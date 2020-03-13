@@ -1,0 +1,16 @@
+.page-item.active .page-link,
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: #6c757d;
+    border-color: #dee2e6;
+}
+
+.page-link {
+    color: #6c757d;
+}
+
+.state-error,
+.required,
+.error {
+	color: #ff0000;
+}
