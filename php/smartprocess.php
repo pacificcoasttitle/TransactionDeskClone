@@ -112,7 +112,10 @@
 		$EscrowLenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
 		$EscrowLenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
 	}
-	$parties_email[$EscrowLenderEmail] = $EscrowLenderName;
+	if(isset($EscrowLenderEmail) && !empty($EscrowLenderEmail))
+	{
+		$parties_email[$EscrowLenderEmail] = $EscrowLenderName;
+	}
 
 	$order_file = uniqid();
 	$order_upload = $order_file.isset($_FILES['orderfiles']['name']) && !empty($_FILES['orderfiles']['name']) ? $_FILES['orderfiles']['name'] : '';	
