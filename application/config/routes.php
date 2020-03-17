@@ -53,6 +53,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $route['default_controller'] = 'frontend/login/index';
 $route['home'] = 'frontend/home/index';
+$route['login'] = 'frontend/login/index';
+$route['do_login'] = 'frontend/login/do_login';
+$route['logout'] = 'frontend/home/logout';
 $route['home/getSearchResults'] = 'frontend/home/getSearchResults';
 $route['home/checkEmail'] = 'frontend/home/checkEmail';
 $route['home/getCustomerNumber'] = 'frontend/home/getCustomerNumber';
@@ -66,8 +69,8 @@ $route['getResultById'] = 'frontend/TitlePoint/getResultById';
 $route['imageCreateRequest'] = 'frontend/TitlePoint/imageCreateRequest';
 $route['getRequestStatus'] = 'frontend/TitlePoint/getRequestStatus';
 $route['generateImage'] = 'frontend/TitlePoint/generateImage';
+
 $route['adminpanel'] = 'admin/home/login';
-$route['login/login'] = 'frontend/login/login';
 $route['admin'] = 'admin/home/login';
 $route['admin/dashboard'] = 'admin/home/dashboard';
 $route['admin/import'] = 'admin/home/import';

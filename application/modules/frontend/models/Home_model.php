@@ -6,6 +6,24 @@ class Home_model extends CI_Model
         $this->table = 'customer_basic_details';
     }
 
+    public function get_user($params = array()) 
+    {
+        $table = $this->table;
+        $this->db->select('*');
+        $this->db->from($table);
+        foreach($params as $key => $val){
+            $this->db->where($key, $val);
+        }
+        $query = $this->db->get();
+        $result = $query->row_array();
+        if(!empty($result)) { 
+            return $result;
+        } else {
+            return array();
+        }
+        
+    }
+
     public function get_customers($params = array())
     {
     	$table = $this->table;

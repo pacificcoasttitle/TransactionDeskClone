@@ -11,6 +11,11 @@ class Agent extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('agent_model');
+        if ($this->session->userdata('id')) {
+			if($this->session->userdata('is_admin') == 0) {
+				redirect(base_url().'home');
+			} 
+		} 
     }
 
 	public function index()
@@ -297,8 +302,8 @@ class Agent extends MX_Controller {
 
     public function is_admin()
     {
-        if ($this->session->userdata('id')) {
-            
+        if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 1) {
+            return true;
         } else {
             redirect(base_url());
         }

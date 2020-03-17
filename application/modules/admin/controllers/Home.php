@@ -27,20 +27,17 @@ class Home extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('home_model'); 
-        $userdata = $this->session->userdata('user');
-        // if ($userdata['usertype'] != 1) {
-            
-        //     redirect('login');
-            
-        // }else{
-           
-        // }  
+        if ($this->session->userdata('id')) {
+			if($this->session->userdata('is_admin') == 0) {
+				redirect(base_url().'home');
+			} 
+		} 
     }
     
 	public function login()
 	{
 		$data = array();
-        if ($this->session->userdata('id')) {
+        if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 1) {
             redirect(base_url().'admin/dashboard');
         } else {
             $this->load->view('layout/login_header', $data);
@@ -62,7 +59,8 @@ class Home extends MX_Controller {
         		$session_data = array(
                     "id" => isset($admin['id']) && !empty($admin['id']) ? $admin['id'] : '',
                     "name" => isset($admin['user_name']) && !empty($admin['user_name']) ? $admin['user_name'] : '',
-                    "email_address" => isset($admin['email_id']) && !empty($admin['email_id']) ? $admin['email_id'] : ''
+                    "email_address" => isset($admin['email_id']) && !empty($admin['email_id']) ? $admin['email_id'] : '',
+                    "is_admin" => 1
                 );
 
                 $this->session->set_userdata($session_data);

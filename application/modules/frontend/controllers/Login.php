@@ -7,41 +7,49 @@ class Login extends MX_Controller {
     function __construct() 
     {
         parent::__construct();
-        $this->load->helper(array('file', 'url'));
+        $this->load->helper(
+            array('file', 'url','form')
+        );
         $this->load->library('form_validation');
         $this->load->model('home_model'); 
+        if ($this->session->userdata('id')) {
+			if($this->session->userdata('is_admin') == 1) {
+				redirect(base_url().'admin/dashboard');
+			}
+		} 
     }
 
     function index() 
     {
-        if ($this->session->userdata('id')) {
-            redirect(base_url().'/dashboard');
+        if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 0) {
+            redirect(base_url().'home');
         } else {
             $data = array();
-            $this->load->view('login', $data);
-        }	
+            $this->load->view('login', $data);	
+        }
     }
 
-    function login() 
+    function do_login() 
     {
         if ($this->input->post()) {
-            $this->form_validation->set_rules('OpenEmail', 'Email', 'trim|required|valid_email|xss_clean');
+            $this->form_validation->set_rules('OpenEmail', 'Email', 'trim|required|valid_email');
             if ($this->form_validation->run($this) == FALSE) {
-                $data['error'] =  form_error('OpenEmail');
+                $data['error'] =  'The Email field must contain a valid email address.';
                 $this->load->view('login', $data);
             } else {
                 $email = $this->input->post('OpenEmail');
-                $user = $this->home_model->get_user($email);
-                if ($user) {
+                $user =  $this->home_model->get_user(array('email_address' => $email));
+                if (!empty($user)) {
                     $session_data = array(
                         "id" => isset($user['id']) && !empty($user['id']) ? $user['id'] : '',
-                        "name" => isset($user['user_name']) && !empty($user['user_name']) ? $user['user_name'] : '',
-                        "email_address" => isset($user['email_id']) && !empty($user['email_id']) ? $user['email_id'] : ''
+                        "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name'] : '',
+                        "email" => isset($user['email_id']) && !empty($user['email_id']) ? $user['email_id'] : '',
+                        "is_admin" => 0
                     );
                     $this->session->set_userdata($session_data);
-                    redirect(base_url().'/dashboard');
+                    redirect(base_url().'home');
                 } else {
-                    $data['error'] =  form_error('OpenEmail');
+                    $data['error'] =  'Please enter the correct email address';
                     $this->load->view('login', $data);
                 }
             }

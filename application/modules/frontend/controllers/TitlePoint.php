@@ -2,7 +2,7 @@
 
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-class TitlePoint extends MY_Controller {
+class TitlePoint extends MX_Controller {
 
 	function createService()
 	{

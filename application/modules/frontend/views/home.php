@@ -32,14 +32,14 @@
                                             <div class="frm-row">
                                                 <div class="section colm colm9">
                                                     <label class="field" style="padding-right:8px;">
-                                                    <input type="text" class="gui-input" name="CustomerNumber" id="CustomerNumber" placeholder="Customer Number">
+                                                    <input type="text" value="<?php echo $customer_data['customer_number'];?>" class="gui-input" name="CustomerNumber" id="CustomerNumber" placeholder="Customer Number">
                                                     </label>
                                                     <em id="CustomerNumber-error" class="state-error" style="display: none;"></em>                     
                                                 </div>
-                                                <div class="section colm colm3">
+                                                <!-- <div class="section colm colm3">
                                                     <a href="javascript:void(0);" id="getCustomerInfo" class="clone button btn-primary"><i class="fa fa-check"></i></a>
                                                     <a href="javascript:void(0);" id="findCustomerNumber" class="delete button"><i class="fa fa-question"></i></a>
-                                                </div>
+                                                </div> -->
                                             </div><!-- end frm-row section -->
 
                                             <div class="spacer-b30 spacer-t30">
@@ -49,7 +49,7 @@
                                             <div class="frm-row">
                                                 <div class="section colm colm6">
                                                     <label class="field prepend-icon">
-                                                        <input type="text" name="OpenName" id="OpenName" class="gui-input" placeholder=" First Name">
+                                                        <input value="<?php echo $customer_data['first_name'];?>" type="text" name="OpenName" id="OpenName" class="gui-input" placeholder=" First Name">
                                                         <span class="field-icon"><i class="fa fa-user"></i></span>
                                                         <input type="hidden" name="id" id="CustomerId" value="">
                                                     </label>
@@ -57,7 +57,7 @@
 
                                                 <div class="section colm colm6">
                                                     <label class="field prepend-icon">
-                                                        <input type="text" name="OpenLastName" id="OpenLastName" class="gui-input" placeholder="Last Name">
+                                                        <input value="<?php echo $customer_data['last_name'];?>" type="text" name="OpenLastName" id="OpenLastName" class="gui-input" placeholder="Last Name">
                                                         <span class="field-icon"><i class="fa fa-user"></i></span>  
                                                     </label>
                                                 </div><!-- end section -->
@@ -66,13 +66,13 @@
                                             <div class="frm-row">
                                                 <div class="section colm colm6">
                                                     <label class="field prepend-icon">
-                                                        <input type="tel" name="Opentelephone" id="Opentelephone" class="gui-input" placeholder="Telephone">
+                                                        <input value="<?php echo $customer_data['telephone_no'];?>" type="tel" name="Opentelephone" id="Opentelephone" class="gui-input" placeholder="Telephone">
                                                         <span class="field-icon"><i class="fa fa-phone-square"></i></span>  
                                                     </label>
                                                 </div><!-- end section --> 
                                                 <div class="section colm colm6">
                                                     <label class="field prepend-icon">
-                                                        <input type="email" name="OpenEmail" id="OpenEmail" class="gui-input" placeholder="Email address">
+                                                        <input value="<?php echo $customer_data['email_address'];?>" type="email" name="OpenEmail" id="OpenEmail" class="gui-input" placeholder="Email address">
                                                         <span class="field-icon"><i class="fa fa-envelope"></i></span>  
                                                     </label>
                                                 </div><!-- end section -->
@@ -81,14 +81,14 @@
                                             <div class="frm-row">                       
                                                 <div class="section colm colm6">
                                                     <label class="field prepend-icon">
-                                                        <input type="text" name="CompanyName" id="CompanyName" class="gui-input" placeholder="Company Name">
+                                                        <input value="<?php echo $customer_data['company_name'];?>" type="text" name="CompanyName" id="CompanyName" class="gui-input" placeholder="Company Name">
                                                         <span class="field-icon"><i class="fa fa-user"></i></span>
                                                     </label>
                                                 </div><!-- end section --> 
                                             
                                                 <div class="section colm colm6">
                                                     <label class="field prepend-icon">
-                                                        <input type="text" name="StreetAddress" id="StreetAddress" class="gui-input" placeholder="Street Address">
+                                                        <input value="<?php echo $customer_data['street_address'];?>" type="text" name="StreetAddress" id="StreetAddress" class="gui-input" placeholder="Street Address">
                                                         <span class="field-icon"><i class="fa fa-envelope"></i></span>  
                                                     </label>
                                                 </div><!-- end section -->         
@@ -97,14 +97,14 @@
                                             <div class="frm-row">                       
                                                 <div class="section colm colm6">
                                                     <label class="field prepend-icon">
-                                                        <input type="text" name="City" id="City" class="gui-input" placeholder="City">
+                                                        <input value="<?php echo $customer_data['city'];?>" type="text" name="City" id="City" class="gui-input" placeholder="City">
                                                         <span class="field-icon"><i class="fa fa-user"></i></span>
                                                     </label>
                                                 </div><!-- end section --> 
                                                 
                                                 <div class="section colm colm6">
                                                     <label class="field prepend-icon">
-                                                        <input type="text" name="Zipcode" id="Zipcode" class="gui-input" placeholder="Zipcode">
+                                                        <input value="<?php echo $customer_data['zip_code'];?>" type="text" name="Zipcode" id="Zipcode" class="gui-input" placeholder="Zipcode">
                                                         <span class="field-icon"><i class="fa fa-envelope"></i></span>  
                                                     </label>
                                                 </div><!-- end section -->  
