@@ -199,8 +199,7 @@ class Home extends MY_Controller {
 							$mail->Encoding = "base64";
 							$mail->Timeout = 200;
 							$mail->ContentType = "text/html";
-							// $mail->addAddress('openorders@pct.com', 'Open Order Desk');
-							$mail->addAddress('a.parmar@crestinfosystems.net', 'Open Order Desk');
+							$mail->addAddress('openorders@pct.com', 'Open Order Desk');							
 							$mail->Subject = "Order Placed at Resware";
 
 							$data = array(
@@ -211,6 +210,7 @@ class Home extends MY_Controller {
 						       'ProductType'=> $ProductType,
 						       'SalesAmount'=> $SalesAmount,
 						       'LoanAmount'=> $LoanAmount,
+						       'currYear'=> CURRENT_YEAR
 						    );
 							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
 							$mail->Body = $order_message_body;
@@ -402,7 +402,8 @@ class Home extends MY_Controller {
 					       'LoanAmount'=> $LoanAmount,
 					       'sendermessage'=> $sendermessage,
 					       'poweredby_url'=> POWEREDBY_URL,
-							'poweredby_name'=> POWEREDBY_NAME,
+						   'poweredby_name'=> POWEREDBY_NAME,
+						   'currYear'=> CURRENT_YEAR
 					    );
 
 						$message = $this->load->view('emails/smartmessage.php',$data,TRUE);	
@@ -470,7 +471,7 @@ class Home extends MY_Controller {
 							       'sendername'=> $sendername,
 							       'poweredby_url'=> POWEREDBY_URL,
 							       'poweredby_name'=> POWEREDBY_NAME,
-							       'currYear'=> $CURRENT_YEAR
+							       'currYear'=> CURRENT_YEAR
 							    );
 							    $automessage = $this->load->view('emails/autoresponder.php',$data,TRUE);
 								$automail->Body = $automessage;
