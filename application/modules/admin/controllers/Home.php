@@ -27,20 +27,26 @@ class Home extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('home_model'); 
+        $userdata = $this->session->userdata('user');
+        // if ($userdata['usertype'] != 1) {
+            
+        //     redirect('login');
+            
+        // }else{
+           
+        // }  
     }
     
 	public function login()
 	{
 		$data = array();
-        if($this->session->userdata('msg'))
-        {
-            $data['msg'] = $this->session->userdata('msg');
-            $this->session->unset_userdata('msg');
-        }
-
-		$this->load->view('layout/login_header', $data);
-        $this->load->view('home/login', $data);
-        $this->load->view('layout/login_footer', $data);
+        if ($this->session->userdata('id')) {
+            redirect(base_url().'admin/dashboard');
+        } else {
+            $this->load->view('layout/login_header', $data);
+            $this->load->view('home/login', $data);
+            $this->load->view('layout/login_footer', $data);
+        }		
 	}
 
 	public function do_login()
@@ -329,6 +335,6 @@ class Home extends MX_Controller {
         $this->session->unset_userdata('name');
         $this->session->unset_userdata('email_address');
         session_destroy();
-        redirect(base_url());
+        redirect(base_url().'admin');
     }
 }
