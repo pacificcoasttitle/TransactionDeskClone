@@ -261,8 +261,8 @@
                                                     <label class="field select">
                                                         <select id="ProductTypeID" name="ProductTypeID">
                                                             <option value="">Select Product</option>
-                                                            <option value="33">Loan: Title Only (Outside Escrow) Westcor</option>
-                                                            <option value="32">Sales: Title Only (Outside Escrow) Westcor</option>
+                                                            <option value="33">Loan: Refinance</option>
+                                                	    <option value="32">Sales: Purchase</option>
                                                         </select>
                                                         <i class="arrow double"></i>
                                                     </label>

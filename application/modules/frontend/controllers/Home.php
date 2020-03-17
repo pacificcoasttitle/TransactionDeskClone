@@ -2,7 +2,7 @@
 
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-class Home extends MY_Controller {
+class Home extends MX_Controller {
 
     function __construct() {
         parent::__construct();
@@ -353,8 +353,8 @@ class Home extends MY_Controller {
 				: Prepare form field variables for CSV export
 				----------------------------------------------------------------------- */
 				
-				if(GENERATE_CSV == true){
-					$csvFile = $csvFileName;	
+				/*if(GENERATE_CSV == true){
+					$csvFile = CSV_FILE_NAME;	
 					$csvData = array(
 						"$sendername",
 						"$emailaddress",
@@ -364,7 +364,7 @@ class Home extends MY_Controller {
 						"$orderbudget",
 						"$ordertimeframe"			
 					);
-				}
+				}*/
 				
 				if(isset($_FILES['orderfiles']) && !empty($_FILES['orderfiles']))
 				{
@@ -378,7 +378,7 @@ class Home extends MY_Controller {
 						$mail = $this->phpmailer_library->load();
 						$mail->isSendmail();
 						$mail->IsHTML(true);
-						$mail->setFrom($emailaddress,$sendername);
+						$mail->setFrom($OpenEmail,$OpenEmail);
 						$mail->CharSet = "UTF-8";
 						$mail->Encoding = "base64";
 						$mail->Timeout = 200;
@@ -458,17 +458,17 @@ class Home extends MY_Controller {
 								
 								$automail = $this->phpmailer_library->load();
 								$automail->isSendmail();
-								$automail->setFrom($receiver_email,$receiver_name);
+								$automail->setFrom(RECEIVER_EMAIL,RECEIVER_NAME);
 								$automail->isHTML(true);                                 
 								$automail->CharSet = "UTF-8";
 								$automail->Encoding = "base64";
 								$automail->Timeout = 200;
 								$automail->ContentType = "text/html";
-								$automail->AddAddress($emailaddress, $sendername);
+								$automail->AddAddress($OpenEmail, $OpenName);
 								$automail->Subject = "Thank you for contacting us";
 								$data = array(
 							       'receiver_email'=> RECEIVER_EMAIL,
-							       'sendername'=> $sendername,
+							       'sendername'=> $OpenName,
 							       'poweredby_url'=> POWEREDBY_URL,
 							       'poweredby_name'=> POWEREDBY_NAME,
 							       'currYear'=> CURRENT_YEAR
