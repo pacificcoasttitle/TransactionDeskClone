@@ -51,5 +51,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 $route['default_controller'] = 'frontend/home/index';
+$route['home/getSearchResults'] = 'frontend/home/getSearchResults';
+$route['home/checkEmail'] = 'frontend/home/checkEmail';
+$route['home/getCustomerNumber'] = 'frontend/home/getCustomerNumber';
+$route['agent/getAgentDetails'] = 'frontend/agent/getAgentDetails';
+$route['home/getCustomerDetails'] = 'frontend/home/getCustomerDetails';
+$route['home/getDetailsByName'] = 'frontend/home/getDetailsByName';
+$route['order-submit'] = 'frontend/home/orderSubmit';
+$route['createService'] = 'frontend/TitlePoint/createService';
+$route['getRequestSummaries'] = 'frontend/TitlePoint/getRequestSummaries';
+$route['getResultById'] = 'frontend/TitlePoint/getResultById';
+$route['imageCreateRequest'] = 'frontend/TitlePoint/imageCreateRequest';
+$route['getRequestStatus'] = 'frontend/TitlePoint/getRequestStatus';
+$route['generateImage'] = 'frontend/TitlePoint/generateImage';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

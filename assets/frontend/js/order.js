@@ -24,13 +24,15 @@ function createService4()
 	var city = localStorage.getItem('city');*/
 
 	$.ajax({
-        url: 'php/createservice.php',
+        // url: 'php/createservice.php',
+        url: base_url+'index.php?createService',
         data: {
             fipCode: fipCode,
             address: address,
             city: city,
             methodId: 4,
         },
+        type: "POST",
         dataType: "xml"
     })
     	.done(function(response, textStatus, jqXHR) {
@@ -71,14 +73,16 @@ function createService3()
 	var county = localStorage.getItem('county');*/
 
 	$.ajax({
-        url: 'php/createservice.php',
+        // url: 'php/createservice.php',
+        url: base_url+'index.php?createService',
         data: {
             apn: apn,
             state: state,
             county: county,
             methodId: 3,
         },
-        dataType: "xml"
+        dataType: "xml",
+        type: "POST"
     })
     	.done(function(response, textStatus, jqXHR) {
 
@@ -114,11 +118,12 @@ function createService3()
 function getRequestSummaries(requestId,methodId)
 {
 	$.ajax({
-        url: 'php/getrequestsummaries.php',
+        url: base_url+'index.php?getRequestSummaries',
         data: {
             requestId: requestId
         },
-        dataType: "xml"
+        dataType: "xml",
+        type: "POST"
     })
     	.done(function(response, textStatus, jqXHR) {
 
@@ -174,12 +179,13 @@ function getRequestSummaries(requestId,methodId)
 function getResultById(resultId,methodId)
 {
 	$.ajax({
-        url: 'php/getresultbyid.php',
+        url: base_url+'index.php?getResultById',
         data: {
             resultId: resultId,
             methodId: methodId
         },
-        dataType: "xml"
+        dataType: "xml",
+        type: "POST"
     })
     	.done(function(response, textStatus, jqXHR) {
 
@@ -288,11 +294,12 @@ function getResultById(resultId,methodId)
 function imageCreateRequest(serviceId)
 {
     $.ajax({
-        url: 'php/imagecreaterequest.php',
+        url: base_url+'index.php?imageCreateRequest',
         data: {
             serviceId: serviceId,
         },
-        dataType: "xml"
+        dataType: "xml",
+        type: "POST"
     })
         .done(function(response, textStatus, jqXHR) {
 
@@ -322,11 +329,12 @@ function imageCreateRequest(serviceId)
 function getRequestStatus(requestId)
 {
     $.ajax({
-        url: 'php/getrequeststatus.php',
+        url: base_url+'index.php?getRequestStatus',
         data: {
             requestId: requestId
         },
-        dataType: "xml"
+        dataType: "xml",
+        type:"POST"
     })
         .done(function(response, textStatus, jqXHR) {
 
@@ -356,11 +364,12 @@ function getRequestStatus(requestId)
 function generateImage(requestId)
 {
     $.ajax({
-        url: 'php/generateimage.php',
+        url: base_url+'index.php?generateImage',
         data: {
             requestId: requestId
         },
-        dataType: "xml"
+        dataType: "xml",
+        type: "POST"
     })
         .done(function(response, textStatus, jqXHR) {
 

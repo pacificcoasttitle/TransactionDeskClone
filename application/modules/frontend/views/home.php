@@ -23,7 +23,7 @@
                                         <h4>Open Your Title Order</h4>
                                     </div><!-- end .form-header section -->
                                     <!-- Start Form -->
-                                    <form method="POST" action="<?php echo BASE_URL; ?>php/smartprocess.php" id="smart-form" enctype="multipart/form-data">
+                                    <form method="POST" id="smart-form" enctype="multipart/form-data">
                                         <div class="form-body">
                                             <div class="spacer-b30 spacer-t30">
                                                 <div class="tagline"><span>Customer Number</span></div>
@@ -578,4 +578,3 @@
 <?php
     $this->load->view('layout/footer');
 ?>
-</div>

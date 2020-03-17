@@ -257,7 +257,12 @@
 					                        $("#Zipcode").val('').removeAttr('readonly').parent();
 					                        $("#CustomerNumber").val('').removeAttr('readonly').parent();
 					                        $("#CustomerId").val('');
-					                        $('#agent-details-fields').hide();											
+					                        $('#agent-details-fields').hide();
+
+					                    /*window.location.replace(base_url+'?order-submit')	*/
+
+					                    setTimeout(function () { 
+					                    	window.location.replace(base_url+'?order-submit') }, 8000);										
 									}
 							  });
 						}

@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    
 	reportData = {};
 	apnInfo = {};
 	var isNewSearch=false;
@@ -22,7 +21,8 @@ $(document).ready(function() {
         else
         {
             $.ajax({
-               url: "php/search.php",
+               // url: "php/search.php",
+               url: base_url+'index.php?/home/getCustomerDetails',
                type: "POST",//type of posting the data
                data: {
                     customer_no: customer_no
@@ -95,8 +95,9 @@ $(document).ready(function() {
                 required: true,
                 email: true,
                 remote: {
-                    url: 'php/checkemail.php',
-                    type: "get",
+                    // url: 'php/checkemail.php',
+                    url: base_url+'index.php?/home/checkEmail',
+                    type: "POST",
                     data: {
                         title: function() {
                             return $("#CustomerEmail").val();
@@ -135,8 +136,8 @@ $(document).ready(function() {
         /* @ajax form submition 
         ---------------------------------------------------- */
         submitHandler:function(form) {
-            $(form).ajaxSubmit({
-                /*target:'#showCustomerNumber',*/       
+            /*$(form).ajaxSubmit({
+                    
                 error:function(){
                     // $('.form-footer').removeClass('progress');
                 },
@@ -156,6 +157,34 @@ $(document).ready(function() {
                     $("#showCustomerNumber").html(content);
                     $("#showCustomernumberModal").modal('show');
                 }
+            });*/
+
+            $.ajax({
+                url: base_url+'index.php?/home/getCustomerNumber',
+                type: "POST",
+                data: {
+                    email_address: $("#CustomerEmail").val(),
+                },
+                success: function(result)
+                {
+                    var res = jQuery.parseJSON(result);
+                    
+                    $('#findCustomerModal').modal('hide');
+                    if(res.customer_number)
+                    {
+                        var content = "<h3>Your Customer Number is:"+res.customer_number+"</h3>";
+
+                    }
+                    else
+                    {
+                        var content = '<h3> No data found</h3>';
+                    }
+                    $("#showCustomerNumber").html(content);
+                    $("#showCustomernumberModal").modal('show');
+                },
+                error:function(){
+                    alert('Something went wrong');
+                },
             });
         }
     });
@@ -222,7 +251,19 @@ $(document).ready(function() {
     });
 
     $("#BuyerAgentName").autocomplete({
-        source: "php/agentsearch.php",
+        source: function(request, response) {
+            $.ajax({
+                url: base_url+'index.php?/agent/getAgentDetails',
+                // dataType: "json",
+                data: {
+                    term : request.term,//the value of the input is here
+                    
+                },
+                type: "POST",
+                dataType: "json",
+                success: response //response is a callable accepting data parameter. no reason to wrap in anonymous function.
+            });
+        },
         select: function( event, ui ) {
             event.preventDefault();
             $("#BuyerAgentName").val(ui.item.name);
@@ -247,7 +288,18 @@ $(document).ready(function() {
 
     /* Listing Agent autocomplete */
     $("#ListingAgentName").autocomplete({
-        source: "php/agentsearch.php",
+        source: function(request, response) {
+            $.ajax({
+                url: base_url+'index.php?/agent/getAgentDetails',
+                data: {
+                    term : request.term,//the value of the input is here
+                    
+                },
+                type: "POST",
+                dataType: "json",
+                success: response //response is a callable accepting data parameter. no reason to wrap in anonymous function.
+            });
+        },
         select: function( event, ui ) {
             event.preventDefault();
             $("#ListingAgentName").val(ui.item.name);
@@ -273,7 +325,19 @@ $(document).ready(function() {
 
     /* Lender autocomplete */
     $("#LenderName").autocomplete({
-        source: "php/usersearch.php",
+        // source: "php/usersearch.php",
+        source: function(request, response) {
+            $.ajax({
+                url: base_url+'index.php?/home/getDetailsByName',
+                data: {
+                    term : request.term,//the value of the input is here
+                    is_escrow : 0                    
+                },
+                type: "POST",
+                dataType: "json",
+                success: response
+            });
+        },
         select: function( event, ui ) {
             event.preventDefault();
             $("#LenderName").val(ui.item.name);
@@ -296,7 +360,18 @@ $(document).ready(function() {
 
     /* Escrow autocomplete */
     $("#EscrowName").autocomplete({
-        source: "php/escrowusersearch.php",
+        source: function(request, response) {
+            $.ajax({
+                url: base_url+'index.php?/home/getDetailsByName',
+                data: {
+                    term : request.term,//the value of the input is here
+                    is_escrow : 1                    
+                },
+                type: "POST",
+                dataType: "json",
+                success: response //response is a callable accepting data parameter. no reason to wrap in anonymous function.
+            });
+        },
         select: function( event, ui ) {
             event.preventDefault();
             $("#EscrowName").val(ui.item.name);
@@ -425,7 +500,7 @@ function fetchReports(repNum)
 {
     reportNum = repNum;
     $.ajax({
-        url: 'php/getsearchresults.php',
+        url: base_url+'index.php?/home/getSearchResults?',
         data: {
             requrl: request + '&reportType=' + reportNum
         },
@@ -479,7 +554,7 @@ function compileXmlUrls(response, report) {
 
 function get187() {
     $.ajax({
-        url: 'php/getsearchresults.php',
+        url: base_url+'index.php?/home/getSearchResults?',
         data: {
             requrl: reportData.report187,
         },

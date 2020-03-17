@@ -85,3 +85,41 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 define('BASE_URL_MAIN','http://pct.com/');
+/* Start Resware API */
+define('PLACE_ORDER_API','http://clients.pacificcoasttitle.com/api/orders/');
+/* End Resware API */
+
+/* Start TP API */
+define("TP_CREATE_SERVICE_ENDPOINT",'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/CreateService4?');
+define("TP_TAX_CREATE_SERVICE_ENDPOINT",'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/CreateService3?');
+define("TP_REQUEST_SUMMARY_ENDPOINT",'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/GetRequestSummaries?');
+define("TP_GET_RESULT_BY_ID",'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/GetResultByID?');
+define("TP_GET_RESULT_BY_ID_3",'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/GetResultByID3?');
+define("TP_USERNAME",'pctxmltrial01');
+define("TP_PASSWORD",'Mf9w6R7Tbq');
+define("SERVICE_TYPE",'TitlePoint.LegalAndVesting2');
+define("TAX_SEARCH_SERVICE_TYPE",'TitlePoint.Geo.Tax');
+
+/* Image API */
+define('TP_IMAGE_ENDPOINT', 'https://www.titlepoint.com/TitlePointServices/tpsgenerateimage.asmx/CreateRequest3?');
+define('TP_IMAGE_REQUEST_STATUS', 'https://www.titlepoint.com/TitlePointServices/tpsgenerateimage.asmx/GetRequestStatus?');
+define('TP_GENERATE_IMAGE', 'https://www.titlepoint.com/titlepointservices/TpsGenerateImage.asmx/GetGeneratedImage?');
+
+/* Image API */
+/* End TP API */
+
+
+/* settings.php */
+
+define('RECEIVER_NAME', "Pacific Coast Title");
+define('RECEIVER_SUBJECT', "New Title Order");
+define('RECEIVER_EMAIL', "openorders@pct.com");
+define('REDIRECT_FROM', "TRUE");
+define('REDIRECT_URL', "http://www.pct.com/order/order-submitted.html");
+define('POWEREDBY_NAME', "Pacific Coast Title Company");
+define('POWEREDBY_URL', "http://www.pct.com");
+define('GENERATE_CSV', "FALSE");
+define('CSV_FILE_NAME', "formcsv.csv");
+define('AUTORESPONDER', "FALSE");
+define('CURRENT_YEAR', date("Y"));
+/* settings.php */
