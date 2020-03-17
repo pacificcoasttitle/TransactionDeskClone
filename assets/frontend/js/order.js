@@ -25,7 +25,7 @@ function createService4()
 
 	$.ajax({
         // url: 'php/createservice.php',
-        url: base_url+'index.php?createService',
+        url: base_url+'createService',
         data: {
             fipCode: fipCode,
             address: address,
@@ -74,7 +74,7 @@ function createService3()
 
 	$.ajax({
         // url: 'php/createservice.php',
-        url: base_url+'index.php?createService',
+        url: base_url+'createService',
         data: {
             apn: apn,
             state: state,
@@ -118,7 +118,7 @@ function createService3()
 function getRequestSummaries(requestId,methodId)
 {
 	$.ajax({
-        url: base_url+'index.php?getRequestSummaries',
+        url: base_url+'getRequestSummaries',
         data: {
             requestId: requestId
         },
@@ -179,7 +179,7 @@ function getRequestSummaries(requestId,methodId)
 function getResultById(resultId,methodId)
 {
 	$.ajax({
-        url: base_url+'index.php?getResultById',
+        url: base_url+'getResultById',
         data: {
             resultId: resultId,
             methodId: methodId
@@ -294,7 +294,7 @@ function getResultById(resultId,methodId)
 function imageCreateRequest(serviceId)
 {
     $.ajax({
-        url: base_url+'index.php?imageCreateRequest',
+        url: base_url+'imageCreateRequest',
         data: {
             serviceId: serviceId,
         },
@@ -329,7 +329,7 @@ function imageCreateRequest(serviceId)
 function getRequestStatus(requestId)
 {
     $.ajax({
-        url: base_url+'index.php?getRequestStatus',
+        url: base_url+'getRequestStatus',
         data: {
             requestId: requestId
         },
@@ -364,7 +364,7 @@ function getRequestStatus(requestId)
 function generateImage(requestId)
 {
     $.ajax({
-        url: base_url+'index.php?generateImage',
+        url: base_url+'generateImage',
         data: {
             requestId: requestId
         },

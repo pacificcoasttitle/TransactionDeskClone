@@ -2547,6 +2547,18 @@ html, body{
 	padding:0;
 }
 
+#OpenEmail-error {
+	display: block!important;
+    margin-top: 6px;
+    padding: 0 3px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    line-height: normal;
+    color: red;
+    font-size: 0.85em;
+}
+	
+
 /* @captcha refresh button themes
 -------------------------------------------------- */
 .smart-forms .refresh-black    { background: #34495e; border-color: #2c3e50; }

@@ -8,11 +8,18 @@ class Home extends MX_Controller {
         parent::__construct();
         $this->load->helper(array('file', 'url'));
         $this->load->library('session');
-        $this->load->model('home_model');
+		$this->load->model('home_model');
+		$this->load->library('form_validation');
+		if ($this->session->userdata('id')) {
+			if($this->session->userdata('is_admin') == 1) {
+				redirect(base_url().'admin/dashboard');
+			}
+		} 
     }
 
     function index() 
     {
+		$this->is_user();
     	if(isset($_POST) && !empty($_POST))
     	{
     		$this->load->library("phpmailer_library");
@@ -22,7 +29,7 @@ class Home extends MX_Controller {
     		$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
     		$this->form_validation->set_rules('sendermessage', 'Sender Message', 'required',array('required'=> 'Oops you forgot your message'));
 
-    		if($this->form_validation->run() == true)
+    		if($this->form_validation->run($this) == true)
     		{
     			$CustomerNumber = $this->input->post('CustomerNumber');
 	        	$OpenName      = $this->input->post('OpenName');
@@ -511,7 +518,8 @@ class Home extends MX_Controller {
     	}
     	else
     	{
-    		$data['title'] = 'Open Order | Pacific Coast Title Company';
+			$data['title'] = 'Open Order | Pacific Coast Title Company';
+			$data['customer_data'] =  $this->home_model->get_user(array('id' => $this->session->userdata('id')));
 	        $this->load->view('layout/header',$data);
 	       	$this->load->view('home');
     	}
@@ -652,6 +660,7 @@ class Home extends MX_Controller {
 
     function orderSubmit()
     {
+		$this->is_user();
     	$data['title'] = 'Open Order | Pacific Coast Title Company';
     	$data['address'] = $this->session->userdata('address');
     	$data['city'] = $this->session->userdata('city');
@@ -664,5 +673,26 @@ class Home extends MX_Controller {
 
         $this->load->view('layout/header',$data);
        	$this->load->view('order-submission',$data);
-    }
+	}
+	
+	public function is_user()
+    {
+        if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 0) {
+            return true;
+        } else {
+            redirect(base_url());
+        }
+	}
+	
+	function logout()
+	{
+		$user_data = $this->session->all_userdata();
+			foreach ($user_data as $key => $value) {
+				if ($key != 'session_id' && $key != 'ip_address' && $key != 'user_agent' && $key != 'last_activity') {
+					$this->session->unset_userdata($key);
+				}
+			}
+		$this->session->sess_destroy();
+		redirect(base_url());
+	}
 }
