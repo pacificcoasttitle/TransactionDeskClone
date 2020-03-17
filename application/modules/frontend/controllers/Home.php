@@ -64,8 +64,8 @@ class Home extends MY_Controller {
 	        	$SecondaryOwner      = $this->input->post('SecondaryOwner');
 	        	$SalesRep      = $this->input->post('SalesRep');
 	        	$TitleOfficer      = $this->input->post('TitleOfficer');
-	        	$LoanAmount      = $this->input->post('LoanAmount');
-	        	$SalesAmount      = $this->input->post('SalesAmount');
+	        	$LoanAmount      = $this->input->post('loanAmount');
+	        	$SalesAmount      = $this->input->post('salesAmount');
 	        	$TransactionTypeID = isset($_POST["TransactionTypeID"]) && !empty($_POST["TransactionTypeID"]) ? $_POST["TransactionTypeID"] : 3;
 	        	$ProductTypeID      = $this->input->post('ProductTypeID');
 	        	$CCR = isset($_POST["CCR"]) && !empty($_POST["CCR"]) ? 1 : 0;
@@ -159,7 +159,7 @@ class Home extends MY_Controller {
 					); 
 					$error_msg = curl_error($ch);
 					$result = curl_exec($ch);
-echo "<pre>"; print_r($result); exit;
+
 					if(isset($result) && !empty($result))
 					{
 						$response = json_decode($result,true);
@@ -352,20 +352,18 @@ echo "<pre>"; print_r($result); exit;
 			/*	----------------------------------------------------------------------
 				: Prepare form field variables for CSV export
 				----------------------------------------------------------------------- */
-				if(isset($generateCSV) && !empty($generateCSV))
-				{
-					if($generateCSV == true){
-						$csvFile = $csvFileName;	
-						$csvData = array(
-							"$sendername",
-							"$emailaddress",
-							"$telephone",
-							"$senderwebsite",
-							"$orderservices",
-							"$orderbudget",
-							"$ordertimeframe"			
-						);
-					}
+				
+				if(GENERATE_CSV == true){
+					$csvFile = $csvFileName;	
+					$csvData = array(
+						"$sendername",
+						"$emailaddress",
+						"$telephone",
+						"$senderwebsite",
+						"$orderservices",
+						"$orderbudget",
+						"$ordertimeframe"			
+					);
 				}
 				
 				if(isset($_FILES['orderfiles']) && !empty($_FILES['orderfiles']))
@@ -431,7 +429,7 @@ echo "<pre>"; print_r($result); exit;
 							// -----------------------------------------------------------------
 							// : Generate the CSV file and post values if its true
 							// ----------------------------------------------------------------- 		
-							if($generateCSV == true){	
+							if(GENERATE_CSV == true){	
 								if (file_exists($csvFile)) {
 									$csvFileData = fopen($csvFile, 'a');
 									fputcsv($csvFileData, $csvData );
@@ -455,9 +453,7 @@ echo "<pre>"; print_r($result); exit;
 							// ---------------------------------------------------------------------
 							// : Send the auto responder message if its true
 							// --------------------------------------------------------------------- 
-							if($autoResponder == true){
-							
-								// include dirname(__FILE__).'/templates/autoresponder.php';
+							if(AUTORESPONDER == true){
 								
 								$automail = $this->phpmailer_library->load();
 								$automail->isSendmail();
@@ -481,10 +477,6 @@ echo "<pre>"; print_r($result); exit;
 								$automail->AltBody = "Use an HTML compatible email client";
 								$automail->Send();	 
 							}
-							
-							/*if($redirectForm == true){
-								echo '<script>setTimeout(function () { window.location.replace("'.$redirectForm_url.'") }, 8000); </script>';
-							}*/
 										
 						  	echo '<div class="alert notification alert-success">Your title order is being submitted. Please wait for confirmation.</div>'; 
 						  

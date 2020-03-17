@@ -159,7 +159,7 @@
 <script type="text/javascript">
   var base_url = '<?php echo base_url(); ?>';
 </script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js"></script>
+
 <script type="text/javascript">
     var address = "<?php echo isset($address) && !empty($address) ? $address : ''; ?>";
     var city = "<?php echo isset($city) && !empty($city) ? $city : ''; ?>";
@@ -169,6 +169,7 @@
     var fipCode = "<?php echo isset($fipCode) && !empty($fipCode) ? $fipCode : ''; ?>";
     var customer_number = "<?php echo isset($customer_number) && !empty($customer_number) ? $customer_number : '' ; ?>";
 </script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js"></script>
 <?php
     $this->load->view('layout/footer');
 ?>
