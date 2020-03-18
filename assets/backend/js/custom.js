@@ -12,7 +12,7 @@ $(document).ready(function () {
                 {
                     var jsonResult = $.ajax({
                         type: "POST",
-                        url: base_url+"admin/home/get_customer_list",
+                        url: base_url+"?admin/home/get_customer_list",
                         data: {
                             keyword: $('#tbl-customers-listing_filter input').val(),
                         },
@@ -28,7 +28,7 @@ $(document).ready(function () {
                 {
                     var jsonResult = $.ajax({
                         type: "POST",
-                        url: base_url+"admin/agent/get_agent_list",
+                        url: base_url+"?admin/agent/get_agent_list",
                         data: {
                             keyword: $('#tbl-agents-listing_filter input').val(),
                         },
@@ -102,7 +102,7 @@ $(document).ready(function () {
             "ordering": false,            
             "serverSide": true,
             "ajax": {                
-                url: base_url+"admin/home/get_customer_list", // json datasource
+                url: base_url+"?admin/home/get_customer_list", // json datasource
                 type: "post", // method  , by default get
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -209,7 +209,7 @@ $(document).ready(function () {
             "ordering": false,            
             "serverSide": true,
             "ajax": {                
-                url: base_url+"admin/agent/get_agent_list", // json datasource
+                url: base_url+"?admin/agent/get_agent_list", // json datasource
                 type: "post", // method  , by default get
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -274,7 +274,7 @@ function deleteCustomer(id)
 
     if (ready) {
         $.ajax({
-            url: base_url+"admin/home/delete_customer",
+            url: base_url+"?admin/home/delete_customer",
             method: "POST",
             data : {id:id},
             success: function(data){
@@ -328,7 +328,7 @@ function deleteAgent(id)
 
     if (ready) {
         $.ajax({
-            url: base_url+"admin/agent/delete_agent",
+            url: base_url+"?admin/agent/delete_agent",
             method: "POST",
             data : {id:id},
             success: function(data){

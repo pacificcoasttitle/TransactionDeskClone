@@ -70,7 +70,6 @@ $route['imageCreateRequest'] = 'frontend/TitlePoint/imageCreateRequest';
 $route['getRequestStatus'] = 'frontend/TitlePoint/getRequestStatus';
 $route['generateImage'] = 'frontend/TitlePoint/generateImage';
 
-$route['adminpanel'] = 'admin/home/login';
 $route['admin'] = 'admin/home/login';
 $route['admin/dashboard'] = 'admin/home/dashboard';
 $route['admin/import'] = 'admin/home/import';

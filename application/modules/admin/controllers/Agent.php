@@ -13,7 +13,7 @@ class Agent extends MX_Controller {
         $this->load->model('agent_model');
         if ($this->session->userdata('id')) {
 			if($this->session->userdata('is_admin') == 0) {
-				redirect(base_url().'home');
+				redirect(base_url().'?home');
 			} 
 		} 
     }
@@ -190,7 +190,7 @@ class Agent extends MX_Controller {
                 
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
                 {
-                    $editOrderUrl = base_url().'admin/edit-agent/'.$value['id'];
+                    $editOrderUrl = base_url().'?admin/edit-agent/'.$value['id'];
                     $action = "<a href='".$editOrderUrl."' class='btn btn-action edit-agent'title ='Edit Agent Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
 
                     $action .= "<a href='javascript:void(0);' onclick='deleteAgent(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
