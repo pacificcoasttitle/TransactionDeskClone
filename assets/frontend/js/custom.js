@@ -51,7 +51,7 @@ $(document).ready(function() {
                         $("#Zipcode").val(res.zip_code).attr('readonly','readonly').parent().addClass('state-success');
                         $("#CustomerId").val(res.id);
 
-                        if(res.is_escrow == 1)
+                        /*if(res.is_escrow == 1)
                         {
                             $('#add-lender-section').show();
                             $('#add-escrow-section').hide();
@@ -64,7 +64,7 @@ $(document).ready(function() {
                             $('#add-escrow-section').show();
                             $('#lender-details-fields').hide();
                             $('#add-escrow-details').trigger('change');
-                        }
+                        }*/
                     }
                },
                error: function(xhr, ajaxOptions, thrownError){
