@@ -1,3 +1,6 @@
+<?php
+// echo "<pre>"; print_r($customer_data); exit;
+?>
 <div class="section-title-page7m area-bg area-bg_blue area-bg_op_60 parallax">
               <div class="area-bg__inner">
                 <div class="container">

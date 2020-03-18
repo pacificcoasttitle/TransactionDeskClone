@@ -262,7 +262,7 @@
 					                    /*window.location.replace(base_url+'?order-submit')	*/
 
 					                    setTimeout(function () { 
-					                    	window.location.replace(base_url+'order-submit') }, 8000);										
+					                    	window.location.replace(base_url+'?order-submit') }, 8000);										
 									}
 							  });
 						}

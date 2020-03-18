@@ -124,7 +124,7 @@
                         <li><a href="http://www.pct.com/orange.html">Orange</a></li>
 						<li><a href="http://www.pct.com/oxnard.html">Oxnard</a></li>
                         <li><a href="http://www.pct.com/sandiego.html">San Diego</a></li>    
-                        <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>                     
+                        <li><a href="<?php echo base_url().'?logout'; ?>">Logout</a></li>                     
                     </ul>
                 </li>
             </ul>
@@ -227,7 +227,7 @@
                                             <li><a href="http://www.pct.com/orange.html">Orange</a></li>
     										<li><a href="http://www.pct.com/oxnard.html">Oxnard</a></li>
                                             <li><a href="http://www.pct.com/sandiego.html">San Diego</a></li>
-                                            <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>  
+                                            <li><a href="<?php echo base_url().'?logout'; ?>">Logout</a></li>  
                                             
                                         </ul>
                                     </li>

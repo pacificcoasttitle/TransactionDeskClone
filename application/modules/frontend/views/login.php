@@ -42,7 +42,7 @@
                             <a href="login2.html" class="active">Log in</a>
                             <!-- <a href="register2.html">Register</a> -->
                         </div>
-                        <form method="POST" action="<?php echo base_url()?>do_login" id="smart-form" enctype="multipart/form-data">
+                        <form method="POST" action="<?php echo base_url();?>?do_login" id="smart-form" enctype="multipart/form-data">
                             <label class="field state-error" style="display:block;">
                                 <input class="form-control gui-input" type="email" name="OpenEmail" id="OpenEmail" placeholder="E-mail Address">
                             </label>
