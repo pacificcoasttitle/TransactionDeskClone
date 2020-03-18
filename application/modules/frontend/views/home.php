@@ -554,7 +554,7 @@
                             <section class="b-sm-about">  
                                 <ul class="b-isotope-grid grid list-unstyled">
                                     <li class="grid-sizer"></li>
-                                    <li style="margin-bottom:15px;" class="b-isotope-grid__item grid-item pctttb"><a class="b-isotope- lightbox" href="https://www.youtube.com/watch?v=ICczHNfT7cA"><img src="http://www.pct.com/order/images/OpenOrderFormVideo.jpg" alt="foto"></a></li>
+                                    <li style="margin-bottom:15px;" class="b-isotope-grid__item grid-item pctttb"><a class="b-isotope- lightbox" href="https://www.youtube.com/watch?v=ICczHNfT7cA"><img src="<?php echo base_url(); ?>assets/frontend/images/OpenOrderFormVideo.jpg" alt="foto"></a></li>
                                 </ul>
                                 <h3  class="b-sm-about__title">Video Tutorial - Smart Form</h3>
                                 <p>We have created a quick video that shows you how our smart open order form works.</p>
