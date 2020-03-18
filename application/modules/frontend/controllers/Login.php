@@ -14,7 +14,7 @@ class Login extends MX_Controller {
         $this->load->model('home_model'); 
         if ($this->session->userdata('id')) {
 			if($this->session->userdata('is_admin') == 1) {
-				redirect(base_url().'admin/dashboard');
+				redirect(base_url().'?admin/dashboard');
 			}
 		} 
     }
@@ -22,7 +22,7 @@ class Login extends MX_Controller {
     function index() 
     {
         if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 0) {
-            redirect(base_url().'home');
+            redirect(base_url().'?home');
         } else {
             $data = array();
             $this->load->view('login', $data);	
