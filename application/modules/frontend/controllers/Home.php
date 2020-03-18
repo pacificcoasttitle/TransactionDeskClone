@@ -12,7 +12,7 @@ class Home extends MX_Controller {
 		$this->load->library('form_validation');
 		if ($this->session->userdata('id')) {
 			if($this->session->userdata('is_admin') == 1) {
-				redirect(base_url().'admin/dashboard');
+				redirect(base_url().'?admin/dashboard');
 			}
 		} 
     }
@@ -115,13 +115,13 @@ class Home extends MX_Controller {
 				if($ProductTypeID == '19' || $ProductTypeID == '33')
 				{
 					$place_order['Buyers'][] = $legalEntity;
-					$ProductType = 'Residential: Loan: Title Only (Outside Escrow) Westcor';
+					$ProductType = 'Residential: Loan: Refinance';
 				}
 				elseif ($ProductTypeID == '20' || $ProductTypeID == '32') 
 				{
 					$place_order['Sellers'][] = $legalEntity;
 					$place_order['SalesPrice'] = $SalesAmount;
-					$ProductType = 'Residential: Sales: Title Only (Outside Escrow) Westcor';
+					$ProductType = 'Residential: Sales: Purchase';
 				}		
 				
 				$place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID'=>$ProductTypeID);
