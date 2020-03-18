@@ -5,7 +5,7 @@
             <i class="fas fa-table"></i>
             Agents
             <div class="float-right">
-                <a href="<?php echo base_url()?>admin/import-agents" class="btn btn-secondary"> Import </a>
+                <a href="<?php echo base_url()?>?admin/import-agents" class="btn btn-secondary"> Import </a>
                 <a href="javascript:void(0);" data-export-type="csv" id="export-agent-data" class="btn btn-secondary"> Export </a>
             </div>
         </div>

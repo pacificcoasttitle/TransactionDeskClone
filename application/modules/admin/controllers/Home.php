@@ -29,7 +29,7 @@ class Home extends MX_Controller {
         $this->load->model('home_model'); 
         if ($this->session->userdata('id')) {
 			if($this->session->userdata('is_admin') == 0) {
-				redirect(base_url().'home');
+				redirect(base_url().'?home');
 			} 
 		} 
     }
@@ -38,7 +38,7 @@ class Home extends MX_Controller {
 	{
 		$data = array();
         if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 1) {
-            redirect(base_url().'admin/dashboard');
+            redirect(base_url().'?admin/dashboard');
         } else {
             $this->load->view('layout/login_header', $data);
             $this->load->view('home/login', $data);
@@ -73,7 +73,7 @@ class Home extends MX_Controller {
                 else 
                 {
                     // redirect('home/dashboard');
-                    redirect(base_url().'admin/dashboard');
+                    redirect(base_url().'?admin/dashboard');
                 }
         	}
         	else 
@@ -333,6 +333,6 @@ class Home extends MX_Controller {
         $this->session->unset_userdata('name');
         $this->session->unset_userdata('email_address');
         session_destroy();
-        redirect(base_url().'admin');
+        redirect(base_url().'?admin');
     }
 }
