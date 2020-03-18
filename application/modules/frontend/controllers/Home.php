@@ -678,7 +678,7 @@ class Home extends MX_Controller {
 	public function is_user()
     {
         if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 0) {
-            return true;
+            
         } else {
             redirect(base_url());
         }
