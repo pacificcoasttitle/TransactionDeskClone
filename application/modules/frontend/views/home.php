@@ -1,5 +1,4 @@
 <?php
-// echo "<pre>"; print_r($customer_data); exit;
 ?>
 <div class="section-title-page7m area-bg area-bg_blue area-bg_op_60 parallax">
               <div class="area-bg__inner">
@@ -336,24 +335,40 @@
                                                         </label>
                                                     </div><!-- end .option-group section -->
                                                 </div><!-- end .colm section -->
-
-                                                <div class="section colm colm4" style="display: none;" id= "add-lender-section">
-                                                    <div class="option-group field">
-                                                        <label class="option block spacer-t10">
-                                                            <input type="checkbox" name="add-lender-details" id= "add-lender-details">
-                                                            <span class="checkbox"></span> Add Lender         
-                                                        </label>
-                                                    </div><!-- end .option-group section -->
-                                                </div>
-
-                                                <div class="section colm colm4" style="display: none;" id= "add-escrow-section">
-                                                    <div class="option-group field">
-                                                        <label class="option block spacer-t10">
-                                                            <input type="checkbox" name="add-escrow-details" id= "add-escrow-details">
-                                                            <span class="checkbox"></span> Add Escrow         
-                                                        </label>
-                                                    </div><!-- end .option-group section -->
-                                                </div>
+                                                <?php 
+                                                    $is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ?  $customer_data['is_escrow'] : 0;
+                                                ?>
+                                                <?php 
+                                                    if($is_escrow == 1)
+                                                    {
+                                                ?>
+                                                        <div class="section colm colm4" id= "add-lender-section">
+                                                            <div class="option-group field">
+                                                                <label class="option block spacer-t10">
+                                                                    <input type="checkbox" name="add-lender-details" id= "add-lender-details">
+                                                                    <span class="checkbox"></span> Add Lender         
+                                                                </label>
+                                                            </div><!-- end .option-group section -->
+                                                        </div>
+                                                <?php
+                                                    }
+                                                ?>
+                                                <?php 
+                                                    if($is_escrow == 0)
+                                                    {
+                                                ?>
+                                                        <div class="section colm colm4" id= "add-escrow-section">
+                                                            <div class="option-group field">
+                                                                <label class="option block spacer-t10">
+                                                                    <input type="checkbox" name="add-escrow-details" id= "add-escrow-details">
+                                                                    <span class="checkbox"></span> Add Escrow         
+                                                                </label>
+                                                            </div><!-- end .option-group section -->
+                                                        </div>
+                                                <?php
+                                                    }
+                                                ?>
+                                                
                                             </div>
 
                                             <div id="agent-details-fields" style="display: none;">
