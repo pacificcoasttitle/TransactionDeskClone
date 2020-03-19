@@ -47,7 +47,7 @@ class Login extends MX_Controller {
                         "is_admin" => 0
                     );
                     $this->session->set_userdata($session_data);
-                    redirect(base_url().'?home');
+                    redirect(base_url().'?dashboard');
                 } else {
                     $data['error'] =  'Please enter the correct email address';
                     $this->load->view('login', $data);

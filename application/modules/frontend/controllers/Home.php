@@ -695,4 +695,12 @@ class Home extends MX_Controller {
 		$this->session->sess_destroy();
 		redirect(base_url());
 	}
+
+	function dashboard()
+	{
+		$this->is_user();
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+		$this->load->view('layout/head_dashboard',$data);
+		$this->load->view('dashboard');
+	}
 }
