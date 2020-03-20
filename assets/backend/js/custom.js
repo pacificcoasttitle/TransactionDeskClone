@@ -2,7 +2,7 @@ var customer_list ='';
 var agent_list ='';
 $(document).ready(function () {
 
-    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length)
+    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length)
     {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
         
@@ -23,6 +23,22 @@ $(document).ready(function () {
                     var data = jsonResult.responseText;
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-customers-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+                else if(this.context[0].sTableId == 'tbl-lenders-listing')
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"?admin/home/get_lender_list",
+                        data: {
+                            keyword: $('#tbl-lenders-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-lenders-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
                 else
                 {
@@ -153,6 +169,42 @@ $(document).ready(function () {
                 });*/
             }
         }); 
+    }
+
+    if(jQuery('#importLenderFrm').length)
+    {
+       jQuery('#importLenderFrm').validate({ 
+            rules: {
+                file:"required",
+                lenderType:"required",
+            },
+            messages: {
+                file:"Please upload file to import",
+                lenderType:"Please select lender type",
+            },
+            submitHandler: function(form) {
+                form.submit();
+                /*$(form).ajaxSubmit({      
+                    error:function(){
+                        // $('.form-footer').removeClass('progress');
+                    },
+                    success:function(data){
+                        var res = jQuery.parseJSON(data);
+                        if(res.status == 'success')
+                        { 
+                            var content = '<div class="alert alert-success">'+res.msg+'</div>';
+                        }
+                        else
+                        {
+                            var content = '<div class="alert alert-danger">'+res.msg+'</div>';
+                        }
+                        $("#importFrm").trigger("reset");
+                        $('#import-result').html(content);
+                        $('#import-result').delay(5000).fadeOut();
+                    }
+                });*/
+            }
+        }); 
     }    
 
     if ($('#tbl-agents-listing').length) 
@@ -259,6 +311,81 @@ $(document).ready(function () {
                 form.submit();
             }
         }); 
+    }
+
+    /* Lender listing table */
+    if ($('#tbl-lenders-listing').length) 
+    {
+        customer_list = $('#tbl-lenders-listing').DataTable({
+           /*"pageLength": 2,*/
+           "paging": true,
+            "lengthChange": false,
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                // searchPlaceholder: "Customer Number",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-csv').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if(export_type)
+                    {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Lenders',
+                    exportOptions: {
+                        columns: [0,1, 2, 3, 4, 5, 6, 7,8],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                // Strip $ from salary column to make it numeric
+                                return (column === 0 || column === 1|| column === 2 || column === 3 || column === 4|| column === 5|| column === 6) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"?admin/home/get_lender_list", // json datasource
+                type: "post", // method  , by default get
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-lenders-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-lenders-listing_processing").css("display", "none");
+
+                }
+            }            
+        });
     }
     
 });
