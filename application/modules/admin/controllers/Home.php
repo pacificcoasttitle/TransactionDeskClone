@@ -116,6 +116,7 @@ class Home extends MX_Controller {
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 1;
 
             $pageno = ($params['start'] / $params['length'])+1;
 
@@ -136,7 +137,7 @@ class Home extends MX_Controller {
 	    	foreach ($customer_lists['data'] as $key => $value) 
 	    	{
 	    		$nestedData=array();
-	            $nestedData[] = $value['customer_number'];
+	            /*$nestedData[] = $value['customer_number'];*/
 	            $nestedData[] = $value['first_name'];
 	            $nestedData[] = $value['last_name'];
 	            $nestedData[] = $value['email_address'];
@@ -190,58 +191,66 @@ class Home extends MX_Controller {
                     
                     // Parse data from CSV file
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
-                    
+
+                    $password = md5('Pacific2');
                     // Insert/update CSV data into database
-                    if(!empty($csvData)){
-                        foreach($csvData as $row){ 
+                    if(!empty($csvData)){                        
 
-                        	$rowCount++;
+                        
+                        foreach($csvData as $row)
+                        { 
+                            $rowCount++;
+                            if(isset($row['Email Address']) && !empty($row['Email Address']))
+                            {
+                                // Check whether email already exists in the database
+                                /*$random_number = $this->home_model->get_customer_number();
+                                $customer_number = isset($random_number['random_num']) && !empty($random_number['random_num']) ? $random_number['random_num'] : '';*/
+
+                                // Prepare data for DB insertion
+                                $customerData = array(
+                                    /*'customer_number' => $customer_number,*/
+                                    'first_name' => ucfirst(strtolower($row['First Name'])),
+                                    'last_name' => ucfirst(strtolower($row['Last Name'])),
+                                    'email_address' => strtolower(str_replace(' ','',$row['Email Address'])),
+                                    'telephone_no' => $row['Telephone'],
+                                    'company_name' => $row['Company Name'],
+                                    'street_address' => $row['Street Address'],
+                                    'city' => $row['City'],
+                                    'zip_code' => $row['Zipcode'],
+                                    'password' => $password,
+                                    'status'=> 1,
+                                    'is_escrow' => 1
+                                );
+
+                                $con = array(
+                                    'where' => array(
+                                        'first_name' => $row['First Name'],
+                                        'email_address' => strtolower(str_replace(' ','',$row['Email Address'])),
+                                        'is_escrow' => 1
+                                    ),
+                                    'returnType' => 'count'
+                                );
+                                $prevCount = $this->home_model->get_rows($con);
+                              
+                                if($prevCount > 0){
+                                    // Update member data
+                                    // unset($customerData['customer_number']);
+                                    $condition = array('first_name' => $row['First Name'], 'email_address' => strtolower(str_replace(' ','',$row['Email Address'])));
+                                    $update = $this->home_model->update($customerData, $condition);
+                                    
+                                    if($update){
+                                        $updateCount++;
+                                    }
+                                }else{
+                                    // Insert member data
+                                    $insert = $this->home_model->insert($customerData);
+                                    
+                                    if($insert){
+                                        $insertCount++;
+                                    }
+                                }
+                            }   
                             
-                            // Check whether email already exists in the database
-                            $random_number = $this->home_model->get_customer_number();
-                            $customer_number = isset($random_number['random_num']) && !empty($random_number['random_num']) ? $random_number['random_num'] : '';
-
-                            // Prepare data for DB insertion
-                            $customerData = array(
-                                'customer_number' => $customer_number,
-                                'first_name' => ucfirst(strtolower($row['First Name'])),
-                                'last_name' => ucfirst(strtolower($row['Last Name'])),
-                                'email_address' => $row['Email Address'],
-                                'telephone_no' => $row['Telephone'],
-                                'company_name' => $row['Company Name'],
-                                'street_address' => $row['Street Address'],
-                                'city' => $row['City'],
-                                'zip_code' => $row['Zipcode'],
-                                'status'=> 1,
-                                'is_escrow' => 1
-                            );
-
-                            $con = array(
-                                'where' => array(
-                                    'first_name' => $row['First Name'],
-                                    'email_address' => $row['Email Address'],
-                                ),
-                                'returnType' => 'count'
-                            );
-                            $prevCount = $this->home_model->get_rows($con);
-                          
-                            if($prevCount > 0){
-                                // Update member data
-                                unset($customerData['customer_number']);
-                                $condition = array('first_name' => $row['First Name'], 'email_address' => $row['Email Address']);
-                                $update = $this->home_model->update($customerData, $condition);
-                                
-                                if($update){
-                                    $updateCount++;
-                                }
-                            }else{
-                                // Insert member data
-                                $insert = $this->home_model->insert($customerData);
-                                
-                                if($insert){
-                                    $insertCount++;
-                                }
-                            }
                         }
                         
                         // Status message with imported data count
@@ -334,5 +343,204 @@ class Home extends MX_Controller {
         $this->session->unset_userdata('email_address');
         session_destroy();
         redirect(base_url().'?admin');
+    }
+
+    public function import_lenders()
+    {    
+        $this->is_admin();  
+        $data = array();
+        $data['title'] = 'PCT Order: Import';
+        if($this->input->post())
+        {
+            $lenderType = $this->input->post('lenderType');
+
+            ini_set('max_execution_time', 0); 
+            ini_set('memory_limit','2048M');
+            // Form field validation rules
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+            
+            // Validate submitted form data
+            if($this->form_validation->run($this) == true)
+            {
+                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
+
+                
+                // If file uploaded
+                if(is_uploaded_file($_FILES['file']['tmp_name']))
+                {
+                    
+                    // Load CSV reader library
+                    $this->load->library('CSVReader');
+                    
+                    // Parse data from CSV file
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+                    $password = md5('Pacific2');
+
+                    // Insert/update CSV data into database
+                    if(!empty($csvData))
+                    {
+                        foreach($csvData as $row)
+                        {
+                            $rowCount++;
+                            if(isset($row['Email Address']) && !empty($row['Email Address']))
+                            {
+                                // Check whether email already exists in the database
+                                /*$random_number = $this->home_model->get_customer_number();
+                                $customer_number = isset($random_number['random_num']) && !empty($random_number['random_num']) ? $random_number['random_num'] : '';*/
+
+                                $street_address = '';
+                                if(isset($row['Address Line 1']) && !empty($row['Address Line 1']))
+                                {
+                                    $street_address .= $row['Address Line 1'];
+                                }
+                                if(isset($row['Address Line 2']) && !empty($row['Address Line 2']))
+                                {
+                                    $street_address .= $row['Address Line 2'];
+                                }
+                                
+                                // Prepare data for DB insertion
+                                $customerData = array(
+                                    'first_name' => ucfirst(strtolower($row['First Name'])),
+                                    'last_name' => ucfirst(strtolower($row['Last Name'])),
+                                    'email_address' => strtolower(str_replace(' ','',$row['Email Address'])),
+                                    'telephone_no' => $row['Telephone'],
+                                    'company_name' => $row['Company Name'],
+                                    'street_address' => $street_address,
+                                    'city' => $row['City'],
+                                    'zip_code' => $row['Zipcode'],
+                                    'password' => $password,
+                                    'status'=> 1,
+                                    'is_escrow' => 0,
+                                    'lender_type' => $lenderType
+                                );
+
+                                $con = array(
+                                    'where' => array(
+                                        'first_name' => $row['First Name'],
+                                        'email_address' => strtolower(str_replace(' ','',$row['Email Address'])),
+                                        'is_escrow' => 0
+                                    ),
+                                    'returnType' => 'count'
+                                );
+                                $prevCount = $this->home_model->get_rows($con);
+                              
+                                if($prevCount > 0)
+                                {
+                                    // Update member data
+                                    $condition = array('first_name' => $row['First Name'], 'email_address' => strtolower(str_replace(' ','',$row['Email Address'])));
+                                    $update = $this->home_model->update($customerData, $condition);
+                                    
+                                    if($update){
+                                        $updateCount++;
+                                    }
+                                }
+                                else
+                                {
+                                    // Insert member data
+                                    $insert = $this->home_model->insert($customerData);
+                                    
+                                    if($insert){
+                                        $insertCount++;
+                                    }
+                                }  
+                            }                            
+                        }
+                        
+                        // Status message with imported data count
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'Customers imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                        // $this->session->set_userdata('success_msg', $successMsg);
+                        $data['success_msg'] = $successMsg;
+                    }
+                }
+                else
+                {
+                   // $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
+                    $data['error_msg'] = 'Error on file upload, please try again.';
+                }
+            }
+            else
+            {
+                
+                // $this->session->set_userdata('error_msg', 'Invalid file, please select only CSV file.');
+                $data['error_msg'] = 'Invalid file, please select only CSV file.';
+            }
+        }
+        $this->load->view('layout/header', $data);
+        $this->load->view('home/import_lender', $data);
+        $this->load->view('layout/footer', $data);
+    }
+
+    public function lenders()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Lenders';
+        $this->load->view('layout/header', $data);
+        $this->load->view('home/lenders', $data);
+        $this->load->view('layout/footer', $data);
+    }
+
+    public function get_lender_list()
+    {
+        $params = array();
+
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+
+            $pageno = ($params['start'] / $params['length'])+1;
+
+            $lender_lists = $this->home_model->get_customers($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $lender_lists = $this->home_model->get_customers($params);            
+        }
+        $data = array(); 
+        
+        if(isset($lender_lists['data']) && !empty($lender_lists['data']))
+        {
+            foreach ($lender_lists['data'] as $key => $value) 
+            {
+                $nestedData=array();
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['telephone_no'];
+                $nestedData[] = $value['company_name'];
+                $nestedData[] = $value['street_address'];
+                $nestedData[] = $value['city'];
+                $nestedData[] = $value['zip_code'];
+                $nestedData[] = $value['lender_type'];
+                         
+                
+                if(isset($_POST['draw']) && !empty($_POST['draw']))
+                {
+                    /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";*/
+
+                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $nestedData[] = $action;
+                }
+                
+                $data[] = $nestedData;            
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal'] = intval( $lender_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $lender_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
     }
 }

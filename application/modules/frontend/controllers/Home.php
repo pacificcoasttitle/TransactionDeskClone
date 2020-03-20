@@ -31,7 +31,7 @@ class Home extends MX_Controller {
 
     		if($this->form_validation->run($this) == true)
     		{
-    			$CustomerNumber = $this->input->post('CustomerNumber');
+    			// $CustomerNumber = $this->input->post('CustomerNumber');
 	        	$OpenName      = $this->input->post('OpenName');
 	        	$OpenLastName      = $this->input->post('OpenLastName');
 	        	$Opentelephone      = $this->input->post('Opentelephone');

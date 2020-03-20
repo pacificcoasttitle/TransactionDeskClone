@@ -26,13 +26,17 @@ class Home_model extends CI_Model
 
     public function get_customers($params)
     {
+        $is_escrow = isset($params['is_escrow']) && !empty($params['is_escrow']) ? $params['is_escrow'] : 0;
+
+        $this->db->where('is_escrow', $is_escrow);
     	$this->db->where('status', 1);
     	$this->db->from('customer_basic_details');
 		$total_records =  $this->db->count_all_results();
 
 
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-    	$offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+    	
         
         $customer_lists =array();
     	if(isset($params['searchvalue']) && !empty($params['searchvalue']))
@@ -41,26 +45,28 @@ class Home_model extends CI_Model
 
     		if(isset($keyword) && !empty($keyword))
 			{
-				$this->db->like('customer_number', $keyword);
+				$this->db->like('first_name', $keyword);
 			}
 
-			$this->db->where('status', 1);
+            $this->db->where('status', 1);
+			$this->db->where('is_escrow', $is_escrow);
 	    	$this->db->from('customer_basic_details');
 			$filter_total_records =  $this->db->count_all_results();
 
 
 			if(isset($keyword) && !empty($keyword))
 			{
-				$this->db->like('customer_number', $keyword);
+				$this->db->like('first_name', $keyword);
 			}
 
 			$this->db->where('status', 1);
+            $this->db->where('is_escrow', $is_escrow);
+
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
             }			
 			$query = $this->db->get('customer_basic_details');
-			
 
 			if ($query->num_rows() > 0) 
 	        {
@@ -71,16 +77,19 @@ class Home_model extends CI_Model
     	{    		
 
     		$this->db->where('status', 1);
+            $this->db->where('is_escrow', $is_escrow);
 	    	$this->db->from('customer_basic_details');
-			$filter_total_records =  $this->db->count_all_results();
 
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->where('is_escrow', $is_escrow);
 			$this->db->where('status', 1);
 			if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
             }
 			$query = $this->db->get('customer_basic_details');
-			/*$filter_total_records = $query->num_rows();*/
+			
 			if ($query->num_rows() > 0) 
 	        {
 	            $customer_lists = $query->result_array();

@@ -28,23 +28,6 @@
                                     <form method="POST" id="smart-form" enctype="multipart/form-data">
                                         <div class="form-body">
                                             <div class="spacer-b30 spacer-t30">
-                                                <div class="tagline"><span>Customer Number</span></div>
-                                            </div>   <!-- .tagline -->
-
-                                            <div class="frm-row">
-                                                <div class="section colm colm9">
-                                                    <label class="field" style="padding-right:8px;">
-                                                    <input type="text" value="<?php echo $customer_data['customer_number'];?>" class="gui-input" name="CustomerNumber" id="CustomerNumber" placeholder="Customer Number">
-                                                    </label>
-                                                    <em id="CustomerNumber-error" class="state-error" style="display: none;"></em>                     
-                                                </div>
-                                                <!-- <div class="section colm colm3">
-                                                    <a href="javascript:void(0);" id="getCustomerInfo" class="clone button btn-primary"><i class="fa fa-check"></i></a>
-                                                    <a href="javascript:void(0);" id="findCustomerNumber" class="delete button"><i class="fa fa-question"></i></a>
-                                                </div> -->
-                                            </div><!-- end frm-row section -->
-
-                                            <div class="spacer-b30 spacer-t30">
                                                 <div class="tagline"><span>Your Details (Will Be AutoFilled) </span></div><!-- .tagline -->
                                             </div>                 
 

@@ -58,7 +58,7 @@ class CSVReader {
         while(($row = fgetcsv($csvFile, $this->max_row_size, $this->separator, $this->enclosure)) !== FALSE){
             // Skip empty lines
             if($row != NULL){
-                $values = explode(',', $row[0]);
+                $values = str_getcsv($row[0], ',');
                 if(count($keys) == count($values)){
                     $arr        = array();
                     $new_values = array();
