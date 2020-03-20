@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!--[if IE 8 ]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9 ]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Rate Calculator Report | Pacific Coast Title Company</title>
+    <meta name="Description" content="Pacific Coast Title Company Specializes in Residential & Commercial Title Insurance. We take pride in the success of our clients.">
+    <!-- ////////////////////////////////// -->
+    <!-- //     Retina Bookmark Icon     // -->
+    <!-- ////////////////////////////////// -->
+    <link rel="apple-touch-icon-precomposed" href="apple-icon.png" />
+    <!-- ////////////////////////////////// -->
+    <!-- //     Retina Bookmark Icon     // -->
+    <!-- ////////////////////////////////// -->
+    <link rel="apple-touch-icon-precomposed" href="apple-icon.png" />
+    <!-- ////////////////////////////////// -->
+    <!-- //      Stylesheets Files       // -->
+    <!-- ////////////////////////////////// -->
+    <link rel="stylesheet" href="files/css/style.css" />
+    <link rel="stylesheet" href="files/css/media.css" />
+    <link rel="stylesheet" href="files/css/noscript.css" media="screen,all" id="noscript" />
+    <!-- ////////////////////////////////// -->
+    <!-- //     Google Webfont Files     // -->
+    <!-- ////////////////////////////////// -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,300,700,500,900" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Pacifico" />
+    <!-- ////////////////////////////////// -->
+    <!-- //        Favicon Files         // -->
+    <!-- ////////////////////////////////// -->
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <!-- ////////////////////////////////// -->
+    <!-- //      Javascript Files        // -->
+    <!-- ////////////////////////////////// -->
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
+    <script src="files/js/jquery.js"></script>
+    <script src="files/js/jquery.easing-1.3.min.js"></script>
+    <script src="files/js/modernizr.js"></script>
+    <script src="files/js/jquery.retina.js"></script>
+    <script src="files/js/jquery.validate.min.js"></script>
+    <!-- ////////////////////////////////// -->
+    <!-- //     Login Form    // -->
+    <!-- ////////////////////////////////// -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel='stylesheet' href='http://codepen.io/assets/libs/fullpage/jquery-ui.css'>
+    <link rel="stylesheet" href="files/lar/css/style.css" media="screen" type="text/css" />
+    <!-- IE Fix for HTML5 Tags -->
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="files/js/jquery-2.1.4.min.js">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <!-- forms hide/show script -->
+    <script>
+        $(document).ready(function(){
+
+            $("div.signin-form").hide();
+            $("div.forget-form").hide();
+
+            $("#open-signin-form").click(function(){
+                $("div.signin-form").show();
+                $("div.signup-form").hide();
+                $("div.forget-form").hide();
+            });
+            $("#open-signup-form").click(function(){
+                $("div.signup-form").show();
+                $("div.forget-form").hide();
+                $("div.signin-form").hide();
+            });
+
+            $("#open-signin").click(function(){
+                $("div.signin-form").show();
+                $("div.signup-form").hide();
+                $("div.forget-form").hide();
+            });
+            $("#open-signup").click(function(){
+                $("div.signup-form").show();
+                $("div.forget-form").hide();
+                $("div.signin-form").hide();
+            });
+            $("#forget-pass").click(function(){
+                $("div.forget-form").show();
+                $("div.signin-form").hide();
+                $("div.signup-form").hide();
+            });
+            
+        });
+    </script>
+</head>
+
+<body>
+    <!-- header start here -->
+    <header>
+        <!-- top info start here -->
+        <div id="top-info">
+            <div class="row">
+                <div class="twelve column">
+                    <!-- logo start here -->
+                    <div id="logo">
+                        <a href=""><img src="files/images/logo.png" alt="main-logo" class="retina" /></a>
+                    </div>
+                    <!-- logo end here -->
+                    <div id="top-socials">
+                        <ul>
+                            <li class="facebook-color"><a target="_blank" href="https://www.facebook.com/PacificCoastTitleCompany"><i class="social-facebook"></i></a></li>
+                            <li class="twitter-color"><a target="_blank" href="https://twitter.com/mypct"><i class="social-twitter"></i></a></li>
+                            <li class="googleplus-color"><a target="_blank" href="https://www.google.com/+Pacificcoasttitle"><i class="social-googleplus"></i></a></li>
+                            <li class="linkedin-color"><a target="_blank" href="https://www.linkedin.com/company/pacific-coast-title-company"><i class="social-linkedin"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- header end here -->
+    <!-- bottom content start here -->
+    <section id="bottom-content">
+        <div class="row">
+            <div class="seven column  first">
+               <img src="files/images/sample_images/img-sample6.png">
+            </div>
+             <div class="five column">
+                <div class="row signup-form">
+                    <h2 class="column bold-title"><b>Sign Up</b></h2>
+                    <div class="column twelve">
+                        <input type="email" placeholder="Email Id" class="">
+                    </div>
+                    <div class="column six">
+                        <input type="text" placeholder="First Name" class="">
+                    </div>
+                    <div class="column six">
+                        <input type="text" placeholder="Last Name" class="">
+                    </div>
+                    <div class="column six">
+                        <input type="password" placeholder="Password" class="">
+                    </div>
+                    <div class="column six">
+                        <input type="password" placeholder="Confirm Password" class="">
+                    </div>
+                    <div class="column">
+                        <a class="button orange small submit">Sign Up</a>
+                        <a class="button grey small reset" value="Reset Form">Reset</a>&nbsp;|&nbsp;
+                        <a class="blue" id="open-signin-form">Already Registered</a>
+                    </div>
+                </div>
+                <div class="row signin-form">
+                    <h2 class="column bold-title"><b>Sign In</b></h2>
+                    <div class="column twelve">
+                        <input type="email" placeholder="Email Id" class="">
+                    </div>
+                    <div class="column twelve">
+                        <input type="password" placeholder="Password" class="">
+                    </div>
+                    <div class="column twelve">
+                        <a class="button orange small submit" style="margin-bottom:initial">Sign In</a>
+                        <a class="button grey small reset" style="margin-bottom:initial">Reset</a>&nbsp;|&nbsp;
+                        <a id="forget-pass">Forget Password</a>
+                        <hr style="border-color:#a1a1a1;">
+                        <a id="open-signup-form">Sign Up Here</a>
+                        <!-- <hr style="border-color:#a1a1a1;">
+                        <a class="button blue small reset">SignUp</a> -->
+                    </div>
+                </div>
+                <div class="row forget-form">
+                    <h2 class="column bold-title"><b>Reset Password</b></h2>
+                    <div class="column seven">
+                        <input type="email" placeholder="Email Id" class="">
+                    </div>
+                    <div class="column five">
+                        <a type="button" placeholder="send reset" class="button orange small">Get Reset Code</a>
+                    </div>
+                    <div class="column twelve">
+                        <input type="text" placeholder="Reset Code" class="">
+                    </div>
+                    <div class="column six">
+                        <input type="password" placeholder="Password" class="">
+                    </div>
+                    <div class="column six">
+                        <input type="password" placeholder="Confirm Password" class="">
+                    </div>
+                    <div class="column twelve">
+                        <a class="button orange small submit">Submit</a>
+                        <a class="button grey small reset">Reset</a>&nbsp;|&nbsp;
+                        <a id="open-signin">Back To Sign In</a>&nbsp;|&nbsp;
+                        <a id="open-signup">Back To Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- bottom content end here -->
+    <!-- footer start here -->
+    <footer>
+        <div class="row">
+            <div class="nine column">
+                <h6>Corporate Contacts</h6>
+                <ul class="footer-address no-bullet">
+                    <li class="address">1111 E. Katella Ave Ste.120 Orange, CA, 92867</li>
+                    <li class="phone">(714) 516 6700</li>
+                    <li class="email"><a href="mailto:info@pct.com">info@pct.com</a></li>
+                </ul>
+                <ul class="footer-link no-bullet">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Legal Notice</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">&copy; All Rights Reserved</a></li>
+                </ul>
+            </div>
+            <div class="three column">
+                <img src="files/images/logo.png" alt="" class="footer-logo retina" />
+                <p style="margin-bottom:0px;">We specialize Residential & Commercial Title Insurance and we work hard behind the scenes to make sure your experience with us is a satisfying one.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- footer end here
+<script>$('#noscript').remove();</script> -->
+</body>
+
+</html>

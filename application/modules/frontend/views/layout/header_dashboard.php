@@ -33,7 +33,7 @@
                     <li><a href="training-center.html">Training center</a></li>
                 </ul>				
             </li>
-            <li><a href="<?php echo base_url().'?logout'; ?>">Logout</a></li>      
+            <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>      
         </ul>
     </div>
     <header class="header header-topbar-hidden header-boxed-width navbar-fixed-top header-background-trans header-color-white header-logo-white header-navibox-1-left header-navibox-2-right header-navibox-3-right header-navibox-4-right">
@@ -84,7 +84,7 @@
                                 </ul>
                                 
                             </li>
-                            <li><a href="<?php echo base_url().'?logout'; ?>">Logout</a></li>    
+                            <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>    
         </ul>
                     </div>
                 

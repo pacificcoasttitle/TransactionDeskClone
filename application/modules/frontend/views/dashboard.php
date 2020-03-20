@@ -14,7 +14,7 @@
 							</div>
 							<div class="typography-sectiona">
 								<div class="col-md-12">
-                                    <a href="<?php echo base_url().'?home'; ?>"><button class="btn btn-type-1a btn-lg" type="button">Open Order</button></a>
+                                    <a href="<?php echo base_url().'order'; ?>"><button class="btn btn-type-1a btn-lg" type="button">Open Order</button></a>
 									<button class="btn btn-type-1b btn-lg" type="button">View CPL's</button>
 							        <button class="btn btn-type-1c btn-lg" type="button">Review Prelim</button>
 									<button class="btn btn-type-1d btn-lg" type="button">Attach Doc</button>

@@ -5,7 +5,7 @@
             <i class="fas fa-table"></i>
             Customers
             <div class="float-right">
-                <a href="<?php echo base_url()?>?admin/import" class="btn btn-secondary"> Import </a>
+                <a href="<?php echo base_url()?>admin/import" class="btn btn-secondary"> Import </a>
                 <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-secondary"> Export </a>
             </div>
         </div>

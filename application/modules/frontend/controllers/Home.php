@@ -12,7 +12,7 @@ class Home extends MX_Controller {
 		$this->load->library('form_validation');
 		if ($this->session->userdata('id')) {
 			if($this->session->userdata('is_admin') == 1) {
-				redirect(base_url().'?admin/dashboard');
+				redirect(base_url().'admin/dashboard');
 			}
 		} 
     }
@@ -520,7 +520,7 @@ class Home extends MX_Controller {
     	{
 			$data['title'] = 'Open Order | Pacific Coast Title Company';
 			$data['customer_data'] =  $this->home_model->get_user(array('id' => $this->session->userdata('id')));
-	        $this->load->view('layout/header',$data);
+	        $this->load->view('layout/head',$data);
 	       	$this->load->view('home');
     	}
     	
