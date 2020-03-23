@@ -5,7 +5,7 @@
             <i class="fas fa-table"></i>
             Lenders
             <div class="float-right">
-                <a href="<?php echo base_url()?>?admin/import-lenders" class="btn btn-secondary"> Import </a>
+                <a href="<?php echo base_url()?>admin/import-lenders" class="btn btn-secondary"> Import </a>
                 <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-secondary"> Export </a>
             </div>
         </div>
@@ -18,7 +18,7 @@
                 <table class="table table-bordered" id="tbl-lenders-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>First Name</th>
+                            <th>First Names</th>
                             <th>Last Name</th>
                             <th>Email Address</th>
                             <th>Telephone</th>

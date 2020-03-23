@@ -1,19 +1,22 @@
+<?php
+// echo "<pre>"; print_r($this->uri->segment(2)); exit;
+?>
 <ul class="sidebar navbar-nav">
 
-	<li class="nav-item <?php if($this->uri->uri_string() == 'dashboard') { echo 'active'; } ?>">
+	<li class="nav-item <?php if($this->uri->uri_string() == 'admin/dashboard' || $this->uri->uri_string() == 'admin/import') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'admin/dashboard'; ?>">
 			<i class="fas fa-fw fa-tachometer-alt"></i>
 			<span>Dashboard</span>
 		</a>
 	</li>
 	<li
-		class="nav-item <?php if($this->uri->uri_string() == 'agents' || $this->uri->uri_string() == 'import-agents' || $this->uri->segment(1) == 'edit-agent') { echo 'active'; } ?>">
+		class="nav-item <?php if($this->uri->uri_string() == 'admin/agents' || $this->uri->uri_string() == 'admin/import-agents' || $this->uri->segment(2) == 'edit-agent') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'admin/agents'; ?>">
 			<i class="fas fa-fw fa-users"></i>
 			<span>Agents</span></a>
 	</li>
 	<li
-		class="nav-item <?php if($this->uri->uri_string() == 'agents' || $this->uri->uri_string() == 'import-agents' || $this->uri->segment(1) == 'edit-agent') { echo 'active'; } ?>">
+		class="nav-item <?php if($this->uri->uri_string() == 'admin/lenders' || $this->uri->uri_string() == 'admin/import-lenders' || $this->uri->segment(2) == 'edit-lender') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'admin/lenders'; ?>">
 			<i class="fas fa-fw fa-users"></i>
 			<span>Lenders</span></a>
