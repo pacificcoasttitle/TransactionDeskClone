@@ -2547,7 +2547,7 @@ html, body{
 	padding:0;
 }
 
-#OpenEmail-error {
+#email_address-error {
 	display: block!important;
     margin-top: 6px;
     padding: 0 3px;

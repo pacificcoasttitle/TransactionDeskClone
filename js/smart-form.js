@@ -264,75 +264,7 @@
 						
 				});
 				
-				$( "#login-form" ).validate({
 				
-					/* @validation states + elements 
-					------------------------------------------- */
-					errorClass: "state-error",
-					validClass: "state-success",
-					errorElement: "em",
-					onkeyup: false,
-					onclick: false,						
-					
-					/* @validation rules 
-					------------------------------------------ */
-					rules: {
-						email_address: {
-								required: true,
-								email: true
-							},
-					},
-					
-					/* @validation error messages 
-					---------------------------------------------- */
-					messages:{
-							
-						email_address: {
-								required: 'Enter your email address',
-								email: 'Enter a VALID email address'
-							},
-					},
-
-					/* @validation highlighting + error placement  
-					---------------------------------------------------- */	
-					highlight: function(element, errorClass, validClass) {
-							$(element).closest('.field').addClass(errorClass).removeClass(validClass);
-					},
-					unhighlight: function(element, errorClass, validClass) {
-							$(element).closest('.field').removeClass(errorClass).addClass(validClass);
-					},
-					errorPlacement: function(error, element) {
-					   if (element.is(":radio") || element.is(":checkbox")) {
-								element.closest('.option-group').after(error);
-					   } else {
-								error.insertAfter(element.parent());
-					   }
-					},
-					
-					/* @ajax form submition 
-					---------------------------------------------------- */
-					submitHandler:function(form) {
-						$(form).ajaxSubmit({
-								target:'.result',			   
-								beforeSubmit:function(){
-									
-								},
-								uploadProgress: function(event, position, total, percentComplete) {
-									
-									
-								},								
-								error:function(){
-									
-								},
-								success:function(data){
-										
-									$("#email_address").val('').removeAttr('readonly').parent();
-																					
-								}
-						  });
-					}
-					
-			});	
 		
 	});				
     

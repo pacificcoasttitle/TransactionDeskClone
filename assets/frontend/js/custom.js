@@ -22,7 +22,7 @@ $(document).ready(function() {
         {
             $.ajax({
                // url: "php/search.php",
-               url: base_url+'index.php?/home/getCustomerDetails',
+               url: base_url+'home/getCustomerDetails',
                type: "POST",//type of posting the data
                data: {
                     customer_no: customer_no
@@ -96,7 +96,7 @@ $(document).ready(function() {
                 email: true,
                 remote: {
                     // url: 'php/checkemail.php',
-                    url: base_url+'index.php?/home/checkEmail',
+                    url: base_url+'home/checkEmail',
                     type: "POST",
                     data: {
                         title: function() {
@@ -160,7 +160,7 @@ $(document).ready(function() {
             });*/
 
             $.ajax({
-                url: base_url+'index.php?/home/getCustomerNumber',
+                url: base_url+'home/getCustomerNumber',
                 type: "POST",
                 data: {
                     email_address: $("#CustomerEmail").val(),
@@ -253,7 +253,7 @@ $(document).ready(function() {
     $("#BuyerAgentName").autocomplete({
         source: function(request, response) {
             $.ajax({
-                url: base_url+'index.php?/agent/getAgentDetails',
+                url: base_url+'agent/getAgentDetails',
                 // dataType: "json",
                 data: {
                     term : request.term,//the value of the input is here
@@ -290,7 +290,7 @@ $(document).ready(function() {
     $("#ListingAgentName").autocomplete({
         source: function(request, response) {
             $.ajax({
-                url: base_url+'index.php?/agent/getAgentDetails',
+                url: base_url+'agent/getAgentDetails',
                 data: {
                     term : request.term,//the value of the input is here
                     
@@ -328,7 +328,7 @@ $(document).ready(function() {
         // source: "php/usersearch.php",
         source: function(request, response) {
             $.ajax({
-                url: base_url+'index.php?/home/getDetailsByName',
+                url: base_url+'home/getDetailsByName',
                 data: {
                     term : request.term,//the value of the input is here
                     is_escrow : 0                    
@@ -362,7 +362,7 @@ $(document).ready(function() {
     $("#EscrowName").autocomplete({
         source: function(request, response) {
             $.ajax({
-                url: base_url+'index.php?/home/getDetailsByName',
+                url: base_url+'home/getDetailsByName',
                 data: {
                     term : request.term,//the value of the input is here
                     is_escrow : 1                    
@@ -500,7 +500,7 @@ function fetchReports(repNum)
 {
     reportNum = repNum;
     $.ajax({
-        url: base_url+'index.php?/home/getSearchResults?',
+        url: base_url+'home/getSearchResults?',
         data: {
             requrl: request + '&reportType=' + reportNum
         },
@@ -554,7 +554,7 @@ function compileXmlUrls(response, report) {
 
 function get187() {
     $.ajax({
-        url: base_url+'index.php?/home/getSearchResults?',
+        url: base_url+'home/getSearchResults?',
         data: {
             requrl: reportData.report187,
         },

@@ -14,7 +14,7 @@ class Login extends MX_Controller {
         $this->load->model('home_model'); 
         if ($this->session->userdata('id')) {
 			if($this->session->userdata('is_admin') == 1) {
-				redirect(base_url().'?admin/dashboard');
+				redirect(base_url().'admin/dashboard');
 			}
 		} 
     }
@@ -22,7 +22,7 @@ class Login extends MX_Controller {
     function index() 
     {
         if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 0) {
-            redirect(base_url().'?home');
+            redirect(base_url().'order');
         } else {
             $data = array();
             $this->load->view('login', $data);	
@@ -47,7 +47,7 @@ class Login extends MX_Controller {
                         "is_admin" => 0
                     );
                     $this->session->set_userdata($session_data);
-                    redirect(base_url().'?home');
+                    redirect(base_url().'dashboard');
                 } else {
                     $data['error'] =  'Please enter the correct email address';
                     $this->load->view('login', $data);

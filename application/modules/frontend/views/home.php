@@ -1,6 +1,8 @@
-<?php
-?>
-<div class="section-title-page7m area-bg area-bg_blue area-bg_op_60 parallax">
+<body>
+    <?php
+        $this->load->view('layout/header');
+    ?>
+    <div class="section-title-page7m area-bg area-bg_blue area-bg_op_60 parallax">
               <div class="area-bg__inner">
                 <div class="container">
                   <div class="row">
@@ -563,19 +565,114 @@
             </section>
           <!-- end .section-type-14-->
           <br><br>
-          <section class="section-type-1 section-sm parallax area-bg area-bg_grad-2 area-bg_op_80">
-            <div class="area-bg__inner">
-              <div class="container">
-                <div class="row">
-                  <div class="col-md-7">
-                    <h2 class="ui-title-block-3">Ready to work with us?</h2>
-                    <div class="ui-subtitle-block-2">we are ready to help.</div>
-                  </div>
-                  <div class="col-md-5"><a class="btn btn-default btn-round pull-right" href="https://clients.pacificcoasttitle.com/login.aspx?ReturnUrl=/&officeid=1">open orders</a><a class="btn btn-default btn-round pull-right" href="rate-book.html">get rates</a></div>
+          
+          <?php
+                $this->load->view('layout/footer_above_section');
+        ?>
+          <div class="modal fade" id="searchResultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Search Results</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-              </div>
+                <div class="modal-body search-result">
+                        <table class="table-search-results" width="100%">
+                            <thead>
+                                <tr>
+                                    <th width="21%">APN</th>
+                                    <th width="22%">Address</th>
+                                    <!-- <th width="21%">County</th> -->
+                                    <th width="21%">City</th>
+                                    <th width="15%">Run Listing</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="apn-search-loader hidden"></div>
+                </div>
+                </div>
             </div>
-          </section>
+            </div>
+            <!-- End Property search result Modal -->
+
+            <!-- Start Find Customer Number Modal -->
+            <div class="modal fade smart-forms" id="findCustomerModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Find Customer Number</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                    <div class="modal-body search-result">
+                        <form method="POST" action="" id="find-customer-form">
+                            <div class="form-body">
+                                <div class="frm-row">
+                                    <div class="section colm colm12">
+                                        <label class="field prepend-icon">
+                                            <input type="email" name="CustomerEmail" id="CustomerEmail" class="gui-input" placeholder="Email address">
+                                            <span class="field-icon"><i class="fa fa-envelope"></i></span>  
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        <div class="find-customer-result"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="button btn-primary">Submit</button>
+                        <button type="button" class="button btn-primary" data-dismiss="modal">Cancel</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+            <!-- End Find Customer Number Modal -->
+
+            <!-- Start Show Customer Number Modal -->
+            <div class="modal fade smart-forms" id="showCustomernumberModal" tabindex="-1" role="dialog" aria-labelledby="showCustomernumberModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Customer Number</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                    <div class="modal-body search-result">                    
+                            <div class="form-body">                            
+                                <div id="showCustomerNumber"></div>
+                            </div>                    
+                            <!-- <div class="find-customer-result"></div> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <!-- End Show Customer Number Modal -->
+</body>
+</html>
 <?php
     $this->load->view('layout/footer');
 ?>
+
+<link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
+<link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/jquery-ui.css">
+
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoMfJn9Q37LUYQucbUdgWF8JGWRuTZlt4&libraries=places&sensor=false"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.form.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/additional-methods.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script> 
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/custom.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>

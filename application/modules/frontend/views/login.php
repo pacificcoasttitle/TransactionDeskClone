@@ -42,12 +42,12 @@
                             <a href="login2.html" class="active">Log in</a>
                             <!-- <a href="register2.html">Register</a> -->
                         </div>
-                        <form method="POST" action="<?php echo base_url();?>?do_login" id="login-form" enctype="multipart/form-data">
+                        <form method="POST" action="<?php echo base_url();?>do_login" id="login-form" enctype="multipart/form-data">
                             <label class="field state-error" style="display:block;">
                                 <input class="form-control gui-input" type="email" name="email_address" id="email_address" placeholder="E-mail Address">
                             </label>
                             <?php if(isset($error)) { ?> 
-                                <em id="OpenEmail-error" class="state-error"><?php echo $error; ?></em>
+                                <em id="email_address-error" class="state-error"><?php echo $error; ?></em>
                             <?php } ?>
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Log in</button>

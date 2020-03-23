@@ -52,7 +52,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 $route['default_controller'] = 'frontend/login/index';
-$route['home'] = 'frontend/home/index';
+$route['order'] = 'frontend/home/index';
+$route['dashboard'] = 'frontend/home/dashboard';
 $route['login'] = 'frontend/login/index';
 $route['do_login'] = 'frontend/login/do_login';
 $route['logout'] = 'frontend/home/logout';
@@ -69,6 +70,42 @@ $route['getResultById'] = 'frontend/TitlePoint/getResultById';
 $route['imageCreateRequest'] = 'frontend/TitlePoint/imageCreateRequest';
 $route['getRequestStatus'] = 'frontend/TitlePoint/getRequestStatus';
 $route['generateImage'] = 'frontend/TitlePoint/generateImage';
+
+$route['index'] = 'frontend/index/index';
+
+$route['our-role'] = 'frontend/aboutus/role';
+$route['protecting-you'] = 'frontend/aboutus/protect';
+$route['why-pacific-coast-title'] = 'frontend/aboutus/pacific';
+$route['about-us'] = 'frontend/aboutus/about';
+$route['join-our-team'] = 'frontend/aboutus/joinOurTeam';
+
+$route['residential-title'] = 'frontend/residential/title';
+$route['escrow-settlement'] = 'frontend/residential/escrowSettlement';
+$route['what-is-title-insurance'] = 'frontend/residential/titleInsurance';
+$route['benefits-title-insurance'] = 'frontend/residential/benefitsTitleInsurance';
+$route['life-of-title-search'] = 'frontend/residential/lifeOfTitleSearch';
+$route['top-10-title-problems'] = 'frontend/residential/topTitleProblems';
+$route['what-is-escrow'] = 'frontend/residential/whatIsEscrow';
+$route['life-of-escrow'] = 'frontend/residential/lifeOfEscrow';
+$route['escrow-terms'] = 'frontend/residential/escrowTerms';
+
+$route['commercial-services'] = 'frontend/commercial/commercialServices';
+$route['commercial-resources'] = 'frontend/commercial/commercialResources';
+$route['commercial-expertise'] = 'frontend/commercial/commercialExpertise';
+
+$route['blank-forms'] = 'frontend/agentResources/blankForms';
+$route['educational-booklets'] = 'frontend/agentResources/educationalBooklets';
+$route['flyer-center'] = 'frontend/agentResources/flyerCenter';
+$route['recording-fees'] = 'frontend/agentResources/recordingFees';
+$route['rate-book'] = 'frontend/agentResources/rateBook';
+$route['training-center'] = 'frontend/agentResources/trainingCenter';
+
+$route['downey'] = 'frontend/contact/downey';
+$route['orange'] = 'frontend/contact/orange';
+$route['oxnard'] = 'frontend/contact/oxnard';
+$route['sandiego'] = 'frontend/contact/sandiego';
+$route['glendale'] = 'frontend/contact/glendale';
+
 
 $route['admin'] = 'admin/home/login';
 $route['admin/dashboard'] = 'admin/home/dashboard';
