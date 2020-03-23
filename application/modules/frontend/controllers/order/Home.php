@@ -8,11 +8,11 @@ class Home extends MX_Controller {
         parent::__construct();
         $this->load->helper(array('file', 'url'));
         $this->load->library('session');
-		$this->load->model('home_model');
+		$this->load->model('order/home_model');
 		$this->load->library('form_validation');
 		if ($this->session->userdata('id')) {
 			if($this->session->userdata('is_admin') == 1) {
-				redirect(base_url().'admin/dashboard');
+				redirect(base_url().'order/admin/dashboard');
 			}
 		} 
     }
@@ -537,7 +537,7 @@ class Home extends MX_Controller {
 			$data['title'] = 'Open Order | Pacific Coast Title Company';
 			$data['customer_data'] =  $this->home_model->get_user(array('id' => $this->session->userdata('id')));
 	        $this->load->view('layout/head',$data);
-	       	$this->load->view('home');
+	       	$this->load->view('order/home');
     	}
     	
         /* $this->load->view('layout/footer');*/
@@ -688,7 +688,8 @@ class Home extends MX_Controller {
     	$data['orderNumber'] = $this->session->userdata('orderNumber');
 
         $this->load->view('layout/head',$data);
-       	$this->load->view('order-submission',$data);
+       	$this->load->view('order/order-submission',$data);
+
 	}
 	
 	public function is_user()
@@ -696,7 +697,7 @@ class Home extends MX_Controller {
         if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 0) {
             
         } else {
-            redirect(base_url());
+            redirect(base_url().'order/login');
         }
 	}
 	
@@ -709,7 +710,7 @@ class Home extends MX_Controller {
 				}
 			}
 		$this->session->sess_destroy();
-		redirect(base_url());
+		redirect(base_url().'order');
 	}
 
 	function dashboard()
@@ -717,6 +718,6 @@ class Home extends MX_Controller {
 		$this->is_user();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('dashboard');
+		$this->load->view('order/dashboard');
 	}
 }

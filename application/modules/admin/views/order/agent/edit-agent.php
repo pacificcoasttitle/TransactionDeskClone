@@ -66,7 +66,7 @@
                 </div>
                 <div class="pull-right">
                     <button type="submit" class="btn btn-secondary">Update</button>
-                    <a href="<?php echo base_url().'admin/agents'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
+                    <a href="<?php echo base_url().'order/admin/agents'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
                 </div>           
             </form>
         </div>

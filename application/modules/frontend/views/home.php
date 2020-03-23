@@ -1,678 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><?php echo $title; ?></title>
+	<meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta content="We specialize in Residential, Commercial Title & Escrow Services" name="description">
+    <meta content="" name="keywords">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="telephone=no" name="format-detection">
+    <meta name="HandheldFriendly" content="true">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/frontend/css/custom.css">
+    <link rel="stylesheet" href="http://www.pct.com/assets/css/master.css">
+    <link rel="icon" href="<?php echo base_url(); ?>assets/frontend/images/favicon.ico" type="image/x-icon">
+</head>
 <body>
-    <?php
+	<?php
         $this->load->view('layout/header');
     ?>
-    <div class="section-title-page7m area-bg area-bg_blue area-bg_op_60 parallax">
-              <div class="area-bg__inner">
-                <div class="container">
-                  <div class="row">
+	<div class="main-slider slider-pro text-center" id="main-slider" data-slider-width="100%" data-slider-height="920px"
+		data-slider-arrows="false" data-slider-buttons="true">
+		<div class="sp-slides">
+			<!-- Slide 1-->
+			<div class="sp-slide"><img class="sp-image"
+					src="<?php echo base_url(); ?>assets/media/components/b-main-slider/springhome.jpg" alt="slider">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="main-slider__info sp-layer" data-width="100%" data-show-transition="left"
+								data-hide-transition="left" data-show-duration="2000" data-show-delay="1200"
+								data-hide-delay="400">Residential / Commercial</div>
+							<h2 class="main-slider__title sp-layer" data-width="100%" data-show-transition="left"
+								data-hide-transition="left" data-show-duration="800" data-show-delay="400"
+								data-hide-delay="400">Title Settlement Services</h2>
+							<div class="sp-layer" data-width="100%" data-show-transition="left"
+								data-hide-transition="left" data-show-duration="1200" data-show-delay="2000"
+								data-hide-delay="400">
+								<!--<a class="main-slider__btn btn btn-default btn-lg " href="<?php echo base_url(); ?>order">Open Order</a>--><a
+									class="main-slider__btn btn btn-default btn-lg "
+									href="<?php echo base_url(); ?>calculator/">Get Quote</a><a
+									class="main-slider__btn btn btn-default btn-lg "
+									href="https://www.pcttitletoolbox.com/#!/">Property Info</a>
+								<!--<a class="main-slider__btn btn btn-default btn-lg " href="<?php echo base_url(); ?>farm">Order Farm</a>-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Slide 2-->
+			<!--   <div class="sp-slide"><img class="sp-image" src="<?php echo base_url(); ?>assets/media/components/b-main-slider/bg-2.jpg" alt="slider">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <div class="main-slider__info sp-layer" data-width="100%" data-show-transition="left" data-hide-transition="left" data-show-duration="2000" data-show-delay="1200" data-hide-delay="400">Creative / Multipurpose / Colorful</div>
+                                <h2 class="main-slider__title sp-layer" data-width="100%" data-show-transition="left" data-hide-transition="left" data-show-duration="800" data-show-delay="400" data-hide-delay="400">your project hassle-free</h2>
+                                <div class="sp-layer" data-width="100%" data-show-transition="left" data-hide-transition="left" data-show-duration="1200" data-show-delay="2000" data-hide-delay="400"><a class="main-slider__btn btn btn-default btn-round" href="services.html">Open Order</a><a class="main-slider__btn main-slider__btn_white btn btn-default btn-round" href="services.html">Property Info</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+			<!-- Slide 3-->
+			<!--    <div class="sp-slide"><img class="sp-image" src="<?php echo base_url(); ?>assets/media/components/b-main-slider/bg-1.jpg" alt="slider">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <div class="main-slider__info sp-layer" data-width="100%" data-show-transition="left" data-hide-transition="left" data-show-duration="2000" data-show-delay="1200" data-hide-delay="400">Creative / Multipurpose / Colorful</div>
+                                <h2 class="main-slider__title sp-layer" data-width="100%" data-show-transition="left" data-hide-transition="left" data-show-duration="800" data-show-delay="400" data-hide-delay="400">your project hassle-free</h2>
+                                <div class="sp-layer" data-width="100%" data-show-transition="left" data-hide-transition="left" data-show-duration="1200" data-show-delay="2000" data-hide-delay="400"><a class="main-slider__btn btn btn-default btn-round" href="services.html">read more</a><a class="main-slider__btn main-slider__btn_white btn btn-default btn-round" href="services.html">what we offer</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 4-->
+			<!--    <div class="sp-slide"><img class="sp-image" src="<?php echo base_url(); ?>assets/media/components/b-main-slider/bg-2.jpg" alt="slider">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <div class="main-slider__info sp-layer" data-width="100%" data-show-transition="left" data-hide-transition="left" data-show-duration="2000" data-show-delay="1200" data-hide-delay="400">Creative / Multipurpose / Colorful</div>
+                                <h2 class="main-slider__title sp-layer" data-width="100%" data-show-transition="left" data-hide-transition="left" data-show-duration="800" data-show-delay="400" data-hide-delay="400">your project hassle-free</h2>
+                                <div class="sp-layer" data-width="100%" data-show-transition="left" data-hide-transition="left" data-show-duration="1200" data-show-delay="2000" data-hide-delay="400"><a class="main-slider__btn btn btn-default btn-round" href="services.html">read more</a><a class="main-slider__btn main-slider__btn_white btn btn-default btn-round" href="services.html">what we offer</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+		</div>
+	</div>
+	<!-- end .main-slider-->
+	<section class="section-default">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="text-center">
+						<div class="ui-subtitle-block">We would like to welcome you to Pacific Coast Title </div>
+						<h2 class="ui-title-block-2">What We Do</h2>
+						<div class="ui-decor-1 bg-primary" style="background:#d35410;"></div>
+
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<section class="b-advantages b-advantages-1  wow  fadeIn" data-wow-duration="1s"
+						data-wow-delay="0.15s"> <i class="b-advantages__icon stroke flaticon-printed-paper "></i>
+						<div class="b-advantages__inner">
+							<h3 class="b-advantages__title ui-title-inner"><a href="index.html">Residential Title</a>
+							</h3>
+							<div class="b-advantages__info">Our thorough title searches, title clearance, and title
+								policies help to produce a clear property title and enable an efficient closing of your
+								transactions.</div>
+						</div>
+					</section>
+					<!-- end .b-advantages-->
+				</div>
+				<div class="col-sm-3">
+					<section class="b-advantages b-advantages-1  wow  fadeIn" data-wow-duration="1s"
+						data-wow-delay="0.35s"> <i class="b-advantages__icon stroke flaticon-layers "></i>
+						<div class="b-advantages__inner">
+							<h3 class="b-advantages__title ui-title-inner"><a href="index.html">Commercial Title</a>
+							</h3>
+							<div class="b-advantages__info">Our team of top industry professionals have the expertise
+								and knowledge
+								needed to close your commercial real estate transactions.</div>
+						</div>
+					</section>
+					<!-- end .b-advantages-->
+				</div>
+				<div class="col-sm-3">
+					<section class="b-advantages b-advantages-1 wow  fadeIn" data-wow-duration="1s"
+						data-wow-delay="0.45s"><i class="b-advantages__icon stroke flaticon-presentation"></i>
+						<div class="b-advantages__inner">
+							<h3 class="b-advantages__title ui-title-inner"><a href="index.html">Escrow Settlement</a>
+							</h3>
+							<div class="b-advantages__info">Our escrow division is comprised of seasoned settlement
+								agents who can
+								facilitate the closing of the most demanding residential & commercial transactions</div>
+						</div>
+					</section>
+					<!-- end .b-advantages-->
+				</div>
+				<div class="col-sm-3">
+					<section class="b-advantages b-advantages-1 wow  fadeIn" data-wow-duration="1s"
+						data-wow-delay="0.65s"><i class="b-advantages__icon stroke flaticon-bar-chart"></i>
+						<div class="b-advantages__inner">
+							<h3 class="b-advantages__title ui-title-inner"><a href="index.html">Lender Solutions</a>
+							</h3>
+							<div class="b-advantages__info">Our title operations and technology infrastructure allow us
+								to partner with some of the nations largest lenders requiring title & escrow services
+							</div>
+						</div>
+					</section>
+					<!-- end .b-advantages-->
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end .section-default-->
+	<div class="block-table block-table_lg">
+		<div class="block-table__cell col-lg-6">
+			<div class="section-type-9 area-bg area-bg_op_25 area-bg_grad-5 block-table__inner">
+				<div class="area-bg__inner">
+					<!--   <div class="b-brands owl-carousel owl-theme enable-owl-carousel" data-min480="2" data-min768="3" data-min992="3" data-min1200="3" data-pagination="false" data-navigation="false" data-auto-play="40000" data-stop-on-hover="true">
+                            <a class="b-brands__item" href="index.html"><img class="img-responsive center-block" src="<?php echo base_url(); ?>assets/media/components/b-brands/res.png" alt="foto"></a>
+                            <a class="b-brands__item" href="index.html"><img class="img-responsive center-block" src="<?php echo base_url(); ?>assets/media/components/b-brands/com.png" alt="foto"></a>
+                            <a class="b-brands__item" href="index.html"><img class="img-responsive center-block" src="<?php echo base_url(); ?>assets/media/components/b-brands/hou.png" alt="foto"></a>
+                        </div> -->
+					<!-- end b-brands-->
+				</div>
+				<div class="helper-2"></div>
+			</div>
+		</div>
+		<div class="block-table__cell col-lg-6">
+			<div class="section-type-10 area-bg area-bg_blue area-bg_op_90 parallax">
+				<div class="area-bg__inner">
+					<ul class="b-tabs-nav nav nav-tabs">
+						<li class="active"><a href="#who" data-toggle="tab">about us</a></li>
+						<li><a href="#statement" data-toggle="tab">mission statement</a></li>
+						<li><a href="#awards" data-toggle="tab">our values</a></li>
+						<li><a href="#strategy" data-toggle="tab">the strategy</a></li>
+					</ul>
+					<div class="b-tabs-content tab-content">
+						<div class="tab-pane active" id="who">
+							<section class="section-area">
+								<h2 class="ui-title-block-3">who we are</h2>
+								<div class="ui-subtitle-block-2">solutions for everyone</div>
+								<div class="ui-decor-2 bg-white"></div>
+								<p>We specialize in Residential & Commercial Title Insurance and we work hard behind the
+									scenes to make sure your experience with us is a satisfying one. Your success is our
+									success.</p>
+							</section>
+						</div>
+						<div class="tab-pane" id="statement">
+							<section class="section-area">
+								<h2 class="ui-title-block-3">mission statement</h2>
+								<div class="ui-subtitle-block-2">solutions for everyone</div>
+								<div class="ui-decor-2 bg-white"></div>
+								<p>To empower our clients through superior customer service, industry innovation, and
+									our commitment to delivering on our promises.<br><br></p>
+							</section>
+						</div>
+						<div class="tab-pane" id="awards">
+							<section class="section-area">
+								<h2 class="ui-title-block-3">our values</h2>
+								<div class="ui-subtitle-block-2">solutions for everyone</div>
+								<div class="ui-decor-2 bg-white"></div>
+								<p>it's our goal to establish a long-term relationship with all of our clients. By
+									working together, we can deliver our services faster which will help you close deals
+									quickly and more efficiently. </p>
+							</section>
+						</div>
+						<div class="tab-pane" id="strategy">
+							<section class="section-area">
+								<h2 class="ui-title-block-3">our strategy</h2>
+								<div class="ui-subtitle-block-2">solutions for everyone</div>
+								<div class="ui-decor-2 bg-white"></div>
+								<p>to provide cutting edge tools that agents can use in their business generation
+									efforts and combine them with the best customer service in the industry.<br><br></p>
+							</section>
+						</div>
+					</div>
+					<!-- end .b-tabs-->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end .block-table-->
+	<section class="section-default bg-grey">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="text-center">
+						<div class="ui-subtitle-block">want to know a little more about us</div>
+						<h2 class="ui-title-block-2"><span class="shuffle">Service, Tools, Commitment</span></h2>
+						<div class="ui-decor-1 bg-primary" style="background:#d35410;"></div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="b-advantages-group">
+						<section class="b-advantages b-advantages-2 b-advantages_3-col"><i
+								class="b-advantages__icon stroke flaticon-screen"></i>
+							<div class="b-advantages__inner effect-border">
+								<h3 class="b-advantages__title ui-title-inner">residential</h3>
+								<div class="b-advantages__info">Our experience in the Residential sector allows us to
+									provide Title Insurance policies promptly.</div>
+							</div>
+						</section>
+						<!-- end .b-advantages-->
+						<section class="b-advantages b-advantages-2  b-advantages_3-col"><i
+								class="b-advantages__icon stroke flaticon-layers"></i>
+							<div class="b-advantages__inner effect-border effect-active ">
+								<h3 class="b-advantages__title ui-title-inner">commercial</h3>
+								<div class="b-advantages__info">Our commercial sector is ready to meet all the demands
+									brought by these large transactions.</div>
+							</div>
+						</section>
+						<!-- end .b-advantages-->
+						<section class="b-advantages b-advantages-2 b-advantages_3-col"><i
+								class="b-advantages__icon stroke flaticon-presentation	"></i>
+							<div class="b-advantages__inner effect-border">
+								<h3 class="b-advantages__title ui-title-inner">escrow</h3>
+								<div class="b-advantages__info">Our escrow division is ready to help ensure all
+									conditions are met and all funds are dispersed.</div>
+							</div>
+						</section>
+						<!-- end .b-advantages-->
+						<section class="b-advantages b-advantages-2 b-advantages_3-col"><i
+								class="b-advantages__icon stroke flaticon-worldwide"></i>
+							<div class="b-advantages__inner effect-border">
+								<h3 class="b-advantages__title ui-title-inner">nationwide</h3>
+								<div class="b-advantages__info">Our nationwide network helps us provide our services on
+									residential & commercial transactions within the United States.
+
+								</div>
+							</div>
+						</section>
+						<!-- end .b-advantages-->
+						<section class="b-advantages b-advantages-2 b-advantages_3-col"><i
+								class="b-advantages__icon stroke flaticon-analytics"></i>
+							<div class="b-advantages__inner effect-border">
+								<h3 class="b-advantages__title ui-title-inner">technology</h3>
+								<div class="b-advantages__info">Our dedication to technology keeps us at the forefont of
+									innovation which helps us provide the serives you need.</div>
+							</div>
+						</section>
+						<!-- end .b-advantages-->
+						<section class="b-advantages b-advantages-2 b-advantages_3-col"><i
+								class="b-advantages__icon stroke flaticon-big-handbag"></i>
+							<div class="b-advantages__inner effect-border">
+								<h3 class="b-advantages__title ui-title-inner">people</h3>
+								<div class="b-advantages__info">Our team is what makes it all come together. The company
+									culture at Pacific Coast Title Company is unlike any other.</div>
+							</div>
+						</section>
+						<!-- end .b-advantages-->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end .section-default-->
+
+	<!-- end .section-area-->
+	<!-- <section class="section-default">
+            <div class="container">
+                <div class="row">
                     <div class="col-xs-12">
-                      <h1 class="b-title-page">Open Order Form</h1>
-                      <div class="b-title-page__info">Helping Get Your Transaction Started.</div>
-                      <!-- end breadcrumb-->
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- end .b-title-page-->
-            
-            <section class="section-type-4 section-default" style="padding-bottom:0px; padding-top:40px;">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <div class="smart-wrap">
-                                <div class="smart-forms smart-container wrap-2">
-                                    <div class="form-header header-primary">
-                                        <h4>Open Your Title Order</h4>
-                                    </div><!-- end .form-header section -->
-                                    <!-- Start Form -->
-                                    <form method="POST" id="smart-form" enctype="multipart/form-data">
-                                        <div class="form-body">
-                                            <div class="spacer-b30 spacer-t30">
-                                                <div class="tagline"><span>Your Details (Will Be AutoFilled) </span></div><!-- .tagline -->
-                                            </div>                 
-
-                                            <div class="frm-row">
-                                                <div class="section colm colm6">
-                                                    <label class="field prepend-icon">
-                                                        <input value="<?php echo $customer_data['first_name'];?>" type="text" name="OpenName" id="OpenName" class="gui-input" placeholder=" First Name">
-                                                        <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                        <input type="hidden" name="id" id="CustomerId" value="<?php echo $customer_data['id'];?>">
-                                                    </label>
-                                                </div><!-- end section --> 
-
-                                                <div class="section colm colm6">
-                                                    <label class="field prepend-icon">
-                                                        <input value="<?php echo $customer_data['last_name'];?>" type="text" name="OpenLastName" id="OpenLastName" class="gui-input" placeholder="Last Name">
-                                                        <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                                    </label>
-                                                </div><!-- end section -->
-                                            </div><!-- end frm-row section -->
-
-                                            <div class="frm-row">
-                                                <div class="section colm colm6">
-                                                    <label class="field prepend-icon">
-                                                        <input value="<?php echo $customer_data['telephone_no'];?>" type="tel" name="Opentelephone" id="Opentelephone" class="gui-input" placeholder="Telephone">
-                                                        <span class="field-icon"><i class="fa fa-phone-square"></i></span>  
-                                                    </label>
-                                                </div><!-- end section --> 
-                                                <div class="section colm colm6">
-                                                    <label class="field prepend-icon">
-                                                        <input value="<?php echo $customer_data['email_address'];?>" type="email" name="OpenEmail" id="OpenEmail" class="gui-input" placeholder="Email address">
-                                                        <span class="field-icon"><i class="fa fa-envelope"></i></span>  
-                                                    </label>
-                                                </div><!-- end section -->
-                                            </div><!-- end frm-row section -->
-
-                                            <div class="frm-row">                       
-                                                <div class="section colm colm6">
-                                                    <label class="field prepend-icon">
-                                                        <input value="<?php echo $customer_data['company_name'];?>" type="text" name="CompanyName" id="CompanyName" class="gui-input" placeholder="Company Name">
-                                                        <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                    </label>
-                                                </div><!-- end section --> 
-                                            
-                                                <div class="section colm colm6">
-                                                    <label class="field prepend-icon">
-                                                        <input value="<?php echo $customer_data['street_address'];?>" type="text" name="StreetAddress" id="StreetAddress" class="gui-input" placeholder="Street Address">
-                                                        <span class="field-icon"><i class="fa fa-envelope"></i></span>  
-                                                    </label>
-                                                </div><!-- end section -->         
-                                            </div><!-- end frm-row section -->
-
-                                            <div class="frm-row">                       
-                                                <div class="section colm colm6">
-                                                    <label class="field prepend-icon">
-                                                        <input value="<?php echo $customer_data['city'];?>" type="text" name="City" id="City" class="gui-input" placeholder="City">
-                                                        <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                    </label>
-                                                </div><!-- end section --> 
-                                                
-                                                <div class="section colm colm6">
-                                                    <label class="field prepend-icon">
-                                                        <input value="<?php echo $customer_data['zip_code'];?>" type="text" name="Zipcode" id="Zipcode" class="gui-input" placeholder="Zipcode">
-                                                        <span class="field-icon"><i class="fa fa-envelope"></i></span>  
-                                                    </label>
-                                                </div><!-- end section -->  
-                                            </div>
-
-                                            <div class="spacer-b30 spacer-t30">
-                                                <div class="tagline">
-                                                    <span>Find Your Property</span>
-                                                </div><!-- .tagline -->
-                                            </div>
-
-                                            <div class="frm-row">
-                                                <div class="section colm colm10">
-                                                    <label class="field prepend-icon">
-                                                        <input type="text" name="Property" id="property-search" class="gui-input" placeholder="Property Address"> 
-                                                        <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                        <input type="hidden" name="property-state" id="property-state" value="">
-                                                        <input type="hidden" name="property-city" id="property-city" value="">
-                                                        <input type="hidden" name="property-fips" id="property-fips" value="">
-                                                        <input type="hidden" name="property-full-address" id="property-full-address" value="">
-                                                    </label>
-                                                </div>                                        
-                                                <div class="section colm colm2">    
-                                                    <!-- <button type="" data-btntext-sending="Searching..." class="button btn-primary">Search</button> -->
-
-                                                    <a class="button btn-primary search-property search-property-button" href="javascript:void(0);" id="search-btn">Search</a>  
-                                                </div> 
-                                           </div>
-                                           <div class="pma-error alert alert-danger" style="display:none;"></div>
-                                            <div class="search-loader hidden"></div>
-
-                                           <div class="spacer-b30 spacer-t30">
-                                                <div class="tagline"><span> Property Details (Will Be AutoFilled) </span></div>
-                                            </div>
-
-                                            <div class="frm-row">
-                                                <div class="section colm colm12">
-                                                    <label class="field prepend-icon">
-                                                        <input type="text" name="FullProperty" id="FullProperty" class="gui-input" placeholder="Full Street Address">
-                                                        <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                    </label>
-                                                </div><!-- end section -->
-                                            </div>
-
-                                            <div class="frm-row">                       
-                                                <div class="section colm colm6">
-                                                    <label class="field prepend-icon">
-                                                        <input type="text" name="apn" id="apn" class="gui-input" placeholder="APN">
-                                                        <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                    </label>
-                                                </div><!-- end section --> 
-                                                
-                                                <div class="section colm colm6">
-                                                    <label class="field prepend-icon">
-                                                        <input type="text" name="County" id="County" class="gui-input" placeholder="County">
-                                                        <span class="field-icon"><i class="fa fa-envelope"></i></span>  
-                                                    </label>
-                                                </div><!-- end section --> 
-                                            </div>
-
-                                            <div class="frm-row">
-                                                <div class="section colm colm12">
-                                                    <label class="field prepend-icon">
-                                                        <input type="text" name="LegalDescription" id="LegalDescription" class="gui-input" placeholder="Brief Legal Desription">
-                                                        <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                    </label>
-                                                </div><!-- end section -->
-                                            </div>
-
-                                            <div class="spacer-b30 spacer-t30">
-                                                <div class="tagline"><span>Seller Details (Will Be AutoFilled)</span></div><!-- .tagline -->
-                                            </div>
-
-                                            <div class="frm-row">
-                                                <div class="section colm colm12">
-                                                    <label class="field prepend-icon">
-                                                        <input type="text" name="PrimaryOwner" id="PrimaryOwner" class="gui-input" placeholder="Primary Owner">
-                                                        <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                    </label>
-                                                </div><!-- end section -->
-
-                                                <div class="section colm colm12">
-                                                    <label class="field prepend-icon">
-                                                        <input type="text" name="SecondaryOwner" id="SecondaryOwner" class="gui-input" placeholder="Secondary Owner">
-                                                        <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                    </label>
-                                                </div><!-- end section --> 
-                                            </div>
-
-                                            <div class="spacer-b30 spacer-t30">
-                                                <div class="tagline"><span> Transaction Details </span></div><!-- .tagline -->
-                                            </div>
-
-                                            <div class="frm-row">
-                                                <div class="section colm colm6">
-                                                    <label class="field select">
-                                                        <select id="SalesRep" name="SalesRep">
-                                                            <option value="">Sales Rep...</option>
-                                                            <option value="Angeline Ahn">Angeline Ahn</option>
-                                                            <option value="Bethany Cummins">Bethany Cummins</option>
-                                                            <option value="Cibeli Tregembo">Cibeli Tregembo</option>
-                                                            <option value="David Gomez">David Gomez</option>
-                                                            <option value="Edgar Rivas">Edgar Rivas</option>
-                                                            <option value="Eddie Castro">Eddie Castro</option>
-                                                            <option value="Evelyn Lindgren">Evelyn Lindgren</option>
-                                                            <option value="Felicia Pantoja">Felicia Pantoja</option>
-                                                            <option value="Hai Tran">Hai Tran</option>
-                                                            <option value="Hugo Lopez">Hugo Lopez</option>
-                                                            <option value="Justin Nouri">Justin Nouri</option>
-                                                            <option value="Kim Buchok">Kim Buchok</option>
-                                                            <option value="Linda Ruiz">Linda Ruiz</option>
-                                                            <option value="Lisa Lee">Lisa Lee</option>
-                                                            <option value="Lou Morreale">Lou Morreale</option>
-                                                            <option value="Malay Wadhwa">Malay Wadhwa</option>
-                                                            <option value="Max Galindo">Max Galindo</option>
-                                                            <option value="Meza Group">Meza Group</option>
-                                                            <option value="Michael Nouri">Michael Nouri</option>
-                                                            <option value="Mike Johnson">Mike Johnson</option>
-                                                            <option value="Nelson Torres">Nelson Torres</option>
-                                                            <option value="Richard Bohn">Richard Bohn</option>
-                                                            <option value="Scott Smith">Scott Smith</option>
-                                                            <option value="Sonia Flores">Sonia Flores</option>
-                                                        </select>
-                                                        <i class="arrow double"></i>                    
-                                                    </label>  
-                                                </div><!-- end section -->
-
-                                                <div class="section colm colm6">
-                                                    <label class="field select">
-                                                        <select id="TitleOfficer" name="TitleOfficer">
-                                                            <option value="">Title Officer</option>
-                                                            <option value="Albert Wassif">Albert Wassif</option>
-                                                            <option value="Clive Virata">Clive Virata</option>
-                                                            <option value="Eddie LasMarias">Eddie LasMarias</option>
-                                                            <option value="Jim Jean">Jim Jean</option>
-                                                        </select>
-                                                        <i class="arrow double"></i>                    
-                                                    </label>  
-                                                </div><!-- end section -->       
-                                            </div><!-- end frm-row section -->
-                                            
-                                            <div class="frm-row">
-                                                <!-- <div class="section colm colm6">
-                                                    <label class="field select">
-                                                        <select id="TransactionTypeID" name="TransactionTypeID">
-                                                            <option value="">Select Transaction Type</option>
-                                                            <option value="3">Residential</option>
-                                                            <option value="2">Commercial</option>
-                                                        </select>
-                                                        <i class="arrow double"></i>
-                                                    </label>
-                                                </div> -->
-                                                <div class="section colm colm12">
-                                                    <label class="field select">
-                                                        <select id="ProductTypeID" name="ProductTypeID">
-                                                            <option value="">Select Product</option>
-                                                            <option value="33">Loan: Refinance</option>
-                                                	    <option value="32">Sales: Purchase</option>
-                                                        </select>
-                                                        <i class="arrow double"></i>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div class="frm-row" id="sales-loan-amount-fields" style="display: none;">
-                                                <div class="section colm colm12">
-                                                    <label class="field">
-                                                        <input type="text" class="gui-input" name="salesAmount" id="salesAmount" placeholder="Sales Amount">
-                                                    </label>
-                                                    <div class="spacer-b10"></div>
-                                                    <label class="field">
-                                                        <input type="text" class="gui-input" name="loanAmount" id="loanAmount" placeholder="Loan Amount">
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="spacer-t30">
-                                                <div class="tagline"><span> Special Instructions </span></div><!-- .tagline -->
-                                            </div>
-                                            <div class="frm-row">
-                                                <div class="section colm colm4">
-                                                    <div class="option-group field">
-                                                        <label class="option block spacer-t10">
-                                                            <input type="checkbox" name="CCR" value="CCR's">
-                                                            <span class="checkbox"></span> CCR's           
-                                                        </label>
-                                                    </div><!-- end .option-group section -->
-                                                </div><!-- end .colm section -->
-
-                                                <div class="section colm colm4">
-                                                    <div class="option-group field">
-                                                        <label class="option block spacer-t10">
-                                                            <input type="checkbox" name="Docs" value="Underlying Docs">
-                                                            <span class="checkbox"></span> Underlying Docs           
-                                                        </label>                                
-                                                    </div><!-- end .option-group section -->
-                                                </div><!-- end .colm section -->
-
-                                                <div class="section colm colm4">
-                                                    <div class="option-group field">
-                                                        <label class="option block spacer-t10">
-                                                            <input type="checkbox" name="Ease" value="Plotted Easements">
-                                                            <span class="checkbox"></span> Plotted Easements           
-                                                        </label>
-                                                    </div><!-- end .option-group section -->
-                                                </div><!-- end .colm section -->
-                                            </div>
-
-                                            <div class="section spacer-t20">
-                                                <label class="field prepend-icon">
-                                                    <textarea class="gui-textarea" id="sendermessage" name="sendermessage" placeholder="Additional details"></textarea>
-                                                    <span class="field-icon"><i class="fa fa-comments"></i></span>
-                                                    <span class="input-hint"> <strong>NOTE:</strong> Be as detailed as possible for better feedback.</span>   
-                                                </label>
-                                            </div><!-- end section -->
-
-                                            <!-- start agent details -->
-                                            <div class="spacer-t30">
-                                                <div class="tagline"><span> Add Parties</span></div><!-- .tagline -->
-                                            </div>
-                                            <div class="frm-row">
-                                                <div class="section colm colm4">
-                                                    <div class="option-group field">
-                                                        <label class="option block spacer-t10">
-                                                            <input type="checkbox" name="add-agent-details" id= "add-agent-details">
-                                                            <span class="checkbox"></span> Add Agent Details         
-                                                        </label>
-                                                    </div><!-- end .option-group section -->
-                                                </div><!-- end .colm section -->
-                                                <?php 
-                                                    $is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ?  $customer_data['is_escrow'] : 0;
-                                                ?>
-                                                <?php 
-                                                    if($is_escrow == 1)
-                                                    {
-                                                ?>
-                                                        <div class="section colm colm4" id= "add-lender-section">
-                                                            <div class="option-group field">
-                                                                <label class="option block spacer-t10">
-                                                                    <input type="checkbox" name="add-lender-details" id= "add-lender-details">
-                                                                    <span class="checkbox"></span> Add Lender         
-                                                                </label>
-                                                            </div><!-- end .option-group section -->
-                                                        </div>
-                                                <?php
-                                                    }
-                                                ?>
-                                                <?php 
-                                                    if($is_escrow == 0)
-                                                    {
-                                                ?>
-                                                        <div class="section colm colm4" id= "add-escrow-section">
-                                                            <div class="option-group field">
-                                                                <label class="option block spacer-t10">
-                                                                    <input type="checkbox" name="add-escrow-details" id= "add-escrow-details">
-                                                                    <span class="checkbox"></span> Add Escrow         
-                                                                </label>
-                                                            </div><!-- end .option-group section -->
-                                                        </div>
-                                                <?php
-                                                    }
-                                                ?>
-                                                
-                                            </div>
-
-                                            <div id="agent-details-fields" style="display: none;">
-                                                <div class="frm-row">
-                                                    <div class="spacer-b10"></div>
-                                                    <div class="section colm colm6 tagline">
-                                                        <span>
-                                                            Buyers Agent
-                                                        </span>
-                                                    </div><!-- end section -->
-                                                    <div class="section colm colm6 tagline">
-                                                        <span>
-                                                            Listing Agent
-                                                        </span>
-                                                    </div><!-- end section -->
-                                                </div>
-                                                <div class="frm-row">
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="text" name="BuyerAgentName" id="BuyerAgentName" class="gui-input" placeholder="Agent Name">
-                                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                            <input type="hidden" name="BuyerAgentId" id="BuyerAgentId" value="">
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="text" name="ListingAgentName" id="ListingAgentName" class="gui-input" placeholder="Agent Name">
-                                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                            <input type="hidden" name="ListingAgentId" id="ListingAgentId" value="">
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                </div>
-
-                                                <div class="frm-row">           
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="email" name="BuyerAgentEmailAddress" id="BuyerAgentEmailAddress" class="gui-input" placeholder="Agent Email address" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-envelope"></i></span>  
-                                                        </label>
-                                                    </div><!-- end section -->
-
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="email" name="ListingAgentEmailAddress" id="ListingAgentEmailAddress" class="gui-input" placeholder="Agent Email address" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-envelope"></i></span>  
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                </div><!-- end frm-row section -->
-
-                                                <div class="frm-row">           
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="tel" name="BuyerAgentTelephone" id="BuyerAgentTelephone" class="gui-input" placeholder="Agent Telephone" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-phone-square"></i></span>  
-                                                        </label>
-                                                    </div><!-- end section -->
-
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="tel" name="ListingAgentTelephone" id="ListingAgentTelephone" class="gui-input" placeholder="Agent Telephone" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-phone-square"></i></span>  
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                </div><!-- end frm-row section -->
-                                                <div class="frm-row">
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="text" name="BuyerAgentCompany" id="BuyerAgentCompany" class="gui-input" placeholder="Agent Company Name" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="text" name="ListingAgentCompany" id="ListingAgentCompany" class="gui-input" placeholder="Agent Company Name" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                </div>
-                                            </div>
-                                            <!-- end agent details -->
-
-                                            <!-- start lender details  -->
-
-                                            <div id="lender-details-fields" style="display: none;">
-                                                
-                                                <div class="spacer-b30">
-                                                    <div class="tagline"><span> Add Lender Details</span></div><!-- .tagline -->
-                                                </div>
-
-                                                <div class="frm-row">
-                                                    <div class="section colm colm12">
-                                                        <label class="field prepend-icon">
-                                                            <input type="text" name="LenderName" id="LenderName" class="gui-input" placeholder="Lender Name">
-                                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                            <input type="hidden" name="LenderId" id="LenderId" value="">
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                </div>
-
-                                                <div class="frm-row">           
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="email" name="LenderEmailAddress" id="LenderEmailAddress" class="gui-input" placeholder="Lender Email address" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-envelope"></i></span>  
-                                                        </label>
-                                                    </div><!-- end section -->
-
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="tel" name="LenderTelephone" id="LenderTelephone" class="gui-input" placeholder="Lender Telephone" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-phone-square"></i></span>  
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                </div><!-- end frm-row section -->
-                                                <div class="frm-row">
-                                                    <div class="section colm colm12">
-                                                        <label class="field prepend-icon">
-                                                            <input type="text" name="LenderCompany" id="LenderCompany" class="gui-input" placeholder="Lender Company Name" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                </div>
-                                                
-                                                
-                                            </div>
-                                            <!-- end lender details  -->
-
-                                            <!-- start escrow details -->
-                                            <div id="escrow-details-fields" style="display: none;">
-                                                
-                                                <div class="spacer-b30">
-                                                    <div class="tagline"><span> Add Escrow Details</span></div><!-- .tagline -->
-                                                </div>
-
-                                                <div class="frm-row">
-                                                    <div class="section colm colm12">
-                                                        <label class="field prepend-icon">
-                                                            <input type="text" name="EscrowName" id="EscrowName" class="gui-input" placeholder="Escrow Name">
-                                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                            <input type="hidden" name="EscrowId" id="EscrowId" value="">
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                </div>
-
-                                                <div class="frm-row">           
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="email" name="EscrowEmailAddress" id="EscrowEmailAddress" class="gui-input" placeholder="Escrow Email address" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-envelope"></i></span>  
-                                                        </label>
-                                                    </div><!-- end section -->
-
-                                                    <div class="section colm colm6">
-                                                        <label class="field prepend-icon">
-                                                            <input type="tel" name="EscrowTelephone" id="EscrowTelephone" class="gui-input" placeholder="Escrow Telephone" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-phone-square"></i></span>  
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                </div><!-- end frm-row section -->
-                                                <div class="frm-row">
-                                                    <div class="section colm colm12">
-                                                        <label class="field prepend-icon">
-                                                            <input type="text" name="EscrowCompany" id="EscrowCompany" class="gui-input" placeholder="Escrow Company Name" readonly="readonly">
-                                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                        </label>
-                                                    </div><!-- end section -->
-                                                </div>
-                                            </div>
-                                            <!-- end escrow details -->
-
-                                            <div class="result spacer-b10"></div><!-- end .result  section -->
-
-                                            <!-- <div class="section progress-section">
-                                                <div class="progress-bar progress-animated bar-primary">
-                                                    <div class="bar"></div>
-                                                    <div class="percent">0%</div>
-                                                </div>
-                                            </div> --><!-- end progress section -->
-
-                                            <div class='' id="progressDivId">
-                                                <div class='' id='progressBar'></div>
-                                                <div class='' id='percent'>0%</div>
-                                            </div>
-                                            <div style="height: 10px;"></div>
-
-                                        </div><!-- end .form-body section -->
-                                        <div class="form-footer">
-                                            <button type="submit" data-btntext-sending="Sending..." class="button btn-primary">Submit</button>
-                                            <button type="reset" class="button">Cancel</button>
-                                            <a style="border: 0;height: 42px;color: #243140;line-height: 1;font-size: 15px;cursor: pointer;padding: 0 18px;text-align: center;vertical-align: top;background: #bdc3c7;display: inline-block;-webkit-user-drag: none;text-shadow: 0 1px rgba(255, 255, 255, 0.2);margin-right: 10px;margin-bottom: 5px;text-decoration: none;border-radius: 3px;padding-top: 13px;" href="http://www.pct.com">Homepage</a>
-                                        </div>
-                                    </form>
-                                    <!-- End Form -->
-                                </div><!-- end .smart-forms section -->
-                            </div><!-- end .smart-wrap section -->
-                        </div>
-                        <div class="col-md-3">
-                            <section class="b-sm-about">  
-                                <ul class="b-isotope-grid grid list-unstyled">
-                                    <li class="grid-sizer"></li>
-                                    <li style="margin-bottom:15px;" class="b-isotope-grid__item grid-item pctttb"><a class="b-isotope- lightbox" href="https://www.youtube.com/watch?v=ICczHNfT7cA"><img src="<?php echo base_url(); ?>assets/frontend/images/OpenOrderFormVideo.jpg" alt="foto"></a></li>
-                                </ul>
-                                <h3  class="b-sm-about__title">Video Tutorial - Smart Form</h3>
-                                <p>We have created a quick video that shows you how our smart open order form works.</p>
-                            </section>
+                        <div class="text-center">
+                            <div class="ui-subtitle-block">Tempor incididunt labore dolore veniam</div>
+                            <h2 class="ui-title-block-2"><span class="shuffle">projects we do</span></h2>
+                            <div class="ui-decor-1 bg-primary"></div>
                         </div>
                     </div>
                 </div>
-            </section>
-          <!-- end .section-type-14-->
-          <br><br>
-          
-          <?php
-                $this->load->view('layout/footer_above_section');
-        ?>
-          <div class="modal fade" id="searchResultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Search Results</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body search-result">
-                        <table class="table-search-results" width="100%">
-                            <thead>
-                                <tr>
-                                    <th width="21%">APN</th>
-                                    <th width="22%">Address</th>
-                                    <!-- <th width="21%">County</th> -->
-                                    <th width="21%">City</th>
-                                    <th width="15%">Run Listing</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                </div>
-                <div class="modal-footer">
-                    <div class="apn-search-loader hidden"></div>
-                </div>
-                </div>
-            </div>
-            </div>
-            <!-- End Property search result Modal -->
-
-            <!-- Start Find Customer Number Modal -->
-            <div class="modal fade smart-forms" id="findCustomerModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Find Customer Number</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                    <div class="modal-body search-result">
-                        <form method="POST" action="" id="find-customer-form">
-                            <div class="form-body">
-                                <div class="frm-row">
-                                    <div class="section colm colm12">
-                                        <label class="field prepend-icon">
-                                            <input type="email" name="CustomerEmail" id="CustomerEmail" class="gui-input" placeholder="Email address">
-                                            <span class="field-icon"><i class="fa fa-envelope"></i></span>  
-                                        </label>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="b-isotope b-isotope-1">
+                            <ul class="b-isotope-filter list-inline">
+                                <li><a class="current" href="" data-filter="*">all works</a></li>
+                                <li><a href="" data-filter=".design">web design</a></li>
+                                <li><a href="" data-filter=".wordpress">wordpress</a></li>
+                                <li><a href="" data-filter=".mockups">mockups</a></li>
+                                <li><a href="" data-filter=".animation">animation</a></li>
+                                <li><a href="" data-filter=".print">print design</a></li>
+                            </ul>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <ul class="b-isotope-grid grid list-unstyled">
+                                            <li class="grid-sizer"></li>
+                                            <li class="b-isotope-grid__item grid-item wordpress print ">
+                                                <a class="b-isotope-grid__inner" href="portfolio-1.html"><img src="<?php echo base_url(); ?>assets/media/content/gallery/360x360/1.jpg" alt="foto"><span class="b-isotope-grid__wrap-info"><span class="b-isotope-grid__info"><span class="b-isotope-grid__title">the glass bottle</span><span class="b-isotope-grid__categorie">branding / print</span></span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="b-isotope-grid__item grid-item design animation">
+                                                <a class="b-isotope-grid__inner" href="portfolio-1.html"><img src="<?php echo base_url(); ?>assets/media/content/gallery/360x260/1.jpg" alt="foto"><span class="b-isotope-grid__wrap-info"><span class="b-isotope-grid__info"><span class="b-isotope-grid__title">the glass bottle</span><span class="b-isotope-grid__categorie">branding / print</span></span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="b-isotope-grid__item grid-item wordpress mockups animation">
+                                                <a class="b-isotope-grid__inner" href="portfolio-1.html"><img src="<?php echo base_url(); ?>assets/media/content/gallery/360x450/1.jpg" alt="foto"><span class="b-isotope-grid__wrap-info"><span class="b-isotope-grid__info"><span class="b-isotope-grid__title">the glass bottle</span><span class="b-isotope-grid__categorie">branding / print</span></span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="b-isotope-grid__item grid-item wordpress animation print effect-active">
+                                                <a class="b-isotope-grid__inner" href="portfolio-1.html"><img src="<?php echo base_url(); ?>assets/media/content/gallery/360x260/2.jpg" alt="foto"><span class="b-isotope-grid__wrap-info"><span class="b-isotope-grid__info"><span class="b-isotope-grid__title">the glass bottle</span><span class="b-isotope-grid__categorie">branding / print</span></span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="b-isotope-grid__item grid-item design">
+                                                <a class="b-isotope-grid__inner" href="portfolio-1.html"><img src="<?php echo base_url(); ?>assets/media/content/gallery/360x450/2.jpg" alt="foto"><span class="b-isotope-grid__wrap-info"><span class="b-isotope-grid__info"><span class="b-isotope-grid__title">the glass bottle</span><span class="b-isotope-grid__categorie">branding / print</span></span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="b-isotope-grid__item grid-item wordpress mockups animation">
+                                                <a class="b-isotope-grid__inner" href="portfolio-1.html"><img src="<?php echo base_url(); ?>assets/media/content/gallery/360x360/2.jpg" alt="foto"><span class="b-isotope-grid__wrap-info"><span class="b-isotope-grid__info"><span class="b-isotope-grid__title">the glass bottle</span><span class="b-isotope-grid__categorie">branding / print</span></span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="b-isotope-grid__item grid-item design print">
+                                                <a class="b-isotope-grid__inner" href="portfolio-1.html"><img src="<?php echo base_url(); ?>assets/media/content/gallery/360x260/3.jpg" alt="foto"><span class="b-isotope-grid__wrap-info"><span class="b-isotope-grid__info"><span class="b-isotope-grid__title">the glass bottle</span><span class="b-isotope-grid__categorie">branding / print</span></span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
-                        
-                        <div class="find-customer-result"></div>
+                        </div>
+                        <!-- end .b-isotope
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="button btn-primary">Submit</button>
-                        <button type="button" class="button btn-primary" data-dismiss="modal">Cancel</button>
-                    </div>
-                    </form>
                 </div>
             </div>
-            </div>
-            <!-- End Find Customer Number Modal -->
+        </section> -->
+	<!-- end .section-default-->
+	<section class="section-type-1 section-sm parallax area-bg area-bg_grad-2 area-bg_op_80">
+		<div class="area-bg__inner">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8">
+						<h2 class="ui-title-block-3">Want to Know More about Us?</h2>
+						<div class="ui-subtitle-block-2">we would love to tell you!</div>
+					</div>
+					<div class="col-md-4"><a class="btn btn-default btn-lg pull-right"
+							href="industry-documents/PCTInfoSheet.pdf">View Company Overview</a></div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end .section-type-1-->
 
-            <!-- Start Show Customer Number Modal -->
-            <div class="modal fade smart-forms" id="showCustomernumberModal" tabindex="-1" role="dialog" aria-labelledby="showCustomernumberModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Customer Number</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                    <div class="modal-body search-result">                    
-                            <div class="form-body">                            
-                                <div id="showCustomerNumber"></div>
-                            </div>                    
-                            <!-- <div class="find-customer-result"></div> -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="button btn-primary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-            </div>
-            <!-- End Show Customer Number Modal -->
+	<section class="section-type-4 section-default">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="ui-subtitle-block">in the real estate transaction</div>
+					<h2 class="ui-title-block ui-title-block_light">How We Protect<br> Your Clients</h2>
+					<div class="ui-decor-1 bg-primary"></div>
+
+					<p>After your sales contract has been accepted, Pacific Coast Title Company will search all related
+						public records to look for any problems with the home’s title. This search typically involves a
+						review of land records going back many years. More than 1/3 of all title searches reveal a
+						problem with the title that we will make sure is fixed before you go to closing. For instance, a
+						previous owner may have had minor construction done on the property, but never fully paid the
+						contractor. Or the previous owner may have failed to pay local or state taxes. Pacific Coast
+						Title Company seeks to resolve problems like these before you go to closing. Once we issue a
+						title policy, if for some reason any claim which is covered under your title policy is ever
+						filed against your property, Contact Pacific Coast Title Company and we will work diligently to
+						process and help resolve your claim.</p>
+
+				</div>
+				<div class="col-md-6">
+					<div class="owl-carousel owl-theme owl-theme_mod-b enable-owl-carousel" data-pagination="true"
+						data-navigation="false" data-single-item="true" data-auto-play="7000"
+						data-transition-style="fade" data-main-text-animation="true" data-after-init-delay="3000"
+						data-after-move-delay="1000" data-stop-on-hover="true"><img class="img-responsive"
+							src="<?php echo base_url(); ?>assets/media/content/carousel-1/4.jpg" alt="foto">
+						<!--<img class="img-responsive" src="<?php echo base_url(); ?>assets/media/content/carousel-1/1.png" alt="foto"><img class="img-responsive" src="<?php echo base_url(); ?>assets/media/content/carousel-1/1.png" alt="foto">-->
+					</div>
+					<!-- end carousel-->
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end .section-default-->
+	<!-- b-progress width parallax-->
+
+	<section class="section-type-8 parallax area-bg area-bg_grad-2">
+		<div class="area-bg__inner">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="b-video player fixed-controls play-button">
+							<video poster="<?php echo base_url(); ?>assets/media/components/b-video/poster-3.jpg">
+								<source src="<?php echo base_url(); ?>assets/media/content/video/4.mp4"
+									type="video/mp4">
+							</video>
+						</div>
+						<!-- end .b-video-->
+					</div>
+					<div class="col-md-6">
+						<div class="section-type-8__inner">
+							<div class="ui-subtitle-block">Want to know...</div>
+							<h2 class="ui-title-block ui-title-block_light">Why Real Estate Agents Trust Pacific Coast
+								Title Company</h2>
+							<div class="ui-decor-1 bg-white"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section><br><br><br><br>
+	<!-- end .section-type-8-->
+
+
+	<section class="section-type-4 scrollme-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="ui-subtitle-block">In real estate</div>
+					<h2 class="ui-title-block ui-title-block_light"><span class="shuffle">Title Insurance is Your Best
+							Bet.</span></h2>
+					<div class="ui-decor-1 bg-primary"></div>
+
+					<p>Dollar for dollar, title insurance is the best investment you can make to protect your
+						interest in one of the most valuable assets you own: your home. Title insurance insures
+						a real estate investment, unlocking its potential as a financial asset for the owner. As
+						such, title insurance plays a major role in the confidence that lies at the heart of our
+						nation’s real estate market and economy.</p><a class="btn btn-default btn-round btn_mrg-top_45"
+						href="residential-title.html">learn more about title</a>
+				</div>
+				<div class="col-md-6">
+					<div class="section-type-4__img">
+						<div class="scrollme">
+							<div class="animateme" data-when="enter" data-from="1" data-to="0" data-opacity="0"
+								data-translatex="300" data-rotatez="0">
+								<img src="<?php echo base_url(); ?>assets/media/content/657x498/2.jpg" alt="foto">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<?php
+        $this->load->view('layout/footer_above_section');
+	?>
+	
 </body>
+
 </html>
 <?php
     $this->load->view('layout/footer');
 ?>
 
-<link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
-<link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/jquery-ui.css">
-
-
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoMfJn9Q37LUYQucbUdgWF8JGWRuTZlt4&libraries=places&sensor=false"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.form.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/additional-methods.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script> 
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/custom.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/plugins/slider-pro/jquery.sliderPro.min.js"></script>

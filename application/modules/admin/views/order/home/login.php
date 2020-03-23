@@ -11,7 +11,7 @@
         </div>
         
           <?php // echo form_open('home/do_login', array('class'=>'jsform','name'=>'login-form','id'=>'login-form')); ?>
-        <form id="login-form" name="login-form" method="POST" action="<?php echo base_url()?>admin/home/do_login">
+        <form id="login-form" name="login-form" method="POST" action="<?php echo base_url()?>order/admin/home/do_login">
           <div class="form-group">
             <div class="form-label-group">
               <input type="email" id="email_address" name="email_address" class="form-control" autofocus="autofocus">

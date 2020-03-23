@@ -11,7 +11,7 @@
 <?php } ?>
     <div id="import-result"></div>
     <div class="card mx-auto mt-5">
-      <div class="card-header">Import Customers</div>
+      <div class="card-header">Import Agents</div>
         <div class="card-body">        
             <form id="importFrm" method="POST" enctype="multipart/form-data">
 
@@ -28,7 +28,7 @@
                 
                 <div class="pull-right">
                     <button type="submit" value="import" name="importSubmit" class="btn btn-secondary">Import</button>
-                    <a href="<?php echo base_url(); ?>admin/dashboard" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
+                    <a href="<?php echo base_url(); ?>order/admin/agents" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

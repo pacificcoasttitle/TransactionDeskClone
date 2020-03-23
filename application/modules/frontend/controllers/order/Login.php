@@ -11,10 +11,10 @@ class Login extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
-        $this->load->model('home_model'); 
+        $this->load->model('order/home_model'); 
         if ($this->session->userdata('id')) {
 			if($this->session->userdata('is_admin') == 1) {
-				redirect(base_url().'admin/dashboard');
+				redirect(base_url().'order/admin/dashboard');
 			}
 		} 
     }
@@ -25,7 +25,7 @@ class Login extends MX_Controller {
             redirect(base_url().'order');
         } else {
             $data = array();
-            $this->load->view('login', $data);	
+            $this->load->view('order/login', $data);	
         }
     }
 
@@ -50,7 +50,7 @@ class Login extends MX_Controller {
                     redirect(base_url().'dashboard');
                 } else {
                     $data['error'] =  'Please enter the correct email address';
-                    $this->load->view('login', $data);
+                    $this->load->view('order/login', $data);
                 }
             }
     	}

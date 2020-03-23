@@ -10,10 +10,10 @@ class Agent extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
-        $this->load->model('agent_model');
+        $this->load->model('order/agent_model');
         if ($this->session->userdata('id')) {
 			if($this->session->userdata('is_admin') == 0) {
-				redirect(base_url().'home');
+				redirect(base_url().'order/home');
 			} 
 		} 
     }
@@ -23,9 +23,9 @@ class Agent extends MX_Controller {
         $this->is_admin();
 		$data = array();
         $data['title'] = 'PCT Order: Agents';
-        $this->load->view('layout/header', $data);
-        $this->load->view('agent/agents', $data);
-        $this->load->view('layout/footer', $data);
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/agent/agents', $data);
+        $this->load->view('order/layout/footer', $data);
 	}
 
     public function import_agents()
@@ -123,9 +123,9 @@ class Agent extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-        $this->load->view('layout/header', $data);
-        $this->load->view('agent/import', $data);
-        $this->load->view('layout/footer', $data);
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/agent/import', $data);
+        $this->load->view('order/layout/footer', $data);
     }
 
     public function file_check($str)
@@ -190,7 +190,7 @@ class Agent extends MX_Controller {
                 
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
                 {
-                    $editOrderUrl = base_url().'admin/edit-agent/'.$value['id'];
+                    $editOrderUrl = base_url().'order/admin/edit-agent/'.$value['id'];
                     $action = "<a href='".$editOrderUrl."' class='btn btn-action edit-agent'title ='Edit Agent Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
 
                     $action .= "<a href='javascript:void(0);' onclick='deleteAgent(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
@@ -240,7 +240,7 @@ class Agent extends MX_Controller {
     public function edit()
     {
         $this->is_admin();
-        $id = $this->uri->segment(3);        
+        $id = $this->uri->segment(4);        
         $data = array();
         $data['title'] = 'PCT Order: Edit Agent';
         if(isset($id) && !empty($id))
@@ -295,9 +295,9 @@ class Agent extends MX_Controller {
         }
 
 
-        $this->load->view('layout/header', $data);
-        $this->load->view('agent/edit-agent', $data);
-        $this->load->view('layout/footer', $data);
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/agent/edit-agent', $data);
+        $this->load->view('order/layout/footer', $data);
     }
 
     public function is_admin()

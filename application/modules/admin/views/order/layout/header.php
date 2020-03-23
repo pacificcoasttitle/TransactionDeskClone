@@ -45,7 +45,7 @@
           <i class="fas fa-user-circle fa-fw"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-          <a class="dropdown-item" href="<?php echo base_url().'admin/logout'; ?>">Logout</a>
+          <a class="dropdown-item" href="<?php echo base_url().'order/admin/logout'; ?>">Logout</a>
         </div>
       </li>
     </ul>
@@ -54,6 +54,6 @@
 
   <div id="wrapper">
   <!-- Sidebar -->
-  <?php $this->load->view('layout/sidebar'); ?>
+  <?php $this->load->view('order/layout/sidebar'); ?>
 
   <div id="content-wrapper">
