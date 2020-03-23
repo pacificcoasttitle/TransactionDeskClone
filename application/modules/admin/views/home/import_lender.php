@@ -44,7 +44,7 @@
                 
                 <div class="pull-right">
                     <button type="submit" value="import" name="importSubmit" class="btn btn-secondary">Import</button>
-                    <a href="<?php echo base_url(); ?>?admin/lenders" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
+                    <a href="<?php echo base_url(); ?>admin/lenders" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

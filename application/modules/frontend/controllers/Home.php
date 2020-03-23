@@ -186,11 +186,12 @@ class Home extends MX_Controller {
 							fwrite($fh, date('m/d/Y H:i:s').' : '.$result."\n");
 							fclose($fh);
 						}
-						$orderNumber = '';
+						$orderNumber = $file_id = '';
 
 						if(isset($response['FileID']) && !empty($response['FileID']))
 						{
 							$orderNumber = isset($response['FileNumber']) && !empty($response['FileNumber']) ? $response['FileNumber'] : '';
+							$file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
 							// $_SESSION['orderNumber'] = $orderNumber;
 						}
 
@@ -206,7 +207,7 @@ class Home extends MX_Controller {
 							$mail->Encoding = "base64";
 							$mail->Timeout = 200;
 							$mail->ContentType = "text/html";
-							$mail->addAddress('openorders@pct.com', 'Open Order Desk');							
+							$mail->addAddress('cs@pct.com', 'Open Order Desk');							
 							$mail->Subject = "Order Placed at Resware";
 
 							$data = array(
@@ -223,8 +224,6 @@ class Home extends MX_Controller {
 							$mail->Body = $order_message_body;
 							$mail->AltBody = "Use an HTML compatible email client";
 
-							$mail->Send();
-
 							//send order deatils to all parties						
 							if(isset($parties_email) && !empty($parties_email))
 							{
@@ -233,7 +232,7 @@ class Home extends MX_Controller {
 								}
 							}
 							
-							
+							$mail->Send();
 						}
 
 						$session_data = array(
@@ -254,13 +253,12 @@ class Home extends MX_Controller {
 				if(empty($_POST['id']))
 				{
 					$time = date("Y-m-d H:i:s");
-					$random_number = $this->home_model->get_customer_number();
+					/*$random_number = $this->home_model->get_customer_number();
                     $customer_number = isset($random_number['random_num']) && !empty($random_number['random_num']) ? $random_number['random_num'] : '';
-                    $this->session->set_userdata('customer_number', $customer_number);
+                    $this->session->set_userdata('customer_number', $customer_number);*/
 
                     // Prepare data for DB insertion
                     $customerData = array(
-                        'customer_number' => $customer_number,
                         'first_name' => $OpenName,
                         'last_name' => $OpenLastName,
                         'email_address' => $OpenEmail,
@@ -278,6 +276,15 @@ class Home extends MX_Controller {
 
                     if($id)
                     {
+                    	$orderData = array(
+	                        'customer_id' => $id,
+	                        'file_id' => $file_id,
+	                        'file_number' => $orderNumber,
+	                        'status'=> 1
+	                    );
+
+		                $orderId = $this->home_model->insert($orderData,'order_details'); 
+
                     	$propertyData = array(
 	                        'customer_id' => $id,
 	                        'buyer_agent_id' => $BuyerAgentId,

@@ -28,7 +28,7 @@ $(document).ready(function () {
                 {
                     var jsonResult = $.ajax({
                         type: "POST",
-                        url: base_url+"?admin/home/get_lender_list",
+                        url: base_url+"admin/home/get_lender_list",
                         data: {
                             keyword: $('#tbl-lenders-listing_filter input').val(),
                         },
@@ -369,7 +369,7 @@ $(document).ready(function () {
             "ordering": false,            
             "serverSide": true,
             "ajax": {                
-                url: base_url+"?admin/home/get_lender_list", // json datasource
+                url: base_url+"admin/home/get_lender_list", // json datasource
                 type: "post", // method  , by default get
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
