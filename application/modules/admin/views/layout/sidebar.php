@@ -1,6 +1,3 @@
-<?php
-// echo "<pre>"; print_r($this->uri->segment(2)); exit;
-?>
 <ul class="sidebar navbar-nav">
 
 	<li class="nav-item <?php if($this->uri->uri_string() == 'admin/dashboard' || $this->uri->uri_string() == 'admin/import') { echo 'active'; } ?>">

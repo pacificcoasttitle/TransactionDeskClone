@@ -18,7 +18,7 @@
                 <table class="table table-bordered" id="tbl-lenders-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>First Names</th>
+                            <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email Address</th>
                             <th>Telephone</th>
