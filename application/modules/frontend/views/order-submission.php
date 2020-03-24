@@ -1,25 +1,31 @@
-<div class="section-title-page3 area-bg area-bg_blue area-bg_op_90 parallax">
-          <div class="area-bg__inner">
-            <div class="container">
-              <div class="row">
-                <div class="col-xs-12">
-                  <h1 class="b-title-page">Order Submitted Successfully</h1>
-                  <div class="b-title-page__info">Congratulations</div>
-                  <!-- end breadcrumb-->
-                </div>
-              </div>
-            </div>
-          </div>
+<body>
+    <?php
+        $this->load->view('layout/header');
+    ?>
+<div class="section-title-page7q area-bg area-bg_blue area-bg_op_60 parallax">
+  <div class="area-bg__inner">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <h1 class="b-title-page"></h1>
+          <div class="b-title-page__info"></div>
+          <!-- end breadcrumb-->
         </div>
+      </div>
+    </div>
+  </div>
+</div>
         <!-- end .b-title-page-->
         <article class="b-about section-default">
           <div class="container">
             <div class="row">
+                <div class="col-md-12">
+                    <div class="ui-subtitle-block">Important Details Below</div>
+                    <h2 class="ui-title-block ui-title-block_light">Your Order Info...</h2>
+                    <div class="ui-decor-1 bg-primary"></div>
+                    <p>We will be sending you an email confirmation shortly. Below you can find your order number, the full legal description, and the vesting information for your recently submitted order.</p>
+                </div>
               <div class="col-md-6">
-                <div class="ui-subtitle-block">Important Details Below</div>
-                <h2 class="ui-title-block ui-title-block_light">Your Order Info...</h2>
-                <div class="ui-decor-1 bg-primary"></div>
-                <p>We will be sending you an email confirmation shortly. Below you can find your order number, the full legal description, and the vesting information for your recently submitted order.</p>
                 <footer class="b-about__footer">
 				<ul class="list list-mark-2">
                     <?php 
@@ -53,42 +59,21 @@
               </div>
               <div class="col-md-6">
                 <div class="b-sm-about-group">
-                  <div class="row">
+                  <div class="row" id="taxInformation">
                     <div class="col-md-6">
-                      <section class="b-sm-about"><img class="img-responsive" src="<?php echo BASE_URL_MAIN; ?>assets/media/components/b-about/p1.jpg" alt="foto">
-                        <h3 class="b-sm-about__title">How to Read a Prelim</h3>
-                        <p>Want to understand your preliminary title report? Our guide can help you understand what your report is stating.</p>
-						
-						<a class="btn btn-default btn-sm btn_mrg-top_30" href="/industry-documents/pctReadPrelim.pdf">Download PDF</a>
-                      </section>
+                        <h3>1st Installment</h3>
+                        <div class="loader"></div>
+                        <div id="firstInstallment"></div>
                     </div>
-                    <div class="col-md-6">
-                      <section class="b-sm-about"><img class="img-responsive" src="<?php echo BASE_URL_MAIN; ?>assets/media/components/b-about/p2.jpg" alt="foto">
-                        <h3 class="b-sm-about__title">Buyer & Seller Guide</h3>
-                        <p>The perfect way to educate your prospective buyers and sellers about the process of purchasing or selling a home.</p>
-						<a class="btn btn-default btn-sm btn_mrg-top_30" href="/industry-documents/TitleCompany-Buy-Sell-Web.pdf">Download PDF</a>
-						
-                      </section>
+                    <div class="col-md-6">                      
+                        <h3>2nd Installment</h3>
+                        <div class="loader"></div>
+                        <div id="secondInstallment"></div>                
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row" id="taxInformation">
-                <div class="col-md-12">
-                    <h3>Taxes:</h3>
-                </div>
-                <div class="col-md-6">
-                    <h3>1st Installment</h3>
-                    <div class="loader"></div>
-                    <div id="firstInstallment"></div>
-                </div>
-                <div class="col-md-6">
-                    <h3>2nd Installment</h3>
-                    <div class="loader"></div>
-                    <div id="secondInstallment"></div>
-                </div>
-            </div><br/>
             <div class="row" id="grantDeedInfo">
                 <div class="col-md-12">
                     <h3>Grant Deed Information:</h3>
@@ -156,6 +141,8 @@
                 </div>
             </div>
         </section>
+</body>
+</html>
 <script type="text/javascript">
   var base_url = '<?php echo base_url(); ?>';
 </script>
@@ -169,7 +156,8 @@
     var fipCode = "<?php echo isset($fipCode) && !empty($fipCode) ? $fipCode : ''; ?>";
     var customer_number = "<?php echo isset($customer_number) && !empty($customer_number) ? $customer_number : '' ; ?>";
 </script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js"></script>
+
 <?php
     $this->load->view('layout/footer');
 ?>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js"></script>

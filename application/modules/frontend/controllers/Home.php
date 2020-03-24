@@ -687,7 +687,7 @@ class Home extends MX_Controller {
     	$data['customer_number'] = $this->session->userdata('customer_number');
     	$data['orderNumber'] = $this->session->userdata('orderNumber');
 
-        $this->load->view('layout/header',$data);
+        $this->load->view('layout/head',$data);
        	$this->load->view('order-submission',$data);
 	}
 	
