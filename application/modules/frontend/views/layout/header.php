@@ -107,7 +107,7 @@
                                 <!-- Mobile Trigger Start-->
                                 <button class="menu-mobile-button visible-xs-block js-toggle-mobile-slidebar toggle-menu-button"><i class="toggle-menu-button-icon"><span></span><span></span><span></span><span></span><span></span><span></span></i></button>
                                 <!-- Mobile Trigger End-->
-                                <a class="navbar-brand scroll" href="<?php echo BASE_URL_MAIN; ?>index"><img class="normal-logo" src="<?php echo base_url(); ?>assets/media/general/logo2.png" alt="logo"><img class="scroll-logo hidden-xs" src="<?php echo base_url(); ?>assets/media/general/logo2-dark.png" alt="logo"></a>
+                                <a class="navbar-brand scroll" href="<?php echo base_url(); ?>"><img class="normal-logo" src="<?php echo base_url(); ?>assets/media/general/logo2.png" alt="logo"><img class="scroll-logo hidden-xs" src="<?php echo base_url(); ?>assets/media/general/logo2-dark.png" alt="logo"></a>
                             </div>
                             <div class="header-navibox-2">
                                 <ul class="yamm main-menu nav navbar-nav">
