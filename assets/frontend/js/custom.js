@@ -748,16 +748,17 @@ function compileAPNRequest(dataobj) {
 
 function notifyAdmin()
 {
-    var customer_no = $("#CustomerNumber").val();
+    var customer_id = $("#CustomerId").val();
     var first_name = $("#OpenName").val();
 
-    if(customer_no || first_name)
+    if(customer_id || first_name)
     {
         $.ajax({
-           url: "php/notifyadmin.php",
+           // url: "php/notifyadmin.php",
+           url: base_url+'notifyAdmin',
            type: "POST",//type of posting the data
            data: {
-                customer_no: customer_no,
+                customer_id: customer_id,
                 first_name: first_name,
                 last_name: $("#OpenLastName").val(),
                 telephone_no: $("#Opentelephone").val(),
