@@ -2,7 +2,7 @@
 <div class="l-theme animated-css" style="height:fit-content;" data-header="sticky" data-header-top="200" data-canvas="container">
     <div data-off-canvas="mobile-slidebar left overlay">
         <ul class="yamm nav navbar-nav">
-            <li><a href="index.html">Dashboard Home</a></li>				
+            <li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>				
             <li class="dropdown">
                 <a class="dropdown-toggle" href="#" data-toggle="dropdown">Resources<b class="caret"></b></a>
                 <ul class="dropdown-menu">
@@ -45,11 +45,11 @@
                         <!-- Mobile Trigger Start-->
                         <button class="menu-mobile-button visible-xs-block js-toggle-mobile-slidebar toggle-menu-button"><i class="toggle-menu-button-icon"><span></span><span></span><span></span><span></span><span></span><span></span></i></button>
                         <!-- Mobile Trigger End-->
-                        <a class="navbar-brand scroll" href="index.html"><img class="normal-logo" src="http://www.pct.com/assets/media/general/logo2.png" alt="logo"><img class="scroll-logo hidden-xs" src="http://www.pct.com/assets/media/general/logo2-dark.png" alt="logo"></a>
+                        <a class="navbar-brand scroll" href="<?php echo base_url(); ?>"><img class="normal-logo" src="http://www.pct.com/assets/media/general/logo2.png" alt="logo"><img class="scroll-logo hidden-xs" src="http://www.pct.com/assets/media/general/logo2-dark.png" alt="logo"></a>
                     </div>
                     <div class="header-navibox-2">
                         <ul class="yamm nav navbar-nav">
-            <li><a href="index.html">Dashboard Home</a></li>
+            <li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>
                             
                             
                             <li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Resources<b class="caret"></b>

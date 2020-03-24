@@ -38,7 +38,7 @@
                                                     <label class="field prepend-icon">
                                                         <input value="<?php echo $customer_data['first_name'];?>" type="text" name="OpenName" id="OpenName" class="gui-input" placeholder=" First Name">
                                                         <span class="field-icon"><i class="fa fa-user"></i></span>
-                                                        <input type="hidden" name="id" id="CustomerId" value="">
+                                                        <input type="hidden" name="id" id="CustomerId" value="<?php echo $customer_data['id'];?>">
                                                     </label>
                                                 </div><!-- end section --> 
 
