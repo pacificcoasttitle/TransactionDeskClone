@@ -324,6 +324,15 @@ class Home extends MX_Controller {
 				{
 					$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
+					$orderData = array(
+                        'customer_id' => $customer_id,
+                        'file_id' => $file_id,
+                        'file_number' => $orderNumber,
+                        'status'=> 1
+                    );
+
+		            $orderId = $this->home_model->insert($orderData,'order_details');
+
 					$propertyData = array(
                         'customer_id' => $customer_id,
                         'buyer_agent_id' => $BuyerAgentId,
