@@ -100,6 +100,7 @@ $route['getResultById'] = 'frontend/order/TitlePoint/getResultById';
 $route['imageCreateRequest'] = 'frontend/order/TitlePoint/imageCreateRequest';
 $route['getRequestStatus'] = 'frontend/order/TitlePoint/getRequestStatus';
 $route['generateImage'] = 'frontend/order/TitlePoint/generateImage';
+$route['notifyAdmin'] = 'frontend/order/home/notifyAdmin';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

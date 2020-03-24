@@ -711,4 +711,48 @@ class Home extends MX_Controller {
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/dashboard');
 	}
+
+	function notifyAdmin()
+	{
+		if($this->input->post())
+		{
+			$customer_id = $this->input->post('customer_id');
+			$first_name = $this->input->post('first_name');
+			$last_name = $this->input->post('last_name');
+			$telephone_no = $this->input->post('telephone_no');
+			$email_address = $this->input->post('email_address');
+			$company_name = $this->input->post('company_name');
+			$street_address = $this->input->post('street_address');
+			$city = $this->input->post('city');
+			$zipcode = $this->input->post('zipcode');
+			$property = $this->input->post('property');
+
+			if((isset($customer_id) && !empty($customer_id)) || (isset($first_name) && !empty($first_name)))
+			{
+				$message = '<h3>User Details:</h3><p>Customer Number: '.$customer_no.'</p><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p>';
+
+				$mail = $this->phpmailer_library->load();
+				$mail->isSendmail();
+				$mail->IsHTML(true);
+				$mail->setFrom($email_address,$first_name.' '.$last_name);
+				$mail->CharSet = "UTF-8";
+				$mail->Encoding = "base64";
+				$mail->Timeout = 200;
+				$mail->ContentType = "text/html";
+				$mail->addAddress('cs@pct.com', 'Find Property No Hit');					
+				$mail->Subject = "Notification for No Hit on property search";				
+				$mail->Body = $message;
+				$mail->AltBody = "Use an HTML compatible email client";
+				
+				if($mail->Send())
+				{
+					echo 'success'; exit;
+				}
+				else
+				{
+					echo 'error'; exit;
+				}
+			}
+		}
+	}
 }
