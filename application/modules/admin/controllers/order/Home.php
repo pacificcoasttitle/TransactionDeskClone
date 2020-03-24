@@ -27,17 +27,13 @@ class Home extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('order/home_model'); 
-        if ($this->session->userdata('id')) {
-			if($this->session->userdata('is_admin') == 0) {
-				redirect(base_url().'home');
-			} 
-		} 
     }
     
 	public function login()
 	{
-		$data = array();
-        if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 1) {
+        $data = array();
+        $userdata = $this->session->userdata('admin');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
             redirect(base_url().'order/admin/dashboard');
         } else {
             $this->load->view('order/layout/login_header', $data);
@@ -63,8 +59,7 @@ class Home extends MX_Controller {
                     "is_admin" => 1
                 );
 
-                $this->session->set_userdata($session_data);
-                
+                $this->session->set_userdata('admin', $session_data);
                 if ($this->input->is_ajax_request()) 
                 {
                     $result = array('status'=>'success');
@@ -329,19 +324,17 @@ class Home extends MX_Controller {
 
     public function is_admin()
     {
-        if ($this->session->userdata('id')) {
+        $userdata = $this->session->userdata('admin');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
             
         } else {
-            redirect(base_url());
+            redirect(base_url().'order/admin');
         }
     }
 
     public function logout()
     {
-        $this->session->unset_userdata('id');
-        $this->session->unset_userdata('name');
-        $this->session->unset_userdata('email_address');
-        session_destroy();
+        $this->session->unset_userdata('admin');
         redirect(base_url().'order/admin');
     }
 

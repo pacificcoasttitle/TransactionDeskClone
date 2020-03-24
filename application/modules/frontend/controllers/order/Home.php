@@ -10,11 +10,6 @@ class Home extends MX_Controller {
         $this->load->library('session');
 		$this->load->model('order/home_model');
 		$this->load->library('form_validation');
-		if ($this->session->userdata('id')) {
-			if($this->session->userdata('is_admin') == 1) {
-				redirect(base_url().'order/admin/dashboard');
-			}
-		} 
     }
 
     function index() 
@@ -535,7 +530,8 @@ class Home extends MX_Controller {
     	else
     	{
 			$data['title'] = 'Open Order | Pacific Coast Title Company';
-			$data['customer_data'] =  $this->home_model->get_user(array('id' => $this->session->userdata('id')));
+			$userdata = $this->session->userdata('user');
+			$data['customer_data'] =  $this->home_model->get_user(array('id' => $userdata['id']));
 	        $this->load->view('layout/head',$data);
 	       	$this->load->view('order/home');
     	}
@@ -694,7 +690,8 @@ class Home extends MX_Controller {
 	
 	public function is_user()
     {
-        if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 0) {
+        $userdata = $this->session->userdata('user');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 0) {
             
         } else {
             redirect(base_url().'order/login');
@@ -703,13 +700,7 @@ class Home extends MX_Controller {
 	
 	function logout()
 	{
-		$user_data = $this->session->all_userdata();
-			foreach ($user_data as $key => $value) {
-				if ($key != 'session_id' && $key != 'ip_address' && $key != 'user_agent' && $key != 'last_activity') {
-					$this->session->unset_userdata($key);
-				}
-			}
-		$this->session->sess_destroy();
+		$this->session->unset_userdata('user');
 		redirect(base_url().'order');
 	}
 
