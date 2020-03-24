@@ -8,13 +8,8 @@ class Home extends MX_Controller {
         parent::__construct();
         $this->load->helper(array('file', 'url'));
         $this->load->library('session');
-		$this->load->model('home_model');
+		$this->load->model('order/home_model');
 		$this->load->library('form_validation');
-		if ($this->session->userdata('id')) {
-			if($this->session->userdata('is_admin') == 1) {
-				redirect(base_url().'admin/dashboard');
-			}
-		} 
     }
 
     function index() 
@@ -535,9 +530,10 @@ class Home extends MX_Controller {
     	else
     	{
 			$data['title'] = 'Open Order | Pacific Coast Title Company';
-			$data['customer_data'] =  $this->home_model->get_user(array('id' => $this->session->userdata('id')));
+			$userdata = $this->session->userdata('user');
+			$data['customer_data'] =  $this->home_model->get_user(array('id' => $userdata['id']));
 	        $this->load->view('layout/head',$data);
-	       	$this->load->view('home');
+	       	$this->load->view('order/home');
     	}
     	
         /* $this->load->view('layout/footer');*/
@@ -688,28 +684,24 @@ class Home extends MX_Controller {
     	$data['orderNumber'] = $this->session->userdata('orderNumber');
 
         $this->load->view('layout/head',$data);
-       	$this->load->view('order-submission',$data);
+       	$this->load->view('order/order-submission',$data);
+
 	}
 	
 	public function is_user()
     {
-        if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 0) {
+        $userdata = $this->session->userdata('user');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 0) {
             
         } else {
-            redirect(base_url());
+            redirect(base_url().'order/login');
         }
 	}
 	
 	function logout()
 	{
-		$user_data = $this->session->all_userdata();
-			foreach ($user_data as $key => $value) {
-				if ($key != 'session_id' && $key != 'ip_address' && $key != 'user_agent' && $key != 'last_activity') {
-					$this->session->unset_userdata($key);
-				}
-			}
-		$this->session->sess_destroy();
-		redirect(base_url());
+		$this->session->unset_userdata('user');
+		redirect(base_url().'order');
 	}
 
 	function dashboard()
@@ -717,6 +709,6 @@ class Home extends MX_Controller {
 		$this->is_user();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('dashboard');
+		$this->load->view('order/dashboard');
 	}
 }

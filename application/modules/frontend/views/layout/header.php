@@ -5,7 +5,7 @@
         <div data-off-canvas="mobile-slidebar left overlay">
             <ul class="yamm nav navbar-nav">
 	            <li>
-	            	<a href="<?php echo base_url(); ?>index">Home</a>
+	            	<a href="<?php echo base_url(); ?>">Home</a>
 	            </li>
                	<li class="dropdown">
                		<a class="dropdown-toggle" href="#" data-toggle="dropdown">About Us<b class="caret"></b>
@@ -111,7 +111,7 @@
                             </div>
                             <div class="header-navibox-2">
                                 <ul class="yamm main-menu nav navbar-nav">
-                                    <li><a href="<?php echo base_url(); ?>index">Home</a></li>
+                                    <li><a href="<?php echo base_url(); ?>">Home</a></li>
                                    <li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">About Us<b class="caret"></b>
                               <!-- Classic Dropdown--></a>
                                         <ul class="dropdown-menu">

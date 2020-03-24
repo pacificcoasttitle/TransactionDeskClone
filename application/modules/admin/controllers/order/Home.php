@@ -26,23 +26,19 @@ class Home extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
-        $this->load->model('home_model'); 
-        if ($this->session->userdata('id')) {
-			if($this->session->userdata('is_admin') == 0) {
-				redirect(base_url().'home');
-			} 
-		} 
+        $this->load->model('order/home_model'); 
     }
     
 	public function login()
 	{
-		$data = array();
-        if ($this->session->userdata('id') && $this->session->userdata('is_admin') == 1) {
-            redirect(base_url().'admin/dashboard');
+        $data = array();
+        $userdata = $this->session->userdata('admin');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
+            redirect(base_url().'order/admin/dashboard');
         } else {
-            $this->load->view('layout/login_header', $data);
-            $this->load->view('home/login', $data);
-            $this->load->view('layout/login_footer', $data);
+            $this->load->view('order/layout/login_header', $data);
+            $this->load->view('order/home/login', $data);
+            $this->load->view('order/layout/login_footer', $data);
         }		
 	}
 
@@ -63,8 +59,7 @@ class Home extends MX_Controller {
                     "is_admin" => 1
                 );
 
-                $this->session->set_userdata($session_data);
-                
+                $this->session->set_userdata('admin', $session_data);
                 if ($this->input->is_ajax_request()) 
                 {
                     $result = array('status'=>'success');
@@ -73,7 +68,7 @@ class Home extends MX_Controller {
                 else 
                 {
                     // redirect('home/dashboard');
-                    redirect(base_url().'admin/dashboard');
+                    redirect(base_url().'order/admin/dashboard');
                 }
         	}
         	else 
@@ -98,9 +93,9 @@ class Home extends MX_Controller {
         $this->is_admin();
     	$data = array();
         $data['title'] = 'PCT Order: Dashboard';
-		$this->load->view('layout/header', $data);
-        $this->load->view('home/dashboard', $data);
-        $this->load->view('layout/footer', $data);
+		$this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/dashboard', $data);
+        $this->load->view('order/layout/footer', $data);
     }
 
     public function get_customer_list()
@@ -272,9 +267,9 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-		$this->load->view('layout/header', $data);
-        $this->load->view('home/import', $data);
-        $this->load->view('layout/footer', $data);
+		$this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/import', $data);
+        $this->load->view('order/layout/footer', $data);
     }
 
     public function file_check($str)
@@ -329,20 +324,18 @@ class Home extends MX_Controller {
 
     public function is_admin()
     {
-        if ($this->session->userdata('id')) {
+        $userdata = $this->session->userdata('admin');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
             
         } else {
-            redirect(base_url());
+            redirect(base_url().'order/admin');
         }
     }
 
     public function logout()
     {
-        $this->session->unset_userdata('id');
-        $this->session->unset_userdata('name');
-        $this->session->unset_userdata('email_address');
-        session_destroy();
-        redirect(base_url().'admin');
+        $this->session->unset_userdata('admin');
+        redirect(base_url().'order/admin');
     }
 
     public function import_lenders()
@@ -466,9 +459,9 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-        $this->load->view('layout/header', $data);
-        $this->load->view('home/import_lender', $data);
-        $this->load->view('layout/footer', $data);
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/import_lender', $data);
+        $this->load->view('order/layout/footer', $data);
     }
 
     public function lenders()
@@ -476,9 +469,9 @@ class Home extends MX_Controller {
         $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Lenders';
-        $this->load->view('layout/header', $data);
-        $this->load->view('home/lenders', $data);
-        $this->load->view('layout/footer', $data);
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/lenders', $data);
+        $this->load->view('order/layout/footer', $data);
     }
 
     public function get_lender_list()

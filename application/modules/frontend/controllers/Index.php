@@ -12,7 +12,7 @@ class Index extends MX_Controller {
     function index() 
     {
         $data['title'] = 'Pacific Coast Title Company | Residential & Commercial Title & Escrow Service';
-		$this->load->view('index/index', $data);
+		$this->load->view('home', $data);
     }
 
 }

@@ -50,35 +50,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
-
-$route['default_controller'] = 'frontend/login/index';
-$route['order'] = 'frontend/home/index';
-$route['dashboard'] = 'frontend/home/dashboard';
-$route['login'] = 'frontend/login/index';
-$route['do_login'] = 'frontend/login/do_login';
-$route['logout'] = 'frontend/home/logout';
-$route['home/getSearchResults'] = 'frontend/home/getSearchResults';
-$route['home/checkEmail'] = 'frontend/home/checkEmail';
-$route['home/getCustomerNumber'] = 'frontend/home/getCustomerNumber';
-$route['agent/getAgentDetails'] = 'frontend/agent/getAgentDetails';
-$route['home/getCustomerDetails'] = 'frontend/home/getCustomerDetails';
-$route['home/getDetailsByName'] = 'frontend/home/getDetailsByName';
-$route['order-submit'] = 'frontend/home/orderSubmit';
-$route['createService'] = 'frontend/TitlePoint/createService';
-$route['getRequestSummaries'] = 'frontend/TitlePoint/getRequestSummaries';
-$route['getResultById'] = 'frontend/TitlePoint/getResultById';
-$route['imageCreateRequest'] = 'frontend/TitlePoint/imageCreateRequest';
-$route['getRequestStatus'] = 'frontend/TitlePoint/getRequestStatus';
-$route['generateImage'] = 'frontend/TitlePoint/generateImage';
-
-$route['index'] = 'frontend/index/index';
-
+/* Route for PCT static pages*/
+$route['default_controller'] = 'frontend/order/index/index';
 $route['our-role'] = 'frontend/aboutus/role';
 $route['protecting-you'] = 'frontend/aboutus/protect';
 $route['why-pacific-coast-title'] = 'frontend/aboutus/pacific';
 $route['about-us'] = 'frontend/aboutus/about';
 $route['join-our-team'] = 'frontend/aboutus/joinOurTeam';
-
 $route['residential-title'] = 'frontend/residential/title';
 $route['escrow-settlement'] = 'frontend/residential/escrowSettlement';
 $route['what-is-title-insurance'] = 'frontend/residential/titleInsurance';
@@ -88,33 +66,59 @@ $route['top-10-title-problems'] = 'frontend/residential/topTitleProblems';
 $route['what-is-escrow'] = 'frontend/residential/whatIsEscrow';
 $route['life-of-escrow'] = 'frontend/residential/lifeOfEscrow';
 $route['escrow-terms'] = 'frontend/residential/escrowTerms';
-
 $route['commercial-services'] = 'frontend/commercial/commercialServices';
 $route['commercial-resources'] = 'frontend/commercial/commercialResources';
 $route['commercial-expertise'] = 'frontend/commercial/commercialExpertise';
-
 $route['blank-forms'] = 'frontend/agentResources/blankForms';
 $route['educational-booklets'] = 'frontend/agentResources/educationalBooklets';
 $route['flyer-center'] = 'frontend/agentResources/flyerCenter';
 $route['recording-fees'] = 'frontend/agentResources/recordingFees';
 $route['rate-book'] = 'frontend/agentResources/rateBook';
 $route['training-center'] = 'frontend/agentResources/trainingCenter';
-
 $route['downey'] = 'frontend/contact/downey';
 $route['orange'] = 'frontend/contact/orange';
 $route['oxnard'] = 'frontend/contact/oxnard';
 $route['sandiego'] = 'frontend/contact/sandiego';
 $route['glendale'] = 'frontend/contact/glendale';
 
+/* Route for PCT-Order Frontside*/
+$route['order'] = 'frontend/order/home/index';
+$route['dashboard'] = 'frontend/order/home/dashboard';
+$route['order/login'] = 'frontend/order/login/index';
+$route['do_login'] = 'frontend/order/login/do_login';
+$route['logout'] = 'frontend/order/home/logout';
+$route['home/getSearchResults'] = 'frontend/order/home/getSearchResults';
+$route['home/checkEmail'] = 'frontend/order/home/checkEmail';
+$route['home/getCustomerNumber'] = 'frontend/order/home/getCustomerNumber';
+$route['agent/getAgentDetails'] = 'frontend/order/agent/getAgentDetails';
+$route['home/getCustomerDetails'] = 'frontend/order/home/getCustomerDetails';
+$route['home/getDetailsByName'] = 'frontend/order/home/getDetailsByName';
+$route['order-submit'] = 'frontend/order/home/orderSubmit';
+$route['createService'] = 'frontend/order/TitlePoint/createService';
+$route['getRequestSummaries'] = 'frontend/order/TitlePoint/getRequestSummaries';
+$route['getResultById'] = 'frontend/order/TitlePoint/getResultById';
+$route['imageCreateRequest'] = 'frontend/order/TitlePoint/imageCreateRequest';
+$route['getRequestStatus'] = 'frontend/order/TitlePoint/getRequestStatus';
+$route['generateImage'] = 'frontend/order/TitlePoint/generateImage';
 
-$route['admin'] = 'admin/home/login';
-$route['admin/dashboard'] = 'admin/home/dashboard';
-$route['admin/import'] = 'admin/home/import';
-$route['admin/import-lenders'] = 'admin/home/import_lenders';
-$route['admin/lenders'] = 'admin/home/lenders';
-$route['admin/agents'] = 'admin/agent/index';
-$route['admin/edit-agent/:num'] = 'admin/agent/edit';
-$route['admin/import-agents'] = 'admin/agent/import_agents';
-$route['admin/logout'] = 'admin/home/logout';
+/* Route for PCT-Order backend*/
+$route['order/admin'] = 'admin/order/home/login';
+$route['order/admin/home/do_login'] = 'admin/order/home/do_login';
+$route['order/admin/dashboard'] = 'admin/order/home/dashboard';
+$route['order/admin/import'] = 'admin/order/home/import';
+$route['order/admin/import-lenders'] = 'admin/order/home/import_lenders';
+$route['order/admin/lenders'] = 'admin/order/home/lenders';
+$route['order/admin/agents'] = 'admin/order/agent/index';
+$route['order/admin/edit-agent/:num'] = 'admin/order/agent/edit';
+$route['order/admin/import-agents'] = 'admin/order/agent/import_agents';
+$route['order/admin/logout'] = 'admin/order/home/logout';
+
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+
+
+
+
+
