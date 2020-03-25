@@ -101,6 +101,9 @@ $route['imageCreateRequest'] = 'frontend/order/TitlePoint/imageCreateRequest';
 $route['getRequestStatus'] = 'frontend/order/TitlePoint/getRequestStatus';
 $route['generateImage'] = 'frontend/order/TitlePoint/generateImage';
 $route['notifyAdmin'] = 'frontend/order/home/notifyAdmin';
+$route['select-files'] = 'frontend/order/dashboard/selectFiles';
+$route['getFiles'] = 'frontend/order/dashboard/getFiles';
+$route['recordings'] = 'frontend/order/dashboard/recordings';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

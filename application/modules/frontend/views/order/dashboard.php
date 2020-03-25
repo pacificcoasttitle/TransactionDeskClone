@@ -8,7 +8,7 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="typography-section__innera">
-									<h2 class="ui-title-block ui-title-block_light">Welcome Back Jerry,</h2>
+									<h2 class="ui-title-block ui-title-block_light">Welcome Back <?php echo $name; ?>,</h2>
 									<div class="ui-decor-1a bg-primary"></div>
 									<h3 class="ui-title-block_light">What would you like to do?</h3>
 							</div>
@@ -16,14 +16,14 @@
 								<div class="col-md-12">
                                     <a href="<?php echo base_url().'order'; ?>"><button class="btn btn-type-1a btn-lg" type="button">Open Order</button></a>
 									<button class="btn btn-type-1b btn-lg" type="button">View CPL's</button>
-							        <button class="btn btn-type-1c btn-lg" type="button">Review Prelim</button>
+                                    <a href="<?php echo base_url().'select-files'; ?>"><button class="btn btn-type-1a btn-lg" type="button">Review Prelim</button></a>							        
 									<button class="btn btn-type-1d btn-lg" type="button">Attach Doc</button>
 								</div>
 								</div>
 							    <div class="typography-sectionc">
 								<div class="col-md-12">
 								    <button class="btn btn-type-1e btn-lg" type="button">View Proposed</button>
-									<button class="btn btn-type-1f btn-lg" type="button">View Recordings</button>
+									<a href="<?php echo base_url().'recordings'; ?>"><button class="btn btn-type-1f btn-lg" type="button">View Recordings</button></a>
 							        <button class="btn btn-type-1a btn-lg" type="button">Fee Estimate</button>
 									<button class="btn btn-type-1b btn-lg" type="button">View All Notes</button>
 								</div>
@@ -133,6 +133,8 @@
             </div>
             
         </section>
+    </body>
+    </html>
         <?php
         $this->load->view('layout/footer');
     ?>
