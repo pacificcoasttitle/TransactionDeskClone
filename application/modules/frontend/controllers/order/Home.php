@@ -707,6 +707,9 @@ class Home extends MX_Controller {
 	function dashboard()
 	{
 		$this->is_user();
+		$userdata = $this->session->userdata('user');
+		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
+		$data['name'] = $name;
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/dashboard');
@@ -755,4 +758,13 @@ class Home extends MX_Controller {
 			}
 		}
 	}
+
+	function selectFiles()
+    {
+    	echo "<pre>"; print_r("here"); exit;
+    	$this->is_user();
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+		$this->load->view('layout/head_dashboard',$data);
+		$this->load->view('order/dashboard');
+    }
 }
