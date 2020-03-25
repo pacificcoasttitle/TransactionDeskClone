@@ -118,6 +118,32 @@ $route['order/admin/import-agents'] = 'admin/order/agent/import_agents';
 $route['order/admin/logout'] = 'admin/order/home/logout';
 
 
+
+/* Route for PCT-Order backend*/
+$route['calculator1'] = 'frontend/calc/welcome/index';  
+$route['calculator1/signup'] = 'frontend/calc/welcome/signup';  
+$route['calculator1/dashboard'] = 'frontend/calc/welcome/dashboard';  
+$route['calculator1/logout'] = 'frontend/calc/welcome/logout'; 
+$route['calculator1/view_quote/:num'] = 'frontend/calc/welcome/view_quote';
+$route['calculator1/admin_login'] = 'frontend/calc/welcome/admin_login';  
+$route['calculator1/admin_dashboard'] = 'admin/calc/admin/admin_dashboard';
+$route['calculator1/admin/title_rates'] = 'admin/calc/admin/title_rates'; 
+$route['calculator1/admin_dashboard_submit'] = 'admin/calc/admin/admin_dashboard_submit'; 
+$route['calculator1/admin/import_title_rates'] = 'admin/calc/admin/import_title_rates'; 
+$route['calculator1/admin/edit_title_rates/:num'] = 'admin/calc/admin/edit_title_rates'; 
+$route['calculator1/admin/resale_rates'] = 'admin/calc/admin/resale_rates'; 
+$route['calculator1/admin/add_resale_rates'] = 'admin/calc/admin/add_resale_rates'; 
+$route['calculator1/admin/edit_resale_rates/:num'] = 'admin/calc/admin/edit_resale_rates'; 
+$route['calculator1/admin/refinance_rates'] = 'admin/calc/admin/refinance_rates'; 
+$route['calculator1/admin/add_refinance_rates'] = 'admin/calc/admin/add_refinance_rates'; 
+$route['calculator1/admin/edit_refinance_rates/:num'] = 'admin/calc/admin/edit_refinance_rates'; 
+$route['calculator1/admin/fees'] = 'admin/calc/admin/fees'; 
+$route['calculator1/admin/add_fees'] = 'admin/calc/admin/add_fees'; 
+$route['calculator1/admin/edit_fees/:num'] = 'admin/calc/admin/edit_fees'; 
+$route['calculator1/admin_logout'] = 'admin/calc/admin/admin_logout'; 
+
+
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 

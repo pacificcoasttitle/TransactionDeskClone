@@ -2,8 +2,17 @@
         var base_url = '<?php echo base_url(); ?>';
     </script>
     <!-- Start main scripts -->
+    <?php 
+        $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+
+
+        if (strpos($url,'calculator1') !== false) {
+            echo 'Car exists.';
+        } else { ?>
+            <script src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
+        <?php }
+    ?>
     
-    <script src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/libs/jquery-migrate-1.2.1.js"></script>
     <!-- Bootstrap-->
     <script src="<?php echo base_url(); ?>assets/libs/bootstrap/bootstrap.min.js"></script>  
