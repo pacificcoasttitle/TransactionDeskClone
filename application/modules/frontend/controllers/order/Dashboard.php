@@ -34,5 +34,27 @@ class Dashboard extends MX_Controller {
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/recordings');
+	}
+	
+	function get_recordings()
+    {
+		
+		$ch = curl_init(GET_RECORDING_URL.'&date=2020-03-25');                                    
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                        
+		curl_setopt($ch, CURLOPT_POSTFIELDS, array());                   
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                
+			"cache-control: no-cache",
+            "Content-Type: application/json"                             
+		));
+		$error_msg = curl_error($ch);
+		$result = curl_exec($ch);
+		if(isset($result) && !empty($result))
+		{
+			$response = json_decode($result,true);
+		}
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+		$this->load->view('layout/head_dashboard',$data);
+		$this->load->view('order/recordings');
     }
 }
