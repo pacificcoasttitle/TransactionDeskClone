@@ -38,8 +38,7 @@ class Dashboard extends MX_Controller {
 	
 	function get_recordings()
     {
-		
-		$ch = curl_init(GET_RECORDING_URL.'&date=2020-03-25');                                    
+		$ch = curl_init(GET_RECORDING_URL.'&date=2020-03-26');                                    
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                        
 		curl_setopt($ch, CURLOPT_POSTFIELDS, array());                   
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -52,9 +51,16 @@ class Dashboard extends MX_Controller {
 		if(isset($result) && !empty($result))
 		{
 			$response = json_decode($result,true);
+		} else {
+			
 		}
-		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/recordings');
+		$nestedData[] = 1;
+			$nestedData[] = 'hitesh';
+			$nestedData[] = 'gghhg';
+		$data[] = $nestedData;  
+		$json_data['recordsTotal'] = 1;
+		//$json_data['recordsTotal'] = intval( $agent_lists['recordsTotal'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
     }
 }
