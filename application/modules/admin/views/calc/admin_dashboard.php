@@ -45,7 +45,7 @@
                               <td><?php echo $user->email; ?></td>
                               <td><?php echo $user->rep_key; ?></td>
                               <td>
-                                <form action="<?php echo base_url(); ?>calculator1/admin_dashboard_submit" method="post" accept-charset="utf-8" id="user_role_<?php echo $user->user_id_pk; ?>">
+                                <form action="<?php echo base_url(); ?>calculator/admin_dashboard_submit" method="post" accept-charset="utf-8" id="user_role_<?php echo $user->user_id_pk; ?>">
                                   <select type="text" placeholder="Select Rep" name="membership_id_fk" class="sarinput">
                                      <option value="">Select Membership</option>
                                      <?php foreach ($roles as $role): ?>
@@ -92,7 +92,7 @@
    function form_submit (form_id) {
      var form_data =  $("#user_role_"+form_id).serialize();
      $.ajax({
-      url     : "<?php echo base_url(); ?>calculator1/admin_dashboard_submit",
+      url     : "<?php echo base_url(); ?>calculator/admin_dashboard_submit",
       type    : "POST",
       data    : form_data,
       success : function( data )
@@ -109,7 +109,7 @@
           }
           else if(data == "login_fail")
           {
-            window.location.assign('<?php echo base_url(); ?>calculator1/admin_login');
+            window.location.assign('<?php echo base_url(); ?>calculator/admin_login');
           }
       },
       error   : function( xhr, err )

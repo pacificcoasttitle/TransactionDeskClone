@@ -4,7 +4,7 @@
             <i class="fas fa-table"></i>
             Resale Rates
             <div class="float-right">
-                <a href="<?php echo base_url(); ?>calculator1/admin/add_resale_rates" class="btn btn-secondary"> Add Rates </a>
+                <a href="<?php echo base_url(); ?>calculator/admin/add_resale_rates" class="btn btn-secondary"> Add Rates </a>
             </div>
         </div>
         <div class="card-body">
@@ -43,7 +43,7 @@
                               <td><?php echo $minimum_rate; ?></td>
                               
                               <td>
-                                <a href="<?php echo base_url(); ?>calculator1/admin/edit_resale_rates/<?php echo $row['escrow_resale_id_pk']; ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                <a href="<?php echo base_url(); ?>calculator/admin/edit_resale_rates/<?php echo $row['escrow_resale_id_pk']; ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                 <a href="javascript:void(0);" onclick="delete_rates(<?php echo $row['escrow_resale_id_pk']; ?>);" class="grey button small2"><i class="fa fa-trash" aria-hidden="true"></i></a>
                               </td>
                           </tr>

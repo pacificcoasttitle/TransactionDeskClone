@@ -298,7 +298,7 @@
 				type1 = ex[1];
 				if (data == "1") {
 					$("#loading1").hide();
-					window.location.assign('<?=base_url()?>calculator1');
+					window.location.assign('<?=base_url()?>calculator');
 				} else if (data == "0") {
 					$("#output_body").html("Email ID or Password is Incorrect!");
 					$("#output").show();

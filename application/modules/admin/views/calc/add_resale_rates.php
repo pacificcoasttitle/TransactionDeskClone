@@ -95,7 +95,7 @@
                 </div>
                 <div class="pull-right">
                     <button type="submit" class="btn btn-secondary">Add</button>
-                    <a href="<?php echo site_url('calculator1/admin/resale_rates'); ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
+                    <a href="<?php echo site_url('calculator/admin/resale_rates'); ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

@@ -837,7 +837,7 @@ class Admin extends CI_Controller
         }
         else
         {
-            redirect('calculator1/admin/title_rates');
+            redirect('calculator/admin/title_rates');
         }
         $data['rate_info'] = $rate_info;
 
@@ -873,7 +873,7 @@ class Admin extends CI_Controller
         if ($this->session->userdata('adminid')) {
             
         } else {
-            redirect("calculator1/admin_login");
+            redirect("calculator/admin_login");
         }
     }
 
@@ -899,7 +899,7 @@ class Admin extends CI_Controller
         $this->email->message('Hi ' . "\n" . "\n" . 'You have requested for new password on PCT.' . "\n" . "\n" . 'Here is your New login details' . "\n" . 'your email id : ' . $user_detail->email . "\n" . 'Password : ' . $_POST['pass'] . "\n" . "\n" . 'PCT Team' . "\n" . 'http://www.pacificcoasttitle.com' . "\n" . "\n" . "\n" . 'This is an automatically generated email. Please do not reply');
         $this->email->send();
         $this->session->set_flashdata('msg', "user account password been reset.");
-        redirect("calculator1/admin_dashboard");
+        redirect("calculator/admin_dashboard");
     }
     
     public function admin_dashboard_submit()
@@ -911,7 +911,7 @@ class Admin extends CI_Controller
                 // redirect('?welcome/admin_dashboard','refresh');
                 print_r("1");
             } else {
-                redirect("calculator1/admin_dashboard");
+                redirect("calculator/admin_dashboard");
             }
         } else {
             print_r("login_fail");
@@ -941,7 +941,7 @@ class Admin extends CI_Controller
                     print_r("1,admin");
                     die;
                 } else {
-                    redirect('calculator1/admin_dashboard');
+                    redirect('calculator/admin_dashboard');
                 }
                 
             } else {
@@ -961,6 +961,6 @@ class Admin extends CI_Controller
         $this->session->unset_userdata('adminname');
         $this->session->unset_userdata('adminemail');
         session_destroy();
-        redirect("calculator1/admin_login");
+        redirect("calculator/admin_login");
     }
 }

@@ -23,9 +23,9 @@
 			<div class="column six">
 				<?php if($this->session->userdata('mpuserid') !=""){?>
 				Hi, <?php echo $this->session->userdata('mpusername');?> <a
-					href="<?=base_url()?>calculator1/logout">Logout</a>
+					href="<?=base_url()?>calculator/logout">Logout</a>
 				<?php } else{?>
-				<a class="button orange create-repo-btn small" href="<?=base_url()?>calculator1/signup"> Lender
+				<a class="button orange create-repo-btn small" href="<?=base_url()?>calculator/signup"> Lender
 					Partner Login</a>
 				<?php } ?>
 			</div>

@@ -4,7 +4,7 @@
             <i class="fas fa-table"></i>
             Title Rates
             <div class="float-right">
-                <a href="<?php echo base_url(); ?>calculator1/admin/import_title_rates" class="btn btn-secondary"> Import </a>
+                <a href="<?php echo base_url(); ?>calculator/admin/import_title_rates" class="btn btn-secondary"> Import </a>
                 <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-secondary"> Export </a>
             </div>
         </div>
@@ -38,7 +38,7 @@
                                <td><?php echo "$".number_format($row['resi_loan_rate']); ?></td>
                                <td><?php echo "$".number_format($row['con_full_loan_rate']); ?></td>
                                <td>
-                                <a href="<?php echo base_url(); ?>calculator1/admin/edit_title_rates/<?php echo $row['title_rate_id_pk']; ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                <a href="<?php echo base_url(); ?>calculator/admin/edit_title_rates/<?php echo $row['title_rate_id_pk']; ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                 <a href="javascript:void(0);" onclick="delete_rates(<?php echo $row['title_rate_id_pk']; ?>);" class="grey button small2"><i class="fa fa-trash" aria-hidden="true"></i></a>
                               </td>
                             </tr>

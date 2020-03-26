@@ -127,13 +127,13 @@ class Welcome extends MX_Controller
         if ($_POST['region']) {
             $quote_id = $this->welcome_model->generate_quote();
         }
-        redirect('calculator1/view_quote/' . $quote_id, 'refresh');
+        redirect('calculator/view_quote/' . $quote_id, 'refresh');
     }
     
     public function view_quote()
     {   
         if(isset($_POST) && !empty($_POST)) {
-            redirect('calculator1/view_quote/' . $_POST['quote_id'], 'refresh');
+            redirect('calculator/view_quote/' . $_POST['quote_id'], 'refresh');
         } else if ($this->uri->segment(3)) {
             $quote_id = $this->uri->segment(3);
             $data['quote_detail']   = $this->welcome_model->get_quote_detail($quote_id);
@@ -257,7 +257,7 @@ class Welcome extends MX_Controller
                 
                 
                 $this->session->set_flashdata('msg', 'You are registered Successfully,Please login with your Email and password.');
-                redirect('calculator1', 'refresh');
+                redirect('calculator', 'refresh');
             }
         }
         
@@ -455,7 +455,7 @@ class Welcome extends MX_Controller
         $this->session->unset_userdata('mpusername');
         $this->session->unset_userdata('mpusertype');
         session_destroy();
-        redirect(base_url()."calculator1");
+        redirect(base_url()."calculator");
     }
     
     

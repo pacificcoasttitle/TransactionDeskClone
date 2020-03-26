@@ -65,7 +65,7 @@
                 
                 <div class="pull-right">
                     <button type="submit" id="addFee" name="addFee" class="btn btn-secondary">Add</button>
-                    <a href="<?php echo site_url('calculator1/admin/fees'); ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
+                    <a href="<?php echo site_url('calculator/admin/fees'); ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

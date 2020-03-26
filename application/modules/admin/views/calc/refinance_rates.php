@@ -4,7 +4,7 @@
             <i class="fas fa-table"></i>
             Refinance Rates
             <div class="float-right">
-                <a href="<?php echo base_url(); ?>calculator1/admin/add_refinance_rates" class="btn btn-secondary"> Add Rates </a>
+                <a href="<?php echo base_url(); ?>calculator/admin/add_refinance_rates" class="btn btn-secondary"> Add Rates </a>
             </div>
         </div>
         <div class="card-body">
@@ -32,7 +32,7 @@
                               <td><?php echo "$".number_format($row['escrow_rate']); ?></td>
                               <td><?php echo $row['county']; ?></td>
                               <td>
-                                <a href="<?php echo base_url(); ?>calculator1/admin/edit_refinance_rates/<?php echo $row['escrow_ref_id_pk']; ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                <a href="<?php echo base_url(); ?>calculator/admin/edit_refinance_rates/<?php echo $row['escrow_ref_id_pk']; ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                 <a href="javascript:void(0);" onclick="delete_rates(<?php echo $row['escrow_ref_id_pk']; ?>);" class="grey button small2"><i class="fa fa-trash" aria-hidden="true"></i></a>
                               </td>
                           </tr>

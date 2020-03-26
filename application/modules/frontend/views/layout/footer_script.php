@@ -6,7 +6,7 @@
         $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 
 
-        if (strpos($url,'calculator1') !== false) {
+        if (strpos($url,'calculator') !== false) {
             echo 'Car exists.';
         } else { ?>
             <script src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>

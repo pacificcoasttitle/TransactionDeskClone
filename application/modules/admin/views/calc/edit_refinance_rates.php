@@ -82,7 +82,7 @@
                 </div>                
                 <div class="pull-right">
                     <button type="submit" class="btn btn-secondary">Update</button>
-                    <a href="<?php echo site_url('calculator1/admin/refinance_rates'); ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
+                    <a href="<?php echo site_url('calculator/admin/refinance_rates'); ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

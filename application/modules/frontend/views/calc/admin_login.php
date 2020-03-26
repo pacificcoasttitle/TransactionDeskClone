@@ -104,7 +104,7 @@
                 if(data == "1")
                 {
                     $("#loading1").hide();
-                    window.location.assign('<?=base_url()?>calculator1/admin_dashboard');
+                    window.location.assign('<?=base_url()?>calculator/admin_dashboard');
                 }
                 else if(data == "0")
                 {

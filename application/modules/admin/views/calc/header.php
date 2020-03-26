@@ -27,7 +27,7 @@
 
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="<?php echo site_url().'calculator1/admin_dashboard'; ?>">
+    <a class="navbar-brand mr-1" href="<?php echo site_url().'calculator/admin_dashboard'; ?>">
       <img src="<?php echo base_url(); ?>assets/admin/images/logo2.png">
     </a>
 
@@ -42,7 +42,7 @@
           <i class="fas fa-user-circle fa-fw"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-          <a class="dropdown-item" href="<?php echo site_url('calculator1/admin_logout'); ?>">Logout</a>
+          <a class="dropdown-item" href="<?php echo site_url('calculator/admin_logout'); ?>">Logout</a>
         </div>
       </li>
     </ul>

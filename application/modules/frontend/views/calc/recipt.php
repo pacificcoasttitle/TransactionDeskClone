@@ -462,7 +462,7 @@ function evalmath($equation) {
         <?php
           }
         ?>
-                <a class="button small blue" href="<?=base_url() ?>calculator1" target="_blank">Start New Quote</a>
+                <a class="button small blue" href="<?=base_url() ?>calculator" target="_blank">Start New Quote</a>
             </div>
 
             <div class="clearfix">
