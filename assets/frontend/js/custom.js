@@ -5,7 +5,30 @@ $(document).ready(function() {
 	var request = '';
 
 	autoComplete();
-	$(document).on('click', '.search-property', getAddress);
+    $(document).on('click', '.search-property', getAddress);
+    
+    if ($('#table-recordings').length)
+    {
+        jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
+        
+            if (this.context.length) 
+            {
+                if(this.context[0].sTableId == 'table-recordings')
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"frontend/order/dashboard/get_recordings",
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#table-recordings thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+            }
+        });
+    }
 
 
     //customer no

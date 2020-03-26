@@ -38,6 +38,12 @@
     <script src="<?php echo base_url(); ?>assets/plugins/animate/wow.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/plugins/animate/jquery.shuffleLetters.js"></script>
     <script src="<?php echo base_url(); ?>assets/plugins/animate/jquery.scrollme.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/vendor/datatables/dataTables.bootstrap4.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/vendor/datatables/dataTables.bootstrap4.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/vendor/datatables/dataTables.buttons.min.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/vendor/datatables/buttons.html5.min.js"></script>
+
     
 
     <!-- User customization-->
