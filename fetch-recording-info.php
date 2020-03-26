@@ -1,7 +1,7 @@
 <?php
 
 	$api_token = 'testPCTGtoken';
-	$url = 'http://50.28.52.207/api/order/recorded?api_token='.$api_token.'&date=2020-03-25';
+	$url = 'http://50.28.52.207/api/order/recorded?api_token='.$api_token.'&date=2019-11-19';
 
 	$curl = curl_init();
 

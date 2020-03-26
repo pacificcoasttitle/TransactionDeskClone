@@ -45,12 +45,25 @@ body {
   padding-bottom: 110px;
 }
 
+.l-main-contenta {
+  padding-top: 30px;
+  padding-bottom: 110px;
+}
+
 .l-sidebar {
   margin-top: 110px;
 }
 
+.l-sidebara {
+  margin-top: 30px;
+}
+.l-sidebarb {
+  margin-top: 0px;
+}
+
+
 .l-sidebar_right {
-  padding-left: 10px;
+  padding-left: 0px;
 }
 
 /* ======= GUI ======= */
@@ -133,6 +146,8 @@ body {
   margin-bottom: 54px;
 }
 
+
+
 .ui-title-block-4 + .ui-decor-3a {
   margin-bottom: 10px;
 }
@@ -170,8 +185,8 @@ body {
 
 .ui-decor-1a {
   display: inline-block;
-  width: 70px;
-  height: 7px;
+  width: 40px;
+  height: 3px;
 }
 
 .ui-decor-2 {
@@ -1033,6 +1048,9 @@ blockquote cite {
 .alert__inner {
   padding-left: 70px;
 }
+.alert__inner {
+  padding-left: 0px;
+}
 .alert__inner2 {
   padding-left: 30px;
 }
@@ -1100,6 +1118,13 @@ blockquote cite {
   text-shadow: none;
 }
 
+.alert-blocksmall {
+  margin-bottom: 10px;
+  padding: 5px 15px 5px;
+  text-shadow: none;
+  margin-top:5px;
+}
+
 .alert-title {
   margin-bottom: 9px;
   font-size: 18px;
@@ -1107,6 +1132,14 @@ blockquote cite {
   letter-spacing: 0;
   text-transform: uppercase;
 }
+.alert-titlesmall {
+  margin-bottom: 1px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
 
 .alert-text {
   letter-spacing: .025em;
@@ -1919,7 +1952,10 @@ blockquote cite {
 
 .bg-border {
   padding: 5px;
-  border: 1px dashed #222;
+  border: 2px dotted #04415D;
+  color:#d35411;
+  font-weight:bold;
+  text-transform:Uppercase;
 }
 
 .color-dark {
@@ -2561,7 +2597,7 @@ blockquote cite {
 .b-blockquote-3__footer {
   margin-top: 50px;
   padding-right: 115px;
-  text-align: right;
+  text-align: left;
 }
 
 .b-blockquote-3__author {
@@ -3632,6 +3668,7 @@ blockquote cite {
 
 .b-post-full .entry-content {
   padding-right: 20px;
+  padding-left:14px;
 }
 
 .b-post-full .entry-meta__item {
@@ -4562,11 +4599,23 @@ blockquote cite {
     text-align: left;
 }
 
+.typography-sectionabcd {
+  padding-top: 0px;
+    padding-bottom: 135px;
+    text-align: left;
+}
+
+
 .typography-sectionc {
   padding-top: 50px;
   padding-bottom: 100px;
   text-align: center;
   margin-bottom: 175px;
+}
+
+.typography-sectione {
+  padding-top: 0px;
+  padding-bottom: 100px;
 }
 
 
@@ -5023,10 +5072,18 @@ blockquote cite {
 .section-sidebar {
   margin-bottom: 65px;
 }
+.section-sidebara {
+  margin-bottom: 82px;
+}
 
 .widget-content {
   margin-top: 45px;
 }
+
+.widget-contenta {
+  margin-top: 0px;
+}
+
 
 .widget-content2 {
   margin-top: 10px;
@@ -5350,8 +5407,33 @@ font-weight:bold;
 font-size:15px;
 line-height: 1.25px;
 margin-top:15px;
+
 }	
 		
-	
+/* Input field */
+
+.custom-file {
+
+text-align: center;
+padding: 3px 22px;
+border: 1px solid #eee;
+margin-top: 10px;
+/* background-color: white; */
+padding-left: 0px;
+
+}
+
+.input-group {
+	    text-align: center;
+    display: inline-block;
+}
+
+.text-bg.bg-primary2 {
+  padding: 5px;
+    color: #ffffff;
+    background-color: rgba(211, 84, 0, 0.8);
+    padding-right: 20px;
+    padding-left: 20px;
+}
 	
 	
