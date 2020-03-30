@@ -9,6 +9,7 @@ class Dashboard extends MX_Controller {
         $this->load->helper(array('file', 'url'));
         $this->load->library('session');
 		$this->load->library('form_validation');
+		$this->load->model('order/orderRecording');
     }
 
     function selectFiles()
@@ -38,7 +39,7 @@ class Dashboard extends MX_Controller {
 	
 	function get_recordings()
     {
-		$ch = curl_init(GET_RECORDING_URL.'&date=2020-03-26');                                    
+		$ch = curl_init(GET_RECORDING_URL.'date=2020-03-26&api_token='.RECORDING_API_TOKEN);                                    
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                        
 		curl_setopt($ch, CURLOPT_POSTFIELDS, array());                   
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -48,19 +49,64 @@ class Dashboard extends MX_Controller {
 		));
 		$error_msg = curl_error($ch);
 		$result = curl_exec($ch);
-		if(isset($result) && !empty($result))
-		{
+		if (isset($result) && !empty($result)) {
 			$response = json_decode($result,true);
-		} else {
-			
-		}
-		$nestedData[] = 1;
-			$nestedData[] = 'hitesh';
-			$nestedData[] = 'gghhg';
-		$data[] = $nestedData;  
-		$json_data['recordsTotal'] = 1;
-		//$json_data['recordsTotal'] = intval( $agent_lists['recordsTotal'] );
+			$records = array();
+			if (isset($response) && !empty($response)) {
+				foreach ($response as $key => $value) {
+					if (isset($value['documents']) && !empty($value['documents'])) {
+						foreach ($value['documents'] as $k => $v)  {
+							$date = strtotime($v['recordingTime']);
+							$recording_date = date('m/d/Y H:i:s', $date);
+							$records = array(
+								'instrument_number' => $v['instrumentNumber'], 
+								'state' => $v['state'], 
+								'county' => $v['county'],
+								'recording_date' => $v['recordingTime'],
+								'created' => date('Y-m-d H:i:s'),
+								'updated' => date('Y-m-d H:i:s')
+							);
+							$this->db->replace('pct_order_recordings', $records);
+						}
+					}
+				}
+			}
+		} 
+
+		$params = array();  $data = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+			$recording_lists = $this->orderRecording->get_recordings($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $recording_lists = $this->orderRecording->get_recordings($params);
+        }
+        
+
+        if (isset($recording_lists['data']) && !empty($recording_lists['data'])) {
+            foreach ($recording_lists['data'] as $key => $value)  {
+				$nestedData=array();
+				
+				$date = strtotime($value['recording_date']);
+				$recording_date = date('m/d/Y H:i:s', $date);
+				$nestedData[] = $recording_date;
+                $nestedData[] = $value['instrument_number'];
+                $nestedData[] = 'file_number';
+                $data[] = $nestedData;      
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $recording_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $recording_lists['recordsFiltered'] );
         $json_data['data'] = $data;
         echo json_encode($json_data);
+		
     }
 }
