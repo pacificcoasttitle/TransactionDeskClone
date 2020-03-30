@@ -31,7 +31,7 @@ class Dashboard extends MX_Controller {
 
     function recordings()
     {
-    	// $this->is_user();
+    	$this->is_user();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/recordings');
@@ -137,5 +137,45 @@ class Dashboard extends MX_Controller {
 				}
 			}
 		}  
+	}
+	
+	function attach_files()
+    {
+    	//$this->is_user();
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+		$this->load->view('layout/head_dashboard',$data);
+		$this->load->view('order/attach_files');
+	}
+
+	function get_orders()
+    {
+		$data = array();
+		$this->load->library('order/order');
+		$orders = $this->order->get_orders();
+		if(!empty($orders)) {
+			$i = 1;
+			foreach($orders as $order)  {
+				$nestedData = array();
+				$nestedData[] = $i;
+				$nestedData[] = $order->file_number;
+				$nestedData[] = $order->full_address;
+				$nestedData[] = '<a href="'.base_url().'upload-documents/'.$order->file_id.'"><button class="btn btn-grad-2a" type="button">Attach Files</button></a>';
+				$data[] = $nestedData; 
+				$i++; 
+			}
+			$json_data['recordsTotal'] = intval(count($orders));;
+		} else {
+			$json_data['recordsTotal'] = 0;
+		}
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+	}
+
+	public function upload_documents()
+	{
+		//$this->is_user();
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+		$this->load->view('layout/head_dashboard',$data);
+		$this->load->view('order/upload_documents');
 	}
 }

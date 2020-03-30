@@ -86,7 +86,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 define('BASE_URL_MAIN','http://pct.com/');
 /* Start Resware API */
-define('PLACE_ORDER_API','http://clients.pacificcoasttitle.com/api/orders/');
+define('RESWARE_ORDER_API','http://clients.pacificcoasttitle.com/api/');
 /* End Resware API */
 
 /* Start TP API */

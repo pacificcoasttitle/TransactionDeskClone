@@ -1,4 +1,4 @@
-<html lang="zxx">
+<html lang="">
 
 <head>
     <meta charset="utf-8">

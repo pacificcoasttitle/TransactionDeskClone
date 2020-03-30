@@ -7,17 +7,17 @@
                 <a class="dropdown-toggle" href="#" data-toggle="dropdown">Resources<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><h4>Forms & Flyers</h4></li>
-                    <li><a href="blank-forms.html">Blank Forms</a></li>
-                    <li><a href="educational-booklets.html">Educational Booklets</a></li>
-                    <li><a href="flyer-center.html">Flyer Center</a></li>
+                    <li><a href="<?php echo base_url(); ?>blank-forms">Blank Forms</a></li>
+                    <li><a href="<?php echo base_url(); ?>educational-booklets">Educational Booklets</a></li>
+                    <li><a href="<?php echo base_url(); ?>flyer-center">Flyer Center</a></li>
                     <li class="divider"></li>
                     <li><h4>Rates & Fees</h4></li>
-                    <li><a href="http://www.pct.com/calculator/">Rate Calculator</a></li>
-                    <li><a href="http://www.pct.com/calculator/index.php?welcome/signup">Lender Rate Portal</a></li>
-                    <li><a href="recording-fees.html">Recording Fees</a></li>
-                    <li><a href="assets/downloads/Recorders-Calendar.pdf">Recorders Holidays</a></li>
-                    <li><a href="assets/downloads/TransferTaxes.pdf">Transfer Tax Info</a></li>
-                    <li><a href="rate-book.html">Rate Book</a></li>
+                    <li><a href="<?php echo base_url(); ?>calculator/">Rate Calculator</a></li>
+                    <li><a href="<?php echo base_url(); ?>calculator/signup">Lender Rate Portal</a></li>
+                    <li><a href="<?php echo base_url(); ?>recording-fees">Recording Fees</a></li>
+                    <li><a href="<?php echo base_url(); ?>assets/downloads/2019-RecordersCalendar.pdf">Recorders Holidays</a></li>
+                    <li><a href="<?php echo base_url(); ?>assets/downloads/TransferTaxes.pdf">Transfer Tax Info</a></li>
+                    <li><a href="<?php echo base_url(); ?>rate-book">Rate Book</a></li>
                     <li class="divider"></li>
                     <li><h4>Tools & Video</h4></li>
                     <li class="dropdown">
@@ -30,7 +30,7 @@
                     
                         </ul>
                         </li>
-                    <li><a href="training-center.html">Training center</a></li>
+                    <li><a href="<?php echo base_url(); ?>training-center">Training center</a></li>
                 </ul>				
             </li>
             <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>      
@@ -56,17 +56,17 @@
                         <!-- Classic Dropdown--></a>
                                 <ul class="dropdown-menu">
                                         <li><h4>Forms & Flyers</h4></li>
-                                    <li><a href="blank-forms.html">Blank Forms</a></li>
-                                    <li><a href="educational-booklets.html">Educational Booklets</a></li>
-                                    <li><a href="flyer-center.html">Flyer Center</a></li>
+                                    <li><a href="<?php echo base_url(); ?>blank-forms">Blank Forms</a></li>
+                                    <li><a href="<?php echo base_url(); ?>educational-booklets">Educational Booklets</a></li>
+                                    <li><a href="<?php echo base_url(); ?>flyer-center">Flyer Center</a></li>
                                         <li class="divider"></li>
                                         <li><h4>Rates & Fees</h4></li>
-                                    <li><a href="http://www.pct.com/calculator/">Rate Calculator</a></li>
-                                    <li><a href="http://www.pct.com/calculator/index.php?welcome/signup">Lender Rate Portal</a></li>
-                                    <li><a href="recording-fees.html">Recording Fees</a></li>
-                                    <li><a href="assets/downloads/Recorders-Calendar.pdf">Recorders Holidays</a></li>
-                                    <li><a href="assets/downloads/TransferTaxes.pdf">Transfer Tax Info</a></li>
-                                    <li><a href="rate-book.html">Rate Book</a></li>
+                                    <li><a href="<?php echo base_url(); ?>calculator/">Rate Calculator</a></li>
+                                    <li><a href="<?php echo base_url(); ?>calculator/signup">Lender Rate Portal</a></li>
+                                    <li><a href="<?php echo base_url(); ?>recording-fees">Recording Fees</a></li>
+                                    <li><a href="<?php echo base_url(); ?>assets/downloads/2019-RecordersCalendar.pdf">Recorders Holidays</a></li>
+                                    <li><a href="<?php echo base_url(); ?>assets/downloads/TransferTaxes.pdf">Transfer Tax Info</a></li>
+                                    <li><a href="<?php echo base_url(); ?>rate-book">Rate Book</a></li>
                                         <li class="divider"></li>
                                         <li><h4>Tools & Video</h4></li>
                                     <li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Agent Tools<b style="color:#d35411;" class="caret"></b>
@@ -80,7 +80,7 @@
                                     
                                         </ul>
                             </li>
-                            <li><a href="training-center.html">Training center</a></li>
+                            <li><a href="<?php echo base_url(); ?>training-center">Training center</a></li>
                                 </ul>
                                 
                             </li>

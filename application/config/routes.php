@@ -107,6 +107,9 @@ $route['recordings'] = 'frontend/order/dashboard/recordings';
 $route['order/get-recordings'] = 'frontend/order/dashboard/get_recordings';
 $route['review-prelim'] = 'frontend/order/resware/reviewPrelim';
 $route['instrumentService'] = 'frontend/order/TitlePoint/instrumentService';
+$route['attach-files'] = 'frontend/order/dashboard/attach_files';
+$route['get-orders'] = 'frontend/order/dashboard/get_orders';
+$route['upload-documents/:num'] = 'frontend/order/dashboard/upload_documents';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
