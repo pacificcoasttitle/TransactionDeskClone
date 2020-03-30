@@ -279,6 +279,9 @@ class Home extends MX_Controller {
 						}
 						
 						$mail->Send();
+					} else {
+						print_r($response);
+						return false;
 					}
 
 					$session_data = array(
