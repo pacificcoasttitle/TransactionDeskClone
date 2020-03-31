@@ -1,3 +1,32 @@
+<style>
+	.pagination {
+		overflow: hidden;
+	}
+	.pagination > li > a {
+		width: 42px;
+		height: 42px;
+		margin-right: 8px;
+		padding-top: 14px;
+		border: 1px solid rgba(221, 221, 221, 0.5);
+	}
+	.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+		background-color: #6533d7;
+		background-image: -webkit-linear-gradient(305deg, #6533d7 0%, #339bd7 100%);
+	}
+	.pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
+		background-color: #6533d7;
+		background-image: -webkit-linear-gradient(305deg, #6533d7 0%, #339bd7 100%);
+	}
+	.dataTables_paginate {
+		padding-top: 50px;
+		padding-bottom: 100px;
+		text-align: right;
+	}
+	.typography-section {
+		padding-bottom: 0px;
+	}
+</style>
+
 <body>
 	<?php
         $this->load->view('layout/header_dashboard');
@@ -30,16 +59,7 @@
 										</tbody>
 									</table>
 
-									<div class="typography-sectionab">
-
-										<ul class="pagination pagination-1">
-											<li><a href="#"><span class="fa fa-angle-left"></span></a></li>
-											<li><a href="#">1</a></li>
-											<li class="active"><a href="#">2</a></li>
-											<li><a href="#">3</a></li>
-											<li><a href="#"><span class="fa fa-angle-right"></span></a></li>
-										</ul>
-									</div>
+									
 
 								</div>
 							</div>
@@ -67,11 +87,11 @@
 				"paging": true,
 				"lengthChange": false,
 				"language": {
-                    paginate: {
-                        next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
-                        previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
-                    },
-                    "emptyTable": "Record(s) not found.",
+					paginate: {
+						next: '<span class="fa fa-angle-right"></span>',
+						previous: '<span class="fa fa-angle-left"></span>',
+					},
+					"emptyTable": "Record(s) not found.",
                 },
                 "searching": false,
 				initComplete: function () {
@@ -81,10 +101,7 @@
 				dom: 'Bfrtip',
 				buttons: [],
 				"drawCallback": function () {
-					$('.dataTables_paginate > .pagination li').addClass('page-item');
-					$('.dataTables_paginate > .pagination a').addClass('page-link');
-					$('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a')
-						.addClass('rounded');
+					
 				},
 				"ordering": false,
 				"serverSide": true,

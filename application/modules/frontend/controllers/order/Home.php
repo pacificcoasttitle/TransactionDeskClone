@@ -166,7 +166,6 @@ class Home extends MX_Controller {
 				if(isset($result) && !empty($result))
 				{
 					$response = json_decode($result,true);
-			
 					if(isset($response['ResponseStatus']) && !empty($response['ResponseStatus']))
 					{
 						$logDir = FCPATH.'logs/';
@@ -279,10 +278,7 @@ class Home extends MX_Controller {
 						}
 						
 						$mail->Send();
-					} else {
-						print_r($response);
-						return false;
-					}
+					} 
 
 					$session_data = array(
 						"orderNumber" => $orderNumber,
