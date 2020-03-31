@@ -125,4 +125,5 @@ define('CURRENT_YEAR', date("Y"));
 /* settings.php */
 
 /* Recording API */
-define('GET_RECORDING_URL', 'http://50.28.52.207/api/order/recorded?api_token=testPCTGtoken');
+define('GET_RECORDING_URL', 'https://dev-app.quickcloze.net/api/order-recorded/all?');
+define('RECORDING_API_TOKEN', 'testPCTGtoken');
