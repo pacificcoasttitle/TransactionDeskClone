@@ -207,73 +207,42 @@ class Home extends MX_Controller {
 
 						$data = array(
 							'orderNumber'=> $orderNumber,
-							'OpenName'=> $OpenName,
-							'OpenEmail'=> $OpenEmail,
+							'OpenName'=> $OpenName.' '.$OpenLastName,
 							'Opentelephone'=> $Opentelephone,
+							'OpenEmail'=> $OpenEmail,
+							'CompanyName'=> $CompanyName,
+							'StreetAddress'=> $StreetAddress,
+							'City'=> $City,
+							'Zipcode'=> $Zipcode,
+							'PropertyAddress'=> $PropertyAddress,
+							'FullProperty'=> $FullProperty,
+							'APN'=> $apn,
+							'County'=> $County,
+							'LegalDescription'=> $LegalDescription,
+							'PrimaryOwner'=> $PrimaryOwner,
+							'SecondaryOwner'=> $SecondaryOwner,
+							'SalesRep'=> $SalesRep,
+							'TitleOfficer'=> $TitleOfficer,
 							'ProductType'=> $ProductType,
 							'SalesAmount'=> $SalesAmount,
 							'LoanAmount'=> $LoanAmount,
+							'sendermessage'=> $sendermessage,
+							'buyers_agent'=> $buyers_agent_details,
+							'listing_agent'=> $listing_agent_details,
+							'lender_details'=> $lender_details,
+							'escrow_details'=> $escrow_details,
 							'currYear'=> CURRENT_YEAR
-						);
+						 );
+
 						$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
 						$mail->Body = $order_message_body;
 						$mail->AltBody = "Use an HTML compatible email client";
-
+						
 						//send order deatils to all parties						
 						if(isset($parties_email) && !empty($parties_email))
 						{
-							/*$message = '<h3>Order Details:</h3><p>Customer Name: '.$OpenName.' '.$OpenLastName.'</p><p>Email Address: '.$OpenEmail.'</p><p>Order Number: '.$orderNumber.'</p>';*/
-							$mail = $this->phpmailer_library->load();
-							// $mail = new PHPMailer();
-							$mail->isSendmail();
-							$mail->IsHTML(true);
-							$mail->setFrom($OpenEmail,$OpenName.' '.$OpenLastName);
-							$mail->CharSet = "UTF-8";
-							$mail->Encoding = "base64";
-							$mail->Timeout = 200;
-							$mail->ContentType = "text/html";
-							$mail->addAddress('cs@pct.com', 'Open Order Desk');
-							$mail->Subject = "Order Placed at Resware";
-
-							$data = array(
-						       'orderNumber'=> $orderNumber,
-						       'OpenName'=> $OpenName.' '.$OpenLastName,
-						       'Opentelephone'=> $Opentelephone,
-						       'OpenEmail'=> $OpenEmail,
-						       'CompanyName'=> $CompanyName,
-						       'StreetAddress'=> $StreetAddress,
-						       'City'=> $City,
-						       'Zipcode'=> $Zipcode,
-						       'PropertyAddress'=> $PropertyAddress,
-						       'FullProperty'=> $FullProperty,
-						       'APN'=> $apn,
-						       'County'=> $County,
-						       'LegalDescription'=> $LegalDescription,
-						       'PrimaryOwner'=> $PrimaryOwner,
-						       'SecondaryOwner'=> $SecondaryOwner,
-						       'SalesRep'=> $SalesRep,
-						       'TitleOfficer'=> $TitleOfficer,
-						       'ProductType'=> $ProductType,
-						       'SalesAmount'=> $SalesAmount,
-						       'LoanAmount'=> $LoanAmount,
-						       'sendermessage'=> $sendermessage,
-						       'buyers_agent'=> $buyers_agent_details,
-						       'listing_agent'=> $listing_agent_details,
-						       'lender_details'=> $lender_details,
-						       'escrow_details'=> $escrow_details,
-						       'currYear'=> CURRENT_YEAR
-						    );
-
-							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
-							$mail->Body = $order_message_body;
-							$mail->AltBody = "Use an HTML compatible email client";
-
-							//send order deatils to all parties						
-							if(isset($parties_email) && !empty($parties_email))
-							{
-								foreach($parties_email as $email => $name){
-									$mail->AddBCC($email, $name);
-								}
+							foreach($parties_email as $email => $name){
+								$mail->AddBCC($email, $name);
 							}
 						}
 						
