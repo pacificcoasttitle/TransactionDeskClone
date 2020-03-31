@@ -287,8 +287,7 @@ class Home extends MX_Controller {
 		                    "apn" => $apn,
 		                    "state" => $PropertyState,
 		                    "county" => $County,
-		                    "fipCode" => $PropertyFips,
-		                    "fipCode" => '06037',
+		                    "fipCode" => $PropertyFips
 		                );
 
 	                	$this->session->set_userdata($session_data);
