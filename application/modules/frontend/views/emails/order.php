@@ -23,7 +23,7 @@
                                              <table style="margin:auto" align="center">
                                                 <tbody>
                                                    <tr>
-                                                      <td style="margin-top:;font-size: 22px; font-family:Montserrat; Font-weight: 800; color: #04415D;text-transform: uppercase; text-align:center;">
+                                                      <td style="margin-top:;font-size: 22px; font-family:Montserrat; font-weight: 800; color: #04415D;text-transform: uppercase; text-align:center;">
                                                          NEW ORDER DETAILS  
                                                       </td>
                                                    </tr>
@@ -38,6 +38,80 @@
                                                 <p><span style="font-weight:bold;font-size:16px">Opened By:</span> <?php echo $OpenName; ?></p>
                                                 <p><span style="font-weight:bold;font-size:16px">Open Mail:</span> <?php echo $OpenEmail; ?></p>
                                                 <p><span style="font-weight:bold;font-size:16px">Open Telephone:</span> <?php echo $Opentelephone; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">Company:</span> <?php echo $CompanyName; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">Address:</span> <?php echo $StreetAddress; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">City:</span> <?php echo $City; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">Zipcode:</span> <?php echo $Zipcode; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">Additional Details:</span> <?php echo $sendermessage; ?></p>
+                                                <br>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                       <tr>
+                                          <td style="border-bottom:1px solid #D8D8D8;color:#666;text-align:center;padding-bottom:30px">
+                                             <table style="margin:auto" align="center">
+                                                <tbody>
+                                                   <tr>
+                                                      <td style="margin-top:;font-size: 22px; font-family:Montserrat;font-weight: 800; color: #04415D;text-transform: uppercase; text-align:center;">
+                                                         PROPERTY DETAILS
+                                                      </td>
+                                                   </tr>
+                                                </tbody>
+                                             </table>
+                                          </td>
+                                       </tr>
+                                       <tr>
+                                          <td style="color:#666;padding:15px; padding-bottom:0;font-size:14px;line-height:20px;font-family:arial;text-align:left">
+                                             <div style="font-style:normal;padding-bottom:15px;font-family:arial;line-height:20px;text-align:left">
+                                                <p><span style="font-weight:bold;font-size:16px">Property Address:</span> <?php echo $PropertyAddress; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">Full Street Address:</span> <?php echo $FullProperty; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">APN:</span> <?php echo $APN; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">County:</span> <?php echo $County; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">Breif Legal Description:</span> <?php echo $LegalDescription; ?></p>
+                                                <br>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                       <tr>
+                                          <td style="border-bottom:1px solid #D8D8D8;color:#666;text-align:center;padding-bottom:30px">
+                                             <table style="margin:auto" align="center">
+                                                <tbody>
+                                                   <tr>
+                                                      <td style="margin-top:;font-size: 22px; font-family:Montserrat;font-weight: 800; color: #04415D;text-transform: uppercase; text-align:center;">
+                                                         SELLER DETAILS  
+                                                      </td>
+                                                   </tr>
+                                                </tbody>
+                                             </table>
+                                          </td>
+                                       </tr>
+                                       <tr>
+                                          <td style="color:#666;padding:15px; padding-bottom:0;font-size:14px;line-height:20px;font-family:arial;text-align:left">
+                                             <div style="font-style:normal;padding-bottom:15px;font-family:arial;line-height:20px;text-align:left">
+                                                <p><span style="font-weight:bold;font-size:16px">Primary Owner:</span> <?php echo $PrimaryOwner; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">Secondary Owner:</span> <?php echo $SecondaryOwner; ?></p>
+                                                <br>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                       <tr>
+                                          <td style="border-bottom:1px solid #D8D8D8;color:#666;text-align:center;padding-bottom:30px">
+                                             <table style="margin:auto" align="center">
+                                                <tbody>
+                                                   <tr>
+                                                      <td style="margin-top:;font-size: 22px; font-family:Montserrat; font-weight: 800; color: #04415D;text-transform: uppercase; text-align:center;">
+                                                         TRANSACTION DETAILS
+                                                      </td>
+                                                   </tr>
+                                                </tbody>
+                                             </table>
+                                          </td>
+                                       </tr>
+                                       <tr>
+                                          <td style="color:#666;padding:15px; padding-bottom:0;font-size:14px;line-height:20px;font-family:arial;text-align:left">
+                                             <div style="font-style:normal;padding-bottom:15px;font-family:arial;line-height:20px;text-align:left">
+                                                <p><span style="font-weight:bold;font-size:16px">Sales Rep:</span> <?php echo $SalesRep; ?></p>
+                                                <p><span style="font-weight:bold;font-size:16px">Title Officer:</span> <?php echo $TitleOfficer; ?></p>
                                                 <p><span style="font-weight:bold;font-size:16px">Product:</span> <?php echo $ProductType; ?></p>
                                                 <p><span style="font-weight:bold;font-size:16px">Sales Price:</span> <?php echo $SalesAmount; ?></p>
                                                 <p><span style="font-weight:bold;font-size:16px">Loan Amount:</span> <?php echo $LoanAmount; ?></p>
@@ -45,6 +119,130 @@
                                              </div>
                                           </td>
                                        </tr>
+                                       <?php
+                                          if(isset($buyers_agent) && !empty($buyers_agent))
+                                          {
+                                       ?>
+                                            <tr>
+                                              <td style="border-bottom:1px solid #D8D8D8;color:#666;text-align:center;padding-bottom:30px">
+                                                 <table style="margin:auto" align="center">
+                                                    <tbody>
+                                                       <tr>
+                                                          <td style="margin-top:;font-size: 22px; font-family:Montserrat; font-weight: 800; color: #04415D;text-transform: uppercase; text-align:center;">
+                                                             BUYERS AGENT DETAILS
+                                                          </td>
+                                                       </tr>
+                                                    </tbody>
+                                                 </table>
+                                              </td>
+                                           </tr>
+                                           <tr>
+                                              <td style="color:#666;padding:15px; padding-bottom:0;font-size:14px;line-height:20px;font-family:arial;text-align:left">
+                                                 <div style="font-style:normal;padding-bottom:15px;font-family:arial;line-height:20px;text-align:left">
+                                                    <p><span style="font-weight:bold;font-size:16px">Name:</span> <?php echo $buyers_agent['name']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Email Address:</span> <?php echo $buyers_agent['email']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Telephone:</span> <?php echo $buyers_agent['telephone']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Company:</span> <?php echo $buyers_agent['company']; ?></p>
+                                                    <br>
+                                                 </div>
+                                              </td>
+                                           </tr>  
+                                       <?php
+                                          }
+                                       ?>
+                                       <?php
+                                          if(isset($listing_agent) && !empty($listing_agent))
+                                          {
+                                       ?>
+                                            <tr>
+                                              <td style="border-bottom:1px solid #D8D8D8;color:#666;text-align:center;padding-bottom:30px">
+                                                 <table style="margin:auto" align="center">
+                                                    <tbody>
+                                                       <tr>
+                                                          <td style="margin-top:;font-size: 22px; font-family:Montserrat; font-weight: 800; color: #04415D;text-transform: uppercase; text-align:center;">
+                                                             LISTING AGENT DETAILS
+                                                          </td>
+                                                       </tr>
+                                                    </tbody>
+                                                 </table>
+                                              </td>
+                                           </tr>
+                                           <tr>
+                                              <td style="color:#666;padding:15px; padding-bottom:0;font-size:14px;line-height:20px;font-family:arial;text-align:left">
+                                                 <div style="font-style:normal;padding-bottom:15px;font-family:arial;line-height:20px;text-align:left">
+                                                    <p><span style="font-weight:bold;font-size:16px">Name:</span> <?php echo $listing_agent['name']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Email Address:</span> <?php echo $listing_agent['email']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Telephone:</span> <?php echo $listing_agent['telephone']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Company:</span> <?php echo $listing_agent['company']; ?></p>
+                                                    <br>
+                                                 </div>
+                                              </td>
+                                           </tr>  
+                                       <?php
+                                          }
+                                       ?>
+                                       <?php
+                                          if(isset($lender_details) && !empty($lender_details))
+                                          {
+                                       ?>
+                                            <tr>
+                                              <td style="border-bottom:1px solid #D8D8D8;color:#666;text-align:center;padding-bottom:30px">
+                                                 <table style="margin:auto" align="center">
+                                                    <tbody>
+                                                       <tr>
+                                                          <td style="margin-top:;font-size: 22px; font-family:Montserrat; Font-weight: 800; color: #04415D;text-transform: uppercase; text-align:center;">
+                                                             LENDER DETAILS
+                                                          </td>
+                                                       </tr>
+                                                    </tbody>
+                                                 </table>
+                                              </td>
+                                           </tr>
+                                           <tr>
+                                              <td style="color:#666;padding:15px; padding-bottom:0;font-size:14px;line-height:20px;font-family:arial;text-align:left">
+                                                 <div style="font-style:normal;padding-bottom:15px;font-family:arial;line-height:20px;text-align:left">
+                                                    <p><span style="font-weight:bold;font-size:16px">Name:</span> <?php echo $lender_details['name']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Email Address:</span> <?php echo $lender_details['email']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Telephone:</span> <?php echo $lender_details['telephone']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Company:</span> <?php echo $lender_details['company']; ?></p>
+                                                    <br>
+                                                 </div>
+                                              </td>
+                                           </tr>  
+                                       <?php
+                                          }
+                                       ?>
+                                       <?php
+                                          if(isset($escrow_details) && !empty($escrow_details))
+                                          {
+                                       ?>
+                                            <tr>
+                                              <td style="border-bottom:1px solid #D8D8D8;color:#666;text-align:center;padding-bottom:30px">
+                                                 <table style="margin:auto" align="center">
+                                                    <tbody>
+                                                       <tr>
+                                                          <td style="margin-top:;font-size: 22px; font-family:Montserrat; font-weight: 800; color: #04415D;text-transform: uppercase; text-align:center;">
+                                                             ESCROW DETAILS
+                                                          </td>
+                                                       </tr>
+                                                    </tbody>
+                                                 </table>
+                                              </td>
+                                           </tr>
+                                           <tr>
+                                              <td style="color:#666;padding:15px; padding-bottom:0;font-size:14px;line-height:20px;font-family:arial;text-align:left">
+                                                 <div style="font-style:normal;padding-bottom:15px;font-family:arial;line-height:20px;text-align:left">
+                                                    <p><span style="font-weight:bold;font-size:16px">Name:</span> <?php echo $escrow_details['name']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Email Address:</span> <?php echo $escrow_details['email']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Telephone:</span> <?php echo $escrow_details['telephone']; ?></p>
+                                                    <p><span style="font-weight:bold;font-size:16px">Company:</span> <?php echo $escrow_details['company']; ?></p>
+                                                    <br>
+                                                 </div>
+                                              </td>
+                                           </tr>  
+                                       <?php
+                                          }
+                                       ?>
                                     </tbody>
                                  </table>
                               </td>

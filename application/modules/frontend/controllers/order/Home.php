@@ -76,26 +76,57 @@ class Home extends MX_Controller {
 
 	        	$sendermessage      = $this->input->post('sendermessage');
 	        	$BuyerAgentId      = $this->input->post('BuyerAgentId');
-	        	$BuyerAgentEmailAddress      = $this->input->post('BuyerAgentEmailAddress');
-	        	$parties_email[$BuyerAgentEmailAddress] = isset($_POST["BuyerAgentName"]) && !empty($_POST["BuyerAgentName"]) ? strip_tags(trim($_POST["BuyerAgentName"])) : '';
+
+	        	$parties_email = $buyers_agent_details = $listing_agent_details = array();
+	        	if(isset($BuyerAgentId) && !empty($BuyerAgentId))
+	        	{
+	        		$BuyerAgentName      = $this->input->post('BuyerAgentName');
+	        		$BuyerAgentEmailAddress      = $this->input->post('BuyerAgentEmailAddress');
+	        		$BuyerAgentTelephone      = $this->input->post('BuyerAgentTelephone');
+	        		$BuyerAgentCompany      = $this->input->post('BuyerAgentCompany');
+
+	        		$parties_email[$BuyerAgentEmailAddress] = isset($_POST["BuyerAgentName"]) && !empty($_POST["BuyerAgentName"]) ? strip_tags(trim($_POST["BuyerAgentName"])) : '';
+
+	        		$buyers_agent_details = array('name'=>$BuyerAgentName, 'email'=>$BuyerAgentEmailAddress, 'telephone'=> $BuyerAgentTelephone,'company'=>$BuyerAgentCompany);
+	        	}
+	        	
 	        	
 	        	$ListingAgentId      = $this->input->post('ListingAgentId');
-	        	$ListingAgentEmailAddress = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
+	        	if(isset($ListingAgentId) && !empty($ListingAgentId))
+	        	{
+	        		$ListingAgentName      = $this->input->post('ListingAgentName');
+	        		$ListingAgentEmailAddress = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
+	        		$ListingAgentTelephone      = $this->input->post('ListingAgentTelephone');
+	        		$ListingAgentCompany      = $this->input->post('ListingAgentCompany');
+	        		
 
-				$parties_email[$ListingAgentEmailAddress] = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
+					$parties_email[$ListingAgentEmailAddress] = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
+
+					$listing_agent_details = array('name'=>$ListingAgentName, 'email'=>$ListingAgentEmailAddress, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
+	        	}
+	        	
 
 				$EscrowLenderId = '';
+				$lender_details = $escrow_details = array();
 				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
 				{
 					$EscrowLenderId = $_POST['EscrowId'];
-					$EscrowLenderEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
 					$EscrowLenderName = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
+					$EscrowLenderEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
+					$EscrowLenderTelephone      = $this->input->post('EscrowTelephone');
+	        		$EscrowLenderCompany      = $this->input->post('EscrowCompany');
+
+					$escrow_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
 				}
 				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
 				{
 					$EscrowLenderId = $_POST['LenderId'];
-					$EscrowLenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
 					$EscrowLenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
+					$EscrowLenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
+					$EscrowLenderTelephone      = $this->input->post('LenderTelephone');
+	        		$EscrowLenderCompany      = $this->input->post('LenderCompany');
+
+					$lender_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
 				}
 				if(isset($EscrowLenderEmail) && !empty($EscrowLenderEmail))
 				{
@@ -202,19 +233,38 @@ class Home extends MX_Controller {
 							$mail->Encoding = "base64";
 							$mail->Timeout = 200;
 							$mail->ContentType = "text/html";
-							$mail->addAddress('cs@pct.com', 'Open Order Desk');							
+							$mail->addAddress('cs@pct.com', 'Open Order Desk');
 							$mail->Subject = "Order Placed at Resware";
 
 							$data = array(
 						       'orderNumber'=> $orderNumber,
-						       'OpenName'=> $OpenName,
-						       'OpenEmail'=> $OpenEmail,
+						       'OpenName'=> $OpenName.' '.$OpenLastName,
 						       'Opentelephone'=> $Opentelephone,
+						       'OpenEmail'=> $OpenEmail,
+						       'CompanyName'=> $CompanyName,
+						       'StreetAddress'=> $StreetAddress,
+						       'City'=> $City,
+						       'Zipcode'=> $Zipcode,
+						       'PropertyAddress'=> $PropertyAddress,
+						       'FullProperty'=> $FullProperty,
+						       'APN'=> $apn,
+						       'County'=> $County,
+						       'LegalDescription'=> $LegalDescription,
+						       'PrimaryOwner'=> $PrimaryOwner,
+						       'SecondaryOwner'=> $SecondaryOwner,
+						       'SalesRep'=> $SalesRep,
+						       'TitleOfficer'=> $TitleOfficer,
 						       'ProductType'=> $ProductType,
 						       'SalesAmount'=> $SalesAmount,
 						       'LoanAmount'=> $LoanAmount,
+						       'sendermessage'=> $sendermessage,
+						       'buyers_agent'=> $buyers_agent_details,
+						       'listing_agent'=> $listing_agent_details,
+						       'lender_details'=> $lender_details,
+						       'escrow_details'=> $escrow_details,
 						       'currYear'=> CURRENT_YEAR
 						    );
+
 							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
 							$mail->Body = $order_message_body;
 							$mail->AltBody = "Use an HTML compatible email client";
@@ -237,7 +287,7 @@ class Home extends MX_Controller {
 		                    "apn" => $apn,
 		                    "state" => $PropertyState,
 		                    "county" => $County,
-		                    "fipCode" => $PropertyFips,
+		                    "fipCode" => $PropertyFips
 		                );
 
 	                	$this->session->set_userdata($session_data);
@@ -672,6 +722,7 @@ class Home extends MX_Controller {
 
     function orderSubmit()
     {
+    	// $this->session->set_userdata('fipCode', '06037');
 		$this->is_user();
     	$data['title'] = 'Open Order | Pacific Coast Title Company';
     	$data['address'] = $this->session->userdata('address');
