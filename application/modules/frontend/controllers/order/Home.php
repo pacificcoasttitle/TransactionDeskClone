@@ -160,259 +160,155 @@ class Home extends MX_Controller {
 				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
 
 				$order_data = json_encode($place_order);
-
-				$login = 'Ghernandez@pct.com';
-				$password= 'Alpha637#';
-
-				/*$login_array = array('djorns@capstoneescrow.com','bfong@americantrustescrow.com','angiebao@jadeescrow.com','jrodriguez@capstoneescrow.com','ghernandez@pct.com');*/
-				// $password= 'Pacific2';
-
-				
-				$condition = array(
-		            'where' => array(
-		                'email_address' => $OpenEmail,
-		            )
-		        );
-		        $customerInfo = $this->home_model->get_customers($condition);
-		        
-		        $userPassword = isset($customerData[0]['password']) && !empty($customerData[0]['password']) ? $customerData[0]['password'] : '';
-            	
-				/*if(in_array($OpenEmail, $login_array) && md5($password) == $userPassword)
-				{*/
-					$ch = curl_init(PLACE_ORDER_API);                                    
-					curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                        
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $order_data);                   
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-					curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-					// curl_setopt($ch, CURLOPT_USERPWD, "$OpenEmail:$password");
-					curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
-					curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                
-					    'Content-Type: application/json',
-					    'Content-Length: ' . strlen($order_data))                                 
-					); 
-					$error_msg = curl_error($ch);
-					$result = curl_exec($ch);
-
-					if(isset($result) && !empty($result))
+				$this->load->library('order/resware');
+				$result = $this->resware->make_request('POST', 'orders', $order_data);
+			
+				if(isset($result) && !empty($result))
+				{
+					$response = json_decode($result,true);
+					if(isset($response['ResponseStatus']) && !empty($response['ResponseStatus']))
 					{
-						$response = json_decode($result,true);
-						
-						if(isset($response['ResponseStatus']) && !empty($response['ResponseStatus']))
+						$logDir = FCPATH.'logs/';
+						if(!is_dir($logDir))
 						{
-							$logDir = FCPATH.'logs/';
-							if(!is_dir($logDir))
-							{
-							    mkdir($logDir, 0777, true);
-							}
-							$logFile = $logDir.'place_order.log';
-
-							$method = (file_exists($logFile)) ? 'a' : 'w';
-							$fh = fopen($logFile,$method);
-
-							fwrite($fh, date('m/d/Y H:i:s').' : '.$result."\n");
-							fclose($fh);
+							mkdir($logDir, 0777, true);
 						}
-						$orderNumber = $file_id = '';
+						$logFile = $logDir.'place_order.log';
 
-						if(isset($response['FileID']) && !empty($response['FileID']))
-						{
-							$orderNumber = isset($response['FileNumber']) && !empty($response['FileNumber']) ? $response['FileNumber'] : '';
-							$file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
-							// $_SESSION['orderNumber'] = $orderNumber;
-						}
+						$method = (file_exists($logFile)) ? 'a' : 'w';
+						$fh = fopen($logFile,$method);
 
-						if($orderNumber)
-						{
-							/*$message = '<h3>Order Details:</h3><p>Customer Name: '.$OpenName.' '.$OpenLastName.'</p><p>Email Address: '.$OpenEmail.'</p><p>Order Number: '.$orderNumber.'</p>';*/
-							$mail = $this->phpmailer_library->load();
-							// $mail = new PHPMailer();
-							$mail->isSendmail();
-							$mail->IsHTML(true);
-							$mail->setFrom($OpenEmail,$OpenName.' '.$OpenLastName);
-							$mail->CharSet = "UTF-8";
-							$mail->Encoding = "base64";
-							$mail->Timeout = 200;
-							$mail->ContentType = "text/html";
-							$mail->addAddress('cs@pct.com', 'Open Order Desk');
-							$mail->Subject = "Order Placed at Resware";
-
-							$data = array(
-						       'orderNumber'=> $orderNumber,
-						       'OpenName'=> $OpenName.' '.$OpenLastName,
-						       'Opentelephone'=> $Opentelephone,
-						       'OpenEmail'=> $OpenEmail,
-						       'CompanyName'=> $CompanyName,
-						       'StreetAddress'=> $StreetAddress,
-						       'City'=> $City,
-						       'Zipcode'=> $Zipcode,
-						       'PropertyAddress'=> $PropertyAddress,
-						       'FullProperty'=> $FullProperty,
-						       'APN'=> $apn,
-						       'County'=> $County,
-						       'LegalDescription'=> $LegalDescription,
-						       'PrimaryOwner'=> $PrimaryOwner,
-						       'SecondaryOwner'=> $SecondaryOwner,
-						       'SalesRep'=> $SalesRep,
-						       'TitleOfficer'=> $TitleOfficer,
-						       'ProductType'=> $ProductType,
-						       'SalesAmount'=> $SalesAmount,
-						       'LoanAmount'=> $LoanAmount,
-						       'sendermessage'=> $sendermessage,
-						       'buyers_agent'=> $buyers_agent_details,
-						       'listing_agent'=> $listing_agent_details,
-						       'lender_details'=> $lender_details,
-						       'escrow_details'=> $escrow_details,
-						       'currYear'=> CURRENT_YEAR
-						    );
-
-							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
-							$mail->Body = $order_message_body;
-							$mail->AltBody = "Use an HTML compatible email client";
-
-							//send order deatils to all parties						
-							if(isset($parties_email) && !empty($parties_email))
-							{
-								foreach($parties_email as $email => $name){
-									$mail->AddBCC($email, $name);
-								}
-							}
-							
-							$mail->Send();
-						}
-
-						$session_data = array(
-		                    "orderNumber" => $orderNumber,
-		                    "address" => $PropertyAddress,
-		                    "city" => $PropertyCity,
-		                    "apn" => $apn,
-		                    "state" => $PropertyState,
-		                    "county" => $County,
-		                    "fipCode" => $PropertyFips
-		                );
-
-	                	$this->session->set_userdata($session_data);
+						fwrite($fh, date('m/d/Y H:i:s').' : '.$result."\n");
+						fclose($fh);
 					}
-				/*}*/
-				/* End place order at resware */
-				$password = md5('Pacific2');
-				if(empty($_POST['id']))
-				{
-					$time = date("Y-m-d H:i:s");
-					/*$random_number = $this->home_model->get_customer_number();
-                    $customer_number = isset($random_number['random_num']) && !empty($random_number['random_num']) ? $random_number['random_num'] : '';
-                    $this->session->set_userdata('customer_number', $customer_number);*/
+					$orderNumber = $file_id = '';
 
-                    // Prepare data for DB insertion
-                    $customerData = array(
-                        'first_name' => $OpenName,
-                        'last_name' => $OpenLastName,
-                        'email_address' => $OpenEmail,
-                        'telephone_no' => $Opentelephone,
-                        'password' => $password,
-                        'company_name' => $CompanyName,
-                        'street_address' => $StreetAddress,
-                        'city' => $City,
-                        'zip_code' => $Zipcode,
-                        'is_escrow'=> 1,
-                        'status'=> 1
-                    );
+					if(isset($response['FileID']) && !empty($response['FileID']))
+					{
+						$orderNumber = isset($response['FileNumber']) && !empty($response['FileNumber']) ? $response['FileNumber'] : '';
+						$file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
+						// $_SESSION['orderNumber'] = $orderNumber;
+					}
 
-                    $id = $this->home_model->insert($customerData,'customer_basic_details');
+					if($orderNumber)
+					{
+						/*$message = '<h3>Order Details:</h3><p>Customer Name: '.$OpenName.' '.$OpenLastName.'</p><p>Email Address: '.$OpenEmail.'</p><p>Order Number: '.$orderNumber.'</p>';*/
+						$mail = $this->phpmailer_library->load();
+						// $mail = new PHPMailer();
+						$mail->isSendmail();
+						$mail->IsHTML(true);
+						$mail->setFrom($OpenEmail,$OpenName.' '.$OpenLastName);
+						$mail->CharSet = "UTF-8";
+						$mail->Encoding = "base64";
+						$mail->Timeout = 200;
+						$mail->ContentType = "text/html";
+						$mail->addAddress('cs@pct.com', 'Open Order Desk');							
+						$mail->Subject = "Order Placed at Resware";
 
-                    if($id)
-                    {
-                    	$orderData = array(
-	                        'customer_id' => $id,
-	                        'file_id' => $file_id,
-	                        'file_number' => $orderNumber,
-	                        'status'=> 1
-	                    );
+						$data = array(
+							'orderNumber'=> $orderNumber,
+							'OpenName'=> $OpenName.' '.$OpenLastName,
+							'Opentelephone'=> $Opentelephone,
+							'OpenEmail'=> $OpenEmail,
+							'CompanyName'=> $CompanyName,
+							'StreetAddress'=> $StreetAddress,
+							'City'=> $City,
+							'Zipcode'=> $Zipcode,
+							'PropertyAddress'=> $PropertyAddress,
+							'FullProperty'=> $FullProperty,
+							'APN'=> $apn,
+							'County'=> $County,
+							'LegalDescription'=> $LegalDescription,
+							'PrimaryOwner'=> $PrimaryOwner,
+							'SecondaryOwner'=> $SecondaryOwner,
+							'SalesRep'=> $SalesRep,
+							'TitleOfficer'=> $TitleOfficer,
+							'ProductType'=> $ProductType,
+							'SalesAmount'=> $SalesAmount,
+							'LoanAmount'=> $LoanAmount,
+							'sendermessage'=> $sendermessage,
+							'buyers_agent'=> $buyers_agent_details,
+							'listing_agent'=> $listing_agent_details,
+							'lender_details'=> $lender_details,
+							'escrow_details'=> $escrow_details,
+							'currYear'=> CURRENT_YEAR
+						 );
 
-		                $orderId = $this->home_model->insert($orderData,'order_details'); 
+						$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
+						$mail->Body = $order_message_body;
+						$mail->AltBody = "Use an HTML compatible email client";
+						
+						//send order deatils to all parties						
+						if(isset($parties_email) && !empty($parties_email))
+						{
+							foreach($parties_email as $email => $name){
+								$mail->AddBCC($email, $name);
+							}
+						}
+						
+						$mail->Send();
+					} 
 
-                    	$propertyData = array(
-	                        'customer_id' => $id,
-	                        'buyer_agent_id' => $BuyerAgentId,
-	                        'listing_agent_id' => $ListingAgentId,
-	                        'escrow_lender_id' => $EscrowLenderId,
-	                        'full_address' => $FullProperty,
-	                        'apn' => $apn,
-	                        'county' => $County,
-	                        'legal_description' => $LegalDescription,
-	                        'primary_owner' => $PrimaryOwner,
-	                        'secondary_owner' => $SecondaryOwner,
-	                        'additional_details'=> $sendermessage,
-	                        'status'=> 1
-	                    );
+					$session_data = array(
+						"orderNumber" => $orderNumber,
+						"address" => $PropertyAddress,
+						"city" => $PropertyCity,
+						"apn" => $apn,
+						"state" => $PropertyState,
+						"county" => $County,
+						"fipCode" => $PropertyFips
+					);
 
-	                    $propertyId = $this->home_model->insert($propertyData,'property_details');
-
-	                    $transactionData = array(
-	                        'customer_id' => $id,
-	                        'sales_representative' => $SalesRep,
-	                        'title_officer' => $TitleOfficer,
-	                        'sales_amount' => $SalesAmount,
-	                        'loan_amount' => $LoanAmount,
-	                        'transaction_type' => $TransactionTypeID,
-	                        'purchase_type' => $ProductTypeID,
-	                        'is_ccr' => $CCR,
-	                        'is_underlying_docs' => $Docs,
-	                        'is_plotted_easements' => $Ease,
-	                        'status'=> 1
-	                    );
-
-	                    $transactionId = $this->home_model->insert($transactionData,'transaction_details');
-                    }
-                    echo '<div class="alert alert-success">Data saved successfully.</div>';
+					$this->session->set_userdata($session_data);
 				}
-				else
-				{
-					$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+				
+				$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
-					$orderData = array(
-                        'customer_id' => $customer_id,
-                        'file_id' => $file_id,
-                        'file_number' => $orderNumber,
-                        'status'=> 1
-                    );
+				$propertyData = array(
+					'customer_id' => $customer_id,
+					'buyer_agent_id' => $BuyerAgentId,
+					'listing_agent_id' => $ListingAgentId,
+					'escrow_lender_id' => $EscrowLenderId,
+					'full_address' => $FullProperty,
+					'apn' => $apn,
+					'county' => $County,
+					'legal_description' => $LegalDescription,
+					'primary_owner' => $PrimaryOwner,
+					'secondary_owner' => $SecondaryOwner,
+					'additional_details'=> $sendermessage,
+					'status'=> 1
+				);
 
-		            $orderId = $this->home_model->insert($orderData,'order_details');
+				$propertyId = $this->home_model->insert($propertyData,'property_details');
 
-					$propertyData = array(
-                        'customer_id' => $customer_id,
-                        'buyer_agent_id' => $BuyerAgentId,
-                        'listing_agent_id' => $ListingAgentId,
-                        'escrow_lender_id' => $EscrowLenderId,
-                        'full_address' => $FullProperty,
-                        'apn' => $apn,
-                        'county' => $County,
-                        'legal_description' => $LegalDescription,
-                        'primary_owner' => $PrimaryOwner,
-                        'secondary_owner' => $SecondaryOwner,
-                        'additional_details'=> $sendermessage,
-                        'status'=> 1
-                    );
+				$orderData = array(
+					'customer_id' => $customer_id,
+					'file_id' => $file_id,
+					'file_number' => $orderNumber,
+					'property_id' => $propertyId,
+					'status'=> 1
+				);
 
-	                $propertyId = $this->home_model->insert($propertyData,'property_details');
+				$orderId = $this->home_model->insert($orderData,'order_details');
 
-	                $transactionData = array(
-                        'customer_id' => $customer_id,
-                        'sales_representative' => $SalesRep,
-                        'title_officer' => $TitleOfficer,
-                        'sales_amount' => $SalesAmount,
-                        'loan_amount' => $LoanAmount,
-                        'transaction_type' => $TransactionTypeID,
-                        'purchase_type' => $ProductTypeID,
-                        'is_ccr' => $CCR,
-                        'is_underlying_docs' => $Docs,
-                        'is_plotted_easements' => $Ease,
-                        'status'=> 1
-                    );
+				$transactionData = array(
+					'customer_id' => $customer_id,
+					'sales_representative' => $SalesRep,
+					'title_officer' => $TitleOfficer,
+					'sales_amount' => $SalesAmount,
+					'loan_amount' => $LoanAmount,
+					'transaction_type' => $TransactionTypeID,
+					'purchase_type' => $ProductTypeID,
+					'is_ccr' => $CCR,
+					'is_underlying_docs' => $Docs,
+					'is_plotted_easements' => $Ease,
+					'status'=> 1
+				);
 
-	                $transactionId = $this->home_model->insert($transactionData,'transaction_details');
+				$transactionId = $this->home_model->insert($transactionData,'transaction_details');
 
-	                echo '<div class="alert alert-success">Data saved successfully.</div>';
-				}
+				echo '<div class="alert alert-success">Data saved successfully.</div>';
+			
 
 				$order_file = uniqid();
 				$order_upload = $order_file.isset($_FILES['orderfiles']['name']) && !empty($_FILES['orderfiles']['name']) ? $_FILES['orderfiles']['name'] : '';	

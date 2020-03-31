@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class CreateTestTable extends AbstractMigration
+class AddPropertyIdInOrderTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -31,6 +31,8 @@ class CreateTestTable extends AbstractMigration
      */
     public function change()
     {
-
+        $table = $this->table('order_details');
+        $table->addColumn('property_id', 'integer', ['after' => 'status'])
+              ->update();
     }
 }

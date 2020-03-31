@@ -62,7 +62,7 @@
 						 <li class="divider"></li>
 						 <li><h4>Rates & Fees</h4></li>
 						<li><a href="<?php echo base_url(); ?>calculator/">Rate Calculator</a></li>
-						<li><a href="<?php echo base_url(); ?>calculator/index.php?welcome/signup">Lender Rate Portal</a></li>
+						<li><a href="<?php echo base_url(); ?>calculator/signup">Lender Rate Portal</a></li>
 						<li><a href="<?php echo base_url(); ?>recording-fees">Recording Fees</a></li>
 						<li><a href="<?php echo base_url(); ?>assets/downloads/2019-RecordersCalendar.pdf">Recorders Holidays</a></li>
 						<li><a href="<?php echo base_url(); ?>assets/downloads/TransferTaxes.pdf">Transfer Tax Info</a></li>
@@ -163,7 +163,7 @@
     										 <li class="divider"></li>
     										 <li><h4>Rates & Fees</h4></li>
     										<li><a href="<?php echo base_url(); ?>calculator/">Rate Calculator</a></li>
-    										<li><a href="<?php echo base_url(); ?>calculator/index.php?welcome/signup">Lender Rate Portal</a></li>
+    										<li><a href="<?php echo base_url(); ?>calculator/signup">Lender Rate Portal</a></li>
     										<li><a href="<?php echo base_url(); ?>recording-fees">Recording Fees</a></li>
     										<li><a href="<?php echo base_url(); ?>assets/downloads/2019-RecordersCalendar.pdf">Recorders Holidays</a></li>
     										<li><a href="<?php echo base_url(); ?>assets/downloads/TransferTaxes.pdf">Transfer Tax Info</a></li>
@@ -177,7 +177,7 @@
                                             <li><a href="http://www.pacificcoastagent.com/">Pacific Coast Agent</a></li>
     										<li><a href="https://www.pcttitletoolbox.com/#!/">PCT Title Toolbox</a></li>
     										<li><a href="#">Instant Profile</a></li>
-    										
+    										<li><a href="http://www.pct247.com/">PCT247.com</a></li>
     										
     										 </ul>
                                     </li>
