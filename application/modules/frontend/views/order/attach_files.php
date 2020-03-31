@@ -1,32 +1,3 @@
-<style>
-	.pagination {
-		overflow: hidden;
-	}
-	.pagination > li > a {
-		width: 42px;
-		height: 42px;
-		margin-right: 8px;
-		padding-top: 14px;
-		border: 1px solid rgba(221, 221, 221, 0.5);
-	}
-	.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
-		background-color: #6533d7;
-		background-image: -webkit-linear-gradient(305deg, #6533d7 0%, #339bd7 100%);
-	}
-	.pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
-		background-color: #6533d7;
-		background-image: -webkit-linear-gradient(305deg, #6533d7 0%, #339bd7 100%);
-	}
-	.dataTables_paginate {
-		padding-top: 50px;
-		padding-bottom: 100px;
-		text-align: right;
-	}
-	.typography-section {
-		padding-bottom: 0px;
-	}
-</style>
-
 <body>
 	<?php
         $this->load->view('layout/header_dashboard');
@@ -83,7 +54,7 @@
 	$(document).ready(function () {
 		if ($('#orders_listing').length) {
 			customer_list = $('#orders_listing').DataTable({
-				"pageLength": 2,
+				// "pageLength": 2,
 				"paging": true,
 				"lengthChange": false,
 				"language": {

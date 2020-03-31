@@ -10,8 +10,8 @@
 						<div class="typography-section__inner">
 							<h2 class="ui-title-block ui-title-block_light">Upload a Document</h2>
 							<div class="ui-decor-1a bg-primary"></div>
-							<h3 class="ui-title-block_light">File Number 10123456</h3>
-							<h3 class="ui-title-block_light">12434 Main St. Los Angeles.</h3>
+							<h3 class="ui-title-block_light">File Number <?php echo $orderDetails['file_number'];?></h3>
+							<h3 class="ui-title-block_light"><?php echo $orderDetails['full_address'];?></h3>
 						</div>
 						<div class="typography-sectiona">
 							<div class="col-md-12">
@@ -19,9 +19,6 @@
 
 									<div class="typography-sectione typography-section-border">
 										<div class="container">
-
-
-
 											<div class="row">
 												<div class="col-md-6">
 													<blockquote class="b-blockquote b-blockquote-3">
@@ -33,15 +30,14 @@
 														</footer>
 														<div class="b-blockquote-3__content">
 															<div class="header-language-nav dropdown">
-																<button class="dropdown-toggle" type="button"
-																	id="dropdownMenu1" data-toggle="dropdown"
-																	aria-expanded="false">Document Type:<span
-																		class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	<li><a href="#">Statement of Information</a></li>
-																	<li><a href="#">Reconveyance</a></li>
-																	<li><a href="#">Drivers License</a></li>
-																</ul>
+																<select class="dropdown-toggle">
+																	<option value="">DOCUMENT TYPE:</option>
+																	<?php foreach($documentTypes as $documentType) { ?>
+																	<option
+																		value="<?php echo $documentType['api_id'];?>">
+																		<?php echo $documentType['name'];?></option>
+																	<?php } ?>
+																</select>
 															</div>
 															<div class="input-group">
 
@@ -50,6 +46,14 @@
 																		id="inputGroupFile01"
 																		aria-describedby="inputGroupFileAddon01">
 
+																</div>
+															</div>
+															<div class="header-language-nav dropdown">
+
+																<div class="" style="margin-top: 10px;">
+																	<textarea rows="3" cols="44" type="file"
+																		class="custom-file-input" id="inputGroupFile01"
+																		style="border: 1px solid rgba(238,238,238);"></textarea>
 																</div>
 															</div>
 
@@ -68,15 +72,14 @@
 														</footer>
 														<div class="b-blockquote-3__content">
 															<div class="header-language-nav dropdown">
-																<button class="dropdown-toggle" type="button"
-																	id="dropdownMenu1" data-toggle="dropdown"
-																	aria-expanded="false">Document Type:<span
-																		class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	<li><a href="#">Statement of Information</a></li>
-																	<li><a href="#">Reconveyance</a></li>
-																	<li><a href="#">Drivers License</a></li>
-																</ul>
+																<select class="dropdown-toggle">
+																	<option value="">DOCUMENT TYPE:</option>
+																	<?php foreach($documentTypes as $documentType) { ?>
+																	<option
+																		value="<?php echo $documentType['api_id'];?>">
+																		<?php echo $documentType['name'];?></option>
+																	<?php } ?>
+																</select>
 															</div>
 															<div class="input-group">
 
@@ -103,15 +106,14 @@
 														</footer>
 														<div class="b-blockquote-3__content">
 															<div class="header-language-nav dropdown">
-																<button class="dropdown-toggle" type="button"
-																	id="dropdownMenu1" data-toggle="dropdown"
-																	aria-expanded="false">Document Type:<span
-																		class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	<li><a href="#">Statement of Information</a></li>
-																	<li><a href="#">Reconveyance</a></li>
-																	<li><a href="#">Drivers License</a></li>
-																</ul>
+																<select class="dropdown-toggle">
+																	<option value="">DOCUMENT TYPE:</option>
+																	<?php foreach($documentTypes as $documentType) { ?>
+																	<option
+																		value="<?php echo $documentType['api_id'];?>">
+																		<?php echo $documentType['name'];?></option>
+																	<?php } ?>
+																</select>
 															</div>
 															<div class="input-group">
 
@@ -138,15 +140,14 @@
 														</footer>
 														<div class="b-blockquote-3__content">
 															<div class="header-language-nav dropdown">
-																<button class="dropdown-toggle" type="button"
-																	id="dropdownMenu1" data-toggle="dropdown"
-																	aria-expanded="false">Document Type:<span
-																		class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	<li><a href="#">Statement of Information</a></li>
-																	<li><a href="#">Reconveyance</a></li>
-																	<li><a href="#">Drivers License</a></li>
-																</ul>
+																<select class="dropdown-toggle">
+																	<option value="">DOCUMENT TYPE:</option>
+																	<?php foreach($documentTypes as $documentType) { ?>
+																	<option
+																		value="<?php echo $documentType['api_id'];?>">
+																		<?php echo $documentType['name'];?></option>
+																	<?php } ?>
+																</select>
 															</div>
 															<div class="input-group">
 
@@ -173,15 +174,14 @@
 														</footer>
 														<div class="b-blockquote-3__content">
 															<div class="header-language-nav dropdown">
-																<button class="dropdown-toggle" type="button"
-																	id="dropdownMenu1" data-toggle="dropdown"
-																	aria-expanded="false">Document Type:<span
-																		class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	<li><a href="#">Statement of Information</a></li>
-																	<li><a href="#">Reconveyance</a></li>
-																	<li><a href="#">Drivers License</a></li>
-																</ul>
+																<select class="dropdown-toggle">
+																	<option value="">DOCUMENT TYPE:</option>
+																	<?php foreach($documentTypes as $documentType) { ?>
+																	<option
+																		value="<?php echo $documentType['api_id'];?>">
+																		<?php echo $documentType['name'];?></option>
+																	<?php } ?>
+																</select>
 															</div>
 															<div class="input-group">
 
@@ -208,15 +208,14 @@
 														</footer>
 														<div class="b-blockquote-3__content">
 															<div class="header-language-nav dropdown">
-																<button class="dropdown-toggle" type="button"
-																	id="dropdownMenu1" data-toggle="dropdown"
-																	aria-expanded="false">Document Type:<span
-																		class="caret"></span></button>
-																<ul class="dropdown-menu">
-																	<li><a href="#">Statement of Information</a></li>
-																	<li><a href="#">Reconveyance</a></li>
-																	<li><a href="#">Drivers License</a></li>
-																</ul>
+																<select class="dropdown-toggle">
+																	<option value="">DOCUMENT TYPE:</option>
+																	<?php foreach($documentTypes as $documentType) { ?>
+																	<option
+																		value="<?php echo $documentType['api_id'];?>">
+																		<?php echo $documentType['name'];?></option>
+																	<?php } ?>
+																</select>
 															</div>
 															<div class="input-group">
 

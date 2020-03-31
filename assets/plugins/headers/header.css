@@ -805,8 +805,8 @@ body:not(.header-demo) .navbar-scrolling .top-bar {
   margin-left: 21px;
 }
 .header-language-nav .dropdown-toggle {
-  border: 1px solid rgba(255,255,255,.8);
-  border-radius: 15px;
+  border: 1px solid rgba(238,238,238);
+  border-radius: 0px;
   font-size: 11px;
   text-transform: uppercase;
   background-color: transparent;
@@ -817,6 +817,8 @@ body:not(.header-demo) .navbar-scrolling .top-bar {
 .navbar-scrolling  .header-language-nav .dropdown-toggle {
     border: 1px solid #333;
 }
+
+
 
 /*SIDEBARS*/
 

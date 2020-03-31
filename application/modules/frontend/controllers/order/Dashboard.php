@@ -6,7 +6,9 @@ class Dashboard extends MX_Controller {
 
 	function __construct() {
         parent::__construct();
-        $this->load->helper(array('file', 'url'));
+		$this->load->helper(
+            array('file', 'url','form')
+        );
         $this->load->library('session');
 		$this->load->library('form_validation');
 		$this->load->model('order/orderRecording');
@@ -188,7 +190,11 @@ class Dashboard extends MX_Controller {
 	public function upload_documents()
 	{
 		//$this->is_user();
+		$this->load->library('order/order');
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+		$fileId = $this->uri->segment(2);     
+		$data['documentTypes'] = $this->order->get_document_types();
+		$data['orderDetails'] = $this->order->get_order_details($fileId);
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/upload_documents');
 	}
