@@ -39,40 +39,26 @@ class Dashboard extends MX_Controller {
 	
 	function get_recordings()
     {
-		$ch = curl_init(GET_RECORDING_URL.'date=2020-03-26&api_token='.RECORDING_API_TOKEN);                                    
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                        
-		curl_setopt($ch, CURLOPT_POSTFIELDS, array());                   
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                
-			"cache-control: no-cache",
-            "Content-Type: application/json"                             
-		));
-		$error_msg = curl_error($ch);
-		$result = curl_exec($ch);
-		if (isset($result) && !empty($result)) {
-			$response = json_decode($result,true);
-			$records = array();
-			if (isset($response) && !empty($response)) {
-				foreach ($response as $key => $value) {
-					if (isset($value['documents']) && !empty($value['documents'])) {
-						foreach ($value['documents'] as $k => $v)  {
-							$date = strtotime($v['recordingTime']);
-							$recording_date = date('m/d/Y H:i:s', $date);
-							$records = array(
-								'instrument_number' => $v['instrumentNumber'], 
-								'state' => $v['state'], 
-								'county' => $v['county'],
-								'recording_date' => $v['recordingTime'],
-								'created' => date('Y-m-d H:i:s'),
-								'updated' => date('Y-m-d H:i:s')
-							);
-							$this->db->replace('pct_order_recordings', $records);
-						}
-					}
-				}
-			}
-		} 
+		$this->db->select('*');
+        $this->db->from('pct_order_recordings_monthly_sync');	
+        $this->db->where('month', date('Ym'));
+		$this->db->where('is_sync',  1);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+			$this->get_recordings_from_api(date("Y-m-d"));
+		} else {
+			$begin = new DateTime(date('Y-m-01'));
+			$end = new DateTime(date('Y-m-d', strtotime(date('y-m-d') . ' +1 day')));
+		
+			$interval = DateInterval::createFromDateString('1 day');
+			$period = new DatePeriod($begin, $interval, $end);
 
+			foreach ($period as $dt) {
+				$this->get_recordings_from_api($dt->format("Y-m-d"));
+			}
+			$this->db->insert('pct_order_recordings_monthly_sync', array('is_sync' => 1, 'month' => date('Ym'), 'created' => date('Y-m-d H:i:s')));
+		}
+	
 		$params = array();  $data = array();
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -108,5 +94,48 @@ class Dashboard extends MX_Controller {
         $json_data['data'] = $data;
         echo json_encode($json_data);
 		
-    }
+	}
+	
+	public function get_recordings_from_api($date)
+	{
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		$url = GET_RECORDING_URL.'date='.$date.'&api_token='.RECORDING_API_TOKEN;
+		$logId = $this->apiLogs->syncLogs($userdata['id'], 'recording', 'get_recordings', $url);
+		$ch = curl_init($url);                                    
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                        
+		curl_setopt($ch, CURLOPT_POSTFIELDS, array());                   
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                
+			"cache-control: no-cache",
+            "Content-Type: application/json"                             
+		));
+		$error_msg = curl_error($ch);
+		$result = curl_exec($ch);
+		$this->apiLogs->syncLogs($userdata['id'], 'recording', 'get_recordings', $url, array(), $result, 0, $logId);
+
+		if (isset($result) && !empty($result)) {
+			$response = json_decode($result,true);
+			$records = array();
+			if (isset($response) && !empty($response)) {
+				foreach ($response as $key => $value) {
+					if (isset($value['documents']) && !empty($value['documents'])) {
+						foreach ($value['documents'] as $k => $v)  {
+							$date = strtotime($v['recordingTime']);
+							$recording_date = date('m/d/Y H:i:s', $date);
+							$records = array(
+								'instrument_number' => $v['instrumentNumber'], 
+								'state' => $v['state'], 
+								'county' => $v['county'],
+								'recording_date' => $v['recordingTime'],
+								'created' => date('Y-m-d H:i:s'),
+								'updated' => date('Y-m-d H:i:s')
+							);
+							$this->db->replace('pct_order_recordings', $records);
+						}
+					}
+				}
+			}
+		}  
+	}
 }
