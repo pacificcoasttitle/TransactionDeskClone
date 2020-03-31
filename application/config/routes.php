@@ -104,6 +104,8 @@ $route['notifyAdmin'] = 'frontend/order/home/notifyAdmin';
 $route['select-files'] = 'frontend/order/dashboard/selectFiles';
 $route['getFiles'] = 'frontend/order/dashboard/getFiles';
 $route['recordings'] = 'frontend/order/dashboard/recordings';
+$route['review-prelim'] = 'frontend/order/resware/reviewPrelim';
+$route['instrumentService'] = 'frontend/order/TitlePoint/instrumentService';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

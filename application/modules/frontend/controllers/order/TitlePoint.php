@@ -30,7 +30,7 @@ class TitlePoint extends MX_Controller {
 			$requestParams['parameters'] = 'Tax.APN='.$apn.';General.AutoSearchTaxes=true;General.AutoSearchProperty=false';
 			$requestParams['state'] = $state;
 			$requestParams['county'] = $county;
-			$requestUrl= TP_TAX_CREATE_SERVICE_ENDPOINT;
+			$requestUrl= TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT;
 		}
 		else if($methodId == 4)
 		{
@@ -191,6 +191,43 @@ class TitlePoint extends MX_Controller {
 		$request = TP_GENERATE_IMAGE.http_build_query($requestParams);
 
 		$opts = array(
+			"ssl"=>array(
+		        "verify_peer"=>false,
+		        "verify_peer_name"=>false,
+		    ),
+		);
+		$context = stream_context_create($opts);
+		$file = file_get_contents($request,false,$context);
+
+		echo trim($file);
+	}
+
+	function instrumentService()
+	{
+		$state = isset($_POST['state']) && !empty($_POST['state']) ? $_POST['state'] : '';
+		$county = isset($_POST['county']) && !empty($_POST['county']) ? $_POST['county'] : '';
+		$docId = isset($_POST['docId']) && !empty($_POST['docId']) ? $_POST['docId'] : '';
+		$recDate = isset($_POST['recDate']) && !empty($_POST['recDate']) ? $_POST['recDate'] : '';
+
+		$requestParams = array(
+            'userID' => TP_USERNAME,
+            'password' => TP_PASSWORD,
+            'orderNo' =>  '',
+            'customerRef'=>  '',
+            'company'=>  '',
+            'department'=>  '',
+            'titleOfficer'=>  '',
+            'orderComment'=>  '',
+            'starterRemarks'=>  '',
+            'serviceType'=>  INSTRUMENT_SEARCH_SERVICE_TYPE,
+            'parameters'=>  'Document.SearchType=Instrument;Document.RecordDate='.$recDate.'; Document.InstrumentNumber='.$docId.'',
+            'state'=>  $state,
+            'county'=>  $county,
+        );
+
+        $request = TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT.http_build_query($requestParams);
+
+        $opts = array(
 			"ssl"=>array(
 		        "verify_peer"=>false,
 		        "verify_peer_name"=>false,

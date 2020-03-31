@@ -78,9 +78,13 @@
                 <div class="col-md-12">
                     <h3>Grant Deed Information:</h3>
                 </div>
-                <div class="col-md-6">                    
+                <div class="col-md-3">                    
                     <div class="loader"></div>
                     <div id="grantDeedInfoFile"></div>
+                </div>
+                <div class="col-md-3">                    
+                    <div class="loader"></div>
+                    <div id="instrumentInfoFile"></div>
                 </div>
             </div>
           </div>
