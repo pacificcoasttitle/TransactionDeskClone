@@ -12,6 +12,8 @@ class Dashboard extends MX_Controller {
         $this->load->library('session');
 		$this->load->library('form_validation');
 		$this->load->model('order/orderRecording');
+		$this->load->library('order/order');
+		$this->order->is_user();
     }
 
     function selectFiles()
@@ -25,7 +27,6 @@ class Dashboard extends MX_Controller {
 
     function getFiles()
     {
-    	$this->is_user();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/dashboard');
@@ -33,7 +34,6 @@ class Dashboard extends MX_Controller {
 
     function recordings()
     {
-    	$this->is_user();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/recordings');
@@ -151,7 +151,6 @@ class Dashboard extends MX_Controller {
 
 	function get_orders()
     {
-		$this->load->library('order/order');
 		$params = array();  $data = array();
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -189,14 +188,21 @@ class Dashboard extends MX_Controller {
 
 	public function upload_documents()
 	{
-		//$this->is_user();
 		$data['errors'] = array();
 		$data['success'] = array();
-		$this->load->library('order/order');
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$fileId = $this->uri->segment(2);     
 		$data['documentTypes'] = $this->order->get_document_types();
 		$data['orderDetails'] = $this->order->get_order_details($fileId);
+
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/upload_documents');
 	}
@@ -210,7 +216,7 @@ class Dashboard extends MX_Controller {
 		$success = array();
 		$config['upload_path'] = './uploads/';
 		$config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';   
-		$config['max_size'] = 3000;
+		$config['max_size'] = 12000;
 		$userdata = $this->session->userdata('user');
 		$this->load->library('upload', $config);
 		$fileId = $this->input->post('file_id');
@@ -257,13 +263,13 @@ class Dashboard extends MX_Controller {
 				} 
 			}
 		}
-		$this->load->library('order/order');
-		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$data['errors'] = $errors;
 		$data['success'] = $success;
-		$data['documentTypes'] = $this->order->get_document_types();
-		$data['orderDetails'] = $this->order->get_order_details($fileId);
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/upload_documents');
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'upload-documents/'.$fileId);
 	}
 }

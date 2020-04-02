@@ -10,11 +10,14 @@ class Home extends MX_Controller {
         $this->load->library('session');
 		$this->load->model('order/home_model');
 		$this->load->library('form_validation');
+		$this->load->library('order/order');
+		$this->order->is_user();
     }
 
     function index() 
     {
-		$this->is_user();
+		$userdata = $this->session->userdata('user');
+		$this->load->model('order/apiLogs');
     	if(isset($_POST) && !empty($_POST))
     	{
     		$this->load->library("phpmailer_library");
@@ -161,7 +164,9 @@ class Home extends MX_Controller {
 
 				$order_data = json_encode($place_order);
 				$this->load->library('order/resware');
+				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, array(), 0, 0);
 				$result = $this->resware->make_request('POST', 'orders', $order_data);
+				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, $result, 0, $logid);
 			
 				if(isset($result) && !empty($result))
 				{
@@ -460,8 +465,6 @@ class Home extends MX_Controller {
 							}
 					}
 				}
-				
-
     		}
     		else
             {
@@ -476,7 +479,6 @@ class Home extends MX_Controller {
     	else
     	{
 			$data['title'] = 'Open Order | Pacific Coast Title Company';
-			$userdata = $this->session->userdata('user');
 			$data['customer_data'] =  $this->home_model->get_user(array('id' => $userdata['id']));
 	        $this->load->view('layout/head',$data);
 	       	$this->load->view('order/home');
@@ -618,8 +620,6 @@ class Home extends MX_Controller {
 
     function orderSubmit()
     {
-    	// $this->session->set_userdata('fipCode', '06037');
-		$this->is_user();
     	$data['title'] = 'Open Order | Pacific Coast Title Company';
     	$data['address'] = $this->session->userdata('address');
     	$data['city'] = $this->session->userdata('city');
@@ -635,16 +635,6 @@ class Home extends MX_Controller {
 
 	}
 	
-	public function is_user()
-    {
-        $userdata = $this->session->userdata('user');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 0) {
-            
-        } else {
-            redirect(base_url().'order/login');
-        }
-	}
-	
 	function logout()
 	{
 		$this->session->unset_userdata('user');
@@ -653,7 +643,6 @@ class Home extends MX_Controller {
 
 	function dashboard()
 	{
-		$this->is_user();
 		$userdata = $this->session->userdata('user');
 		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
 		$data['name'] = $name;
@@ -708,8 +697,6 @@ class Home extends MX_Controller {
 
 	function selectFiles()
     {
-    	echo "<pre>"; print_r("here"); exit;
-    	$this->is_user();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/dashboard');

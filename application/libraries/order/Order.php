@@ -64,4 +64,14 @@ class Order
         $query = $this->CI->db->get();
         return $query->row_array();
     }
+
+    public function is_user()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 0) {
+            
+        } else {
+            redirect(base_url().'order/login');
+        }
+	}
 }
