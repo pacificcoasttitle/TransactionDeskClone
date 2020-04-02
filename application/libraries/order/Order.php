@@ -57,11 +57,21 @@ class Order
 
     public function get_order_details($fileId) 
     {
-        $this->CI->db->select('order_details.file_number, order_details.file_id,property_details.full_address')
+        $this->CI->db->select('order_details.file_number, order_details.id, order_details.file_id,property_details.full_address')
         ->from('order_details')
         ->join('property_details', 'order_details.property_id = property_details.id');
         $this->CI->db->where('file_id', $fileId);
         $query = $this->CI->db->get();
         return $query->row_array();
     }
+
+    public function is_user()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 0) {
+            
+        } else {
+            redirect(base_url().'order/login');
+        }
+	}
 }

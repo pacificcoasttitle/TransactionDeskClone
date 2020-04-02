@@ -110,6 +110,7 @@ $route['instrumentService'] = 'frontend/order/TitlePoint/instrumentService';
 $route['attach-files'] = 'frontend/order/dashboard/attach_files';
 $route['get-orders'] = 'frontend/order/dashboard/get_orders';
 $route['upload-documents/:num'] = 'frontend/order/dashboard/upload_documents';
+$route['files-upload'] = 'frontend/order/dashboard/files_upload';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

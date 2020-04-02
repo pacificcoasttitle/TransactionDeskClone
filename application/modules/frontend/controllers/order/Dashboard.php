@@ -12,6 +12,8 @@ class Dashboard extends MX_Controller {
         $this->load->library('session');
 		$this->load->library('form_validation');
 		$this->load->model('order/orderRecording');
+		$this->load->library('order/order');
+		$this->order->is_user();
     }
 
     function selectFiles()
@@ -25,7 +27,6 @@ class Dashboard extends MX_Controller {
 
     function getFiles()
     {
-    	$this->is_user();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/dashboard');
@@ -33,7 +34,6 @@ class Dashboard extends MX_Controller {
 
     function recordings()
     {
-    	$this->is_user();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/recordings');
@@ -151,7 +151,6 @@ class Dashboard extends MX_Controller {
 
 	function get_orders()
     {
-		$this->load->library('order/order');
 		$params = array();  $data = array();
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -189,13 +188,88 @@ class Dashboard extends MX_Controller {
 
 	public function upload_documents()
 	{
-		//$this->is_user();
-		$this->load->library('order/order');
+		$data['errors'] = array();
+		$data['success'] = array();
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$fileId = $this->uri->segment(2);     
 		$data['documentTypes'] = $this->order->get_document_types();
 		$data['orderDetails'] = $this->order->get_order_details($fileId);
+
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/upload_documents');
+	}
+
+	public function files_upload() 
+	{
+		$this->load->model('order/document');
+		$this->load->model('order/apiLogs');
+		$this->load->library('order/resware');
+		$errors = array();
+		$success = array();
+		$config['upload_path'] = './uploads/';
+		$config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';   
+		$config['max_size'] = 12000;
+		$userdata = $this->session->userdata('user');
+		$this->load->library('upload', $config);
+		$fileId = $this->input->post('file_id');
+		$orderId = $this->input->post('order_id');
+
+		for ($i = 1; $i <=6 ; $i++) {
+			if (!empty($_FILES['document_'.$i]['name'])) {
+				if (! $this->upload->do_upload('document_'.$i)) {
+					$errors[$i] = "Document #".$i.": ".$this->upload->display_errors();
+				} else { 
+					$data = $this->upload->data();
+					$contents = file_get_contents($data['full_path']);
+					$binaryData   = base64_encode($contents); 
+					
+					$documentData = array(
+						'document_name' => $data['file_name'],
+						'document_type_id' => $this->input->post('document_type_'.$i),
+						'document_size' => ($data['file_size'] * 1000),
+						'user_id' => $userdata['id'],
+						'order_id' => $orderId
+					);
+					
+					$documentId = $this->document->insert($documentData);
+					
+					$endPoint = 'files/'.$fileId.'/documents';
+					
+					$documentApiData = array(			
+						'DocumentName' => $data['file_name'],
+						'DocumentType' => array(
+							'DocumentTypeID' => $this->input->post('document_type_'.$i),
+						),
+						'Description' => $this->input->post('description_'.$i),
+						'InternalOnly' => false,
+						'DocumentBody' => $binaryData
+					);
+					$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+					
+					$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, array(), $orderId, 0);
+					$result = $this->resware->make_request('POST', $endPoint, $document_api_data);
+					$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderId, $logid);
+					$res = json_decode($result);
+					$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+					$success[$i] = "Document #".$i.": uploaded successfully";
+				} 
+			}
+		}
+		$data['errors'] = $errors;
+		$data['success'] = $success;
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'upload-documents/'.$fileId);
 	}
 }
