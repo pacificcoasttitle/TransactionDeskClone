@@ -27,6 +27,7 @@
 								}?>
 							</div>
 						<?php } ?>
+						<div class="loader"></div>
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">
@@ -34,7 +35,7 @@
 									<div class="typography-sectione typography-section-border">
 										<div class="container">
 											<div class="row">
-												<form action="<?php echo base_url();?>files-upload" method="POST" enctype="multipart/form-data">
+												<form id="files_upload" action="<?php echo base_url();?>files-upload" method="POST" enctype="multipart/form-data">
 													<div class="col-md-12">
 														<a href="">
 															<button class="btn btn-grad-2a" type="submit">Upload Documents</button>
@@ -319,6 +320,10 @@
 
 <script>
     $(document).ready(function(){
+		$("#files_upload").submit(function( event ) {
+			$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+			$('#page-preloader').css('display', 'block');
+		});
         $("#document_2").change(function(){
 			$("#document_type_2").prop('required',true);
 			$("#description_2").prop('required',true);
