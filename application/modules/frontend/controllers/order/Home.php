@@ -252,19 +252,22 @@ class Home extends MX_Controller {
 						}
 						
 						$mail->Send();
-					} 
+					}
+					$titlepointData = $this->session->userdata($apn);
+					$titlepointData['state'] = $PropertyState;
+					$titlepointData['county'] = $County;
+					$titlepointData['address'] = $PropertyAddress;
+					$titlepointData['city'] = $PropertyCity;
+					$titlepointData['apn'] = $apn;
+					$titlepointData['fipCode'] = $PropertyFips;
+					$titlepointData['fipCode'] = '06037';
+					
+					
+					$this->session->set_userdata('orderNumber', $orderNumber);
+					$this->session->set_userdata("order_no_".$orderNumber, $titlepointData);
 
-					$session_data = array(
-						"orderNumber" => $orderNumber,
-						"address" => $PropertyAddress,
-						"city" => $PropertyCity,
-						"apn" => $apn,
-						"state" => $PropertyState,
-						"county" => $County,
-						"fipCode" => $PropertyFips
-					);
-
-					$this->session->set_userdata($session_data);
+					$this->session->unset_userdata($apn);
+					// echo "<pre>"; print_r($this->session->userdata()); 
 				}
 				
 				$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
@@ -620,16 +623,22 @@ class Home extends MX_Controller {
 
     function orderSubmit()
     {
-    	$data['title'] = 'Open Order | Pacific Coast Title Company';
-    	$data['address'] = $this->session->userdata('address');
-    	$data['city'] = $this->session->userdata('city');
-    	$data['apn'] = $this->session->userdata('apn');
-    	$data['state'] = $this->session->userdata('state');
-    	$data['county'] = $this->session->userdata('county');
-    	$data['fipCode'] = $this->session->userdata('fipCode');
-    	$data['customer_number'] = $this->session->userdata('customer_number');
-    	$data['orderNumber'] = $this->session->userdata('orderNumber');
 
+		$this->is_user();
+		$orderNumber = $this->session->userdata('orderNumber');
+    	$data = $this->session->userdata('order_no_'.$orderNumber);
+    	$data['title'] = 'Open Order | Pacific Coast Title Company';
+    	$data['orderNumber'] = $orderNumber;
+    	$data['L_V_CreateService'] = $this->session->userdata('L_V_CreateService');
+    	$data['L_V_RequestId'] = $this->session->userdata('L_V_RequestId');
+    	$data['Tax_CreateService'] = $this->session->userdata('Tax_CreateService');
+    	$data['Tax_RequestId'] = $this->session->userdata('Tax_RequestId');
+    	$data['L_V_GetRequestSummary'] = $this->session->userdata('L_V_GetRequestSummary');
+    	$data['L_V_ResultId'] = $this->session->userdata('L_V_ResultId');
+    	$data['Tax_GetRequestSummary'] = $this->session->userdata('Tax_GetRequestSummary');
+    	$data['Tax_ResultId'] = $this->session->userdata('Tax_ResultId');
+    	$data['L_V_GetResultById'] = $this->session->userdata('L_V_GetResultById');
+    	$data['Tax_GetResultById'] = $this->session->userdata('Tax_GetResultById');
         $this->load->view('layout/head',$data);
        	$this->load->view('order/order-submission',$data);
 

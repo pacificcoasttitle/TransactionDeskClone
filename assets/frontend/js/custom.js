@@ -518,7 +518,6 @@ function fetchReports(repNum)
             } 
             else if (responseStatus != 'OK') 
             {
-                console.log(response);
                 displayError(responseStatus);
             } 
             else 
@@ -640,6 +639,7 @@ function parse187()
     $('#SecondaryOwner').val(ownerNameSecondary).prop('readonly', true);
     $("#searchResultModal").find(".apn-search-loader").addClass("hidden");
     $('#searchResultModal').modal('hide');
+    var fipCode = $('#property-fips').val();
 
     /*if (localStorage) 
     {
@@ -649,6 +649,8 @@ function parse187()
         localStorage.setItem('state',$('#property-state').val());
         localStorage.setItem('county',county);
     }*/
+    createService4(fipCode,address,city);
+    createService3(apn,state,county);
 }
 
 
