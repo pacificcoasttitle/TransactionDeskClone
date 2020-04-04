@@ -260,7 +260,6 @@ class Home extends MX_Controller {
 					$titlepointData['city'] = $PropertyCity;
 					$titlepointData['apn'] = $apn;
 					$titlepointData['fipCode'] = $PropertyFips;
-					$titlepointData['fipCode'] = '06037';
 					
 					
 					$this->session->set_userdata('orderNumber', $orderNumber);
