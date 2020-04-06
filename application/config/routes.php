@@ -111,6 +111,10 @@ $route['attach-files'] = 'frontend/order/dashboard/attach_files';
 $route['get-orders'] = 'frontend/order/dashboard/get_orders';
 $route['upload-documents/:num'] = 'frontend/order/dashboard/upload_documents';
 $route['files-upload'] = 'frontend/order/dashboard/files_upload';
+$route['fees'] = 'frontend/order/dashboard/fees';
+$route['get-transaction-orders'] = 'frontend/order/dashboard/get_transaction_orders';
+$route['get-fees/:num'] = 'frontend/order/dashboard/get_fees';
+$route['get-fee-estimate-pdf'] = 'frontend/order/dashboard/get_fee_estimate_pdf';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
