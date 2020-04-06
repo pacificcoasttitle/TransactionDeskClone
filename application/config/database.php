@@ -75,9 +75,9 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '97.74.31.130',
-	'username' => 'pctorder',
-	'password' => 'PctOrderAlpha637#',
+	'hostname' => 'localhost',
+	'username' => 'root',
+	'password' => '',
 	'database' => 'pctorder',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

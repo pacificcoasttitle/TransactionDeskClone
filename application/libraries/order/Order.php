@@ -18,7 +18,7 @@ class Order
     public function get_orders($params)
     {
         $userdata = $this->CI->session->userdata('user');
-        $this->CI->db->select('order_details.file_number, order_details.file_id,property_details.full_address')
+        $this->CI->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
         $this->CI->db->where('order_details.customer_id', $userdata['id']);
@@ -28,12 +28,13 @@ class Order
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $orders_lists = array();
        
-        $this->CI->db->select('order_details.file_number, order_details.file_id,property_details.full_address')
+        $this->CI->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
 
         
         $this->CI->db->where('order_details.customer_id', $userdata['id']);
+        $this->CI->db->order_by("order_details.id", "desc");
 
         if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
             $this->CI->db->limit($limit, $offset);
@@ -60,12 +61,13 @@ class Order
         return $rs = $query->result_array();
     }
 
-    public function get_order_details($fileId) 
+    public function get_order_details($fileId)
     {
-        $this->CI->db->select('order_details.file_number, order_details.id, order_details.file_id,property_details.address,property_details.full_address,property_details.county,transaction_details.sales_amount,transaction_details.loan_amount,transaction_details.transaction_type,transaction_details.purchase_type')
-        ->from('order_details')
-        ->join('property_details', 'order_details.property_id = property_details.id')
-        ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->select('order_details.file_number, order_details.id, order_details.file_id, property_details.full_address,property_details.county, property_details.westcor_property_id, property_details.legal_description, property_details.primary_owner, property_details.escrow_lender_id, transaction_details.sales_amount, transaction_details.loan_amount, transaction_details.transaction_type, transaction_details.purchase_type, customer_basic_details.*')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left');
         $this->CI->db->where('file_id', $fileId);
         $query = $this->CI->db->get();
         return $query->row_array();
@@ -79,5 +81,26 @@ class Order
         } else {
             redirect(base_url().'order/login');
         }
-	}
+    }
+    
+    public function get_token()
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_order_westcore_token');
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        if(!empty($result)) {
+            $date = new DateTime($result['create_token_time']);
+            $date2 = new DateTime(date('Y-m-d H:i:s'));
+            $diff = $date2->getTimestamp() - $date->getTimestamp();
+            if($diff < $result['expires_in']) {
+                return $result;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+       
 }
