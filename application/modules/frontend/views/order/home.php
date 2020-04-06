@@ -663,7 +663,10 @@
 <?php
     $this->load->view('layout/footer');
 ?>
-
+<script type="text/javascript">
+    var L_V_CreateService,L_V_GetRequestSummary,L_V_GetResultById;
+    var Tax_CreateService,Tax_GetRequestSummary,Tax_GetResultById;
+</script>
 <link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
 <link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/jquery-ui.css">
@@ -676,3 +679,4 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script> 
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/custom.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js"></script>
