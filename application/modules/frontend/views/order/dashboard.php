@@ -27,7 +27,9 @@
 								<button class="btn btn-type-1e btn-lg" type="button">View Proposed</button>
 								<a href="<?php echo base_url().'recordings'; ?>"><button class="btn btn-type-1f btn-lg"
 										type="button">View Recordings</button></a>
-								<button class="btn btn-type-1a btn-lg" type="button">Fee Estimate</button>
+								<a href="<?php echo base_url().'fees'; ?>">
+									<button class="btn btn-type-1a btn-lg" type="button">Fee Estimate</button>
+								</a>
 								<button class="btn btn-type-1b btn-lg" type="button">View All Notes</button>
 							</div>
 						</div>

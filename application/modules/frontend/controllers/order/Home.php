@@ -286,17 +286,7 @@ class Home extends MX_Controller {
 					'status'=> 1
 				);
 
-				$propertyId = $this->home_model->insert($propertyData,'property_details');
-
-				$orderData = array(
-					'customer_id' => $customer_id,
-					'file_id' => $file_id,
-					'file_number' => $orderNumber,
-					'property_id' => $propertyId,
-					'status'=> 1
-				);
-
-				$orderId = $this->home_model->insert($orderData,'order_details');
+				$propertyId = $this->home_model->insert($propertyData,'property_details');				
 
 				$transactionData = array(
 					'customer_id' => $customer_id,
@@ -313,6 +303,17 @@ class Home extends MX_Controller {
 				);
 
 				$transactionId = $this->home_model->insert($transactionData,'transaction_details');
+
+				$orderData = array(
+					'customer_id' => $customer_id,
+					'file_id' => $file_id,
+					'file_number' => $orderNumber,
+					'property_id' => $propertyId,
+					'transaction_id' => $transactionId,
+					'status'=> 1
+				);
+
+				$orderId = $this->home_model->insert($orderData,'order_details');
 
 				echo '<div class="alert alert-success">Data saved successfully.</div>';
 			
