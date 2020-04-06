@@ -66,16 +66,6 @@ class Cron extends MX_Controller {
 
                 $propertyId = $this->home_model->insert($propertyData,'property_details');
 
-                $orderData = array(
-                    'customer_id' => $userdata['id'],
-                    'file_id' => $res->FileID,
-                    'file_number' => $res->FileNumber,
-                    'property_id' => $propertyId,
-                    'status'=> 1
-                );
-
-                $orderId = $this->home_model->insert($orderData,'order_details');
-
                 $transactionData = array(
                     'customer_id' => $userdata['id'],
                     'sales_amount' =>  $res->SalesPrice,
@@ -85,6 +75,18 @@ class Cron extends MX_Controller {
                     'status'=> 1
                 );
                 $transactionId = $this->home_model->insert($transactionData,'transaction_details');
+
+                $orderData = array(
+                    'customer_id' => $userdata['id'],
+                    'file_id' => $res->FileID,
+                    'file_number' => $res->FileNumber,
+                    'property_id' => $propertyId,
+                    'transaction_id' => $transactionId,
+                    'status'=> 1
+                );
+
+                $orderId = $this->home_model->insert($orderData,'order_details');
+
             }
         }
         echo "All orders synced successfully";
