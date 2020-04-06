@@ -15,7 +15,7 @@ class Resware
 		self::$CI = $this->CI;
     }
 
-   public function make_request($http_method, $endpoint, $body_params)
+   public function make_request($http_method, $endpoint, $body_params='')
    {
         $userdata = $this->CI->session->userdata('user');
         $login =  $userdata['email'];
@@ -24,8 +24,6 @@ class Resware
         } else {
             $password= 'Pacific2';
         }
-        $login = 'ghernandez@pct.com';
-        $password= 'Alpha637#';
         $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
