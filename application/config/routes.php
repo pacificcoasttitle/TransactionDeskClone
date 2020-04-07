@@ -116,6 +116,9 @@ $route['get-transaction-orders'] = 'frontend/order/dashboard/get_transaction_ord
 $route['get-fees/:num'] = 'frontend/order/dashboard/get_fees';
 $route['get-fee-estimate-pdf'] = 'frontend/order/dashboard/get_fee_estimate_pdf';
 $route['import-orders'] = 'frontend/order/cron/import_orders';
+$route['notes'] = 'frontend/order/dashboard/notes';
+$route['get-notes-orders'] = 'frontend/order/dashboard/get_notes_orders';
+$route['get-notes/:num'] = 'frontend/order/dashboard/get_notes';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

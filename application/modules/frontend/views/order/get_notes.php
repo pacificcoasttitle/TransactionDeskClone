@@ -1,0 +1,9 @@
+<body>
+    <?php
+        $this->load->view('layout/header_dashboard');
+    ?>
+	<?php
+       $this->load->view('layout/footer');
+    ?>
+</body>
+</html>
