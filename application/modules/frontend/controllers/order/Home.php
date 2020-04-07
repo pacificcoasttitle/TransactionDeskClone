@@ -623,8 +623,6 @@ class Home extends MX_Controller {
 
     function orderSubmit()
     {
-
-		$this->is_user();
 		$orderNumber = $this->session->userdata('orderNumber');
     	$data = $this->session->userdata('order_no_'.$orderNumber);
     	$data['title'] = 'Open Order | Pacific Coast Title Company';
