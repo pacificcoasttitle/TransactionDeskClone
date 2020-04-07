@@ -29,15 +29,18 @@ class Resware
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                
+       // curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       // curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array( 
+            'Authorization: Basic Z2hlcm5hbmRlekBwY3QuY29tOkFscGhhNjM3Iw==',                              
             'Content-Type: application/json',
             'Content-Length: ' . strlen($body_params))                                 
         ); 
         $error_msg = curl_error($ch);
         $result = curl_exec($ch);
-        echo "here";
+        echo "here345";
+        echo $result;
+        print_r($result);
         echo $error_msg;
         print_r($error_msg);
         echo "here123";
