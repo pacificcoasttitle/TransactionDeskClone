@@ -38,8 +38,8 @@ class Resware
         $error_msg = curl_error($ch);
         $result = curl_exec($ch);
         echo "here";
-        echo $result;
-        print_r($result);
+        echo $error_msg;
+        print_r($error_msg);
         echo "here123";
         exit;
         return $result;
