@@ -17,6 +17,7 @@ class Resware
 
    public function make_request($http_method, $endpoint, $body_params='')
    {
+       echo "hdggf";
     $handle = curl_init();
  
     $url = "https://www.ladygaga.com";
