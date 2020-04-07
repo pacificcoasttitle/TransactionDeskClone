@@ -321,8 +321,6 @@ class Dashboard extends MX_Controller {
 
     function get_fees()
     {
-        $this->load->model('order/apiLogs');
-        
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $userdata = $this->session->userdata('user');
         $fileId = $this->uri->segment(2);
@@ -376,8 +374,8 @@ class Dashboard extends MX_Controller {
         $this->load->library('order/resware');
 
 
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', RESWARE_ORDER_API, $fees_data, array(), 0, 0);
         $endPoint = 'estimates/closingfees';
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', RESWARE_ORDER_API.$endPoint, $fees_data, array(), 0, 0);
         $result = $this->resware->make_request('POST', $endPoint, $fees_data);
 
         
@@ -434,7 +432,7 @@ class Dashboard extends MX_Controller {
         $data['productType'] = $productType;
         $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
         
-        $this->apiLogs->syncLogs($userdata['id'], $endPoint, 'get_fees', RESWARE_ORDER_API, $fees_data, $result, 0, $logid);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', RESWARE_ORDER_API.$endPoint, $fees_data, $result, 0, $logid);
 
         $this->load->model('order/fee');
         $feesData = array(
@@ -460,18 +458,101 @@ class Dashboard extends MX_Controller {
         {
             $this->load->library('order/resware');
 
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fee_estimate_pdf', RESWARE_ORDER_API, $closing_fee_id, array(), 0, 0);
-
             $endPoint = '/estimates/closingfees/'.$closing_fee_id.'/receipt/pdf';
+
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fee_estimate_pdf', RESWARE_ORDER_API.$endPoint, $closing_fee_id, array(), 0, 0);
 
             $result = $this->resware->make_request('GET', $endPoint, array());
 
-            $this->apiLogs->syncLogs($userdata['id'], $endPoint, 'get_fee_estimate_pdf', RESWARE_ORDER_API, $closing_fee_id, $result, 0, $logid);
+            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fee_estimate_pdf', RESWARE_ORDER_API.$endPoint, $closing_fee_id, $result, 0, $logid);
             
             if(isset($result) && !empty($result))
             {
                 echo base64_encode($result);
             }
         }
+    }
+
+    function notes()
+    {
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $this->load->view('layout/head_dashboard',$data);
+        $this->load->view('order/notes');
+    }
+
+    function get_notes_orders()
+    {
+        $params = array();  $data = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $order_lists = $this->order->get_orders($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $order_lists = $this->order->get_orders($params);
+        }
+
+        if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($order_lists['data'] as $order)  {
+                $nestedData = array();
+                $nestedData[] = $i;
+                $nestedData[] = $order['file_number'];
+                $nestedData[] = $order['full_address'];
+                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'"><button class="btn btn-grad-2a" type="button">Get Notes</button></a>';
+                $data[] = $nestedData; 
+                $i++; 
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+
+    function get_notes()
+    {        
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $userdata = $this->session->userdata('user');
+        $fileId = $this->uri->segment(2);
+
+        $userdata = $this->session->userdata('user');
+        
+        $this->load->library('order/resware');
+
+        $request = array();
+        $endPoint = '/files/'.$fileId.'/notes';
+
+        $request['DownloadDocuments'] = false;
+        $request['FileID'] = $fileId;
+
+        $notes_data = json_encode($request);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_notes', RESWARE_ORDER_API.$endPoint, $notes_data, array(), 0, 0);        
+
+        $result = $this->resware->make_request('GET', $endPoint, $notes_data);
+
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_notes', RESWARE_ORDER_API.$endPoint, $notes_data, $result, 0, $logid);
+        
+        if(isset($result) && !empty($result))
+        {
+            $response = json_decode($result, TRUE);
+
+            if(isset($response['notes']) && !empty($response['notes']))
+            {
+                $data['notes'] = $response['notes'];
+            }
+        }
+        /* end get fees details from resware */
+
+        $this->load->view('layout/head_dashboard',$data);
+        $this->load->view('order/get_notes');
     }
 }
