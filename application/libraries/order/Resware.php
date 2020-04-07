@@ -28,6 +28,15 @@ class Resware
     curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
      
     $output = curl_exec($handle);
+
+    if(curl_exec($ch) === false)
+    {
+        echo 'Curl error: ' . curl_error($ch);
+    }
+    else
+    {
+        echo 'Operation completed without any errors';
+    }
      
     curl_close($handle);
      
