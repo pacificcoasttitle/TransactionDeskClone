@@ -650,8 +650,6 @@ class Home extends MX_Controller {
 
 	function dashboard()
 	{
-		echo base_url();
-		echo "here";exit;
 		$userdata = $this->session->userdata('user');
 		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
 		$data['name'] = $name;
