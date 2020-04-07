@@ -724,6 +724,8 @@ class Dashboard extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$fileId = $this->uri->segment(2);     
 		$orderDetails = $this->order->get_order_details($fileId);
+		//echo "<pre>";
+		//print_r($orderDetails);exit;
 		$token = $this->order->get_token();
 		if ($token === false) {
 			$token = array();
@@ -748,20 +750,20 @@ class Dashboard extends MX_Controller {
 
 		$propertyDetail = explode(",", $orderDetails['full_address']);
 		$propery[] = array (
-			'PropertyID' => !empty($orderDetail['westcor_property_id']) ? $orderDetails['westcor_property_id'] : 0,
-			'tvid' =>  !empty($orderDetail['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
-			'CountyName' => $orderDetail['county'].' County',
-			'ShortLegal' => $orderDetail['legal_description'],
+			'PropertyID' => !empty($orderDetails['westcor_property_id']) ? $orderDetails['westcor_property_id'] : 0,
+			'tvid' =>  !empty($orderDetails['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
+			'CountyName' => $orderDetails['county'].' County',
+			'ShortLegal' => $orderDetails['legal_description'],
 			'StreetAddress' => $propertyDetail[0]." ".$propertyDetail[1],
 			'City' => $propertyDetail[2],
 			'State' => $propertyDetail[3],
 			'Zip' => $propertyDetail[4],
 		);
 
-		$primary_owner = explode(" ", $orderDetail['primary_owner']);
-		if ($orderDetail['purchase_type'] == '19' || $orderDetail['purchase_type'] == '33') {
+		$primary_owner = explode(" ", $orderDetails['primary_owner']);
+		if ($orderDetails['purchase_type'] == '19' || $orderDetails['purchase_type'] == '33') {
 			$buyers[] = array (
-				'NameID' => !empty($orderDetail['westcor_buyer_id']) ? $orderDetails['westcor_buyer_id'] : 0,
+				'NameID' => !empty($orderDetails['westcor_buyer_id']) ? $orderDetails['westcor_buyer_id'] : 0,
 				'Last' => $primary_owner[1],
 				'First' => $primary_owner[0],
 				'NameType' => 1,
@@ -774,9 +776,9 @@ class Dashboard extends MX_Controller {
 				'Address' => $propertyDetail[0]." ".$propertyDetail[1]
 			  );
 			$sellers = array();
-		} else if ($orderDetail['purchase_type'] == '20' || $orderDetail['purchase_type'] == '32')  {
+		} else if ($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32')  {
 			$sellers[] = array (
-				'NameID' => !empty($orderDetail['westcor_seller_id']) ? $orderDetails['westcor_seller_id'] : 0,
+				'NameID' => !empty($orderDetails['westcor_seller_id']) ? $orderDetails['westcor_seller_id'] : 0,
 				'Last' => $primary_owner[1],
 				'First' => $primary_owner[0],
 				'NameType' => 2,
@@ -788,27 +790,28 @@ class Dashboard extends MX_Controller {
 				'Zip' => $propertyDetail[4],
 				'Address' => $propertyDetail[0]." ".$propertyDetail[1],
 			);
+			
 			$buyers = array();
 		}
 
-		if (!empty($orderDetail['escrow_lender_id'])) {
+		if (!empty($orderDetails['escrow_lender_id'])) {
 			$lenders[] =  array (
-				'Id' => !empty($orderDetail['westcor_seller_id']) ? $orderDetails['westcor_seller_id'] : 0,
-				'tvid' => !empty($orderDetail['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
-				'name' => $orderDetail['first_name']." ".$orderDetail['last_name'],
-				'city' => $orderDetail['city'],
+				'Id' => !empty($orderDetails['westcor_seller_id']) ? $orderDetails['westcor_seller_id'] : 0,
+				'tvid' => !empty($orderDetails['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
+				'name' => $orderDetails['first_name']." ".$orderDetails['last_name'],
+				'city' => $orderDetails['city'],
 				'state' => 'CA',
-				'zip' => $orderDetail['zip_code'],
-				'address' => $orderDetail['street_address'],
-				'phone' => $orderDetail['telephone_no'],
-				'email' => $orderDetail['email_address']
+				'zip' => $orderDetails['zip_code'],
+				'address' => $orderDetails['street_address'],
+				'phone' => $orderDetails['telephone_no'],
+				'email' => $orderDetails['email_address']
 			);
 		} else {
 			$lenders = array();
 		}
 		
 		$cplPostData = array (
-			'tvid' => !empty($orderDetail['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
+			'tvid' => !empty($orderDetails['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
 			'agentnumber' => $token['agent_number'],
 			'agent_file_number' => $orderDetails['file_number'],
 			'email_requestor' => $userdata['email'],
@@ -817,7 +820,7 @@ class Dashboard extends MX_Controller {
 			'buyers' => $buyers,
 			'sellers' => $sellers,
 			'lenders' => $lenders,
-			'notes' => !empty($orderDetail['addtional_details']) ? $orderDetails['addtional_details'] : 0,
+			'notes' => !empty($orderDetails['addtional_details']) ? $orderDetails['addtional_details'] : 0,
 			'actions' =>  array (
 				'sdn' => false,
 				'update_base' => true,
@@ -835,10 +838,13 @@ class Dashboard extends MX_Controller {
 			'partnerCode' => WESTCORE_INTEGRATION_PARTNER
 		);
 		$endPoint = 'VendorApi/Order/Update/'.WESTCORE_INTEGRATION_PARTNER;
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', WESTCORE_URL.$cplPostData, $postData, array(), $orderDetails['id'], 0);
-		$result = $this->westcor->make_request('POST', $endPoint, $postData, 0, $token['token']);
+		$cplPostData = json_encode($cplPostData);
+
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', WESTCORE_URL.$endPoint, $cplPostData, array(), $orderDetails['id'], 0);
+		$result = $this->westcor->make_request('POST', $endPoint, $cplPostData, 0, $token['token']);
 		$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', WESTCORE_URL.$endPoint, $cplPostData, $result, $orderDetails['id'], $logid);
 		$res = json_decode($result);
+		echo "<pre>";
 		print_r($res);exit;
 	}
 }
