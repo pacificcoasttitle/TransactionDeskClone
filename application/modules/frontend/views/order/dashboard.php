@@ -30,7 +30,9 @@
 								<a href="<?php echo base_url().'fees'; ?>">
 									<button class="btn btn-type-1a btn-lg" type="button">Fee Estimate</button>
 								</a>
-								<button class="btn btn-type-1b btn-lg" type="button">View All Notes</button>
+								<a href="<?php echo base_url().'notes'; ?>">
+									<button class="btn btn-type-1b btn-lg" type="button">View All Notes</button>
+								</a>
 							</div>
 						</div>
 					</div>
