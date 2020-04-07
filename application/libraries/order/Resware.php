@@ -24,6 +24,7 @@ class Resware
         } else {
             $password= 'Pacific2';
         }
+        echo $login."---".$password;
         $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
@@ -38,7 +39,9 @@ class Resware
         $result = curl_exec($ch);
         echo "here";
         echo $result;
-        print_r($result);exit;
+        print_r($result);
+        echo "here123";
+        exit;
         return $result;
    }
     
