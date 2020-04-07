@@ -261,8 +261,8 @@
 
 					                    /*window.location.replace(base_url+'?order-submit')	*/
 
-					                    /*setTimeout(function () { 
-					                    	window.location.replace(base_url+'order-submit') }, 8000);*/										
+					                    setTimeout(function () { 
+					                    	window.location.replace(base_url+'order-submit') }, 8000);										
 									}
 							  });
 						}
