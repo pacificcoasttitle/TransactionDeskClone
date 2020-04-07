@@ -44,7 +44,7 @@ class Login extends MX_Controller {
                     );
                     $this->session->set_userdata('user', $session_data);
                     echo "herte";
-                    redirect(base_url().'dashboard1');
+                    redirect(base_url().'dashboard');
                 } else {
                     $data['error'] =  'Please enter the correct email address';
                     $this->load->view('order/login', $data);
