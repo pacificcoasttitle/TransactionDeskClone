@@ -506,7 +506,7 @@ function fetchReports(repNum)
         dataType: 'xml'
     })
     	.done(function(response, textStatus, jqXHR) {
-            console.log(response);
+
             var responseStatus = $(response).find('StatusCode').text();
             $("#search-btn").parents("form").find(".search-loader").addClass("hidden");
             
