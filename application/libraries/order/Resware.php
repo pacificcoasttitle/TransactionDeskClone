@@ -17,6 +17,7 @@ class Resware
 
    public function make_request($http_method, $endpoint, $body_params='')
    {
+       echo  function_exists('curl_version');exit;
         $userdata = $this->CI->session->userdata('user');
         $login =  $userdata['email'];
         if ($userdata['email'] == 'ghernandez@pct.com') {
