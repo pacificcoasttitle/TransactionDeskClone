@@ -13,6 +13,13 @@ class Cron extends MX_Controller {
 
     function import_orders() 
     {
+        $handle = curl_init();
+$url = "https://www.ladygaga.com";
+curl_setopt($handle, CURLOPT_URL, $url);
+curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+$output = curl_exec($handle);
+curl_close($handle);
+echo $output;exit;
         $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
         $userdata = $this->session->userdata('user');
