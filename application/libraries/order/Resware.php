@@ -17,30 +17,6 @@ class Resware
 
    public function make_request($http_method, $endpoint, $body_params='')
    {
-       echo "hdggf";
-    $handle = curl_init();
- 
-    $url = "https://www.ladygaga.com";
-     
-    
-    curl_setopt($handle, CURLOPT_URL, $url);
-    
-    curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-     
-    $output = curl_exec($handle);
-
-    if(curl_exec($ch) === false)
-    {
-        echo 'Curl error: ' . curl_error($ch);
-    }
-    else
-    {
-        echo 'Operation completed without any errors';
-    }
-     
-    curl_close($handle);
-     
-    echo $output;exit;
         $userdata = $this->CI->session->userdata('user');
         $login =  $userdata['email'];
         if ($userdata['email'] == 'ghernandez@pct.com') {
@@ -52,8 +28,6 @@ class Resware
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false );
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                
