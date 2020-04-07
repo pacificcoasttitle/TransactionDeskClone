@@ -17,6 +17,20 @@ class Resware
 
    public function make_request($http_method, $endpoint, $body_params='')
    {
+    $handle = curl_init();
+ 
+    $url = "https://www.ladygaga.com";
+     
+    
+    curl_setopt($handle, CURLOPT_URL, $url);
+    
+    curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+     
+    $output = curl_exec($handle);
+     
+    curl_close($handle);
+     
+    echo $output;exit;
         $userdata = $this->CI->session->userdata('user');
         $login =  $userdata['email'];
         if ($userdata['email'] == 'ghernandez@pct.com') {
