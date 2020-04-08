@@ -10,15 +10,18 @@ class Order
 	{
 		$this->CI =& get_instance();                        
 		$this->CI->load->database();
-		$this->CI->load->library('email');
+        $this->CI->load->library('email');
+        $this->CI->load->library('session');
 		self::$CI = $this->CI;
     }
 
     public function get_orders($params)
     {
+        $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number, order_details.file_id,property_details.full_address')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
+        $this->CI->db->where('order_details.customer_id', $userdata['id']);
         $total_records =  $this->CI->db->count_all_results();
        
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -29,11 +32,13 @@ class Order
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
 
+        
+        $this->CI->db->where('order_details.customer_id', $userdata['id']);
+
         if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
             $this->CI->db->limit($limit, $offset);
         }
 
-       
         $query = $this->CI->db->get();
 
         if ($query->num_rows() > 0)  {
