@@ -375,7 +375,7 @@ class Dashboard extends MX_Controller {
 
 
         $endPoint = 'estimates/closingfees';
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', RESWARE_ORDER_API.$endPoint, $fees_data, array(), 0, 0);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', RESWARE_ORDER_API.$endPoint, $fees_data, array(), $orderId, 0);
         $result = $this->resware->make_request('POST', $endPoint, $fees_data);
 
         
@@ -432,7 +432,7 @@ class Dashboard extends MX_Controller {
         $data['productType'] = $productType;
         $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
         
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', RESWARE_ORDER_API.$endPoint, $fees_data, $result, 0, $logid);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', RESWARE_ORDER_API.$endPoint, $fees_data, $result, $orderId, $logid);
 
         $this->load->model('order/fee');
         $feesData = array(
@@ -505,7 +505,7 @@ class Dashboard extends MX_Controller {
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'"><button class="btn btn-grad-2a" type="button">Get Notes</button></a>';
+                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'"><button class="btn btn-grad-2a" type="button">View / Add Notes</button></a>';
                 $data[] = $nestedData; 
                 $i++; 
             }
@@ -523,7 +523,9 @@ class Dashboard extends MX_Controller {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $userdata = $this->session->userdata('user');
         $fileId = $this->uri->segment(2);
-
+        $orderDetails = $this->order->get_order_details($fileId);
+		$orderId = isset($orderDetails['id']) && !empty($orderDetails['id']) ? $orderDetails['id'] : '';
+        $data['fileId'] = $fileId;
         $userdata = $this->session->userdata('user');
         
         $this->load->library('order/resware');
@@ -535,11 +537,11 @@ class Dashboard extends MX_Controller {
         $request['FileID'] = $fileId;
 
         $notes_data = json_encode($request);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_notes', RESWARE_ORDER_API.$endPoint, $notes_data, array(), 0, 0);        
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_notes', RESWARE_ORDER_API.$endPoint, $notes_data, array(), $orderId, 0);        
 
         $result = $this->resware->make_request('GET', $endPoint, $notes_data);
 
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_notes', RESWARE_ORDER_API.$endPoint, $notes_data, $result, 0, $logid);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_notes', RESWARE_ORDER_API.$endPoint, $notes_data, $result, $orderId, $logid);
         
         if(isset($result) && !empty($result))
         {
@@ -554,5 +556,70 @@ class Dashboard extends MX_Controller {
 
         $this->load->view('layout/head_dashboard',$data);
         $this->load->view('order/get_notes');
+    }
+
+    public function create_note()
+    {
+    	$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
+    	if(isset($fileId) && !empty($fileId))
+    	{
+    		$userdata = $this->session->userdata('user');
+    		$subject = isset($_POST['subject']) && !empty($_POST['subject']) ? $_POST['subject'] : '';
+    		$body = isset($_POST['body']) && !empty($_POST['body']) ? $_POST['body'] : '';
+    		$orderDetails = $this->order->get_order_details($fileId);
+			$orderId = isset($orderDetails['id']) && !empty($orderDetails['id']) ? $orderDetails['id'] : '';
+			
+    		$this->load->library('order/resware');
+
+	        $request = array();
+	        $endPoint = '/files/'.$fileId.'/notes';
+
+	        $request['Subject'] = $subject;
+	        $request['Body'] = $body;
+	        $request['FileID'] = $fileId;
+
+	        $notes_data = json_encode($request);
+	        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', RESWARE_ORDER_API.$endPoint, $notes_data, array(), $orderId, 0);        
+
+	        $result = $this->resware->make_request('POST', $endPoint, $notes_data);
+
+	        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', RESWARE_ORDER_API.$endPoint, $notes_data, $result, $orderId, $logid);
+	        
+	        if(isset($result) && !empty($result))
+	        {
+	            $response = json_decode($result, TRUE);
+	            if(isset($response['ResponseStatus']) && !empty($response['ResponseStatus']))
+				{
+					$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+					$response = array('status'=>'error', 'message'=> $message);
+					echo json_encode($response); exit;
+				}
+				else
+				{
+					$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+
+					$this->load->model('order/note');
+					
+			        $notesData = array(
+			            'note_id' => $noteId,
+			            'user_id' => $userdata['id'],
+			            'order_id' => $orderId
+			        );
+
+			        $id = $this->note->insert($notesData);
+
+			        if($noteId && $id)
+			        {
+			        	$response = array('status'=>'success', 'message'=>'Note created successfully.');
+						echo json_encode($response); exit;
+			        }
+			        else
+			        {
+			        	$response = array('status'=>'error', 'message'=> 'Something went wrong. Please try again.');
+						echo json_encode($response); exit;
+			        }
+				}
+	    	}
+	    }
     }
 }
