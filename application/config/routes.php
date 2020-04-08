@@ -119,6 +119,7 @@ $route['import-orders'] = 'frontend/order/cron/import_orders';
 $route['notes'] = 'frontend/order/dashboard/notes';
 $route['get-notes-orders'] = 'frontend/order/dashboard/get_notes_orders';
 $route['get-notes/:num'] = 'frontend/order/dashboard/get_notes';
+$route['create-note'] = 'frontend/order/dashboard/create_note';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

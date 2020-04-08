@@ -9,7 +9,7 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="typography-section__inner">
-							<h2 class="ui-title-block ui-title-block_light">Upload a Document</h2>
+							<h2 class="ui-title-block ui-title-block_light">View Notes</h2>
 							<div class="ui-decor-1a bg-primary"></div>
 							<h3 class="ui-title-block_light">Below are all files</h3>
 						</div>
