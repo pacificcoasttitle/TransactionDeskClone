@@ -14,24 +14,33 @@
 						</div>
 						<div class="typography-sectiona">
 							<div class="col-md-12">
-								<a href="<?php echo base_url().'order'; ?>"><button class="btn btn-type-1a btn-lg" type="button">Open
-										Order</button></a>
-								<button class="btn btn-type-1b btn-lg" type="button">View CPL's</button>
-								<a href="<?php echo base_url().'select-files'; ?>"><button class="btn btn-type-1a btn-lg"
-										type="button">Review Prelim</button></a>
-                  <a href="<?php echo base_url().'attach-files'; ?>"><button class="btn btn-type-1d btn-lg" type="button">Attach Doc</button>
+								<a href="<?php echo base_url().'order'; ?>">
+									<button class="btn btn-type-1a btn-lg" type="button">Open New Order</button>
+								</a>
+								<button class="btn btn-type-1b btn-lg" type="button">Generate CPL</button>
+								<a href="<?php echo base_url().'select-files'; ?>">
+									<button class="btn btn-type-1a btn-lg"
+										type="button">Prelim Review</button>
+								</a>
+                  				<a href="<?php echo base_url().'attach-files'; ?>">
+                  					<button class="btn btn-type-1d btn-lg" type="button">Upload a Document</button>
+                  				</a>
 							</div>
 						</div>
 						<div class="typography-sectionc">
 							<div class="col-md-12">
-								<button class="btn btn-type-1e btn-lg" type="button">View Proposed</button>
-								<a href="<?php echo base_url().'recordings'; ?>"><button class="btn btn-type-1f btn-lg"
-										type="button">View Recordings</button></a>
+								<a href="<?php echo base_url().'proposed-insured'; ?>">
+									<button class="btn btn-type-1e btn-lg" type="button">Proposed Insured</button>
+								</a>
+								<a href="<?php echo base_url().'recordings'; ?>">
+									<button class="btn btn-type-1f btn-lg"
+										type="button">Recording Confirmations</button>
+								</a>
 								<a href="<?php echo base_url().'fees'; ?>">
-									<button class="btn btn-type-1a btn-lg" type="button">Fee Estimate</button>
+									<button class="btn btn-type-1a btn-lg" type="button">Get Fee Estimate</button>
 								</a>
 								<a href="<?php echo base_url().'notes'; ?>">
-									<button class="btn btn-type-1b btn-lg" type="button">View All Notes</button>
+									<button class="btn btn-type-1b btn-lg" type="button">Notes on Files</button>
 								</a>
 							</div>
 						</div>
