@@ -48,21 +48,28 @@
                                 {
                             ?>
                                     <div class="loader"></div>
+                                    <span id="legalDescription"></span>
+                            <?php
+                                }
+                                else
+                                {
+                            ?>
+                                
+                                    <span id="legalDescription">
+                                        <?php 
+                                            if(isset($briefLegal) && !empty($briefLegal))
+                                            {
+                                                echo $briefLegal;
+                                            }
+                                            else
+                                            {
+                                                echo 'No data found.';
+                                            }
+                                        ?>
+                                    </span>
                             <?php
                                 }
                             ?>
-                            <span id="legalDescription">                                
-                                <?php 
-                                    if(isset($briefLegal) && !empty($briefLegal))
-                                    {
-                                        echo $briefLegal;
-                                    }
-                                    else
-                                    {
-                                        echo 'No data found.';
-                                    }
-                                ?>
-                            </span>
                         </span>
                     </li><br>
                     <li>
@@ -73,21 +80,27 @@
                                 {
                             ?>
                                     <div class="loader"></div>
+                                    <span id="vestingInformation"></span>
                             <?php
                                 }
+                                else
+                                {
                             ?>
-                            <span id="vestingInformation">
-                                <?php 
-                                    if(isset($vesting) && !empty($vesting))
-                                    {
-                                        echo $vesting;
-                                    }
-                                    else
-                                    {
-                                        echo 'No data found.';
-                                    }
-                                ?>
-                            </span>
+                                    <span id="vestingInformation">
+                                        <?php 
+                                            if(isset($vesting) && !empty($vesting))
+                                            {
+                                                echo $vesting;
+                                            }
+                                            else
+                                            {
+                                                echo 'No data found.';
+                                            }
+                                        ?>
+                                    </span>
+                            <?php
+                                }
+                            ?>                            
                         </span>
                     </li><br>                                         
                 </ul>
@@ -103,27 +116,34 @@
                             {
                         ?>
                                 <div class="loader"></div>
+                                <div id="firstInstallment"></div>
                         <?php
                             }
+                            else
+                            {
                         ?>
-                        <div id="firstInstallment" style="border:1px solid #000000;padding:15px;">
-                            <?php
-                                if(isset($firstInstallment) && !empty($firstInstallment))
-                                {
-                            ?>
-                                    <p>Balance: <?php echo isset($firstInstallment['Balance']) && !empty($firstInstallment['Balance']) ? $firstInstallment['Balance'] : '-'?></p>
-                                    <p>Amount: <?php echo isset($firstInstallment['Amount']) && !empty($firstInstallment['Amount']) ? $firstInstallment['Amount'] : '-'?></p>
-                                    <p>DueDate: <?php echo isset($firstInstallment['DueDate']) && !empty($firstInstallment['DueDate']) ? $firstInstallment['DueDate'] : '-'?></p>
-                                    <p>Number: <?php echo isset($firstInstallment['Number']) && !empty($firstInstallment['Number']) ? $firstInstallment['Number'] : '-'?></p>
-                                    <p>PaymentDate: <?php echo isset($firstInstallment['PaymentDate']) && !empty($firstInstallment['PaymentDate']) ? $firstInstallment['PaymentDate'] : '-'?></p>
-                                    <p>Penalty: <?php echo isset($firstInstallment['Penalty']) && !empty($firstInstallment['Penalty']) ? $firstInstallment['Penalty'] : '-'?></p>
-                                    <p>Status: <?php echo isset($firstInstallment['Status']) && !empty($firstInstallment['Status']) ? $firstInstallment['Status'] : '-'?></p>
-                                    <p>AmountPaid: <?php echo isset($firstInstallment['AmountPaid']) && !empty($firstInstallment['AmountPaid']) ? $firstInstallment['AmountPaid'] : '-'?></p>
-                                    <p>TaxYear: <?php echo isset($firstInstallment['TaxYear']) && !empty($firstInstallment['TaxYear']) ? $firstInstallment['TaxYear'] : '-'?></p>
-                            <?php
-                                }
-                            ?>
-                        </div>
+                                <div id="firstInstallment" style="border:1px solid #000000;padding:15px;">
+                                <?php
+                                    if(isset($firstInstallment) && !empty($firstInstallment))
+                                    {
+                                ?>
+                                        <p>Balance: <?php echo isset($firstInstallment['Balance']) && !empty($firstInstallment['Balance']) ? $firstInstallment['Balance'] : '-'?></p>
+                                        <p>Amount: <?php echo isset($firstInstallment['Amount']) && !empty($firstInstallment['Amount']) ? $firstInstallment['Amount'] : '-'?></p>
+                                        <p>DueDate: <?php echo isset($firstInstallment['DueDate']) && !empty($firstInstallment['DueDate']) ? $firstInstallment['DueDate'] : '-'?></p>
+                                        <p>Number: <?php echo isset($firstInstallment['Number']) && !empty($firstInstallment['Number']) ? $firstInstallment['Number'] : '-'?></p>
+                                        <p>PaymentDate: <?php echo isset($firstInstallment['PaymentDate']) && !empty($firstInstallment['PaymentDate']) ? $firstInstallment['PaymentDate'] : '-'?></p>
+                                        <p>Penalty: <?php echo isset($firstInstallment['Penalty']) && !empty($firstInstallment['Penalty']) ? $firstInstallment['Penalty'] : '-'?></p>
+                                        <p>Status: <?php echo isset($firstInstallment['Status']) && !empty($firstInstallment['Status']) ? $firstInstallment['Status'] : '-'?></p>
+                                        <p>AmountPaid: <?php echo isset($firstInstallment['AmountPaid']) && !empty($firstInstallment['AmountPaid']) ? $firstInstallment['AmountPaid'] : '-'?></p>
+                                        <p>TaxYear: <?php echo isset($firstInstallment['TaxYear']) && !empty($firstInstallment['TaxYear']) ? $firstInstallment['TaxYear'] : '-'?></p>
+                                <?php
+                                    }
+                                ?>
+                            </div>
+                        <?php 
+                            }
+                        ?>
+                        
                     </div>
                     <div class="col-md-6">                      
                         <h3>2nd Installment</h3>
@@ -132,27 +152,33 @@
                             {
                         ?>
                                 <div class="loader"></div>
+                                <div id="secondInstallment"></div>
                         <?php
                             }
+                            else
+                            {
                         ?>
-                        <div id="secondInstallment" style="border:1px solid #000000;padding:15px;">
-                            <?php
-                                if(isset($secondInstallment) && !empty($secondInstallment))
-                                {
-                            ?>
-                                    <p>Balance: <?php echo isset($secondInstallment['Balance']) && !empty($secondInstallment['Balance']) ? $secondInstallment['Balance'] : '-'?></p>
-                                    <p>Amount: <?php echo isset($secondInstallment['Amount']) && !empty($secondInstallment['Amount']) ? $secondInstallment['Amount'] : '-'?></p>
-                                    <p>DueDate: <?php echo isset($secondInstallment['DueDate']) && !empty($secondInstallment['DueDate']) ? $secondInstallment['DueDate'] : '-'?></p>
-                                    <p>Number: <?php echo isset($secondInstallment['Number']) && !empty($secondInstallment['Number']) ? $secondInstallment['Number'] : '-'?></p>
-                                    <p>PaymentDate: <?php echo isset($secondInstallment['PaymentDate']) && !empty($secondInstallment['PaymentDate']) ? $secondInstallment['PaymentDate'] : '-'?></p>
-                                    <p>Penalty: <?php echo isset($secondInstallment['Penalty']) && !empty($secondInstallment['Penalty']) ? $secondInstallment['Penalty'] : '-'?></p>
-                                    <p>Status: <?php echo isset($secondInstallment['Status']) && !empty($secondInstallment['Status']) ? $secondInstallment['Status'] : '-'?></p>
-                                    <p>AmountPaid: <?php echo isset($secondInstallment['AmountPaid']) && !empty($secondInstallment['AmountPaid']) ? $secondInstallment['AmountPaid'] : '-'?></p>
-                                    <p>TaxYear: <?php echo isset($secondInstallment['TaxYear']) && !empty($secondInstallment['TaxYear']) ? $secondInstallment['TaxYear'] : '-'?></p>
-                            <?php
-                                }
-                            ?>
-                        </div>                
+                                <div id="secondInstallment" style="border:1px solid #000000;padding:15px;">
+                                <?php
+                                    if(isset($secondInstallment) && !empty($secondInstallment))
+                                    {
+                                ?>
+                                        <p>Balance: <?php echo isset($secondInstallment['Balance']) && !empty($secondInstallment['Balance']) ? $secondInstallment['Balance'] : '-'?></p>
+                                        <p>Amount: <?php echo isset($secondInstallment['Amount']) && !empty($secondInstallment['Amount']) ? $secondInstallment['Amount'] : '-'?></p>
+                                        <p>DueDate: <?php echo isset($secondInstallment['DueDate']) && !empty($secondInstallment['DueDate']) ? $secondInstallment['DueDate'] : '-'?></p>
+                                        <p>Number: <?php echo isset($secondInstallment['Number']) && !empty($secondInstallment['Number']) ? $secondInstallment['Number'] : '-'?></p>
+                                        <p>PaymentDate: <?php echo isset($secondInstallment['PaymentDate']) && !empty($secondInstallment['PaymentDate']) ? $secondInstallment['PaymentDate'] : '-'?></p>
+                                        <p>Penalty: <?php echo isset($secondInstallment['Penalty']) && !empty($secondInstallment['Penalty']) ? $secondInstallment['Penalty'] : '-'?></p>
+                                        <p>Status: <?php echo isset($secondInstallment['Status']) && !empty($secondInstallment['Status']) ? $secondInstallment['Status'] : '-'?></p>
+                                        <p>AmountPaid: <?php echo isset($secondInstallment['AmountPaid']) && !empty($secondInstallment['AmountPaid']) ? $secondInstallment['AmountPaid'] : '-'?></p>
+                                        <p>TaxYear: <?php echo isset($secondInstallment['TaxYear']) && !empty($secondInstallment['TaxYear']) ? $secondInstallment['TaxYear'] : '-'?></p>
+                                <?php
+                                    }
+                                ?>
+                            </div>
+                        <?php 
+                            }
+                        ?>                                        
                     </div>
                   </div>
                 </div>
@@ -163,28 +189,59 @@
                     <h3>Grant Deed Information:</h3>
                 </div>
                 <div class="col-md-3">
-                    <div id="grantDeedInfoFile">
-                        <?php 
-                            $L_V_serviceId = isset($L_V_serviceId) && !empty($L_V_serviceId) ? $L_V_serviceId : '';
-                            $instrumentNumber = isset($instrumentNumber) && !empty($instrumentNumber) ? $instrumentNumber : '';
-                            $state = isset($state) && !empty($state) ? $state : '';
-                            $county = isset($county) && !empty($county) ? $county : '';
-                            $recordedDate = isset($recordedDate) && !empty($recordedDate) ? $recordedDate : '';
-                            $time = strtotime($recordedDate);
-                            $year = date('Y',$time);
-                            
-                            $docId = str_replace($year, '', $instrumentNumber);
-                           
-                        ?>
-                        <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4);'>Download L&V</a>
-                    </div>
-                    <div class="loader" style="display: none;"></div>
+                    
+                    <?php 
+                        if(empty($L_V_CreateService)|| empty($L_V_GetRequestSummary) || empty($L_V_GetResultById))
+                        {
+                    ?>
+                            <div id="grantDeedInfoFile"></div>
+                            <div class="loader" style="display: none;"></div>
+                    <?php
+                        }
+                        else
+                        {
+                    ?>
+                            <div id="grantDeedInfoFile">
+                                <?php 
+                                    $L_V_serviceId = isset($L_V_serviceId) && !empty($L_V_serviceId) ? $L_V_serviceId : '';
+                                    $instrumentNumber = isset($instrumentNumber) && !empty($instrumentNumber) ? $instrumentNumber : '';
+                                    $state = isset($state) && !empty($state) ? $state : '';
+                                    $county = isset($county) && !empty($county) ? $county : '';
+                                    $recordedDate = isset($recordedDate) && !empty($recordedDate) ? $recordedDate : '';
+                                    $time = strtotime($recordedDate);
+                                    $year = date('Y',$time);
+                                    
+                                    $docId = str_replace($year, '', $instrumentNumber);
+                                   
+                                ?>
+                                <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4);'>Download L&V</a>
+                            </div>
+                            <div class="loader" style="display: none;"></div>
+                    <?php
+                        }
+                    ?>
+                    
                 </div>
                 <div class="col-md-3">
-                    <div id="instrumentInfoFile">
-                        <a href="javascript:void(0);" onclick='instrumentSearch("<?php echo $docId; ?>","<?php echo $recordedDate; ?>","<?php echo $state; ?>","<?php echo $county; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
-                    </div>
-                    <div class="loader" style="display: none;"></div>
+                    <?php
+                        if(empty($L_V_CreateService)|| empty($L_V_GetRequestSummary) || empty($L_V_GetResultById))
+                        {
+                    ?>
+                            <div id="instrumentInfoFile"></div>
+                            <div class="loader" style="display: none;"></div>
+                    <?php
+                        }
+                        else
+                        {
+                    ?>
+                            <div id="instrumentInfoFile">
+                            <a href="javascript:void(0);" onclick='instrumentSearch("<?php echo $docId; ?>","<?php echo $recordedDate; ?>","<?php echo $state; ?>","<?php echo $county; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
+                        </div>
+                        <div class="loader" style="display: none;"></div>
+                    <?php
+                        }
+                    ?>
+                    
                 </div>
             </div>
           </div>
@@ -265,7 +322,6 @@
     var Tax_GetRequestSummary = "<?php echo isset($Tax_GetRequestSummary) && !empty($Tax_GetRequestSummary) ? $Tax_GetRequestSummary : ''; ?>";
     var L_V_GetResultById = "<?php echo isset($L_V_GetResultById) && !empty($L_V_GetResultById) ? $L_V_GetResultById : ''; ?>";
     var Tax_GetResultById = "<?php echo isset($Tax_GetResultById) && !empty($Tax_GetResultById) ? $Tax_GetResultById : ''; ?>";
-    
 </script>
 
 <?php

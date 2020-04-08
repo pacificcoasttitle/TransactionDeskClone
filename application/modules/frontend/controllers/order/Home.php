@@ -29,7 +29,6 @@ class Home extends MX_Controller {
 
     		if($this->form_validation->run($this) == true)
     		{
-    			// $CustomerNumber = $this->input->post('CustomerNumber');
 	        	$OpenName      = $this->input->post('OpenName');
 	        	$OpenLastName      = $this->input->post('OpenLastName');
 	        	$Opentelephone      = $this->input->post('Opentelephone');
@@ -161,6 +160,7 @@ class Home extends MX_Controller {
 				}
 
 				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
+
 				$order_data = json_encode($place_order);
 
 				$this->load->library('order/resware');
@@ -173,300 +173,298 @@ class Home extends MX_Controller {
 					$response = json_decode($result,true);
 					if(isset($response['ResponseStatus']) && !empty($response['ResponseStatus']))
 					{
-						$logDir = FCPATH.'logs/';
-						if(!is_dir($logDir))
+						$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+						$response = array('status'=>'error', 'message'=> $message);
+						echo json_encode($response); exit;
+					}
+					else
+					{
+						$orderNumber = $file_id = '';
+
+						if(isset($response['FileID']) && !empty($response['FileID']))
 						{
-							mkdir($logDir, 0777, true);
+							$orderNumber = isset($response['FileNumber']) && !empty($response['FileNumber']) ? $response['FileNumber'] : '';
+							$file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
 						}
-						$logFile = $logDir.'place_order.log';
 
-						$method = (file_exists($logFile)) ? 'a' : 'w';
-						$fh = fopen($logFile,$method);
-
-						fwrite($fh, date('m/d/Y H:i:s').' : '.$result."\n");
-						fclose($fh);
-					}
-					$orderNumber = $file_id = '';
-
-					if(isset($response['FileID']) && !empty($response['FileID']))
-					{
-						$orderNumber = isset($response['FileNumber']) && !empty($response['FileNumber']) ? $response['FileNumber'] : '';
-						$file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
-						// $_SESSION['orderNumber'] = $orderNumber;
-					}
-
-					if($orderNumber)
-					{
-						/*$message = '<h3>Order Details:</h3><p>Customer Name: '.$OpenName.' '.$OpenLastName.'</p><p>Email Address: '.$OpenEmail.'</p><p>Order Number: '.$orderNumber.'</p>';*/
-						$mail = $this->phpmailer_library->load();
-						// $mail = new PHPMailer();
-						$mail->isSendmail();
-						$mail->IsHTML(true);
-						$mail->setFrom($OpenEmail,$OpenName.' '.$OpenLastName);
-						$mail->CharSet = "UTF-8";
-						$mail->Encoding = "base64";
-						$mail->Timeout = 200;
-						$mail->ContentType = "text/html";
-						$mail->addAddress('cs@pct.com', 'Open Order Desk');							
-						$mail->Subject = "Order Placed at Resware";
-
-						$data = array(
-							'orderNumber'=> $orderNumber,
-							'OpenName'=> $OpenName.' '.$OpenLastName,
-							'Opentelephone'=> $Opentelephone,
-							'OpenEmail'=> $OpenEmail,
-							'CompanyName'=> $CompanyName,
-							'StreetAddress'=> $StreetAddress,
-							'City'=> $City,
-							'Zipcode'=> $Zipcode,
-							'PropertyAddress'=> $PropertyAddress,
-							'FullProperty'=> $FullProperty,
-							'APN'=> $apn,
-							'County'=> $County,
-							'LegalDescription'=> $LegalDescription,
-							'PrimaryOwner'=> $PrimaryOwner,
-							'SecondaryOwner'=> $SecondaryOwner,
-							'SalesRep'=> $SalesRep,
-							'TitleOfficer'=> $TitleOfficer,
-							'ProductType'=> $ProductType,
-							'SalesAmount'=> $SalesAmount,
-							'LoanAmount'=> $LoanAmount,
-							'sendermessage'=> $sendermessage,
-							'buyers_agent'=> $buyers_agent_details,
-							'listing_agent'=> $listing_agent_details,
-							'lender_details'=> $lender_details,
-							'escrow_details'=> $escrow_details,
-							'currYear'=> CURRENT_YEAR
-						 );
-
-						$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
-						$mail->Body = $order_message_body;
-						$mail->AltBody = "Use an HTML compatible email client";
-						
-						//send order deatils to all parties						
-						if(isset($parties_email) && !empty($parties_email))
+						if($orderNumber)
 						{
-							foreach($parties_email as $email => $name){
-								$mail->AddBCC($email, $name);
-							}
-						}
-						
-						$mail->Send();
-					}
-					$titlepointData = $this->session->userdata($apn);
-					$titlepointData['state'] = $PropertyState;
-					$titlepointData['county'] = $County;
-					$titlepointData['address'] = $PropertyAddress;
-					$titlepointData['city'] = $PropertyCity;
-					$titlepointData['apn'] = $apn;
-					$titlepointData['fipCode'] = $PropertyFips;
-					
-					
-					$this->session->set_userdata('orderNumber', $orderNumber);
-					$this->session->set_userdata("order_no_".$orderNumber, $titlepointData);
-
-					$this->session->unset_userdata($apn);
-					// echo "<pre>"; print_r($this->session->userdata()); 
-				}
-				
-				$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
-
-				$propertyData = array(
-					'customer_id' => $customer_id,
-					'buyer_agent_id' => $BuyerAgentId,
-					'listing_agent_id' => $ListingAgentId,
-					'escrow_lender_id' => $EscrowLenderId,
-					'full_address' => $FullProperty,
-					'apn' => $apn,
-					'county' => $County,
-					'legal_description' => $LegalDescription,
-					'primary_owner' => $PrimaryOwner,
-					'secondary_owner' => $SecondaryOwner,
-					'additional_details'=> $sendermessage,
-					'status'=> 1
-				);
-
-				$propertyId = $this->home_model->insert($propertyData,'property_details');				
-
-				$transactionData = array(
-					'customer_id' => $customer_id,
-					'sales_representative' => $SalesRep,
-					'title_officer' => $TitleOfficer,
-					'sales_amount' => $SalesAmount,
-					'loan_amount' => $LoanAmount,
-					'transaction_type' => $TransactionTypeID,
-					'purchase_type' => $ProductTypeID,
-					'is_ccr' => $CCR,
-					'is_underlying_docs' => $Docs,
-					'is_plotted_easements' => $Ease,
-					'status'=> 1
-				);
-
-				$transactionId = $this->home_model->insert($transactionData,'transaction_details');
-
-				$orderData = array(
-					'customer_id' => $customer_id,
-					'file_id' => $file_id,
-					'file_number' => $orderNumber,
-					'property_id' => $propertyId,
-					'transaction_id' => $transactionId,
-					'status'=> 1
-				);
-
-				$orderId = $this->home_model->insert($orderData,'order_details');
-
-				echo '<div class="alert alert-success">Data saved successfully.</div>';
-			
-
-				$order_file = uniqid();
-				$order_upload = $order_file.isset($_FILES['orderfiles']['name']) && !empty($_FILES['orderfiles']['name']) ? $_FILES['orderfiles']['name'] : '';	
-				
-			/*	----------------------------------------------------------------------
-				: Prepare form field variables for CSV export
-				----------------------------------------------------------------------- */
-				
-				/*if(GENERATE_CSV == true){
-					$csvFile = CSV_FILE_NAME;	
-					$csvData = array(
-						"$sendername",
-						"$emailaddress",
-						"$telephone",
-						"$senderwebsite",
-						"$orderservices",
-						"$orderbudget",
-						"$ordertimeframe"			
-					);
-				}*/
-				
-				if(isset($_FILES['orderfiles']) && !empty($_FILES['orderfiles']))
-				{
-					if ($_FILES['orderfiles']['error'] == 0) 
-					{
-						move_uploaded_file($_FILES['orderfiles']['tmp_name'], FCPATH.'smuploads/' .$order_upload);	
-					
-						
-						// include dirname(__FILE__).'/templates/smartmessage.php';
 							
-						$mail = $this->phpmailer_library->load();
-						$mail->isSendmail();
-						$mail->IsHTML(true);
-						$mail->setFrom($OpenEmail,$OpenEmail);
-						$mail->CharSet = "UTF-8";
-						$mail->Encoding = "base64";
-						$mail->Timeout = 200;
-						$mail->ContentType = "text/html";
-						$mail->addAddress(RECEIVER_EMAIL, RECEIVER_NAME);
-						$mail->Subject = RECEIVER_SUBJECT;
-						$mail->AddAttachment(FCPATH.'smuploads/'.$order_upload);
+							$mail = $this->phpmailer_library->load();
+							$mail->isSendmail();
+							$mail->IsHTML(true);
+							$mail->setFrom($OpenEmail,$OpenName.' '.$OpenLastName);
+							$mail->CharSet = "UTF-8";
+							$mail->Encoding = "base64";
+							$mail->Timeout = 200;
+							$mail->ContentType = "text/html";
+							$mail->addAddress('cs@pct.com', 'Open Order Desk');							
+							$mail->Subject = "Order Placed at Resware";
 
-						$data = array(
-					       'OpenName'=> $OpenName,
-					       'OpenEmail'=> $OpenEmail,
-					       'Opentelephone'=> $Opentelephone,
-					       'OpenRole'=> $OpenRole,
-					       'PartnerName'=> $PartnerName,
-					       'ParnterEmailaddress'=> $ParnterEmailaddress,
-					       'PartnerTelephone'=> $PartnerTelephone,
-					       'PartnerRole'=> $PartnerRole,
-					       'Property'=> $Property,
-					       'SalesRep'=> $SalesRep,
-					       'TitleOfficer'=> $TitleOfficer,
-					       'LoanAmount'=> $LoanAmount,
-					       'sendermessage'=> $sendermessage,
-					       'poweredby_url'=> POWEREDBY_URL,
-						   'poweredby_name'=> POWEREDBY_NAME,
-						   'currYear'=> CURRENT_YEAR
-					    );
+							$data = array(
+								'orderNumber'=> $orderNumber,
+								'OpenName'=> $OpenName.' '.$OpenLastName,
+								'Opentelephone'=> $Opentelephone,
+								'OpenEmail'=> $OpenEmail,
+								'CompanyName'=> $CompanyName,
+								'StreetAddress'=> $StreetAddress,
+								'City'=> $City,
+								'Zipcode'=> $Zipcode,
+								'PropertyAddress'=> $PropertyAddress,
+								'FullProperty'=> $FullProperty,
+								'APN'=> $apn,
+								'County'=> $County,
+								'LegalDescription'=> $LegalDescription,
+								'PrimaryOwner'=> $PrimaryOwner,
+								'SecondaryOwner'=> $SecondaryOwner,
+								'SalesRep'=> $SalesRep,
+								'TitleOfficer'=> $TitleOfficer,
+								'ProductType'=> $ProductType,
+								'SalesAmount'=> $SalesAmount,
+								'LoanAmount'=> $LoanAmount,
+								'sendermessage'=> $sendermessage,
+								'buyers_agent'=> $buyers_agent_details,
+								'listing_agent'=> $listing_agent_details,
+								'lender_details'=> $lender_details,
+								'escrow_details'=> $escrow_details,
+								'currYear'=> CURRENT_YEAR
+							 );
 
-						$message = $this->load->view('emails/smartmessage.php',$data,TRUE);	
-						$mail->Body = $message;
-						$mail->AltBody = "Use an HTML compatible email client";
-								
-						// For multiple email recepients from the form 
-						// Simply change recepients from false to true
-						// Then enter the recipients email addresses
-						// echo $message;
-						$recipients = false;
-						if($recipients == true){
-							$recipients = array(
-								"rmcmahon@pct.com" => "Ryan",
-								"openorders@pct.com" => "Open Order Desk"
-							);
+							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
+							$mail->Body = $order_message_body;
+							$mail->AltBody = "Use an HTML compatible email client";
 							
-							foreach($recipients as $email => $name){
-								$mail->AddBCC($email, $name);
-							}	
-						}
-						
-						if($mail->Send()) {
-							// -----------------------------------------------------------------
-							// : Generate the CSV file and post values if its true
-							// ----------------------------------------------------------------- 		
-							if(GENERATE_CSV == true){	
-								if (file_exists($csvFile)) {
-									$csvFileData = fopen($csvFile, 'a');
-									fputcsv($csvFileData, $csvData );
-								} else {
-									$csvFileData = fopen($csvFile, 'a'); 
-									$headerRowFields = array(
-										"Sender Name",
-										"Email Address",
-										"Telephone",
-										"Website",
-										"Services",
-										"Budget",
-										"Time Frame"										
-									);
-									fputcsv($csvFileData,$headerRowFields);
-									fputcsv($csvFileData, $csvData );
+							//send order deatils to all parties						
+							if(isset($parties_email) && !empty($parties_email))
+							{
+								foreach($parties_email as $email => $name){
+									$mail->AddBCC($email, $name);
 								}
-								fclose($csvFileData);
 							}
 							
-							// ---------------------------------------------------------------------
-							// : Send the auto responder message if its true
-							// --------------------------------------------------------------------- 
-							if(AUTORESPONDER == true){
-								
-								$automail = $this->phpmailer_library->load();
-								$automail->isSendmail();
-								$automail->setFrom(RECEIVER_EMAIL,RECEIVER_NAME);
-								$automail->isHTML(true);                                 
-								$automail->CharSet = "UTF-8";
-								$automail->Encoding = "base64";
-								$automail->Timeout = 200;
-								$automail->ContentType = "text/html";
-								$automail->AddAddress($OpenEmail, $OpenName);
-								$automail->Subject = "Thank you for contacting us";
+							$mail->Send();
+						}
+
+						$titlepointData = $this->session->userdata($apn);
+						$titlepointData['state'] = $PropertyState;
+						$titlepointData['county'] = $County;
+						$titlepointData['address'] = $PropertyAddress;
+						$titlepointData['city'] = $PropertyCity;
+						$titlepointData['apn'] = $apn;
+						$titlepointData['fipCode'] = $PropertyFips;
+					
+					
+						$this->session->set_userdata('orderNumber', $orderNumber);
+						$this->session->set_userdata("order_no_".$orderNumber, $titlepointData);
+
+						$this->session->unset_userdata($apn);
+
+						$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+
+						$propertyData = array(
+							'customer_id' => $customer_id,
+							'buyer_agent_id' => $BuyerAgentId,
+							'listing_agent_id' => $ListingAgentId,
+							'escrow_lender_id' => $EscrowLenderId,
+							'full_address' => $FullProperty,
+							'apn' => $apn,
+							'county' => $County,
+							'legal_description' => $LegalDescription,
+							'primary_owner' => $PrimaryOwner,
+							'secondary_owner' => $SecondaryOwner,
+							'additional_details'=> $sendermessage,
+							'status'=> 1
+						);
+
+						$propertyId = $this->home_model->insert($propertyData,'property_details');				
+
+						$transactionData = array(
+							'customer_id' => $customer_id,
+							'sales_representative' => $SalesRep,
+							'title_officer' => $TitleOfficer,
+							'sales_amount' => $SalesAmount,
+							'loan_amount' => $LoanAmount,
+							'transaction_type' => $TransactionTypeID,
+							'purchase_type' => $ProductTypeID,
+							'is_ccr' => $CCR,
+							'is_underlying_docs' => $Docs,
+							'is_plotted_easements' => $Ease,
+							'status'=> 1
+						);
+
+						$transactionId = $this->home_model->insert($transactionData,'transaction_details');
+
+						$orderData = array(
+							'customer_id' => $customer_id,
+							'file_id' => $file_id,
+							'file_number' => $orderNumber,
+							'property_id' => $propertyId,
+							'transaction_id' => $transactionId,
+							'status'=> 1
+						);
+
+						$orderId = $this->home_model->insert($orderData,'order_details');
+
+						$order_file = uniqid();
+						$order_upload = $order_file.isset($_FILES['orderfiles']['name']) && !empty($_FILES['orderfiles']['name']) ? $_FILES['orderfiles']['name'] : '';	
+				
+						/*	----------------------------------------------------------------------
+							: Prepare form field variables for CSV export
+							----------------------------------------------------------------------- */
+				
+						/*if(GENERATE_CSV == true){
+							$csvFile = CSV_FILE_NAME;	
+							$csvData = array(
+								"$sendername",
+								"$emailaddress",
+								"$telephone",
+								"$senderwebsite",
+								"$orderservices",
+								"$orderbudget",
+								"$ordertimeframe"			
+							);
+						}*/
+						$mail_status= $mail_response = '';
+						if(isset($_FILES['orderfiles']) && !empty($_FILES['orderfiles']))
+						{
+							if ($_FILES['orderfiles']['error'] == 0) 
+							{
+								move_uploaded_file($_FILES['orderfiles']['tmp_name'], FCPATH.'smuploads/' .$order_upload);
+									
+								$mail = $this->phpmailer_library->load();
+								$mail->isSendmail();
+								$mail->IsHTML(true);
+								$mail->setFrom($OpenEmail,$OpenEmail);
+								$mail->CharSet = "UTF-8";
+								$mail->Encoding = "base64";
+								$mail->Timeout = 200;
+								$mail->ContentType = "text/html";
+								$mail->addAddress(RECEIVER_EMAIL, RECEIVER_NAME);
+								$mail->Subject = RECEIVER_SUBJECT;
+								$mail->AddAttachment(FCPATH.'smuploads/'.$order_upload);
+
 								$data = array(
-							       'receiver_email'=> RECEIVER_EMAIL,
-							       'sendername'=> $OpenName,
+							       'OpenName'=> $OpenName,
+							       'OpenEmail'=> $OpenEmail,
+							       'Opentelephone'=> $Opentelephone,
+							       'OpenRole'=> $OpenRole,
+							       'PartnerName'=> $PartnerName,
+							       'ParnterEmailaddress'=> $ParnterEmailaddress,
+							       'PartnerTelephone'=> $PartnerTelephone,
+							       'PartnerRole'=> $PartnerRole,
+							       'Property'=> $Property,
+							       'SalesRep'=> $SalesRep,
+							       'TitleOfficer'=> $TitleOfficer,
+							       'LoanAmount'=> $LoanAmount,
+							       'sendermessage'=> $sendermessage,
 							       'poweredby_url'=> POWEREDBY_URL,
-							       'poweredby_name'=> POWEREDBY_NAME,
-							       'currYear'=> CURRENT_YEAR
+								   'poweredby_name'=> POWEREDBY_NAME,
+								   'currYear'=> CURRENT_YEAR
 							    );
-							    $automessage = $this->load->view('emails/autoresponder.php',$data,TRUE);
-								$automail->Body = $automessage;
-								$automail->AltBody = "Use an HTML compatible email client";
-								$automail->Send();	 
-							}
+
+								$message = $this->load->view('emails/smartmessage.php',$data,TRUE);	
+								$mail->Body = $message;
+								$mail->AltBody = "Use an HTML compatible email client";
 										
-						  	echo '<div class="alert notification alert-success">Your title order is being submitted. Please wait for confirmation.</div>'; 
-						  
-							// Start delete function 
-							// Automatically deletes files from the smuploads folder after successful sending
-							// You can remove this function if you want to keep uploads on your server
-							$files = glob(FCPATH.'smuploads/*'); 
-							foreach($files as $file){ 
-							  if(is_file($file))
-								unlink($file); 
-							}	  
-						  
-							} 
-							else {
-								echo '<div class="alert notification alert-error">Message not sent - server error occured!</div>';	
+								// For multiple email recepients from the form 
+								// Simply change recepients from false to true
+								// Then enter the recipients email addresses
+								// echo $message;
+								$recipients = false;
+								if($recipients == true){
+									$recipients = array(
+										"rmcmahon@pct.com" => "Ryan",
+										"openorders@pct.com" => "Open Order Desk"
+									);
+									
+									foreach($recipients as $email => $name){
+										$mail->AddBCC($email, $name);
+									}	
+								}
+								
+								if($mail->Send()) {
+									// -----------------------------------------------------------------
+									// : Generate the CSV file and post values if its true
+									// ----------------------------------------------------------------- 		
+									if(GENERATE_CSV == true){	
+										if (file_exists($csvFile)) {
+											$csvFileData = fopen($csvFile, 'a');
+											fputcsv($csvFileData, $csvData );
+										} else {
+											$csvFileData = fopen($csvFile, 'a'); 
+											$headerRowFields = array(
+												"Sender Name",
+												"Email Address",
+												"Telephone",
+												"Website",
+												"Services",
+												"Budget",
+												"Time Frame"										
+											);
+											fputcsv($csvFileData,$headerRowFields);
+											fputcsv($csvFileData, $csvData );
+										}
+										fclose($csvFileData);
+									}
+									
+									// ---------------------------------------------------------------------
+									// : Send the auto responder message if its true
+									// --------------------------------------------------------------------- 
+									if(AUTORESPONDER == true){
+										
+										$automail = $this->phpmailer_library->load();
+										$automail->isSendmail();
+										$automail->setFrom(RECEIVER_EMAIL,RECEIVER_NAME);
+										$automail->isHTML(true);                                 
+										$automail->CharSet = "UTF-8";
+										$automail->Encoding = "base64";
+										$automail->Timeout = 200;
+										$automail->ContentType = "text/html";
+										$automail->AddAddress($OpenEmail, $OpenName);
+										$automail->Subject = "Thank you for contacting us";
+										$data = array(
+									       'receiver_email'=> RECEIVER_EMAIL,
+									       'sendername'=> $OpenName,
+									       'poweredby_url'=> POWEREDBY_URL,
+									       'poweredby_name'=> POWEREDBY_NAME,
+									       'currYear'=> CURRENT_YEAR
+									    );
+									    $automessage = $this->load->view('emails/autoresponder.php',$data,TRUE);
+										$automail->Body = $automessage;
+										$automail->AltBody = "Use an HTML compatible email client";
+										$automail->Send();	 
+									}	
+								  	
+								  	$mail_status='success'; 
+								  	$mail_response='Your title order is being submitted. Please wait for confirmation.'; 
+								  
+									// Start delete function 
+									// Automatically deletes files from the smuploads folder after successful sending
+									// You can remove this function if you want to keep uploads on your server
+									$files = glob(FCPATH.'smuploads/*'); 
+									foreach($files as $file){ 
+									  if(is_file($file))
+										unlink($file); 
+									}	  
+								  
+									} 
+									else 
+									{
+										$mail_status='error'; 
+								  		$mail_response='Message not sent - server error occured!';	
+									}
 							}
-					}
+						}
+						
+						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','mail_status'=>$mail_status,'mail_response'=>$mail_response);
+						echo json_encode($response); exit;
+					} 
+				}
+				else
+				{
+					
+					$response = array('status'=>'error', 'message'=> 'Something went wrong. Please try again.');
+					echo json_encode($response); exit;
 				}
     		}
     		else
@@ -475,9 +473,7 @@ class Home extends MX_Controller {
                 $data['OpenLastName_error_msg'] = form_error('OpenLastName');
                 $data['OpenEmail_error_msg'] = form_error('OpenEmail');
                 $data['sendermessage_error_msg'] = form_error('sendermessage');
-                
             }
-			
     	}
     	else
     	{
@@ -486,8 +482,6 @@ class Home extends MX_Controller {
 	        $this->load->view('layout/head',$data);
 	       	$this->load->view('order/home');
     	}
-    	
-        /* $this->load->view('layout/footer');*/
     }
 
 
@@ -644,6 +638,7 @@ class Home extends MX_Controller {
 	
 	function logout()
 	{
+		$this->session->sess_destroy();
 		$this->session->unset_userdata('user');
 		redirect(base_url().'order');
 	}
