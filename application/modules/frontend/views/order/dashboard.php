@@ -33,8 +33,7 @@
 									<button class="btn btn-type-1e btn-lg" type="button">Proposed Insured</button>
 								</a>
 								<a href="<?php echo base_url().'recordings'; ?>">
-									<button class="btn btn-type-1f btn-lg"
-										type="button">Recording Confirmations</button>
+									<button class="btn btn-type-1f btn-lg" style="padding-left:16px;" type="button">Recording Confirmations</button>
 								</a>
 								<a href="<?php echo base_url().'fees'; ?>">
 									<button class="btn btn-type-1a btn-lg" type="button">Get Fee Estimate</button>
