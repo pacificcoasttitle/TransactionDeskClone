@@ -519,6 +519,18 @@ function fetchReports(repNum)
             else if (responseStatus != 'OK') 
             {
                 displayError(responseStatus);
+                if(base_url == 'http://localhost-pct.com/')
+                {
+                    var fipCode = $('#property-fips').val();
+                    var city = $('#property-city').val();
+                    var apn = $('#apn').val();
+                    var state = $('#property-state').val();
+                    var county = $('#County').val();
+                    
+                    createService4(fipCode,address,city);
+                    createService3(apn,state,county);
+                }
+                
             } 
             else 
             {

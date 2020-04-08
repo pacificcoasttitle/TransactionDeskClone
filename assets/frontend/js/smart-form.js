@@ -218,51 +218,41 @@
 										$('.form-footer').removeClass('progress');
 									},
 									success:function(data){
-										/*var CustomerId = $('#CustomerId').val();
-										var res = jQuery.parseJSON(data);*/
-										/*if(customer_number)
+										var res = jQuery.parseJSON(data);
+										if(res.status == 'error')
 										{
-											if(customer_number)
-						                    {
-						                        var content = "<h3>Your Customer Number is:"+customer_number+"</h3>";
-						                    }
-
-						                    $("#showCustomerNumber").html(content);
-						                    $("#showCustomernumberModal").modal('show');
-										}*/
+											$('.result').html('<div class="alert notification alert-error">'+res.message+'</div>');
+										}
+										else if(res.status == 'success')
+										{
+											$('.result').html('<div class="alert alert-success">'+res.message+'</div>');
+											setTimeout(function () { 
+						                    	window.location.replace(base_url+'order-submit')
+						                    }, 8000);
+										}
+										if(res.mail_status != '')
+										{
+											if(res.mail_status == 'error')
+											{
+												$('.result').append('<div class="alert notification alert-error">'+res.mail_response+'</div>');
+											}
+											else if(res.status == 'success')
+											{
+												$('.result').append('<div class="alert alert-success">'+res.mail_response+'</div>');
+											}
+										}
 										
 										swapButton(); 
-										$("#progressBar").stop();
-										/*var percentVal = '100%';
-										bar.width(percentVal);
-										percent.html(percentVal);
-										$('.progress-section').show().delay(5000).fadeOut(); */								
+										$("#progressBar").stop();								
 										$('#progressDivId').show().delay(5000).fadeOut();
 										$('.form-footer').removeClass('progress');
 										$('.alert-success').show().delay(7000).fadeOut();
-										/*$('#clone-min-max').replaceWith($stored_elem);*/
+										
 										$('.field').removeClass("state-error, state-success");
 										if( $('.alert-error').length == 0){
 											$('#smart-form').resetForm();
 											reloadCaptcha();	
-										}
-
-											$("#OpenName").val('').removeAttr('readonly').parent();
-					                        $("#OpenLastName").val('').removeAttr('readonly').parent();
-					                        // $("#Opentelephone").val('').removeAttr('readonly').parent();
-					                        $("#OpenEmail").val('').removeAttr('readonly').parent();
-					                        $("#CompanyName").val('').removeAttr('readonly').parent();
-					                        $("#StreetAddress").val('').removeAttr('readonly').parent();
-					                        $("#City").val('').removeAttr('readonly').parent();
-					                        $("#Zipcode").val('').removeAttr('readonly').parent();
-					                        $("#CustomerNumber").val('').removeAttr('readonly').parent();
-					                        $("#CustomerId").val('');
-					                        $('#agent-details-fields').hide();
-
-					                    /*window.location.replace(base_url+'?order-submit')	*/
-
-					                    setTimeout(function () { 
-					                    	window.location.replace(base_url+'order-submit') }, 8000);										
+										}										
 									}
 							  });
 						}
