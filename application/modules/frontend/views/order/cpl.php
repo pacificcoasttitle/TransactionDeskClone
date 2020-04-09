@@ -105,7 +105,8 @@
 			});
 		}
 
-		$("#files_upload").submit(function( event ) {
+		$(".generate").on('click', function(event){
+			console.log('hi');
 			$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 			$('#page-preloader').css('display', 'block');
 		});

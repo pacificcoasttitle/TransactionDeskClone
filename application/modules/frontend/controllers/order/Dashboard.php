@@ -715,9 +715,9 @@ class Dashboard extends MX_Controller {
 				if(!empty($order['westcor_file_id'])) {
 					$westcorFileId = $order['westcor_file_id'];
 					$westcorOrderId = $order['westcor_order_id'];
-					$nestedData[] = "<a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' type='button'>Download</button></a>";
+					$nestedData[] = "<a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>";
 				} else {
-					$nestedData[] = '<a href="'.base_url().'create-cpl/'.$order['file_id'].'"><button class="btn btn-grad-2a" type="button">GENERATE</button></a>';
+					$nestedData[] = '<a href="'.base_url().'create-cpl/'.$order['file_id'].'"><button class="btn btn-grad-2a generate" type="button">GENERATE CPL</button></a>';
 				}
 				$data[] = $nestedData; 
 				$i++; 
@@ -747,7 +747,6 @@ class Dashboard extends MX_Controller {
 			$resToken = $this->westcor->createToken($orderDetails['order_id']);
 		} 
 
-	
 		$propertyDetail = explode(",", $orderDetails['full_address']);
 		$propery[] = array (
 			'PropertyID' => !empty($orderDetails['westcor_property_id']) ? $orderDetails['westcor_property_id'] : 0,
@@ -776,6 +775,7 @@ class Dashboard extends MX_Controller {
 				'Zip' => trim($propertyDetail[4]),
 				'Address' => trim($propertyDetail[0])." ".trim($propertyDetail[1])
 			);
+			$purchase_price = $orderDetails['loan_amount'];
 			$sellers = array();
 		} else if ($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32')  {
 			$sellers[] = array (
@@ -791,7 +791,7 @@ class Dashboard extends MX_Controller {
 				'Zip' => trim($propertyDetail[4]),
 				'Address' => trim($propertyDetail[0])." ".trim($propertyDetail[1]),
 			);
-			
+			$purchase_price = $orderDetails['sales_amount'];
 			$buyers = array();
 		}
 
@@ -832,7 +832,7 @@ class Dashboard extends MX_Controller {
 			'agentnumber' => $resToken['agent_number'],
 			'agent_file_number' => $orderDetails['file_number'],
 			'email_requestor' => $userdata['email'],
-			'purchase_price' => 450000,
+			'purchase_price' => $purchase_price,
 			'property' =>  $propery,
 			'buyers' => $buyers,
 			'sellers' => $sellers,
@@ -905,8 +905,6 @@ class Dashboard extends MX_Controller {
 			redirect(base_url().'cpl-dashboard');
 		}
 		
-		
-		
 		if(!empty($orderDetails['westcor_order_id'])) {
 
 			$endPointGetOrdeData = 'VendorApi/Order/'.$orderDetails['westcor_order_id'].'/'.WESTCORE_INTEGRATION_PARTNER;
@@ -920,7 +918,7 @@ class Dashboard extends MX_Controller {
 				'CPLID' => -1,
 				'FileInformation' => null,
 				'LetterName' => 'ALTA CPL Single Trans 2.0',
-				'IssueDate' => '2020-04-08T07:40:04.703-04:00',
+				'IssueDate' => date('Y-m-d H:i:s'),
 				'CancelDate' => null,
 				'CancelReason' => null,
 				'CancelUser' => null,
