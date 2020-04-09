@@ -19,8 +19,6 @@ class Dashboard extends MX_Controller {
 
     function selectFiles()
     {
-    	/*echo "<pre>"; print_r("here"); exit;
-    	$this->is_user();*/
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/select-files');
@@ -101,8 +99,8 @@ class Dashboard extends MX_Controller {
 	
 	public function get_recordings_from_api($date)
 	{
-		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
+		$this->load->model('order/apiLogs');
 		$url = GET_RECORDING_URL.'date='.$date.'&api_token='.RECORDING_API_TOKEN;
 		$logId = $this->apiLogs->syncLogs($userdata['id'], 'recording', 'get_recordings', $url);
 		$ch = curl_init($url);                                    
@@ -144,7 +142,6 @@ class Dashboard extends MX_Controller {
 	
 	function attach_files()
     {
-    	//$this->is_user();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/attach_files');
@@ -276,7 +273,6 @@ class Dashboard extends MX_Controller {
 
     function fees()
     {
-        //$this->is_user();
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $this->load->view('layout/head_dashboard',$data);
         $this->load->view('order/fees');
@@ -521,7 +517,7 @@ class Dashboard extends MX_Controller {
     function get_notes()
     {        
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $userdata = $this->session->userdata('user');
+        
         $fileId = $this->uri->segment(2);
         $orderDetails = $this->order->get_order_details($fileId);
 		$orderId = isset($orderDetails['id']) && !empty($orderDetails['id']) ? $orderDetails['id'] : '';
@@ -675,6 +671,16 @@ class Dashboard extends MX_Controller {
     }
 	function cpl()
     {
+		$data['errors'] = array();
+		$data['success'] = array();
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/cpl');
@@ -697,7 +703,7 @@ class Dashboard extends MX_Controller {
 			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
 			$order_lists = $this->order->get_orders($params);
 		}
-
+		
 		if (isset($order_lists['data']) && !empty($order_lists['data'])) {
 			$i = $params['start'] + 1;
 			foreach ($order_lists['data'] as $order)  {
@@ -705,7 +711,14 @@ class Dashboard extends MX_Controller {
 				$nestedData[] = $i;
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
-				$nestedData[] = '<a href="'.base_url().'create-cpl/'.$order['file_id'].'"><button class="btn btn-grad-2a" type="button">GENERATE</button></a>';
+				
+				if(!empty($order['westcor_file_id'])) {
+					$westcorFileId = $order['westcor_file_id'];
+					$westcorOrderId = $order['westcor_order_id'];
+					$nestedData[] = "<a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' type='button'>Download</button></a>";
+				} else {
+					$nestedData[] = '<a href="'.base_url().'create-cpl/'.$order['file_id'].'"><button class="btn btn-grad-2a" type="button">GENERATE</button></a>';
+				}
 				$data[] = $nestedData; 
 				$i++; 
 			}
@@ -721,43 +734,31 @@ class Dashboard extends MX_Controller {
 	{
 		$this->load->model('order/apiLogs');
 		$this->load->library('order/westcor');
+		$this->load->model('order/home_model');
 		$userdata = $this->session->userdata('user');
-		$fileId = $this->uri->segment(2);     
+		$fileId = $this->uri->segment(2);    
+		$errors = array();
+		$success = array();
 		$orderDetails = $this->order->get_order_details($fileId);
-		//echo "<pre>";
-		//print_r($orderDetails);exit;
-		$token = $this->order->get_token();
-		if ($token === false) {
-			$token = array();
-			$endPoint = 'Token';
-			$postData = 'grant_type='.WESTCORE_GRANT_TYPE.'&username='.WESTCORE_USERNAME.'&password='.WESTCORE_PASSWORD.'&integrationpartner='.WESTCORE_INTEGRATION_PARTNER;
-			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, array(), $orderDetails['id'], 0);
-			$result = $this->westcor->make_request('POST', $endPoint, $postData, 1);
-			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, $result, $orderDetails['id'], $logid);
-			$res = json_decode($result);
-			$records = array(
-				'token' => $res->access_token, 
-				'create_token_time' => date('Y-m-d H:i:s'), 
-				'expires_in' => $res->expires_in,
-				'agent_number' => $res->agentNumber,
-				'created_at' => date('Y-m-d H:i:s'),
-				'updated_at' => date('Y-m-d H:i:s')
-			);
-			$this->db->replace('pct_order_westcore_token', $records);
-			$token['agent_number'] = $res->agentNumber;
-			$token['token'] = $res->access_token;
+		$res = array();
+
+		$resToken = $this->order->get_token();
+		if ($resToken === false) {
+			$resToken = $this->westcor->createToken($orderDetails['order_id']);
 		} 
 
+	
 		$propertyDetail = explode(",", $orderDetails['full_address']);
 		$propery[] = array (
 			'PropertyID' => !empty($orderDetails['westcor_property_id']) ? $orderDetails['westcor_property_id'] : 0,
 			'tvid' =>  !empty($orderDetails['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
 			'CountyName' => $orderDetails['county'].' County',
-			'ShortLegal' => $orderDetails['legal_description'],
-			'StreetAddress' => $propertyDetail[0]." ".$propertyDetail[1],
-			'City' => $propertyDetail[2],
-			'State' => $propertyDetail[3],
-			'Zip' => $propertyDetail[4],
+			'ShortLegal' => $orderDetails['legal_description'] ? $orderDetails['legal_description'] : null,
+			'StreetAddress' => trim($propertyDetail[0])." ".trim($propertyDetail[1]),
+			'City' => trim($propertyDetail[2]),
+			'State' => trim($propertyDetail[3]),
+			'Zip' => trim($propertyDetail[4]),
+			'PropertyType' => 'R'
 		);
 
 		$primary_owner = explode(" ", $orderDetails['primary_owner']);
@@ -770,11 +771,11 @@ class Dashboard extends MX_Controller {
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
 				'Sequence' => 1,
-				'City' => $propertyDetail[2],
-				'State' => $propertyDetail[3],
-				'Zip' => $propertyDetail[4],
-				'Address' => $propertyDetail[0]." ".$propertyDetail[1]
-			  );
+				'City' => trim($propertyDetail[2]),
+				'State' => trim($propertyDetail[3]),
+				'Zip' => trim($propertyDetail[4]),
+				'Address' => trim($propertyDetail[0])." ".trim($propertyDetail[1])
+			);
 			$sellers = array();
 		} else if ($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32')  {
 			$sellers[] = array (
@@ -785,10 +786,10 @@ class Dashboard extends MX_Controller {
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
 				'Sequence' => 1,
-				'City' => $propertyDetail[2],
-				'State' => $propertyDetail[3],
-				'Zip' => $propertyDetail[4],
-				'Address' => $propertyDetail[0]." ".$propertyDetail[1],
+				'City' => trim($propertyDetail[2]),
+				'State' => trim($propertyDetail[3]),
+				'Zip' => trim($propertyDetail[4]),
+				'Address' => trim($propertyDetail[0])." ".trim($propertyDetail[1]),
 			);
 			
 			$buyers = array();
@@ -807,12 +808,28 @@ class Dashboard extends MX_Controller {
 				'email' => $orderDetails['email_address']
 			);
 		} else {
-			$lenders = array();
+			$lenders[] = array(
+				'Id' => 0,
+				'tvid' => 0,
+				'name' => 'Morgan Gomez',
+				'city' => 'Woodland Hills',
+				'state' => 'CA',
+				'zip' => '91367',
+				'countyFIPS' => null,
+				'address' => '22020 Clarendon Street #200',
+				'assignment' => null,
+				'mortgageType' => null,
+				'amount' => 0,
+				'phone' => '',
+				'email' => 'morgan@morgansellsla.com',
+				'loan_number' => null,
+				'vendorInternalID' => null
+			);
 		}
 		
 		$cplPostData = array (
 			'tvid' => !empty($orderDetails['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
-			'agentnumber' => $token['agent_number'],
+			'agentnumber' => $resToken['agent_number'],
 			'agent_file_number' => $orderDetails['file_number'],
 			'email_requestor' => $userdata['email'],
 			'purchase_price' => 450000,
@@ -820,7 +837,17 @@ class Dashboard extends MX_Controller {
 			'buyers' => $buyers,
 			'sellers' => $sellers,
 			'lenders' => $lenders,
-			'notes' => !empty($orderDetails['addtional_details']) ? $orderDetails['addtional_details'] : 0,
+			'search' => null,
+			'commitment' => null,
+			'jacket' => null,
+			'sdn' => null,
+			'history' => null,
+			'notes' => !empty($orderDetails['addtional_details']) ? $orderDetails['addtional_details'] : null,
+			'messages' => array(
+				'success' => [],
+				'warning' => [],
+				'error' => []
+			),
 			'actions' =>  array (
 				'sdn' => false,
 				'update_base' => true,
@@ -835,16 +862,165 @@ class Dashboard extends MX_Controller {
 				'update_reinsurance' => false,
 				'update_priors' => false,
 			),
-			'partnerCode' => WESTCORE_INTEGRATION_PARTNER
+			'partnerCode' => (int)WESTCORE_INTEGRATION_PARTNER,
+			'cpl' => null,
+			'priors' => null
 		);
-		$endPoint = 'VendorApi/Order/Update/'.WESTCORE_INTEGRATION_PARTNER;
+		$endPointCreateOrder = 'VendorApi/Order/Update/'.WESTCORE_INTEGRATION_PARTNER;
 		$cplPostData = json_encode($cplPostData);
 
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', WESTCORE_URL.$endPoint, $cplPostData, array(), $orderDetails['id'], 0);
-		$result = $this->westcor->make_request('POST', $endPoint, $cplPostData, 0, $token['token']);
-		$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', WESTCORE_URL.$endPoint, $cplPostData, $result, $orderDetails['id'], $logid);
-		$res = json_decode($result);
-		echo "<pre>";
-		print_r($res);exit;
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', WESTCORE_URL.$endPointCreateOrder, $cplPostData, array(), $orderDetails['order_id'], 0);
+		$result = $this->westcor->make_request('POST', $endPointCreateOrder, $cplPostData, 0, $resToken['token']);
+		$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', WESTCORE_URL.$endPointCreateOrder, $cplPostData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result, true);
+		if(is_array($res)) {
+			if ($res['Message']) {
+				$errors[] = $res['Message'];
+				$data = array(
+					"errors" =>  $errors,
+					"success" => $success
+				);
+				$this->session->set_userdata($data);
+				redirect(base_url().'cpl-dashboard');
+			}
+			$order_details = array(
+				'westcor_order_id'	=> $res['tvid'],
+				'westcor_buyer_id'  => !empty($res['buyers']) ? $res['buyers'][0]['NameID'] : 0,
+				'westcor_seller_id'  => !empty($res['sellers']) ? $res['sellers'][0]['NameID'] : 0,
+				'westcor_lender_id' => !empty($res['lenders']) ? $res['lenders'][0]['Id']: 0,
+			);
+			$condition = array(
+				'id' => $orderDetails['order_id']
+			);
+			$this->home_model->update($order_details, $condition, 'order_details');
+			$this->home_model->update(array('westcor_property_id' => !empty($res['property']) ? $res['property'][0]['PropertyID'] : 0), array('id' => $orderDetails['property_id']), 'property_details');
+			$orderDetails['westcor_order_id'] = $res['tvid'];
+		} else {
+			$errors[] = $result;
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+			$this->session->set_userdata($data);
+			redirect(base_url().'cpl-dashboard');
+		}
+		
+		
+		
+		if(!empty($orderDetails['westcor_order_id'])) {
+
+			$endPointGetOrdeData = 'VendorApi/Order/'.$orderDetails['westcor_order_id'].'/'.WESTCORE_INTEGRATION_PARTNER;
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_order_data', WESTCORE_URL.$endPointGetOrdeData, array(), array(), $orderDetails['order_id'], 0);
+			$resultForGetOrderData = $this->westcor->make_request('GET', $endPointGetOrdeData, array(), 0, $resToken['token']);
+			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_order_data', WESTCORE_URL.$endPointGetOrdeData, array(), $resultForGetOrderData, $orderDetails['order_id'], $logid);	
+			$res = json_decode($resultForGetOrderData, true);
+						
+			$cpl[] = array (
+				'TVID' => $res['tvid'],
+				'CPLID' => -1,
+				'FileInformation' => null,
+				'LetterName' => 'ALTA CPL Single Trans 2.0',
+				'IssueDate' => '2020-04-08T07:40:04.703-04:00',
+				'CancelDate' => null,
+				'CancelReason' => null,
+				'CancelUser' => null,
+				'CreatedBy'=> null,
+				'PolicyProducingAgentNumber' => $resToken['agent_number'],
+				'PolicyProducingAgentAddressID' => $resToken['agent_number'],
+				'PolicyProducingAgentName' => $resToken['agency_name'],
+				'PolicyProducingAgentAddress' => $resToken['address'],
+				'PolicyProducingAgentCity' => $resToken['city'],
+				'PolicyProducingAgentState' => $resToken['state'],
+				'PolicyProducingAgentZip' => $resToken['zip'],
+				'ClosingAgentNumber'=> null,
+				'ClosingAgentAddressID'=> null,
+				'ClosingAgentName'=> null,
+				'ClosingAgentAddress'=> null,
+				'ClosingAgentCity'=> null,
+				'ClosingAgentState'=> null,
+				'ClosingAgentZip'=> null,
+				'IsAuthorizedforDualCPLs' => false,
+				'IsDualCPL' => false,
+				'LenderID' => !empty($res['lenders']) ? $res['lenders'][0]['Id'] : 0,
+				'CustomFields'=> null,
+				'DualCombinedInfo'=> [],
+				'ProtectBorrower' => false,
+				'ProtectBuyer' => false,
+				'ProtectLender' => true,
+				'ProtectSeller' => false,
+				'ProtectSeller'=> false,
+				'ProtectAnyone'=> false,
+				'ProtectAnyoneValue'=> null,
+				'FreeInfoText'=> 'Some additional information about the closing would go here.',
+				'AdditionalAgencyLocationsJSON'=> null,
+				'ShowAdditionalAgencyLocations'=> false
+			) ;
+			$res['cpl'] = $cpl;
+			$res['actions']['update_cpls'] = true;
+			$generateCplPostData = json_encode($res);
+			$endPointCreateCPL = 'VendorApi/Order/Update/'.WESTCORE_INTEGRATION_PARTNER;
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'generate_cpl', WESTCORE_URL.$endPointCreateCPL, $generateCplPostData, array(), $orderDetails['order_id'], 0);
+			$resultCPL = $this->westcor->make_request('POST', $endPointCreateCPL, $generateCplPostData, 0, $resToken['token']);
+			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'generate_cpl', WESTCORE_URL.$endPointCreateCPL, $generateCplPostData, $resultCPL, $orderDetails['order_id'], $logid);
+			$resCPL = json_decode($resultCPL, true);
+
+			if (is_array($resCPL)) {
+				if ($resCPL['Message']) {
+					$errors[] = $res['Message'];
+					$data = array(
+						"errors" =>  $errors,
+						"success" => $success
+					);
+					$this->session->set_userdata($data);
+					redirect(base_url().'cpl-dashboard');
+				}
+				$order_details = array(
+					'westcor_cpl_id'	=> $resCPL['cpl'][0]['CPLID'],
+					'westcor_file_id'   => $resCPL['cpl'][0]['FileInformation']['FileAsDataVaultFileID']
+				 );
+				 
+				$condition = array(
+					'id' => $orderDetails['order_id']
+				);
+	
+				$this->home_model->update($order_details, $condition, 'order_details');
+				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
+			} else {
+				$errors[] = $resultCPL;
+			}
+		
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+			$this->session->set_userdata($data);
+			redirect(base_url().'cpl-dashboard');
+		}
+	}
+
+	public function donloadCplPdf()
+	{
+		$userdata = $this->session->userdata('user');
+		$this->load->library('order/westcor');
+		$this->load->model('order/apiLogs');
+		$westcor_file_id = $this->input->post('westcor_file_id');
+		$westcor_order_id = $this->input->post('westcor_order_id');
+		$data = array(
+			'fileIDs' => [$westcor_file_id], 
+			'dvid' => $westcor_order_id , 
+			'toZip' => false
+		);
+		$data = json_encode($data, true);
+		$resToken = $this->order->get_token();
+		if ($resToken === false) {
+			$resToken = $this->westcor->createToken($westcor_order_id);
+		} 
+		$endPoint = 'VendorApi/Attachments/Download/'.WESTCORE_INTEGRATION_PARTNER;
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', WESTCORE_URL.$endPoint, $data, array(), $westcor_order_id, 0);
+		$result = $this->westcor->make_request('POST', $endPoint, $data, 0, $resToken['token']);
+		$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', WESTCORE_URL.$endPoint, $data, $result, $westcor_order_id, $logid);
+		if (isset($result) && !empty($result)) {
+			echo base64_encode($result);
+		}	
 	}
 }

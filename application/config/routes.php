@@ -126,6 +126,7 @@ $route['generate-proposed-insured/:num'] = 'frontend/order/dashboard/generate_pr
 $route['cpl-dashboard'] = 'frontend/order/dashboard/cpl';
 $route['get-orders-cpl'] = 'frontend/order/dashboard/get_orders_cpl';
 $route['create-cpl/:num'] = 'frontend/order/dashboard/create_cpl';
+$route['download-cpl-pdf'] = 'frontend/order/dashboard/donloadCplPdf';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

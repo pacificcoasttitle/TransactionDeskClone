@@ -14,7 +14,7 @@ class ApiLogs extends CI_Model
                 'order_id' => $order_id,
                 'api_type' => $api_type,
                 'request_type' => $request_type,
-                'request_data' => !empty($request_data) ? json_encode($request_data, JSON_UNESCAPED_SLASHES) : '',
+                'request_data' => !empty($request_data) ? $request_data : '',
                 'request_url' => $request_url,
                 'created' => date('Y-m-d H:i:s')
             );
@@ -22,7 +22,7 @@ class ApiLogs extends CI_Model
             return $this->db->insert_id();
         } else {
             $data = array(
-                'response_data' => !empty($response_data) ? json_encode($response_data, JSON_UNESCAPED_SLASHES) : '',
+                'response_data' => !empty($response_data) ? $response_data : '',
                 'updated' => date('Y-m-d H:i:s'),
             );
             $this->db->update($this->table, $data, array('id' => $logId));

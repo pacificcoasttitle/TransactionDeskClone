@@ -58,7 +58,7 @@ class Cron extends MX_Controller {
                     'apn' => '',
                     'county' => $res->Properties[0]->County,
                     'legal_description' => $LegalDescription,
-                    'primary_owner' => $res->Properties[0]->StreetNumber,
+                    'primary_owner' => $primary_owner,
                     'secondary_owner' => $SecondaryOwner,
                     'additional_details'=> '',
                     'status'=> 1

@@ -12,12 +12,12 @@ class Westcor
 		$this->CI->load->database();
         $this->CI->load->library('email');
         $this->CI->load->library('session');
-		self::$CI = $this->CI;
+        self::$CI = $this->CI;
+        $userdata = $this->CI->session->userdata('user');
     }
 
    public function make_request($http_method, $endpoint, $body_params, $is_token_call = 0, $bearerToken = '')
    {
-        $userdata = $this->CI->session->userdata('user');
         $ch = curl_init(WESTCORE_URL.$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
@@ -34,9 +34,43 @@ class Westcor
         return $result;
    }
 
-   public function createToken() 
+   public function createToken($orderNumber) 
    {
+        $endPoint = 'Token';
+        $postData = 'grant_type='.WESTCORE_GRANT_TYPE.'&username='.WESTCORE_USERNAME.'&password='.WESTCORE_PASSWORD.'&integrationpartner='.WESTCORE_INTEGRATION_PARTNER;
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, array(), $orderNumber, 0);
+        $result = $this->westcor->make_request('POST', $endPoint, $postData, 1);
+        $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, $result, $orderNumber, $logid);
+        $resToken = json_decode($result, true);
+        $resToken['groups'] = str_replace("[", "", $resToken['groups']);
+        $groups = json_decode(str_replace("]", "", $resToken['groups']),true);
+        $resToken['address'] = $groups['address'];
+        $resToken['city'] = $groups['city'];
+        $resToken['state'] = $groups['state'];
+        $resToken['zip'] = $groups['zip'];
+        $resToken['phone'] = $groups['phone'];
 
+        $records = array(
+            'token' => $resToken['access_token'], 
+            'first_name' => $resToken['firstName'], 
+            'last_name' => $resToken['lastName'], 
+            'email' => $resToken['email'],
+            'agency_name' => $resToken['agencyName'],
+            'address' => $resToken['address'],
+            'city' => $resToken['city'],
+            'state' => $resToken['state'], 
+            'zip' => $resToken['zip'], 
+            'role' => $resToken['role'],
+            'servername' =>$resToken['servername'],
+            'phone' => $resToken['phone'], 
+            'create_token_time' => date('Y-m-d H:i:s'), 
+            'expires_in' => $resToken['expires_in'],
+            'agent_number' => $resToken['agentNumber'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        );
+        $this->db->replace('pct_order_westcore_token', $records); 
+        return $records;
    }
     
 }
