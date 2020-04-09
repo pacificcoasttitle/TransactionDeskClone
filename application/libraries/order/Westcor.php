@@ -39,9 +39,9 @@ class Westcor
         $userdata = $this->CI->session->userdata('user');
         $endPoint = 'Token';
         $postData = 'grant_type='.WESTCORE_GRANT_TYPE.'&username='.WESTCORE_USERNAME.'&password='.WESTCORE_PASSWORD.'&integrationpartner='.WESTCORE_INTEGRATION_PARTNER;
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, array(), $orderNumber, 0);
-        $result = $this->westcor->make_request('POST', $endPoint, $postData, 1);
-        $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, $result, $orderNumber, $logid);
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, array(), $orderNumber, 0);
+        $result = $this->CI->westcor->make_request('POST', $endPoint, $postData, 1);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, $result, $orderNumber, $logid);
         $resToken = json_decode($result, true);
         $resToken['groups'] = str_replace("[", "", $resToken['groups']);
         $groups = json_decode(str_replace("]", "", $resToken['groups']),true);
@@ -70,7 +70,7 @@ class Westcor
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         );
-        $this->db->replace('pct_order_westcore_token', $records); 
+        $this->CI->db->replace('pct_order_westcore_token', $records); 
         return $records;
    }
     
