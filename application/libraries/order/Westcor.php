@@ -13,7 +13,6 @@ class Westcor
         $this->CI->load->library('email');
         $this->CI->load->library('session');
         self::$CI = $this->CI;
-        $userdata = $this->CI->session->userdata('user');
     }
 
    public function make_request($http_method, $endpoint, $body_params, $is_token_call = 0, $bearerToken = '')
@@ -37,6 +36,7 @@ class Westcor
 
    public function createToken($orderNumber) 
    {
+        $userdata = $this->CI->session->userdata('user');
         $endPoint = 'Token';
         $postData = 'grant_type='.WESTCORE_GRANT_TYPE.'&username='.WESTCORE_USERNAME.'&password='.WESTCORE_PASSWORD.'&integrationpartner='.WESTCORE_INTEGRATION_PARTNER;
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, array(), $orderNumber, 0);
