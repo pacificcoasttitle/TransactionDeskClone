@@ -92,10 +92,12 @@ class Home_model extends CI_Model
         }
     }
 
-    public function update($data, $condition = array()) 
+    public function update($data, $condition = array(), $table='') 
     {
-        $table = $this->table;
-
+        if(empty($table)) {
+            $table = $this->table;
+        }
+        
         if(!empty($data))
         {          
             

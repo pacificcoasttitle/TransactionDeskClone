@@ -8,7 +8,7 @@ class Agent extends MX_Controller {
         parent::__construct();
         $this->load->helper(array('file', 'url'));
         $this->load->library('session');
-        $this->load->model('agent_model');
+        $this->load->model('order/agent_model');
     }
 
     function getAgentDetails() {
