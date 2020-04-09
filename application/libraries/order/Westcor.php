@@ -18,6 +18,7 @@ class Westcor
 
    public function make_request($http_method, $endpoint, $body_params, $is_token_call = 0, $bearerToken = '')
    {
+        $userdata = $this->CI->session->userdata('user');
         $ch = curl_init(WESTCORE_URL.$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
