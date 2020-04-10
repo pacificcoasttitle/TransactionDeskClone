@@ -607,7 +607,10 @@ class Home extends MX_Controller {
 	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
 	            $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
 	            $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
-	            $data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
+				$data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
+				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
+				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
 	            // array_push($userInfo, $data); 
 	            $userInfo[] =$data;
     		}

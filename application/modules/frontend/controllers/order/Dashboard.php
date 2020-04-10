@@ -632,7 +632,8 @@ class Dashboard extends MX_Controller {
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
             $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
-            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+			$params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+			$params['start'] = 20;
             $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
@@ -717,7 +718,9 @@ class Dashboard extends MX_Controller {
 					$westcorOrderId = $order['westcor_order_id'];
 					$nestedData[] = "<a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>";
 				} else {
-					$nestedData[] = '<a href="'.base_url().'create-cpl/'.$order['file_id'].'"><button class="btn btn-grad-2a generate" type="button">GENERATE CPL</button></a>';
+					$file_id = $order['file_id'];
+					$lender_id_flag = !empty($order['escrow_lender_id']) ? 1 : 0;
+					$nestedData[] = "<form onclick='return lender_pop_up($lender_id_flag, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><button class='btn btn-grad-2a generate' type='submit'>GENERATE CPL</button></form>";
 				}
 				$data[] = $nestedData; 
 				$i++; 
@@ -749,8 +752,8 @@ class Dashboard extends MX_Controller {
 
 		$propertyDetail = explode(",", $orderDetails['full_address']);
 		$propery[] = array (
-			'PropertyID' => !empty($orderDetails['westcor_property_id']) ? $orderDetails['westcor_property_id'] : 0,
-			'tvid' =>  !empty($orderDetails['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
+			'PropertyID' => 0,
+			'tvid' =>  0,
 			'CountyName' => $orderDetails['county'].' County',
 			'ShortLegal' => $orderDetails['legal_description'] ? $orderDetails['legal_description'] : null,
 			'StreetAddress' => trim($propertyDetail[0])." ".trim($propertyDetail[1]),
@@ -763,7 +766,7 @@ class Dashboard extends MX_Controller {
 		$primary_owner = explode(" ", $orderDetails['primary_owner']);
 		if ($orderDetails['purchase_type'] == '19' || $orderDetails['purchase_type'] == '33') {
 			$buyers[] = array (
-				'NameID' => !empty($orderDetails['westcor_buyer_id']) ? $orderDetails['westcor_buyer_id'] : 0,
+				'NameID' => 0,
 				'Last' => $primary_owner[1],
 				'First' => $primary_owner[0],
 				'NameType' => 1,
@@ -779,7 +782,7 @@ class Dashboard extends MX_Controller {
 			$sellers = array();
 		} else if ($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32')  {
 			$sellers[] = array (
-				'NameID' => !empty($orderDetails['westcor_seller_id']) ? $orderDetails['westcor_seller_id'] : 0,
+				'NameID' =>  0,
 				'Last' => $primary_owner[1],
 				'First' => $primary_owner[0],
 				'NameType' => 2,
@@ -797,38 +800,26 @@ class Dashboard extends MX_Controller {
 
 		if (!empty($orderDetails['escrow_lender_id'])) {
 			$lenders[] =  array (
-				'Id' => !empty($orderDetails['westcor_seller_id']) ? $orderDetails['westcor_seller_id'] : 0,
-				'tvid' => !empty($orderDetails['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
+				'Id' =>  0,
+				'tvid' => 0,
 				'name' => $orderDetails['first_name']." ".$orderDetails['last_name'],
 				'city' => $orderDetails['city'],
 				'state' => 'CA',
 				'zip' => $orderDetails['zip_code'],
 				'address' => $orderDetails['street_address'],
 				'phone' => $orderDetails['telephone_no'],
-				'email' => $orderDetails['email_address']
-			);
-		} else {
-			$lenders[] = array(
-				'Id' => 0,
-				'tvid' => 0,
-				'name' => 'Morgan Gomez',
-				'city' => 'Woodland Hills',
-				'state' => 'CA',
-				'zip' => '91367',
+				'email' => $orderDetails['email_address'],
 				'countyFIPS' => null,
-				'address' => '22020 Clarendon Street #200',
 				'assignment' => null,
 				'mortgageType' => null,
 				'amount' => 0,
-				'phone' => '',
-				'email' => 'morgan@morgansellsla.com',
 				'loan_number' => null,
-				'vendorInternalID' => null
+				'vendorInternalID' => $orderDetails['escrow_lender_id']
 			);
-		}
+		} 
 		
 		$cplPostData = array (
-			'tvid' => !empty($orderDetails['westcor_order_id']) ? $orderDetails['westcor_order_id'] : 0,
+			'tvid' =>  0,
 			'agentnumber' => $resToken['agent_number'],
 			'agent_file_number' => $orderDetails['file_number'],
 			'email_requestor' => $userdata['email'],
@@ -1020,5 +1011,32 @@ class Dashboard extends MX_Controller {
 		if (isset($result) && !empty($result)) {
 			echo base64_encode($result);
 		}	
+	}
+
+	public function addLenderOnOrder()
+	{
+		$this->load->model('order/home_model');
+		$userdata = $this->session->userdata('user');
+		$file_id = $this->input->post('file_id');
+		$LenderId = $this->input->post('LenderId');
+		$name = explode(" ",$this->input->post('LenderName'));	
+		$orderDetails = $this->order->get_order_details($file_id);
+
+		$lender_details = array(
+			'first_name'	=> $name[0],
+			'last_name'  => !empty($name[1]) ? $name[1] : '',
+			'telephone_no'  => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
+			'email_address' => !empty($this->input->post('LenderTelephone')) ? $this->input->post('LenderTelephone') : "",
+			'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
+			'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
+			'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
+			'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : ""
+		);
+		$condition = array(
+			'id' => $LenderId
+		);
+		$this->home_model->update($lender_details, $condition, 'customer_basic_details');
+		$this->home_model->update(array('escrow_lender_id' => $LenderId), array('id' => $orderDetails['property_id']), 'property_details');
+		redirect(base_url()."create-cpl/".$file_id);
 	}
 }
