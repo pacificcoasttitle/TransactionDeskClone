@@ -1,25 +1,25 @@
 .DS_Store
 
-application/cache/*
-!application/cache/index.html
+/application/cache/*
+!/application/cache/index.html
 
-application/logs/*
-!application/logs/index.html
+/application/logs/*
+!/application/logs/index.html
 
-!application/*/.htaccess
+!/application/*/.htaccess
 
 composer.lock
 
-user_guide_src/build/*
-user_guide_src/cilexer/build/*
-user_guide_src/cilexer/dist/*
-user_guide_src/cilexer/pycilexer.egg-info/*
+/user_guide_src/build/*
+/user_guide_src/cilexer/build/*
+/user_guide_src/cilexer/dist/*
+/user_guide_src/cilexer/pycilexer.egg-info/*
 /vendor/
 
 # IDE Files
 #-------------------------
 /nbproject/
-.idea/*
+/.idea/*
 
 ## Sublime Text cache files
 *.tmlanguage.cache
@@ -31,6 +31,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/results/
 /logs
 
-application/config/config.php
-application/config/database.php
+/application/config/config.php
+/application/config/database.php
 phinx.yml
