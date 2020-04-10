@@ -72,7 +72,14 @@
 					},
 					"emptyTable": "Record(s) not found.",
                 },
-                "searching": false,
+				"searching": false,
+				"bStateSave": true,
+				"fnStateSave": function (oSettings, oData) {
+					localStorage.setItem('offersDataTables', JSON.stringify(oData));
+				},
+				"fnStateLoad": function (oSettings) {
+					return JSON.parse(localStorage.getItem('offersDataTables'));
+				},
 				initComplete: function () {
 					
 					
