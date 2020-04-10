@@ -122,7 +122,7 @@ $route['get-notes/:num'] = 'frontend/order/dashboard/get_notes';
 $route['create-note'] = 'frontend/order/dashboard/create_note';
 $route['proposed-insured'] = 'frontend/order/dashboard/proposed_insured';
 $route['get-proposed-orders'] = 'frontend/order/dashboard/get_proposed_orders';
-$route['generate-proposed-insured/:num'] = 'frontend/order/dashboard/generate_proposed_insured';
+$route['generate-proposed-insured'] = 'frontend/order/dashboard/generate_proposed_insured';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

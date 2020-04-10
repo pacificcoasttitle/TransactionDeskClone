@@ -655,7 +655,7 @@ class Dashboard extends MX_Controller {
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = '<a href="'.base_url().'generate-proposed-insured/'.$order['file_id'].'"><button class="btn btn-grad-2a" type="button">Generate</button></a>';
+                $nestedData[] = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a" type="button">Generate</button></a>';
                 $data[] = $nestedData; 
                 $i++; 
             }
@@ -669,8 +669,23 @@ class Dashboard extends MX_Controller {
 
     public function generate_proposed_insured()
     {
+    	
     	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/generate_proposed_insured');
+    	$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
+    	$orderDetails = $this->order->get_order_details($fileId);
+        $orderId = isset($orderDetails['id']) && !empty($orderDetails['id']) ? $orderDetails['id'] : '';
+echo "<pre>"; print_r($orderDetails); exit;
+        $html=$this->load->view('order/proposed_insured_pdf',$data, true);
+
+        $this->load->library('m_pdf');
+        $this->m_pdf->pdf->WriteHTML($html);
+        $pdfFilePath = "output_pdf_name.pdf";
+        // We will be outputting a PDF 
+		/*header('Content-Type: application/pdf'); 
+  
+		// It will be called downloaded.pdf 
+		header('Content-Disposition: attachment; filename="mpdf.pdf"'); */
+        $this->m_pdf->pdf->Output($pdfFilePath,"F"); exit;
+        
     }
 }
