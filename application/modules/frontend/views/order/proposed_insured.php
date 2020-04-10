@@ -98,4 +98,24 @@
 		}
 	});
 
+function generateProposedInsured(fileId)
+{
+	if(fileId)
+	{
+		$.ajax({
+            url: base_url + "generate-proposed-insured",
+            type: "post",
+            data:{
+                fileId: fileId,
+            },
+            success: function(response) {
+				
+            }
+        });
+	}
+	else
+	{
+		alert("File ID required.");
+	}
+}
 </script>
