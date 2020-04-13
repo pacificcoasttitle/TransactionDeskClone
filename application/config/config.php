@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://www.pct.com/order/';
+$config['base_url'] = getenv('APP_URL');
 
 /*
 |--------------------------------------------------------------------------
@@ -91,16 +91,7 @@ $config['language']	= 'english';
 */
 $config['charset'] = 'UTF-8';
 
-/*
-|--------------------------------------------------------------------------
-| Enable/Disable System Hooks
-|--------------------------------------------------------------------------
-|
-| If you would like to use the 'hooks' feature you must enable it by
-| setting this variable to TRUE (boolean).  See the user guide for details.
-|
-*/
-$config['enable_hooks'] = FALSE;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -136,7 +127,7 @@ $config['subclass_prefix'] = 'MY_';
 | Note: This will NOT disable or override the CodeIgniter-specific
 |	autoloading (application/config/autoload.php)
 */
-$config['composer_autoload'] = FALSE;
+$config['composer_autoload'] = true;
 
 /*
 |--------------------------------------------------------------------------
@@ -158,7 +149,20 @@ $config['composer_autoload'] = FALSE;
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
+
+
 $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
+
+/*
+|--------------------------------------------------------------------------
+| Enable/Disable System Hooks
+|--------------------------------------------------------------------------
+|
+| If you would like to use the 'hooks' feature you must enable it by
+| setting this variable to TRUE (boolean).  See the user guide for details.
+|
+*/
+$config['enable_hooks'] = true;
 
 /*
 |--------------------------------------------------------------------------

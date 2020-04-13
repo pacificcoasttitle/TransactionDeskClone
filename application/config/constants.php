@@ -132,9 +132,6 @@ define('WESTCORE_GRANT_TYPE', "password");
 define('WESTCORE_USERNAME', "pacificCT");
 define('WESTCORE_PASSWORD', "P@ssw0rd1!");
 define('WESTCORE_INTEGRATION_PARTNER', "7758");
+define('WESTCORE_URL', get_env('WESTCORE_URL'));
 
-if(ENVIRONMENT == 'development') {
-    define('WESTCORE_URL', "https://uatservices.ewestcor.com/");
-} else {
-    define('WESTCORE_URL', "https://services.ewestcor.com/");
-}
+ 
