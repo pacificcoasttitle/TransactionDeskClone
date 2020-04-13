@@ -665,8 +665,6 @@ class Dashboard extends MX_Controller {
 
     public function generate_proposed_insured()
     {
-    	
-    	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
     	$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
 
     	$orderDetails = $this->order->get_order_details($fileId);
@@ -702,8 +700,9 @@ class Dashboard extends MX_Controller {
 		$data['property_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
 		$data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
 
-        $html=$this->load->view('order/proposed_insured_pdf',$data, true);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'proposed_insured', RESWARE_ORDER_API.$endPoint, $data, array(), $orderId, 0);
 
+        $html=$this->load->view('order/proposed_insured_pdf',$data, true);
         $this->load->library('m_pdf');
         $this->m_pdf->pdf->WriteHTML($html);
 

@@ -64,7 +64,7 @@
 	<div class="pdf-wrapper">
 		<div class="header-section">
 			<div class="logo">
-				<img src="http://dev.pacificcoasttitle.com/assets/media/general/logo2-dark.png" alt=""/>
+				<img src="<?php echo base_url(); ?>assets/media/general/logo2-dark.png" alt=""/>
 			</div>
 			<div class="company-details text-center">
 				<p>200 W. Glenoaks Blvd, Suite 100</p>
