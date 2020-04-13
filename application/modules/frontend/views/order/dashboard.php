@@ -69,74 +69,41 @@
 										<thead>
 											<tr>
 												<th>#</th>
-												<th>First Name</th>
-												<th>Last Name</th>
-												<th>user id</th>
-												<th>Email</th>
+												<th>Date Opened</th>
+												<th>Property Address</th>
+												<th>Buyer/Seller</th>
+												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<td>1</td>
-												<td>Mark</td>
-												<td>Otto</td>
-												<td>nomdo</td>
-												<td>mark.otto@mdo.net</td>
-											</tr>
-											<tr>
-												<td>2</td>
-												<td>Jacob</td>
-												<td>Thornton</td>
-												<td>wrfat</td>
-												<td>jacob.thrnton321@fatbeer.org</td>
-											</tr>
-											<tr>
-												<td>3</td>
-												<td>Larry</td>
-												<td>the Bird</td>
-												<td>kotwitter</td>
-												<td>larry.king.live@twitterhack.com</td>
-											</tr>
-											<tr>
-												<td>3</td>
-												<td>Larry</td>
-												<td>the Bird</td>
-												<td>kotwitter</td>
-												<td>larry.king.live@twitterhack.com</td>
-											</tr>
-											<tr>
-												<td>3</td>
-												<td>Larry</td>
-												<td>the Bird</td>
-												<td>kotwitter</td>
-												<td>larry.king.live@twitterhack.com</td>
-											</tr>
-											<tr>
-												<td>3</td>
-												<td>Larry</td>
-												<td>the Bird</td>
-												<td>kotwitter</td>
-												<td>larry.king.live@twitterhack.com</td>
-											</tr>
-											<tr>
-												<td>3</td>
-												<td>Larry</td>
-												<td>the Bird</td>
-												<td>kotwitter</td>
-												<td>larry.king.live@twitterhack.com</td>
-											</tr>
+											<?php 
+												if(!empty($order_lists)) {
+													foreach($order_lists as $order) { ?>
+														<tr>
+															<td><?php echo $order['file_number']; ?></td>
+															
+															<td><?php echo date("m/d/Y", strtotime($order['created_at'])); ?></td>
+															
+															<td><?php echo $order['full_address']; ?></td>
+															<td><?php echo $order['primary_owner']; ?></td>
+															<td>
+																<a href="<?php echo base_url()."upload-documents/".$order['file_id'];?>" style="margin-right:10px;"><i class="fa fa-upload" aria-hidden="true"></i></a>
+																<a href="<?php echo base_url()."get-notes/".$order['file_id'];?>"><i class="fa fa-sticky-note-o"></i></a>
+															</td>
+														</tr>
+													<?php } 
+												} else { ?>
+													<tr>
+														<td colspan="8">No Records Found.</td>
+													</tr>
+												<?php }
+											?>	
 										</tbody>
 									</table>
 
 									<div class="typography-sectionab">
 
-										<ul class="pagination pagination-1">
-											<li><a href="#"><span class="fa fa-angle-left"></span></a></li>
-											<li><a href="#">1</a></li>
-											<li class="active"><a href="#">2</a></li>
-											<li><a href="#">3</a></li>
-											<li><a href="#"><span class="fa fa-angle-right"></span></a></li>
-										</ul>
+										
 									</div>
 
 								</div>
