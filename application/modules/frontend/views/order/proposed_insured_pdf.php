@@ -64,7 +64,7 @@
 	<div class="pdf-wrapper">
 		<div class="header-section">
 			<div class="logo">
-				<img src="<?php echo base_url(); ?>assets/frontend/images/img2.jpg" alt=""/>
+				<img src="<?php echo base_url(); ?>assets/frontend/images/pi_logo.jpg" alt=""/>
 			</div>
 			<div class="company-details text-center">
 				<p>200 W. Glenoaks Blvd, Suite 100</p>
