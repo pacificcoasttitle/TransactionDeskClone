@@ -632,8 +632,7 @@ class Dashboard extends MX_Controller {
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
             $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
-			$params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
-			$params['start'] = 20;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
             $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
@@ -669,22 +668,57 @@ class Dashboard extends MX_Controller {
     	
     	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
     	$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
+
     	$orderDetails = $this->order->get_order_details($fileId);
         $orderId = isset($orderDetails['id']) && !empty($orderDetails['id']) ? $orderDetails['id'] : '';
-echo "<pre>"; print_r($orderDetails); exit;
+
+        $userdata = $this->session->userdata('user');
+
+        $this->load->model('order/home_model');
+		$customer_data =  $this->home_model->get_user(array('id' => $userdata['id']));
+
+		$data['title_officer'] = isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer']) ? $orderDetails['title_officer'] : '';
+		$data['company'] = isset($customer_data['company_name']) && !empty($customer_data['company_name']) ? $customer_data['company_name'] : '';
+		$data['company'] = isset($customer_data['company_name']) && !empty($customer_data['company_name']) ? $customer_data['company_name'] : '';
+		$address = array();
+		$street_address = isset($customer_data['street_address']) && !empty($customer_data['street_address']) ? $customer_data['street_address'] : '';
+		if($street_address)
+		{
+			$address[] = $street_address;
+		}
+		$city = isset($customer_data['city']) && !empty($customer_data['city']) ? $customer_data['city'] : '';
+		if($city)
+		{
+			$address[] = $city;
+		}
+
+		$zip_code = isset($customer_data['zip_code']) && !empty($customer_data['zip_code']) ? $customer_data['zip_code'] : '';
+		if($zip_code)
+		{
+			$address[] = $zip_code;
+		}
+		$data['address'] = implode(', ', $address);
+		$data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+		$data['property_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+		$data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+
         $html=$this->load->view('order/proposed_insured_pdf',$data, true);
 
         $this->load->library('m_pdf');
         $this->m_pdf->pdf->WriteHTML($html);
-        $pdfFilePath = "output_pdf_name.pdf";
-        // We will be outputting a PDF 
-		/*header('Content-Type: application/pdf'); 
-  
-		// It will be called downloaded.pdf 
-		header('Content-Disposition: attachment; filename="mpdf.pdf"'); */
-        $this->m_pdf->pdf->Output($pdfFilePath,"F"); exit;
-        
+
+        if (!is_dir('uploads/proposed-insured')) {
+		    mkdir('./uploads/proposed-insured', 0777, TRUE);
+		}
+
+		$pdfFilePath = './uploads/proposed-insured/ProposedInsured_'.time().'.pdf';
+        $this->m_pdf->pdf->Output($pdfFilePath,'F');
+        $contents = file_get_contents($pdfFilePath);
+		$binaryData   = base64_encode($contents);		
+		unlink($pdfFilePath);
+        echo $binaryData; exit;
     }
+
 	function cpl()
     {
 		$data['errors'] = array();
