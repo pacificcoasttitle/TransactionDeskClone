@@ -15,6 +15,25 @@ class Order
 		self::$CI = $this->CI;
     }
 
+    public function get_recent_orders()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('order_details.file_number, order_details.file_id, property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.created_at, property_details.primary_owner')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id');
+
+        $this->CI->db->where('order_details.customer_id', $userdata['id']);
+        $this->CI->db->order_by("order_details.created_at", "desc");
+        $this->CI->db->limit(10);
+        $query = $this->CI->db->get();
+
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        } 
+    }
+
     public function get_orders($params)
     {
         $userdata = $this->CI->session->userdata('user');
