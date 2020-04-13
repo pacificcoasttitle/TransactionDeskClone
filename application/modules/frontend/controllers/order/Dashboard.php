@@ -15,7 +15,20 @@ class Dashboard extends MX_Controller {
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
 		$this->order->is_user();
-    }
+	}
+	
+	
+	function index()
+	{
+		$userdata = $this->session->userdata('user');
+		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
+		$data['name'] = $name;
+		$data['order_lists'] = $this->order->get_recent_orders();
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+		$this->load->view('layout/head_dashboard',$data);
+		$this->load->view('order/dashboard');
+	}
+
 
     function selectFiles()
     {

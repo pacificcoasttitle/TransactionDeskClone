@@ -646,16 +646,6 @@ class Home extends MX_Controller {
 		redirect(base_url().'order');
 	}
 
-	function dashboard()
-	{
-		$userdata = $this->session->userdata('user');
-		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
-		$data['name'] = $name;
-		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/dashboard');
-	}
-
 	function notifyAdmin()
 	{
 		if($this->input->post())
