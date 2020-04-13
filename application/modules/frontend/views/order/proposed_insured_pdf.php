@@ -76,7 +76,7 @@
 		<hr>
 		<div class="title-officer-info">
 			<div class="title-officer-basic-info">
-				<p><span class="heading">Title Officer:</span> Eddie LasMarias</p>
+				<p><span class="heading">Title Officer:</span> <?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
 				<p><span class="heading">Title Officer Email:</span>  unit33@pct.com</p>
 			</div>
 			<div class="title-officer-contact-info">
@@ -85,14 +85,14 @@
 			</div>
 			<div class= "customer-info">
 				<div class="company-details">
-					<p class="heading-info"><span class="heading">To:</span> RBS Realty</p>
-					<p>15455 San Fernando Mission Boulevard, Suite 101 Mission Hills, CA 91345</p>
+					<p class="heading-info"><span class="heading">To:</span> <?php echo isset($company) && !empty($company) ? $company : ''; ?></p>
+					<p><?php echo isset($address) && !empty($address) ? $address : ''; ?></p>
 				</div>
 				<div class="order-number">
-					<p class="heading-info"><span class="heading">Order No.:</span> 10142984-GLT-U33</p>
+					<p class="heading-info"><span class="heading">Order No.:</span> <?php echo isset($order_number) && !empty($order_number) ? $order_number : ''; ?></p>
 				</div>
 				<div class="property-info">
-					<p class="heading-info"><span class="heading">Property Address:</span> 9879 BARTEE AVENUE, (ARLETA AREA), LOS ANGELES, CA 91331</p>
+					<p class="heading-info"><span class="heading">Property Address:</span> <?php echo isset($property_address) && !empty($property_address) ? $property_address : ''; ?></p>
 				</div>
 			</div>
 			<hr>
@@ -111,12 +111,12 @@
 				<p>Borrowers: Flor Ojeda, Oscar Eduardo Diaz and Maria Roselia Vaquerano</p>
 				<p>Lender: Home Approvals Direct, Inc., DBA HomeFirst Mortgage Bankers, It’s Successors and/or Assigns.</p>
 				<p>Loan # 200200183</p>
-				<p>Loan Amount: $550,976.00</p>
+				<p>Loan Amount: <?php echo isset($loan_amount) && !empty($loan_amount) ? '$'.$loan_amount : ''; ?></p>
 			</div>
 			<div class="spacer-t30"></div>
 			<div class="">
 				<p>Sincerely,</p>
-				<p>Eddie LasMarias</p>
+				<p><?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
 				<p>Title Officer</p>
 			</div>
 		</div>
