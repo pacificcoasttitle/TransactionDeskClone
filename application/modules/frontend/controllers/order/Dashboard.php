@@ -703,6 +703,7 @@ class Dashboard extends MX_Controller {
 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'proposed_insured', RESWARE_ORDER_API.$endPoint, $data, array(), $orderId, 0);
 
         $html=$this->load->view('order/proposed_insured_pdf',$data, true);
+        echo "<pre>"; print_r($html); exit;
         $this->load->library('m_pdf');
         $this->m_pdf->pdf->WriteHTML($html);
 
