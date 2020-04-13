@@ -128,6 +128,7 @@ $route['get-orders-cpl'] = 'frontend/order/dashboard/get_orders_cpl';
 $route['create-cpl/:num'] = 'frontend/order/dashboard/create_cpl';
 $route['download-cpl-pdf'] = 'frontend/order/dashboard/donloadCplPdf';
 $route['add-lender-order'] = 'frontend/order/dashboard/addLenderOnOrder';
+$route['add-order-details'] = 'frontend/order/dashboard/add_order_details';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
