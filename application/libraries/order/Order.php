@@ -63,7 +63,14 @@ class Order
 
     public function get_order_details($fileId)
     {
-        $this->CI->db->select('order_details.file_number, order_details.id as order_id, order_details.file_id, order_details.westcor_order_id,order_details.westcor_cpl_id, property_details.id as property_id, property_details.full_address,property_details.county, property_details.westcor_property_id, property_details.legal_description, property_details.primary_owner, property_details.escrow_lender_id, transaction_details.sales_amount, transaction_details.loan_amount, transaction_details.transaction_type, 
+        $this->CI->db->select('order_details.file_number, order_details.id as order_id, order_details.file_id, order_details.westcor_order_id,order_details.westcor_cpl_id, property_details.id as property_id, property_details.full_address,property_details.county, property_details.westcor_property_id, property_details.legal_description, property_details.primary_owner,
+            property_details.secondary_owner,
+            property_details.escrow_lender_id,
+            transaction_details.id as transaction_id,
+            transaction_details.sales_amount,
+            transaction_details.loan_amount,
+            transaction_details.loan_number,
+            transaction_details.transaction_type, 
             transaction_details.title_officer,
             transaction_details.purchase_type, customer_basic_details.*')
             ->from('order_details')

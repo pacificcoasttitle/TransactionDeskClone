@@ -1,3 +1,12 @@
+<style>
+	.smart-forms .prepend-icon .field-icon {
+		top: 14px !important;
+	}
+	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;} 
+	.error {
+		color: #FF2F0F !important;
+	}
+</style>
 <body>
 	<?php
         $this->load->view('layout/header_dashboard');
@@ -45,11 +54,88 @@
 
 	<?php
            $this->load->view('layout/footer');
-        ?>
+    ?>
+    <div class="modal fade" width="500px" id="lender_information" tabindex="-1" role="dialog"
+		aria-labelledby="Lender Infromation" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document" style="width:40%;">
+			<div class="modal-content">
+				<form method="POST" id="add-order-details" enctype="multipart/form-data">
+					<div class="smart-forms smart-container wrap-2" style="margin:30px">
+						<div class="modal-body search-result">
+							<div id="lender-details-fields" style="">
+								<div class="spacer-b30">
+									<div class="tagline"><span>Add Details</span></div><!-- .tagline -->
+								</div>
+
+								<div class="frm-row" id="title-officer-section">
+									<input type="hidden" name="orderId" value="" id="orderId">
+
+									<input type="hidden" name="property_id" value="" id="property_id">
+
+									<input type="hidden" name="transaction_id" value="" id="transaction_id">
+
+									<input type="hidden" name="fileId" value="" id="fileId">
+
+									<div class="section colm colm12">
+										<label class="field select">
+                                            <select id="TitleOfficer" name="TitleOfficer">
+                                                <option value="">Title Officer</option>
+                                                <option value="Albert Wassif">Albert Wassif</option>
+                                                <option value="Clive Virata">Clive Virata</option>
+                                                <option value="Eddie LasMarias">Eddie LasMarias</option>
+                                                <option value="Jim Jean">Jim Jean</option>
+                                            </select>
+                                            <i class="arrow double"></i>                    
+                                        </label> 
+									</div><!-- end section -->
+								</div>
+
+								<div class="frm-row" id="loan-number-section">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="loan_number" id="loan_number" class="gui-input" placeholder="Loan Number">
+											<span class="field-icon"><i class="fa fa-envelope"></i></span>
+										</label>
+									</div>
+								</div>
+								<div class="frm-row" id="borrower-section">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="borrower" id="borrower" class="gui-input"
+												placeholder="Borrower">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+								<div class="frm-row" id="lender-section">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="lender" id="lender" class="gui-input"
+												placeholder="Lender" readonly="readonly" required="required">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-footer" style="padding-top:0px;">
+							<button type="submit" data-btntext-sending="Sending..."
+								class="button btn-primary">Submit</button>
+							<button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/jquery-ui.css">
 
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
 <script>
 	$(document).ready(function () {
 		if ($('#orders_listing').length) {
@@ -96,6 +182,67 @@
 				}
 			});
 		}
+
+		if(jQuery('#add-order-details').length)
+	    {
+	       jQuery('#add-order-details').validate({
+	       		ignore:":not(:visible)",
+	            rules: {
+	                TitleOfficer:"required",
+	                loan_number:"required",
+	                borrower:"required",
+	                lender:"required"
+	            },
+	            messages: {
+	                TitleOfficer:"Please select title officer",
+	                loan_number:"Please enter loan number",
+	                borrower:"Please enter borrower",
+	                lender:"Please enter lender",
+	            },
+	            submitHandler: function(form) {
+	            	var TitleOfficer = $('#TitleOfficer').val();
+	            	var loan_number = $('#loan_number').val();
+	            	var borrower = $('#borrower').val();
+	            	var lender = $('#lender').val();
+	            	var orderId = $('#orderId').val();
+	            	var transaction_id = $('#transaction_id').val();
+	            	var property_id = $('#property_id').val();
+	            	var fileId = $('#fileId').val();
+
+	                $.ajax({
+	                url: base_url + "add-order-details",
+	                type: "post",
+	                data:{
+	                    TitleOfficer: TitleOfficer,
+	                    loan_number: loan_number,
+	                    borrower: borrower,
+	                    lender: lender,
+	                    orderId: orderId,
+	                    transaction_id: transaction_id,
+	                    property_id: property_id,
+	                    fileId: fileId,
+	                }, 
+	                success: function(response) {
+	                	var res = JSON.parse(response);
+						if(res.status == 'success')
+						{
+							$('#lender_information').modal('hide');
+							generateProposedInsured(res.fileId);
+						}
+						/*else if(res.status == 'success')
+						{
+							$('#result').html('<div class="alert alert-success">'+res.message+'</div>');
+						}
+						$('#result').show().delay(7000).fadeOut("normal", function(){
+	        					$('#result').html('');
+	        					$('#subject').val('');
+	            				$('#body').val('');
+	    				});*/
+	                }
+	            });
+	            }
+	        }); 
+	    }
 	});
 
 function generateProposedInsured(fileId)
@@ -109,11 +256,37 @@ function generateProposedInsured(fileId)
                 fileId: fileId,
             },
             success: function(response) {
-            	if(response)
+            	var res = JSON.parse(response);
+            	console.log(res);
+            	if(res.status == 'dataRequired')
                 {
-                    if (navigator.msSaveBlob)
+                	$('#orderId').val(res.data.orderId);
+                	$('#transaction_id').val(res.data.transaction_id);
+                	$('#property_id').val(res.data.property_id);
+                	$('#fileId').val(res.data.fileId);
+                	if(res.data.is_title_officer == 1)
+                	{
+                		$('#title-officer-section').css('display','none');
+                	}
+                	if(res.data.is_loan_number == 1)
+                	{
+                		$('#loan-number-section').css('display','none');
+                	}
+                	if(res.data.is_borrower == 1)
+                	{
+                		$('#borrower-section').css('display','none');
+                	}
+                	if(res.data.is_lender == 1)
+                	{
+                		$('#lender-section').css('display','none');
+                	}
+                    $('#lender_information').modal('show');
+                }
+                else
+                {
+                	if (navigator.msSaveBlob)
                     {                       
-                        var csvData = base64toBlob(response,'application/octet-stream');
+                        var csvData = base64toBlob(res.data,'application/octet-stream');
                         var csvURL = navigator.msSaveBlob(csvData, 'ProposedInsured.pdf');
                         var element = document.createElement('a');
                         element.setAttribute('href', csvURL);
@@ -125,7 +298,7 @@ function generateProposedInsured(fileId)
                     else
                     {
 
-                        var csvURL = 'data:application/octet-stream;base64,'+response;
+                        var csvURL = 'data:application/octet-stream;base64,'+res.data;
                         var element = document.createElement('a');
                         element.setAttribute('href', csvURL);
                         element.setAttribute('download', 'ProposedInsured.pdf');
