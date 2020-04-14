@@ -334,8 +334,7 @@ class Dashboard extends MX_Controller {
         $userdata = $this->session->userdata('user');
         $fileId = $this->uri->segment(2);
         $orderDetails = $this->order->get_order_details($fileId);
-        $orderId = isset($orderDetails['id']) && !empty($orderDetails['id']) ? $orderDetails['id'] : '';
-        
+        $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
         /* start get fees details from resware */
         $request = array();
 
@@ -533,7 +532,7 @@ class Dashboard extends MX_Controller {
         
         $fileId = $this->uri->segment(2);
         $orderDetails = $this->order->get_order_details($fileId);
-		$orderId = isset($orderDetails['id']) && !empty($orderDetails['id']) ? $orderDetails['id'] : '';
+		$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
         $data['fileId'] = $fileId;
         $userdata = $this->session->userdata('user');
         
@@ -576,7 +575,7 @@ class Dashboard extends MX_Controller {
     		$subject = isset($_POST['subject']) && !empty($_POST['subject']) ? $_POST['subject'] : '';
     		$body = isset($_POST['body']) && !empty($_POST['body']) ? $_POST['body'] : '';
     		$orderDetails = $this->order->get_order_details($fileId);
-			$orderId = isset($orderDetails['id']) && !empty($orderDetails['id']) ? $orderDetails['id'] : '';
+			$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
 			
     		$this->load->library('order/resware');
 
@@ -686,6 +685,8 @@ class Dashboard extends MX_Controller {
         $transaction_id = isset($orderDetails['transaction_id']) && !empty($orderDetails['transaction_id']) ? $orderDetails['transaction_id'] : '';
         $property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] : '';
 
+        $purchase_type = isset($orderDetails['purchase_type']) && !empty($orderDetails['purchase_type']) ? $orderDetails['purchase_type'] : '';
+
         $userdata = $this->session->userdata('user');
 
         $this->load->model('order/home_model');
@@ -706,7 +707,7 @@ class Dashboard extends MX_Controller {
 		$emptyData['is_title_officer'] = $is_title_officer;
 		
 		$data['company'] = isset($customer_data['company_name']) && !empty($customer_data['company_name']) ? $customer_data['company_name'] : '';
-		/*$data['company'] = isset($customer_data['company_name']) && !empty($customer_data['company_name']) ? $customer_data['company_name'] : '';*/
+		
 		$address = array();
 		$street_address = isset($customer_data['street_address']) && !empty($customer_data['street_address']) ? $customer_data['street_address'] : '';
 		if($street_address)
@@ -736,26 +737,53 @@ class Dashboard extends MX_Controller {
 			$data['loan_number'] = $orderDetails['loan_number'];
 		}
 		$emptyData['is_loan_number'] = $is_loan_number;
-		$owners = array();
-		$primary_owner = isset($orderDetails['primary_owner']) && !empty($orderDetails['primary_owner']) ? $orderDetails['primary_owner'] : '';
-		$secondary_owner = isset($orderDetails['secondary_owner']) && !empty($orderDetails['secondary_owner']) ? $orderDetails['secondary_owner'] : '';
-		if($primary_owner)
-		{
-			$owners[] = $primary_owner;
-		}
-
-		if($secondary_owner)
-		{
-			$owners[] = $secondary_owner;
-		}
 
 		$is_borrower = 0;
-		if(isset($owners) && !empty($owners))
+		if($purchase_type == '19' || $purchase_type == '33')
 		{
+			$owners = array();
+			$primary_owner = isset($orderDetails['primary_owner']) && !empty($orderDetails['primary_owner']) ? $orderDetails['primary_owner'] : '';
+			$secondary_owner = isset($orderDetails['secondary_owner']) && !empty($orderDetails['secondary_owner']) ? $orderDetails['secondary_owner'] : '';
+			if($primary_owner)
+			{
+				$owners[] = $primary_owner;
+			}
+
+			if($secondary_owner)
+			{
+				$owners[] = $secondary_owner;
+			}
 			$data['borrowers'] = implode(', ', $owners);
-			$is_borrower = 1;
-		}	
+			$is_borrower = 1;			
+		}
+		
+		if($purchase_type == '20' || $purchase_type == '32')
+		{
+			$borrowers =  isset($orderDetails['borrower']) && !empty($orderDetails['borrower']) ? $orderDetails['borrower'] : '';
+			$data['borrowers'] = $borrowers;
+			if($borrowers)
+			{
+				$is_borrower = 1;
+			}
+			
+		}
 		$emptyData['is_borrower'] = $is_borrower;
+
+		$is_supplemental_report_date = 0;
+		if(isset($orderDetails['supplemental_report_date']) && !empty($orderDetails['supplemental_report_date']))
+		{
+			$data['supplemental_report_date'] =  $orderDetails['supplemental_report_date'];
+			$is_supplemental_report_date = 1;
+		}
+		$emptyData['is_supplemental_report_date'] = $is_supplemental_report_date;
+
+		$is_preliminary_report_date = 0;
+		if(isset($orderDetails['preliminary_report_date']) && !empty($orderDetails['preliminary_report_date']))
+		{
+			$data['preliminary_report_date'] = $orderDetails['preliminary_report_date'];
+			$is_preliminary_report_date = 1;
+		}
+		$emptyData['is_preliminary_report_date'] = $is_preliminary_report_date;
 
 		$is_lender = 0;
 		if(isset($orderDetails['escrow_lender_id']) && !empty($orderDetails['escrow_lender_id']))
@@ -768,7 +796,7 @@ class Dashboard extends MX_Controller {
 		$emptyData['is_lender'] = $is_lender;
 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'proposed_insured', '', $data, array(), $orderId, 0);
 		
-		if(empty($data['title_officer']) || empty($data['borrowers']) || empty($data['lender']) || empty($data['loan_number']))
+		if(empty($data['title_officer']) || empty($data['borrowers']) || empty($data['lender']) || empty($data['loan_number']) || empty($data['supplemental_report_date']) || empty($data['preliminary_report_date']))
 		{
 			$res = array('status'=>'dataRequired','data'=>$emptyData);
 			echo json_encode($res); exit;
@@ -1176,8 +1204,10 @@ class Dashboard extends MX_Controller {
 			$TitleOfficer = isset($_POST['TitleOfficer']) && !empty($_POST['TitleOfficer']) ? $_POST['TitleOfficer'] : '';
 			$loan_number = isset($_POST['loan_number']) && !empty($_POST['loan_number']) ? $_POST['loan_number'] : '';
 			$borrower = isset($_POST['borrower']) && !empty($_POST['borrower']) ? $_POST['borrower'] : '';
-			$lender = isset($_POST['lender']) && !empty($_POST['lender']) ? $_POST['lender'] : '';
+			$LenderId = isset($_POST['LenderId']) && !empty($_POST['LenderId']) ? $_POST['LenderId'] : '';
 			$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
+			$s_report_date = isset($_POST['s_report_date']) && !empty($_POST['s_report_date']) ? $_POST['s_report_date'] : '';
+			$p_report_date = isset($_POST['p_report_date']) && !empty($_POST['p_report_date']) ? $_POST['p_report_date'] : '';
 
 			
 			if((isset($TitleOfficer) && !empty($TitleOfficer)) || (isset($loan_number) && !empty($loan_number)))
@@ -1193,31 +1223,47 @@ class Dashboard extends MX_Controller {
 				{
 					$update_data['loan_number'] = $loan_number;
 				}
+				if($borrower)
+				{
+					$update_data['borrower'] = $borrower;
+				}
+				if($s_report_date)
+				{
+					$update_data['supplemental_report_date'] = date("Y-m-d",strtotime($s_report_date));
+				}
+				if($p_report_date)
+				{
+					$update_data['preliminary_report_date'] = date("Y-m-d",strtotime($p_report_date));
+				}
 
 				$condition = array(
 					'id' => $transaction_id
 				);
-				$this->home_model->update($update_data, $condition, 'transaction_details');
-
-				
+				$transaction_update_flag = $this->home_model->update($update_data, $condition, 'transaction_details');
 			}
-			$data = array('status'=>'success', 'fileId'=>$fileId);
-			echo json_encode($data); exit;
-			/*if(isset($lender) && !empty($lender))
+			
+			if(isset($LenderId) && !empty($LenderId))
 			{
-				$update_data = array();
-				if($TitleOfficer)
-				{
-					$update_data['escrow_lender_id'] = $TitleOfficer;
-				}
+				$update_data = array();			
+				$update_data['escrow_lender_id'] = $LenderId;
+
 				$property_id = isset($_POST['property_id']) && !empty($_POST['property_id']) ? $_POST['property_id'] : '';
 
 				$condition = array(
-					'id' => $transaction_id
+					'id' => $property_id
 				);
 
-				$this->home_model->update(array('escrow_lender_id' => $LenderId), array('id' => $orderDetails['property_id']), 'property_details');
-			}*/
+				$property_update_flag = $this->home_model->update($update_data, $condition, 'property_details');
+			}
+			if($property_update_flag || $transaction_update_flag)
+			{
+				$data = array('status'=>'success', 'fileId'=>$fileId);
+			}
+			else
+			{
+				$data = array('status'=>'error');
+			}
+			echo json_encode($data); exit;
 		}
 	}
 }

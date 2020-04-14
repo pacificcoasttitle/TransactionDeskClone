@@ -91,7 +91,10 @@ class Order
             transaction_details.loan_number,
             transaction_details.transaction_type, 
             transaction_details.title_officer,
-            transaction_details.purchase_type, customer_basic_details.*')
+            transaction_details.purchase_type,
+            transaction_details.supplemental_report_date,
+            transaction_details.preliminary_report_date,
+            transaction_details.borrower, customer_basic_details.*')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')

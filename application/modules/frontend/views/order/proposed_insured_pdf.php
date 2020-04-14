@@ -99,8 +99,25 @@
 		</div>
 		<div class="content-info">
 			<div class="basic-details">
-				<p class="text-center"><span class="heading">Supplemental report dated as of: </span><?php echo date('M d, Y'); ?></p>
-				<p class="text-center"><span class="heading">Original preliminary report dated: </span></p>
+				<p class="text-center"><span class="heading">
+					<?php
+						$s_date = date('M d, Y');
+						if(isset($supplemental_report_date) && !empty($supplemental_report_date))
+						{
+							$s_date = date('M d, Y', strtotime($supplemental_report_date));
+						}
+					?>
+				Supplemental report dated as of: </span><?php echo $s_date; ?></p>
+				<p class="text-center">
+					<?php
+						$p_date = date('M d, Y');
+						if(isset($preliminary_report_date) && !empty($preliminary_report_date))
+						{
+							$p_date = date('M d, Y', strtotime($preliminary_report_date));
+						}
+					?>
+					<span class="heading">Original preliminary report dated: </span><?php echo $p_date; ?>
+				</p>
 			</div>
 			<div class="note">
 				<h2 class="heading text-center">Supplemental Report</h2>
@@ -108,9 +125,9 @@
 				<p style="text-align: justify;">UPON THE CLOSE OF ESCROW AND CONFIRMATION OF RECORDING PACIFIC COAST TITLE WILL BE IN A POSITION TO ISSUE A TITLE POLICY IN FAVOR OF:</p>
 			</div>
 			<div>
-				<p>Borrowers: Flor Ojeda, Oscar Eduardo Diaz and Maria Roselia Vaquerano</p>
-				<p>Lender: Home Approvals Direct, Inc., DBA HomeFirst Mortgage Bankers, It’s Successors and/or Assigns.</p>
-				<p>Loan # 200200183</p>
+				<p>Borrowers: <?php echo isset($borrowers) && !empty($borrowers) ? $borrowers : '-'; ?></p>
+				<p>Lender: <?php echo isset($lender) && !empty($lender) ? $lender : '-'; ?></p>
+				<p>Loan #: <?php echo isset($loan_number) && !empty($loan_number) ? $loan_number : '-'; ?></p>
 				<p>Loan Amount: <?php echo isset($loan_amount) && !empty($loan_amount) ? '$'.$loan_amount : ''; ?></p>
 			</div>
 			<div class="spacer-t30"></div>

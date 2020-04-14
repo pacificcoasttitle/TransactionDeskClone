@@ -6,6 +6,12 @@
 	.error {
 		color: #FF2F0F !important;
 	}
+	.ui-helper-clearfix:before, .ui-helper-clearfix:after {
+		border: none !important;
+	}
+	.ui-datepicker {
+		margin-top: 0px !important;
+	}
 </style>
 <body>
 	<?php
@@ -76,6 +82,8 @@
 
 									<input type="hidden" name="fileId" value="" id="fileId">
 
+									<input type="hidden" name="LenderId" value="" id="LenderId">
+
 									<div class="section colm colm12">
 										<label class="field select">
                                             <select id="TitleOfficer" name="TitleOfficer">
@@ -111,8 +119,22 @@
 									<div class="section colm colm12">
 										<label class="field prepend-icon">
 											<input type="text" name="lender" id="lender" class="gui-input"
-												placeholder="Lender" readonly="readonly" required="required">
+												placeholder="Lender" required="required">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+								<div class="frm-row">
+									<div class="section colm colm6" id="s-date-section">
+										<label class="field prepend-icon">
+											<input type="text" name="supplemental_report_date" id="supplemental_report_date" class="gui-input" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
+											<span class="field-icon"><i class="fa fa-calendar"></i></span>
+										</label>
+									</div>
+									<div class="section colm colm6" id="p-date-section">
+										<label class="field prepend-icon">
+											<input type="text" name="preliminary_report_date" id="preliminary_report_date" class="gui-input" placeholder="Preliminary Report Date" value="<?php echo date('m/d/Y'); ?>">
+											<span class="field-icon"><i class="fa fa-calendar"></i></span>
 										</label>
 									</div>
 								</div>
@@ -134,10 +156,15 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/jquery-ui.css">
-
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css">
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
 <script>
 	$(document).ready(function () {
+
+		$('#supplemental_report_date').datepicker();
+		$('#preliminary_report_date').datepicker();
 		if ($('#orders_listing').length) {
 			order_list = $('#orders_listing').DataTable({
 				// "pageLength": 2,
@@ -191,23 +218,31 @@
 	                TitleOfficer:"required",
 	                loan_number:"required",
 	                borrower:"required",
-	                lender:"required"
+	                lender:"required",
+	                supplemental_report_date:"required",
+	                preliminary_report_date:"required",
 	            },
 	            messages: {
 	                TitleOfficer:"Please select title officer",
 	                loan_number:"Please enter loan number",
 	                borrower:"Please enter borrower",
 	                lender:"Please enter lender",
+	                supplemental_report_date:"Please select date",
+	                preliminary_report_date:"Please select date",
 	            },
 	            submitHandler: function(form) {
+	            	$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+					$('#page-preloader').css('display', 'block');
 	            	var TitleOfficer = $('#TitleOfficer').val();
 	            	var loan_number = $('#loan_number').val();
 	            	var borrower = $('#borrower').val();
-	            	var lender = $('#lender').val();
+	            	var LenderId = $('#LenderId').val();
 	            	var orderId = $('#orderId').val();
 	            	var transaction_id = $('#transaction_id').val();
 	            	var property_id = $('#property_id').val();
 	            	var fileId = $('#fileId').val();
+	            	var supplemental_report_date = $('#supplemental_report_date').val();
+	            	var preliminary_report_date = $('#preliminary_report_date').val();
 
 	                $.ajax({
 	                url: base_url + "add-order-details",
@@ -216,33 +251,72 @@
 	                    TitleOfficer: TitleOfficer,
 	                    loan_number: loan_number,
 	                    borrower: borrower,
-	                    lender: lender,
+	                    LenderId: LenderId,
 	                    orderId: orderId,
 	                    transaction_id: transaction_id,
 	                    property_id: property_id,
 	                    fileId: fileId,
+	                    s_report_date: supplemental_report_date,
+	                    p_report_date: preliminary_report_date,
 	                }, 
 	                success: function(response) {
+	                	$('#page-preloader').css('display', 'none');
 	                	var res = JSON.parse(response);
 						if(res.status == 'success')
 						{
 							$('#lender_information').modal('hide');
 							generateProposedInsured(res.fileId);
 						}
-						/*else if(res.status == 'success')
+						else if(res.status == 'error')
 						{
-							$('#result').html('<div class="alert alert-success">'+res.message+'</div>');
+							$('.modal-body.search-result').append('<div class="error">Something went wrong. Please try again.</div>');
+							$('#lender_information').modal('hide');
 						}
-						$('#result').show().delay(7000).fadeOut("normal", function(){
-	        					$('#result').html('');
-	        					$('#subject').val('');
-	            				$('#body').val('');
-	    				});*/
 	                }
 	            });
 	            }
 	        }); 
 	    }
+
+	    /* Lender autocomplete */
+	    $("#lender").autocomplete({
+	        // source: "php/usersearch.php",
+	        source: function(request, response) {
+	            $.ajax({
+	                url: base_url+'home/getDetailsByName',
+	                data: {
+	                    term : request.term,//the value of the input is here
+	                    is_escrow : 0                    
+	                },
+	                type: "POST",
+	                dataType: "json",
+	                success: response
+	            });
+	        },
+	        select: function( event, ui ) {
+	            event.preventDefault();
+				$("#lender").val(ui.item.name);
+				$("#LenderId").val(ui.item.id);
+	            
+	        },
+	        change: function( event, ui ) {
+	            if (ui.item == null)
+	            {
+					$("#LenderId").val('');				
+	            }
+	        }
+	    });
+		/* Lender autocomplete */
+
+		$('#lender_information').on('hidden.bs.modal', function (e) {
+		  $(this)
+		    .find("input,textarea,select")
+		       .val('')
+		       .end()
+		    .find("input[type=checkbox], input[type=radio]")
+		       .prop("checked", "")
+		       .end();
+		});
 	});
 
 function generateProposedInsured(fileId)
@@ -279,6 +353,14 @@ function generateProposedInsured(fileId)
                 	if(res.data.is_lender == 1)
                 	{
                 		$('#lender-section').css('display','none');
+                	}
+                	if(res.data.is_supplemental_report_date == 1)
+                	{
+                		$('#s-date-section').css('display','none');
+                	}
+                	if(res.data.is_preliminary_report_date == 1)
+                	{
+                		$('#p-date-section').css('display','none');
                 	}
                     $('#lender_information').modal('show');
                 }
