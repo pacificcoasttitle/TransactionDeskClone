@@ -68,13 +68,18 @@ class Cron extends MX_Controller {
 
                 $transactionData = array(
                     'customer_id' => $userdata['id'],
-                    'sales_amount' =>  $res->SalesPrice,
-                    'loan_amount' => $res->Loans[0]->LoanAmount,
+                    'sales_amount' =>  !empty($res->SalesPrice) ? $res->SalesPrice : 0,
+                    'loan_number' => !empty($res->Loans[0]->LoanNumber) ? $res->Loans[0]->LoanNumber : 0,
+                    'loan_amount' => !empty($res->Loans[0]->LoanAmount) ? $res->Loans[0]->LoanAmount : 0,
                     'transaction_type' => $res->TransactionProductType->TransactionTypeID,
                     'purchase_type' => $res->TransactionProductType->ProductTypeID,
                     'status'=> 1
                 );
                 $transactionId = $this->home_model->insert($transactionData,'transaction_details');
+
+                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res->Dates->OpenedDate)))/1000);
+
+                $created_date = date('Y-m-d H:i:s', $time);
 
                 $orderData = array(
                     'customer_id' => $userdata['id'],
@@ -82,6 +87,7 @@ class Cron extends MX_Controller {
                     'file_number' => $res->FileNumber,
                     'property_id' => $propertyId,
                     'transaction_id' => $transactionId,
+                    'created_at' => $created_date,
                     'status'=> 1
                 );
 

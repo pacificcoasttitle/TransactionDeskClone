@@ -20,9 +20,8 @@
 								<a href="<?php echo base_url().'cpl-dashboard'; ?>">
 									<button class="btn btn-type-1b btn-lg" type="button">Generate CPL</button>
 								</a>
-								<a href="<?php echo base_url().'select-files'; ?>">
-									<button class="btn btn-type-1a btn-lg"
-										type="button">Prelim Review</button>
+								<a href="<?php echo base_url().'prelim-files'; ?>">
+									<button class="btn btn-type-1a btn-lg" type="button">Prelim Review</button>
 								</a>
                   				<a href="<?php echo base_url().'attach-files'; ?>">
                   					<button class="btn btn-type-1d btn-lg" type="button">Upload a Document</button>
