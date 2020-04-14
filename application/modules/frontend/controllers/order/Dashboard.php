@@ -1210,7 +1210,7 @@ class Dashboard extends MX_Controller {
 			$p_report_date = isset($_POST['p_report_date']) && !empty($_POST['p_report_date']) ? $_POST['p_report_date'] : '';
 
 			
-			if((isset($TitleOfficer) && !empty($TitleOfficer)) || (isset($loan_number) && !empty($loan_number)))
+			if((isset($TitleOfficer) && !empty($TitleOfficer)) || (isset($loan_number) && !empty($loan_number)) || (isset($borrower) && !empty($borrower)) || (isset($s_report_date) && !empty($s_report_date)) || (isset($p_report_date) && !empty($p_report_date)))
 			{
 				$transaction_id = isset($_POST['transaction_id']) && !empty($_POST['transaction_id']) ? $_POST['transaction_id'] : '';
 
