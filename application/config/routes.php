@@ -101,7 +101,7 @@ $route['imageCreateRequest'] = 'frontend/order/TitlePoint/imageCreateRequest';
 $route['getRequestStatus'] = 'frontend/order/TitlePoint/getRequestStatus';
 $route['generateImage'] = 'frontend/order/TitlePoint/generateImage';
 $route['notifyAdmin'] = 'frontend/order/home/notifyAdmin';
-$route['select-files'] = 'frontend/order/dashboard/selectFiles';
+$route['prelim-files'] = 'frontend/order/dashboard/prelimFiles';
 $route['getFiles'] = 'frontend/order/dashboard/getFiles';
 $route['recordings'] = 'frontend/order/dashboard/recordings';
 $route['order/get-recordings'] = 'frontend/order/dashboard/get_recordings';
@@ -129,6 +129,8 @@ $route['create-cpl/:num'] = 'frontend/order/dashboard/create_cpl';
 $route['download-cpl-pdf'] = 'frontend/order/dashboard/donloadCplPdf';
 $route['add-lender-order'] = 'frontend/order/dashboard/addLenderOnOrder';
 $route['add-order-details'] = 'frontend/order/dashboard/add_order_details';
+$route['get-orders-prelim'] = 'frontend/order/dashboard/get_orders_prelim';
+$route['review-file/(:num)/(:any)'] = 'frontend/order/dashboard/review_file/$1/$2';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
