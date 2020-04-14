@@ -11,13 +11,36 @@ class Cron extends MX_Controller {
         $this->load->model('order/home_model');
     }
 
-    function import_orders() 
+    public function import_orders_all_users()
+    {
+        $condition = array(
+            'where' => array(
+                'email_address' => 'ghernandez@pct.com',
+            )
+        );
+        $customers = $this->home_model->get_customers($condition);
+        if(!empty($customers)) {
+            foreach ($customers as $customer) {
+                $this->import_orders($customer);
+            }
+        }
+        echo "All orders synced successfully for all users";exit;
+    }
+
+    function import_orders($user = array()) 
     {
         $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
-        $userdata = $this->session->userdata('user');
+
+        if(empty($user)) {
+            $userdata = $this->session->userdata('user');
+        } else {
+            $userdata = $user;
+            $userdata['email'] = $userdata['email_address'];
+        }
+        
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_orders', RESWARE_ORDER_API.'files/search', array(), array(), 0, 0);
-        $res = $this->resware->make_request('POST', 'files/search');
+        $res = $this->make_request('POST', 'files/search', '',  $userdata);
         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_orders', RESWARE_ORDER_API.'files/search', array(), $res, 0, $logid);
         $result = json_decode($res);
 
@@ -96,5 +119,28 @@ class Cron extends MX_Controller {
             }
         }
         echo "All orders synced successfully";
+    }
+
+    public function make_request($http_method, $endpoint, $body_params='', $userdata)
+    {
+        $login =  $userdata['email'];
+        if ($userdata['email'] == 'ghernandez@pct.com') {
+            $password= 'Alpha637#';
+        } else {
+            $password= 'Pacific2';
+        }
+        $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($body_params))                                 
+        ); 
+        $error_msg = curl_error($ch);
+        $result = curl_exec($ch);
+        return $result;
     }
 }

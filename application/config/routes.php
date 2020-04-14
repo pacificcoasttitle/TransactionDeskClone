@@ -131,6 +131,7 @@ $route['add-lender-order'] = 'frontend/order/dashboard/addLenderOnOrder';
 $route['add-order-details'] = 'frontend/order/dashboard/add_order_details';
 $route['get-orders-prelim'] = 'frontend/order/dashboard/get_orders_prelim';
 $route['review-file/(:num)/(:any)'] = 'frontend/order/dashboard/review_file/$1/$2';
+$route['import-orders-all-users'] = 'frontend/order/cron/import_orders_all_users';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
