@@ -130,8 +130,15 @@ $route['download-cpl-pdf'] = 'frontend/order/dashboard/donloadCplPdf';
 $route['add-lender-order'] = 'frontend/order/dashboard/addLenderOnOrder';
 $route['add-order-details'] = 'frontend/order/dashboard/add_order_details';
 $route['get-orders-prelim'] = 'frontend/order/dashboard/get_orders_prelim';
-$route['review-file/(:num)/(:any)'] = 'frontend/order/dashboard/review_file/$1/$2';
+$route['review-file/:num'] = 'frontend/order/dashboard/review_file';
 $route['import-orders-all-users'] = 'frontend/order/cron/import_orders_all_users';
+$route['summary'] = 'frontend/order/dashboard/summary';
+$route['prelim'] = 'frontend/order/dashboard/prelim';
+$route['linked-doc'] = 'frontend/order/dashboard/linked_doc';
+$route['legal-vesting'] = 'frontend/order/dashboard/legal_vesting';
+$route['plat-map'] = 'frontend/order/dashboard/plat_map';
+$route['download-resware-document'] = 'frontend/order/dashboard/download_resware_document';
+
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

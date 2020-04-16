@@ -133,5 +133,20 @@ class Order
             return false;
         }
     }
+
+    public function get_order_documents($fileId)
+    {
+        $this->CI->db->select('order_details.file_number, order_details.file_id, order_details.id as order_id, pct_order_documents.*, pct_order_documents_types.name')
+            ->from('order_details')
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id')
+            ->join('pct_order_documents_types', 'pct_order_documents.document_type_id = pct_order_documents_types.api_id');
+        $this->CI->db->where('order_details.file_id', $fileId);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
        
 }
