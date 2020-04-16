@@ -11,6 +11,7 @@ class Home extends MX_Controller {
 		$this->load->model('order/home_model');
 		$this->load->library('form_validation');
 		$this->load->library('order/order');
+		$this->load->model('order/titlePointData');
 		$this->order->is_user();
     }
 
@@ -167,7 +168,7 @@ class Home extends MX_Controller {
 				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, array(), 0, 0);
 				$result = $this->resware->make_request('POST', 'orders', $order_data);
 				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, $result, 0, $logid);
-			
+
 				if(isset($result) && !empty($result))
 				{
 					$response = json_decode($result,true);
@@ -189,7 +190,18 @@ class Home extends MX_Controller {
 
 						if($orderNumber)
 						{
-							
+							if($this->session->has_userdata('tp_api_id'))
+							{
+								$id = $this->session->userdata('tp_api_id');
+								$condition = array(
+									'id' => $id
+								);
+								$tpData = array(
+									'file_id' => $file_id,
+									'file_number' => $orderNumber,
+								);					
+								$this->titlePointData->update($tpData,$condition);
+							}
 							$mail = $this->phpmailer_library->load();
 							$mail->isSendmail();
 							$mail->IsHTML(true);
@@ -244,21 +256,7 @@ class Home extends MX_Controller {
 							
 							$mail->Send();
 						}
-
-						$titlepointData = $this->session->userdata($apn);
-						$titlepointData['state'] = $PropertyState;
-						$titlepointData['county'] = $County;
-						$titlepointData['address'] = $PropertyAddress;
-						$titlepointData['city'] = $PropertyCity;
-						$titlepointData['apn'] = $apn;
-						$titlepointData['fipCode'] = $PropertyFips;
-					
-					
-						$this->session->set_userdata('orderNumber', $orderNumber);
-						$this->session->set_userdata("order_no_".$orderNumber, $titlepointData);
-
-						$this->session->unset_userdata($apn);
-
+						
 						$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
 						$propertyData = array(
@@ -620,20 +618,44 @@ class Home extends MX_Controller {
 
     function orderSubmit()
     {
-		$orderNumber = $this->session->userdata('orderNumber');
-    	$data = $this->session->userdata('order_no_'.$orderNumber);
-    	$data['title'] = 'Open Order | Pacific Coast Title Company';
-    	$data['orderNumber'] = $orderNumber;
-    	$data['L_V_CreateService'] = $this->session->userdata('L_V_CreateService');
-    	$data['L_V_RequestId'] = $this->session->userdata('L_V_RequestId');
-    	$data['Tax_CreateService'] = $this->session->userdata('Tax_CreateService');
-    	$data['Tax_RequestId'] = $this->session->userdata('Tax_RequestId');
-    	$data['L_V_GetRequestSummary'] = $this->session->userdata('L_V_GetRequestSummary');
-    	$data['L_V_ResultId'] = $this->session->userdata('L_V_ResultId');
-    	$data['Tax_GetRequestSummary'] = $this->session->userdata('Tax_GetRequestSummary');
-    	$data['Tax_ResultId'] = $this->session->userdata('Tax_ResultId');
-    	$data['L_V_GetResultById'] = $this->session->userdata('L_V_GetResultById');
-    	$data['Tax_GetResultById'] = $this->session->userdata('Tax_GetResultById');
+    	
+    	if ($this->session->has_userdata('tp_api_id')) 
+		{
+			$id = $this->session->userdata('tp_api_id');
+		}
+		$id =3;
+		if($id)
+		{
+			$condition = array(
+	            'where' => array(
+	                'id' => $id,
+	            )
+	        );
+			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+		}
+		
+		$fileId = isset($titlePointDetails[0]['file_id']) && !empty($titlePointDetails[0]['file_id']) ? $titlePointDetails[0]['file_id'] :'';
+		if($fileId)
+		{
+			$orderDetails = $this->order->get_order_details($fileId);
+			$property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] :'';
+			$propertyData = $this->home_model->get_property_details($property_id);
+			$county = isset($propertyData['county']) && !empty($propertyData['county']) ? $propertyData['county'] :'';
+			$FullProperty = isset($propertyData['full_address']) && !empty($propertyData['full_address']) ? $propertyData['full_address'] :'';
+
+			$AddressPropertyParts = explode(',', $FullProperty);
+	        $AddressPropertyInfo = array_slice($AddressPropertyParts,0, -1);
+	        $propertyState = trim(end($AddressPropertyInfo));
+
+	        $AddressPropertyCityInfo = array_slice($AddressPropertyInfo,0, -1);
+	        $propertyCity = trim(end($AddressPropertyCityInfo));			
+		}
+		
+		$data['tp_data'] = isset($titlePointDetails[0]) && !empty($titlePointDetails[0]) ? $titlePointDetails[0] : array();
+		$data['state'] = isset($propertyState) && !empty($propertyState) ? $propertyState : array();
+		$data['city'] = isset($propertyCity) && !empty($propertyCity) ? $propertyCity : array();
+		$data['county'] = isset($county) && !empty($county) ? $county : array();
+		
         $this->load->view('layout/head',$data);
        	$this->load->view('order/order-submission',$data);
 
