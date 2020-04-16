@@ -247,7 +247,8 @@ class Dashboard extends MX_Controller {
 						'document_type_id' => $this->input->post('document_type_'.$i),
 						'document_size' => ($data['file_size'] * 1000),
 						'user_id' => $userdata['id'],
-						'order_id' => $orderId
+						'order_id' => $orderId,
+						'description' => $this->input->post('description_'.$i)
 					);
 					
 					$documentId = $this->document->insert($documentData);
@@ -1248,7 +1249,7 @@ class Dashboard extends MX_Controller {
 				$nestedData[] = $order['full_address'];
 				
 				
-				$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."/summary"."'><button class='btn btn-grad-2a' type='button'>REVIEW FILE</button></a>";
+				$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a' type='button'>REVIEW FILE</button></a>";
 				
 				$data[] = $nestedData; 
 				$i++; 
@@ -1261,12 +1262,144 @@ class Dashboard extends MX_Controller {
 		echo json_encode($json_data);
 	}
 
-	public function review_file($fileId, $type)
+	public function review_file()
 	{
+		$fileId = $this->uri->segment(2);
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';  
 		$data['orderDetails'] = $this->order->get_order_details($fileId);
-		$data['type'] =  $type;
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/view_review_file');
 	}
+
+	public function summary() 
+	{
+        $fileId = $this->input->post('fileId');
+        $data['orderDetails'] = $this->order->get_order_details($fileId);
+        $results = $this->load->view('order/review_file_summary', $data, TRUE);
+        echo json_encode($results, true);
+	}
+	
+	public function prelim() 
+	{
+        $fileId = $this->input->post('fileId');
+        $data['orderDetails'] = $this->order->get_order_details($fileId);
+        $results = $this->load->view('order/review_file_prelim', $data, TRUE);
+        echo json_encode($results, true);
+	}
+
+	public function linked_doc() 
+	{
+		$this->load->library('order/resware');
+		$this->load->model('order/document');
+		$userdata = $this->session->userdata('user');
+		$fileId = $this->input->post('fileId');
+		$orderId = $this->input->post('orderId');
+		$documents = $this->order->get_order_documents($fileId);
+		$endPoint = 'files/'. $fileId .'/documents';
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), array(), $orderId, 0);
+		$resultDocuments = $this->resware->make_request('GET', $endPoint);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), $resultDocuments, $orderId, $logid);
+		$resDocuments = json_decode($resultDocuments, true);
+		$documentCount  = count($documents);
+		
+		if (!empty($documents)) {
+			$apiDocumentIds = array_column($documents, 'api_document_id');
+			if (!empty($resDocuments['Documents'])) {
+				foreach($resDocuments['documents'] as $resDocument) {
+					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
+						$time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
+               			$created_date = date('Y-m-d H:i:s', $time);
+						$documentData = array(
+							'document_name' => $resDocument['DocumentName'],
+							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
+							'api_document_id' => $resDocument['DocumentID'],
+							'document_size' => $resDocument['Size'],
+							'user_id' => $userdata['id'],
+							'order_id' => $orderId,
+							'description' => $resDocument['DocumentName'],
+							'created' => $created_date
+						);
+						$documentId = $this->document->insert($documentData);
+
+						$documents[$documentCount]['document_name'] = $resDocument['DocumentName'];
+						$documents[$documentCount]['document_type_id'] = $resDocument['DocumentType']['DocumentTypeID'];
+						$documents[$documentCount]['document_size'] = $resDocument['Size'];
+						$documents[$documentCount]['user_id'] = $userdata['id'];
+						$documents[$documentCount]['order_id'] = $orderId;
+						$documents[$documentCount]['description'] = $resDocument['DocumentName'];
+						$documents[$documentCount]['created'] = $created_date;
+						$documentCount++;
+					}
+				}	
+			}
+		} else {
+			if (!empty($resDocuments['Documents'])) {
+				foreach($resDocuments['Documents'] as $resDocument) {
+					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
+						$time = round((str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
+               			$created_date = date('Y-m-d H:i:s', $time);
+						$documentData = array(
+							'document_name' => $resDocument['DocumentName'],
+							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
+							'api_document_id' => $resDocument['DocumentID'],
+							'document_size' => $resDocument['Size'],
+							'user_id' => $userdata['id'],
+							'order_id' => $orderId,
+							'description' => $resDocument['DocumentName'],
+							'created' => $created_date
+						);
+						
+						$documentId = $this->document->insert($documentData);
+
+						$documents[$documentCount]['document_name'] = $resDocument['DocumentName'];
+						$documents[$documentCount]['document_type_id'] = $resDocument['DocumentType']['DocumentTypeID'];
+						$documents[$documentCount]['document_size'] = $resDocument['Size'];
+						$documents[$documentCount]['user_id'] = $userdata['id'];
+						$documents[$documentCount]['order_id'] = $orderId;
+						$documents[$documentCount]['description'] = $resDocument['DocumentName'];
+						$documents[$documentCount]['created'] = $created_date;
+						$documentCount++;
+					}
+				}	
+			}
+		}
+		$data['documents'] = $documents;
+	
+        $results = $this->load->view('order/review_file_attach_doc', $data, TRUE);
+        echo json_encode($results, true);
+	}
+
+	public function legal_vesting() 
+	{
+        $fileId = $this->input->post('fileId');
+        $data['orderDetails'] = $this->order->get_order_details($fileId);
+        $results = $this->load->view('order/review_file_legal_vesting', $data, TRUE);
+        echo json_encode($results, true);
+	}
+
+	public function plat_map() 
+	{
+        $fileId = $this->input->post('fileId');
+        $data['orderDetails'] = $this->order->get_order_details($fileId);
+        $results = $this->load->view('order/review_file_plat_map', $data, TRUE);
+        echo json_encode($results, true);
+	}
+
+	public function download_resware_document()
+	{
+		$userdata = $this->session->userdata('user');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$resware_document_id = $this->input->post('resware_document_id');
+		$order_id = $this->input->post('order_id');
+		$endPoint = 'documents/'.$resware_document_id.'?format=json';
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $order_id, 0);
+		$resultDocument = $this->resware->make_request('GET', $endPoint);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $order_id, $logid);
+		$resDocument = json_decode($resultDocument, true);
+		if (isset($resDocument['Document']) && !empty($resDocument['Document'])) {
+			echo $resDocument['Document']['DocumentBody'];
+		}	
+	}
+
 }

@@ -29,7 +29,10 @@ class Document extends CI_Model
          $table = $this->table;
         if(!empty($data)){
 
-            $data['created'] = date("Y-m-d H:i:s");
+            
+            if(!isset($data['created'])) {
+                $data['created'] = date("Y-m-d H:i:s");
+            }
 
             // Insert data
             $insert = $this->db->insert($table, $data);
