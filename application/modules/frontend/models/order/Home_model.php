@@ -129,4 +129,14 @@ class Home_model extends CI_Model
         }
         return false;
     }
+
+    public function get_property_details($id)
+    {
+        $this->db->select('*');
+        $this->db->from('property_details');
+        $this->db->where('id', $id);
+        $query = $this->db->get();    
+        if($query->num_rows() > 0)
+            return $query->row_array();
+    }
 }

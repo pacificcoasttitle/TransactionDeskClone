@@ -1,16 +1,6 @@
 $(document).ready(function() {    
 });
 
-if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-{
-    createService4(fipCode,address,city);
-}
-
-if(Tax_CreateService == '' || Tax_GetRequestSummary == '' || Tax_GetResultById == '')
-{
-    createService3(apn,state,county);
-}
-
 
 function createService4(fipCode,address,city)
 {
@@ -32,8 +22,7 @@ function createService4(fipCode,address,city)
             
             if (responseStatus == 'Failed') 
             {
-                if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-                {
+                
                     $('#legalDescription, #vestingInformation').prev('.loader').hide();
                     $('#legalDescription').html('No data found.');
                     $('#vestingInformation').html('No data found.');
@@ -41,7 +30,7 @@ function createService4(fipCode,address,city)
                     $('#grantDeedInfoFile').css('border','1px solid #000000');
                     $('#grantDeedInfoFile').css('padding','15px');
                     $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                }
+                
             } 
             else if (responseStatus == 'Success') 
             {
@@ -50,24 +39,18 @@ function createService4(fipCode,address,city)
             }
         })
         .fail(function(err) {
-            if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-            {
-                $('#legalDescription, #vestingInformation').prev('.loader').hide();
-                $('#legalDescription').html('No data found.');
-                $('#vestingInformation').html('No data found.');
-                $('#grantDeedInfoFile').prev('.loader').hide();
-                $('#grantDeedInfoFile').css('border','1px solid #000000');
-                $('#grantDeedInfoFile').css('padding','15px');
-                $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-            }
+            $('#legalDescription, #vestingInformation').prev('.loader').hide();
+            $('#legalDescription').html('No data found.');
+            $('#vestingInformation').html('No data found.');
+            $('#grantDeedInfoFile').prev('.loader').hide();
+            $('#grantDeedInfoFile').css('border','1px solid #000000');
+            $('#grantDeedInfoFile').css('padding','15px');
+            $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');         
         });
 }
 
 function createService3(apn,state,county)
 {
-	/*var apn = localStorage.getItem('apn');
-	var state = localStorage.getItem('state');
-	var county = localStorage.getItem('county');*/
 	$.ajax({
         // url: 'php/createservice.php',
         url: base_url+'createService',
@@ -86,16 +69,13 @@ function createService3(apn,state,county)
             
             if (responseStatus == 'Failed') 
             {
-                if(Tax_CreateService == '' || Tax_GetRequestSummary == '' || Tax_GetResultById == '')
-                {
-                    $('#firstInstallment, #secondInstallment').prev('.loader').hide();
-                    $('#firstInstallment').css('border','1px solid #000000');
-                    $('#firstInstallment').css('padding','15px');
-                    $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
-                    $('#secondInstallment').css('border','1px solid #000000');
-                    $('#secondInstallment').css('padding','15px');
-                    $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
-                }
+                $('#firstInstallment, #secondInstallment').prev('.loader').hide();
+                $('#firstInstallment').css('border','1px solid #000000');
+                $('#firstInstallment').css('padding','15px');
+                $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
+                $('#secondInstallment').css('border','1px solid #000000');
+                $('#secondInstallment').css('padding','15px');
+                $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
             } 
             else if (responseStatus == 'Success') 
             {
@@ -104,16 +84,13 @@ function createService3(apn,state,county)
             }
         })
         .fail(function(err) {
-            if(Tax_CreateService == '' || Tax_GetRequestSummary == '' || Tax_GetResultById == '')
-            {
-                $('#firstInstallment, #secondInstallment').prev('.loader').hide();
-                $('#firstInstallment').css('border','1px solid #000000');
-                $('#firstInstallment').css('padding','15px');
-                $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
-                $('#secondInstallment').css('border','1px solid #000000');
-                $('#secondInstallment').css('padding','15px');
-                $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');  
-            }
+            $('#firstInstallment, #secondInstallment').prev('.loader').hide();
+            $('#firstInstallment').css('border','1px solid #000000');
+            $('#firstInstallment').css('padding','15px');
+            $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
+            $('#secondInstallment').css('border','1px solid #000000');
+            $('#secondInstallment').css('padding','15px');
+            $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
         });
 }
 
@@ -136,32 +113,28 @@ function getRequestSummaries(requestId,methodId)
             
             if (responseStatus == 'Failed') 
             {
-                if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-                {
-                    $('#legalDescription, #vestingInformation').prev('.loader').hide();
-                    $('#legalDescription').html('No data found.');
-                    $('#vestingInformation').html('No data found.');
-                    
-                    $('#grantDeedInfoFile').prev('.loader').hide();
-                    $('#grantDeedInfoFile').css('border','1px solid #000000');
-                    $('#grantDeedInfoFile').css('padding','15px');
-                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                }
-                if(Tax_CreateService == '' || Tax_GetRequestSummary == '' || Tax_GetResultById == '')
-                {
-                    $('#firstInstallment, #secondInstallment').prev('.loader').hide();
-                    $('#firstInstallment').css('border','1px solid #000000');
-                    $('#firstInstallment').css('padding','15px');
-                    $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
-                    $('#secondInstallment').css('border','1px solid #000000');
-                    $('#secondInstallment').css('padding','15px');
-                    $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
-                }
+               $('#legalDescription, #vestingInformation').prev('.loader').hide();
+                $('#legalDescription').html('No data found.');
+                $('#vestingInformation').html('No data found.');
+                
+                $('#grantDeedInfoFile').prev('.loader').hide();
+                $('#grantDeedInfoFile').css('border','1px solid #000000');
+                $('#grantDeedInfoFile').css('padding','15px');
+                $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
+            
+                $('#firstInstallment, #secondInstallment').prev('.loader').hide();
+                $('#firstInstallment').css('border','1px solid #000000');
+                $('#firstInstallment').css('padding','15px');
+                $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
+                $('#secondInstallment').css('border','1px solid #000000');
+                $('#secondInstallment').css('padding','15px');
+                $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
+                
             } 
             else if (responseStatus == 'Success') 
             {
                 $resultId = $(response).find("ResultThumbNail:first").find("ID").text();
-                if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
+                /*if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
                 {
                     serviceId = '';
                     if(methodId == 4)
@@ -169,14 +142,12 @@ function getRequestSummaries(requestId,methodId)
                         serviceId = $(response).find("RequestSummaries:first").find("RequestSummary:first").find("Order:first").find("Services:first").find("Service:first").find("ID:first").text();
                         imageCreateRequest(serviceId,methodId);
                     }
-                }
+                }*/
                 
                 getResultById($resultId,methodId);
             }
         })
         .fail(function(err) {
-            if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-            {
                 $('#legalDescription, #vestingInformation').prev('.loader').hide();
                 $('#legalDescription').html('No data found.');
                 $('#vestingInformation').html('No data found.');
@@ -185,10 +156,7 @@ function getRequestSummaries(requestId,methodId)
                 $('#grantDeedInfoFile').css('border','1px solid #000000');
                 $('#grantDeedInfoFile').css('padding','15px');
                 $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-            }
-
-            if(Tax_CreateService == '' || Tax_GetRequestSummary == '' || Tax_GetResultById == '')
-            {
+            
                 $('#firstInstallment, #secondInstallment').prev('.loader').hide();
                 $('#firstInstallment').css('border','1px solid #000000');
                 $('#firstInstallment').css('padding','15px');
@@ -196,7 +164,6 @@ function getRequestSummaries(requestId,methodId)
                 $('#secondInstallment').css('border','1px solid #000000');
                 $('#secondInstallment').css('padding','15px');
                 $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
-            }
         });
 }
 
@@ -219,28 +186,23 @@ function getResultById(resultId,methodId)
             
             if (responseStatus == 'Failed') 
             {
-                if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-                {
-                    $('#legalDescription, #vestingInformation').prev('.loader').hide();
-                    $('#legalDescription').html('No data found.');
-                    $('#vestingInformation').html('No data found.');
-                    
-                }
-
-                if(Tax_CreateService == '' || Tax_GetRequestSummary == '' || Tax_GetResultById == '')
-                {
-                    $('#firstInstallment, #secondInstallment').prev('.loader').hide();
-                    $('#firstInstallment').css('border','1px solid #000000');
-                    $('#firstInstallment').css('padding','15px');
-                    $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
-                    $('#secondInstallment').css('border','1px solid #000000');
-                    $('#secondInstallment').css('padding','15px');
-                    $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
-                }
+                $('#legalDescription, #vestingInformation').prev('.loader').hide();
+                $('#legalDescription').html('No data found.');
+                $('#vestingInformation').html('No data found.');
+                
+           
+                $('#firstInstallment, #secondInstallment').prev('.loader').hide();
+                $('#firstInstallment').css('border','1px solid #000000');
+                $('#firstInstallment').css('padding','15px');
+                $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
+                $('#secondInstallment').css('border','1px solid #000000');
+                $('#secondInstallment').css('padding','15px');
+                $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
+                
             } 
             else if (responseStatus == 'Success') 
             {
-            	if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
+            	/*if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
                 {
                     if(methodId == 4)
                     {
@@ -329,19 +291,14 @@ function getResultById(resultId,methodId)
                             $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
                         }
                     }
-                }
+                }*/
             }
         })
         .fail(function(err) {
-            if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-            {
+            
                 $('#legalDescription, #vestingInformation').prev('.loader').hide();
                 $('#legalDescription').html('No data found.');
-                $('#vestingInformation').html('No data found.');                
-            }
-
-            if(Tax_CreateService == '' || Tax_GetRequestSummary == '' || Tax_GetResultById == '')
-            {
+                $('#vestingInformation').html('No data found.');
                 $('#firstInstallment, #secondInstallment').prev('.loader').hide();
                 $('#firstInstallment').css('border','1px solid #000000');
                 $('#firstInstallment').css('padding','15px');
@@ -349,11 +306,10 @@ function getResultById(resultId,methodId)
                 $('#secondInstallment').css('border','1px solid #000000');
                 $('#secondInstallment').css('padding','15px');
                 $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
-            }
         });
 }
 
-function imageCreateRequest(serviceId,methodId)
+function imageCreateRequest(serviceId,methodId,fileNumber)
 {
     if(methodId == 4)
     {
@@ -376,13 +332,11 @@ function imageCreateRequest(serviceId,methodId)
             {
                 if(methodId == 4)
                 {
-                    if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-                    {
-                        $('#grantDeedInfoFile').next('.loader').hide();
-                        $('#grantDeedInfoFile').css('border','1px solid #000000');
-                        $('#grantDeedInfoFile').css('padding','15px');
-                        $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                    }
+                    
+                    $('#grantDeedInfoFile').next('.loader').hide();
+                    $('#grantDeedInfoFile').css('border','1px solid #000000');
+                    $('#grantDeedInfoFile').css('padding','15px');
+                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>'); 
                     
                 }
                 else if(methodId == 3)
@@ -396,19 +350,17 @@ function imageCreateRequest(serviceId,methodId)
             else if (responseStatus == 'Success') 
             {
                 $requestId = $(response).find('RequestID').text();
-                getRequestStatus($requestId,methodId);
+                getRequestStatus($requestId,methodId,fileNumber);
             }
         })
         .fail(function(err) {
             if(methodId == 4)
             {
-                if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-                {
-                    $('#grantDeedInfoFile').next('.loader').hide();
-                    $('#grantDeedInfoFile').css('border','1px solid #000000');
-                    $('#grantDeedInfoFile').css('padding','15px');
-                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                }
+                $('#grantDeedInfoFile').next('.loader').hide();
+                $('#grantDeedInfoFile').css('border','1px solid #000000');
+                $('#grantDeedInfoFile').css('padding','15px');
+                $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
+                
             }
             else if(methodId == 3)
             {
@@ -420,7 +372,7 @@ function imageCreateRequest(serviceId,methodId)
         });
 }
 
-function getRequestStatus(requestId,methodId)
+function getRequestStatus(requestId,methodId,fileNumber)
 {
     $.ajax({
         url: base_url+'getRequestStatus',
@@ -438,13 +390,12 @@ function getRequestStatus(requestId,methodId)
             {
                 if(methodId == 4)
                 {
-                    if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-                    {
+                    
                         $('#grantDeedInfoFile').next('.loader').hide();
                         $('#grantDeedInfoFile').css('border','1px solid #000000');
                         $('#grantDeedInfoFile').css('padding','15px');
                         $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                    }
+                    
                 }
                 else if(methodId == 3)
                 {
@@ -457,19 +408,17 @@ function getRequestStatus(requestId,methodId)
             else if (responseStatus == 'Success') 
             {
                 $resultId = $(response).find("RequestId:first").text();
-                generateImage($resultId,methodId);
+                generateImage($resultId,methodId,fileNumber);
             }
         })
         .fail(function(err) {
             if(methodId == 4)
             {
-                if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-                {
-                    $('#grantDeedInfoFile').next('.loader').hide();
+                 $('#grantDeedInfoFile').next('.loader').hide();
                     $('#grantDeedInfoFile').css('border','1px solid #000000');
                     $('#grantDeedInfoFile').css('padding','15px');
                     $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                }
+                
             }
             else if(methodId == 3)
             {
@@ -481,12 +430,14 @@ function getRequestStatus(requestId,methodId)
         });
 }
 
-function generateImage(requestId,methodId)
+function generateImage(requestId,methodId,fileNumber)
 {
     $.ajax({
         url: base_url+'generateImage',
         data: {
-            requestId: requestId
+            requestId: requestId,
+            methodId: methodId,
+            fileNumber: fileNumber,
         },
         dataType: "xml",
         type: "POST"
@@ -499,13 +450,11 @@ function generateImage(requestId,methodId)
             {
                 if(methodId == 4)
                 {
-                    if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-                    {
                         $('#grantDeedInfoFile').prev('.loader').hide();
                         $('#grantDeedInfoFile').css('border','1px solid #000000');
                         $('#grantDeedInfoFile').css('padding','15px');
                         $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                    }
+                    
                 }
                 else if(methodId == 3)
                 {
@@ -523,7 +472,7 @@ function generateImage(requestId,methodId)
 
                 if(methodId == 3)
                 {
-                    if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
+                    /*if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
                     {
                         if (navigator.msSaveBlob)
                         {
@@ -556,7 +505,7 @@ function generateImage(requestId,methodId)
                         $('#instrumentInfoFile').html(link);
                     }
                     else
-                    {
+                    {*/
                         if (navigator.msSaveBlob)
                         {
                             var filename = "GrantDeed.pdf";
@@ -567,11 +516,11 @@ function generateImage(requestId,methodId)
                             download('GrantDeed.pdf', base64_data);
                         }
                         $('#instrumentInfoFile').next('.loader').hide();
-                    }
+                    /*}*/
                 }
                 else if(methodId == 4)
                 {
-                    if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
+                    /*if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
                     {
                         if (navigator.msSaveBlob)
                         {
@@ -604,7 +553,7 @@ function generateImage(requestId,methodId)
                         $('#grantDeedInfoFile').html(link);
                     }
                     else
-                    {
+                    {*/
                         if (navigator.msSaveBlob)
                         {
                             var filename = "L&V.pdf";                            
@@ -615,7 +564,7 @@ function generateImage(requestId,methodId)
                             download('L&V.pdf', base64_data);
                         }
                         $('#grantDeedInfoFile').next('.loader').hide();
-                    }
+                    /*}*/
                 }
             }
         })
@@ -648,7 +597,7 @@ function generateImage(requestId,methodId)
         });
 }
 
-function instrumentSearch(docId,recDate,state,county)
+function instrumentSearch(docId,recDate,state,county,fileNumber)
 {
     $('#instrumentInfoFile').next('.loader').show();
     $.ajax({
@@ -680,7 +629,7 @@ function instrumentSearch(docId,recDate,state,county)
             else if (responseStatus == 'Success') 
             {
                 $requestId = $(response).find('RequestID').text();
-                getInstrumentRequestSummaries($requestId,'3');
+                getInstrumentRequestSummaries($requestId,'3',fileNumber);
             }
         })
         .fail(function(err) {
@@ -693,7 +642,7 @@ function instrumentSearch(docId,recDate,state,county)
         });
 }
 
-function getInstrumentRequestSummaries(requestId,methodId)
+function getInstrumentRequestSummaries(requestId,methodId,fileNumber)
 {
     var apn = $("#apn").val();
     $.ajax({
@@ -721,7 +670,7 @@ function getInstrumentRequestSummaries(requestId,methodId)
             {
                 serviceId = '';                
                 serviceId = $(response).find("RequestSummaries:first").find("RequestSummary:first").find("Order:first").find("Services:first").find("Service:first").find("ID:first").text();
-                imageCreateRequest(serviceId,methodId);
+                imageCreateRequest(serviceId,methodId,fileNumber);
             }
         })
         .fail(function(err) {
@@ -755,7 +704,7 @@ function base64toBlob(base64Data, contentType) {
 
 function download(filename, text) {
 
-    if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
+    /*if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
     {
         var csvData = base64toBlob(text,'application/octet-stream');
         var csvURL = navigator.msSaveBlob(csvData, filename);
@@ -770,7 +719,7 @@ function download(filename, text) {
         document.body.removeChild(element);
     }
     else
-    {
+    {*/
         if (navigator.msSaveBlob)
         {
             var csvData = base64toBlob(text,'application/octet-stream');
@@ -796,7 +745,7 @@ function download(filename, text) {
             element.click();
             document.body.removeChild(element);
         }
-    }
+    /*}*/
 
     
 }

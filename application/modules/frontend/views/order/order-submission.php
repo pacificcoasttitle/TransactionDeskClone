@@ -29,12 +29,13 @@
                 <footer class="b-about__footer">
 				<ul class="list list-mark-2">
                     <?php 
-                        if(isset($orderNumber) && !empty($orderNumber))
+                    // echo "<pre>"; print_r($tp_data); exit;
+                        if(isset($tp_data['file_number']) && !empty($tp_data['file_number']))
                         {
                     ?>
                             <li>
                                 <h3>Order Number:</h3><br>
-                                <span class="orderinfo1" id="orderNumber"><?php echo $orderNumber; ?></span>
+                                <span class="orderinfo1" id="orderNumber"><?php echo $tp_data['file_number']; ?></span>
                             </li><br>
                     <?php
                         }
@@ -43,64 +44,36 @@
                     <li>
                         <h3>Full Legal Description:</h3><br>
                         <span class="orderinfo1">
-                            <?php
-                                if(empty($L_V_CreateService) || empty($L_V_GetRequestSummary) || empty($L_V_GetResultById))
-                                {
-                            ?>
-                                    <div class="loader"></div>
-                                    <span id="legalDescription"></span>
-                            <?php
-                                }
-                                else
-                                {
-                            ?>
-                                
-                                    <span id="legalDescription">
-                                        <?php 
-                                            if(isset($briefLegal) && !empty($briefLegal))
-                                            {
-                                                echo $briefLegal;
-                                            }
-                                            else
-                                            {
-                                                echo 'No data found.';
-                                            }
-                                        ?>
-                                    </span>
-                            <?php
-                                }
-                            ?>
+                            <span id="legalDescription">
+                                <?php 
+                                    if(isset($tp_data['legal_description']) && !empty($tp_data['legal_description']))
+                                    {
+                                        echo $tp_data['legal_description'];
+                                    }
+                                    else
+                                    {
+                                        echo 'No data found.';
+                                    }
+                                ?>
+                            </span>
                         </span>
                     </li><br>
                     <li>
                         <h3>Vesting Information:</h3><br>
                         <span class="orderinfo1">
-                            <?php
-                                if(empty($L_V_CreateService)|| empty($L_V_GetRequestSummary) || empty($L_V_GetResultById))
-                                {
-                            ?>
-                                    <div class="loader"></div>
-                                    <span id="vestingInformation"></span>
-                            <?php
-                                }
-                                else
-                                {
-                            ?>
-                                    <span id="vestingInformation">
-                                        <?php 
-                                            if(isset($vesting) && !empty($vesting))
-                                            {
-                                                echo $vesting;
-                                            }
-                                            else
-                                            {
-                                                echo 'No data found.';
-                                            }
-                                        ?>
-                                    </span>
-                            <?php
-                                }
-                            ?>                            
+                            <span id="vestingInformation">
+                                <?php 
+                                    if(isset($tp_data['vesting_information']) && !empty($tp_data['vesting_information']))
+                                    {
+                                        echo $tp_data['vesting_information'];
+                                    }
+                                    else
+                                    {
+                                        echo 'No data found.';
+                                    }
+                                ?>
+                            </span>
+                                                     
                         </span>
                     </li><br>                                         
                 </ul>
@@ -111,21 +84,11 @@
                   <div class="row" id="taxInformation">
                     <div class="col-md-6">
                         <h3>1st Installment</h3>
-                        <?php
-                            if(empty($Tax_CreateService)|| empty($Tax_GetRequestSummary) || empty($Tax_GetResultById))
-                            {
-                        ?>
-                                <div class="loader"></div>
-                                <div id="firstInstallment"></div>
-                        <?php
-                            }
-                            else
-                            {
-                        ?>
                                 <div id="firstInstallment" style="border:1px solid #000000;padding:15px;">
                                 <?php
-                                    if(isset($firstInstallment) && !empty($firstInstallment))
+                                    if(isset($tp_data['first_installment']) && !empty($tp_data['first_installment']))
                                     {
+                                        $firstInstallment = json_decode($tp_data['first_installment'],TRUE)
                                 ?>
                                         <p>Balance: <?php echo isset($firstInstallment['Balance']) && !empty($firstInstallment['Balance']) ? $firstInstallment['Balance'] : '-'?></p>
                                         <p>Amount: <?php echo isset($firstInstallment['Amount']) && !empty($firstInstallment['Amount']) ? $firstInstallment['Amount'] : '-'?></p>
@@ -138,47 +101,38 @@
                                         <p>TaxYear: <?php echo isset($firstInstallment['TaxYear']) && !empty($firstInstallment['TaxYear']) ? $firstInstallment['TaxYear'] : '-'?></p>
                                 <?php
                                     }
-                                ?>
-                            </div>
-                        <?php 
-                            }
-                        ?>
-                        
-                    </div>
-                    <div class="col-md-6">                      
-                        <h3>2nd Installment</h3>
-                        <?php
-                            if(empty($Tax_CreateService)|| empty($Tax_GetRequestSummary) || empty($Tax_GetResultById))
-                            {
-                        ?>
-                                <div class="loader"></div>
-                                <div id="secondInstallment"></div>
-                        <?php
-                            }
-                            else
-                            {
-                        ?>
-                                <div id="secondInstallment" style="border:1px solid #000000;padding:15px;">
-                                <?php
-                                    if(isset($secondInstallment) && !empty($secondInstallment))
+                                    else
                                     {
                                 ?>
-                                        <p>Balance: <?php echo isset($secondInstallment['Balance']) && !empty($secondInstallment['Balance']) ? $secondInstallment['Balance'] : '-'?></p>
-                                        <p>Amount: <?php echo isset($secondInstallment['Amount']) && !empty($secondInstallment['Amount']) ? $secondInstallment['Amount'] : '-'?></p>
-                                        <p>DueDate: <?php echo isset($secondInstallment['DueDate']) && !empty($secondInstallment['DueDate']) ? $secondInstallment['DueDate'] : '-'?></p>
-                                        <p>Number: <?php echo isset($secondInstallment['Number']) && !empty($secondInstallment['Number']) ? $secondInstallment['Number'] : '-'?></p>
-                                        <p>PaymentDate: <?php echo isset($secondInstallment['PaymentDate']) && !empty($secondInstallment['PaymentDate']) ? $secondInstallment['PaymentDate'] : '-'?></p>
-                                        <p>Penalty: <?php echo isset($secondInstallment['Penalty']) && !empty($secondInstallment['Penalty']) ? $secondInstallment['Penalty'] : '-'?></p>
-                                        <p>Status: <?php echo isset($secondInstallment['Status']) && !empty($secondInstallment['Status']) ? $secondInstallment['Status'] : '-'?></p>
-                                        <p>AmountPaid: <?php echo isset($secondInstallment['AmountPaid']) && !empty($secondInstallment['AmountPaid']) ? $secondInstallment['AmountPaid'] : '-'?></p>
-                                        <p>TaxYear: <?php echo isset($secondInstallment['TaxYear']) && !empty($secondInstallment['TaxYear']) ? $secondInstallment['TaxYear'] : '-'?></p>
+                                        <span class="orderinfo1">No data found.</span>
                                 <?php
                                     }
                                 ?>
                             </div>
-                        <?php 
+                        
+                        
+                    </div>
+                    <div class="col-md-6">                      
+                        <h3>2nd Installment</h3>                    
+                        <div id="secondInstallment" style="border:1px solid #000000;padding:15px;">
+                        <?php
+                            if(isset($tp_data['second_installment']) && !empty($tp_data['second_installment']))
+                            {
+                                $secondInstallment = json_decode($tp_data['second_installment'],TRUE);
+                        ?>
+                                <p>Balance: <?php echo isset($secondInstallment['Balance']) && !empty($secondInstallment['Balance']) ? $secondInstallment['Balance'] : '-'?></p>
+                                <p>Amount: <?php echo isset($secondInstallment['Amount']) && !empty($secondInstallment['Amount']) ? $secondInstallment['Amount'] : '-'?></p>
+                                <p>DueDate: <?php echo isset($secondInstallment['DueDate']) && !empty($secondInstallment['DueDate']) ? $secondInstallment['DueDate'] : '-'?></p>
+                                <p>Number: <?php echo isset($secondInstallment['Number']) && !empty($secondInstallment['Number']) ? $secondInstallment['Number'] : '-'?></p>
+                                <p>PaymentDate: <?php echo isset($secondInstallment['PaymentDate']) && !empty($secondInstallment['PaymentDate']) ? $secondInstallment['PaymentDate'] : '-'?></p>
+                                <p>Penalty: <?php echo isset($secondInstallment['Penalty']) && !empty($secondInstallment['Penalty']) ? $secondInstallment['Penalty'] : '-'?></p>
+                                <p>Status: <?php echo isset($secondInstallment['Status']) && !empty($secondInstallment['Status']) ? $secondInstallment['Status'] : '-'?></p>
+                                <p>AmountPaid: <?php echo isset($secondInstallment['AmountPaid']) && !empty($secondInstallment['AmountPaid']) ? $secondInstallment['AmountPaid'] : '-'?></p>
+                                <p>TaxYear: <?php echo isset($secondInstallment['TaxYear']) && !empty($secondInstallment['TaxYear']) ? $secondInstallment['TaxYear'] : '-'?></p>
+                        <?php
                             }
-                        ?>                                        
+                        ?>
+                    </div>                           
                     </div>
                   </div>
                 </div>
@@ -188,60 +142,30 @@
                 <div class="col-md-12">
                     <h3>Grant Deed Information:</h3>
                 </div>
-                <div class="col-md-3">
-                    
-                    <?php 
-                        if(empty($L_V_CreateService)|| empty($L_V_GetRequestSummary) || empty($L_V_GetResultById))
-                        {
-                    ?>
-                            <div id="grantDeedInfoFile"></div>
-                            <div class="loader" style="display: none;"></div>
-                    <?php
-                        }
-                        else
-                        {
-                    ?>
-                            <div id="grantDeedInfoFile">
-                                <?php 
-                                    $L_V_serviceId = isset($L_V_serviceId) && !empty($L_V_serviceId) ? $L_V_serviceId : '';
-                                    $instrumentNumber = isset($instrumentNumber) && !empty($instrumentNumber) ? $instrumentNumber : '';
-                                    $state = isset($state) && !empty($state) ? $state : '';
-                                    $county = isset($county) && !empty($county) ? $county : '';
-                                    $recordedDate = isset($recordedDate) && !empty($recordedDate) ? $recordedDate : '';
-                                    $time = strtotime($recordedDate);
-                                    $year = date('Y',$time);
-                                    
-                                    $docId = str_replace($year, '', $instrumentNumber);
-                                   
-                                ?>
-                                <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4);'>Download L&V</a>
-                            </div>
-                            <div class="loader" style="display: none;"></div>
-                    <?php
-                        }
-                    ?>
-                    
+                <div class="col-md-3"> 
+                    <div id="grantDeedInfoFile">
+                        <?php 
+                            $L_V_serviceId = isset($tp_data['cs4_service_id']) && !empty($tp_data['cs4_service_id']) ? $tp_data['cs4_service_id'] : '';
+                            $instrumentNumber = isset($tp_data['cs4_instrument_no']) && !empty($tp_data['cs4_instrument_no']) ? $tp_data['cs4_instrument_no'] : '';
+                            $state = isset($state) && !empty($state) ? $state : '';
+                            $county = isset($county) && !empty($county) ? $county : '';
+                            $recordedDate = isset($tp_data['cs4_recorded_date']) && !empty($tp_data['cs4_recorded_date']) ? $tp_data['cs4_recorded_date'] : '';
+                            $time = strtotime($recordedDate);
+                            $year = date('Y',$time);
+                            
+                            $docId = str_replace($year, '', $instrumentNumber);
+                            $file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : ''; 
+                           
+                        ?>
+                        <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4,"<?php echo $file_number; ?>");'>Download L&V</a>
+                    </div>
+                    <div class="loader" style="display: none;"></div>
                 </div>
                 <div class="col-md-3">
-                    <?php
-                        if(empty($L_V_CreateService)|| empty($L_V_GetRequestSummary) || empty($L_V_GetResultById))
-                        {
-                    ?>
-                            <div id="instrumentInfoFile"></div>
-                            <div class="loader" style="display: none;"></div>
-                    <?php
-                        }
-                        else
-                        {
-                    ?>
-                            <div id="instrumentInfoFile">
-                            <a href="javascript:void(0);" onclick='instrumentSearch("<?php echo $docId; ?>","<?php echo $recordedDate; ?>","<?php echo $state; ?>","<?php echo $county; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
-                        </div>
-                        <div class="loader" style="display: none;"></div>
-                    <?php
-                        }
-                    ?>
-                    
+                    <div id="instrumentInfoFile">
+                        <a href="javascript:void(0);" onclick='instrumentSearch("<?php echo $docId; ?>","<?php echo $recordedDate; ?>","<?php echo $state; ?>","<?php echo $county; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
+                    </div>
+                    <div class="loader" style="display: none;"></div>
                 </div>
             </div>
           </div>
@@ -306,22 +230,22 @@
 </html>
 <script type="text/javascript">
     var base_url = '<?php echo base_url(); ?>';
-    var address = "<?php echo isset($address) && !empty($address) ? $address : ''; ?>";
-    var city = "<?php echo isset($city) && !empty($city) ? $city : ''; ?>";
-    var apn = "<?php echo isset($apn) && !empty($apn) ? $apn : '' ; ?>";
-    var state = "<?php echo isset($state) && !empty($state) ? $state : ''; ?>";
-    var county = "<?php echo isset($county) && !empty($county) ? $county : ''; ?>";
-    var fipCode = "<?php echo isset($fipCode) && !empty($fipCode) ? $fipCode : ''; ?>";
-    var L_V_RequestId = "<?php echo isset($L_V_RequestId) && !empty($L_V_RequestId) ? $L_V_RequestId : ''; ?>";
-    var L_V_CreateService = "<?php echo isset($L_V_CreateService) && !empty($L_V_CreateService) ? $L_V_CreateService : ''; ?>";
-    var Tax_RequestId = "<?php echo isset($Tax_RequestId) && !empty($Tax_RequestId) ? $Tax_RequestId : ''; ?>";
-    var Tax_CreateService = "<?php echo isset($Tax_CreateService) && !empty($Tax_CreateService) ? $Tax_CreateService : ''; ?>";
-    var L_V_GetRequestSummary = "<?php echo isset($L_V_GetRequestSummary) && !empty($L_V_GetRequestSummary) ? $L_V_GetRequestSummary : ''; ?>";
-    var L_V_ResultId = "<?php echo isset($L_V_ResultId) && !empty($L_V_ResultId) ? $L_V_ResultId : ''; ?>";
-    var Tax_ResultId = "<?php echo isset($Tax_ResultId) && !empty($Tax_ResultId) ? $Tax_ResultId : ''; ?>";
-    var Tax_GetRequestSummary = "<?php echo isset($Tax_GetRequestSummary) && !empty($Tax_GetRequestSummary) ? $Tax_GetRequestSummary : ''; ?>";
-    var L_V_GetResultById = "<?php echo isset($L_V_GetResultById) && !empty($L_V_GetResultById) ? $L_V_GetResultById : ''; ?>";
-    var Tax_GetResultById = "<?php echo isset($Tax_GetResultById) && !empty($Tax_GetResultById) ? $Tax_GetResultById : ''; ?>";
+    /*var address = "<?php // echo isset($address) && !empty($address) ? $address : ''; ?>";
+    var city = "<?php // echo isset($city) && !empty($city) ? $city : ''; ?>";
+    var apn = "<?php // echo isset($apn) && !empty($apn) ? $apn : '' ; ?>";
+    var state = "<?php // echo isset($state) && !empty($state) ? $state : ''; ?>";
+    var county = "<?php // echo isset($county) && !empty($county) ? $county : ''; ?>";
+    var fipCode = "<?php // echo isset($fipCode) && !empty($fipCode) ? $fipCode : ''; ?>";
+    var L_V_RequestId = "<?php // echo isset($L_V_RequestId) && !empty($L_V_RequestId) ? $L_V_RequestId : ''; ?>";
+    var L_V_CreateService = "<?php // echo isset($L_V_CreateService) && !empty($L_V_CreateService) ? $L_V_CreateService : ''; ?>";
+    var Tax_RequestId = "<?php // echo isset($Tax_RequestId) && !empty($Tax_RequestId) ? $Tax_RequestId : ''; ?>";
+    var Tax_CreateService = "<?php // echo isset($Tax_CreateService) && !empty($Tax_CreateService) ? $Tax_CreateService : ''; ?>";
+    var L_V_GetRequestSummary = "<?php // echo isset($L_V_GetRequestSummary) && !empty($L_V_GetRequestSummary) ? $L_V_GetRequestSummary : ''; ?>";
+    var L_V_ResultId = "<?php // echo isset($L_V_ResultId) && !empty($L_V_ResultId) ? $L_V_ResultId : ''; ?>";
+    var Tax_ResultId = "<?php // echo isset($Tax_ResultId) && !empty($Tax_ResultId) ? $Tax_ResultId : ''; ?>";
+    var Tax_GetRequestSummary = "<?php // echo isset($Tax_GetRequestSummary) && !empty($Tax_GetRequestSummary) ? $Tax_GetRequestSummary : ''; ?>";
+    var L_V_GetResultById = "<?php // echo isset($L_V_GetResultById) && !empty($L_V_GetResultById) ? $L_V_GetResultById : ''; ?>";
+    var Tax_GetResultById = "<?php // echo isset($Tax_GetResultById) && !empty($Tax_GetResultById) ? $Tax_GetResultById : ''; ?>";*/
 </script>
 
 <?php
