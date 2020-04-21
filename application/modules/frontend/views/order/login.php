@@ -15,14 +15,25 @@
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/iofrm-style.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/iofrm-theme2.css">
     <link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
-
+    <style>
+        #email_address_php_error {
+            display: none;
+            margin-top: 6px;
+            padding: 0 3px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-style: normal;
+            line-height: normal;
+            color: red;
+            font-size: 0.85em;
+        }
+    </style>
 </head>
 <body>
     <div class="form-body">
         <div class="website-logo">
             <a href="index.html">
                 <div class="logo">
-                    <img class="logo-size" src="images/logo.png" alt="">
+                    <img class="logo-size" src="<?php echo base_url(); ?>assets/media/general/logo_login.png" alt="">
                 </div>
             </a>
         </div>
@@ -46,9 +57,9 @@
                             <label class="field state-error" style="display:block;">
                                 <input class="form-control gui-input" type="email" name="email_address" id="email_address" placeholder="E-mail Address">
                             </label>
-                            <?php if(isset($error)) { ?> 
-                                <em id="email_address-error" class="state-error"><?php echo $error; ?></em>
-                            <?php } ?>
+                            
+                            <span id="email_address_php_error" class=""></span>
+                            
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Log in</button>
                             </div>
@@ -60,10 +71,14 @@
     </div>
 
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.form.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/popper.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/main.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script>   
+    <script type="text/javascript">
+        var base_url = '<?php echo base_url(); ?>';
+    </script>
 </body>
 </html>
