@@ -30,8 +30,8 @@ class Login extends MX_Controller {
         if ($this->input->post()) {
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email');
             if ($this->form_validation->run($this) == FALSE) {
-                $data['error'] =  'The Email field must contain a valid email address.';
-                $this->load->view('login', $data);
+                $response = array('status'=>'error', 'message'=> 'Enter a Valid email address.');
+                echo json_encode($response); exit;
             } else {
                 $email = $this->input->post('email_address');
                 $user =  $this->home_model->get_user(array('email_address' => $email));
@@ -43,11 +43,11 @@ class Login extends MX_Controller {
                         "is_admin" => 0
                     );
                     $this->session->set_userdata('user', $session_data);
-                    echo "herte";
-                    redirect(base_url().'dashboard');
+                    $response = array('status'=>'success', 'message'=> '');
+					echo json_encode($response); exit;
                 } else {
-                    $data['error'] =  'Please enter the correct email address';
-                    $this->load->view('order/login', $data);
+                    $response = array('status'=>'error', 'message'=> 'Please enter the correct email address.');
+					echo json_encode($response); exit;
                 }
             }
     	}

@@ -11,8 +11,8 @@
     <meta name="HandheldFriendly" content="true">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/master.css">
     <link href="<?php echo base_url(); ?>assets/backend/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <script type="text/javascript" src="http://localhost-pct.com/assets/frontend/js/jquery-1.9.1.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="<?php echo base_url(); ?>favicon.ico">
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script>
 </head>
 <style>
 	.pagination {

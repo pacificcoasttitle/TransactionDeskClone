@@ -302,13 +302,14 @@
 					   } else {
 								error.insertAfter(element.parent());
 					   }
+					   $('#email_address_php_error').hide();
 					},
 					
 					/* @ajax form submition 
 					---------------------------------------------------- */
 					submitHandler:function(form) {
 						$(form).ajaxSubmit({
-								target:'.result',			   
+								target:'#email_address',			   
 								beforeSubmit:function(){
 									
 								},
@@ -320,9 +321,13 @@
 									
 								},
 								success:function(data){
-										
-									$("#email_address").val('').removeAttr('readonly').parent();
-																					
+									var res = jQuery.parseJSON(data);
+									if (res.status == 'error') {
+										$('#email_address_php_error').html(res.message);
+										$('#email_address_php_error').show();
+									} else {
+										window.location.replace(base_url+'dashboard');
+									}
 								}
 						  });
 					}

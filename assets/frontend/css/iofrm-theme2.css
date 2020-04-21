@@ -31,7 +31,7 @@
 }
 
 .website-logo .logo {
-    background-image: url("../images/logo.png");
+    background-image: url("../../../assets/media/general/logo_login.png");
 }
 
 .website-logo .logo img {
@@ -43,7 +43,7 @@
 }
 
 .website-logo-inside .logo {
-    background-image: url("../images/logo.png");
+    background-image: url("../../../assets/media/general/logo_login.png");
 }
 
 .website-logo-inside .logo img {
