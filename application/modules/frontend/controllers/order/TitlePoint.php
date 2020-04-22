@@ -4,9 +4,18 @@
 
 class TitlePoint extends MX_Controller {
 
+	function __construct() {
+        parent::__construct();
+        // $this->load->model('order/apiLogs');
+		$this->load->model('order/titlePointData');
+	}
+
 	function createService()
 	{
-		// $this->session->unset_userdata('customer_number');
+		/*if($this->session->has_userdata('tp_api_id'))
+		{
+			$this->session->unset_userdata('tp_api_id');
+		}*/
 		$methodId = isset($_POST['methodId']) && !empty($_POST['methodId']) ? $_POST['methodId'] : '';
 
 		$requestParams = array(
@@ -63,12 +72,27 @@ class TitlePoint extends MX_Controller {
 			if($responseStatus == 'Success')
 			{
 				$requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
-				$this->session->set_userdata('L_V_RequestId', $requestId);
-				$this->session->set_userdata('L_V_CreateService', 1);
-			}
-			else
-			{
-				$this->session->set_userdata('L_V_CreateService', 0);
+				$tpData = 	array(
+								'cs4_request_id' => $requestId,
+							);
+
+				if ($this->session->has_userdata('tp_api_id')) 
+				{
+					$id = $this->session->userdata('tp_api_id');
+					$condition = array(
+						'id' => $id
+					);					
+					$this->titlePointData->update($tpData,$condition);
+				}
+				else
+				{
+					$tpId = $this->titlePointData->insert($tpData);
+
+					if($tpId)
+					{
+						$this->session->set_userdata('tp_api_id', $tpId);
+					}
+				}
 			}
 			
 		}
@@ -77,12 +101,28 @@ class TitlePoint extends MX_Controller {
 			if($responseStatus == 'Success')
 			{
 				$requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
-				$this->session->set_userdata('Tax_RequestId', $requestId);
-				$this->session->set_userdata('Tax_CreateService', 1);
-			}
-			else
-			{
-				$this->session->set_userdata('Tax_CreateService', 0);
+
+				$tpData = 	array(
+								'cs3_request_id' => $requestId,
+							);
+
+				if ($this->session->has_userdata('tp_api_id')) 
+				{
+					$id = $this->session->userdata('tp_api_id');
+					$condition = array(
+						'id' => $id
+					);					
+					$this->titlePointData->update($tpData,$condition);
+				}
+				else
+				{
+					$tpId = $this->titlePointData->insert($tpData);
+
+					if($tpId)
+					{
+						$this->session->set_userdata('tp_api_id', $tpId);
+					}
+				}
 			}
 			
 		}
@@ -131,26 +171,27 @@ class TitlePoint extends MX_Controller {
 				
 				$resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID'] : ''; 
 				$serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
-			
-				if ($this->session->has_userdata($apn)) 
+				
+				$tpData = 	array(
+					'cs4_result_id' => $resultId,
+					'cs4_service_id' => $serviceId,
+				);
+				if ($this->session->has_userdata('tp_api_id')) 
 				{
-					$session_info = $this->session->userdata($apn);
-					$session_info['L_V_serviceId'] = $serviceId;
-					$this->session->set_userdata($apn, $session_info);
+					$id = $this->session->userdata('tp_api_id');
+					$condition = array(
+						'id' => $id
+					);					
+					$this->titlePointData->update($tpData,$condition);
 				}
 				else
 				{
-					$session_data = array(
-			            "L_V_serviceId" => $serviceId
-			        );
-					$this->session->set_userdata($apn, $session_data);
+					$tpId = $this->titlePointData->insert($tpData);
+					if($tpId)
+					{
+						$this->session->set_userdata('tp_api_id', $tpId);
+					}
 				}
-				$this->session->set_userdata('L_V_GetRequestSummary', 1);
-				$this->session->set_userdata('L_V_ResultId', $resultId);
-			}
-			else
-			{
-				$this->session->set_userdata('L_V_GetRequestSummary', 0);
 			}
 		}
 		if($methodId == 3)
@@ -158,12 +199,26 @@ class TitlePoint extends MX_Controller {
 			if($responseStatus == 'Success')
 			{
 				$resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : '';
-				$this->session->set_userdata('Tax_ResultId', $resultId);
-				$this->session->set_userdata('Tax_GetRequestSummary', 1);
-			}
-			else
-			{
-				$this->session->set_userdata('Tax_GetRequestSummary', 0);
+				
+				$tpData = 	array(
+					'cs3_result_id' => $resultId
+				);
+				if ($this->session->has_userdata('tp_api_id')) 
+				{
+					$id = $this->session->userdata('tp_api_id');
+					$condition = array(
+						'id' => $id
+					);					
+					$this->titlePointData->update($tpData,$condition);
+				}
+				else
+				{
+					$tpId = $this->titlePointData->insert($tpData);
+					if($tpId)
+					{
+						$this->session->set_userdata('tp_api_id', $tpId);
+					}
+				}
 			}
 		}
 		/*else if($responseStatus == 'Success' && $methodId == 3)
@@ -227,50 +282,50 @@ class TitlePoint extends MX_Controller {
 		
 		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 		$session_data = array();
-		/*echo "<pre>"; print_r($result); exit;*/
+		
 		if($methodId == 4)
 		{
 			if($responseStatus == 'Success')
 			{
-				$briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : '';
+				$briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : 'No data found.';
 				
-	            $vesting = isset($result['Result']['Vesting']) && !empty($result['Result']['Vesting']) ? $result['Result']['Vesting'] : '';
-	            /*$apn = isset($result['Result']['Apn']) && !empty($result['Result']['Apn']) ? $result['Result']['Apn'] : '';*/
+	            $vesting = isset($result['Result']['Vesting']) && !empty($result['Result']['Vesting']) ? $result['Result']['Vesting'] : 'No data found.';
+	            
 	            $instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber'] : '';
 	            $recordedDate = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate'] : '';
 
-	            
-		       	if ($this->session->has_userdata($apn)) 
+	            $tpData = 	array(
+					'legal_description' => $briefLegal,
+					'vesting_information' => $vesting,
+					'cs4_instrument_no' => $instrumentNumber,
+					'cs4_recorded_date' => $recordedDate,
+				);
+
+		       	if ($this->session->has_userdata('tp_api_id')) 
 				{
-					$session_info = $this->session->userdata($apn);
-					$session_info['briefLegal'] = $briefLegal;
-					$session_info['vesting'] = $vesting;
-					$session_info['recordedDate'] = $recordedDate;
-					$session_info['instrumentNumber'] = $instrumentNumber;
-					$this->session->set_userdata($apn, $session_info);
+					$id = $this->session->userdata('tp_api_id');
+					$condition = array(
+						'id' => $id
+					);					
+					$this->titlePointData->update($tpData,$condition);
+					
 				}
 				else
 				{
-					$session_data = array(
-			            "briefLegal" => $briefLegal,
-			            "vesting" => $vesting,
-			            "instrumentNumber" => $instrumentNumber,
-			            "recordedDate" => $recordedDate,
-			        );
-					$this->session->set_userdata($apn, $session_data);
+					$tpId = $this->titlePointData->insert($tpData);
+
+					if($tpId)
+					{
+						$this->session->set_userdata('tp_api_id', $tpId);
+					}
 				}
-				$this->session->set_userdata('L_V_GetResultById', 1);
-			}
-			else
-			{
-				$this->session->set_userdata('L_V_GetResultById', 0);
 			}
 		}
 		if($methodId == 3)
 		{
 			if($responseStatus == 'Success')
 			{
-				$firstInstallment = $secondInstallment = '';
+				$firstInstallment = $secondInstallment = array();
 				if(isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]))
 				{
 					$firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];
@@ -282,23 +337,28 @@ class TitlePoint extends MX_Controller {
 					$secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];			
 				}
 
-				if ($this->session->has_userdata($apn)) 
+				$tpData = 	array(
+					'first_installment' => json_encode($firstInstallment),
+					'second_installment' => json_encode($secondInstallment),
+				);
+
+				if ($this->session->has_userdata('tp_api_id')) 
 				{
-					$session_info = $this->session->userdata($apn);
-					$session_info['firstInstallment'] = $firstInstallment;
-					$session_info['secondInstallment'] = $secondInstallment;
-					$this->session->set_userdata($apn, $session_info);
+					$id = $this->session->userdata('tp_api_id');
+					$condition = array(
+						'id' => $id
+					);					
+					$this->titlePointData->update($tpData,$condition);
 				}
 				else
 				{
-					$session_data = array('firstInstallment'=>$firstInstallment, 'secondInstallment'=>$secondInstallment);
-					$this->session->set_userdata($apn, $session_data);
+					$tpId = $this->titlePointData->insert($tpData);
+
+					if($tpId)
+					{
+						$this->session->set_userdata('tp_api_id', $tpId);
+					}
 				}
-				$this->session->set_userdata('Tax_GetResultById', 1);
-			}
-			else
-			{
-				$this->session->set_userdata('Tax_GetResultById', 0);
 			}
 		}
 		echo trim($file);
@@ -364,6 +424,8 @@ class TitlePoint extends MX_Controller {
 	function generateImage()
 	{
 		$requestId = isset($_POST['requestId']) && !empty($_POST['requestId']) ? $_POST['requestId'] : '';
+		$methodId = isset($_POST['methodId']) && !empty($_POST['methodId']) ? $_POST['methodId'] : '';
+		$fileNumber = isset($_POST['fileNumber']) && !empty($_POST['fileNumber']) ? $_POST['fileNumber'] : '';
 
 		$requestParams = array(
 		                    'username' => TP_USERNAME,
@@ -382,6 +444,33 @@ class TitlePoint extends MX_Controller {
 		$context = stream_context_create($opts);
 		$file = file_get_contents($request,false,$context);
 
+		$xmlData = simplexml_load_string($file);
+		$response = json_encode($xmlData);
+		$result = json_decode($response,TRUE);
+		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+		if($responseStatus == 'Success')
+		{
+			$base64_data = isset($result['Data']) && !empty($result['Data']) ? $result['Data'] : '';
+			$bin = base64_decode($base64_data, true);
+			
+			if($methodId == 4)
+			{
+				if (!is_dir('uploads/legal-vesting')) {
+				    mkdir('./uploads/legal-vesting', 0777, TRUE);
+				}
+				$pdfFilePath = './uploads/legal-vesting/'.$fileNumber.'.pdf';
+				file_put_contents($pdfFilePath, $bin);
+			}
+			if($methodId == 3)
+			{
+				if (!is_dir('uploads/grant-deed')) {
+				    mkdir('./uploads/grant-deed', 0777, TRUE);
+				}
+				$pdfFilePath = './uploads/grant-deed/'.$fileNumber.'.pdf';
+				file_put_contents($pdfFilePath, $bin);
+			}
+
+		}
 		echo trim($file);
 	}
 

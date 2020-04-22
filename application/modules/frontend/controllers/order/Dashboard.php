@@ -702,7 +702,18 @@ class Dashboard extends MX_Controller {
 		$is_title_officer = 0;
 		if(isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer']))
 		{
+			$this->load->model('order/titleOfficer');
+			$condition = array(
+                'where' => array(
+                    'name' => $orderDetails['title_officer']
+                )
+            );
+			
+			$titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
+			
 			$data['title_officer'] = $orderDetails['title_officer'];
+			$data['title_officer_email'] = isset($titleOfficerDetails[0]['email_address']) && !empty($titleOfficerDetails[0]['email_address']);
+			$data['title_officer_phone'] = isset($titleOfficerDetails[0]['phone']) && !empty($titleOfficerDetails[0]['phone']);
 			$is_title_officer = 1;
 		}
 		$emptyData['is_title_officer'] = $is_title_officer;

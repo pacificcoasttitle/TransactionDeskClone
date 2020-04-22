@@ -26,7 +26,11 @@
 	.customer-info .company-details, 
 	.customer-info .order-number, 
 	.customer-info .property-info {
-		float:left;width:50%;
+		float:left;
+		width:50%;
+	}
+	.title-officer-info .title-officer-contact-info {
+		float: right;
 	}
 	.customer-info .order-number,
 	.customer-info .property-info { 
@@ -77,12 +81,13 @@
 		<div class="title-officer-info">
 			<div class="title-officer-basic-info">
 				<p><span class="heading">Title Officer:</span> <?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
-				<p><span class="heading">Title Officer Email:</span>  unit33@pct.com</p>
+				<p><span class="heading">Title Officer Email:</span>  <?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
 			</div>
 			<div class="title-officer-contact-info">
 				<p><span class="heading">Title Officer Phone:</span> (818)662-6771</p>
-				<p><span class="heading">Title Officer Fax:</span>  (818)484-2540</p>
+				<!-- <p><span class="heading">Title Officer Fax:</span>  (818)484-2540</p> -->
 			</div>
+			<div style="clear: both;"></div>
 			<div class= "customer-info">
 				<div class="company-details">
 					<p class="heading-info"><span class="heading">To:</span> <?php echo isset($company) && !empty($company) ? $company : ''; ?></p>
