@@ -40,6 +40,7 @@
 
 <script>
 	$(document).ready(function () {
+		
 		if ($('#table-recordings').length) {
 			customer_list = $('#table-recordings').DataTable({
 				// "pageLength": 1,

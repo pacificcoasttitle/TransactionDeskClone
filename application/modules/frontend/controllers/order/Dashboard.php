@@ -55,11 +55,30 @@ class Dashboard extends MX_Controller {
     {
 		$this->db->select('*');
         $this->db->from('pct_order_recordings_monthly_sync');	
-        $this->db->where('month', date('Ym'));
+		$this->db->where('month', date('Ym'));
+		$this->db->order_by("day", "desc");
 		$this->db->where('is_sync',  1);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
-			$this->get_recordings_from_api(date("Y-m-d"));
+			$syncData = $query->result_array();
+			if ($syncData[0]['day'] == date('d')) {
+				$this->get_recordings_from_api(date("Y-m-d"));
+			} else {
+				$day = $syncData[0]['day'];
+				$begin = new DateTime(date("Y-m-$day"));
+				$end = new DateTime(date('Y-m-d', strtotime(date('Y-m-d') . ' +1 day')));
+			
+				$interval = DateInterval::createFromDateString('1 day');
+				$period = new DatePeriod($begin, $interval, $end);
+				$i = 0;
+				foreach ($period as $dt) {
+					$this->get_recordings_from_api($dt->format("Y-m-d"));
+					if ($i != 0) {
+						$this->db->insert('pct_order_recordings_monthly_sync', array('is_sync' => 1, 'month' => $dt->format("Ym"), 'day' => $dt->format("d"), 'created' => date('Y-m-d H:i:s')));
+					}
+					$i++;
+				}
+			}
 		} else {
 			$begin = new DateTime(date('Y-m-01'));
 			$end = new DateTime(date('Y-m-d', strtotime(date('y-m-d') . ' +1 day')));
@@ -69,8 +88,8 @@ class Dashboard extends MX_Controller {
 
 			foreach ($period as $dt) {
 				$this->get_recordings_from_api($dt->format("Y-m-d"));
+				$this->db->insert('pct_order_recordings_monthly_sync', array('is_sync' => 1, 'month' => $dt->format("Ym"), 'day' => $dt->format("d"), 'created' => date('Y-m-d H:i:s')));
 			}
-			$this->db->insert('pct_order_recordings_monthly_sync', array('is_sync' => 1, 'month' => date('Ym'), 'created' => date('Y-m-d H:i:s')));
 		}
 	
 		$params = array();  $data = array();
