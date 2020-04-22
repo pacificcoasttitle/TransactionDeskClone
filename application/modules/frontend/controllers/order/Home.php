@@ -454,7 +454,7 @@ class Home extends MX_Controller {
 							}
 						}
 						
-						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','mail_status'=>$mail_status,'mail_response'=>$mail_response);
+						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','mail_status'=>$mail_status,'mail_response'=>$mail_response,'file_id'=>$file_id);
 						echo json_encode($response); exit;
 					} 
 				}
@@ -618,25 +618,18 @@ class Home extends MX_Controller {
 
     function orderSubmit()
     {
-    	
-    	if ($this->session->has_userdata('tp_api_id')) 
-		{
-			$id = $this->session->userdata('tp_api_id');
-		}
+    	$fileId = $this->uri->segment(2);
+    	$this->session->unset_userdata('tp_api_id');
 		
-		if($id)
+		if($fileId)
 		{
 			$condition = array(
 	            'where' => array(
-	                'id' => $id,
+	                'file_id' => $fileId,
 	            )
 	        );
 			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-		}
-		
-		$fileId = isset($titlePointDetails[0]['file_id']) && !empty($titlePointDetails[0]['file_id']) ? $titlePointDetails[0]['file_id'] :'';
-		if($fileId)
-		{
+
 			$orderDetails = $this->order->get_order_details($fileId);
 			$property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] :'';
 			$propertyData = $this->home_model->get_property_details($property_id);

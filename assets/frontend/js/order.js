@@ -472,99 +472,29 @@ function generateImage(requestId,methodId,fileNumber)
 
                 if(methodId == 3)
                 {
-                    /*if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
+                    if (navigator.msSaveBlob)
                     {
-                        if (navigator.msSaveBlob)
-                        {
-                            var link = document.createElement('a');
-                            link.setAttribute('id', 'btn-download-grant-deed');
-                            link.innerHTML = 'Download Grant Deed';
-                            link.download = 'GrantDeed.pdf';
-                            link.className= 'btn btn-default btn-sm btn_mrg-top_30';
-                            link.href = 'javascript:void(0);';
-                            document.body.appendChild(link);
-
-                            document.getElementById("btn-download-grant-deed").addEventListener("click", function(){
-                                
-                                var filename = "GrantDeed.pdf";
-                                
-                                download(filename, base64_data);
-                            }, false);
-                        }
-                        else
-                        {
-                            var link = document.createElement('a');
-                            link.innerHTML = 'Download Grant Deed';
-                            link.download = 'GrantDeed.pdf';
-                            link.className= 'btn btn-default btn-sm btn_mrg-top_30';
-                            link.href = 'data:application/octet-stream;base64,' + base64_data;
-                            document.body.appendChild(link);
-                        }                    
-                       
-                        $('#instrumentInfoFile').next('.loader').hide();
-                        $('#instrumentInfoFile').html(link);
+                        var filename = "GrantDeed.pdf";
+                        download(filename, base64_data);
                     }
                     else
-                    {*/
-                        if (navigator.msSaveBlob)
-                        {
-                            var filename = "GrantDeed.pdf";
-                            download(filename, base64_data);
-                        }
-                        else
-                        {
-                            download('GrantDeed.pdf', base64_data);
-                        }
-                        $('#instrumentInfoFile').next('.loader').hide();
-                    /*}*/
+                    {
+                        download('GrantDeed.pdf', base64_data);
+                    }
+                    $('#instrumentInfoFile').next('.loader').hide();
                 }
                 else if(methodId == 4)
                 {
-                    /*if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
+                    if (navigator.msSaveBlob)
                     {
-                        if (navigator.msSaveBlob)
-                        {
-                            var link = document.createElement('a');
-                            link.setAttribute('id', 'btn-download-L-V');
-                            link.innerHTML = 'Download L&V';
-                            link.download = 'L&V.pdf';
-                            link.className= 'btn btn-default btn-sm btn_mrg-top_30';
-                            link.href = 'javascript:void(0);';
-                            document.body.appendChild(link);
-
-                            document.getElementById("btn-download-L-V").addEventListener("click", function(){
-                                
-                                var filename = "L&V.pdf";
-                                
-                                download(filename, base64_data);
-                            }, false);
-                        }
-                        else
-                        {
-                            var link = document.createElement('a');
-                            link.setAttribute('id', 'dwn-btn');
-                            link.innerHTML = 'Download L&V';
-                            link.download = 'L&V.pdf';
-                            link.className= 'btn btn-default btn-sm btn_mrg-top_30';
-                            link.href = 'data:application/octet-stream;base64,' + base64_data;
-                            document.body.appendChild(link);
-                        }
-                        $('#grantDeedInfoFile').next('.loader').hide();
-                        $('#grantDeedInfoFile').html(link);
+                        var filename = "L&V.pdf";                            
+                        download(filename, base64_data);
                     }
                     else
-                    {*/
-                        if (navigator.msSaveBlob)
-                        {
-                            var filename = "L&V.pdf";                            
-                            download(filename, base64_data);
-                        }
-                        else
-                        {
-                            download('L&V.pdf', base64_data);
-                        }
-                        $('#grantDeedInfoFile').next('.loader').hide();
-                    /*}*/
+                    {
+                        download('L&V.pdf', base64_data);
+                    }
+                    $('#grantDeedInfoFile').next('.loader').hide();
                 }
             }
         })
