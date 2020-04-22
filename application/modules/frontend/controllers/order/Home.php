@@ -623,7 +623,7 @@ class Home extends MX_Controller {
 		{
 			$id = $this->session->userdata('tp_api_id');
 		}
-		$id =3;
+		
 		if($id)
 		{
 			$condition = array(
