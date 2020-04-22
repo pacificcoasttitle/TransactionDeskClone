@@ -1448,7 +1448,36 @@ class Dashboard extends MX_Controller {
 	public function legal_vesting() 
 	{
         $fileId = $this->input->post('fileId');
-        $data['orderDetails'] = $this->order->get_order_details($fileId);
+        $orderDetails = $this->order->get_order_details($fileId);
+        
+        $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+        $file_path = FCPATH.'uploads/legal-vesting/'.$file_number.'.pdf';
+
+        $file_url = '';
+
+		if (file_exists($file_path)) 
+		{
+		    $file_url = base_url().'uploads/legal-vesting/'.$file_number.'.pdf';
+		} 
+		else 
+		{
+			$this->load->model('order/titlePointData');
+		    $file_id = isset($orderDetails['file_id']) && !empty($orderDetails['file_id']) ? $orderDetails['file_id'] : '';
+
+		    $condition = array(
+	            'where' => array(
+	                'file_id' => $file_id,
+	            )
+	        );
+			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+
+			$serviceId = isset($titlePointDetails[0]['cs4_service_id']) && !empty($titlePointDetails[0]['cs4_service_id']) ? $titlePointDetails[0]['cs4_service_id'] : '';
+		}
+        
+        $data['file_url'] = $file_url;
+        $data['file_number'] = $file_number;
+        $data['serviceId'] = $serviceId;
+        
         $results = $this->load->view('order/review_file_legal_vesting', $data, TRUE);
         echo json_encode($results, true);
 	}
