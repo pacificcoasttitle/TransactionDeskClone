@@ -49,16 +49,16 @@
 											<div class="widget-content2">
 												<ul class="widget-list lista">
 													<li class="widget-list__item"><a class="widget-list__link"
-															href="">Borrower Name</a><br>Jackson Storm</li>
+															href="">Borrower Name</a><br><?php echo $orderDetails['primary_owner'];?></li>
 													<div class="ui-decor-3"></div>
 													<li class="widget-list__itema"><a class="widget-list__link"
-															href="">Transaction Type</a><br>Refinance</li>
+															href="">Transaction Type</a><br><?php echo ($orderDetails['primary_owner'] == '33') ? 'Refinance' : 'Purchase';?></li>
 													<div class="ui-decor-3"></div>
 													<li class="widget-list__itema"><a class="widget-list__link"
-															href="">Loan Amount</a><br>650,000</li>
+															href="">Loan Amount</a><br><?php echo $orderDetails['loan_amount'];?></li>
 													<div class="ui-decor-3"></div>
 													<li class="widget-list__itema"><a class="widget-list__link"
-															href="">Open Date</a><br>04/11/1983</li>
+															href="">Open Date</a><br><?php echo date("m/d/Y", strtotime($orderDetails['opened_date'])); ?></li>
 												</ul>
 											</div>
 										</section>
