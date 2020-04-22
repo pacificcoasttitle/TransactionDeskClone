@@ -42,7 +42,7 @@
 														</a>
 													</div>
 													<input type="hidden" id="file_id" name="file_id" value="<?php echo $orderDetails['file_id'];?>">
-													<input type="hidden" id="order_id" name="order_id" value="<?php echo $orderDetails['id'];?>">
+													<input type="hidden" id="order_id" name="order_id" value="<?php echo $orderDetails['order_id'];?>">
 													<div class="col-md-6">
 														<blockquote class="b-blockquote b-blockquote-3">
 															<footer class="b-blockquote-3__footer">
