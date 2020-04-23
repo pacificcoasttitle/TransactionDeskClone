@@ -1485,7 +1485,49 @@ class Dashboard extends MX_Controller {
 	public function plat_map() 
 	{
         $fileId = $this->input->post('fileId');
-        $data['orderDetails'] = $this->order->get_order_details($fileId);
+        $orderDetails = $this->order->get_order_details($fileId);
+        $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+        $file_path = FCPATH.'uploads/plat-map/'.$file_number.'.pdf';
+
+        $file_url = '';
+
+		if (file_exists($file_path)) 
+		{
+		    $file_url = base_url().'uploads/plat-map/'.$file_number.'.png';
+		} 
+		else
+		{
+			if(isset($orderDetails['full_address']) && !empty($orderDetails['full_address']))
+	        {
+	        	$full_address = $orderDetails['full_address'];
+	        	$AddressPropertyParts = explode(',', $full_address);
+	        	$PropertyAddress = trim(reset($AddressPropertyParts));
+	        	$PropertyZip = trim(end($AddressPropertyParts));
+	        	
+		        $AddressPropertyInfo = array_slice($AddressPropertyParts,0, -1);
+		        $propertyState = trim(end($AddressPropertyInfo));       
+		        $AddressPropertyCityInfo = array_slice($AddressPropertyInfo,0, -1);
+		        $locale = trim(end($AddressPropertyCityInfo));
+		        
+	            if (($locale)) 
+	            {
+	               	if(!empty($propertyState))
+	                {
+	                    $locale .= ', '.$propertyState;
+	                } 
+	                else 
+	                {
+	                    $locale .= ', CA';
+	                }
+	            }
+	        }
+	        $data['address'] = $PropertyAddress;
+	        $data['locale'] = $locale;
+	        $data['zip'] = $PropertyZip;
+		}
+        $data['file_url'] = $file_url;
+        $data['file_number'] = $file_number;
+
         $results = $this->load->view('order/review_file_plat_map', $data, TRUE);
         echo json_encode($results, true);
 	}
@@ -1505,6 +1547,31 @@ class Dashboard extends MX_Controller {
 		if (isset($resDocument['Document']) && !empty($resDocument['Document'])) {
 			echo $resDocument['Document']['DocumentBody'];
 		}	
+	}
+
+	public function generate_plat_map()
+	{
+		$response = array();
+		$imagedata = isset($_POST['imagedata']) && !empty($_POST['imagedata']) ? $_POST['imagedata'] : '';
+		$file_number = isset($_POST['file_number']) && !empty($_POST['file_number']) ? $_POST['file_number'] : '';
+		if($imagedata)
+		{
+			if (!is_dir('uploads/plat-map')) 
+			{
+				mkdir('./uploads/plat-map', 0777, TRUE);
+			}
+			$path = './uploads/plat-map/'.$file_number.'.png';
+
+			file_put_contents($path, base64_decode($imagedata,true));
+			$plat_map_url = base_url().'uploads/plat-map/'.$file_number.'.png';
+			$response = array('status'=>'success','plat_map_url'=>$plat_map_url);
+		}
+		else
+		{
+			$response = array('status'=>'error');
+		}
+		
+		echo json_encode($response); exit;
 	}
 
 }

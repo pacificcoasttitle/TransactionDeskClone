@@ -139,6 +139,7 @@ $route['legal-vesting'] = 'frontend/order/dashboard/legal_vesting';
 $route['plat-map'] = 'frontend/order/dashboard/plat_map';
 $route['download-resware-document'] = 'frontend/order/dashboard/download_resware_document';
 $route['resware-fetch-data'] = 'frontend/order/ReviewPrelim/fetchData';
+$route['generate-plat-map'] = 'frontend/order/dashboard/generate_plat_map';
 
 
 /* Route for PCT-Order backend*/

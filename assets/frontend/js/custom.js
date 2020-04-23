@@ -531,8 +531,8 @@ function fetchReports(repNum)
                     var state = $('#property-state').val();
                     var county = $('#County').val();
                     
-                    /*createService4(fipCode,address,city);
-                    createService3(apn,state,county);*/
+                    createService4(fipCode,address,city);
+                    createService3(apn,state,county);
                 }
                 
             } 
@@ -547,22 +547,6 @@ function fetchReports(repNum)
                 else
                 {
                     get187();
-                    var zip = $('#property-zip').val();
-                    var locale = $('#property-city').val();
-                    locale = $.trim(locale);    
-
-                    state = $('#property-state').val();
-                    state = $.trim(state);
-
-                    if (isNaN(locale[0])) {
-                       // locale += ', CA' // if locale is city rather than zip, add in state
-                       if(state!==''){
-                            locale += ', '+state;
-                        } else {
-                            locale += ', CA' // if locale is city rather than zip, add in state
-                        }
-                    }
-                    getPlat(address,zip,locale);
                 }
                 /*$("#search-btn").parents("form").find("table").removeClass("hidden");
                 $(".buttonNext").removeClass("buttonDisabled");*/
@@ -681,8 +665,8 @@ function parse187()
         localStorage.setItem('state',$('#property-state').val());
         localStorage.setItem('county',county);
     }*/
-    /*createService4(fipCode,address,city);
-    createService3(apn,state,county);*/
+    createService4(fipCode,address,city);
+    createService3(apn,state,county);
 }
 
 
@@ -810,56 +794,4 @@ function notifyAdmin()
            },
         });
     }    
-}
-
-
-// run query for plat map report 
-function getPlat(address,zip,locale) {
-    var request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
-    dataObj = {};
-    dataObj.Address = address;
-    dataObj.LastLine = locale.toString();
-    dataObj.ClientReference = '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
-    dataObj.OwnerName = '';
-
-    request += $.param(dataObj);
-    $.ajax({
-        url: base_url+'home/getSearchResults?',
-        // url: 'http://cardbanana.net/demo/jerry/lp/lp/lp/proxy.php',
-        data: {
-            requrl: request + '?&reportType=111'
-        },
-        dataType: 'xml'
-    })
-        .done(function(response, textStatus, jqXHR) {
-            console.log(response);
-            reportUrl = $(response).find('ReportURL').text();
-            reportData.report111 = reportUrl;
-            get111();
-        });
-}
-
-function get111() {
-    
-    $.ajax({
-        url: base_url+'home/getSearchResults?',
-        data: {
-            requrl: reportData.report111,
-        },
-        dataType: "xml",
-        success: function(xml) {
-            reportXML = xml;
-            console.log(reportXML);
-           parse111();
-        },
-        error: function() {
-            console.log("An error occurred while processing XML file.");
-        }
-    });
-}
-
-function parse111() 
-{
-    var imagedata = $(reportXML).find("Content").text();
-    console.log(imagedata);
 }
