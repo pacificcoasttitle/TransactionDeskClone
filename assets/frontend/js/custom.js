@@ -423,7 +423,6 @@ function autoComplete() {
     autocomplete = new google.maps.places.Autocomplete(input, options);
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
         var place = autocomplete.getPlace(); // get address, without city and state
-        console.log(place);
         $('#property-full-address').val(place.formatted_address);
         setTimeout(function() {
             $('#property-search').val(place.name);
@@ -563,7 +562,6 @@ function fetchReports(repNum)
                             locale += ', CA' // if locale is city rather than zip, add in state
                         }
                     }
-                    console.log(locale);
                     getPlat(address,zip,locale);
                 }
                 /*$("#search-btn").parents("form").find("table").removeClass("hidden");
@@ -842,7 +840,7 @@ function getPlat(address,zip,locale) {
 }
 
 function get111() {
-    console.log("in 111");
+    
     $.ajax({
         url: base_url+'home/getSearchResults?',
         data: {
@@ -852,10 +850,16 @@ function get111() {
         success: function(xml) {
             reportXML = xml;
             console.log(reportXML);
-           // parse187();
+           parse111();
         },
         error: function() {
             console.log("An error occurred while processing XML file.");
         }
     });
+}
+
+function parse111() 
+{
+    var imagedata = $(reportXML).find("Content").text();
+    console.log(imagedata);
 }
