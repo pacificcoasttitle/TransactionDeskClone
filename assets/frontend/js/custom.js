@@ -532,8 +532,8 @@ function fetchReports(repNum)
                     var state = $('#property-state').val();
                     var county = $('#County').val();
                     
-                    createService4(fipCode,address,city);
-                    createService3(apn,state,county);
+                    /*createService4(fipCode,address,city);
+                    createService3(apn,state,county);*/
                 }
                 
             } 
@@ -683,8 +683,8 @@ function parse187()
         localStorage.setItem('state',$('#property-state').val());
         localStorage.setItem('county',county);
     }*/
-    createService4(fipCode,address,city);
-    createService3(apn,state,county);
+    /*createService4(fipCode,address,city);
+    createService3(apn,state,county);*/
 }
 
 
@@ -842,6 +842,7 @@ function getPlat(address,zip,locale) {
 }
 
 function get111() {
+    console.log("in 111");
     $.ajax({
         url: base_url+'home/getSearchResults?',
         data: {
