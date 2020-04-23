@@ -837,5 +837,24 @@ function getPlat(address,zip,locale) {
             console.log(response);
             reportUrl = $(response).find('ReportURL').text();
             reportData.report111 = reportUrl;
+            get111();
         });
+}
+
+function get111() {
+    $.ajax({
+        url: base_url+'home/getSearchResults?',
+        data: {
+            requrl: reportData.report111,
+        },
+        dataType: "xml",
+        success: function(xml) {
+            reportXML = xml;
+            console.log(reportXML);
+           // parse187();
+        },
+        error: function() {
+            console.log("An error occurred while processing XML file.");
+        }
+    });
 }
