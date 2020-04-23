@@ -1340,9 +1340,82 @@ class Dashboard extends MX_Controller {
 
 	public function review_file()
 	{
+		$this->load->library('order/resware');
 		$fileId = $this->uri->segment(2);
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';  
-		$data['orderDetails'] = $this->order->get_order_details($fileId);
+		$orderDetails = $this->order->get_order_details($fileId);
+		$documents = $this->order->get_order_documents($fileId);
+		$endPoint = 'files/'. $fileId .'/documents';
+		$userdata = $this->session->userdata('user');
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
+		$resultDocuments = $this->resware->make_request('GET', $endPoint);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), $resultDocuments, $orderDetails['order_id'], $logid);
+		$resDocuments = json_decode($resultDocuments, true);
+		$documentCount  = count($documents);
+		
+		if (!empty($documents)) {
+			$apiDocumentIds = array_column($documents, 'api_document_id');
+			if (!empty($resDocuments['Documents'])) {
+				foreach($resDocuments['documents'] as $resDocument) {
+					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
+						$time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
+               			$created_date = date('Y-m-d H:i:s', $time);
+						$documentData = array(
+							'document_name' => $resDocument['DocumentName'],
+							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
+							'api_document_id' => $resDocument['DocumentID'],
+							'document_size' => $resDocument['Size'],
+							'user_id' => $userdata['id'],
+							'order_id' => $orderDetails['order_id'],
+							'description' => $resDocument['DocumentName'],
+							'created' => $created_date
+						);
+						$documentId = $this->document->insert($documentData);
+
+						$documents[$documentCount]['document_name'] = $resDocument['DocumentName'];
+						$documents[$documentCount]['document_type_id'] = $resDocument['DocumentType']['DocumentTypeID'];
+						$documents[$documentCount]['document_size'] = $resDocument['Size'];
+						$documents[$documentCount]['user_id'] = $userdata['id'];
+						$documents[$documentCount]['order_id'] = $orderDetails['order_id'];
+						$documents[$documentCount]['description'] = $resDocument['DocumentName'];
+						$documents[$documentCount]['created'] = $created_date;
+						$documentCount++;
+					}
+				}	
+			}
+		} else {
+			if (!empty($resDocuments['Documents'])) {
+				foreach($resDocuments['Documents'] as $resDocument) {
+					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
+						$time = round((str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
+               			$created_date = date('Y-m-d H:i:s', $time);
+						$documentData = array(
+							'document_name' => $resDocument['DocumentName'],
+							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
+							'api_document_id' => $resDocument['DocumentID'],
+							'document_size' => $resDocument['Size'],
+							'user_id' => $userdata['id'],
+							'order_id' => $orderDetails['order_id'],
+							'description' => $resDocument['DocumentName'],
+							'created' => $created_date
+						);
+						
+						$documentId = $this->document->insert($documentData);
+
+						$documents[$documentCount]['document_name'] = $resDocument['DocumentName'];
+						$documents[$documentCount]['document_type_id'] = $resDocument['DocumentType']['DocumentTypeID'];
+						$documents[$documentCount]['document_size'] = $resDocument['Size'];
+						$documents[$documentCount]['user_id'] = $userdata['id'];
+						$documents[$documentCount]['order_id'] = $orderDetails['order_id'];
+						$documents[$documentCount]['description'] = $resDocument['DocumentName'];
+						$documents[$documentCount]['created'] = $created_date;
+						$documentCount++;
+					}
+				}	
+			}
+		}
+		$data['orderDetails'] = $orderDetails;
+		$data['documents'] = $documents;
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/view_review_file');
 	}
@@ -1365,82 +1438,10 @@ class Dashboard extends MX_Controller {
 
 	public function linked_doc() 
 	{
-		$this->load->library('order/resware');
+		
 		$this->load->model('order/document');
-		$userdata = $this->session->userdata('user');
 		$fileId = $this->input->post('fileId');
 		$orderId = $this->input->post('orderId');
-		$documents = $this->order->get_order_documents($fileId);
-		$endPoint = 'files/'. $fileId .'/documents';
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), array(), $orderId, 0);
-		$resultDocuments = $this->resware->make_request('GET', $endPoint);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), $resultDocuments, $orderId, $logid);
-		$resDocuments = json_decode($resultDocuments, true);
-		$documentCount  = count($documents);
-		
-		if (!empty($documents)) {
-			$apiDocumentIds = array_column($documents, 'api_document_id');
-			if (!empty($resDocuments['Documents'])) {
-				foreach($resDocuments['documents'] as $resDocument) {
-					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
-						$time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
-               			$created_date = date('Y-m-d H:i:s', $time);
-						$documentData = array(
-							'document_name' => $resDocument['DocumentName'],
-							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
-							'api_document_id' => $resDocument['DocumentID'],
-							'document_size' => $resDocument['Size'],
-							'user_id' => $userdata['id'],
-							'order_id' => $orderId,
-							'description' => $resDocument['DocumentName'],
-							'created' => $created_date
-						);
-						$documentId = $this->document->insert($documentData);
-
-						$documents[$documentCount]['document_name'] = $resDocument['DocumentName'];
-						$documents[$documentCount]['document_type_id'] = $resDocument['DocumentType']['DocumentTypeID'];
-						$documents[$documentCount]['document_size'] = $resDocument['Size'];
-						$documents[$documentCount]['user_id'] = $userdata['id'];
-						$documents[$documentCount]['order_id'] = $orderId;
-						$documents[$documentCount]['description'] = $resDocument['DocumentName'];
-						$documents[$documentCount]['created'] = $created_date;
-						$documentCount++;
-					}
-				}	
-			}
-		} else {
-			if (!empty($resDocuments['Documents'])) {
-				foreach($resDocuments['Documents'] as $resDocument) {
-					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
-						$time = round((str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
-               			$created_date = date('Y-m-d H:i:s', $time);
-						$documentData = array(
-							'document_name' => $resDocument['DocumentName'],
-							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
-							'api_document_id' => $resDocument['DocumentID'],
-							'document_size' => $resDocument['Size'],
-							'user_id' => $userdata['id'],
-							'order_id' => $orderId,
-							'description' => $resDocument['DocumentName'],
-							'created' => $created_date
-						);
-						
-						$documentId = $this->document->insert($documentData);
-
-						$documents[$documentCount]['document_name'] = $resDocument['DocumentName'];
-						$documents[$documentCount]['document_type_id'] = $resDocument['DocumentType']['DocumentTypeID'];
-						$documents[$documentCount]['document_size'] = $resDocument['Size'];
-						$documents[$documentCount]['user_id'] = $userdata['id'];
-						$documents[$documentCount]['order_id'] = $orderId;
-						$documents[$documentCount]['description'] = $resDocument['DocumentName'];
-						$documents[$documentCount]['created'] = $created_date;
-						$documentCount++;
-					}
-				}	
-			}
-		}
-		$data['documents'] = $documents;
-	
         $results = $this->load->view('order/review_file_attach_doc', $data, TRUE);
         echo json_encode($results, true);
 	}

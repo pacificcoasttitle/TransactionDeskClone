@@ -1,3 +1,46 @@
+<style>
+
+.dropdown-btn {
+	border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    color: #04415D;
+    background: #ffffff;
+    width: 100%;
+    border-bottom: 2px #D35411 dotted;
+    padding: 10px 15px 10px 0;
+}
+
+.dropdown-container {
+	display: none;
+}
+
+.active {
+  border :none;
+}
+
+.fa-caret-down {
+  float: right;
+  padding-right: 8px;
+}
+
+.review_li {
+	float: left;
+	width: 100%;
+}
+
+.linked_doc {
+	float: left;
+    padding: 5px 0px 10px 0;
+	border: none !important;
+	font-weight:bold;
+}
+
+.yamm2 li a {
+	width:100%;
+}
+</style>
 <body>
 	<?php
         $this->load->view('layout/header_dashboard');
@@ -18,7 +61,7 @@
 
 						<div class="typography-sectionabcd">
 							<div class="col-md-12">
-								<div class="col-md-2">
+								<div class="col-md-3">
 									<div class="typography-section__inner">
 										<h3 class="ui-title-block_light">Doc Links</h3>
 										<div class="ui-decor-1a bg-primary"></div>
@@ -29,11 +72,28 @@
 											<div class="widget-contenta">
 												<div class="header-navibox-2">
 													<ul class="yamm2 nav navbar-nav2">
-														<li><a href="javascript:void(0);" onclick="summary();">Summary</a></li><br>
-														<li><a href="javascript:void(0);" onclick="prelim();">Prelim</a></li><br>
-														<li><a href="javascript:void(0);" onclick="linked_doc();">Linked Docs</a></li><br>
-														<li><a href="javascript:void(0);" onclick="legal_vesting();">Legal Vesting</a></li><br>
-														<li><a href="javascript:void(0);" onclick="plat_map();">Plat Map</a></li>
+														<li class="review_li"><a href="javascript:void(0);" onclick="summary();">Summary</a></li><br>
+														<li class="review_li"><a href="javascript:void(0);" onclick="prelim();">Prelim</a></li><br>
+														<li class="review_li">
+															<!-- <a href="javascript:void(0);" onclick="linked_doc();">Linked Docs</a> -->
+															<button class="dropdown-btn">Linked Docs
+																<i class="fa fa-caret-down"></i>
+															</button>
+															<div class="dropdown-container">
+																<?php 
+																	if(!empty($documents)) {
+																		foreach($documents as $document) { ?>
+																			<a class="linked_doc" href="#"><?php echo $document['document_name'];?></a>
+																		<?php } 
+																	 } else { ?>
+																		<a class="linked_doc" href="#">No Documents Found</a>
+																	<?php } 
+																?>
+															</div>
+														</li>
+														<br>
+														<li class="review_li"><a href="javascript:void(0);" onclick="legal_vesting();">Legal Vesting</a></li><br>
+														<li class="review_li"><a href="javascript:void(0);" onclick="plat_map();">Plat Map</a></li>
 
 													</ul>
 												</div>
@@ -67,7 +127,7 @@
 								</div>
 
 								<div class="col-md-1"></div>
-								<div class="col-md-9" id="links_details">
+								<div class="col-md-8" id="links_details">
 									
 								</div>
 							</div>
@@ -86,6 +146,20 @@
 	 $(document).ready(function(){
 		summary();
 	});
+
+	var dropdown = document.getElementsByClassName("dropdown-btn");
+	var i;
+	for (i = 0; i < dropdown.length; i++) {
+		dropdown[i].addEventListener("click", function() {
+			this.classList.toggle("active");
+			var dropdownContent = this.nextElementSibling;
+			if (dropdownContent.style.display === "block") {
+				dropdownContent.style.display = "none";
+			} else {
+				dropdownContent.style.display = "block";
+			}
+		});
+	}
 
 	function summary()
 	{
