@@ -66,7 +66,7 @@ class Cron extends MX_Controller {
                 }
             } 
             if ($syncFlag == 0) {
-                $FullProperty = $res->Properties[0]->StreetNumber.", ".$res->Properties[0]->StreetName." ".$res->Properties[0]->StreetSuffix.", ".$res->Properties[0]->City.", ".$res->Properties[0]->State.", ".$res->Properties[0]->Zip;
+                $FullProperty = $res->Properties[0]->StreetNumber." ".$res->Properties[0]->StreetName." ".$res->Properties[0]->StreetSuffix.", ".$res->Properties[0]->City.", ".$res->Properties[0]->State.", ".$res->Properties[0]->Zip;
                 $primary_owner = ($res->Buyers[0]->Primary && $res->Buyers[0]->Primary->First) ? $res->Buyers[0]->Primary->First : '';
                 $primary_owner .= ($res->Buyers[0]->Primary && $res->Buyers[0]->Primary->Last) ? " ".$res->Buyers[0]->Primary->Last : '';
                 $secondary_owner = ($res->Buyers[0]->Secondary && $res->Buyers[0]->Secondary->First) ? $res->Buyers[0]->Secondary->First : '';

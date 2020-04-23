@@ -96,6 +96,7 @@ function parse111()
 			}
 			else if(result.status == 'success')
 			{
+				var url = result.plat_map_url;
 				$('#plat-map-doc').attr('src',url);
             	$('#page-preloader').css('display', 'none');
 			}
