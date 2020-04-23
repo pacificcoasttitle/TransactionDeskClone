@@ -423,6 +423,7 @@ function autoComplete() {
     autocomplete = new google.maps.places.Autocomplete(input, options);
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
         var place = autocomplete.getPlace(); // get address, without city and state
+        console.log(place);
         $('#property-full-address').val(place.formatted_address);
         setTimeout(function() {
             $('#property-search').val(place.name);
@@ -436,6 +437,10 @@ function autoComplete() {
                 else if (place.address_components[i].types[0] === ("administrative_area_level_1") && place.address_components[i].types.length>1 && place.address_components[i].types[1] === ("political")) { //administrative_area_level_1
                     var state = place.address_components[i].short_name;
                     $('#property-state').val(state);
+                }
+                else if (place.address_components[i].types[0] === ("postal_code")) {
+                    var state = place.address_components[i].short_name;
+                    $('#property-zip').val(state);
                 }
             }
         }
@@ -543,6 +548,10 @@ function fetchReports(repNum)
                 else
                 {
                     get187();
+                    var zip = $('#property-zip').val();
+                    console.log(address);
+                    console.log(zip);
+                    getPlat(address,zip);
                 }
                 /*$("#search-btn").parents("form").find("table").removeClass("hidden");
                 $(".buttonNext").removeClass("buttonDisabled");*/
@@ -790,4 +799,27 @@ function notifyAdmin()
            },
         });
     }    
+}
+
+
+// run query for plat map report 
+function getPlat(address,zip) {
+    var request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
+    dataObj = {};
+    dataObj.Address = address;
+
+    request += $.param(dataObj);
+    $.ajax({
+        url: base_url+'home/getSearchResults?',
+        // url: 'http://cardbanana.net/demo/jerry/lp/lp/lp/proxy.php',
+        data: {
+            requrl: request + '?&reportType=111'
+        },
+        dataType: 'xml'
+    })
+        .done(function(response, textStatus, jqXHR) {
+            console.log(response);
+            reportUrl = $(response).find('ReportURL').text();
+            reportData.report111 = reportUrl;
+        });
 }

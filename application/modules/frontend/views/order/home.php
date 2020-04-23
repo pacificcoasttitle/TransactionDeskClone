@@ -110,6 +110,7 @@
                                                         <span class="field-icon"><i class="fa fa-user"></i></span>
                                                         <input type="hidden" name="property-state" id="property-state" value="">
                                                         <input type="hidden" name="property-city" id="property-city" value="">
+                                                        <input type="hidden" name="property-zip" id="property-zip" value="">
                                                         <input type="hidden" name="property-fips" id="property-fips" value="">
                                                         <input type="hidden" name="property-full-address" id="property-full-address" value="">
                                                     </label>
