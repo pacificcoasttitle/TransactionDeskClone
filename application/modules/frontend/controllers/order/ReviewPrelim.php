@@ -14,6 +14,9 @@ class ReviewPrelim extends MX_Controller {
     	$json = file_get_contents('php://input');
     	if($json)
     	{
+    		$logId = $this->apiLogs->syncLogs(0,'resware WCF', 'get_prelim','https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array('ReceiveSearchDataService'=>true), $json);
+
+    		$this->apiLogs->syncLogs(0, 'resware WCF', 'get_prelim', 'https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array(), $json, 0, $logId);
     		//Name of our directory
 			$dir_name = APPPATH.'logs/prelim';
 
@@ -35,8 +38,6 @@ class ReviewPrelim extends MX_Controller {
 
 			fwrite($fh, $json."\n");
 			fclose($fh);
-
-	    	$logId = $this->apiLogs->syncLogs(0,'resware WCF', 'get_prelim','', array(), $json);
     	}
 		
     }
