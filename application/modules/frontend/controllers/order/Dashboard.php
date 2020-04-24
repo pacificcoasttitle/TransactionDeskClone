@@ -14,6 +14,7 @@ class Dashboard extends MX_Controller {
 		$this->load->model('order/orderRecording');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
+        $this->load->model('order/reviewPrelimData');
 		$this->order->is_user();
 	}
 	
@@ -1483,7 +1484,27 @@ class Dashboard extends MX_Controller {
 	public function summary() 
 	{
         $fileId = $this->input->post('fileId');
-        $data['orderDetails'] = $this->order->get_order_details($fileId);
+        $orderDetails = $this->order->get_order_details($fileId);
+       
+        $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+        $address = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        $file_number = 'EELM-798-NR';
+        // $data['file_number'] = $file_number;
+
+        $condition = array(
+            'where' => array(
+                'file_number' => $file_number,
+            )
+        );
+
+        $prelim_details = $this->reviewPrelimData->get_rows($condition);
+        $data['prelim_details'] = array();
+        if(isset($prelim_details[0]) && !empty($prelim_details[0]))
+        {
+        	$data['prelim_details'] = $prelim_details[0];
+        }
+        $data['prelim_details']['address'] = $address;
+        
         $results = $this->load->view('order/review_file_summary', $data, TRUE);
         echo json_encode($results, true);
 	}
