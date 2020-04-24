@@ -1,4 +1,5 @@
-
+<?php 
+?>
 <div class="typography-section__inner">
 	<h3 class="ui-title-block_light">Prelim Info</h3>
 	<div class="ui-decor-1a bg-primary"></div>
@@ -7,22 +8,17 @@
 	<article class="b-post b-post-full clearfix">
 		<div class="row">
 			<div class="col-md-6">
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Vesting</span> Thomas C. R. Tam,
-					Trustee
-					of the Thomas C. R. Tam Revocable Trust, dated August 29, 2003;
-					Helen L. Tam, a married woman, as her sole and separate
-					property; </p>
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Address</span> <?php echo $orderDetails['full_address'];?></p><br>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Vesting</span> <?php echo isset($prelim_details['vesting']) && !empty($prelim_details['vesting']) ? $prelim_details['vesting'] : '-'; ?></p>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Address</span> <?php echo isset($prelim_details['address']) && !empty($prelim_details['address']) ? $prelim_details['address'] : '-'; ?></p><br>
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Policy</span> CLTA Standard Coverage
 					Policy 1990 (04-08-14)
 					ALTA Loan Policy 2006</p>
 			</div>
 			<div class="col-md-6">
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Order Number</span>
-					<?php echo $orderDetails['file_number'];?></p>
+					<?php echo isset($prelim_details['file_number']) && !empty($prelim_details['file_number']) ? $prelim_details['file_number'] : '-'; ?></p>
 				<br><br>
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Generated</span> May 30, 2019 at
-					07:30 AM
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Generated</span> <?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
 				</p><br>
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Type</span> a Mixed-Use
 					Property,
@@ -34,208 +30,158 @@
 			<h3 class="ui-title-block_light">Prelim Hot Items</h3>
 			<div class="ui-decor-1a bg-primary"></div>
 		</div>
-
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-4">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Property Taxes</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
+		<?php 
+			if(isset($prelim_details['lien']) && !empty($prelim_details['lien']))
+			{				
+		?>
+				<div class="entry-main">
+					<div class="entry-header">
+						<div class="alert alert-blocksmall alert-4">
+							<div class="alert__inner">
+								<h3 class="alert-titlesmall">Liens</h3>
+								<!-- <div class="alert-text">If there are any urgent Items they
+									will appear below.</div> -->
+							</div>
+						</div>
+					</div>
+					<div class="entry-content">
+						<?php
+							$liens = json_decode($prelim_details['lien'],TRUE);
+							if(isset($liens) && !empty($liens))
+							{
+								foreach ($liens as $key => $lien) 
+								{
+							?>
+									<p><?php echo nl2br($lien); ?></p>
+							<?php
+								}
+							}
+							else 
+							{
+						?>
+								<p><?php echo "No data found"; ?></p>
+						<?php
+							}
+						?>
+						
 					</div>
 				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-default">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Tax Collectors Office</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
+		<?php
+			}
+		?>
+		<?php
+			if(isset($prelim_details['easement']) && !empty($prelim_details['easement']))
+			{
+		?>
+				<div class="entry-main">
+					<div class="entry-header">
+						<div class="alert alert-blocksmall alert-4">
+							<div class="alert__inner">
+								<h3 class="alert-titlesmall">Easements</h3>
+								<!-- <div class="alert-text">If there are any urgent Items they
+									will appear below.</div> -->
+							</div>
+						</div>
+					</div>
+					<div class="entry-content">
+						<?php
+							$easements = json_decode($prelim_details['easement'],TRUE);
+							if(isset($easements) && !empty($easements))
+							{
+								foreach ($easements as $key => $easement) 
+								{
+						?>
+									<p><?php echo nl2br($easement); ?></p>
+						<?php
+								}
+							}
+							else
+							{
+						?>
+								<p><?php echo "No data found"; ?></p>
+						<?php
+							}							
+						?>				
 					</div>
 				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-default">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Mello Roos</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
+		<?php
+			}
+		?>
+		<?php 
+			if(isset($prelim_details['requirements']) && !empty($prelim_details['requirements']))
+			{
+		?>
+				<div class="entry-main">
+					<div class="entry-header">
+						<div class="alert alert-blocksmall alert-4">
+							<div class="alert__inner">
+								<h3 class="alert-titlesmall">Requirements</h3>
+								<!-- <div class="alert-text">If there are any urgent Items they
+									will appear below.</div> -->
+							</div>
+						</div>
+					</div>
+					<div class="entry-content">
+						<?php
+							$requirements = json_decode($prelim_details['requirements'],TRUE);
+							if(isset($requirements) && !empty($requirements))
+							{
+								foreach ($requirements as $key => $requirement) 
+								{
+							?>
+									<p><?php echo nl2br($requirement); ?></p>
+							<?php
+								}
+							}
+							else
+							{
+						?>
+								<p><?php echo "No data found"; ?></p>
+						<?php
+							}
+						?>			
 					</div>
 				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-3">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Supplemental Taxes</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
+		<?php
+			}
+		?>
+		<?php 
+			if(isset($prelim_details['restrictions']) && !empty($prelim_details['restrictions']))
+			{
+		?>
+				<div class="entry-main">
+					<div class="entry-header">
+						<div class="alert alert-blocksmall alert-4">
+							<div class="alert__inner">
+								<h3 class="alert-titlesmall">Restrictions</h3>
+								<!-- <div class="alert-text">If there are any urgent Items they
+									will appear below.</div> -->
+							</div>
+						</div>
+					</div>
+					<div class="entry-content">
+						<?php
+							$restrictions = json_decode($prelim_details['restrictions'],TRUE);
+							if(isset($restrictions) && !empty($restrictions))
+							{
+								foreach ($restrictions as $key => $restriction) 
+								{
+						?>
+									<p><?php echo nl2br($restriction); ?></p>
+						<?php
+								}
+							}
+							else
+							{
+						?>
+								<p><?php echo "No data found"; ?></p>
+						<?php
+							}
+						?>						
 					</div>
 				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-5">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Deed of Trust</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
-					</div>
-				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-default">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Order of Abatement</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
-					</div>
-				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-4">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Liens</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
-					</div>
-				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-default">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Rights of Parties in Possession
-						</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
-					</div>
-				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-default">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Inspections / ALTA ACSM Land
-							Title Survey</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
-					</div>
-				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-4">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Invalidity / Defect in Trust
-						</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
-					</div>
-				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-default">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Requirements</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
-					</div>
-				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
-		<div class="entry-main">
-			<div class="entry-header">
-				<div class="alert alert-blocksmall alert-5">
-					<div class="alert__inner">
-						<h3 class="alert-titlesmall">Subject to Review</h3>
-						<div class="alert-text">If there are any urgent Items they
-							will appear below.</div>
-					</div>
-				</div>
-			</div>
-			<div class="entry-content">
-				<p>Aorem ipsum dolor sit amet consecteta elit sed lus tempor
-					incididunt labore et dolore mag aliqua en minim veniam quis
-					nostrud exercitationLorem ipsum dolor sit amet consectetur.</p>
-			</div>
-		</div>
+		<?php
+			}
+		?>
 	</article>
 </div>
-

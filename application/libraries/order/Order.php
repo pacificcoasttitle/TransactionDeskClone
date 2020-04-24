@@ -167,5 +167,24 @@ class Order
             return array();
         }         
     }
+
+    public function update($data, $condition = array()) 
+    {
+        
+        $table = 'order_details';
+        
+        if(!empty($data))
+        {          
+            
+            $data['updated_at'] = date("Y-m-d H:i:s");
+
+            // Update data
+            $update = $this->db->update($table, $data, $condition);
+            
+            // Return the status
+            return $update?true:false;
+        }
+        return false;
+    }
        
 }
