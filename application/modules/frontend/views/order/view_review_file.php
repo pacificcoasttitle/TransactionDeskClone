@@ -40,6 +40,12 @@
 .yamm2 li a {
 	width:100%;
 }
+
+.yamm2 li a:hover {
+	width:100%;
+}
+
+button:focus {outline:0;}
 </style>
 <body>
 	<?php
@@ -73,18 +79,36 @@
 												<div class="header-navibox-2">
 													<ul class="yamm2 nav navbar-nav2">
 														<li class="review_li"><a href="javascript:void(0);" onclick="summary();">Summary</a></li><br>
-														<li class="review_li"><a href="javascript:void(0);" onclick="prelim();">Prelim</a></li><br>
+														<?php  if(!empty($prelimDocument)) { ?>
+															<li class="review_li">
+																<a onclick="load_doc(<?php echo $prelimDocument['is_sync'];?>, <?php echo $prelimDocument['api_document_id'];?>, <?php echo $prelimDocument['order_id'];?>, '<?php echo $prelimDocument['document_name'];?>');" href="javascript:void(0);" onclick="prelim();">
+																	Prelim
+																</a>
+															</li>
+															<br>
+														<?php } else { ?>
+															<li class="review_li">
+																<a href="javascript:void(0);" >Prelim</a></li><br>
+														<?php } ?>
 														<li class="review_li">
-															<!-- <a href="javascript:void(0);" onclick="linked_doc();">Linked Docs</a> -->
 															<button class="dropdown-btn">Linked Docs
-																<i class="fa fa-caret-down"></i>
+																<i style="font-size:16px;" class="fa fa-caret-down"></i>
 															</button>
 															<div class="dropdown-container">
 																<?php 
 																	if(!empty($documents)) {
-																		foreach($documents as $document) { ?>
-																			<a class="linked_doc" href="#"><?php echo $document['document_name'];?></a>
-																		<?php } 
+																		$count = count($documents);
+																		$i = 1;
+																		foreach($documents as $document) { 
+																				if($i == $count) {
+																					$style = "border-bottom: 2px #D35411 dotted !important;";
+																				} else {
+																					$style = "";
+																				}
+																				
+																			?>
+																			<a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>, '<?php echo $document['document_name'];?>');" class="linked_doc" href="#"><?php echo $document['original_document_name'];?></a>
+																		<?php  $i++; } 
 																	 } else { ?>
 																		<a class="linked_doc" href="#">No Documents Found</a>
 																	<?php } 
@@ -199,21 +223,24 @@
 		});
 	}
 
-	function linked_doc()
+	function load_doc(is_sync, resware_document_id, order_id, document_name)
 	{
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
 		$.ajax({
-			url: base_url + "linked-doc",
+			url: base_url + "load-doc",
 			type: "post",
 			data: {
-				fileId: $('#fileId').val(),
-				orderId: $('#orderId').val()
+				resware_document_id: resware_document_id,
+				is_sync: is_sync,
+				order_id: order_id,
+				document_name: document_name
 			},
 			dataType: "html",
 			success: function (response) {
 				var results = JSON.parse(response);
 				$('#links_details').html(results);
+				$('#'+resware_document_id).attr("onclick", "load_doc(1, "+resware_document_id+", "+order_id+", '"+document_name+"')");
 				$('#page-preloader').css('display', 'none');
 			}
 		});
@@ -262,11 +289,12 @@
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
 		$.ajax({
-			url: base_url + "download-resware-document",
+			url: base_url + "download-document",
 			type: "post",
 			data: {
 				resware_document_id: resware_document_id,
-                order_id: order_id
+                order_id: order_id,
+				document_name: document_name
 			},
 			success: function (response) {
 				$('#page-preloader').css('display', 'none');
