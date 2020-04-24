@@ -147,7 +147,15 @@ class Order
 
     public function get_order_documents($fileId)
     {
-        $this->CI->db->select('order_details.file_number, order_details.file_id, order_details.id as order_id, pct_order_documents.*, pct_order_documents_types.name')
+        $this->CI->db->select('order_details.file_number, 
+                order_details.file_id, 
+                order_details.id as order_id, 
+                pct_order_documents.document_name, 
+                pct_order_documents.original_document_name, 
+                pct_order_documents.is_sync, 
+                pct_order_documents.is_prelim_document, 
+                pct_order_documents.api_document_id, 
+                pct_order_documents_types.name')
             ->from('order_details')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id')
             ->join('pct_order_documents_types', 'pct_order_documents.document_type_id = pct_order_documents_types.api_id');

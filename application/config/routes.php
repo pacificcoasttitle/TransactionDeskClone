@@ -134,10 +134,10 @@ $route['review-file/:num'] = 'frontend/order/dashboard/review_file';
 $route['import-orders-all-users'] = 'frontend/order/cron/import_orders_all_users';
 $route['summary'] = 'frontend/order/dashboard/summary';
 $route['prelim'] = 'frontend/order/dashboard/prelim';
-$route['linked-doc'] = 'frontend/order/dashboard/linked_doc';
+$route['load-doc'] = 'frontend/order/dashboard/load_doc';
 $route['legal-vesting'] = 'frontend/order/dashboard/legal_vesting';
 $route['plat-map'] = 'frontend/order/dashboard/plat_map';
-$route['download-resware-document'] = 'frontend/order/dashboard/download_resware_document';
+$route['download-document'] = 'frontend/order/dashboard/download_document';
 $route['resware-fetch-data'] = 'frontend/order/ReviewPrelim/fetchData';
 $route['generate-plat-map'] = 'frontend/order/dashboard/generate_plat_map';
 

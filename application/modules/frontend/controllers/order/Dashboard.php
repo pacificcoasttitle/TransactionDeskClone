@@ -244,13 +244,17 @@ class Dashboard extends MX_Controller {
 		$this->load->library('order/resware');
 		$errors = array();
 		$success = array();
-		$config['upload_path'] = './uploads/';
+		$config['upload_path'] = './uploads/documents/';
 		$config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';   
 		$config['max_size'] = 12000;
 		$userdata = $this->session->userdata('user');
 		$this->load->library('upload', $config);
 		$fileId = $this->input->post('file_id');
 		$orderId = $this->input->post('order_id');
+
+		if (!is_dir('uploads/documents')) {
+			mkdir('./uploads/documents', 0777, TRUE);
+		}
 
 		for ($i = 1; $i <=6 ; $i++) {
 			if (!empty($_FILES['document_'.$i]['name'])) {
@@ -260,14 +264,19 @@ class Dashboard extends MX_Controller {
 					$data = $this->upload->data();
 					$contents = file_get_contents($data['full_path']);
 					$binaryData   = base64_encode($contents); 
+					$document_name = date('YmdHis')."_".$data['file_name'];
+					rename(FCPATH."/uploads/documents/".$data['file_name'], FCPATH."/uploads/documents/".$document_name);
 					
 					$documentData = array(
-						'document_name' => $data['file_name'],
+						'document_name' => $document_name,
+						'original_document_name' => $data['file_name'],
 						'document_type_id' => $this->input->post('document_type_'.$i),
 						'document_size' => ($data['file_size'] * 1000),
 						'user_id' => $userdata['id'],
 						'order_id' => $orderId,
-						'description' => $this->input->post('description_'.$i)
+						'description' => $this->input->post('description_'.$i),
+						'is_sync' => 1,
+						'is_prelim_document' => 0
 					);
 					
 					$documentId = $this->document->insert($documentData);
@@ -851,7 +860,6 @@ class Dashboard extends MX_Controller {
 			$res = array('status'=>'success','data'=>$binaryData);
 			echo json_encode($res); exit;
 		}
-        
     }
 
 	function cpl()
@@ -1340,9 +1348,134 @@ class Dashboard extends MX_Controller {
 
 	public function review_file()
 	{
+		$prelimDocument = array();
+		$this->load->library('order/resware');
+		$this->load->model('order/document');
 		$fileId = $this->uri->segment(2);
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';  
-		$data['orderDetails'] = $this->order->get_order_details($fileId);
+		$orderDetails = $this->order->get_order_details($fileId);
+		$documents = $this->order->get_order_documents($fileId);
+		$endPoint = 'files/'. $fileId .'/documents';
+		$userdata = $this->session->userdata('user');
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
+		$resultDocuments = $this->resware->make_request('GET', $endPoint);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), $resultDocuments, $orderDetails['order_id'], $logid);
+		$resDocuments = json_decode($resultDocuments, true);
+		$documentCount  = count($documents);
+		
+		if (!empty($documents)) {
+			$apiDocumentIds = array_column($documents, 'api_document_id');
+			if (!empty($resDocuments['Documents'])) {
+				foreach($resDocuments['Documents'] as $resDocument) {
+					$ext = end(explode('.', $resDocument['DocumentName']));
+					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
+						$time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
+						$created_date = date('Y-m-d H:i:s', $time);
+						$document_name = date('YmdHis')."_".$resDocument['DocumentName'];
+						if (($resDocument['DocumentType']['DocumentTypeID'] == 1032 || $resDocument['DocumentType']['DocumentTypeID'] == '1032' || strpos($resDocument['DocumentName'], 'Prelim') !== false) && (strtolower($ext) == 'doc' || strtolower($ext) == 'docx')) {
+							$is_prelim_document = 1;
+							$document_name = str_replace($ext, 'pdf', $document_name);
+						} else {
+							$is_prelim_document = 0;
+							if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
+								$document_name = str_replace($ext, 'pdf', $document_name);
+							}
+						}
+						$documentData = array(
+							'document_name' => $document_name,
+							'original_document_name' => $resDocument['DocumentName'],
+							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
+							'api_document_id' => $resDocument['DocumentID'],
+							'document_size' => $resDocument['Size'],
+							'user_id' => $userdata['id'],
+							'order_id' => $orderDetails['order_id'],
+							'description' => $resDocument['DocumentName'],
+							'created' => $created_date,
+							'is_sync' => 0,
+							'is_prelim_document' => $is_prelim_document
+						);
+						$documentId = $this->document->insert($documentData);
+						if($is_prelim_document == 1) {
+							$prelimDocument['original_document_name'] = $resDocument['DocumentName'];
+							$prelimDocument['document_name'] = $document_name;
+							$prelimDocument['api_document_id'] = $resDocument['DocumentID'];
+							$prelimDocument['is_sync'] = 0;
+							$prelimDocument['order_id'] = $orderDetails['order_id'];
+							$prelimDocument['is_prelim_document'] =  $is_prelim_document;
+						} else {
+							$documents[$documentCount]['original_document_name'] = $resDocument['DocumentName'];
+							$documents[$documentCount]['document_name'] = $document_name;
+							$documents[$documentCount]['api_document_id'] = $resDocument['DocumentID'];
+							$documents[$documentCount]['is_sync'] = 0;
+							$documents[$documentCount]['is_prelim_document'] = $is_prelim_document;
+							$documents[$documentCount]['order_id'] = $orderDetails['order_id'];
+							$documentCount++;
+						}
+					} else if (($resDocument['DocumentType']['DocumentTypeID'] == 1032 || $resDocument['DocumentType']['DocumentTypeID'] == '1032' || strpos($resDocument['DocumentName'], 'Prelim') !== false) && (strtolower($ext) == 'doc' || strtolower($ext) == 'docx')) {
+						$key = array_search(1, array_column($documents, 'is_prelim_document'));
+						$prelimDocument['original_document_name'] = $documents[$key]['original_document_name'];
+						$prelimDocument['document_name'] = $documents[$key]['document_name'];
+						$prelimDocument['api_document_id'] = $documents[$key]['api_document_id'];
+						$prelimDocument['is_sync'] = $documents[$key]['is_sync'];
+						$prelimDocument['order_id'] = $orderDetails['order_id'];
+						array_splice($documents, $key, 1);
+					}
+				}	
+			}
+		} else {
+			if (!empty($resDocuments['Documents'])) {
+				foreach($resDocuments['Documents'] as $resDocument) {
+					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
+						$time = round((str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
+						$created_date = date('Y-m-d H:i:s', $time);
+						$document_name = date('YmdHis')."_".$resDocument['DocumentName'];
+						$ext = end(explode('.', $resDocument['DocumentName']));
+						if (($resDocument['DocumentType']['DocumentTypeID'] == 1032 || $resDocument['DocumentType']['DocumentTypeID'] == '1032' || strpos($resDocument['DocumentName'], 'Prelim') !== false) && (strtolower($ext) == 'doc' || strtolower($ext) == 'docx')) {
+							$is_prelim_document = 1;
+							$document_name = str_replace($ext, 'pdf', $document_name);
+						} else {
+							$is_prelim_document = 0;
+							if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
+								$document_name = str_replace($ext, 'pdf', $document_name);
+							}
+						}
+						$documentData = array(
+							'document_name' => $document_name,
+							'original_document_name' => $resDocument['DocumentName'],
+							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
+							'api_document_id' => $resDocument['DocumentID'],
+							'document_size' => $resDocument['Size'],
+							'user_id' => $userdata['id'],
+							'order_id' => $orderDetails['order_id'],
+							'description' => $resDocument['DocumentName'],
+							'created' => $created_date,
+							'is_sync' => 0,
+							'is_prelim_document' => $is_prelim_document
+						);   
+						$documentId = $this->document->insert($documentData);
+						if($is_prelim_document == 1) {
+							$prelimDocument['original_document_name'] = $resDocument['DocumentName'];
+							$prelimDocument['document_name'] = $document_name;
+							$prelimDocument['api_document_id'] = $resDocument['DocumentID'];
+							$prelimDocument['is_sync'] = 0;
+							$prelimDocument['is_prelim_document'] =  $is_prelim_document;
+							$prelimDocument['order_id'] = $orderDetails['order_id'];
+						} else {
+							$documents[$documentCount]['original_document_name'] = $resDocument['DocumentName'];
+							$documents[$documentCount]['document_name'] = $document_name;
+							$documents[$documentCount]['api_document_id'] = $resDocument['DocumentID'];
+							$documents[$documentCount]['is_sync'] = 0;
+							$documents[$documentCount]['is_prelim_document'] = $is_prelim_document;
+							$documents[$documentCount]['order_id'] = $orderDetails['order_id'];
+							$documentCount++;
+						}
+					}
+				}	
+			}
+		}
+		$data['prelimDocument'] = $prelimDocument;
+		$data['orderDetails'] = $orderDetails;
+		$data['documents'] = $documents;
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/view_review_file');
 	}
@@ -1363,85 +1496,36 @@ class Dashboard extends MX_Controller {
         echo json_encode($results, true);
 	}
 
-	public function linked_doc() 
+	public function load_doc() 
 	{
-		$this->load->library('order/resware');
 		$this->load->model('order/document');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
-		$fileId = $this->input->post('fileId');
-		$orderId = $this->input->post('orderId');
-		$documents = $this->order->get_order_documents($fileId);
-		$endPoint = 'files/'. $fileId .'/documents';
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), array(), $orderId, 0);
-		$resultDocuments = $this->resware->make_request('GET', $endPoint);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), $resultDocuments, $orderId, $logid);
-		$resDocuments = json_decode($resultDocuments, true);
-		$documentCount  = count($documents);
-		
-		if (!empty($documents)) {
-			$apiDocumentIds = array_column($documents, 'api_document_id');
-			if (!empty($resDocuments['Documents'])) {
-				foreach($resDocuments['documents'] as $resDocument) {
-					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
-						$time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
-               			$created_date = date('Y-m-d H:i:s', $time);
-						$documentData = array(
-							'document_name' => $resDocument['DocumentName'],
-							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
-							'api_document_id' => $resDocument['DocumentID'],
-							'document_size' => $resDocument['Size'],
-							'user_id' => $userdata['id'],
-							'order_id' => $orderId,
-							'description' => $resDocument['DocumentName'],
-							'created' => $created_date
-						);
-						$documentId = $this->document->insert($documentData);
-
-						$documents[$documentCount]['document_name'] = $resDocument['DocumentName'];
-						$documents[$documentCount]['document_type_id'] = $resDocument['DocumentType']['DocumentTypeID'];
-						$documents[$documentCount]['document_size'] = $resDocument['Size'];
-						$documents[$documentCount]['user_id'] = $userdata['id'];
-						$documents[$documentCount]['order_id'] = $orderId;
-						$documents[$documentCount]['description'] = $resDocument['DocumentName'];
-						$documents[$documentCount]['created'] = $created_date;
-						$documentCount++;
-					}
-				}	
-			}
-		} else {
-			if (!empty($resDocuments['Documents'])) {
-				foreach($resDocuments['Documents'] as $resDocument) {
-					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
-						$time = round((str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
-               			$created_date = date('Y-m-d H:i:s', $time);
-						$documentData = array(
-							'document_name' => $resDocument['DocumentName'],
-							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
-							'api_document_id' => $resDocument['DocumentID'],
-							'document_size' => $resDocument['Size'],
-							'user_id' => $userdata['id'],
-							'order_id' => $orderId,
-							'description' => $resDocument['DocumentName'],
-							'created' => $created_date
-						);
-						
-						$documentId = $this->document->insert($documentData);
-
-						$documents[$documentCount]['document_name'] = $resDocument['DocumentName'];
-						$documents[$documentCount]['document_type_id'] = $resDocument['DocumentType']['DocumentTypeID'];
-						$documents[$documentCount]['document_size'] = $resDocument['Size'];
-						$documents[$documentCount]['user_id'] = $userdata['id'];
-						$documents[$documentCount]['order_id'] = $orderId;
-						$documents[$documentCount]['description'] = $resDocument['DocumentName'];
-						$documents[$documentCount]['created'] = $created_date;
-						$documentCount++;
-					}
-				}	
-			}
-		}
-		$data['documents'] = $documents;
-	
-        $results = $this->load->view('order/review_file_attach_doc', $data, TRUE);
+		$resware_document_id = $this->input->post('resware_document_id');
+		$order_id = $this->input->post('order_id');
+		$document_name = $this->input->post('document_name');
+		$is_sync = $this->input->post('is_sync');
+		if ($is_sync == 0) {
+			$endPoint = 'documents/'.$resware_document_id.'?format=json';
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $order_id, 0);
+			$resultDocument = $this->resware->make_request('GET', $endPoint);
+			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $order_id, $logid);
+			$resDocument = json_decode($resultDocument, true);
+			if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+				$documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+				if (!is_dir('uploads/documents')) {
+				    mkdir('./uploads/documents', 0777, TRUE);
+				}
+				file_put_contents('./uploads/documents/'.$document_name, $documentContent);
+				$this->document->update(array('is_sync' => 1), array('api_document_id' => $resware_document_id));
+			}	
+		} 
+		$data['api_document_id'] = $resware_document_id;
+		$data['order_id'] = $order_id;
+		$data['document_name'] = $document_name;
+		$data['url'] = base_url().'uploads/documents/'.$document_name;
+        $results = $this->load->view('order/review_file_load_doc', $data, TRUE);
         echo json_encode($results, true);
 	}
 
@@ -1532,21 +1616,14 @@ class Dashboard extends MX_Controller {
         echo json_encode($results, true);
 	}
 
-	public function download_resware_document()
+	public function download_document()
 	{
-		$userdata = $this->session->userdata('user');
-		$this->load->library('order/resware');
-		$this->load->model('order/apiLogs');
 		$resware_document_id = $this->input->post('resware_document_id');
 		$order_id = $this->input->post('order_id');
-		$endPoint = 'documents/'.$resware_document_id.'?format=json';
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $order_id, 0);
-		$resultDocument = $this->resware->make_request('GET', $endPoint);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $order_id, $logid);
-		$resDocument = json_decode($resultDocument, true);
-		if (isset($resDocument['Document']) && !empty($resDocument['Document'])) {
-			echo $resDocument['Document']['DocumentBody'];
-		}	
+		$document_name = $this->input->post('document_name');
+		$contents = file_get_contents(base_url().'uploads/documents/'.$document_name);
+		$binaryData   = base64_encode($contents); 
+		echo $binaryData;
 	}
 
 	public function generate_plat_map()

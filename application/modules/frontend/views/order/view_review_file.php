@@ -1,3 +1,52 @@
+<style>
+
+.dropdown-btn {
+	border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    color: #04415D;
+    background: #ffffff;
+    width: 100%;
+    border-bottom: 2px #D35411 dotted;
+    padding: 10px 15px 10px 0;
+}
+
+.dropdown-container {
+	display: none;
+}
+
+.active {
+  border :none;
+}
+
+.fa-caret-down {
+  float: right;
+  padding-right: 8px;
+}
+
+.review_li {
+	float: left;
+	width: 100%;
+}
+
+.linked_doc {
+	float: left;
+    padding: 5px 0px 10px 0;
+	border: none !important;
+	font-weight:bold;
+}
+
+.yamm2 li a {
+	width:100%;
+}
+
+.yamm2 li a:hover {
+	width:100%;
+}
+
+button:focus {outline:0;}
+</style>
 <body>
 	<?php
         $this->load->view('layout/header_dashboard');
@@ -18,7 +67,7 @@
 
 						<div class="typography-sectionabcd">
 							<div class="col-md-12">
-								<div class="col-md-2">
+								<div class="col-md-3">
 									<div class="typography-section__inner">
 										<h3 class="ui-title-block_light">Doc Links</h3>
 										<div class="ui-decor-1a bg-primary"></div>
@@ -29,11 +78,46 @@
 											<div class="widget-contenta">
 												<div class="header-navibox-2">
 													<ul class="yamm2 nav navbar-nav2">
-														<li><a href="javascript:void(0);" onclick="summary();">Summary</a></li><br>
-														<li><a href="javascript:void(0);" onclick="prelim();">Prelim</a></li><br>
-														<li><a href="javascript:void(0);" onclick="linked_doc();">Linked Docs</a></li><br>
-														<li><a href="javascript:void(0);" onclick="legal_vesting();">Legal Vesting</a></li><br>
-														<li><a href="javascript:void(0);" onclick="plat_map();">Plat Map</a></li>
+														<li class="review_li"><a href="javascript:void(0);" onclick="summary();">Summary</a></li><br>
+														<?php  if(!empty($prelimDocument)) { ?>
+															<li class="review_li">
+																<a onclick="load_doc(<?php echo $prelimDocument['is_sync'];?>, <?php echo $prelimDocument['api_document_id'];?>, <?php echo $prelimDocument['order_id'];?>, '<?php echo $prelimDocument['document_name'];?>');" href="javascript:void(0);" onclick="prelim();">
+																	Prelim
+																</a>
+															</li>
+															<br>
+														<?php } else { ?>
+															<li class="review_li">
+																<a href="javascript:void(0);" >Prelim</a></li><br>
+														<?php } ?>
+														<li class="review_li">
+															<button class="dropdown-btn">Linked Docs
+																<i style="font-size:16px;" class="fa fa-caret-down"></i>
+															</button>
+															<div class="dropdown-container">
+																<?php 
+																	if(!empty($documents)) {
+																		$count = count($documents);
+																		$i = 1;
+																		foreach($documents as $document) { 
+																				if($i == $count) {
+																					$style = "border-bottom: 2px #D35411 dotted !important;";
+																				} else {
+																					$style = "";
+																				}
+																				
+																			?>
+																			<a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>, '<?php echo $document['document_name'];?>');" class="linked_doc" href="#"><?php echo $document['original_document_name'];?></a>
+																		<?php  $i++; } 
+																	 } else { ?>
+																		<a class="linked_doc" href="#">No Documents Found</a>
+																	<?php } 
+																?>
+															</div>
+														</li>
+														<br>
+														<li class="review_li"><a href="javascript:void(0);" onclick="legal_vesting();">Legal Vesting</a></li><br>
+														<li class="review_li"><a href="javascript:void(0);" onclick="plat_map();">Plat Map</a></li>
 
 													</ul>
 												</div>
@@ -67,7 +151,7 @@
 								</div>
 
 								<div class="col-md-1"></div>
-								<div class="col-md-9" id="links_details">
+								<div class="col-md-8" id="links_details">
 									
 								</div>
 							</div>
@@ -86,6 +170,20 @@
 	 $(document).ready(function(){
 		summary();
 	});
+
+	var dropdown = document.getElementsByClassName("dropdown-btn");
+	var i;
+	for (i = 0; i < dropdown.length; i++) {
+		dropdown[i].addEventListener("click", function() {
+			this.classList.toggle("active");
+			var dropdownContent = this.nextElementSibling;
+			if (dropdownContent.style.display === "block") {
+				dropdownContent.style.display = "none";
+			} else {
+				dropdownContent.style.display = "block";
+			}
+		});
+	}
 
 	function summary()
 	{
@@ -125,21 +223,24 @@
 		});
 	}
 
-	function linked_doc()
+	function load_doc(is_sync, resware_document_id, order_id, document_name)
 	{
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
 		$.ajax({
-			url: base_url + "linked-doc",
+			url: base_url + "load-doc",
 			type: "post",
 			data: {
-				fileId: $('#fileId').val(),
-				orderId: $('#orderId').val()
+				resware_document_id: resware_document_id,
+				is_sync: is_sync,
+				order_id: order_id,
+				document_name: document_name
 			},
 			dataType: "html",
 			success: function (response) {
 				var results = JSON.parse(response);
 				$('#links_details').html(results);
+				$('#'+resware_document_id).attr("onclick", "load_doc(1, "+resware_document_id+", "+order_id+", '"+document_name+"')");
 				$('#page-preloader').css('display', 'none');
 			}
 		});
@@ -188,11 +289,12 @@
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
 		$.ajax({
-			url: base_url + "download-resware-document",
+			url: base_url + "download-document",
 			type: "post",
 			data: {
 				resware_document_id: resware_document_id,
-                order_id: order_id
+                order_id: order_id,
+				document_name: document_name
 			},
 			success: function (response) {
 				$('#page-preloader').css('display', 'none');
