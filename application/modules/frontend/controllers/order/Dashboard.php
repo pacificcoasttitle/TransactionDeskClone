@@ -1350,6 +1350,7 @@ class Dashboard extends MX_Controller {
 	public function review_file()
 	{
 		$prelimDocument = array();
+		$linked_doc = array();
 		$this->load->library('order/resware');
 		$this->load->model('order/document');
 		$fileId = $this->uri->segment(2);
@@ -1396,6 +1397,7 @@ class Dashboard extends MX_Controller {
 							'is_prelim_document' => $is_prelim_document
 						);
 						$documentId = $this->document->insert($documentData);
+
 						if($is_prelim_document == 1) {
 							$prelimDocument['original_document_name'] = $resDocument['DocumentName'];
 							$prelimDocument['document_name'] = $document_name;
@@ -1403,6 +1405,81 @@ class Dashboard extends MX_Controller {
 							$prelimDocument['is_sync'] = 0;
 							$prelimDocument['order_id'] = $orderDetails['order_id'];
 							$prelimDocument['is_prelim_document'] =  $is_prelim_document;
+
+							$endPoint = 'documents/'.$resDocument['DocumentID'].'?format=json';
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
+							$resultDocument = $this->resware->make_request('GET', $endPoint);
+							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $orderDetails['order_id'], $logid);
+							$resDocument = json_decode($resultDocument, true);
+
+							if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+								$documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+								if (!is_dir('uploads/documents')) {
+									mkdir('./uploads/documents', 0777, TRUE);
+								}
+								file_put_contents('./uploads/documents/'.$document_name, $documentContent);
+								$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
+
+								$source_pdf = './uploads/documents/'.$document_name;
+								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', FCPATH.'/bin/pdftohtml');
+								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', FCPATH.'/bin/pdfinfo');
+								$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
+								$pages = array(4, 5, 6, 7);
+								$linkedDocCount = 0;
+								foreach ($pages as $page) {
+									$html = $pdf->html($page);
+									$total_pages = $pdf->getPages();
+									$htmlDom = new DOMDocument;
+									@$htmlDom->loadHTML($html);
+									$links = $htmlDom->getElementsByTagName('a');
+									$extractedLinks = array();
+									
+									foreach($links as $link) {
+										$linkText = $link->nodeValue;
+										$linkHref = $link->getAttribute('href');
+										if(strlen(trim($linkHref)) == 0){
+											continue;
+										}
+
+										if($linkHref[0] == '#'){
+											continue;
+										}
+									
+										if(strpos($linkHref, 'clients.pacificcoasttitle.com') !== false){
+											$linkText = str_replace(' ', '-', $linkText); 
+											$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
+											$document_name = date('YmdHis')."_".$linkText;
+											$documentId = explode('=', $linkHref);
+											file_put_contents('./uploads/documents/'.$document_name, file_get_contents($linkHref));
+											$fileSize = filesize('./uploads/documents/'.$document_name);
+											$documentData = array(
+												'document_name' => $document_name,
+												'original_document_name' => $linkText,
+												'document_type_id' => 0,
+												'api_document_id' => $documentId[1],
+												'document_size' => $fileSize,
+												'user_id' => $userdata['id'],
+												'order_id' => $orderDetails['order_id'],
+												'description' => "",
+												'created' => date('Y-m-d H:i:s'),
+												'is_sync' => 1,
+												'is_prelim_document' => 0,
+												'is_linked_doc' => 1
+											);
+											$documentId = $this->document->insert($documentData);
+											$linked_doc[$linkedDocCount]['original_document_name'] = $linkText;
+											$linked_doc[$linkedDocCount]['document_name'] = $document_name;
+											$linked_doc[$linkedDocCount]['api_document_id'] = 0;
+											$linked_doc[$linkedDocCount]['is_sync'] = 1;
+											$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
+											$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+											$linkedDocCount++;
+										} else{
+											continue;
+										}
+									}
+								}
+							}	
 						} else {
 							$documents[$documentCount]['original_document_name'] = $resDocument['DocumentName'];
 							$documents[$documentCount]['document_name'] = $document_name;
@@ -1420,6 +1497,17 @@ class Dashboard extends MX_Controller {
 						$prelimDocument['is_sync'] = $documents[$key]['is_sync'];
 						$prelimDocument['order_id'] = $orderDetails['order_id'];
 						array_splice($documents, $key, 1);
+						$keys = array_keys(array_column($documents, 'is_linked_doc'), 1);
+						$linkedDocCount = 0;
+						foreach($keys as $key) {
+							$linked_doc[$linkedDocCount]['original_document_name'] = $documents[$key]['original_document_name'];
+							$linked_doc[$linkedDocCount]['document_name'] = $documents[$key]['document_name'];
+							$linked_doc[$linkedDocCount]['api_document_id'] = $documents[$key]['api_document_id'];
+							$linked_doc[$linkedDocCount]['is_sync'] = $documents[$key]['is_sync'];
+							$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
+							$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+							$linkedDocCount++;
+						}
 					}
 				}	
 			}
@@ -1461,6 +1549,81 @@ class Dashboard extends MX_Controller {
 							$prelimDocument['is_sync'] = 0;
 							$prelimDocument['is_prelim_document'] =  $is_prelim_document;
 							$prelimDocument['order_id'] = $orderDetails['order_id'];
+
+							$endPoint = 'documents/'.$resDocument['DocumentID'].'?format=json';
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
+							$resultDocument = $this->resware->make_request('GET', $endPoint);
+							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $orderDetails['order_id'], $logid);
+							$resDocument = json_decode($resultDocument, true);
+
+							if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+								$documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+								if (!is_dir('uploads/documents')) {
+									mkdir('./uploads/documents', 0777, TRUE);
+								}
+								file_put_contents('./uploads/documents/'.$document_name, $documentContent);
+								$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
+
+								$source_pdf = './uploads/documents/'.$document_name;
+								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', FCPATH.'/bin/pdftohtml');
+								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', FCPATH.'/bin/pdfinfo');
+								$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
+								$pages = array(4, 5, 6, 7);
+								$linkedDocCount = 0;
+								foreach ($pages as $page) {
+									$html = $pdf->html($page);
+									$total_pages = $pdf->getPages();
+									$htmlDom = new DOMDocument;
+									@$htmlDom->loadHTML($html);
+									$links = $htmlDom->getElementsByTagName('a');
+									$extractedLinks = array();
+
+									foreach($links as $link) {
+										$linkText = $link->nodeValue;
+										$linkHref = $link->getAttribute('href');
+										if(strlen(trim($linkHref)) == 0){
+											continue;
+										}
+
+										if($linkHref[0] == '#'){
+											continue;
+										}
+									
+										if(strpos($linkHref, 'clients.pacificcoasttitle.com') !== false){
+											$linkText = str_replace(' ', '-', $linkText); 
+											$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
+											$document_name = date('YmdHis')."_".$linkText;
+											$documentId = explode('=', $linkHref);
+											file_put_contents('./uploads/documents/'.$document_name, file_get_contents($linkHref));
+											$fileSize = filesize('./uploads/documents/'.$document_name);
+											$documentData = array(
+												'document_name' => $document_name,
+												'original_document_name' => $linkText,
+												'document_type_id' => 0,
+												'api_document_id' => $documentId[1],
+												'document_size' => $fileSize,
+												'user_id' => $userdata['id'],
+												'order_id' => $orderDetails['order_id'],
+												'description' => "",
+												'created' => date('Y-m-d H:i:s'),
+												'is_sync' => 1,
+												'is_prelim_document' => 0,
+												'is_linked_doc' => 1
+											);
+											$documentId = $this->document->insert($documentData);
+											$linked_doc[$linkedDocCount]['original_document_name'] = $linkText;
+											$linked_doc[$linkedDocCount]['document_name'] = $document_name;
+											$linked_doc[$linkedDocCount]['api_document_id'] = 0;
+											$linked_doc[$linkedDocCount]['is_sync'] = 1;
+											$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
+											$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+											$linkedDocCount++;
+										} else{
+											continue;
+										}
+									}
+								}
+							}
 						} else {
 							$documents[$documentCount]['original_document_name'] = $resDocument['DocumentName'];
 							$documents[$documentCount]['document_name'] = $document_name;
@@ -1474,6 +1637,7 @@ class Dashboard extends MX_Controller {
 				}	
 			}
 		}
+		$data['linked_doc'] = $linked_doc;
 		$data['prelimDocument'] = $prelimDocument;
 		$data['orderDetails'] = $orderDetails;
 		$data['documents'] = $documents;
