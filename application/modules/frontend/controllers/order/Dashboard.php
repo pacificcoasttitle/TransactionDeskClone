@@ -1421,8 +1421,8 @@ class Dashboard extends MX_Controller {
 								$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 
 								$source_pdf = './uploads/documents/'.$document_name;
-								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', FCPATH.'/bin/pdftohtml');
-								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', FCPATH.'/bin/pdfinfo');
+								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', './bin/pdftohtml');
+								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', './bin/pdfinfo');
 								$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
 								$pages = array(4, 5, 6, 7);
 								$linkedDocCount = 0;
@@ -1565,8 +1565,8 @@ class Dashboard extends MX_Controller {
 								$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 
 								$source_pdf = './uploads/documents/'.$document_name;
-								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', FCPATH.'/bin/pdftohtml');
-								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', FCPATH.'/bin/pdfinfo');
+								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', './bin/pdftohtml');
+								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', './bin/pdfinfo');
 								$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
 								$pages = array(4, 5, 6, 7);
 								$linkedDocCount = 0;
