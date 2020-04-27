@@ -125,8 +125,12 @@ class ReviewPrelim extends MX_Controller {
 		        	$this->order->update($data,$condition);
 	            }
 	    	}
+	    	echo "Data stored successfully.";
     	}
-    	
+    	else
+    	{
+    		echo "Empty response received.";
+    	}
     }
 }
 
