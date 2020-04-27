@@ -96,10 +96,10 @@ button:focus {outline:0;}
 															</button>
 															<div class="dropdown-container">
 																<?php 
-																	if(!empty($documents)) {
-																		$count = count($documents);
+																	if(!empty($linked_doc)) {
+																		$count = count($linked_doc);
 																		$i = 1;
-																		foreach($documents as $document) { 
+																		foreach($linked_doc as $document) { 
 																				if($i == $count) {
 																					$style = "border-bottom: 2px #D35411 dotted !important;";
 																				} else {

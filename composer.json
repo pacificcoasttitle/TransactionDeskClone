@@ -6,7 +6,8 @@
 	"license": "MIT",
 	"require": {
 		"php": ">=5.2.4",
-		"vlucas/phpdotenv": "^4.1"
+		"vlucas/phpdotenv": "^4.1",
+		"gufy/pdftohtml-php": "~2"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

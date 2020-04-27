@@ -155,10 +155,9 @@ class Order
                 pct_order_documents.is_sync, 
                 pct_order_documents.is_prelim_document, 
                 pct_order_documents.api_document_id, 
-                pct_order_documents_types.name')
+                pct_order_documents.is_linked_doc')
             ->from('order_details')
-            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id')
-            ->join('pct_order_documents_types', 'pct_order_documents.document_type_id = pct_order_documents_types.api_id');
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->CI->db->where('order_details.file_id', $fileId);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
