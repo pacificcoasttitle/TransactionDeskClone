@@ -112,6 +112,8 @@
                                                         <input type="hidden" name="property-city" id="property-city" value="">
                                                         <input type="hidden" name="property-fips" id="property-fips" value="">
                                                         <input type="hidden" name="property-full-address" id="property-full-address" value="">
+                                                        <input type="hidden" name="property-type" id="property-type" value="">
+                                                        <input type="hidden" name="property-zip" id="property-zip" value="">
                                                     </label>
                                                 </div>                                        
                                                 <div class="section colm colm2">    
