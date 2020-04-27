@@ -1573,12 +1573,14 @@ class Dashboard extends MX_Controller {
 								foreach ($pages as $page) {
 									$html = $pdf->html($page);
 									$total_pages = $pdf->getPages();
+									echo $total_pages;
 									$htmlDom = new DOMDocument;
 									@$htmlDom->loadHTML($html);
 									$links = $htmlDom->getElementsByTagName('a');
 									$extractedLinks = array();
 
 									foreach($links as $link) {
+										echo "hi".$total_pages;
 										$linkText = $link->nodeValue;
 										$linkHref = $link->getAttribute('href');
 										if(strlen(trim($linkHref)) == 0){
@@ -1622,6 +1624,7 @@ class Dashboard extends MX_Controller {
 											continue;
 										}
 									}
+									echo "hi1".$total_pages;exit;
 								}
 							}
 						} else {
