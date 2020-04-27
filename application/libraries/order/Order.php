@@ -90,6 +90,7 @@ class Order
             order_details.created_at as opened_date, 
             property_details.id as property_id, 
             property_details.full_address, 
+            property_details.property_type, 
             property_details.county, 
             property_details.westcor_property_id, 
             property_details.legal_description, 

@@ -20,9 +20,7 @@
 				<br><br>
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Generated</span> <?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
 				</p><br>
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Type</span> a Mixed-Use
-					Property,
-					known as 631-637 Haight Street, San Francisco, CA,</p>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Type</span> <?php echo isset($prelim_details['property_type']) && !empty($prelim_details['property_type']) ? $prelim_details['property_type'] : '-'; ?></p>
 			</div>
 		</div>
 

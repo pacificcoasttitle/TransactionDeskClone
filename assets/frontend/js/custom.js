@@ -646,7 +646,9 @@ function parse187()
     var county = $(reportXML).find("SubjectValueInfo").find("CountyName").text();
     var legalDescription = $(reportXML).find("PropertyProfile").find("LegalBriefDescription").text();
     legalDescription = legalDescription.replace(/\s\s+/g, ' ');
-    
+    var usecode = $(reportXML).find("PropertyProfile").find("UseCode").text();
+    $('#property-type').val(usecode);
+    $('#property-zip').val(zip);
     $('#FullProperty').val(full_address.join(', ')).prop('readonly', true);
     $('#apn').val(apn).prop('readonly', true);
     $('#County').val(county).prop('readonly', true);

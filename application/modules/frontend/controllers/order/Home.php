@@ -51,10 +51,12 @@ class Home extends MX_Controller {
 	        	$PropertyState      = $this->input->post('property-state');
 	        	$PropertyCity      = $this->input->post('property-city');
 	        	$PropertyFips      = $this->input->post('property-fips');
+	        	$PropertyZip      = $this->input->post('property-zip');
+	        	$PropertyType      = $this->input->post('property-type');
 	        	$FullProperty      = $this->input->post('FullProperty');
 
-	        	$AddressPropertyParts = explode(',', $FullProperty);	
-				$PropertyZip = trim(end($AddressPropertyParts));
+	        	/*$AddressPropertyParts = explode(',', $FullProperty);	
+				$PropertyZip = trim(end($AddressPropertyParts));*/
 
 	        	$apn      = $this->input->post('apn');
 	        	$County      = $this->input->post('County');
@@ -264,6 +266,11 @@ class Home extends MX_Controller {
 							'buyer_agent_id' => $BuyerAgentId,
 							'listing_agent_id' => $ListingAgentId,
 							'escrow_lender_id' => $EscrowLenderId,
+							'address' => $PropertyAddress,
+							'city' => $PropertyCity,
+							'state' => $PropertyState,
+							'zip' => $PropertyZip,
+							'property_type' => $PropertyType,
 							'full_address' => $FullProperty,
 							'apn' => $apn,
 							'county' => $County,
@@ -633,15 +640,13 @@ class Home extends MX_Controller {
 			$orderDetails = $this->order->get_order_details($fileId);
 			$property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] :'';
 			$propertyData = $this->home_model->get_property_details($property_id);
+			
 			$county = isset($propertyData['county']) && !empty($propertyData['county']) ? $propertyData['county'] :'';
 			$FullProperty = isset($propertyData['full_address']) && !empty($propertyData['full_address']) ? $propertyData['full_address'] :'';
-
-			$AddressPropertyParts = explode(',', $FullProperty);
-	        $AddressPropertyInfo = array_slice($AddressPropertyParts,0, -1);
-	        $propertyState = trim(end($AddressPropertyInfo));
-
-	        $AddressPropertyCityInfo = array_slice($AddressPropertyInfo,0, -1);
-	        $propertyCity = trim(end($AddressPropertyCityInfo));			
+			
+	        $propertyState = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] :'';
+	        
+	        $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] :'';			
 		}
 		
 		$data['tp_data'] = isset($titlePointDetails[0]) && !empty($titlePointDetails[0]) ? $titlePointDetails[0] : array();

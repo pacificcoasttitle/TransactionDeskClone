@@ -1657,11 +1657,12 @@ class Dashboard extends MX_Controller {
 	{
         $fileId = $this->input->post('fileId');
         $orderDetails = $this->order->get_order_details($fileId);
-       
+        
         $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
         $address = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        $property_type = isset($orderDetails['property_type']) && !empty($orderDetails['property_type']) ? $orderDetails['property_type'] : '';
         $file_number = 'EELM-798-NR';
-        // $data['file_number'] = $file_number;
+        // $data['file_number'] y= $file_number;
 
         $condition = array(
             'where' => array(
@@ -1676,6 +1677,7 @@ class Dashboard extends MX_Controller {
         	$data['prelim_details'] = $prelim_details[0];
         }
         $data['prelim_details']['address'] = $address;
+        $data['prelim_details']['property_type'] = $property_type;
         
         $results = $this->load->view('order/review_file_summary', $data, TRUE);
         echo json_encode($results, true);
