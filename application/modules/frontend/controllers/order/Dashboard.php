@@ -1576,11 +1576,11 @@ class Dashboard extends MX_Controller {
 									echo $total_pages;
 									$htmlDom = new DOMDocument;
 									@$htmlDom->loadHTML($html);
+									echo $htmlDom;
 									$links = $htmlDom->getElementsByTagName('a');
 									$extractedLinks = array();
 
 									foreach($links as $link) {
-										echo "hi".$total_pages;
 										$linkText = $link->nodeValue;
 										$linkHref = $link->getAttribute('href');
 										if(strlen(trim($linkHref)) == 0){
