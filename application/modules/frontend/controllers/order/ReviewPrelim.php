@@ -50,12 +50,17 @@ class ReviewPrelim extends MX_Controller {
 	    		$vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
 	    		$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
 	    		$liens = array();
+
 	    		if(isset($data['Liens']) && !empty($data['Liens']))
 	    		{
 	    			foreach ($data['Liens'] as $key => $lien) 
 	    			{
 	    				$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
-	    				$liens[] = $language;
+
+	    				if(!empty($language))
+	    				{
+	    					$liens[] = $language;
+	    				}	    				
 	    			}
 	    		}
 
@@ -65,7 +70,11 @@ class ReviewPrelim extends MX_Controller {
 	    			foreach ($data['Easements'] as $key => $easement) 
 	    			{
 	    				$language = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
-	    				$easements[] = $language;
+	    				
+	    				if(!empty($language))
+	    				{
+	    					$easements[] = $language;
+	    				}
 	    			}
 	    		}
 
@@ -75,19 +84,31 @@ class ReviewPrelim extends MX_Controller {
 	    			foreach ($data['Requirements'] as $key => $requirement) 
 	    			{
 	    				$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
-	    				$requirements[] = $language;
+
+	    				if(!empty($language))
+	    				{
+	    					$requirements[] = $language;
+	    				}
 	    			}
 	    		}
 	    		
 	    		$restrictions = array();
+	    		
 	    		if(isset($data['Restrictions']) && !empty($data['Restrictions']))
 	    		{
-	    			foreach ($data['Restrictions'] as $key => $restrictions) 
+	    			foreach ($data['Restrictions'] as $key => $restriction) 
 	    			{
-	    				$language = isset($restrictions['Language']) && !empty($restrictions['Language']) ? $restrictions['Language'] : '';
-	    				$restrictions[] = $language;
+
+	    				$language = isset($restriction['Language']) && !empty($restriction['Language']) ? $restriction['Language'] : '';
+	    				
+	    				if(!empty($language))
+	    				{
+	    					$restrictions[] = $language;
+	    				}
 	    			}
+	    			
 	    		}
+	    		
 	    		$summaryData = array(
 	    			'file_number'=> $file_number,
 	    			'vesting'=> $vesting,
@@ -115,13 +136,12 @@ class ReviewPrelim extends MX_Controller {
 	            	$id = $this->reviewPrelimData->insert($summaryData);
 
 	            	$condition = array(
-			            'where' => array(
-			                'file_number' => $file_number,
-			            )
+			                'file_number' => $file_number
 			        );
 		    		$data = array(
 						'prelim_summary_id'	=> $id
 					);
+
 		        	$this->order->update($data,$condition);
 	            }
 	    	}

@@ -172,18 +172,15 @@ class Order
     }
 
     public function update($data, $condition = array()) 
-    {
-        
+    { 
         $table = 'order_details';
-        
+
         if(!empty($data))
-        {          
-            
+        {   
             $data['updated_at'] = date("Y-m-d H:i:s");
 
             // Update data
-            $update = $this->db->update($table, $data, $condition);
-            
+            $update = $this->CI->db->update($table, $data, $condition);
             // Return the status
             return $update?true:false;
         }
