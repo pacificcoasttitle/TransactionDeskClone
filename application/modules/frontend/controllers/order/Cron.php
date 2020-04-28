@@ -213,26 +213,7 @@ class Cron extends MX_Controller {
         );
         $context = stream_context_create($opts);
         $file = file_get_contents($requestUrl,false,$context);
-        $xmlData = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?>
-<SitexApiResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.sitexdata.com/sitexapi/">
-  <Status>OK</Status>
-  <ReportURL>https://api.sitexdata.com/187/1E0F8F50-6300-4d9f-BA0F-180ADAEDF187.asmx/GetXML?reportInfo=dKasb6JSaWSxO3lihKGgV33BK1uEJQveIcqGApfEjpK_OePMQueXnBWcijWLNg1IScJUkyP5CCtkekduBOIbrMIknJgB7drTJ1dXa4Jwj8OPUI8j_nYKXQ2&amp;filter=&lt;CustCompFilter&gt;&lt;CompNum&gt;8&lt;/CompNum&gt;&lt;MonthsBack&gt;12&lt;/MonthsBack&gt;&lt;/CustCompFilter&gt;</ReportURL>
-  <Locations>
-    <Location>
-      <FIPS>06073</FIPS>
-      <APN>400-081-04-00</APN>
-      <Address>8134 MEDILL AVE</Address>
-      <City>EL CAJON</City>
-      <State>CA</State>
-      <ZIP>92021</ZIP>
-      <ZIP4>1873</ZIP4>
-      <UnitType />
-      <UnitNumber />
-    </Location>
-  </Locations>
-  <MatchStatus>Matched</MatchStatus>
-  <StatusCode>OK</StatusCode>
-</SitexApiResult>');
+        $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
         $result = json_decode($response,TRUE);
         $property_info = array();
