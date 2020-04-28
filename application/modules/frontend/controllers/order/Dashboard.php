@@ -1673,11 +1673,164 @@ class Dashboard extends MX_Controller {
             )
         );
 
-        $prelim_details = $this->reviewPrelimData->get_rows($condition);
+		$prelim_details = $this->reviewPrelimData->get_rows($condition);
+
+		$data = json_decode($prelim_details['resware_json'], TRUE);
+		
+		if(isset($data) && !empty($data))
+		{
+			$file_number = isset($data['FileNumber']) && !empty($data['FileNumber']) ? $data['FileNumber'] : '';
+
+			$parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
+			$vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
+			$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
+			$liens = array();
+
+			if(isset($data['Liens']) && !empty($data['Liens']))
+			{
+				foreach ($data['Liens'] as $key => $lien) 
+				{
+					$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
+					$amount = isset($lien['Amount']) && !empty($lien['Amount']) ? $lien['Amount'] : '';
+					$date = isset($lien['Date']) && !empty($lien['Date']) ? $lien['Date'] : '';
+					$grantor = isset($lien['Grantor']) && !empty($lien['Grantor']) ? $lien['Grantor'] : '';
+					$trustee = isset($lien['Trustee']) && !empty($lien['Trustee']) ? $lien['Trustee'] : '';
+					$grantee = isset($lien['Grantee']) && !empty($lien['Grantee']) ? $lien['Grantee'] : '';
+					$recordedDate = isset($lien['RecordedDate']) && !empty($lien['RecordedDate']) ? $lien['RecordedDate'] : '';
+					$instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
+					if(!empty($language))
+					{
+						
+						if(strpos($language, '_AMOUNT_') !== false) {
+							$language = str_replace("_AMOUNT_", " ".$amount , $language);
+						}
+						if(strpos($language, '_DATE_') !== false) {
+							$language = str_replace("_DATE_", " ".$date , $language);
+						}
+						if(strpos($language, '_GRANTOR_') !== false) {
+							$language = str_replace("_GRANTOR_", " ".$grantor , $language);
+						}
+						if(strpos($language, '_TRUSTEE_') !== false) {
+							$language = str_replace("_TRUSTEE_", " ".$grantor , $language);
+						}
+						if(strpos($language, '_GRANTEE_') !== false) {
+							$language = str_replace("_GRANTEE_", " ".$grantee , $language);
+						}
+						if(strpos($language, '_RECORDEDDATE_') !== false) {
+							$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
+						}
+						if(strpos($language, '_INSTRUMENTONLY_') !== false) {
+							$language = str_replace("_INSTRUMENTONLY_", " ".$recordedDate , $language);
+						}
+						if(strpos($language, '_PARCELID1_') !== false) {
+							$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
+						}
+						$language = str_replace("\u000b", "", $language);
+						$language = str_replace("\r", "", $language);
+						$liens[] = $language;
+					}	    				
+				}
+			}
+
+			$easements = array();
+			if(isset($data['Easements']) && !empty($data['Easements']))
+			{
+				foreach ($data['Easements'] as $key => $easement) 
+				{
+					$language = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
+					$language = str_replace("\u000b", "", $language);
+					$language = str_replace("\r", "", $language);
+					if(!empty($language))
+					{
+						$easements[] = $language;
+					}
+				}
+			}
+
+			$requirements = array();
+			if(isset($data['Requirements']) && !empty($data['Requirements']))
+			{
+				foreach ($data['Requirements'] as $key => $requirement) 
+				{
+					$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
+					$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
+					$amount = isset($requirement['Amount']) && !empty($requirement['Amount']) ? $requirement['Amount'] : '';
+					$date = isset($requirement['Date']) && !empty($requirement['Date']) ? $requirement['Date'] : '';
+					$grantor = isset($requirement['Grantor']) && !empty($requirement['Grantor']) ? $requirement['Grantor'] : '';
+					$trustee = isset($requirement['Trustee']) && !empty($requirement['Trustee']) ? $requirement['Trustee'] : '';
+					$grantee = isset($requirement['Grantee']) && !empty($requirement['Grantee']) ? $requirement['Grantee'] : '';
+					$recordedDate = isset($requirement['RecordedDate']) && !empty($requirement['RecordedDate']) ? $requirement['RecordedDate'] : '';
+					$instrument = isset($requirement['Instrument']) && !empty($requirement['Instrument']) ? $requirement['Instrument'] : '';
+					
+					if(strpos($language, '_AMOUNT_') !== false) {
+						$language = str_replace("_AMOUNT_", " ".$amount , $language);
+					}
+					if(strpos($language, '_DATE_') !== false) {
+						$language = str_replace("_DATE_", " ".$date , $language);
+					}
+					if(strpos($language, '_GRANTOR_') !== false) {
+						$language = str_replace("_GRANTOR_", " ".$grantor , $language);
+					}
+					if(strpos($language, '_TRUSTEE_') !== false) {
+						$language = str_replace("_TRUSTEE_", " ".$grantor , $language);
+					}
+					if(strpos($language, '_GRANTEE_') !== false) {
+						$language = str_replace("_GRANTEE_", " ".$grantee , $language);
+					}
+					if(strpos($language, '_RECORDEDDATE_') !== false) {
+						$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
+					}
+					if(strpos($language, '_INSTRUMENTONLY_') !== false) {
+						$language = str_replace("_INSTRUMENTONLY_", " ".$recordedDate , $language);
+					}
+					if(strpos($language, '_PARCELID1_') !== false) {
+						$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
+					}
+					$language = str_replace("\u000b", "", $language);
+					$language = str_replace("\r", "", $language);
+					if(!empty($language))
+					{
+						$requirements[] = $language;
+					}
+				}
+			}
+			
+			$restrictions = array();
+			
+			if(isset($data['Restrictions']) && !empty($data['Restrictions']))
+			{
+				foreach ($data['Restrictions'] as $key => $restriction) 
+				{
+
+					$language = isset($restriction['Language']) && !empty($restriction['Language']) ? $restriction['Language'] : '';
+					$language = str_replace("\u000b", "", $language);
+					$language = str_replace("\r", "", $language);
+					if(!empty($language))
+					{
+						$restrictions[] = $language;
+					}
+				}
+				
+			}
+			
+			$summaryData = array(
+				'file_number'=> $file_number,
+				'vesting'=> $vesting,
+				'generated_date'=> $generated_date,
+				'lien'=> json_encode($liens),
+				'easement'=> json_encode($easements),
+				'requirements'=> json_encode($requirements),
+				'restrictions'=> json_encode($restrictions),
+				'resware_json' => $json,
+				'parcel_id' => $parcelID
+			);
+			$prelim_details = $summaryData;
+		}
+		
         $data['prelim_details'] = array();
-        if(isset($prelim_details[0]) && !empty($prelim_details[0]))
+        if(isset($prelim_details) && !empty($prelim_details))
         {
-        	$data['prelim_details'] = $prelim_details[0];
+        	$data['prelim_details'] = $prelim_details;
         }
         $data['prelim_details']['address'] = $address;
         $data['prelim_details']['property_type'] = $property_type;
