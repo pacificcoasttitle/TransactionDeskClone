@@ -1572,12 +1572,10 @@ class Dashboard extends MX_Controller {
 								$pages = array(4, 5, 6, 7);
 								$linkedDocCount = 0;
 								foreach ($pages as $page) {
-									$html = $pdf->html();
+									$html = $pdf->html($page);
 									$total_pages = $pdf->getPages();
-									echo $total_pages;
-									echo $html;exit;
 									$htmlDom = new DOMDocument();
-									@$htmlDom->loadHTML($html);exit;
+									@$htmlDom->loadHTML($html);
 									if(!$htmlDom) {
 										echo 'failed to load DOM';
 										exit;
