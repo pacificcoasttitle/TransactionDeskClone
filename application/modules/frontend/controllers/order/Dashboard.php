@@ -1573,7 +1573,7 @@ class Dashboard extends MX_Controller {
 								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', getenv('PDFTOHTML_PATH'));
 								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', getenv('PDFTOINFO_PATH'));
 								$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
-								$pages = array(4, 5, 6, 7);
+								$pages = array(4, 5, 6, 7, 8);
 								$linkedDocCount = 0;
 								foreach ($pages as $page) {
 									$html = $pdf->html($page);
@@ -1685,7 +1685,7 @@ class Dashboard extends MX_Controller {
 			$vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
 			$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
 			$liens = array();
-
+			//$linkedDocuments = $this->order->get_linked_documents($orderDetails['order_id']);
 			if(isset($data['Liens']) && !empty($data['Liens']))
 			{
 				foreach ($data['Liens'] as $key => $lien) 
