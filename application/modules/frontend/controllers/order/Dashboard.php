@@ -1566,16 +1566,16 @@ class Dashboard extends MX_Controller {
 
 								$source_pdf = './uploads/documents/'.$document_name;
 								chmod($source_pdf, 0755);
-								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', '/usr/bin/pdftohtml');
-								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', '/usr/bin/pdfinfo');
+								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', getenv('PDFTOHTML_PATH'));
+								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', getenv('PDFTOINFO_PATH'));
 								$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
 								$pages = array(4, 5, 6, 7);
 								$linkedDocCount = 0;
 								foreach ($pages as $page) {
 									$html = $pdf->html($page);
 									$total_pages = $pdf->getPages();
-									$htmlDom = new DOMDocument;
-									@$htmlDom->loadHTML($html);
+									libxml_use_internal_errors(true);
+									$htmlDom = DOMDocument::loadHTML($html);
 									if(!$htmlDom) {
 										echo 'failed to load DOM';
 										exit;
