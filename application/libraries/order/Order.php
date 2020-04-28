@@ -186,5 +186,19 @@ class Order
         }
         return false;
     }
+
+    public function get_linked_documents($fileId)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_documents');
+            
+        $this->CI->db->where('order_id', $fileId);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
        
 }
