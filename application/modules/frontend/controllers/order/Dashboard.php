@@ -1576,53 +1576,59 @@ class Dashboard extends MX_Controller {
 									$total_pages = $pdf->getPages();
 									$htmlDom = new DOMDocument;
 									@$htmlDom->loadHTML($html);
-									$links = $htmlDom->getElementsByTagName('a');
-									$extractedLinks = array();
+									if(!$htmlDom) {
+										echo 'failed to load DOM';
+										exit;
+									} else {
+										$links = $htmlDom->getElementsByTagName('a');
+										$extractedLinks = array();
 
-									foreach($links as $link) {
-										$linkText = $link->nodeValue;
-										$linkHref = $link->getAttribute('href');
-										if(strlen(trim($linkHref)) == 0){
-											continue;
-										}
+										foreach($links as $link) {
+											$linkText = $link->nodeValue;
+											$linkHref = $link->getAttribute('href');
+											if(strlen(trim($linkHref)) == 0){
+												continue;
+											}
 
-										if($linkHref[0] == '#'){
-											continue;
-										}
-									
-										if(strpos($linkHref, 'clients.pacificcoasttitle.com') !== false){
-											$linkText = str_replace(' ', '-', $linkText); 
-											$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
-											$document_name = date('YmdHis')."_".$linkText;
-											$documentId = explode('=', $linkHref);
-											file_put_contents('./uploads/documents/'.$document_name, file_get_contents($linkHref));
-											$fileSize = filesize('./uploads/documents/'.$document_name);
-											$documentData = array(
-												'document_name' => $document_name,
-												'original_document_name' => $linkText,
-												'document_type_id' => 0,
-												'api_document_id' => $documentId[1],
-												'document_size' => $fileSize,
-												'user_id' => $userdata['id'],
-												'order_id' => $orderDetails['order_id'],
-												'description' => "",
-												'created' => date('Y-m-d H:i:s'),
-												'is_sync' => 1,
-												'is_prelim_document' => 0,
-												'is_linked_doc' => 1
-											);
-											$documentId = $this->document->insert($documentData);
-											$linked_doc[$linkedDocCount]['original_document_name'] = $linkText;
-											$linked_doc[$linkedDocCount]['document_name'] = $document_name;
-											$linked_doc[$linkedDocCount]['api_document_id'] = 0;
-											$linked_doc[$linkedDocCount]['is_sync'] = 1;
-											$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
-											$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
-											$linkedDocCount++;
-										} else{
-											continue;
+											if($linkHref[0] == '#'){
+												continue;
+											}
+										
+											if(strpos($linkHref, 'clients.pacificcoasttitle.com') !== false){
+												$linkText = str_replace(' ', '-', $linkText); 
+												$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
+												$document_name = date('YmdHis')."_".$linkText;
+												$documentId = explode('=', $linkHref);
+												file_put_contents('./uploads/documents/'.$document_name, file_get_contents($linkHref));
+												$fileSize = filesize('./uploads/documents/'.$document_name);
+												$documentData = array(
+													'document_name' => $document_name,
+													'original_document_name' => $linkText,
+													'document_type_id' => 0,
+													'api_document_id' => $documentId[1],
+													'document_size' => $fileSize,
+													'user_id' => $userdata['id'],
+													'order_id' => $orderDetails['order_id'],
+													'description' => "",
+													'created' => date('Y-m-d H:i:s'),
+													'is_sync' => 1,
+													'is_prelim_document' => 0,
+													'is_linked_doc' => 1
+												);
+												$documentId = $this->document->insert($documentData);
+												$linked_doc[$linkedDocCount]['original_document_name'] = $linkText;
+												$linked_doc[$linkedDocCount]['document_name'] = $document_name;
+												$linked_doc[$linkedDocCount]['api_document_id'] = 0;
+												$linked_doc[$linkedDocCount]['is_sync'] = 1;
+												$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
+												$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+												$linkedDocCount++;
+											} else{
+												continue;
+											}
 										}
 									}
+									
 								}
 							}
 						} else {
