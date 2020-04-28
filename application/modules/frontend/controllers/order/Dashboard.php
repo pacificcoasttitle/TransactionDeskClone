@@ -1565,6 +1565,7 @@ class Dashboard extends MX_Controller {
 								$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 
 								$source_pdf = './uploads/documents/'.$document_name;
+								chmod($source_pdf, 0755);
 								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', '/usr/bin/pdftohtml');
 								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', '/usr/bin/pdfinfo');
 								$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
