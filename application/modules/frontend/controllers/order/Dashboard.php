@@ -1765,8 +1765,9 @@ class Dashboard extends MX_Controller {
 	{
         $fileId = $this->input->post('fileId');
         $orderDetails = $this->order->get_order_details($fileId);
+
         $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
-        $file_path = FCPATH.'uploads/plat-map/'.$file_number.'.pdf';
+        $file_path = FCPATH.'uploads/plat-map/'.$file_number.'.png';
 
         $file_url = '';
 
@@ -1804,6 +1805,7 @@ class Dashboard extends MX_Controller {
 	        $data['locale'] = $locale;
 	        $data['zip'] = $PropertyZip;
 		}
+		echo "<pre>"; print_r($file_url); exit;
         $data['file_url'] = $file_url;
         $data['file_number'] = $file_number;
 
