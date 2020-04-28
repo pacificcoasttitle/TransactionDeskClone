@@ -77,7 +77,7 @@ class ReviewPrelim extends MX_Controller {
 								$language = str_replace("_GRANTOR_", " ".$grantor , $language);
 							}
 							if(strpos($language, '_TRUSTEE_') !== false) {
-								$language = str_replace("_TRUSTEE_", " ".$grantor , $language);
+								$language = str_replace("_TRUSTEE_", " ".$trustee , $language);
 							}
 							if(strpos($language, '_GRANTEE_') !== false) {
 								$language = str_replace("_GRANTEE_", " ".$grantee , $language);
@@ -86,7 +86,7 @@ class ReviewPrelim extends MX_Controller {
 								$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
 							}
 							if(strpos($language, '_INSTRUMENTONLY_') !== false) {
-								$language = str_replace("_INSTRUMENTONLY_", " ".$recordedDate , $language);
+								$language = str_replace("_INSTRUMENTONLY_", " ".$instrument , $language);
 							}
 							if(strpos($language, '_PARCELID1_') !== false) {
 								$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
@@ -138,7 +138,7 @@ class ReviewPrelim extends MX_Controller {
 							$language = str_replace("_GRANTOR_", " ".$grantor , $language);
 						}
 						if(strpos($language, '_TRUSTEE_') !== false) {
-							$language = str_replace("_TRUSTEE_", " ".$grantor , $language);
+							$language = str_replace("_TRUSTEE_", " ".$trustee , $language);
 						}
 						if(strpos($language, '_GRANTEE_') !== false) {
 							$language = str_replace("_GRANTEE_", " ".$grantee , $language);
@@ -147,7 +147,7 @@ class ReviewPrelim extends MX_Controller {
 							$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
 						}
 						if(strpos($language, '_INSTRUMENTONLY_') !== false) {
-							$language = str_replace("_INSTRUMENTONLY_", " ".$recordedDate , $language);
+							$language = str_replace("_INSTRUMENTONLY_", " ".$instrument , $language);
 						}
 						if(strpos($language, '_PARCELID1_') !== false) {
 							$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
