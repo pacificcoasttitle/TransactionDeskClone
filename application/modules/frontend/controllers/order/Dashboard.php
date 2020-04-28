@@ -1576,8 +1576,7 @@ class Dashboard extends MX_Controller {
 									$total_pages = $pdf->getPages();
 									echo $html;
 									$htmlDom = new DOMDocument();
-									libxml_use_internal_errors(true);
-									@$htmlDom->loadHTML($html);
+									@$htmlDom->loadHTML($html);exit;
 									if(!$htmlDom) {
 										echo 'failed to load DOM';
 										exit;
