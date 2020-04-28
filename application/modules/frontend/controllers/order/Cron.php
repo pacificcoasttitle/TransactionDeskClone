@@ -127,7 +127,7 @@ class Cron extends MX_Controller {
         if ($userdata['email'] == 'ghernandez@pct.com') {
             $password= 'Alpha637#';
         } else {
-            $password= 'Pacific2';
+            $password= 'Pacific12';
         }
         $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
