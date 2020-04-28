@@ -47,7 +47,7 @@ class Order
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $orders_lists = array();
        
-        $this->CI->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id')
+        $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
 
