@@ -1961,7 +1961,7 @@ class Dashboard extends MX_Controller {
 	        $data['locale'] = $locale;
 	        $data['zip'] = $PropertyZip;
 		}
-		echo "<pre>"; print_r($file_url); exit;
+		
         $data['file_url'] = $file_url;
         $data['file_number'] = $file_number;
 
