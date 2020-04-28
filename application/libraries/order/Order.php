@@ -37,7 +37,7 @@ class Order
     public function get_orders($params)
     {
         $userdata = $this->CI->session->userdata('user');
-        $this->CI->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id')
+        $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
         $this->CI->db->where('order_details.customer_id', $userdata['id']);

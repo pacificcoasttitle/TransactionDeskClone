@@ -1333,8 +1333,12 @@ class Dashboard extends MX_Controller {
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
 				
+				if ($order['prelim_summary_id'] != 0) {
+					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a' type='button'>REVIEW FILE</button></a>";
+				} else {
+					$nestedData[] = "<a href='javascript:void()'><button class='btn btn-grad-2a' type='button'>Not Ready</button></a>";
+				}
 				
-				$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a' type='button'>REVIEW FILE</button></a>";
 				
 				$data[] = $nestedData; 
 				$i++; 
