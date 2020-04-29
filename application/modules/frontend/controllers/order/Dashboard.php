@@ -1760,7 +1760,7 @@ class Dashboard extends MX_Controller {
 								$order_id = $linkedDocument['order_id'];
 								$document_name = $linkedDocument['document_name'];
 								if(strpos($language, $href) !== false) {
-									$onclick = "style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
+									$onclick = "href='' style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
 									$language = str_replace($href, $onclick, $language);
 								}
 							}
@@ -1774,7 +1774,7 @@ class Dashboard extends MX_Controller {
 								$order_id = $linkedDocument['order_id'];
 								$document_name = $linkedDocument['document_name'];
 								if(strpos($language, $href) !== false) {
-									$onclick = "style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
+									$onclick = "href='' style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
 									$language = str_replace($href, $onclick, $language);
 								}
 							}
@@ -1844,7 +1844,7 @@ class Dashboard extends MX_Controller {
 							$order_id = $linkedDocument['order_id'];
 							$document_name = $linkedDocument['document_name'];
 							if(strpos($language, $href) !== false) {
-								$onclick = "style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
+								$onclick = "href='' style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
 								$language = str_replace($href, $onclick, $language);
 							}
 						}
@@ -1858,7 +1858,7 @@ class Dashboard extends MX_Controller {
 							$order_id = $linkedDocument['order_id'];
 							$document_name = $linkedDocument['document_name'];
 							if(strpos($language, $href) !== false) {
-								$onclick = "style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
+								$onclick = "href='' style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
 								$language = str_replace($href, $onclick, $language);
 							}
 						}
