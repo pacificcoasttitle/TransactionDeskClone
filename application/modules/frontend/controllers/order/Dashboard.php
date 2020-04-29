@@ -949,10 +949,10 @@ class Dashboard extends MX_Controller {
 			'tvid' =>  0,
 			'CountyName' => $orderDetails['county'].' County',
 			'ShortLegal' => $orderDetails['legal_description'] ? $orderDetails['legal_description'] : null,
-			'StreetAddress' => trim($propertyDetail[0])." ".trim($propertyDetail[1]),
-			'City' => trim($propertyDetail[2]),
-			'State' => trim($propertyDetail[3]),
-			'Zip' => trim($propertyDetail[4]),
+			'StreetAddress' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]),
+			'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
+			'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
+			'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
 			'PropertyType' => 'R'
 		);
 
@@ -966,10 +966,10 @@ class Dashboard extends MX_Controller {
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
 				'Sequence' => 1,
-				'City' => trim($propertyDetail[2]),
-				'State' => trim($propertyDetail[3]),
-				'Zip' => trim($propertyDetail[4]),
-				'Address' => trim($propertyDetail[0])." ".trim($propertyDetail[1])
+				'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
+				'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
+				'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
+				'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
 			);
 			$purchase_price = $orderDetails['loan_amount'];
 			$sellers = array();
@@ -982,10 +982,10 @@ class Dashboard extends MX_Controller {
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
 				'Sequence' => 1,
-				'City' => trim($propertyDetail[2]),
-				'State' => trim($propertyDetail[3]),
-				'Zip' => trim($propertyDetail[4]),
-				'Address' => trim($propertyDetail[0])." ".trim($propertyDetail[1]),
+				'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
+				'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
+				'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
+				'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]),
 			);
 			$purchase_price = $orderDetails['sales_amount'];
 			$buyers = array();
@@ -999,10 +999,10 @@ class Dashboard extends MX_Controller {
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
 					'Sequence' => 1,
-					'City' => trim($propertyDetail[2]),
-					'State' => trim($propertyDetail[3]),
-					'Zip' => trim($propertyDetail[4]),
-					'Address' => trim($propertyDetail[0])." ".trim($propertyDetail[1]),
+					'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
+					'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
+					'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
+					'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]),
 				);
 				$purchase_price = $orderDetails['sales_amount'];
 				$buyers = array();
@@ -1015,10 +1015,10 @@ class Dashboard extends MX_Controller {
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
 					'Sequence' => 1,
-					'City' => trim($propertyDetail[2]),
-					'State' => trim($propertyDetail[3]),
-					'Zip' => trim($propertyDetail[4]),
-					'Address' => trim($propertyDetail[0])." ".trim($propertyDetail[1])
+					'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
+					'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
+					'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
+					'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
 				);
 				$purchase_price = $orderDetails['loan_amount'];
 				$sellers = array();

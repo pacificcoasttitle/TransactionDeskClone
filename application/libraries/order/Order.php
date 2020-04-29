@@ -89,6 +89,7 @@ class Order
             order_details.westcor_cpl_id, 
             order_details.created_at as opened_date, 
             property_details.id as property_id, 
+            property_details.address, 
             property_details.full_address, 
             property_details.property_type, 
             property_details.city as property_city, 
