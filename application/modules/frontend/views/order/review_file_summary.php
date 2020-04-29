@@ -54,7 +54,7 @@
 								foreach ($liens as $key => $lien) 
 								{
 							?>
-									<li><p><?php echo nl2br(preg_replace('/(.*):/', '<b>$1:</b>', $lien)); ?></p></li>
+									<li><p><?php echo nl2br($lien); ?></p></li>
 							<?php
 								}
 							?>
@@ -146,7 +146,7 @@
 								foreach ($easements as $key => $easement) 
 								{
 						?>									
-									<li><p><?php echo nl2br(preg_replace('/(.*):/', '<b>$1:</b>', $easement)); ?></p></li>
+									<li><p><?php echo nl2br($easement); ?></p></li>
 						<?php
 								}
 						?>
@@ -190,7 +190,7 @@
 								foreach ($requirements as $key => $requirement) 
 								{
 							?>
-									<li><p><?php echo nl2br(preg_replace('/(.*):/', '<b>$1:</b>', $requirement)); ?></p></li>
+									<li><p><?php echo nl2br($requirement); ?></p></li>
 							<?php
 								}
 							?>
@@ -234,7 +234,7 @@
 								foreach ($restrictions as $key => $restriction) 
 								{
 						?>
-									<p><?php echo nl2br(preg_replace('/(.*):/', '<b>$1:</b>', $restriction)); ?></p>
+									<p><?php echo nl2br($restriction); ?></p>
 						<?php
 								}
 						?>
