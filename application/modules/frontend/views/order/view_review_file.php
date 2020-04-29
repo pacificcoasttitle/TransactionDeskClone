@@ -81,7 +81,7 @@ button:focus {outline:0;}
 														<li class="review_li"><a href="javascript:void(0);" onclick="summary();">Summary</a></li><br>
 														<?php  if(!empty($prelimDocument)) { ?>
 															<li class="review_li">
-																<a onclick="load_doc(<?php echo $prelimDocument['is_sync'];?>, <?php echo $prelimDocument['api_document_id'];?>, <?php echo $prelimDocument['order_id'];?>, '<?php echo $prelimDocument['document_name'];?>');" href="javascript:void(0);" onclick="prelim();">
+																<a onclick="load_doc(<?php echo $prelimDocument['is_sync'];?>, <?php echo $prelimDocument['api_document_id'];?>, <?php echo $prelimDocument['order_id'];?>);" href="javascript:void(0);" onclick="prelim();">
 																	Prelim
 																</a>
 															</li>
@@ -107,7 +107,7 @@ button:focus {outline:0;}
 																				}
 																				
 																			?>
-																			<a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>, '<?php echo $document['document_name'];?>');" class="linked_doc" href="#"><?php echo $document['original_document_name'];?></a>
+																			<a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>);" class="linked_doc" href="#"><?php echo $document['original_document_name'];?></a>
 																		<?php  $i++; } 
 																	 } else { ?>
 																		<a class="linked_doc" href="#">No Documents Found</a>
@@ -223,7 +223,7 @@ button:focus {outline:0;}
 		});
 	}
 
-	function load_doc(is_sync, resware_document_id, order_id, document_name)
+	function load_doc(is_sync, resware_document_id, order_id)
 	{
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
@@ -233,14 +233,13 @@ button:focus {outline:0;}
 			data: {
 				resware_document_id: resware_document_id,
 				is_sync: is_sync,
-				order_id: order_id,
-				document_name: document_name
+				order_id: order_id
 			},
 			dataType: "html",
 			success: function (response) {
 				var results = JSON.parse(response);
 				$('#links_details').html(results);
-				$('#'+resware_document_id).attr("onclick", "load_doc(1, "+resware_document_id+", "+order_id+", '"+document_name+"')");
+				$('#'+resware_document_id).attr("onclick", "load_doc(1, "+resware_document_id+", "+order_id+")");
 				$('#page-preloader').css('display', 'none');
 			}
 		});
