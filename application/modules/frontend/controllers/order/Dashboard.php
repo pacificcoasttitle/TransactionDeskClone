@@ -2011,31 +2011,27 @@ class Dashboard extends MX_Controller {
 		} 
 		else
 		{
-			if(isset($orderDetails['full_address']) && !empty($orderDetails['full_address']))
-	        {
-	        	$full_address = $orderDetails['full_address'];
-	        	$AddressPropertyParts = explode(',', $full_address);
-	        	$PropertyAddress = trim(reset($AddressPropertyParts));
-	        	$PropertyZip = trim(end($AddressPropertyParts));
-	        	
-		        $AddressPropertyInfo = array_slice($AddressPropertyParts,0, -1);
-		        $propertyState = trim(end($AddressPropertyInfo));       
-		        $AddressPropertyCityInfo = array_slice($AddressPropertyInfo,0, -1);
-		        $locale = trim(end($AddressPropertyCityInfo));
+			$address = isset($orderDetails['address']) && !empty($orderDetails['address']) ? $orderDetails['address'] : '';
+
+			$locale = isset($orderDetails['property_city']) && !empty($orderDetails['property_city']) ? $orderDetails['property_city'] : '';
+
+			$propertyState = isset($orderDetails['property_state']) && !empty($orderDetails['property_state']) ? $orderDetails['property_state'] : '';
+
+			$PropertyZip = isset($orderDetails['property_zip']) && !empty($orderDetails['property_zip']) ? $orderDetails['property_zip'] : '';
 		        
-	            if (($locale)) 
-	            {
-	               	if(!empty($propertyState))
-	                {
-	                    $locale .= ', '.$propertyState;
-	                } 
-	                else 
-	                {
-	                    $locale .= ', CA';
-	                }
-	            }
-	        }
-	        $data['address'] = $PropertyAddress;
+            if (($locale)) 
+            {
+               	if(!empty($propertyState))
+                {
+                    $locale .= ', '.$propertyState;
+                } 
+                else 
+                {
+                    $locale .= ', CA';
+                }
+            }
+			
+	        $data['address'] = $address;
 	        $data['locale'] = $locale;
 	        $data['zip'] = $PropertyZip;
 		}
