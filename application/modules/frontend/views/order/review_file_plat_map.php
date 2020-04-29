@@ -4,6 +4,7 @@
 <div class="l-main-content">
 	<article class="b-post b-post-full clearfix">
 		<div class="">
+            <div class="pma-error alert alert-danger" style="display:none;"></div>
 			<iframe id="plat-map-doc" src="<?php echo $file_url; ?>" width="825px" height="800px">
 				This browser does not support PDFs. Please download the PDF to view it: Download PDF
 			</iframe>
@@ -47,10 +48,18 @@ function getPlat(address,zip,locale) {
         dataType: 'xml'
     })
         .done(function(response, textStatus, jqXHR) {
-            console.log(response);
-            reportUrl = $(response).find('ReportURL').text();
-            reportData.report111 = reportUrl;
-            get111();
+            var responseStatus = $(response).find('StatusCode').text();
+            if (responseStatus != 'OK') 
+            {
+                displayError(responseStatus);
+            }
+            else
+            {
+                reportUrl = $(response).find('ReportURL').text();
+                reportData.report111 = reportUrl;
+                get111();
+            }
+            
         });
 }
 
@@ -65,8 +74,7 @@ function get111() {
         dataType: "xml",
         success: function(xml) {
             reportXML = xml;
-            console.log(reportXML);
-           parse111();
+            parse111();
         },
         error: function() {
             console.log("An error occurred while processing XML file.");
@@ -92,18 +100,63 @@ function parse111()
             var result = jQuery.parseJSON(response);
             if(result.status == 'error')
 			{
-
+                $('#plat-map-doc').attr('src','');
 			}
 			else if(result.status == 'success')
 			{
 				var url = result.plat_map_url;
 				$('#plat-map-doc').attr('src',url);
-            	$('#page-preloader').css('display', 'none');
+            	
 			}
+            $('#page-preloader').css('display', 'none');
         },
         error: function() {
            // console.log("An error occurred while processing XML file.");
         }
     });
+}
+
+// display error returned in API query
+function displayError(responseStatus) {
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    // determine and display specific error
+    var errorDisplay = "";
+    switch (responseStatus) {
+        case 'NM':
+            error = 'No exact match';
+            break;
+        case 'NC':
+            error = 'Out of coverage area';
+            break;
+        case 'IP':
+            error = 'Invalid IP';
+            break;
+        case 'IK':
+            error = 'Invalid key';
+            break;
+        case 'IR':
+            error = 'Invalid report type';
+            break;
+        case 'IN':
+            error = 'Invalid property address. Please try once with Zip Code instead of City.';
+            break;
+        case 'CR':
+            error = 'No credits';
+            break;
+        case 'NH':
+            error = 'Valid address, but no hit';
+            notifyAdmin();
+            break;
+        default:
+            error = "Error"
+    }
+    $('.pma-error').text(error);
+    var img = base_url+'assets/frontend/images/no_match.jpeg';
+    $('#plat-map-doc').attr('src',img);
+    $('#plat-map-doc').css('width', '800px');
+    $('#plat-map-doc').css('height', '600px');
+    $('#page-preloader').css('display', 'none');
+    $('.pma-error').show();
 }
 </script>
