@@ -1760,7 +1760,7 @@ class Dashboard extends MX_Controller {
 								$order_id = $linkedDocument['order_id'];
 								$document_name = $linkedDocument['document_name'];
 								if(strpos($language, $href) !== false) {
-									$onclick = "style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id, $document_name)'";
+									$onclick = "style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
 									$language = str_replace($href, $onclick, $language);
 								}
 							}
@@ -1774,7 +1774,7 @@ class Dashboard extends MX_Controller {
 								$order_id = $linkedDocument['order_id'];
 								$document_name = $linkedDocument['document_name'];
 								if(strpos($language, $href) !== false) {
-									$onclick = "style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id, $document_name)'";
+									$onclick = "style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
 									$language = str_replace($href, $onclick, $language);
 								}
 							}
@@ -1844,7 +1844,7 @@ class Dashboard extends MX_Controller {
 							$order_id = $linkedDocument['order_id'];
 							$document_name = $linkedDocument['document_name'];
 							if(strpos($language, $href) !== false) {
-								$onclick = "onclick=load_doc($sync, $api_document_id, $order_id, '$document_name');";
+								$onclick = "style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
 								$language = str_replace($href, $onclick, $language);
 							}
 						}
@@ -1858,7 +1858,7 @@ class Dashboard extends MX_Controller {
 							$order_id = $linkedDocument['order_id'];
 							$document_name = $linkedDocument['document_name'];
 							if(strpos($language, $href) !== false) {
-								$onclick = "onclick=load_doc($sync, $api_document_id, $order_id, '$document_name');";
+								$onclick = "style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
 								$language = str_replace($href, $onclick, $language);
 							}
 						}
@@ -1933,7 +1933,7 @@ class Dashboard extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$resware_document_id = $this->input->post('resware_document_id');
 		$order_id = $this->input->post('order_id');
-		$document_name = $this->input->post('document_name');
+		$documentDetail = $this->order->get_document_detail($resware_document_id);
 		$is_sync = $this->input->post('is_sync');
 		if ($is_sync == 0) {
 			$endPoint = 'documents/'.$resware_document_id.'?format=json';
@@ -1946,14 +1946,15 @@ class Dashboard extends MX_Controller {
 				if (!is_dir('uploads/documents')) {
 				    mkdir('./uploads/documents', 0777, TRUE);
 				}
-				file_put_contents('./uploads/documents/'.$document_name, $documentContent);
+				file_put_contents('./uploads/documents/'.$documentDetail['document_name'], $documentContent);
 				$this->document->update(array('is_sync' => 1), array('api_document_id' => $resware_document_id));
 			}	
 		} 
+		
 		$data['api_document_id'] = $resware_document_id;
 		$data['order_id'] = $order_id;
-		$data['document_name'] = $document_name;
-		$data['url'] = base_url().'uploads/documents/'.$document_name;
+		$data['document_name'] = $documentDetail['document_name'];
+		$data['url'] = base_url().'uploads/documents/'.$documentDetail['document_name'];
         $results = $this->load->view('order/review_file_load_doc', $data, TRUE);
         echo json_encode($results, true);
 	}

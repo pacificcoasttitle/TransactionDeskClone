@@ -188,16 +188,30 @@ class Order
         return false;
     }
 
-    public function get_linked_documents($fileId)
+    public function get_linked_documents($order_id)
     {
         $this->CI->db->select('*')
             ->from('pct_order_documents');
             
-        $this->CI->db->where('order_id', $fileId);
+        $this->CI->db->where('order_id', $order_id);
         $this->CI->db->where('is_linked_doc', 1);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
+
+    public function get_document_detail($api_document_id)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_documents');
+        
+        $this->CI->db->where('api_document_id', $api_document_id);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
         } else {
             return array();
         }         
