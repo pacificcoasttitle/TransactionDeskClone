@@ -314,6 +314,10 @@ body:not(.header-demo) .navbar-scrolling .top-bar {
   margin-left: 15px !important;
 }
 
+.header-navibox-2 {
+	padding-top: 24px;
+}
+
 
 /*TOP BAR BOX*/
 
