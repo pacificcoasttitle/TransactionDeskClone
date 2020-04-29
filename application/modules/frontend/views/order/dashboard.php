@@ -30,13 +30,13 @@
 								</div>
 							     -->
 								<a href="<?php echo base_url().'order'; ?>">
-									<button class="btn btn-type-1a btn-lg" type="button">Open New Order</button>
+									<button class="btn btn-type-1a btn-lg" type="button">New Title Order</button>
 								</a>
 								<a href="<?php echo base_url().'cpl-dashboard'; ?>">
 									<button class="btn btn-type-1b btn-lg" type="button">Generate CPL</button>
 								</a>
 								<a href="<?php echo base_url().'prelim-files'; ?>">
-									<button class="btn btn-type-1a btn-lg" type="button">Prelim Review</button>
+									<button class="btn btn-type-1a btn-lg" type="button">Review Prelim</button>
 								</a>
                   				<a href="<?php echo base_url().'attach-files'; ?>">
                   					<button class="btn btn-type-1d btn-lg" type="button">Upload a Document</button>
@@ -68,10 +68,10 @@
 									<button class="btn btn-type-1e btn-lg" type="button">Proposed Insured</button>
 								</a>
 								<a href="<?php echo base_url().'recordings'; ?>">
-									<button class="btn btn-type-1f btn-lg" style="padding-left:16px;" type="button">Recording Confirmations</button>
+									<button class="btn btn-type-1f btn-lg" style="padding-left:16px;" type="button">Confirmations</button>
 								</a>
 								<a href="<?php echo base_url().'fees'; ?>">
-									<button class="btn btn-type-1a btn-lg" type="button">Get Fee Estimate</button>
+									<button class="btn btn-type-1a btn-lg" type="button">Fee Estimate</button>
 								</a>
 								<a href="<?php echo base_url().'notes'; ?>">
 									<button class="btn btn-type-1b btn-lg" type="button">Notes on Files</button>

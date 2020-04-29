@@ -262,12 +262,12 @@ body {
     color: #03374f;
     /* border: 2px solid #03374f; */
     background-color: white;
-
     width: 257px;
     height: 160px;
     padding-top: 120px;
     background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/1.png);
-    box-shadow: 0 1px 6px rgba(57,73,76,.35)
+    box-shadow: 0 1px 6px rgba(57,73,76,.35);
+	text-transform:none;
 }
 .btn-type-1a {
     font-weight: 400;
@@ -279,7 +279,8 @@ body {
     height: 160px;
     padding-top: 120px;
     background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/2.png);
-    box-shadow: 0 1px 6px rgba(57,73,76,.35)
+    box-shadow: 0 1px 6px rgba(57,73,76,.35);
+	text-transform:none;
 }
 .btn-type-1b {
     font-weight: 400;
@@ -291,7 +292,8 @@ body {
     height: 160px;
     padding-top: 120px;
     background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/3.png);
-    box-shadow: 0 1px 6px rgba(57,73,76,.35)
+    box-shadow: 0 1px 6px rgba(57,73,76,.35);
+	text-transform:none;
 }
 .btn-type-1c {
     font-weight: 400;
@@ -303,7 +305,8 @@ body {
     height: 160px;
     padding-top: 120px;
     background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/4.png);
-    box-shadow: 0 1px 6px rgba(57,73,76,.35)
+    box-shadow: 0 1px 6px rgba(57,73,76,.35);
+	text-transform:none;
 }
 .btn-type-1d {
     font-weight: 400;
@@ -315,7 +318,8 @@ body {
     height: 160px;
     padding-top: 120px;
     background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/5.png);
-    box-shadow: 0 1px 6px rgba(57,73,76,.35)
+    box-shadow: 0 1px 6px rgba(57,73,76,.35);
+	text-transform:none;
 }
 
 .btn-type-1e {
@@ -328,7 +332,8 @@ body {
     height: 160px;
     padding-top: 120px;
     background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/6.png);
-    box-shadow: 0 1px 6px rgba(57,73,76,.35)
+    box-shadow: 0 1px 6px rgba(57,73,76,.35);
+	text-transform:none;
 }
 .btn-type-1f {
     font-weight: 400;
@@ -340,7 +345,8 @@ body {
     height: 160px;
     padding-top: 120px;
     background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/7.png);
-    box-shadow: 0 1px 6px rgba(57,73,76,.35)
+    box-shadow: 0 1px 6px rgba(57,73,76,.35);
+	text-transform:none;
 }
 .btn-type-1g {
     font-weight: 400;
@@ -352,7 +358,8 @@ body {
     height: 160px;
     padding-top: 120px;
     background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/8.png);
-    box-shadow: 0 1px 6px rgba(57,73,76,.35)
+    box-shadow: 0 1px 6px rgba(57,73,76,.35);
+	text-transform:none;
 }
 
 
@@ -4533,7 +4540,7 @@ blockquote cite {
 }
 .section-title-page7q {
   position: relative;
-    height: 106px;
+    height: 100px;
     padding-top: 0px;
     padding-bottom: 0px;
     background-image: url("http://www.pct.com/assets/media/components/b-title-page/bluebar1.png");
