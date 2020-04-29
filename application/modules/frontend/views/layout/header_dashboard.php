@@ -50,7 +50,7 @@
                     <div class="header-navibox-2">
                         <ul class="yamm nav navbar-nav">
 							<li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>
-							<li><a href="<?php echo base_url(); ?>">New Order</a></li>
+							<li><a href="<?php echo base_url(); ?>">Open Order</a></li>
 							<li><a href="<?php echo base_url(); ?>">Generate CPL</a></li>
 							<li><a href="<?php echo base_url(); ?>">Proposed Insured</a></li>
 							<li><a href="<?php echo base_url(); ?>">Review Prelims</a></li>
