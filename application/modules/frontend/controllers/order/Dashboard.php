@@ -989,6 +989,40 @@ class Dashboard extends MX_Controller {
 			);
 			$purchase_price = $orderDetails['sales_amount'];
 			$buyers = array();
+		} else {
+			if (!empty($orderDetails['sales_amount'])) {
+				$sellers[] = array (
+					'NameID' =>  0,
+					'Last' => $primary_owner[1],
+					'First' => $primary_owner[0],
+					'NameType' => 2,
+					'JoiningPhrase' => 'single',
+					'tvid' => 0,
+					'Sequence' => 1,
+					'City' => trim($propertyDetail[2]),
+					'State' => trim($propertyDetail[3]),
+					'Zip' => trim($propertyDetail[4]),
+					'Address' => trim($propertyDetail[0])." ".trim($propertyDetail[1]),
+				);
+				$purchase_price = $orderDetails['sales_amount'];
+				$buyers = array();
+			} else {
+				$buyers[] = array (
+					'NameID' => 0,
+					'Last' => $primary_owner[1],
+					'First' => $primary_owner[0],
+					'NameType' => 1,
+					'JoiningPhrase' => 'single',
+					'tvid' => 0,
+					'Sequence' => 1,
+					'City' => trim($propertyDetail[2]),
+					'State' => trim($propertyDetail[3]),
+					'Zip' => trim($propertyDetail[4]),
+					'Address' => trim($propertyDetail[0])." ".trim($propertyDetail[1])
+				);
+				$purchase_price = $orderDetails['loan_amount'];
+				$sellers = array();
+			}
 		}
 
 		if (!empty($orderDetails['escrow_lender_id'])) {
@@ -1685,7 +1719,7 @@ class Dashboard extends MX_Controller {
 			$vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
 			$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
 			$liens = array();
-			//$linkedDocuments = $this->order->get_linked_documents($orderDetails['order_id']);
+			$linkedDocuments = $this->order->get_linked_documents($orderDetails['order_id']);
 			if(isset($data['Liens']) && !empty($data['Liens']))
 			{
 				foreach ($data['Liens'] as $key => $lien) 
@@ -1720,9 +1754,31 @@ class Dashboard extends MX_Controller {
 							$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
 						}
 						if(strpos($language, '_INSTRUMENTONLY_') !== false) {
+							foreach($linkedDocuments as $linkedDocument) {
+								$href = 'href=\"DocumentID='.$linkedDocument['api_document_id'].'\"';
+								$sync = $linkedDocument['is_sync'];
+								$api_document_id = $linkedDocument['api_document_id'];
+								$order_id = $linkedDocument['order_id'];
+								$document_name = $linkedDocument['document_name'];
+								if(strpos($language, $href) !== false) {
+									$onclick = "onclick=load_doc($sync, $api_document_id, $order_id, '$document_name');";
+									$language = str_replace($href, $onclick, $language);
+								}
+							}
 							$language = str_replace("_INSTRUMENTONLY_", " ".$instrument , $language);
 						}
 						if(strpos($language, '_PARCELID1_') !== false) {
+							foreach($linkedDocuments as $linkedDocument) {
+								$href = 'href=\"DocumentID='.$linkedDocument['api_document_id'].'\"';
+								$sync = $linkedDocument['is_sync'];
+								$api_document_id = $linkedDocument['api_document_id'];
+								$order_id = $linkedDocument['order_id'];
+								$document_name = $linkedDocument['document_name'];
+								if(strpos($language, $href) !== false) {
+									$onclick = "onclick=load_doc($sync, $api_document_id, $order_id, '$document_name');";
+									$language = str_replace($href, $onclick, $language);
+								}
+							}
 							$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
 						}
 						$language = str_replace("\u000b", "", $language);
@@ -1781,9 +1837,31 @@ class Dashboard extends MX_Controller {
 						$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
 					}
 					if(strpos($language, '_INSTRUMENTONLY_') !== false) {
+						foreach($linkedDocuments as $linkedDocument) {
+							$href = 'href=\"DocumentID='.$linkedDocument['api_document_id'].'\"';
+							$sync = $linkedDocument['is_sync'];
+							$api_document_id = $linkedDocument['api_document_id'];
+							$order_id = $linkedDocument['order_id'];
+							$document_name = $linkedDocument['document_name'];
+							if(strpos($language, $href) !== false) {
+								$onclick = "onclick=load_doc($sync, $api_document_id, $order_id, '$document_name');";
+								$language = str_replace($href, $onclick, $language);
+							}
+						}
 						$language = str_replace("_INSTRUMENTONLY_", " ".$instrument , $language);
 					}
 					if(strpos($language, '_PARCELID1_') !== false) {
+						foreach($linkedDocuments as $linkedDocument) {
+							$href = 'href=\"DocumentID='.$linkedDocument['api_document_id'].'\"';
+							$sync = $linkedDocument['is_sync'];
+							$api_document_id = $linkedDocument['api_document_id'];
+							$order_id = $linkedDocument['order_id'];
+							$document_name = $linkedDocument['document_name'];
+							if(strpos($language, $href) !== false) {
+								$onclick = "onclick=load_doc($sync, $api_document_id, $order_id, '$document_name');";
+								$language = str_replace($href, $onclick, $language);
+							}
+						}
 						$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
 					}
 					$language = str_replace("\u000b", "", $language);

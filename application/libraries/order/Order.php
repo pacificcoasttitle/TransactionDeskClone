@@ -193,6 +193,7 @@ class Order
             ->from('pct_order_documents');
             
         $this->CI->db->where('order_id', $fileId);
+        $this->CI->db->where('is_linked_doc', 1);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();
