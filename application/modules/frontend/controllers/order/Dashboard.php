@@ -1720,73 +1720,102 @@ class Dashboard extends MX_Controller {
 			$parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
 			$vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
 			$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
-			$liens = array();
+			$liens = $tax = array();
 			$linkedDocuments = $this->order->get_linked_documents($orderDetails['order_id']);
 			if(isset($data['Liens']) && !empty($data['Liens']))
 			{
 				foreach ($data['Liens'] as $key => $lien) 
 				{
 					$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
-					$amount = isset($lien['Amount']) && !empty($lien['Amount']) ? $lien['Amount'] : '';
-					$date = isset($lien['Date']) && !empty($lien['Date']) ? $lien['Date'] : '';
-					$grantor = isset($lien['Grantor']) && !empty($lien['Grantor']) ? $lien['Grantor'] : '';
-					$trustee = isset($lien['Trustee']) && !empty($lien['Trustee']) ? $lien['Trustee'] : '';
-					$grantee = isset($lien['Grantee']) && !empty($lien['Grantee']) ? $lien['Grantee'] : '';
-					$recordedDate = isset($lien['RecordedDate']) && !empty($lien['RecordedDate']) ? $lien['RecordedDate'] : '';
-					$instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
-					if(!empty($language))
+					$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);;
+					if(strpos($language, 'Tax Identification No') !== false)
 					{
-						if(strpos($language, '_AMOUNT_') !== false) {
-							$language = str_replace("_AMOUNT_", " ".$amount , $language);
-						}
-						if(strpos($language, '_DATE_') !== false) {
-							$language = str_replace("_DATE_", " ".$date , $language);
-						}
-						if(strpos($language, '_GRANTOR_') !== false) {
-							$language = str_replace("_GRANTOR_", " ".$grantor , $language);
-						}
-						if(strpos($language, '_TRUSTEE_') !== false) {
-							$language = str_replace("_TRUSTEE_", " ".$trustee , $language);
-						}
-						if(strpos($language, '_GRANTEE_') !== false) {
-							$language = str_replace("_GRANTEE_", " ".$grantee , $language);
-						}
-						if(strpos($language, '_RECORDEDDATE_') !== false) {
-							$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
-						}
-						if(strpos($language, '_INSTRUMENTONLY_') !== false) {
-							foreach($linkedDocuments as $linkedDocument) {
-								$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
-								$sync = $linkedDocument['is_sync'];
-								$api_document_id = $linkedDocument['api_document_id'];
-								$order_id = $linkedDocument['order_id'];
-								$document_name = $linkedDocument['document_name'];
-								if(strpos($language, $href) !== false) {
-									$onclick = "href='javascript:void(0)' style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
-									$language = str_replace($href, $onclick, $language);
-								}
-							}
-							$language = str_replace("_INSTRUMENTONLY_", " ".$instrument , $language);
-						}
-						if(strpos($language, '_PARCELID1_') !== false) {
-							foreach($linkedDocuments as $linkedDocument) {
-								$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
-								$sync = $linkedDocument['is_sync'];
-								$api_document_id = $linkedDocument['api_document_id'];
-								$order_id = $linkedDocument['order_id'];
-								$document_name = $linkedDocument['document_name'];
-								if(strpos($language, $href) !== false) {
-									$onclick = "href='javascript:void(0)' style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
-									$language = str_replace($href, $onclick, $language);
-								}
-							}
-							
-							$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
-						}
+
 						$language = str_replace("\u000b", "", $language);
 						$language = str_replace("\r", "", $language);
-						$liens[] = $language;
-					}	    				
+						if(strpos($language, '_PARCELID1_') !== false) {
+								foreach($linkedDocuments as $linkedDocument) {
+									$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
+									$sync = $linkedDocument['is_sync'];
+									$api_document_id = $linkedDocument['api_document_id'];
+									$order_id = $linkedDocument['order_id'];
+									$document_name = $linkedDocument['document_name'];
+									if(strpos($language, $href) !== false) {
+										$onclick = "href='javascript: void(0)' style='cusror: pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
+										$language = str_replace($href, $onclick, $language);
+									}
+								}
+								
+								$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
+							}
+
+							$tax[] = $language;
+					}
+					else
+					{
+						$amount = isset($lien['Amount']) && !empty($lien['Amount']) ? $lien['Amount'] : '';
+						$date = isset($lien['Date']) && !empty($lien['Date']) ? $lien['Date'] : '';
+						$grantor = isset($lien['Grantor']) && !empty($lien['Grantor']) ? $lien['Grantor'] : '';
+						$trustee = isset($lien['Trustee']) && !empty($lien['Trustee']) ? $lien['Trustee'] : '';
+						$grantee = isset($lien['Grantee']) && !empty($lien['Grantee']) ? $lien['Grantee'] : '';
+						$recordedDate = isset($lien['RecordedDate']) && !empty($lien['RecordedDate']) ? $lien['RecordedDate'] : '';
+						$instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
+						if(!empty($language))
+						{
+							if(strpos($language, '_AMOUNT_') !== false) {
+								$language = str_replace("_AMOUNT_", " ".$amount , $language);
+							}
+							if(strpos($language, '_DATE_') !== false) {
+								$language = str_replace("_DATE_", " ".$date , $language);
+							}
+							if(strpos($language, '_GRANTOR_') !== false) {
+								$language = str_replace("_GRANTOR_", " ".$grantor , $language);
+							}
+							if(strpos($language, '_TRUSTEE_') !== false) {
+								$language = str_replace("_TRUSTEE_", " ".$trustee , $language);
+							}
+							if(strpos($language, '_GRANTEE_') !== false) {
+								$language = str_replace("_GRANTEE_", " ".$grantee , $language);
+							}
+							if(strpos($language, '_RECORDEDDATE_') !== false) {
+								$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
+							}
+							if(strpos($language, '_INSTRUMENTONLY_') !== false) {
+								foreach($linkedDocuments as $linkedDocument) {
+									$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
+									$sync = $linkedDocument['is_sync'];
+									$api_document_id = $linkedDocument['api_document_id'];
+									$order_id = $linkedDocument['order_id'];
+									$document_name = $linkedDocument['document_name'];
+									if(strpos($language, $href) !== false) {
+										$onclick = "href='javascript:void(0)' style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
+										$language = str_replace($href, $onclick, $language);
+									}
+								}
+								$language = str_replace("_INSTRUMENTONLY_", " ".$instrument , $language);
+							}
+							if(strpos($language, '_PARCELID1_') !== false) {
+								foreach($linkedDocuments as $linkedDocument) {
+									$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
+									$sync = $linkedDocument['is_sync'];
+									$api_document_id = $linkedDocument['api_document_id'];
+									$order_id = $linkedDocument['order_id'];
+									$document_name = $linkedDocument['document_name'];
+									if(strpos($language, $href) !== false) {
+										$onclick = "href='javascript:void(0)' style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
+										$language = str_replace($href, $onclick, $language);
+									}
+								}
+								
+								$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
+							}
+							$language = str_replace("\u000b", "", $language);
+							$language = str_replace("\r", "", $language);
+							$liens[] = $language;
+						}
+					}
+					   				
 				}
 			}
 
@@ -1796,6 +1825,8 @@ class Dashboard extends MX_Controller {
 				foreach ($data['Easements'] as $key => $easement) 
 				{
 					$language = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
+					$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);;
 					$language = str_replace("\u000b", "", $language);
 					$language = str_replace("\r", "", $language);
 					if(!empty($language))
@@ -1811,7 +1842,8 @@ class Dashboard extends MX_Controller {
 				foreach ($data['Requirements'] as $key => $requirement) 
 				{
 					$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
-					$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
+					$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);;
 					$amount = isset($requirement['Amount']) && !empty($requirement['Amount']) ? $requirement['Amount'] : '';
 					$date = isset($requirement['Date']) && !empty($requirement['Date']) ? $requirement['Date'] : '';
 					$grantor = isset($requirement['Grantor']) && !empty($requirement['Grantor']) ? $requirement['Grantor'] : '';
@@ -1883,6 +1915,8 @@ class Dashboard extends MX_Controller {
 				{
 
 					$language = isset($restriction['Language']) && !empty($restriction['Language']) ? $restriction['Language'] : '';
+					$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);;
 					$language = str_replace("\u000b", "", $language);
 					$language = str_replace("\r", "", $language);
 					if(!empty($language))
@@ -1898,6 +1932,7 @@ class Dashboard extends MX_Controller {
 				'vesting'=> $vesting,
 				'generated_date'=> $generated_date,
 				'lien'=> json_encode($liens),
+				'tax'=> json_encode($tax),
 				'easement'=> json_encode($easements),
 				'requirements'=> json_encode($requirements),
 				'restrictions'=> json_encode($restrictions),

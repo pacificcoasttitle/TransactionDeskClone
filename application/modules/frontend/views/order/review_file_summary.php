@@ -74,6 +74,53 @@
 		<?php
 			}
 		?>
+		<?php 
+			if(isset($prelim_details['tax']) && !empty($prelim_details['tax']))
+			{				
+		?>
+				<div class="entry-main">
+					<div class="entry-header">
+						<div class="alert alert-1">
+							<div class="alert__inner">
+								<h3 class="alert-titlesmall">Tax</h3>
+								<!-- <div class="alert-text">If there are any urgent Items they
+									will appear below.</div> -->
+							</div>
+						</div>
+					</div>
+					<div class="entry-content">
+						<?php
+							$tax = json_decode($prelim_details['tax'],TRUE);
+							if(isset($tax) && !empty($tax))
+							{
+
+						?>
+								<ol>
+						<?php
+								foreach ($tax as $key => $tax_val) 
+								{
+							?>
+									<li><p><?php echo nl2br($tax_val); ?>
+									</p></li>
+							<?php
+								}
+							?>
+								</ol>
+							<?php
+							}
+							else 
+							{
+						?>
+								<p><?php echo "No data found"; ?></p>
+						<?php
+							}
+						?>
+						
+					</div>
+				</div>
+		<?php
+			}
+		?>
 		<?php
 			if(isset($prelim_details['easement']) && !empty($prelim_details['easement']))
 			{
