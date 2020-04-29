@@ -1,5 +1,5 @@
 <footer class="footer">
-    <div class="container">
+   <!-- <div class="container">
         <div class="row">
             <div class="col-xs-12">
                 <ul class="footer-social-nets">
@@ -9,7 +9,7 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div>  -->
     <div class="footer__main">
         <div class="container">
             <div class="row">

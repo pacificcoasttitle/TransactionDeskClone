@@ -9,11 +9,26 @@
 					<div class="col-xs-12">
 						<div class="typography-section__innera">
 							<h2 class="ui-title-block ui-title-block_light">Welcome Back <?php echo $name; ?>,</h2>
-							<div class="ui-decor-1a bg-primary"></div>
-							<h3 class="ui-title-block_light">What would you like to do?</h3>
+							<div class="ui-decor-1a bg-accent"></div>
+							<h3 class="ui-title-block_light">How can we help you today?</h3>
 						</div>
 						<div class="typography-sectiona">
 							<div class="col-md-12">
+							
+							<!-- 
+								<div class="col-md-3">
+									<div class="card-block"></div>
+								</div>
+								<div class="col-md-3">
+									<div class="card-block"></div>
+								</div>
+								<div class="col-md-3">
+									<div class="card-block"></div>
+								</div>
+								<div class="col-md-3">
+									<div class="card-block"></div>
+								</div>
+							     -->
 								<a href="<?php echo base_url().'order'; ?>">
 									<button class="btn btn-type-1a btn-lg" type="button">Open New Order</button>
 								</a>
@@ -26,10 +41,29 @@
                   				<a href="<?php echo base_url().'attach-files'; ?>">
                   					<button class="btn btn-type-1d btn-lg" type="button">Upload a Document</button>
                   				</a>
+								
+								
 							</div>
 						</div>
 						<div class="typography-sectionc">
 							<div class="col-md-12">
+							
+							<!--
+							   <div class="col-md-3">
+									<div class="card-block"></div>
+								</div>
+								<div class="col-md-3">
+									<div class="card-block"></div>
+								</div>
+								<div class="col-md-3">
+									<div class="card-block"></div>
+								</div>
+								<div class="col-md-3">
+									<div class="card-block"></div>
+								</div> -->
+							
+							
+							
 								<a href="<?php echo base_url().'proposed-insured'; ?>">
 									<button class="btn btn-type-1e btn-lg" type="button">Proposed Insured</button>
 								</a>
@@ -41,7 +75,9 @@
 								</a>
 								<a href="<?php echo base_url().'notes'; ?>">
 									<button class="btn btn-type-1b btn-lg" type="button">Notes on Files</button>
-								</a>
+								</a> 
+								
+								
 							</div>
 						</div>
 					</div>
@@ -64,11 +100,11 @@
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">
-									<table class="table table_primary">
+									<table class="table table-type-1 typography-last-elem">
 										<thead>
 											<tr>
 												<th>#</th>
-												<th>Date Opened</th>
+												<th>Opened</th>
 												<th>Property Address</th>
 												<th>Buyer/Seller</th>
 												<th>Action</th>
