@@ -17,7 +17,7 @@
 					<div class="col-xs-12">
 						<div class="typography-section__inner">
 							<h2 class="ui-title-block ui-title-block_light">Closing Protection Letters</h2>
-							<div class="ui-decor-1a bg-primary"></div>
+							<div class="ui-decor-1a bg-accent"></div>
 							<h3 class="ui-title-block_light">Generate your CPL</h3>
 						</div>
 						<?php if(!empty($success)) {?>
@@ -38,7 +38,7 @@
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">
-									<table class="table table_primary" id="cpl_listing">
+									<table class="table table-type-3 typography-last-elem no-footer" id="cpl_listing">
 										<thead>
 											<tr>
 												<th>#</th>

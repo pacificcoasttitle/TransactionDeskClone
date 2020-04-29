@@ -13,7 +13,7 @@
 					<div class="col-xs-12">
 						<!--  <h2 class="typography-title">Tables</h2> -->
 						<div class="table-responsive">
-							<table class="table table-type-1 typography-last-elem" id="table-recordings" width="100%" cellspacing="0">
+							<table class="table table-type-3 typography-last-elem no-footer" id="table-recordings" width="100%" cellspacing="0">
 								<thead>
 									<tr>
 										<th>Date</th>

@@ -94,13 +94,13 @@
 					<div class="col-xs-12">
 						<div class="typography-section__inner">
 							<h2 class="ui-title-block ui-title-block_light">Recent Orders,</h2>
-							<div class="ui-decor-1a bg-primary"></div>
+							<div class="ui-decor-1a bg-accent"></div>
 							<h3 class="ui-title-block_light">Below are all your orders.</h3>
 						</div>
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">
-									<table class="table table-type-1 typography-last-elem">
+									<table class="table table-type-3 typography-last-elem">
 										<thead>
 											<tr>
 												<th>#</th>
