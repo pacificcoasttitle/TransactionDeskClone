@@ -34,7 +34,7 @@
 		?>
 				<div class="entry-main">
 					<div class="entry-header">
-						<div class="alert alert-blocksmall alert-4">
+						<div class="alert alert-4">
 							<div class="alert__inner">
 								<h3 class="alert-titlesmall">Liens</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
@@ -47,12 +47,19 @@
 							$liens = json_decode($prelim_details['lien'],TRUE);
 							if(isset($liens) && !empty($liens))
 							{
+
+						?>
+								<ol>
+						<?php
 								foreach ($liens as $key => $lien) 
 								{
 							?>
-									<p><?php echo nl2br($lien); ?></p>
+									<li><p><?php echo nl2br(preg_replace('/(.*):/', '<b>$1:</b>', $lien)); ?></p></li>
 							<?php
 								}
+							?>
+								</ol>
+							<?php
 							}
 							else 
 							{
@@ -73,7 +80,7 @@
 		?>
 				<div class="entry-main">
 					<div class="entry-header">
-						<div class="alert alert-blocksmall alert-4">
+						<div class="alert alert-default">
 							<div class="alert__inner">
 								<h3 class="alert-titlesmall">Easements</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
@@ -86,12 +93,18 @@
 							$easements = json_decode($prelim_details['easement'],TRUE);
 							if(isset($easements) && !empty($easements))
 							{
+						?>
+								<ol>
+						<?php
 								foreach ($easements as $key => $easement) 
 								{
-						?>
-									<p><?php echo nl2br($easement); ?></p>
+						?>									
+									<li><p><?php echo nl2br(preg_replace('/(.*):/', '<b>$1:</b>', $easement)); ?></p></li>
 						<?php
 								}
+						?>
+								</ol>
+						<?php
 							}
 							else
 							{
@@ -111,7 +124,7 @@
 		?>
 				<div class="entry-main">
 					<div class="entry-header">
-						<div class="alert alert-blocksmall alert-4">
+						<div class="alert alert-default">
 							<div class="alert__inner">
 								<h3 class="alert-titlesmall">Requirements</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
@@ -124,12 +137,18 @@
 							$requirements = json_decode($prelim_details['requirements'],TRUE);
 							if(isset($requirements) && !empty($requirements))
 							{
+						?>
+								<ol>
+						<?php
 								foreach ($requirements as $key => $requirement) 
 								{
 							?>
-									<p><?php echo nl2br($requirement); ?></p>
+									<li><p><?php echo nl2br(preg_replace('/(.*):/', '<b>$1:</b>', $requirement)); ?></p></li>
 							<?php
 								}
+							?>
+								</ol>
+							<?php
 							}
 							else
 							{
@@ -149,7 +168,7 @@
 		?>
 				<div class="entry-main">
 					<div class="entry-header">
-						<div class="alert alert-blocksmall alert-4">
+						<div class="alert alert-default">
 							<div class="alert__inner">
 								<h3 class="alert-titlesmall">Restrictions</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
@@ -162,12 +181,18 @@
 							$restrictions = json_decode($prelim_details['restrictions'],TRUE);
 							if(isset($restrictions) && !empty($restrictions))
 							{
+						?>
+								<ol>
+						<?php
 								foreach ($restrictions as $key => $restriction) 
 								{
 						?>
-									<p><?php echo nl2br($restriction); ?></p>
+									<p><?php echo nl2br(preg_replace('/(.*):/', '<b>$1:</b>', $restriction)); ?></p>
 						<?php
 								}
+						?>
+								</ol>
+						<?php
 							}
 							else
 							{
