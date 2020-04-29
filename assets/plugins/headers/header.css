@@ -73,9 +73,12 @@ html [data-off-canvas*="mobile-slidebar"]  .dropdown-menu .dropdown-menu {
 
 .header.header-logo-white .normal-logo {
   display: block !important;
+  width:250px;
 }
 .header.header-logo-white .scroll-logo {
   display: none !important;
+  width:250px;
+  
 }
 
 
