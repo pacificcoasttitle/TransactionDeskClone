@@ -780,7 +780,20 @@ class Dashboard extends MX_Controller {
 		$emptyData['is_loan_number'] = $is_loan_number;
 
 		$is_borrower = 0;
-		if($purchase_type == '19' || $purchase_type == '33')
+		
+		$sales_amount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+		
+
+		if(isset($sales_amount) && !empty($sales_amount))
+		{
+			$borrowers =  isset($orderDetails['borrower']) && !empty($orderDetails['borrower']) ? $orderDetails['borrower'] : '';
+			$data['borrowers'] = $borrowers;
+			if($borrowers)
+			{
+				$is_borrower = 1;
+			}
+		}
+		else if(isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']))
 		{
 			$owners = array();
 			$primary_owner = isset($orderDetails['primary_owner']) && !empty($orderDetails['primary_owner']) ? $orderDetails['primary_owner'] : '';
@@ -795,21 +808,10 @@ class Dashboard extends MX_Controller {
 				$owners[] = $secondary_owner;
 			}
 			$data['borrowers'] = implode(', ', $owners);
-			$is_borrower = 1;			
-		}
-		
-		if($purchase_type == '20' || $purchase_type == '32')
-		{
-			$borrowers =  isset($orderDetails['borrower']) && !empty($orderDetails['borrower']) ? $orderDetails['borrower'] : '';
-			$data['borrowers'] = $borrowers;
-			if($borrowers)
-			{
-				$is_borrower = 1;
-			}
-			
+			$is_borrower = 1;	
 		}
 		$emptyData['is_borrower'] = $is_borrower;
-
+		
 		$is_supplemental_report_date = 0;
 		if(isset($orderDetails['supplemental_report_date']) && !empty($orderDetails['supplemental_report_date']))
 		{

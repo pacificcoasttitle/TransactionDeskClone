@@ -323,6 +323,8 @@ function generateProposedInsured(fileId)
 {
 	if(fileId)
 	{
+		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
 		$.ajax({
             url: base_url + "generate-proposed-insured",
             type: "post",
@@ -330,8 +332,8 @@ function generateProposedInsured(fileId)
                 fileId: fileId,
             },
             success: function(response) {
+            	$('#page-preloader').css('display', 'none');
             	var res = JSON.parse(response);
-            	console.log(res);
             	if(res.status == 'dataRequired')
                 {
                 	$('#orderId').val(res.data.orderId);
