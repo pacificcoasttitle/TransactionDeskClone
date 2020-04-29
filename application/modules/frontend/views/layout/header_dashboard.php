@@ -49,11 +49,16 @@
                     </div>
                     <div class="header-navibox-2">
                         <ul class="yamm nav navbar-nav">
-            <li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>
+							<li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>
+							<li><a href="<?php echo base_url(); ?>">New Order</a></li>
+							<li><a href="<?php echo base_url(); ?>">Generate CPL</a></li>
+							<li><a href="<?php echo base_url(); ?>">Proposed Insured</a></li>
+							<li><a href="<?php echo base_url(); ?>">Review Prelims</a></li>
+							
                             
                             
-                            <li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Resources<b class="caret"></b>
-                        <!-- Classic Dropdown--></a>
+                        <!--    <li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Resources<b class="caret"></b>
+                       </a>
                                 <ul class="dropdown-menu">
                                         <li><h4>Forms & Flyers</h4></li>
                                     <li><a href="<?php echo base_url(); ?>blank-forms">Blank Forms</a></li>
@@ -70,7 +75,7 @@
                                         <li class="divider"></li>
                                         <li><h4>Tools & Video</h4></li>
                                     <li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Agent Tools<b style="color:#d35411;" class="caret"></b>
-                        <!-- Classic Dropdown--></a>
+                       </a>
                                     <ul class="dropdown-menu">
                                     
                                     <li><a href="http://www.pacificcoastagent.com/">Pacific Coast Agent</a></li>
@@ -83,7 +88,7 @@
                             <li><a href="<?php echo base_url(); ?>training-center">Training center</a></li>
                                 </ul>
                                 
-                            </li>
+                            </li> -->
                             <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>    
         </ul>
                     </div>
