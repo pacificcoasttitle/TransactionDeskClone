@@ -36,7 +36,7 @@
 									<button class="btn btn-type-1b btn-lg" type="button">Generate CPL</button>
 								</a>
 								<a href="<?php echo base_url().'prelim-files'; ?>">
-									<button class="btn btn-type-1a btn-lg" type="button">Review Prelim</button>
+									<button class="btn btn-type-1c btn-lg" type="button">Review Prelim</button>
 								</a>
                   				<a href="<?php echo base_url().'attach-files'; ?>">
                   					<button class="btn btn-type-1d btn-lg" type="button">Upload a Document</button>
@@ -74,7 +74,7 @@
 									<button class="btn btn-type-1a btn-lg" type="button">Fee Estimate</button>
 								</a>
 								<a href="<?php echo base_url().'notes'; ?>">
-									<button class="btn btn-type-1b btn-lg" type="button">Notes on Files</button>
+									<button class="btn btn-type-1g btn-lh" type="button">Notes on Files</button>
 								</a> 
 								
 								
