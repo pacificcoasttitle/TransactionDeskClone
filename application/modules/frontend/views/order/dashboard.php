@@ -71,10 +71,10 @@
 									<button class="btn btn-type-1f btn-lg" style="padding-left:16px;" type="button">Confirmations</button>
 								</a>
 								<a href="<?php echo base_url().'fees'; ?>">
-									<button class="btn btn-type-1a btn-lg" type="button">Fee Estimate</button>
+									<button class="btn btn-type-1g btn-lg" type="button">Fee Estimate</button>
 								</a>
 								<a href="<?php echo base_url().'notes'; ?>">
-									<button class="btn btn-type-1g btn-lh" type="button">Notes on Files</button>
+									<button class="btn btn-type-1h btn-lg" type="button">Notes on Files</button>
 								</a> 
 								
 								
