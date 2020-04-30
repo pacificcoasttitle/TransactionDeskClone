@@ -8,7 +8,7 @@
     color: #04415D;
     background: #ffffff;
     width: 100%;
-    border-bottom: 2px #D35411 dotted;
+    border-bottom: 2px #D0D0D0 dotted;
     padding: 10px 15px 10px 0;
 }
 

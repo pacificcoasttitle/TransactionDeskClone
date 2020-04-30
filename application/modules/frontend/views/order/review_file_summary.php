@@ -2,7 +2,7 @@
 ?>
 <div class="typography-section__inner">
 	<h3 class="ui-title-block_light">Prelim Info</h3>
-	<div class="ui-decor-1a bg-primary"></div>
+	<div class="ui-decor-1a bg-accent"></div>
 </div>
 <div class="l-main-contenta">
 	<article class="b-post b-post-full clearfix">
@@ -36,7 +36,7 @@
 					<div class="entry-header">
 						<div class="alert alert-4">
 							<div class="alert__inner">
-								<h3 class="alert-titlesmall">Liens</h3>
+								<h3 class="alert-titlesmall1">Liens & Judgements</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
 									will appear below.</div> -->
 							</div>
@@ -82,7 +82,7 @@
 					<div class="entry-header">
 						<div class="alert alert-1">
 							<div class="alert__inner">
-								<h3 class="alert-titlesmall">Tax</h3>
+								<h3 class="alert-titlesmall2">Property Taxes</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
 									will appear below.</div> -->
 							</div>
@@ -127,9 +127,9 @@
 		?>
 				<div class="entry-main">
 					<div class="entry-header">
-						<div class="alert alert-default">
+						<div class="alert alert-6">
 							<div class="alert__inner">
-								<h3 class="alert-titlesmall">Easements</h3>
+								<h3 class="alert-titlesmall3">Easements</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
 									will appear below.</div> -->
 							</div>
@@ -171,9 +171,9 @@
 		?>
 				<div class="entry-main">
 					<div class="entry-header">
-						<div class="alert alert-default">
+						<div class="alert alert-7">
 							<div class="alert__inner">
-								<h3 class="alert-titlesmall">Requirements</h3>
+								<h3 class="alert-titlesmall4">Requirements</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
 									will appear below.</div> -->
 							</div>
@@ -215,9 +215,9 @@
 		?>
 				<div class="entry-main">
 					<div class="entry-header">
-						<div class="alert alert-default">
+						<div class="alert alert-8">
 							<div class="alert__inner">
-								<h3 class="alert-titlesmall">Restrictions</h3>
+								<h3 class="alert-titlesmall5">Restrictions</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
 									will appear below.</div> -->
 							</div>
