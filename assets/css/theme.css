@@ -1146,7 +1146,7 @@ blockquote cite {
 
 .alert-1 {
   background-color: transparent;
-  padding: 7px 19px 10px;
+  padding: 7px 19px 20px;
   margin-bottom: 14px;
   border: 4px dashed #00CC6A;
   position: relative;
@@ -1166,7 +1166,7 @@ blockquote cite {
 
 .alert-4 {
   background-color: transparent;
-  padding: 7px 19px 10px;
+  padding: 7px 19px 20px;
   margin-bottom: 14px;
   border: 4px dashed #E81123;
   position: relative;
@@ -1186,7 +1186,7 @@ blockquote cite {
 
 .alert-6 {
   background-color: transparent;
-  padding: 7px 19px 10px;
+  padding: 7px 19px 20px;
   margin-bottom: 14px;
   border: 4px dashed #B146C2;
   position: relative;
@@ -1194,7 +1194,7 @@ blockquote cite {
 
 .alert-7 {
   background-color: transparent;
-  padding: 7px 19px 10px;
+  padding: 7px 19px 20px;
   margin-bottom: 14px;
   border: 4px dashed #0078D7;
   position: relative;
@@ -1202,7 +1202,7 @@ blockquote cite {
 
 .alert-8 {
   background-color: transparent;
-  padding: 7px 19px 10px;
+  padding: 7px 19px 20px;
   margin-bottom: 14px;
   border: 4px dashed #FFB900;
   position: relative;

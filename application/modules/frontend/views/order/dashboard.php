@@ -39,7 +39,7 @@
 									<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
 								</a>
                   				<a href="<?php echo base_url().'attach-files'; ?>">
-                  					<button class="btn1 btn-type-1d btn-lg" type="button">Upload a Document</button>
+                  					<button class="btn1 btn-type-1d btn-lg" type="button">Upload Doc</button>
                   				</a>
 								
 								
@@ -68,7 +68,7 @@
 									<button class="btn1 btn-type-1e btn-lg" type="button">Proposed Insured</button>
 								</a>
 								<a href="<?php echo base_url().'recordings'; ?>">
-									<button class="btn1 btn-type-1f btn-lg" style="padding-left:16px;" type="button">Confirmations</button>
+									<button class="btn1 btn-type-1f btn-lg" style="" type="button">Confirmations</button>
 								</a>
 								<a href="<?php echo base_url().'fees'; ?>">
 									<button class="btn1 btn-type-1g btn-lg" type="button">Fee Estimate</button>
