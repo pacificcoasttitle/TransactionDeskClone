@@ -30,13 +30,13 @@
 </head>
 <body>
     <div class="form-body">
-        <div class="website-logo">
+       <!--<div class="website-logo">
             <a href="index.html">
                 <div class="logo">
                     <img class="logo-size" src="<?php echo base_url(); ?>assets/media/general/logo_login.png" alt="">
                 </div>
             </a>
-        </div>
+        </div> -->
         <div class="row">
             <div class="img-holder">
                 <div class="bg"></div>
@@ -47,6 +47,15 @@
             <div class="form-holder">
                 <div class="form-content">
                     <div class="form-items">
+					
+					<div class="website-logo-inside">
+                            <a href="index.html">
+                                <div class="l">
+                                    <img class="logo-size" src="<?php echo base_url(); ?>assets/media/general/logo2.png" alt="">
+                                </div>
+                            </a>
+                        </div>
+					
                         <h3>Let us know who you are...</h3>
                         <p>Enter your email below to log in. <br> No password is needed.</p>
                         <div class="page-links">
