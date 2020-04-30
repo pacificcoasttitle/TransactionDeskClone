@@ -58,7 +58,7 @@ button:focus {outline:0;}
 					<div class="col-xs-12">
 						<div class="typography-section__inner">
 							<h2 class="ui-title-block ui-title-block_light">Preliminary Report Review</h2>
-							<div class="ui-decor-1a bg-primary"></div>
+							<div class="ui-decor-1a bg-accent"></div>
 							<h3 class="ui-title-block_light">File Number <?php echo $orderDetails['file_number'];?></h3>
 							<h3 class="ui-title-block_light"><?php echo $orderDetails['full_address'];?></h3>
 							<input type="hidden" id="fileId" name="fileId" value="<?php echo $orderDetails['file_id'];?>">
@@ -70,7 +70,7 @@ button:focus {outline:0;}
 								<div class="col-md-3">
 									<div class="typography-section__inner">
 										<h3 class="ui-title-block_light">Doc Links</h3>
-										<div class="ui-decor-1a bg-primary"></div>
+										<div class="ui-decor-1a bg-accent"></div>
 									</div>
 									<aside class="l-sidebarb l-sidebar_right">
 										<section class="widget section-sidebara">
@@ -126,7 +126,7 @@ button:focus {outline:0;}
 
 										<div class="typography-section__inner">
 											<h3 class="ui-title-block_light">Order Details</h3>
-											<div class="ui-decor-1a bg-primary"></div>
+											<div class="ui-decor-1a bg-accent"></div>
 										</div>
 
 										<section class="widget section-sidebar">
