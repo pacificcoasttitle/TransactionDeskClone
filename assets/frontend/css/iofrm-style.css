@@ -239,7 +239,7 @@ html, body {
     max-width: 160px;
     margin-bottom: 50px;
 }
-/*
+
 .img-holder .bg {
     position: absolute;
     opacity: 0.23;
@@ -247,12 +247,12 @@ html, body {
     top: 0;
     width: 100%;
     height: 100%;
-    background-image: url("../images/img1.jpg");
+    background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/404a4df1-bc03-4696-b50e-a2885c6b8342.jpg");
     background-size: cover;
     background-position: center;
     z-index: -1;
 }
-*/
+
 
 @media (min-height: 700px) {
     .img-holder {
@@ -390,7 +390,7 @@ html, body {
     text-decoration: none;
     color: #fff;
     font-weight: 300;
-    font-size: 15px;
+    font-size: 19px;
     margin-right: 20px;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
@@ -426,7 +426,7 @@ html, body {
 
 .form-content input, .form-content .dropdown-toggle.btn-default {
     width: 100%;
-    padding: 9px 20px;
+    padding: 14px 20px;
     text-align: left;
     border: 0;
     outline: 0;
