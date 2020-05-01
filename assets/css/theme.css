@@ -5594,6 +5594,11 @@ padding-left: 0px;
 .card-block {
 	    border: 1px solid #e9e9e9;
 		padding: 35px 35x 35px 35px;
-		height: 180px;
+    height: 180px;
+}
+
+.button-color {
+  color: #c7c7c7;
+}
 	
 	
