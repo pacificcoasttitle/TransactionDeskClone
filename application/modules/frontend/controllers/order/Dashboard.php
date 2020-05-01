@@ -205,7 +205,7 @@ class Dashboard extends MX_Controller {
 				$nestedData[] = $i;
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
-				$nestedData[] = '<a href="'.base_url().'upload-documents/'.$order['file_id'].'"><button class="btn btn-grad-2a" type="button">Attach Files</button></a>';
+				$nestedData[] = '<a href="'.base_url().'upload-documents/'.$order['file_id'].'"><button class="btn btn-grad-2a button-color button-color" type="button">Attach Files</button></a>';
 				$data[] = $nestedData; 
 				$i++; 
 			}
@@ -346,7 +346,7 @@ class Dashboard extends MX_Controller {
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = '<a href="'.base_url().'get-fees/'.$order['file_id'].'"><button class="btn btn-grad-2a" type="button">Get Fees</button></a>';
+                $nestedData[] = '<a href="'.base_url().'get-fees/'.$order['file_id'].'"><button class="btn btn-grad-2a button-color button-color" type="button">Get Fees</button></a>';
                 $data[] = $nestedData; 
                 $i++; 
             }
@@ -543,7 +543,7 @@ class Dashboard extends MX_Controller {
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'"><button class="btn btn-grad-2a" type="button">View / Add Notes</button></a>';
+                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'"><button class="btn btn-grad-2a button-color button-color" type="button">View / Add Notes</button></a>';
                 $data[] = $nestedData; 
                 $i++; 
             }
@@ -693,7 +693,7 @@ class Dashboard extends MX_Controller {
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a" type="button">Generate</button></a>';
+                $nestedData[] = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
                 $data[] = $nestedData; 
                 $i++; 
             }
@@ -915,7 +915,7 @@ class Dashboard extends MX_Controller {
 				} else {
 					$file_id = $order['file_id'];
 					$lender_id_flag = !empty($order['escrow_lender_id']) ? 1 : 0;
-					$nestedData[] = "<form onclick='return lender_pop_up($lender_id_flag, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><button class='btn btn-grad-2a generate' type='submit'>GENERATE CPL</button></form>";
+					$nestedData[] = "<form onclick='return lender_pop_up($lender_id_flag, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE CPL</button></form>";
 				}
 				$data[] = $nestedData; 
 				$i++; 
@@ -1370,7 +1370,7 @@ class Dashboard extends MX_Controller {
 				$nestedData[] = $order['full_address'];
 				
 				if ($order['prelim_summary_id'] != 0) {
-					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a' type='button'>REVIEW FILE</button></a>";
+					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a button-color' type='button'>REVIEW FILE</button></a>";
 				} else {
 					$nestedData[] = "<a href='javascript:void(0)'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a>";
 				}
