@@ -15,12 +15,14 @@
 1. General Styles.
 2. Responsive Styles.
 -------------------------------------------------------------------*/
-@import url("https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900");
+@import url("https://fonts.googleapis.com/css?family=Manrope:100,300,400,700,900");
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700;800&display=swap');
+
 /* -----------------------------------
     1 - General Styles
 ------------------------------------*/
 *, body {
-    font-family: 'Lato', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -245,11 +247,12 @@ html, body {
     top: 0;
     width: 100%;
     height: 100%;
-    background-image: url("../images/img1.jpg");
+    background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/404a4df1-bc03-4696-b50e-a2885c6b8342.jpg");
     background-size: cover;
     background-position: center;
     z-index: -1;
 }
+
 
 @media (min-height: 700px) {
     .img-holder {
@@ -343,8 +346,10 @@ html, body {
     color: #fff;
     text-align: left;
     font-size: 24px;
-    font-weight: 900;
     margin-bottom: 10px;
+	font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+	
 }
 
 .form-content h3.form-title {
@@ -358,6 +363,7 @@ html, body {
     font-weight: 300;
     line-height: 20px;
     margin-bottom: 30px;
+    font-family: 'Manrope', sans-serif;
 }
 
 .form-content p.form-subtitle {
@@ -368,7 +374,7 @@ html, body {
 .form-content label {
     color: #fff;
     text-align: left;
-    font-size: 15px;
+    font-size: 21px;
     font-weight: 300;
     line-height: 20px;
     margin-bottom: 10px;
@@ -384,7 +390,7 @@ html, body {
     text-decoration: none;
     color: #fff;
     font-weight: 300;
-    font-size: 15px;
+    font-size: 19px;
     margin-right: 20px;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
@@ -398,7 +404,7 @@ html, body {
     position: absolute;
     content: "";
     width: 100%;
-    height: 2px;
+    height: 5px;
     left: 0;
     bottom: -10px;
     background-color: rgba(255, 255, 255, 0.5);
@@ -420,7 +426,7 @@ html, body {
 
 .form-content input, .form-content .dropdown-toggle.btn-default {
     width: 100%;
-    padding: 9px 20px;
+    padding: 14px 20px;
     text-align: left;
     border: 0;
     outline: 0;
@@ -432,6 +438,8 @@ html, body {
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
     margin-bottom: 14px;
+	font-family: 'Manrope', sans-serif;
+    font-weight: 400;
 }
 
 .form-content input:hover, .form-content input:focus, .form-content .dropdown-toggle.btn-default:hover, .form-content .dropdown-toggle.btn-default:focus {
@@ -449,7 +457,6 @@ html, body {
     background-color: #fff;
     border: 0;
     font-size: 15px;
-    font-weight: 300;
     color: #8D8D8D;
     outline: none;
     resize: none;
@@ -457,6 +464,8 @@ html, body {
     -webkit-transition: none;
     transition: none;
     margin-bottom: 14px;
+	font-family: 'Manrope', sans-serif;
+    font-weight: 400;
 }
 
 .form-content textarea:hover, .form-content textarea:focus {
@@ -685,21 +694,26 @@ html, body {
 }
 
 .form-content .form-button .ibtn {
-    border-radius: 6px;
+        border-radius: 6px;
     border: 0;
-    padding: 6px 28px;
+    padding: 10px 45px;
     background-color: #fff;
     color: #29A4FF;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
+    font-family: 'Manrope', sans-serif;
     text-decoration: none;
     cursor: pointer;
+    text-transform: uppercase;
     margin-right: 10px;
     outline: none;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
     -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0.16);
     box-shadow: 0 0 0 rgba(0, 0, 0, 0.16);
+}
+
+;
 }
 
 .form-content .form-button .ibtn:last-child {

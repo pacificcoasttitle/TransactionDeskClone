@@ -2,31 +2,31 @@
 ?>
 <div class="typography-section__inner">
 	<h3 class="ui-title-block_light">Prelim Info</h3>
-	<div class="ui-decor-1a bg-primary"></div>
+	<div class="ui-decor-1a bg-accent"></div>
 </div>
 <div class="l-main-contenta">
 	<article class="b-post b-post-full clearfix">
 		<div class="row">
 			<div class="col-md-6">
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Vesting</span> <?php echo isset($prelim_details['vesting']) && !empty($prelim_details['vesting']) ? $prelim_details['vesting'] : '-'; ?></p>
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Address</span> <?php echo isset($prelim_details['address']) && !empty($prelim_details['address']) ? $prelim_details['address'] : '-'; ?></p><br>
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Policy</span> CLTA Standard Coverage
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Borrower Vesting</span><br> <?php echo isset($prelim_details['vesting']) && !empty($prelim_details['vesting']) ? $prelim_details['vesting'] : '-'; ?></p>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Address</span><br> <?php echo isset($prelim_details['address']) && !empty($prelim_details['address']) ? $prelim_details['address'] : '-'; ?></p>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Type of Policy</span><br> CLTA Standard Coverage
 					Policy 1990 (04-08-14)
 					ALTA Loan Policy 2006</p>
 			</div>
 			<div class="col-md-6">
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Order Number</span>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Order Number</span><br>
 					<?php echo isset($prelim_details['file_number']) && !empty($prelim_details['file_number']) ? $prelim_details['file_number'] : '-'; ?></p>
-				<br><br>
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Generated</span> <?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
+				
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Date Generated</span><br> <?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
 				</p><br>
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Type</span> <?php echo isset($prelim_details['property_type']) && !empty($prelim_details['property_type']) ? $prelim_details['property_type'] : '-'; ?></p>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Type</span><br> <?php echo isset($prelim_details['property_type']) && !empty($prelim_details['property_type']) ? $prelim_details['property_type'] : '-'; ?></p>
 			</div>
 		</div>
 
 		<div class="typography-section__inner">
 			<h3 class="ui-title-block_light">Prelim Hot Items</h3>
-			<div class="ui-decor-1a bg-primary"></div>
+			<div class="ui-decor-1a bg-accent"></div>
 		</div>
 		<?php 
 			if(isset($prelim_details['lien']) && !empty($prelim_details['lien']))
@@ -36,7 +36,7 @@
 					<div class="entry-header">
 						<div class="alert alert-4">
 							<div class="alert__inner">
-								<h3 class="alert-titlesmall">Liens</h3>
+								<h3 class="alert-titlesmall1">Liens & Judgements</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
 									will appear below.</div> -->
 							</div>
@@ -82,7 +82,7 @@
 					<div class="entry-header">
 						<div class="alert alert-1">
 							<div class="alert__inner">
-								<h3 class="alert-titlesmall">Tax</h3>
+								<h3 class="alert-titlesmall2">Property Taxes</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
 									will appear below.</div> -->
 							</div>
@@ -127,9 +127,9 @@
 		?>
 				<div class="entry-main">
 					<div class="entry-header">
-						<div class="alert alert-default">
+						<div class="alert alert-6">
 							<div class="alert__inner">
-								<h3 class="alert-titlesmall">Easements</h3>
+								<h3 class="alert-titlesmall3">Easements</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
 									will appear below.</div> -->
 							</div>
@@ -171,9 +171,9 @@
 		?>
 				<div class="entry-main">
 					<div class="entry-header">
-						<div class="alert alert-default">
+						<div class="alert alert-7">
 							<div class="alert__inner">
-								<h3 class="alert-titlesmall">Requirements</h3>
+								<h3 class="alert-titlesmall4">Requirements</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
 									will appear below.</div> -->
 							</div>
@@ -215,9 +215,9 @@
 		?>
 				<div class="entry-main">
 					<div class="entry-header">
-						<div class="alert alert-default">
+						<div class="alert alert-8">
 							<div class="alert__inner">
-								<h3 class="alert-titlesmall">Restrictions</h3>
+								<h3 class="alert-titlesmall5">Restrictions</h3>
 								<!-- <div class="alert-text">If there are any urgent Items they
 									will appear below.</div> -->
 							</div>

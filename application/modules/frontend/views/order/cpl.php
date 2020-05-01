@@ -44,7 +44,7 @@
 												<th>#</th>
 												<th>File Number</th>
 												<th>Property Address</th>
-												<th></th>
+												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
