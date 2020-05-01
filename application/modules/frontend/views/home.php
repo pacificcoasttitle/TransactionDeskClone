@@ -10,7 +10,7 @@
     <meta content="telephone=no" name="format-detection">
     <meta name="HandheldFriendly" content="true">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/frontend/css/custom.css">
-    <link rel="stylesheet" href="http://www.pct.com/assets/css/master.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/master.css">
     <link rel="icon" href="<?php echo base_url(); ?>assets/frontend/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
