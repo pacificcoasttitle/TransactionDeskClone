@@ -23,11 +23,11 @@
                         <h3 class="footer-section__title">useful links</h3>
                         <ul class="footer-list list-unstyled">
                             <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>about-us">About Us</a></li>
-                            <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>contact.html">Contact Us</a></li>
+                            <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>join-our-team">Contact Us</a></li>
                             <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>how-we-protect-you.html">Our Role</a></li>
-                            <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>blank-forms.html">Blank Forms</a></li>
-                            <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>what-is-title-insurance.html">What Is Title Ins.</a></li>
-                            <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>information-flyers.html">Info Flyers</a></li>
+                            <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>blank-forms">Blank Forms</a></li>
+                            <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>what-is-title-insurance">What Is Title Ins.</a></li>
+                            <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>flyer-center">Info Flyers</a></li>
                             <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>notices.html">Notices</a></li>
                            <li class="footer-list__item"><a class="footer-list__link" href="<?php echo base_url(); ?>sb2-forms.html">SB2-Forms</a></li>
                         </ul>
