@@ -38,7 +38,7 @@
 												<form id="files_upload" action="<?php echo base_url();?>files-upload" method="POST" enctype="multipart/form-data">
 													<div class="col-md-12">
 														<a href="">
-															<button class="btn btn-grad-2a" type="submit">Upload Documents</button>
+															<button style="color: #c7c7c7;width: 220px;" class="btn btn-grad-2a" type="submit">Upload Documents</button>
 														</a>
 													</div>
 													<input type="hidden" id="file_id" name="file_id" value="<?php echo $orderDetails['file_id'];?>">
@@ -293,7 +293,7 @@
 													</div>
 													<div class="col-md-12">
 														<a href="">
-															<button class="btn btn-grad-2a" type="submit">Upload Documents</button>
+															<button style="color: #c7c7c7;width: 220px;" class="btn btn-grad-2a" type="submit">Upload Documents</button>
 														</a>
 													</div>
 												</form>
