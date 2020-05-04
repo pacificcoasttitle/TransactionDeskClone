@@ -127,6 +127,8 @@
 <script>
     $(document).ready(function () {
         $('#download_estimate').click(function() {
+            $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+            $('#page-preloader').css('display', 'block');
             var closing_fee_id = $(this).data('closing-fee-id');
             
             $.ajax({
@@ -162,6 +164,7 @@
                             element.click();
                             document.body.removeChild(element);
                         }
+                        $('#page-preloader').css('display', 'none');
                     }
                 }
             });

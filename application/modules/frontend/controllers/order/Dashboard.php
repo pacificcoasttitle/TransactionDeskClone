@@ -382,14 +382,12 @@ class Dashboard extends MX_Controller {
         $streetName = isset($primaryStreetName) && !empty($primaryStreetName) ? implode(" ", $primaryStreetName) : '';
 
         $FullProperty = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
-        $AddressPropertyParts = explode(',', $FullProperty);       
-        $PropertyZip = trim(end($AddressPropertyParts));
+               
+        $PropertyZip = isset($orderDetails['property_zip']) && !empty($orderDetails['property_zip']) ? $orderDetails['property_zip'] : '';
+        
+        $propertyState = isset($orderDetails['property_state']) && !empty($orderDetails['property_state']) ? $orderDetails['property_state'] : '';
 
-        $AddressPropertyInfo = array_slice($AddressPropertyParts,0, -1);
-        $propertyState = trim(end($AddressPropertyInfo));
-
-        $AddressPropertyCityInfo = array_slice($AddressPropertyInfo,0, -1);
-        $propertyCity = trim(end($AddressPropertyCityInfo));       
+        $propertyCity = isset($orderDetails['property_city']) && !empty($orderDetails['property_city']) ? $orderDetails['property_city'] : '';      
         
         $county = isset($orderDetails['county']) && !empty($orderDetails['county']) ? $orderDetails['county'] : '';
 
@@ -455,7 +453,7 @@ class Dashboard extends MX_Controller {
         $data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
         $data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
 
-        if(isset($orderDetails['purchase_type']) && !empty($orderDetails['purchase_type']))
+        /*if(isset($orderDetails['purchase_type']) && !empty($orderDetails['purchase_type']))
         {
             $productTypeID = $orderDetails['purchase_type'];
             if($productTypeID == '19' || $productTypeID == '33')
@@ -466,7 +464,16 @@ class Dashboard extends MX_Controller {
             {
                 $productType = 'Residential: Sales: Purchase';
             }
+        }*/
+        if(isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']))
+        {
+        	$productType = 'Residential: Sales: Purchase';
         }
+        if(isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']))
+        {
+        	$productType = 'Residential: Loan: Refinance';
+        }
+
         $data['productType'] = $productType;
         $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
         
