@@ -19,6 +19,7 @@ class Home extends MX_Controller {
     {
 		$userdata = $this->session->userdata('user');
 		$this->load->model('order/apiLogs');
+		echo "<pre>"; print_r($_POST);
     	if(isset($_POST) && !empty($_POST))
     	{
     		$this->load->library("phpmailer_library");
@@ -26,7 +27,7 @@ class Home extends MX_Controller {
     		$this->form_validation->set_rules('OpenName', 'First Name', 'required',array('required'=> 'Enter your first name'));
     		$this->form_validation->set_rules('OpenLastName', 'Last Name', 'required',array('required'=> 'Enter your last name'));
     		$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
-    		$this->form_validation->set_rules('sendermessage', 'Sender Message', 'required',array('required'=> 'Oops you forgot your message'));
+    		// $this->form_validation->set_rules('sendermessage', 'Sender Message', 'required',array('required'=> 'Oops you forgot your message'));
 
     		if($this->form_validation->run($this) == true)
     		{
@@ -137,6 +138,24 @@ class Home extends MX_Controller {
 				{
 					$parties_email[$EscrowLenderEmail] = $EscrowLenderName;
 				}
+				$AdditionalEmail = $this->input->post('AdditionalEmail');
+				$AdditionalEmail1 = $this->input->post('AdditionalEmail1');
+				$AdditionalEmail2 = $this->input->post('AdditionalEmail2');
+
+				if(isset($AdditionalEmail) && !empty($AdditionalEmail))
+				{
+					$parties_email[$AdditionalEmai] = '';
+				}
+
+				if(isset($AdditionalEmail1) && !empty($AdditionalEmail1))
+				{
+					$parties_email[$AdditionalEmail1] = '';
+				}
+
+				if(isset($AdditionalEmail2) && !empty($AdditionalEmail2))
+				{
+					$parties_email[$AdditionalEmail2] = '';
+				}
 
 				/* Start place order at resware */
 				$place_order = array();
@@ -168,7 +187,7 @@ class Home extends MX_Controller {
 
 				$this->load->library('order/resware');
 				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, array(), 0, 0);
-				$result = $this->resware->make_request('POST', 'orders', $order_data);
+				// $result = $this->resware->make_request('POST', 'orders', $order_data);
 				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, $result, 0, $logid);
 
 				if(isset($result) && !empty($result))
@@ -277,7 +296,7 @@ class Home extends MX_Controller {
 							'legal_description' => $LegalDescription,
 							'primary_owner' => $PrimaryOwner,
 							'secondary_owner' => $SecondaryOwner,
-							'additional_details'=> $sendermessage,
+							// 'additional_details'=> $sendermessage,
 							'status'=> 1
 						);
 
@@ -294,6 +313,9 @@ class Home extends MX_Controller {
 							'is_ccr' => $CCR,
 							'is_underlying_docs' => $Docs,
 							'is_plotted_easements' => $Ease,
+							'additional_email' => $AdditionalEmail,
+							'additional_email_1' => $AdditionalEmail1,
+							'additional_email_2' => $AdditionalEmail2,
 							'status'=> 1
 						);
 

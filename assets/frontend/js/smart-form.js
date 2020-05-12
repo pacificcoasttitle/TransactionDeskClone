@@ -62,10 +62,10 @@
 									required:true,
 									extension:"jpeg|jpg|png"
 								},								
-								sendermessage: {
+								/*sendermessage: {
 										required: true,
 										minlength: 10
-								},
+								},*/
 								captcha:{
 									required:true,
 									remote:'php/captcha/process.php'
@@ -133,10 +133,10 @@
 									required:'Browse to add some order files',
 									extension:'Sorry, file format not supported'
 								},								
-								sendermessage: {
+								/*sendermessage: {
 										required: 'Oops you forgot your message',
 										minlength: 'Message must be at least 10 characters'
-								},															
+								},*/															
 								captcha:{
 										required: 'You must enter the captcha code',
 										remote:'Captcha code is incorrect'

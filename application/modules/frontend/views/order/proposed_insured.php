@@ -12,6 +12,10 @@
 	.ui-datepicker {
 		margin-top: 0px !important;
 	}
+
+	table#orders_listing tr td:last-child {
+		display: inline-flex;
+	}
 </style>
 <body>
 	<?php
@@ -150,6 +154,100 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Edit info modal -->
+	<div class="modal fade" width="500px" id="edit_information" tabindex="-1" role="dialog"
+		aria-labelledby="" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document" style="width:40%;">
+			<div class="modal-content">
+				<form method="POST" id="edit-order-details" enctype="multipart/form-data">
+					<div class="smart-forms smart-container wrap-2" style="margin:30px">
+						<div class="modal-body search-result">
+							<div id="lender-details-fields" style="">
+								<div class="spacer-b30">
+									<div class="tagline"><span>Edit Details</span></div><!-- .tagline -->
+								</div>
+								<div id="edit-data-result"></div>
+								<div class="frm-row" id="loan-amount-section">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="loan_amount" id="loan_amount" class="gui-input"
+												placeholder="Loan Amount">
+										</label>
+									</div>
+								</div>
+								<div class="frm-row" id="borrower-section">
+									<input type="hidden" name="edit_orderId" value="" id="edit_orderId">
+
+									<input type="hidden" name="edit_property_id" value="" id="edit_property_id">
+
+									<input type="hidden" name="edit_transaction_id" value="" id="edit_transaction_id">
+
+									<input type="hidden" name="edit_fileId" value="" id="edit_fileId">
+
+									<input type="hidden" name="edit_LenderId" value="" id="edit_LenderId">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="primary_borrower" id="primary_borrower" class="gui-input"
+												placeholder="Primary Borrower">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+								<div class="frm-row" id="secondary-borrower-section">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="edit_secondary_borrower" id="edit_secondary_borrower" class="gui-input"
+												placeholder="Secondary Borrower">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+								<div class="frm-row" id="edit-lender-section">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="edit_lender" id="edit_lender" class="gui-input"
+												placeholder="Lender" required="required">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+						<div class="form-footer" style="padding-top:0px;">
+							<button type="submit" data-btntext-sending="Sending..."
+								class="button btn-primary">Submit</button>
+							<button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Edit info modal -->
+
+	<!-- show message modal -->
+	<div class="modal fade" id="show_message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body search-result">
+                	<h4 class="modal-title"></h4>
+                        <div>Data updated successfully</div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <div class="apn-search-loader hidden"></div>
+                </div> -->
+                </div>
+            </div>
+            </div>
+	<!-- show message modal -->
 </body>
 
 </html>
@@ -306,9 +404,37 @@
 	            }
 	        }
 	    });
+
+	    $("#edit_lender").autocomplete({
+	        // source: "php/usersearch.php",
+	        source: function(request, response) {
+	            $.ajax({
+	                url: base_url+'home/getDetailsByName',
+	                data: {
+	                    term : request.term,//the value of the input is here
+	                    is_escrow : 0                    
+	                },
+	                type: "POST",
+	                dataType: "json",
+	                success: response
+	            });
+	        },
+	        select: function( event, ui ) {
+	            event.preventDefault();
+				$("#edit_lender").val(ui.item.name);
+				$("#edit_LenderId").val(ui.item.id);
+	            
+	        },
+	        change: function( event, ui ) {
+	            if (ui.item == null)
+	            {
+					$("#LenderId").val('');				
+	            }
+	        }
+	    });
 		/* Lender autocomplete */
 
-		$('#lender_information').on('hidden.bs.modal', function (e) {
+		$('#lender_information,#edit_information').on('hidden.bs.modal', function (e) {
 		  $(this)
 		    .find("input,textarea,select")
 		       .val('')
@@ -317,6 +443,68 @@
 		       .prop("checked", "")
 		       .end();
 		});
+
+		/* Edit modal validations */
+		if(jQuery('#edit-order-details').length)
+		{
+		   jQuery('#edit-order-details').validate({
+		   		ignore:":not(:visible)",
+		        rules: {
+		            loan_amount:"required",
+		            primary_borrower:"required",
+		            edit_lender:"required",
+		        },
+		        messages: {
+		            loan_amount:"Please enter loan amount",
+		            primary_borrower:"Please enter borrower",
+		            edit_lender:"Please enter lender",
+		        },
+		        submitHandler: function(form) {
+		        	$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+					$('#page-preloader').css('display', 'block');
+		        	
+		        	var loan_amount = $('#loan_amount').val();
+		        	var borrower = $('#primary_borrower').val();
+		        	var edit_secondary_borrower = $('#edit_secondary_borrower').val();
+		        	var LenderId = $('#edit_LenderId').val();
+		        	var orderId = $('#edit_orderId').val();
+		        	var transaction_id = $('#edit_transaction_id').val();
+		        	var property_id = $('#edit_property_id').val();
+		        	var fileId = $('#edit_fileId').val();
+
+		            $.ajax({
+		            url: base_url + "update-order-details",
+		            type: "post",
+		            data:{
+		                loan_amount: loan_amount,
+		                borrower: borrower,
+		                LenderId: LenderId,
+		                orderId: orderId,
+		                transaction_id: transaction_id,
+		                property_id: property_id,
+		                fileId: fileId,
+		                secondary_borrower: edit_secondary_borrower,
+		            }, 
+		            success: function(response) {
+		            	$('#page-preloader').css('display', 'none');
+		            	var res = JSON.parse(response);
+						if(res.status == 'success')
+						{							
+							$('#edit-data-result').html('<div class="alert alert-success">Data updated successfully</div>');
+						}
+						else if(res.status == 'error')
+						{
+							$('#edit-data-result').html('<div class="alert alert-error">Something went wrong. Please try again.</div>');
+						}
+						$('#edit-data-result').fadeOut( 5000, function() {
+						    $('#edit_information').modal('hide');
+						});						
+		            }
+		        });
+		        }
+		    }); 
+		}
+		/* Edit modal validations */
 	});
 
 function generateProposedInsured(fileId)
@@ -421,5 +609,58 @@ function base64toBlob(base64Data, contentType)
         byteArrays[sliceIndex] = new Uint8Array(bytes);
     }
     return new Blob(byteArrays, { type: contentType });
+}
+
+function editInformation(fileId)
+{
+	if(fileId)
+	{
+		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+		
+		$.ajax({
+            url: base_url + "get-order-details",
+            type: "post",
+            data:{
+                fileId: fileId,
+            },
+            success: function(response) {
+            	$('#page-preloader').css('display', 'none');
+            	
+            	var res = JSON.parse(response);
+            	console.log(res);
+            	if(res.status == 'success')
+                {
+                	var loan_amount = res.loan_amount;
+                	var borrower = res.borrower;
+                	var secondary_borrower = res.secondary_borrower;
+                	var lenderName = res.lenderName;
+                	var property_id = res.property_id;
+                	var transaction_id = res.transaction_id;
+                	var fileId = res.fileId;
+                	var orderId = res.orderId;
+                	var escrow_lender_id = res.escrow_lender_id;
+                	$('#loan_amount').val(loan_amount);
+                	$('#primary_borrower').val(borrower);
+                	$('#edit_secondary_borrower').val(secondary_borrower);
+                	$('#edit_lender').val(lenderName);
+                	$('#edit_property_id').val(property_id);
+                	$('#edit_transaction_id').val(transaction_id);
+                	$('#edit_fileId').val(fileId);
+                	$('#edit_orderId').val(orderId);
+                	$('#edit_LenderId').val(escrow_lender_id);
+                	$('#edit_information').modal('show');
+                }
+                else
+                {
+                	alert("Something went wrong. Please try again.");
+                }
+            }
+        });
+	}
+	else
+	{
+		alert("File ID required.");
+	}
 }
 </script>

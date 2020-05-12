@@ -301,14 +301,24 @@
                                                 </div><!-- end .colm section -->
                                             </div>
 
-                                            <div class="section spacer-t20">
+                                            <!-- <div class="section spacer-t20">
                                                 <label class="field prepend-icon">
                                                     <textarea class="gui-textarea" id="sendermessage" name="sendermessage" placeholder="Additional details"></textarea>
                                                     <span class="field-icon"><i class="fa fa-comments"></i></span>
                                                     <span class="input-hint"> <strong>NOTE:</strong> Be as detailed as possible for better feedback.</span>   
                                                 </label>
-                                            </div><!-- end section -->
-
+                                            </div> --><!-- end section -->
+                                            <div id="clone-email-address">
+                                                <div class="toclone clone-widget">
+                                                    <div class="spacer-b10">
+                                                        <label class="field">
+                                                            <input type="email" class="gui-input" name="AdditionalEmail" id="AdditionalEmail" placeholder="Email Adderess">
+                                                        </label>
+                                                    </div>
+                                                    <a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
+                                                    <a href="#" class="delete button"><i class="fa fa-minus"></i></a>
+                                                </div>  
+                                        </div>
                                             <!-- start agent details -->
                                             <div class="spacer-t30">
                                                 <div class="tagline"><span> Add Parties</span></div><!-- .tagline -->
@@ -665,10 +675,7 @@
 <?php
     $this->load->view('layout/footer');
 ?>
-<script type="text/javascript">
-    var L_V_CreateService,L_V_GetRequestSummary,L_V_GetResultById;
-    var Tax_CreateService,Tax_GetRequestSummary,Tax_GetResultById;
-</script>
+
 <link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
 <link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/jquery-ui.css">
@@ -682,3 +689,23 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/custom.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-cloneya.min.js"></script>
+
+<script type="text/javascript">
+    var L_V_CreateService,L_V_GetRequestSummary,L_V_GetResultById;
+    var Tax_CreateService,Tax_GetRequestSummary,Tax_GetResultById;
+    jQuery(document).ready(function($){
+
+        $('#clone-email-address').cloneya({
+            maximum: 3
+        }).on('after_append.cloneya', function (event, toclone, newclone) {
+                var name = $(newclone).find("input[type='email']").attr('id');              
+                $(newclone).find("input[type='email']").attr('name', name);
+            }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
+                    $(clone).slideToggle('slow', function () {
+                        $(clone).remove();
+                    })
+            });
+    });
+    
+</script>
