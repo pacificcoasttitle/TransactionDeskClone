@@ -19,7 +19,6 @@ class Home extends MX_Controller {
     {
 		$userdata = $this->session->userdata('user');
 		$this->load->model('order/apiLogs');
-		echo "<pre>"; print_r($_POST);
     	if(isset($_POST) && !empty($_POST))
     	{
     		$this->load->library("phpmailer_library");
@@ -187,7 +186,7 @@ class Home extends MX_Controller {
 
 				$this->load->library('order/resware');
 				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, array(), 0, 0);
-				// $result = $this->resware->make_request('POST', 'orders', $order_data);
+				$result = $this->resware->make_request('POST', 'orders', $order_data);
 				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, $result, 0, $logid);
 
 				if(isset($result) && !empty($result))
