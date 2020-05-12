@@ -29,52 +29,6 @@
 			<div class="ui-decor-1a bg-accent"></div>
 		</div>
 		<?php 
-			if(isset($prelim_details['lien']) && !empty($prelim_details['lien']))
-			{				
-		?>
-				<div class="entry-main">
-					<div class="entry-header">
-						<div class="alert alert-4">
-							<div class="alert__inner">
-								<h3 class="alert-titlesmall1">Liens & Judgements</h3>
-								<!-- <div class="alert-text">If there are any urgent Items they
-									will appear below.</div> -->
-							</div>
-						</div>
-					</div>
-					<div class="entry-content">
-						<?php
-							$liens = json_decode($prelim_details['lien'],TRUE);
-							if(isset($liens) && !empty($liens))
-							{
-
-						?>
-								<ol>
-						<?php
-								foreach ($liens as $key => $lien) 
-								{
-							?>
-									<li><p><?php echo nl2br($lien); ?></p></li>
-							<?php
-								}
-							?>
-								</ol>
-							<?php
-							}
-							else 
-							{
-						?>
-								<p><?php echo "No data found"; ?></p>
-						<?php
-							}
-						?>
-						
-					</div>
-				</div>
-		<?php
-			}
-		?>
-		<?php 
 			if(isset($prelim_details['tax']) && !empty($prelim_details['tax']))
 			{				
 		?>
@@ -121,6 +75,53 @@
 		<?php
 			}
 		?>
+		<?php 
+			if(isset($prelim_details['lien']) && !empty($prelim_details['lien']))
+			{				
+		?>
+				<div class="entry-main">
+					<div class="entry-header">
+						<div class="alert alert-4">
+							<div class="alert__inner">
+								<h3 class="alert-titlesmall1">Liens & Judgements</h3>
+								<!-- <div class="alert-text">If there are any urgent Items they
+									will appear below.</div> -->
+							</div>
+						</div>
+					</div>
+					<div class="entry-content">
+						<?php
+							$liens = json_decode($prelim_details['lien'],TRUE);
+							if(isset($liens) && !empty($liens))
+							{
+
+						?>
+								<ol>
+						<?php
+								foreach ($liens as $key => $lien) 
+								{
+							?>
+									<li><p><?php echo nl2br($lien); ?></p></li>
+							<?php
+								}
+							?>
+								</ol>
+							<?php
+							}
+							else 
+							{
+						?>
+								<p><?php echo "No data found"; ?></p>
+						<?php
+							}
+						?>
+						
+					</div>
+				</div>
+		<?php
+			}
+		?>
+		
 		<?php
 			if(isset($prelim_details['easement']) && !empty($prelim_details['easement']))
 			{

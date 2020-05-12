@@ -700,7 +700,14 @@ class Dashboard extends MX_Controller {
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+               // $nestedData[] = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+
+                $action = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+
+                $action .= '<a href="javascript:void(0);" onclick="editInformation('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
+
+                $nestedData[] = $action;
+
                 $data[] = $nestedData; 
                 $i++; 
             }
@@ -2122,4 +2129,150 @@ class Dashboard extends MX_Controller {
 		echo json_encode($response); exit;
 	}
 
+	public function get_order_details()
+	{
+		$fileId = $this->input->post('fileId');
+		$data = array();
+		if($fileId)
+		{
+			$orderDetails = $this->order->get_order_details($fileId);
+			
+			$data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+			
+			$sales_amount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+
+			if(isset($sales_amount) && !empty($sales_amount))
+			{
+				$data['borrower'] = isset($orderDetails['borrower']) && !empty($orderDetails['borrower']) ? $orderDetails['borrower'] : '';
+
+				$data['secondary_borrower'] = isset($orderDetails['secondary_borrower']) && !empty($orderDetails['secondary_borrower']) ? $orderDetails['secondary_borrower'] : '';
+			}
+			else if(isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']))
+			{
+				$primary_owner = isset($orderDetails['primary_owner']) && !empty($orderDetails['primary_owner']) ? $orderDetails['primary_owner'] : '';
+				$secondary_owner = isset($orderDetails['secondary_owner']) && !empty($orderDetails['secondary_owner']) ? $orderDetails['secondary_owner'] : '';
+				
+				$data['borrower'] = $primary_owner;
+				$data['secondary_borrower'] = 	$secondary_owner;
+			}
+
+			$data['escrow_lender_id'] = isset($orderDetails['escrow_lender_id']) && !empty($orderDetails['escrow_lender_id']) ? $orderDetails['escrow_lender_id'] : '';
+			$data['property_id'] = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] : '';
+			$data['transaction_id'] = isset($orderDetails['transaction_id']) && !empty($orderDetails['transaction_id']) ? $orderDetails['transaction_id'] : '';
+			$data['orderId'] = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+
+			$data['fileId'] = $fileId;
+			$lenderName = '';
+
+			if(isset($orderDetails['lender_first_name']) && !empty($orderDetails['lender_first_name']))
+			{
+				$lenderName = $orderDetails['lender_first_name'];
+			}
+			if(isset($orderDetails['lender_last_name']) && !empty($orderDetails['lender_last_name']))
+			{
+				$lenderName .= " ".$orderDetails['lender_last_name'];
+			}
+			$data['lenderName']= $lenderName;
+			$data['status'] = 'success';
+		}
+		else
+		{
+			$data['status'] = 'error';
+		}
+		
+		echo json_encode($data); exit;
+	}
+
+	
+	public function update_order_details()
+	{
+		$orderId = isset($_POST['orderId']) && !empty($_POST['orderId']) ? $_POST['orderId'] : '';
+		
+		if($orderId)
+		{
+			$this->load->model('order/home_model');
+			
+			$loan_amount = isset($_POST['loan_amount']) && !empty($_POST['loan_amount']) ? $_POST['loan_amount'] : '';
+			$borrower = isset($_POST['borrower']) && !empty($_POST['borrower']) ? $_POST['borrower'] : '';
+			$secondary_borrower = isset($_POST['secondary_borrower']) && !empty($_POST['secondary_borrower']) ? $_POST['secondary_borrower'] : '';
+			$LenderId = isset($_POST['LenderId']) && !empty($_POST['LenderId']) ? $_POST['LenderId'] : '';
+			$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
+			$transaction_id = isset($_POST['transaction_id']) && !empty($_POST['transaction_id']) ? $_POST['transaction_id'] : '';
+			$property_id = isset($_POST['property_id']) && !empty($_POST['property_id']) ? $_POST['property_id'] : '';
+
+			$orderDetails = $this->order->get_order_details($fileId);
+			$sales_amount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+
+			if(isset($sales_amount) && !empty($sales_amount))
+			{
+				$update_data = array();
+				if($borrower)
+				{
+					$update_data['borrower'] = $borrower;
+				}
+				if($secondary_borrower)
+				{
+					$update_data['secondary_borrower'] = $secondary_borrower;
+				}
+				$condition = array(
+					'id' => $transaction_id
+				);
+				$borrower_update_flag = $this->home_model->update($update_data, $condition, 'transaction_details');
+			}
+			else if(isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']))
+			{
+				$update_data = array();
+				if($borrower)
+				{
+					$update_data['primary_owner'] = $borrower;
+				}
+				if($secondary_borrower)
+				{
+					$update_data['secondary_owner'] = $secondary_borrower;
+				}
+
+				$condition = array(
+					'id' => $property_id
+				);
+
+				$owner_update_flag = $this->home_model->update($update_data, $condition, 'property_details');
+			}
+
+			if(isset($loan_amount) && !empty($loan_amount))
+			{
+				$update_data = array();
+				
+				if($loan_amount)
+				{
+					$update_data['loan_amount'] = $loan_amount;
+				}
+				$condition = array(
+					'id' => $transaction_id
+				);
+				$transaction_update_flag = $this->home_model->update($update_data, $condition, 'transaction_details');
+			}
+			
+			if(isset($LenderId) && !empty($LenderId))
+			{
+				$update_data = array();	
+				
+				$update_data['escrow_lender_id'] = $LenderId;
+
+				$condition = array(
+					'id' => $property_id
+				);
+
+				$property_update_flag = $this->home_model->update($update_data, $condition, 'property_details');
+			}
+			if($property_update_flag || $transaction_update_flag)
+			{
+				$data = array('status'=>'success', 'fileId'=>$fileId);
+			}
+			else
+			{
+				$data = array('status'=>'error');
+			}
+			echo json_encode($data); exit;
+		}
+	}
 }

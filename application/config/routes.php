@@ -140,6 +140,8 @@ $route['plat-map'] = 'frontend/order/dashboard/plat_map';
 $route['download-document'] = 'frontend/order/dashboard/download_document';
 $route['resware-fetch-data'] = 'frontend/order/ReviewPrelim/fetchData';
 $route['generate-plat-map'] = 'frontend/order/dashboard/generate_plat_map';
+$route['get-order-details'] = 'frontend/order/dashboard/get_order_details';
+$route['update-order-details'] = 'frontend/order/dashboard/update_order_details';
 
 
 /* Route for PCT-Order backend*/
