@@ -255,14 +255,7 @@ class ReviewPrelim extends MX_Controller {
 			$mail->Body = $prelim_message_body;
 			$mail->AltBody = "Use an HTML compatible email client";
 			
-			if($mail->Send())
-			{
-				echo 'success'; exit;
-			}
-			else
-			{
-				echo 'error'; exit;
-			}
+			$mail->Send();
 	    	/* Send email to customer */
 
 	    	echo "Data stored successfully.";
