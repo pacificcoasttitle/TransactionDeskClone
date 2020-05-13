@@ -248,7 +248,7 @@ class ReviewPrelim extends MX_Controller {
 			$mail->Encoding = "base64";
 			$mail->Timeout = 200;
 			$mail->ContentType = "text/html";
-			$mail->addAddress('ankita.p@crestinfosystems.net', 'Open Order Desk');							
+			$mail->addAddress('hitesh.p@crestinfosystems.com', 'Open Order Desk');							
 			$mail->Subject = "The Prelim Hot Sheet";
 			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
 
