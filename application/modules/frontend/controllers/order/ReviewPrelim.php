@@ -9,6 +9,7 @@ class ReviewPrelim extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
         $this->load->library('order/order');
+        $this->load->library("phpmailer_library");
     }
 
     function fetchData()
@@ -50,51 +51,67 @@ class ReviewPrelim extends MX_Controller {
 				$parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
 	    		$vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
 	    		$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
-	    		$liens = array();
+	    		$liens = $tax = array();
 
 	    		if(isset($data['Liens']) && !empty($data['Liens']))
 				{
 					foreach ($data['Liens'] as $key => $lien) 
 					{
 						$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
-						$amount = isset($lien['Amount']) && !empty($lien['Amount']) ? $lien['Amount'] : '';
-						$date = isset($lien['Date']) && !empty($lien['Date']) ? $lien['Date'] : '';
-						$grantor = isset($lien['Grantor']) && !empty($lien['Grantor']) ? $lien['Grantor'] : '';
-						$trustee = isset($lien['Trustee']) && !empty($lien['Trustee']) ? $lien['Trustee'] : '';
-						$grantee = isset($lien['Grantee']) && !empty($lien['Grantee']) ? $lien['Grantee'] : '';
-						$recordedDate = isset($lien['RecordedDate']) && !empty($lien['RecordedDate']) ? $lien['RecordedDate'] : '';
-						$instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
-						if(!empty($language))
+						$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+						$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
+
+						if(strpos($language, 'Tax Identification No') !== false)
 						{
-							
-							if(strpos($language, '_AMOUNT_') !== false) {
-								$language = str_replace("_AMOUNT_", " ".$amount , $language);
+							if(strpos($language, '_PARCELID1_') !== false) 
+							{									
+									
+								$language = str_replace("_PARCELID1_", " <strong><u>".$parcelID."</u></strong>" , $language);
 							}
-							if(strpos($language, '_DATE_') !== false) {
-								$language = str_replace("_DATE_", " ".$date , $language);
+
+							$tax[] = $language;
+						}
+						else
+						{
+							$amount = isset($lien['Amount']) && !empty($lien['Amount']) ? $lien['Amount'] : '';
+							$date = isset($lien['Date']) && !empty($lien['Date']) ? $lien['Date'] : '';
+							$grantor = isset($lien['Grantor']) && !empty($lien['Grantor']) ? $lien['Grantor'] : '';
+							$trustee = isset($lien['Trustee']) && !empty($lien['Trustee']) ? $lien['Trustee'] : '';
+							$grantee = isset($lien['Grantee']) && !empty($lien['Grantee']) ? $lien['Grantee'] : '';
+							$recordedDate = isset($lien['RecordedDate']) && !empty($lien['RecordedDate']) ? $lien['RecordedDate'] : '';
+							$instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
+							if(!empty($language))
+							{								
+								if(strpos($language, '_AMOUNT_') !== false) {
+									$language = str_replace("_AMOUNT_", " ".$amount , $language);
+								}
+								if(strpos($language, '_DATE_') !== false) {
+									$language = str_replace("_DATE_", " ".$date , $language);
+								}
+								if(strpos($language, '_GRANTOR_') !== false) {
+									$language = str_replace("_GRANTOR_", " ".$grantor , $language);
+								}
+								if(strpos($language, '_TRUSTEE_') !== false) {
+									$language = str_replace("_TRUSTEE_", " ".$trustee , $language);
+								}
+								if(strpos($language, '_GRANTEE_') !== false) {
+									$language = str_replace("_GRANTEE_", " ".$grantee , $language);
+								}
+								if(strpos($language, '_RECORDEDDATE_') !== false) {
+									$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
+								}
+								if(strpos($language, '_INSTRUMENTONLY_') !== false) {
+									$language = str_replace("_INSTRUMENTONLY_", " ".$instrument , $language);
+								}
+								if(strpos($language, '_PARCELID1_') !== false) {
+									$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
+								}
+								$language = str_replace("\u000b", "", $language);
+								$language = str_replace("\r", "", $language);
+								$liens[] = $language;
 							}
-							if(strpos($language, '_GRANTOR_') !== false) {
-								$language = str_replace("_GRANTOR_", " ".$grantor , $language);
-							}
-							if(strpos($language, '_TRUSTEE_') !== false) {
-								$language = str_replace("_TRUSTEE_", " ".$trustee , $language);
-							}
-							if(strpos($language, '_GRANTEE_') !== false) {
-								$language = str_replace("_GRANTEE_", " ".$grantee , $language);
-							}
-							if(strpos($language, '_RECORDEDDATE_') !== false) {
-								$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
-							}
-							if(strpos($language, '_INSTRUMENTONLY_') !== false) {
-								$language = str_replace("_INSTRUMENTONLY_", " ".$instrument , $language);
-							}
-							if(strpos($language, '_PARCELID1_') !== false) {
-								$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
-							}
-							$language = str_replace("\u000b", "", $language);
-							$language = str_replace("\r", "", $language);
-							$liens[] = $language;
-						}	    				
+						}
+							    				
 					}
 				}
 
@@ -104,8 +121,8 @@ class ReviewPrelim extends MX_Controller {
 					foreach ($data['Easements'] as $key => $easement) 
 					{
 						$language = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
-						$language = str_replace("\u000b", "", $language);
-						$language = str_replace("\r", "", $language);
+						$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+						$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
 						if(!empty($language))
 						{
 							$easements[] = $language;
@@ -119,7 +136,8 @@ class ReviewPrelim extends MX_Controller {
 					foreach ($data['Requirements'] as $key => $requirement) 
 					{
 						$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
-						$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
+						$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+						$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
 						$amount = isset($requirement['Amount']) && !empty($requirement['Amount']) ? $requirement['Amount'] : '';
 						$date = isset($requirement['Date']) && !empty($requirement['Date']) ? $requirement['Date'] : '';
 						$grantor = isset($requirement['Grantor']) && !empty($requirement['Grantor']) ? $requirement['Grantor'] : '';
@@ -152,8 +170,7 @@ class ReviewPrelim extends MX_Controller {
 						if(strpos($language, '_PARCELID1_') !== false) {
 							$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
 						}
-						$language = str_replace("\u000b", "", $language);
-						$language = str_replace("\r", "", $language);
+						
 						if(!empty($language))
 						{
 							$requirements[] = $language;
@@ -169,8 +186,8 @@ class ReviewPrelim extends MX_Controller {
 					{
 
 						$language = isset($restriction['Language']) && !empty($restriction['Language']) ? $restriction['Language'] : '';
-						$language = str_replace("\u000b", "", $language);
-						$language = str_replace("\r", "", $language);
+						$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+						$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
 						if(!empty($language))
 						{
 							$restrictions[] = $language;
@@ -190,6 +207,7 @@ class ReviewPrelim extends MX_Controller {
 					'resware_json' => $json,
 					'parcel_id' => $parcelID
 	    		);
+
 	    		$con = array(
 	                'where' => array(
 	                    'file_number' => $file_number,
@@ -217,6 +235,28 @@ class ReviewPrelim extends MX_Controller {
 		        	$this->order->update($data,$condition);
 	            }
 	    	}
+
+	    	/* Send email to customer */
+	    	$emailContent  = $summaryData;
+	    	$emailContent['tax'] = json_encode($tax);
+	    	
+	    	$mail = $this->phpmailer_library->load();
+	    	$mail->isSendmail();
+			$mail->IsHTML(true);
+			$mail->setFrom('cs@pct.com','Open Order Desk');
+			$mail->CharSet = "UTF-8";
+			$mail->Encoding = "base64";
+			$mail->Timeout = 200;
+			$mail->ContentType = "text/html";
+			$mail->addAddress('ankita.p@crestinfosystems.net', 'Open Order Desk');							
+			$mail->Subject = "The Prelim Hot Sheet";
+			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
+
+			$mail->Body = $prelim_message_body;
+			$mail->AltBody = "Use an HTML compatible email client";
+			$mail->Send();
+	    	/* Send email to customer */
+
 	    	echo "Data stored successfully.";
     	}
     	else
