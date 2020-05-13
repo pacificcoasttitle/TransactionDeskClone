@@ -41,7 +41,7 @@
 												<th>#</th>
 												<th>File Number</th>
 												<th>Property Address</th>
-												<th>Action</th>
+												<th style="text-align: center;">Action</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -115,6 +115,15 @@
 										<label class="field prepend-icon">
 											<input type="text" name="borrower" id="borrower" class="gui-input"
 												placeholder="Borrower">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+								<div class="frm-row" id="secondary-borrower-section">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="secondary_borrower" id="secondary_borrower" class="gui-input"
+												placeholder="Secondary Borrower">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
@@ -334,6 +343,7 @@
 	            	var TitleOfficer = $('#TitleOfficer').val();
 	            	var loan_number = $('#loan_number').val();
 	            	var borrower = $('#borrower').val();
+	            	var secondary_borrower = $('#secondary_borrower').val();
 	            	var LenderId = $('#LenderId').val();
 	            	var orderId = $('#orderId').val();
 	            	var transaction_id = $('#transaction_id').val();
@@ -349,6 +359,7 @@
 	                    TitleOfficer: TitleOfficer,
 	                    loan_number: loan_number,
 	                    borrower: borrower,
+	                    secondary_borrower: secondary_borrower,
 	                    LenderId: LenderId,
 	                    orderId: orderId,
 	                    transaction_id: transaction_id,
@@ -522,6 +533,7 @@ function generateProposedInsured(fileId)
             success: function(response) {
             	$('#page-preloader').css('display', 'none');
             	var res = JSON.parse(response);
+            	
             	if(res.status == 'dataRequired')
                 {
                 	$('#orderId').val(res.data.orderId);
@@ -539,6 +551,10 @@ function generateProposedInsured(fileId)
                 	if(res.data.is_borrower == 1)
                 	{
                 		$('#borrower-section').css('display','none');
+                	}
+                	if(res.data.is_secondary_borrower == 1)
+                	{
+                		$('#secondary-borrower-section').css('display','none');
                 	}
                 	if(res.data.is_lender == 1)
                 	{

@@ -753,10 +753,11 @@ class Dashboard extends MX_Controller {
             );
 			
 			$titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
-			
+			// echo "<pre>"; print_r($titleOfficerDetails); exit;
 			$data['title_officer'] = $orderDetails['title_officer'];
-			$data['title_officer_email'] = isset($titleOfficerDetails[0]['email_address']) && !empty($titleOfficerDetails[0]['email_address']);
-			$data['title_officer_phone'] = isset($titleOfficerDetails[0]['phone']) && !empty($titleOfficerDetails[0]['phone']);
+			$data['title_officer_email'] = isset($titleOfficerDetails[0]['email_address']) && !empty($titleOfficerDetails[0]['email_address']) ? $titleOfficerDetails[0]['email_address'] : '';
+			$data['title_officer_phone'] = isset($titleOfficerDetails[0]['phone']) && !empty($titleOfficerDetails[0]['phone']) ? $titleOfficerDetails[0]['phone'] : '';
+			
 			$is_title_officer = 1;
 		}
 		$emptyData['is_title_officer'] = $is_title_officer;
@@ -793,11 +794,10 @@ class Dashboard extends MX_Controller {
 		}
 		$emptyData['is_loan_number'] = $is_loan_number;
 
-		$is_borrower = 0;
+		$is_borrower = 0; $is_secondary_borrower = 0;
 		
 		$sales_amount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
 		
-
 		if(isset($sales_amount) && !empty($sales_amount))
 		{
 			$borrowers =  isset($orderDetails['borrower']) && !empty($orderDetails['borrower']) ? $orderDetails['borrower'] : '';
@@ -806,25 +806,33 @@ class Dashboard extends MX_Controller {
 			{
 				$is_borrower = 1;
 			}
+
+			$secondary_borrower =  isset($orderDetails['secondary_borrower']) && !empty($orderDetails['secondary_borrower']) ? $orderDetails['secondary_borrower'] : '';
+			$data['secondary_borrower'] = $secondary_borrower;
+			if($secondary_borrower)
+			{
+				$is_secondary_borrower = 1;
+			}
 		}
 		else if(isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']))
 		{
-			$owners = array();
 			$primary_owner = isset($orderDetails['primary_owner']) && !empty($orderDetails['primary_owner']) ? $orderDetails['primary_owner'] : '';
 			$secondary_owner = isset($orderDetails['secondary_owner']) && !empty($orderDetails['secondary_owner']) ? $orderDetails['secondary_owner'] : '';
 			if($primary_owner)
 			{
-				$owners[] = $primary_owner;
+				$data['borrowers'] = $primary_owner;
+				$is_borrower = 1;
 			}
 
 			if($secondary_owner)
 			{
-				$owners[] = $secondary_owner;
+				$data['secondary_borrower'] = $secondary_owner;
+				$is_secondary_borrower = 1;
 			}
-			$data['borrowers'] = implode(', ', $owners);
-			$is_borrower = 1;	
+				
 		}
 		$emptyData['is_borrower'] = $is_borrower;
+		$emptyData['is_secondary_borrower'] = $is_secondary_borrower;
 		
 		$is_supplemental_report_date = 0;
 		if(isset($orderDetails['supplemental_report_date']) && !empty($orderDetails['supplemental_report_date']))
@@ -851,6 +859,7 @@ class Dashboard extends MX_Controller {
 			$data['lender'] = isset($lender_data['company_name']) && !empty($lender_data['company_name']) ? $lender_data['company_name'] : '';
 		}
 		$emptyData['is_lender'] = $is_lender;
+
 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'proposed_insured', '', $data, array(), $orderId, 0);
 		
 		if(empty($data['title_officer']) || empty($data['borrowers']) || empty($data['lender']) || empty($data['loan_number']) || empty($data['supplemental_report_date']) || empty($data['preliminary_report_date']))
@@ -1294,15 +1303,55 @@ class Dashboard extends MX_Controller {
 			$TitleOfficer = isset($_POST['TitleOfficer']) && !empty($_POST['TitleOfficer']) ? $_POST['TitleOfficer'] : '';
 			$loan_number = isset($_POST['loan_number']) && !empty($_POST['loan_number']) ? $_POST['loan_number'] : '';
 			$borrower = isset($_POST['borrower']) && !empty($_POST['borrower']) ? $_POST['borrower'] : '';
+			$secondary_borrower = isset($_POST['secondary_borrower']) && !empty($_POST['secondary_borrower']) ? $_POST['secondary_borrower'] : '';
 			$LenderId = isset($_POST['LenderId']) && !empty($_POST['LenderId']) ? $_POST['LenderId'] : '';
 			$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
 			$s_report_date = isset($_POST['s_report_date']) && !empty($_POST['s_report_date']) ? $_POST['s_report_date'] : '';
 			$p_report_date = isset($_POST['p_report_date']) && !empty($_POST['p_report_date']) ? $_POST['p_report_date'] : '';
+			$transaction_id = isset($_POST['transaction_id']) && !empty($_POST['transaction_id']) ? $_POST['transaction_id'] : '';
+			$property_id = isset($_POST['property_id']) && !empty($_POST['property_id']) ? $_POST['property_id'] : '';
 
-			
-			if((isset($TitleOfficer) && !empty($TitleOfficer)) || (isset($loan_number) && !empty($loan_number)) || (isset($borrower) && !empty($borrower)) || (isset($s_report_date) && !empty($s_report_date)) || (isset($p_report_date) && !empty($p_report_date)))
+			$orderDetails = $this->order->get_order_details($fileId);
+			$sales_amount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+
+			if(isset($sales_amount) && !empty($sales_amount))
 			{
-				$transaction_id = isset($_POST['transaction_id']) && !empty($_POST['transaction_id']) ? $_POST['transaction_id'] : '';
+				$update_data = array();
+				if($borrower)
+				{
+					$update_data['borrower'] = $borrower;
+				}
+				if($secondary_borrower)
+				{
+					$update_data['secondary_borrower'] = $secondary_borrower;
+				}
+				$condition = array(
+					'id' => $transaction_id
+				);
+				$borrower_update_flag = $this->home_model->update($update_data, $condition, 'transaction_details');
+			}
+			else if(isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']))
+			{
+				$update_data = array();
+				if($borrower)
+				{
+					$update_data['primary_owner'] = $borrower;
+				}
+				if($secondary_borrower)
+				{
+					$update_data['secondary_owner'] = $secondary_borrower;
+				}
+
+				$condition = array(
+					'id' => $property_id
+				);
+
+				$owner_update_flag = $this->home_model->update($update_data, $condition, 'property_details');
+			}
+
+
+			if((isset($TitleOfficer) && !empty($TitleOfficer)) || (isset($loan_number) && !empty($loan_number)) || (isset($s_report_date) && !empty($s_report_date)) || (isset($p_report_date) && !empty($p_report_date)))
+			{				
 
 				$update_data = array();
 				if($TitleOfficer)
@@ -1335,9 +1384,7 @@ class Dashboard extends MX_Controller {
 			if(isset($LenderId) && !empty($LenderId))
 			{
 				$update_data = array();			
-				$update_data['escrow_lender_id'] = $LenderId;
-
-				$property_id = isset($_POST['property_id']) && !empty($_POST['property_id']) ? $_POST['property_id'] : '';
+				$update_data['escrow_lender_id'] = $LenderId;		
 
 				$condition = array(
 					'id' => $property_id
@@ -1345,7 +1392,7 @@ class Dashboard extends MX_Controller {
 
 				$property_update_flag = $this->home_model->update($update_data, $condition, 'property_details');
 			}
-			if($property_update_flag || $transaction_update_flag)
+			if($property_update_flag || $transaction_update_flag || $borrower_update_flag || $owner_update_flag)
 			{
 				$data = array('status'=>'success', 'fileId'=>$fileId);
 			}

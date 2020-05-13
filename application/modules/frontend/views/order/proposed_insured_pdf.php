@@ -81,10 +81,10 @@
 		<div class="title-officer-info">
 			<div class="title-officer-basic-info">
 				<p><span class="heading">Title Officer:</span> <?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
-				<p><span class="heading">Title Officer Email:</span>  <?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
+				<p><span class="heading">Title Officer Email:</span>  <?php echo isset($title_officer_email) && !empty($title_officer_email) ? $title_officer_email : ''; ?></p>
 			</div>
 			<div class="title-officer-contact-info">
-				<p><span class="heading">Title Officer Phone:</span> (818)662-6771</p>
+				<p><span class="heading">Title Officer Phone:</span> <?php echo isset($title_officer_phone) && !empty($title_officer_phone) ? $title_officer_phone : ''; ?></p>
 				<!-- <p><span class="heading">Title Officer Fax:</span>  (818)484-2540</p> -->
 			</div>
 			<div style="clear: both;"></div>
@@ -130,7 +130,8 @@
 				<p style="text-align: justify;">UPON THE CLOSE OF ESCROW AND CONFIRMATION OF RECORDING PACIFIC COAST TITLE WILL BE IN A POSITION TO ISSUE A TITLE POLICY IN FAVOR OF:</p>
 			</div>
 			<div>
-				<p>Borrowers: <?php echo isset($borrowers) && !empty($borrowers) ? $borrowers : '-'; ?></p>
+				<p>Borrower: <?php echo isset($borrowers) && !empty($borrowers) ? $borrowers : '-'; ?></p>
+				<p>Secondary Borrower: <?php echo isset($secondary_borrower) && !empty($secondary_borrower) ? $secondary_borrower : '-'; ?></p>
 				<p>Lender: <?php echo isset($lender) && !empty($lender) ? $lender : '-'; ?></p>
 				<p>Loan #: <?php echo isset($loan_number) && !empty($loan_number) ? $loan_number : '-'; ?></p>
 				<p>Loan Amount: <?php echo isset($loan_amount) && !empty($loan_amount) ? '$'.$loan_amount : ''; ?></p>
