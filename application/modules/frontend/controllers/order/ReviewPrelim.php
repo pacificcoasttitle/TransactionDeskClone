@@ -245,9 +245,9 @@ class ReviewPrelim extends MX_Controller {
 			$mail->IsHTML(true);
 			$mail->setFrom('cs@pct.com','Open Order Desk');
 			$mail->CharSet = "UTF-8";
-			$mail->Encoding = "base64";
+			/*$mail->Encoding = "base64";
 			$mail->Timeout = 200;
-			$mail->ContentType = "text/html";
+			$mail->ContentType = "text/html";*/
 			$mail->addAddress('hitesh.p@crestinfosystems.com', 'Open Order Desk');							
 			$mail->Subject = "The Prelim Hot Sheet";
 			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
@@ -255,7 +255,16 @@ class ReviewPrelim extends MX_Controller {
 			$mail->Body = $prelim_message_body;
 			$mail->AltBody = "Use an HTML compatible email client";
 			
-			$mail->Send();
+			if($mail->Send())
+			{
+				echo 'success'; exit;
+			}
+			else
+			{
+				echo 'error';
+				echo "<pre>"; print_r($mail->ErrorInfo;); exit;
+				
+			}
 	    	/* Send email to customer */
 
 	    	echo "Data stored successfully.";
