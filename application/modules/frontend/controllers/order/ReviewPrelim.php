@@ -262,7 +262,7 @@ class ReviewPrelim extends MX_Controller {
 			else
 			{
 				echo 'error';
-				echo "<pre>"; print_r($mail->ErrorInfo;); exit;
+				echo "<pre>"; print_r($mail->ErrorInfo); exit;
 				
 			}
 	    	/* Send email to customer */
