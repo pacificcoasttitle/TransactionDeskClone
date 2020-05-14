@@ -740,6 +740,8 @@ class Home extends MX_Controller {
 
     function testMail()
     {
+    	phpinfo();
+    	exit;
     	/* Send email to customer */
     	$this->load->library("phpmailer_library");
     	$mail = $this->phpmailer_library->load();
