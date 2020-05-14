@@ -1,6 +1,6 @@
 <body>
     <?php
-        $this->load->view('layout/header');
+        $this->load->view('layout/header_dashboard');
     ?>
     <div class="section-title-page7m area-bg area-bg_blue area-bg_op_60 parallax">
               <div class="area-bg__inner">

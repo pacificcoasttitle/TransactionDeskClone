@@ -142,6 +142,7 @@ $route['resware-fetch-data'] = 'frontend/order/ReviewPrelim/fetchData';
 $route['generate-plat-map'] = 'frontend/order/dashboard/generate_plat_map';
 $route['get-order-details'] = 'frontend/order/dashboard/get_order_details';
 $route['update-order-details'] = 'frontend/order/dashboard/update_order_details';
+$route['get-order-details-cpl'] = 'frontend/order/dashboard/getOrderDetailsCpl';
 
 
 /* Route for PCT-Order backend*/

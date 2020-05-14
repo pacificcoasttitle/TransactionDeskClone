@@ -68,8 +68,8 @@
 					<div class="smart-forms smart-container wrap-2" style="margin:30px">
 						<div class="modal-body search-result">
 							<div id="lender-details-fields" style="">
-								<div class="spacer-b30">
-									<div class="tagline"><span>Add Lender Details</span></div><!-- .tagline -->
+								<div class="spacer-b20">
+									<div class="tagline"><span>Add or Edit Lender Details</span></div><!-- .tagline -->
 								</div>
 
 								<div class="frm-row">
@@ -117,7 +117,7 @@
 										</label>
 									</div>
 								</div>
-								<div class="frm-row">
+								<div class="frm-row spacer-b15">
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="LenderCity" id="LenderCity" class="gui-input"
@@ -130,6 +130,37 @@
 											<input type="text" name="LenderZipcode" id="LenderZipcode" class="gui-input"
 												placeholder="Lender Zipcode" readonly="readonly" required="required">
 											<span class="field-icon"><i class="fa fa-envelope"></i></span>
+										</label>
+									</div>
+								</div>
+
+								<div class="spacer-b20">
+									<div class="tagline"><span>Add or Edit Loan Amount</span></div><!-- .tagline -->
+								</div>
+
+								<div class="section colm colm12 spacer-b30">
+									<label class="field">
+										<input required="required" type="text" class="gui-input" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
+									</label>
+								</div>
+
+								<div class="spacer-b20">
+									<div class="tagline"><span>Add or Edit Second Borrower Information</span></div><!-- .tagline -->
+								</div>
+
+								<div class="frm-row">
+									<div class="section colm colm6">
+										<label class="field prepend-icon">
+											<input type="text" name="first_name" id="first_name" class="gui-input"
+												placeholder="First Name"  required="required">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+									<div class="section colm colm6">
+										<label class="field prepend-icon">
+											<input type="text" name="last_name" id="last_name" class="gui-input"
+												placeholder="Last Name"  required="required">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
 								</div>
@@ -295,8 +326,33 @@
 			$('#page-preloader').css('display', 'block');
 			$(this).form.submit();
 		} else {
-			$('#lender_information').modal('show');
-			$('#file_id').val(fileId);
+			$.ajax({
+				url: base_url + "get-order-details-cpl",
+				type: "post",
+				data: {
+					fileId: fileId
+				},
+				success: function (response) {
+					var res = jQuery.parseJSON(response);
+					if(res.status == 'success') {
+						
+						$("#LenderName").val(res.orderDetails['lender_name']);
+						$("#LenderEmailAddress").val(res.orderDetails['lender_email']);
+						$("#LenderTelephone").val(res.orderDetails['lender_telephone_no']);
+						$("#LenderCompany").val(res.orderDetails['lender_company_name']);
+						$("#LenderAddress").val(res.orderDetails['lender_address']);
+						$("#LenderCity").val(res.orderDetails['lender_city']);
+						$("#LenderZipcode").val(res.orderDetails['lender_zipcode']);
+						$("#LenderId").val(res.orderDetails['lender_id']);
+						$("#first_name").val(res.orderDetails['secondary_owner_first_name']);
+						$("#last_name").val(res.orderDetails['secondary_owner_last_name']);
+						$("#loan_amount").val(res.orderDetails['loan_amount']);
+					}  
+					$('#page-preloader').css('display', 'none');
+					$('#lender_information').modal('show');
+					$('#file_id').val(fileId);
+				}
+			});
 			return false;
 		}
 	}
