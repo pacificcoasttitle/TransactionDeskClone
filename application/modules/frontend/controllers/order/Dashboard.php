@@ -938,7 +938,7 @@ class Dashboard extends MX_Controller {
 				} else {
 					$file_id = $order['file_id'];
 					$lender_id_flag = !empty($order['escrow_lender_id']) ? 1 : 0;
-					$nestedData[] = "<div style='display:flex;'><form onclick='return lender_pop_up($lender_id_flag, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE CPL</button></form>
+					$nestedData[] = "<div style='display:flex;'><form onclick='return lender_pop_up($lender_id_flag, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form>
 					<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
 				}
 				$data[] = $nestedData; 
@@ -1220,6 +1220,12 @@ class Dashboard extends MX_Controller {
 				$this->home_model->update($order_details, $condition, 'order_details');
 				$this->home_model->update(array('westcor_property_id' => !empty($res['property']) ? $res['property'][0]['PropertyID'] : 0), array('id' => $orderDetails['property_id']), 'property_details');
 				$orderDetails['westcor_order_id'] = $res['tvid'];
+				$orderDetails['westcor_buyer_id']  = !empty($res['buyers']) ? $res['buyers'][0]['NameID'] : 0;
+				$orderDetails['westcor_seller_id']  = !empty($res['sellers']) ? $res['sellers'][0]['NameID'] : 0;
+				$orderDetails['westcor_secondary_buyer_id']  = !empty($res['buyers']) ? $res['buyers'][1]['NameID'] : 0;
+				$orderDetails['westcor_secondary_seller_id']  = !empty($res['sellers']) ? $res['sellers'][1]['NameID'] : 0;
+				$orderDetails['westcor_lender_id'] = !empty($res['lenders']) ? $res['lenders'][0]['Id']: 0;
+
 			} else {
 				$errors[] = $result;
 				$data = array(
@@ -1246,6 +1252,11 @@ class Dashboard extends MX_Controller {
 			$resCPL = json_decode($cplData, true);
 			$resCPL['CPL']['LetterName'] = $resCPL['CPL']['Forms'][0]['FormName'];
 			$resCPL['CPL']['LenderID'] = $orderDetails['westcor_lender_id'];
+			$resCPL['CPL']['PolicyProducingAgentAddressID'] = $resToken['agent_number'];
+			$resCPL['CPL']['PolicyProducingAgentAddress'] = $resToken['address'];
+			$resCPL['CPL']['PolicyProducingAgentCity'] = $resToken['city'];
+			$resCPL['CPL']['PolicyProducingAgentState'] = $resToken['state'];
+			$resCPL['CPL']['PolicyProducingAgentZip'] = $resToken['zip'];
 						
 			// $cpl[] = array (
 			// 	'TVID' => $res['tvid'],
@@ -1381,8 +1392,8 @@ class Dashboard extends MX_Controller {
 		$lender_details = array(
 			'first_name'	=> $name[0],
 			'last_name'  => !empty($name[1]) ? $name[1] : '',
-			'telephone_no'  => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
-			'email_address' => !empty($this->input->post('LenderTelephone')) ? $this->input->post('LenderTelephone') : "",
+			'telephone_no'  => !empty($this->input->post('LenderTelephone')) ? $this->input->post('LenderTelephone') : "",
+			'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
 			'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
 			'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
 			'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
@@ -2439,6 +2450,17 @@ class Dashboard extends MX_Controller {
 		$orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
 		$orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
 		$orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
+
+		if(empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = '';
+		} else if(empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = $orderDetails['lender_last_name'];
+		} else if(!empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = $orderDetails['lender_first_name'];
+		} else if(!empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
+		}
+
 		if (!empty($orderDetails['secondary_owner'])) {
 			$secondary_owner = explode(' ', $orderDetails['secondary_owner']);
 			$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';

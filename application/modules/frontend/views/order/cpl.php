@@ -335,9 +335,8 @@
 				success: function (response) {
 					var res = jQuery.parseJSON(response);
 					if(res.status == 'success') {
-						if(res.orderDetails['lender_first_name'] != '' || res.orderDetails['lender_last_name'] != '') {
-							$("#LenderName").val(res.orderDetails['lender_first_name']+" "+res.orderDetails['lender_last_name']);
-						}
+						
+						$("#LenderName").val(res.orderDetails['lender_name']);
 						$("#LenderEmailAddress").val(res.orderDetails['lender_email']);
 						$("#LenderTelephone").val(res.orderDetails['lender_telephone_no']);
 						$("#LenderCompany").val(res.orderDetails['lender_company_name']);
