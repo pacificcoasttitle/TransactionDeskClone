@@ -83,7 +83,6 @@ $route['glendale'] = 'frontend/contact/glendale';
 
 /* Route for PCT-Order Frontside*/
 $route['order'] = 'frontend/order/home/index';
-$route['test-mail'] = 'frontend/order/home/testMail';
 $route['dashboard'] = 'frontend/order/dashboard/index';
 $route['order/login'] = 'frontend/order/login/index';
 $route['do_login'] = 'frontend/order/login/do_login';

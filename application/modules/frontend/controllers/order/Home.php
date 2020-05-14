@@ -737,32 +737,4 @@ class Home extends MX_Controller {
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/dashboard');
     }
-
-    function testMail()
-    {
-    	/* Send email to customer */
-    	$this->load->library("phpmailer_library");
-    	$mail = $this->phpmailer_library->load();
-    	$mail->isSendmail();
-		$mail->IsHTML(true);
-		$mail->setFrom('cs@pct.com','Open Order Desk');
-		$mail->CharSet = "UTF-8";
-		
-		$mail->addAddress('ankita.p@crestinfosystems.net', 'Hitesh Patel');							
-		$mail->Subject = "The Prelim Hot Sheet";
-		$mail->Body = "test mail";
-		$mail->AltBody = "Use an HTML compatible email client";
-		
-		if($mail->Send())
-		{
-			echo 'success'; exit;
-		}
-		else
-		{
-			echo 'error';
-			echo "<pre>"; print_r($mail->ErrorInfo); exit;
-			
-		}
-    	/* Send email to customer */
-    }
 }
