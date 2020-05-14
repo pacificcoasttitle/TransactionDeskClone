@@ -741,6 +741,7 @@ class Home extends MX_Controller {
     function testMail()
     {
     	/* Send email to customer */
+    	$this->load->library("phpmailer_library");
     	$mail = $this->phpmailer_library->load();
     	$mail->isSendmail();
 		$mail->IsHTML(true);
