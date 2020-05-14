@@ -327,7 +327,7 @@
 			$(this).form.submit();
 		} else {
 			$.ajax({
-				url: base_url + "get-order-details",
+				url: base_url + "get-order-details-cpl",
 				type: "post",
 				data: {
 					fileId: fileId

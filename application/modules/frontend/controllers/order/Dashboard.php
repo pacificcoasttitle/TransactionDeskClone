@@ -2437,7 +2437,7 @@ class Dashboard extends MX_Controller {
 			echo json_encode($data); exit;
 		}
 	}
-	public function getOrderDetails()
+	public function getOrderDetailsCpl()
 	{
 		$fileId = $this->input->post('fileId');
 		$orderDetails = $this->order->get_order_details($fileId);
