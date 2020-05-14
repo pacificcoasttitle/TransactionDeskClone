@@ -748,7 +748,7 @@ class Home extends MX_Controller {
 		$mail->setFrom('cs@pct.com','Open Order Desk');
 		$mail->CharSet = "UTF-8";
 		
-		$mail->addAddress('hitesh.p@crestinfosystems.com', 'Open Order Desk');							
+		$mail->addAddress('hitesh.p@crestinfosystems.com', 'Hitesh Patel');							
 		$mail->Subject = "The Prelim Hot Sheet";
 		$mail->Body = "test mail";
 		$mail->AltBody = "Use an HTML compatible email client";
