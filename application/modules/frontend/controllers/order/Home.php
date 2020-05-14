@@ -744,6 +744,7 @@ class Home extends MX_Controller {
     	$this->load->library("phpmailer_library");
     	$mail = $this->phpmailer_library->load();
     	// $mail->isSendmail();
+    	$mail->IsSMTP();
 		$mail->IsHTML(true);
 		$mail->setFrom('cs@pct.com','Open Order Desk');
 		$mail->CharSet = "UTF-8";
