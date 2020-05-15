@@ -195,7 +195,7 @@
                     <!--[if mso]><table cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td width="100" align="center" valign="top" style="padding: 0px 8px;"><![endif]-->
                     
                     <!--[if mso]></td><td width="300" align="left" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_col o_col-3 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 300px;">
+                    <div class="o_col o_col-3 o_col-full" style="display: inline-block;vertical-align: top;width: 100%; /* max-width: 300px; */">
                       <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
                       <div class="o_px-xs o_sans o_text-xs o_text-light o_left o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;color: #82899a;text-align: left;padding-left: 8px;padding-right: 8px;">
                         <h4 class="o_heading o_text-dark o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;color: #d35411;font-size: 18px;line-height: 23px;">Taxes</h4>
@@ -206,14 +206,19 @@
 
                             if(isset($tax) && !empty($tax))
                             {
+                        ?>
+                                <!-- <ol> -->
+                            <?php
                                 foreach ($tax as $key => $tax_val) 
                                 {
-                                    $tax_val = preg_replace('/^.+\r/', '', $tax_val);
                             ?>
                                     <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo nl2br(trim($tax_val)); ?>
                                     </p>
                         <?php
                                 }
+                        ?>
+                                <!-- </ol> -->
+                        <?php
                             }
                             else 
                             {
@@ -226,7 +231,7 @@
                       </div>
                     </div>
                     <!--[if mso]></td><td width="200" align="right" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_col o_col-2 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
+                    <!-- <div class="o_col o_col-2 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
                       <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
                       <div class="o_px-xs o_right o_xs-center" style="text-align: right;padding-left: 8px;padding-right: 8px;">
                         <table class="o_right o_xs-center" cellspacing="0" cellpadding="0" border="0" role="presentation" style="text-align: right;margin-left: auto;margin-right: 0;">
@@ -239,7 +244,7 @@
                           </tbody>
                         </table>
                       </div>
-                    </div>
+                    </div> -->
                     <!--[if mso]></td></tr><tr><td colspan="3" style="padding: 0px 8px;"><![endif]-->
                     <div class="o_px-xs" style="padding-left: 8px;padding-right: 8px;">
                       <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
@@ -271,188 +276,30 @@
                 <tr>
                   <td class="o_re o_bg-white o_px o_pt" align="center" style="font-size: 0;vertical-align: top;background-color: #ffffff;padding-left: 16px;padding-right: 16px;padding-top: 16px;">
                     
-                    <div class="o_col o_col-3 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 300px;">
+                    <div class="o_col o_col-3 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;/* max-width: 300px; */">
                       <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
                       <div class="o_px-xs o_sans o_text-xs o_text-light o_left o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;color: #82899a;text-align: left;padding-left: 8px;padding-right: 8px;">
-                        <h4 class="o_heading o_text-dark o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;color: #d35411;font-size: 18px;line-height: 23px;">Leins</h4>
+                        <h4 class="o_heading o_text-dark o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;color: #d35411;font-size: 18px;line-height: 23px;">Liens</h4>
                         <?php
-                        if(isset($lien) && !empty($lien))
+                        if(isset($liens) && !empty($liens))
                         {
-                            $lien = json_decode($lien,TRUE);
+                            $lien = json_decode($liens,TRUE);
 
-                            if(isset($lien[3]) && !empty($lien[3]))
-                            {
-                                /*echo "<pre>"; print_r($lien); exit;
-                                foreach ($lien as $key => $lien_val) 
-                                {*/
-                                    $lien_val = preg_replace('/^.+\n/', '', $lien[3]);
-                            ?>
-                                    <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo nl2br(trim($lien_val)); ?>
-                                    </p>
-                        <?php
-                                /*}*/
-                            }
-                            else 
+                            if(isset($lien) && !empty($lien))
                             {
                         ?>
-                                <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo "No data found"; ?></p>
+                                <!-- <ol> -->
                         <?php
-                            }
-                        }
-                        ?>
-
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="200" align="right" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_col o_col-2 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
-                      <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
-                      <div class="o_px-xs o_right o_xs-center" style="text-align: right;padding-left: 8px;padding-right: 8px;">
-                        <table class="o_right o_xs-center" cellspacing="0" cellpadding="0" border="0" role="presentation" style="text-align: right;margin-left: auto;margin-right: 0;">
-                          <tbody>
-                            <tr>
-                              <td class="o_btn-xs o_bg-dark o_br o_heading o_text-xs" align="center" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;mso-padding-alt: 7px 16px;background-color: #d35411;border-radius: 4px;">
-                                <a class="o_text-white" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #ffffff;display: block;padding: 7px 16px;mso-text-raise: 3px;">View Document</a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td></tr><tr><td colspan="3" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_px-xs" style="padding-left: 8px;padding-right: 8px;">
-                      <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                        <tbody>
-                          <tr>
-                            <td class="o_re o_bb-light" style="font-size: 16px;line-height: 16px;height: 16px;vertical-align: top;border-bottom: 1px solid #d3dce0;">&nbsp; </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <!--[if mso]></td></tr></table><![endif]-->
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- spacer -->
-	 <!-- product-review -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_re o_bg-white o_px o_pt" align="center" style="font-size: 0;vertical-align: top;background-color: #ffffff;padding-left: 16px;padding-right: 16px;padding-top: 16px;">
-                    <!--[if mso]><table cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td width="100" align="center" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    
-					
-                    <!--[if mso]></td><td width="300" align="left" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_col o_col-3 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 300px;">
-                      <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
-                      <div class="o_px-xs o_sans o_text-xs o_text-light o_left o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;color: #82899a;text-align: left;padding-left: 8px;padding-right: 8px;">
-                        <h4 class="o_heading o_text-dark o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;color: #d35411;font-size: 18px;line-height: 23px;">Requirements</h4>
-                        <?php
-                        if(isset($requirements) && !empty($requirements))
-                        {
-                            $requirements = json_decode($requirements,TRUE);
-                            
-                            if(isset($requirements[2]) && !empty($requirements[2]))
-                            {
-                                /*echo "<pre>"; print_r($requirements); exit;
-                                foreach ($requirements as $key => $requirements_val) 
-                                {*/
-                                    $requirements_val = preg_replace('/^.+\n/', '', $requirements[2]);
-                            ?>
-                                    <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo nl2br(trim($requirements_val)); ?>
-                                    </p>
-                        <?php
-                                /*}*/
-                            }
-                            else 
-                            {
-                        ?>
-                                <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo "No data found"; ?></p>
-                        <?php
-                            }
-                        }
-                        ?>
-						
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="200" align="right" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_col o_col-2 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
-                      <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
-                      <div class="o_px-xs o_right o_xs-center" style="text-align: right;padding-left: 8px;padding-right: 8px;">
-                        <table class="o_right o_xs-center" cellspacing="0" cellpadding="0" border="0" role="presentation" style="text-align: right;margin-left: auto;margin-right: 0;">
-                          <tbody>
-                            <tr>
-                              <td class="o_btn-xs o_bg-dark o_br o_heading o_text-xs" align="center" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;mso-padding-alt: 7px 16px;background-color: #d35411;border-radius: 4px;">
-                                <a class="o_text-white" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #ffffff;display: block;padding: 7px 16px;mso-text-raise: 3px;">View Document</a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td></tr><tr><td colspan="3" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_px-xs" style="padding-left: 8px;padding-right: 8px;">
-                      <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                        <tbody>
-                          <tr>
-                            <td class="o_re o_bb-light" style="font-size: 16px;line-height: 16px;height: 16px;vertical-align: top;border-bottom: 1px solid #d3dce0;">&nbsp; </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <!--[if mso]></td></tr></table><![endif]-->
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- spacer -->
-	 <!-- product-review -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_re o_bg-white o_px o_pt" align="center" style="font-size: 0;vertical-align: top;background-color: #ffffff;padding-left: 16px;padding-right: 16px;padding-top: 16px;">
-                    <!--[if mso]><table cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td width="100" align="center" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    
-					
-                    <!--[if mso]></td><td width="300" align="left" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_col o_col-3 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 300px;">
-                      <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
-                      <div class="o_px-xs o_sans o_text-xs o_text-light o_left o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;color: #82899a;text-align: left;padding-left: 8px;padding-right: 8px;">
-                        <h4 class="o_heading o_text-dark o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;color: #d35411;font-size: 18px;line-height: 23px;">Easements</h4>
-                        <?php
-                        if(isset($easement) && !empty($easement))
-                        {
-                            $easement = json_decode($easement,TRUE);
-
-                            if(isset($easement) && !empty($easement))
-                            {
-                                foreach ($easement as $key => $easement_val) 
+                                foreach ($lien as $key => $lien_val)
                                 {
                             ?>
-                                    <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo nl2br(trim($easement_val)); ?>
+                                    <p style=""><?php echo nl2br(($lien_val)); ?>
                                     </p>
                         <?php
                                 }
+                        ?>
+                                <!-- </ol> -->
+                        <?php
                             }
                             else 
                             {
@@ -462,10 +309,11 @@
                             }
                         }
                         ?>
+
                       </div>
                     </div>
                     <!--[if mso]></td><td width="200" align="right" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_col o_col-2 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
+                    <!-- <div class="o_col o_col-2 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
                       <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
                       <div class="o_px-xs o_right o_xs-center" style="text-align: right;padding-left: 8px;padding-right: 8px;">
                         <table class="o_right o_xs-center" cellspacing="0" cellpadding="0" border="0" role="presentation" style="text-align: right;margin-left: auto;margin-right: 0;">
@@ -478,7 +326,7 @@
                           </tbody>
                         </table>
                       </div>
-                    </div>
+                    </div> -->
                     <!--[if mso]></td></tr><tr><td colspan="3" style="padding: 0px 8px;"><![endif]-->
                     <div class="o_px-xs" style="padding-left: 8px;padding-right: 8px;">
                       <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
@@ -500,102 +348,6 @@
       </tbody>
     </table>
     <!-- spacer -->
-
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_bg-white" style="font-size: 24px;line-height: 24px;height: 24px;background-color: #ffffff;">&nbsp; </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-     <!-- product-review -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_re o_bg-white o_px o_pt" align="center" style="font-size: 0;vertical-align: top;background-color: #ffffff;padding-left: 16px;padding-right: 16px;padding-top: 16px;">
-                    <!--[if mso]><table cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td width="100" align="center" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    
-                    
-                    <!--[if mso]></td><td width="300" align="left" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_col o_col-3 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 300px;">
-                      <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
-                      <div class="o_px-xs o_sans o_text-xs o_text-light o_left o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;color: #82899a;text-align: left;padding-left: 8px;padding-right: 8px;">
-                        <h4 class="o_heading o_text-dark o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;color: #d35411;font-size: 18px;line-height: 23px;">Restrictions</h4>
-                        <?php
-                        if(isset($restrictions) && !empty($restrictions))
-                        {
-                            $restrictions = json_decode($restrictions,TRUE);
-
-                            if(isset($restrictions) && !empty($restrictions))
-                            {
-                                foreach ($restrictions as $key => $restrictions_val) 
-                                {
-                            ?>
-                                    <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo nl2br(trim($restrictions_val)); ?>
-                                    </p>
-                        <?php
-                                }
-                            }
-                            else 
-                            {
-                        ?>
-                                <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo "No data found"; ?></p>
-                        <?php
-                            }
-                        }
-                        ?>
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="200" align="right" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_col o_col-2 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
-                      <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
-                      <div class="o_px-xs o_right o_xs-center" style="text-align: right;padding-left: 8px;padding-right: 8px;">
-                        <table class="o_right o_xs-center" cellspacing="0" cellpadding="0" border="0" role="presentation" style="text-align: right;margin-left: auto;margin-right: 0;">
-                          <tbody>
-                            <tr>
-                              <td class="o_btn-xs o_bg-dark o_br o_heading o_text-xs" align="center" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;mso-padding-alt: 7px 16px;background-color: #d35411;border-radius: 4px;">
-                                <a class="o_text-white" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #ffffff;display: block;padding: 7px 16px;mso-text-raise: 3px;">View Document</a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <!--[if mso]></td></tr><tr><td colspan="3" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_px-xs" style="padding-left: 8px;padding-right: 8px;">
-                      <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                        <tbody>
-                          <tr>
-                            <td class="o_re o_bb-light" style="font-size: 16px;line-height: 16px;height: 16px;vertical-align: top;border-bottom: 1px solid #d3dce0;">&nbsp; </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <!--[if mso]></td></tr></table><![endif]-->
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
     <!-- content -->
     <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
       <tbody>

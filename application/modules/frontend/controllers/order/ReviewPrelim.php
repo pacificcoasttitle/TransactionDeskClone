@@ -4,17 +4,25 @@
 
 class ReviewPrelim extends MX_Controller {
 
-	function __construct() {
+	public function __construct() {
         parent::__construct();
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
         $this->load->library('order/order');
         $this->load->library("phpmailer_library");
+        $this->load->model('order/document');
+        $this->load->library('order/resware');
+        $this->load->model('order/home_model');
     }
 
-    function fetchData()
+    
+    public function fetchData()
     {
+    	ini_set('max_execution_time', 0); 
+		ini_set('memory_limit','2048M');
+		
     	$json = file_get_contents('php://input');
+    	
     	if($json)
     	{
     		$logId = $this->apiLogs->syncLogs(0,'resware WCF', 'get_prelim','https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array('ReceiveSearchDataService'=>true), array());
@@ -49,9 +57,10 @@ class ReviewPrelim extends MX_Controller {
 	    		$file_number = isset($data['FileNumber']) && !empty($data['FileNumber']) ? $data['FileNumber'] : '';
 
 				$parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
+
 	    		$vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
 	    		$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
-	    		$liens = $tax = array();
+	    		$liens = $email_data = array();
 
 	    		if(isset($data['Liens']) && !empty($data['Liens']))
 				{
@@ -66,10 +75,11 @@ class ReviewPrelim extends MX_Controller {
 							if(strpos($language, '_PARCELID1_') !== false) 
 							{									
 									
-								$language = str_replace("_PARCELID1_", " <strong><u>".$parcelID."</u></strong>" , $language);
+								$language = str_replace("_PARCELID1_", $parcelID , $language);
+								
 							}
 
-							$tax[] = $language;
+							$email_data['tax'][] = $language;
 						}
 						else
 						{
@@ -106,9 +116,9 @@ class ReviewPrelim extends MX_Controller {
 								if(strpos($language, '_PARCELID1_') !== false) {
 									$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
 								}
-								$language = str_replace("\u000b", "", $language);
-								$language = str_replace("\r", "", $language);
+								
 								$liens[] = $language;
+								$email_data['liens'][] = $language;
 							}
 						}
 							    				
@@ -184,7 +194,6 @@ class ReviewPrelim extends MX_Controller {
 				{
 					foreach ($data['Restrictions'] as $key => $restriction) 
 					{
-
 						$language = isset($restriction['Language']) && !empty($restriction['Language']) ? $restriction['Language'] : '';
 						$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
 						$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
@@ -237,42 +246,147 @@ class ReviewPrelim extends MX_Controller {
 	    	}
 
 	    	/* Send email to customer */
-	    	$emailContent  = $summaryData;
-	    	$emailContent['tax'] = json_encode($tax);
-	    	
+
+
+	        $condition = array(
+	            'where' => array(
+	                'file_number' => $file_number,
+	            )
+	        );
+
+			$order_details = $this->order->get_rows($condition);
+
+			$order_id = isset($order_details['id']) && !empty($order_details['id']) ? $order_details['id'] : '';
+			$file_id = isset($order_details['file_id']) && !empty($order_details['file_id']) ? $order_details['file_id'] : '';
+			$customer_id = isset($order_details['customer_id']) && !empty($order_details['customer_id']) ? $order_details['customer_id'] : '';
+
+			$condition = array(
+	            'id' => $customer_id,
+	        );
+
+	    	$userDetails = $this->home_model->get_customers($condition);
+
+	    	$customer_email = isset($userDetails['email_address']) && !empty($userDetails['email_address']) ? $userDetails['email_address'] : '';
+	    	$customer_name = '';
+
+	    	if(isset($userDetails['first_name']) && !empty($userDetails['first_name']))
+	    	{
+	    		$customer_name = $userDetails['first_name'];
+	    	}
+
+	    	if(isset($userDetails['last_name']) && !empty($userDetails['last_name']))
+	    	{
+	    		$customer_name .= $userDetails['last_name'];
+	    	}
+
+	    	if(isset($email_data) && !empty($email_data))
+	    	{
+	    		foreach ($email_data as $key => $value) 
+	    		{
+	    			foreach ($value as $k => $v)
+	    			{
+	    				$dom = new DomDocument();
+						$dom->loadHTML($v);
+						foreach ($dom->getElementsByTagName('a') as $item) 
+						{
+						    $output = array (
+						      'str' => $dom->saveHTML($item),
+						      'href' => $item->getAttribute('href'),
+						      'anchorText' => $item->nodeValue
+						   	);
+
+						   	if(isset($output) && !empty($output))
+							{
+								$linkHref = $output['href'];
+								$doc_link = explode('=', $linkHref);
+								$document_id = isset($doc_link[1]) && !empty($doc_link[1]) ? $doc_link[1] : '';
+
+								$documentDetail = $this->order->get_document_detail($document_id);
+
+								if(empty($documentDetail))
+								{
+									$document_name = date('YmdHis')."_".trim($output['anchorText']).'.pdf';
+									$original_doc_name = trim($output['anchorText']).'.pdf';
+									
+									$doc_url = 'http://clients.pacificcoasttitle.com/DownloadDocument.aspx?'.$linkHref;		
+
+									file_put_contents('./uploads/documents/'.$document_name, file_get_contents($doc_url));
+
+									$fileSize = filesize('./uploads/documents/'.$document_name);
+									$new_href = base_url().'uploads/documents/'.$document_name;
+									$documentData = array(
+										'document_name' => $document_name,
+										'original_document_name' => $original_doc_name,
+										'document_type_id' => 0,
+										'api_document_id' => $document_id,
+										'document_size' => $fileSize,
+										'user_id' => $customer_id,
+										'order_id' => $order_id,
+										'description' => "",
+										'created' => date('Y-m-d H:i:s'),
+										'is_sync' => 1,
+										'is_prelim_document' => 0,
+										'is_linked_doc' => 1
+									);
+									$documentId = $this->document->insert($documentData);
+
+									$item->setAttribute('href', $new_href);
+									$item->setAttribute('download',$document_name);
+
+									$email_data[$key][$k] = $dom->saveHTML();
+									
+								}
+								else
+								{
+									$document_name = isset($documentDetail['document_name']) && !empty($documentDetail['document_name']) ? $documentDetail['document_name'] : '';
+
+									$new_href = base_url().'uploads/documents/'.$document_name;
+									$item->setAttribute('href', $new_href);
+									$item->setAttribute('download',$document_name);
+
+									$email_data[$key][$k] = $dom->saveHTML();
+								}
+							}
+						}
+						
+	    			}
+	    		}
+	    	}
+
+	    	$emailContent['tax'] = isset($email_data['tax']) && !empty($email_data['tax']) ? json_encode($email_data['tax']) : '';
+	    	$emailContent['liens'] = isset($email_data['liens']) && !empty($email_data['liens']) ? json_encode($email_data['liens']) : '';
+
 	    	$mail = $this->phpmailer_library->load();
 	    	$mail->isSendmail();
 			$mail->IsHTML(true);
 			$mail->setFrom('cs@pct.com','Open Order Desk');
 			$mail->CharSet = "UTF-8";
-			/*$mail->Encoding = "base64";
-			$mail->Timeout = 200;
-			$mail->ContentType = "text/html";*/
+			
 			$mail->addAddress('hitesh.p@crestinfosystems.com', 'Open Order Desk');							
+			// $mail->addAddress($customer_email, $customer_name);							
 			$mail->Subject = "The Prelim Hot Sheet";
 			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
-
+			
 			$mail->Body = $prelim_message_body;
 			$mail->AltBody = "Use an HTML compatible email client";
 			
+			$result = array();
 			if($mail->Send())
 			{
-				echo 'success'; exit;
+				$result['mail_status'] = 'success';
 			}
 			else
 			{
-				echo 'error';
-				echo "<pre>"; print_r($mail->ErrorInfo); exit;
-				
+				$result['mail_status'] = 'error';		
 			}
 	    	/* Send email to customer */
-
-	    	echo "Data stored successfully.";
+	    	$result['message'] = "Data stored successfully.";
     	}
     	else
     	{
-    		echo "Empty response received.";
+    		$result['message'] = "Empty response received.";
     	}
+    	echo json_encode($result);
     }
     
 }

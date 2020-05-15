@@ -233,5 +233,42 @@ class Order
             return array();
         }         
     }
+
+    public function get_rows($params = array())
+    {
+        $table = 'order_details';
+
+        $this->CI->db->select('*');
+        $this->CI->db->from($table);
+        
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->CI->db->where($key, $val);
+            }
+        }
+        
+        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+            $result = $this->CI->db->count_all_results();
+        }else{
+            if(array_key_exists("id", $params)){
+                $this->CI->db->where('id', $params['id']);
+                $query = $this->CI->db->get();
+                $result = $query->row_array();
+            }else{
+                $this->CI->db->order_by('id', 'asc');
+                if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                    $this->CI->db->limit($params['limit'],$params['start']);
+                }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                    $this->CI->db->limit($params['limit']);
+                }
+                
+                $query = $this->CI->db->get();
+                $result = ($query->num_rows() > 0)?$query->row_array():FALSE;
+            }
+        }
+        
+        // Return fetched data
+        return $result;
+    }
        
 }
