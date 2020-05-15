@@ -1122,7 +1122,7 @@ class Dashboard extends MX_Controller {
 				'zip' => $orderDetails['lender_zipcode'],
 				'address' => $orderDetails['lender_address'],
 				'phone' => $orderDetails['lender_telephone_no'],
-				'email' => $orderDetails['lender_telephone_no'],
+				'email' => $orderDetails['lender_email'],
 				'countyFIPS' => null,
 				'assignment' => null,
 				'mortgageType' => null,
@@ -1668,29 +1668,39 @@ class Dashboard extends MX_Controller {
 											$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
 											$document_name = date('YmdHis')."_".$linkText;
 											$documentId = explode('=', $linkHref);
-											file_put_contents('./uploads/documents/'.$document_name, file_get_contents($linkHref));
-											$fileSize = filesize('./uploads/documents/'.$document_name);
-											$documentData = array(
-												'document_name' => $document_name,
-												'original_document_name' => $linkText,
-												'document_type_id' => 0,
-												'api_document_id' => $documentId[1],
-												'document_size' => $fileSize,
-												'user_id' => $userdata['id'],
-												'order_id' => $orderDetails['order_id'],
-												'description' => "",
-												'created' => date('Y-m-d H:i:s'),
-												'is_sync' => 1,
-												'is_prelim_document' => 0,
-												'is_linked_doc' => 1
-											);
-											$documentId = $this->document->insert($documentData);
-											$linked_doc[$linkedDocCount]['original_document_name'] = $linkText;
-											$linked_doc[$linkedDocCount]['document_name'] = $document_name;
-											$linked_doc[$linkedDocCount]['api_document_id'] = 0;
-											$linked_doc[$linkedDocCount]['is_sync'] = 1;
-											$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
-											$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+											if (!in_array($documentId[1], $apiDocumentIds))  {
+												file_put_contents('./uploads/documents/'.$document_name, file_get_contents($linkHref));
+												$fileSize = filesize('./uploads/documents/'.$document_name);
+												$documentData = array(
+													'document_name' => $document_name,
+													'original_document_name' => $linkText,
+													'document_type_id' => 0,
+													'api_document_id' => $documentId[1],
+													'document_size' => $fileSize,
+													'user_id' => $userdata['id'],
+													'order_id' => $orderDetails['order_id'],
+													'description' => "",
+													'created' => date('Y-m-d H:i:s'),
+													'is_sync' => 1,
+													'is_prelim_document' => 0,
+													'is_linked_doc' => 1
+												);
+												$documentId = $this->document->insert($documentData);
+												$linked_doc[$linkedDocCount]['original_document_name'] = $linkText;
+												$linked_doc[$linkedDocCount]['document_name'] = $document_name;
+												$linked_doc[$linkedDocCount]['api_document_id'] = $documentId[1];
+												$linked_doc[$linkedDocCount]['is_sync'] = 1;
+												$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
+												$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+											} else {
+												$key = array_search($documentId[1], array_column($documents, 'api_document_id'));
+												$linked_doc[$linkedDocCount]['original_document_name'] = $documents[$key]['original_document_name'];
+												$linked_doc[$linkedDocCount]['document_name'] = $documents[$key]['document_name'];
+												$linked_doc[$linkedDocCount]['api_document_id'] = $documents[$key]['api_document_id'];
+												$linked_doc[$linkedDocCount]['is_sync'] = $documents[$key]['is_sync'];
+												$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
+												$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+											}
 											$linkedDocCount++;
 										} else{
 											continue;
@@ -1817,29 +1827,39 @@ class Dashboard extends MX_Controller {
 												$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
 												$document_name = date('YmdHis')."_".$linkText;
 												$documentId = explode('=', $linkHref);
-												file_put_contents('./uploads/documents/'.$document_name, file_get_contents($linkHref));
-												$fileSize = filesize('./uploads/documents/'.$document_name);
-												$documentData = array(
-													'document_name' => $document_name,
-													'original_document_name' => $linkText,
-													'document_type_id' => 0,
-													'api_document_id' => $documentId[1],
-													'document_size' => $fileSize,
-													'user_id' => $userdata['id'],
-													'order_id' => $orderDetails['order_id'],
-													'description' => "",
-													'created' => date('Y-m-d H:i:s'),
-													'is_sync' => 1,
-													'is_prelim_document' => 0,
-													'is_linked_doc' => 1
-												);
-												$documentId = $this->document->insert($documentData);
-												$linked_doc[$linkedDocCount]['original_document_name'] = $linkText;
-												$linked_doc[$linkedDocCount]['document_name'] = $document_name;
-												$linked_doc[$linkedDocCount]['api_document_id'] = 0;
-												$linked_doc[$linkedDocCount]['is_sync'] = 1;
-												$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
-												$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+												if (!in_array($documentId[1], $apiDocumentIds))  {
+													file_put_contents('./uploads/documents/'.$document_name, file_get_contents($linkHref));
+													$fileSize = filesize('./uploads/documents/'.$document_name);
+													$documentData = array(
+														'document_name' => $document_name,
+														'original_document_name' => $linkText,
+														'document_type_id' => 0,
+														'api_document_id' => $documentId[1],
+														'document_size' => $fileSize,
+														'user_id' => $userdata['id'],
+														'order_id' => $orderDetails['order_id'],
+														'description' => "",
+														'created' => date('Y-m-d H:i:s'),
+														'is_sync' => 1,
+														'is_prelim_document' => 0,
+														'is_linked_doc' => 1
+													);
+													$documentId = $this->document->insert($documentData);
+													$linked_doc[$linkedDocCount]['original_document_name'] = $linkText;
+													$linked_doc[$linkedDocCount]['document_name'] = $document_name;
+													$linked_doc[$linkedDocCount]['api_document_id'] = $documentId[1];
+													$linked_doc[$linkedDocCount]['is_sync'] = 1;
+													$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
+													$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+												} else {
+													$key = array_search($documentId[1], array_column($documents, 'api_document_id'));
+													$linked_doc[$linkedDocCount]['original_document_name'] = $documents[$key]['original_document_name'];
+													$linked_doc[$linkedDocCount]['document_name'] = $documents[$key]['document_name'];
+													$linked_doc[$linkedDocCount]['api_document_id'] = $documents[$key]['api_document_id'];
+													$linked_doc[$linkedDocCount]['is_sync'] = $documents[$key]['is_sync'];
+													$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
+													$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+												}
 												$linkedDocCount++;
 											} else{
 												continue;
