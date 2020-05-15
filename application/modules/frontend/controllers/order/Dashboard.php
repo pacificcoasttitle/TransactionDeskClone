@@ -1250,7 +1250,7 @@ class Dashboard extends MX_Controller {
 			$cplData = $this->westcor->make_request('GET', $endPointForCPL, array(), 0, $resToken['token']);
 			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_cpl_data', WESTCORE_URL.$endPointForCPL, array(), $cplData, $orderDetails['order_id'], $logid);	
 			$resCPL = json_decode($cplData, true);
-			$resCPL['CPL']['LetterName'] = $resCPL['CPL']['Forms'][0]['FormName'];
+			$resCPL['CPL']['LetterName'] = $resCPL['CPL']['Forms'][1]['FormName'];
 			$resCPL['CPL']['LenderID'] = $orderDetails['westcor_lender_id'];
 			$resCPL['CPL']['PolicyProducingAgentAddressID'] = $resToken['agent_number'];
 			$resCPL['CPL']['PolicyProducingAgentAddress'] = $resToken['address'];
@@ -2461,6 +2461,8 @@ class Dashboard extends MX_Controller {
 	{
 		$fileId = $this->input->post('fileId');
 		$orderDetails = $this->order->get_order_details($fileId);
+		//echo "<pre>";
+		//print_r($orderDetails);exit;
 		$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
 		$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
 		$orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
