@@ -931,6 +931,7 @@ class Dashboard extends MX_Controller {
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
 				if(!empty($order['westcor_file_id'])) {
+					$file_id = $order['file_id'];
 					$westcorFileId = $order['westcor_file_id'];
 					$westcorOrderId = $order['westcor_order_id'];
 					$nestedData[] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
@@ -1251,6 +1252,8 @@ class Dashboard extends MX_Controller {
 			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_cpl_data', WESTCORE_URL.$endPointForCPL, array(), $cplData, $orderDetails['order_id'], $logid);	
 			$resCPL = json_decode($cplData, true);
 			$resCPL['CPL']['LetterName'] = $resCPL['CPL']['Forms'][1]['FormName'];
+			$resCPL['CPL']['FileInformation'] = null;
+			$resCPL['CPL']['CPLID'] = -1;
 			$resCPL['CPL']['LenderID'] = $orderDetails['westcor_lender_id'];
 			$resCPL['CPL']['PolicyProducingAgentAddressID'] = $resToken['agent_number'];
 			$resCPL['CPL']['PolicyProducingAgentAddress'] = $resToken['address'];
@@ -2461,8 +2464,6 @@ class Dashboard extends MX_Controller {
 	{
 		$fileId = $this->input->post('fileId');
 		$orderDetails = $this->order->get_order_details($fileId);
-		//echo "<pre>";
-		//print_r($orderDetails);exit;
 		$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
 		$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
 		$orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
