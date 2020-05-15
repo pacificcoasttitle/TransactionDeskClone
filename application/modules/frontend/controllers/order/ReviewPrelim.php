@@ -362,8 +362,8 @@ class ReviewPrelim extends MX_Controller {
 			$mail->setFrom('cs@pct.com','Open Order Desk');
 			$mail->CharSet = "UTF-8";
 			
-			$mail->addAddress('hitesh.p@crestinfosystems.com', 'Open Order Desk');							
-			// $mail->addAddress($customer_email, $customer_name);							
+			// $mail->addAddress('hitesh.p@crestinfosystems.com', 'Open Order Desk');							
+			$mail->addAddress($customer_email, $customer_name);							
 			$mail->Subject = "The Prelim Hot Sheet";
 			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
 			
