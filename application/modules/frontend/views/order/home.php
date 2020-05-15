@@ -2,7 +2,7 @@
 	.typography-section__inner {
         margin-top: 67px;
         margin-left: 10%;
-        margin-bottom: 50px;
+        margin-bottom: 0px !important;
     }
 </style>
 
@@ -22,9 +22,7 @@
 				<div class="col-md-9">
 					<div class="smart-wrap">
 						<div class="smart-forms smart-container wrap-2">
-							<div class="form-header header-primary">
-								<h4>Open Your Title Order</h4>
-							</div><!-- end .form-header section -->
+							
 							<!-- Start Form -->
 							<form method="POST" id="smart-form" enctype="multipart/form-data">
 								<div class="form-body">

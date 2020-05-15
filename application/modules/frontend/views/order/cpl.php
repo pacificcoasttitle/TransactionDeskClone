@@ -166,7 +166,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-footer" style="padding-top:0px;">
+						<div class="form-footer" style="margin: 0px 20px;">
 							<button type="submit" data-btntext-sending="Sending..."
 								class="button btn-primary">Submit</button>
 							<button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
