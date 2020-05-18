@@ -9,6 +9,7 @@ class Home extends MX_Controller {
         $this->load->helper(array('file', 'url'));
         $this->load->library('session');
 		$this->load->model('order/home_model');
+		$this->load->model('order/agent_model');
 		$this->load->library('form_validation');
 		$this->load->library('order/order');
 		$this->load->model('order/titlePointData');
@@ -330,6 +331,64 @@ class Home extends MX_Controller {
 						);
 
 						$orderId = $this->home_model->insert($orderData,'order_details');
+
+						/* Buyers Agent */						
+						if(isset($BuyerAgentId) && !empty($BuyerAgentId))
+			        	{
+			        		$buyerData = array(
+								'name' => $BuyerAgentName,
+								'email_address' => $BuyerAgentEmailAddress,
+								'company' => $BuyerAgentCompany,
+								'telephone_no' => $BuyerAgentTelephone,
+								'status'=> 1
+							);
+							$condition = array(
+								'id' => $BuyerAgentId
+							);
+							
+							$buyeragentId = $this->agent_model->update($buyerData,$condition);
+			        	}
+						/* Buyers Agent */
+
+						/* Listing Agent */					
+						if(isset($ListingAgentId) && !empty($ListingAgentId))
+			        	{
+			        		$listngAgentData = array(
+								'name' => $ListingAgentName,
+								'email_address' => $ListingAgentEmailAddress,
+								'company' => $ListingAgentCompany,
+								'telephone_no' => $ListingAgentTelephone,
+								'status'=> 1
+							);
+							$condition = array(
+								'id' => $ListingAgentId
+							);
+							
+							$listingAgentId = $this->agent_model->update($listngAgentData,$condition);
+			        	}
+						/* Listing Agent */
+
+						/* Escrow Lender Details */					
+						if(isset($EscrowLenderId) && !empty($EscrowLenderId))
+			        	{
+			        		$name = explode(' ', $EscrowLenderName);
+			        		$first_name = $name[0];
+			        		$last_name = $name[1];
+			        		$EscrowLenderData = array(
+								'first_name' => $first_name,
+								'last_name' => $last_name,
+								'email_address' => $EscrowLenderEmail,
+								'company_name' => $EscrowLenderCompany,
+								'telephone_no' => $EscrowLenderTelephone,
+								'status'=> 1
+							);
+							$condition = array(
+								'id' => $EscrowLenderId
+							);
+							
+							$lenderId = $this->home_model->update($EscrowLenderData,$condition);
+			        	}
+						/* Escrow Lender Details */
 
 						$order_file = uniqid();
 						$order_upload = $order_file.isset($_FILES['orderfiles']['name']) && !empty($_FILES['orderfiles']['name']) ? $_FILES['orderfiles']['name'] : '';	

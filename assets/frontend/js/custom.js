@@ -204,14 +204,14 @@ $(document).ready(function() {
         else
         {
             $("#BuyerAgentName").val('').parent().removeClass('state-success');
-            $("#BuyerAgentEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success');
-            $("#BuyerAgentTelephone").val('').removeAttr('readonly').parent().removeClass('state-success');
-            $("#BuyerAgentCompany").val('').removeAttr('readonly').parent().removeClass('state-success');
+            $("#BuyerAgentEmailAddress").val('').parent().removeClass('state-success');
+            $("#BuyerAgentTelephone").val('').parent().removeClass('state-success');
+            $("#BuyerAgentCompany").val('').parent().removeClass('state-success');
             $("#BuyerAgentId").val('');
             $("#ListingAgentName").val('').parent().removeClass('state-success');
-            $("#ListingAgentEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success');
-            $("#ListingAgentTelephone").val('').removeAttr('readonly').parent().removeClass('state-success');
-            $("#ListingAgentCompany").val('').removeAttr('readonly').parent().removeClass('state-success');
+            $("#ListingAgentEmailAddress").val('').parent().removeClass('state-success');
+            $("#ListingAgentTelephone").val('').parent().removeClass('state-success');
+            $("#ListingAgentCompany").val('').parent().removeClass('state-success');
             $("#ListingAgentId").val('');
             $('#agent-details-fields').hide();
         }        
@@ -225,9 +225,9 @@ $(document).ready(function() {
         else
         {
             $("#LenderName").val('').parent().removeClass('state-success');
-            $("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success');
-            $("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success');
-            $("#LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success');
+            $("#LenderEmailAddress").val('').parent().removeClass('state-success');
+            $("#LenderTelephone").val('').parent().removeClass('state-success');
+            $("#LenderCompany").val('').parent().removeClass('state-success');
             $("#LenderId").val('');
             $('#lender-details-fields').hide();
         }        
@@ -241,9 +241,9 @@ $(document).ready(function() {
         else
         {
             $("#EscrowName").val('').parent().removeClass('state-success');
-            $("#EscrowEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success');
-            $("#EscrowTelephone").val('').removeAttr('readonly').parent().removeClass('state-success');
-            $("#EscrowCompany").val('').removeAttr('readonly').parent().removeClass('state-success');
+            $("#EscrowEmailAddress").val('').parent().removeClass('state-success');
+            $("#EscrowTelephone").val('').parent().removeClass('state-success');
+            $("#EscrowCompany").val('').parent().removeClass('state-success');
             $("#EscrowId").val('');
             $('#escrow-details-fields').hide();
         }        
@@ -268,19 +268,18 @@ $(document).ready(function() {
             $("#BuyerAgentName").val(ui.item.name);
             /*$("#AgentFirstName").val(ui.item.first_name);
             $("#AgentLastName").val(ui.item.last_name).attr('readonly','readonly').parent().addClass('state-success');*/
-            $("#BuyerAgentEmailAddress").val(ui.item.email_address).attr('readonly','readonly').parent().addClass('state-success');
-            $("#BuyerAgentTelephone").val(ui.item.telephone_no).attr('readonly','readonly').parent().addClass('state-success');           
-            $("#BuyerAgentCompany").val(ui.item.company).attr('readonly','readonly').parent().addClass('state-success');
+            $("#BuyerAgentEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
+            $("#BuyerAgentTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+            $("#BuyerAgentCompany").val(ui.item.company).parent().addClass('state-success');
             $("#BuyerAgentId").val(ui.item.id);
         },
         change: function( event, ui ) {
             if (ui.item == null)
             {
-                // $("#AgentLastName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#BuyerAgentEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#BuyerAgentTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#BuyerAgentCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#BuyerAgentId").val('');
+                /*$("#BuyerAgentEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#BuyerAgentTelephone").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#BuyerAgentCompany").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#BuyerAgentId").val('');*/
             }
         }
     });
@@ -302,21 +301,20 @@ $(document).ready(function() {
         select: function( event, ui ) {
             event.preventDefault();
             $("#ListingAgentName").val(ui.item.name);
-            /*$("#AgentFirstName").val(ui.item.first_name);
-            $("#AgentLastName").val(ui.item.last_name).attr('readonly','readonly').parent().addClass('state-success');*/
-            $("#ListingAgentEmailAddress").val(ui.item.email_address).attr('readonly','readonly').parent().addClass('state-success');
-            $("#ListingAgentTelephone").val(ui.item.telephone_no).attr('readonly','readonly').parent().addClass('state-success');           
-            $("#ListingAgentCompany").val(ui.item.company).attr('readonly','readonly').parent().addClass('state-success');
+            
+            $("#ListingAgentEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
+            $("#ListingAgentTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+            $("#ListingAgentCompany").val(ui.item.company).parent().addClass('state-success');
             $("#ListingAgentId").val(ui.item.id);
         },
         change: function( event, ui ) {
             if (ui.item == null)
             {
                 // $("#AgentLastName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#ListingAgentEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#ListingAgentTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#ListingAgentCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#ListingAgentId").val('');
+                /*$("#ListingAgentEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#ListingAgentTelephone").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#ListingAgentCompany").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#ListingAgentId").val('');*/
             }
         }
     });
@@ -340,18 +338,18 @@ $(document).ready(function() {
         select: function( event, ui ) {
             event.preventDefault();
             $("#LenderName").val(ui.item.name);
-            $("#LenderEmailAddress").val(ui.item.email_address).attr('readonly','readonly').parent().addClass('state-success');
-            $("#LenderTelephone").val(ui.item.telephone_no).attr('readonly','readonly').parent().addClass('state-success');           
-            $("#LenderCompany").val(ui.item.company).attr('readonly','readonly').parent().addClass('state-success');
+            $("#LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
+            $("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+            $("#LenderCompany").val(ui.item.company).parent().addClass('state-success');
             $("#LenderId").val(ui.item.id);
         },
         change: function( event, ui ) {
             if (ui.item == null)
             {
-                $("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#LenderId").val('');
+               /* $("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#LenderTelephone").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#LenderCompany").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#LenderId").val('');*/
             }
         }
     });
@@ -374,18 +372,18 @@ $(document).ready(function() {
         select: function( event, ui ) {
             event.preventDefault();
             $("#EscrowName").val(ui.item.name);
-            $("#EscrowEmailAddress").val(ui.item.email_address).attr('readonly','readonly').parent().addClass('state-success');
-            $("#EscrowTelephone").val(ui.item.telephone_no).attr('readonly','readonly').parent().addClass('state-success');           
-            $("#EscrowCompany").val(ui.item.company).attr('readonly','readonly').parent().addClass('state-success');
+            $("#EscrowEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
+            $("#EscrowTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+            $("#EscrowCompany").val(ui.item.company).parent().addClass('state-success');
             $("#EscrowId").val(ui.item.id);
         },
         change: function( event, ui ) {
             if (ui.item == null)
             {
-                $("#EscrowEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#EscrowTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#EscrowCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#EscrowId").val('');
+                /*$("#EscrowEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#EscrowTelephone").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#EscrowCompany").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#EscrowId").val('');*/
             }
         }
     });
