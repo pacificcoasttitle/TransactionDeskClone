@@ -38,39 +38,71 @@
 								OpenLastName: {
 									required: true
 								},
-								/*Opentelephone: {
-									required: true
-								},*/
+								
 								OpenEmail: {
 									required: true
 								},
-								sendername: {
-										required: true,
-										minlength: 2
-								},		
+										
 								emailaddress: {
 										required: true,
 										email: true
 								},
-								orderservices: {
-										required: true
-								},
-								orderbudget: {
-										required: true
-								},
-								orderfiles:{
-									required:true,
-									extension:"jpeg|jpg|png"
-								},								
-								/*sendermessage: {
-										required: true,
-										minlength: 10
-								},*/
 								captcha:{
 									required:true,
 									remote:'php/captcha/process.php'
 								},
-								/*BuyerAgentName:{
+								LenderName:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("input[name=add-lender-details]").val() != "");
+				                        },
+				                    },
+				                },
+				                LenderEmailAddress:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("input[name=add-lender-details]").val() != "");
+				                        },
+				                    },
+				                    email: true,
+				                },
+				                /*LenderTelephone:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("input[name=add-lender-details]").val() != "");
+				                        },
+				                    },
+				                },*/
+				                LenderCompany:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("input[name=add-lender-details]").val() != "");
+				                        },
+				                    },
+				                },
+								BuyerAgentName:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("input[name=add-agent-details]").val() != "");
+				                        },
+				                    },
+				                },
+				                BuyerAgentEmailAddress:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("input[name=add-agent-details]").val() != "");
+				                        },
+				                    },
+				                    email: true,
+				                },
+				                BuyerAgentTelephone:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("input[name=add-agent-details]").val() != "");
+				                        },
+				                    },
+				                },
+				                BuyerAgentCompany:{
 				                    required: {
 				                        depends: function(element) {
 				                            return ($("input[name=add-agent-details]").val() != "");
@@ -83,7 +115,32 @@
 				                            return ($("input[name=add-agent-details]").val() != "");
 				                        },
 				                    },
-				                },*/
+				                },
+				                ListingAgentEmailAddress:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("input[name=add-agent-details]").val() != "");
+				                        },
+				                    },
+				                    email: true,
+				                },
+				                ListingAgentTelephone:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("input[name=add-agent-details]").val() != "");
+				                        },
+				                    },
+				                },
+				                ListingAgentCompany:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("input[name=add-agent-details]").val() != "");
+				                        },
+				                    },
+				                },
+				                ProductTypeID: {
+				                	required: true,
+				                },				                
 				                salesAmount:{
 				                    required: {
 				                        depends: function(element) {
@@ -141,12 +198,48 @@
 										required: 'You must enter the captcha code',
 										remote:'Captcha code is incorrect'
 								},
-								/*BuyerAgentName: {
+								LenderName: {
+									required: 'Enter lender\'s name',
+								},
+								LenderEmailAddress: {
+									required: 'Enter lender\'s email address',
+									email: 'Enter vaild lender\'s email address',
+								},
+								/*LenderTelephone: {
+									required: 'Enter lender\'s telephone',
+								},*/
+								LenderCompany: {
+									required: 'Enter lender\'s company',
+								},
+								BuyerAgentName: {
 									required: 'Enter agent\'s name',
+								},
+								BuyerAgentEmailAddress: {
+									required: 'Enter agent\'s email address',
+									email: 'Enter vaild agent\'s email address',
+								},
+								/*BuyerAgentTelephone: {
+									required: 'Enter agent\'s telephone',
+								},*/
+								BuyerAgentCompany: {
+									required: 'Enter agent\'s company',
 								},
 								ListingAgentName: {
 									required: 'Enter agent\'s name',
+								},
+								ListingAgentEmailAddress: {
+									required: 'Enter agent\'s email address',
+									email: 'Enter vaild agent\'s email address',
+								},
+								/*ListingAgentTelephone: {
+									required: 'Enter agent\'s telephone',
 								},*/
+								ListingAgentCompany: {
+									required: 'Enter agent\'s company',
+								},
+								ProductTypeID: {
+									required: 'Select Product',
+								},
 								salesAmount: {
 									required: 'Enter sales amount',
 								},

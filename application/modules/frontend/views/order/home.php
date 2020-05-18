@@ -437,7 +437,7 @@
 												<label class="field prepend-icon">
 													<input type="email" name="BuyerAgentEmailAddress"
 														id="BuyerAgentEmailAddress" class="gui-input"
-														placeholder="Agent Email address" readonly="readonly">
+														placeholder="Agent Email address">
 													<span class="field-icon"><i class="fa fa-envelope"></i></span>
 												</label>
 											</div><!-- end section -->
@@ -446,7 +446,7 @@
 												<label class="field prepend-icon">
 													<input type="email" name="ListingAgentEmailAddress"
 														id="ListingAgentEmailAddress" class="gui-input"
-														placeholder="Agent Email address" readonly="readonly">
+														placeholder="Agent Email address">
 													<span class="field-icon"><i class="fa fa-envelope"></i></span>
 												</label>
 											</div><!-- end section -->
@@ -457,7 +457,7 @@
 												<label class="field prepend-icon">
 													<input type="tel" name="BuyerAgentTelephone"
 														id="BuyerAgentTelephone" class="gui-input"
-														placeholder="Agent Telephone" readonly="readonly">
+														placeholder="Agent Telephone">
 													<span class="field-icon"><i class="fa fa-phone-square"></i></span>
 												</label>
 											</div><!-- end section -->
@@ -466,7 +466,7 @@
 												<label class="field prepend-icon">
 													<input type="tel" name="ListingAgentTelephone"
 														id="ListingAgentTelephone" class="gui-input"
-														placeholder="Agent Telephone" readonly="readonly">
+														placeholder="Agent Telephone">
 													<span class="field-icon"><i class="fa fa-phone-square"></i></span>
 												</label>
 											</div><!-- end section -->
@@ -475,8 +475,7 @@
 											<div class="section colm colm6">
 												<label class="field prepend-icon">
 													<input type="text" name="BuyerAgentCompany" id="BuyerAgentCompany"
-														class="gui-input" placeholder="Agent Company Name"
-														readonly="readonly">
+														class="gui-input" placeholder="Agent Company Name">
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 												</label>
 											</div><!-- end section -->
@@ -484,7 +483,7 @@
 												<label class="field prepend-icon">
 													<input type="text" name="ListingAgentCompany"
 														id="ListingAgentCompany" class="gui-input"
-														placeholder="Agent Company Name" readonly="readonly">
+														placeholder="Agent Company Name">
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 												</label>
 											</div><!-- end section -->
@@ -516,7 +515,7 @@
 												<label class="field prepend-icon">
 													<input type="email" name="LenderEmailAddress"
 														id="LenderEmailAddress" class="gui-input"
-														placeholder="Lender Email address" readonly="readonly">
+														placeholder="Lender Email address">
 													<span class="field-icon"><i class="fa fa-envelope"></i></span>
 												</label>
 											</div><!-- end section -->
@@ -524,8 +523,7 @@
 											<div class="section colm colm6">
 												<label class="field prepend-icon">
 													<input type="tel" name="LenderTelephone" id="LenderTelephone"
-														class="gui-input" placeholder="Lender Telephone"
-														readonly="readonly">
+														class="gui-input" placeholder="Lender Telephone">
 													<span class="field-icon"><i class="fa fa-phone-square"></i></span>
 												</label>
 											</div><!-- end section -->
@@ -534,8 +532,7 @@
 											<div class="section colm colm12">
 												<label class="field prepend-icon">
 													<input type="text" name="LenderCompany" id="LenderCompany"
-														class="gui-input" placeholder="Lender Company Name"
-														readonly="readonly">
+														class="gui-input" placeholder="Lender Company Name">
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 												</label>
 											</div><!-- end section -->

@@ -48,4 +48,24 @@ class Agent_model extends CI_Model
         // Return fetched data
         return $result;
     }
+
+    public function update($data, $condition = array(), $table='') 
+    {
+        if(empty($table)) {
+            $table = $this->table;
+        }
+        
+        if(!empty($data))
+        {          
+            
+            $data['updated_at'] = date("Y-m-d H:i:s");
+
+            // Update data
+            $update = $this->db->update($table, $data, $condition);
+            
+            // Return the status
+            return $update?true:false;
+        }
+        return false;
+    }
 }
