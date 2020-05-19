@@ -393,7 +393,7 @@ class ReviewPrelim extends MX_Controller {
     {
     	$mail = $this->load->library("email");
 
-    	$mail->isSendmail();
+    	// $mail->isSendmail();
 		$mail->IsHTML(true);
 		$mail->setFrom('cs@pct.com','Open Order Desk');
 		$mail->CharSet = "UTF-8";
