@@ -391,22 +391,22 @@ class ReviewPrelim extends MX_Controller {
     
     public function testMail()
     {
-    	$mail = $this->load->library("email");
-echo "<pre>"; print_r($mail); exit;
-    	// $mail->isSendmail();
-		// $mail->IsHTML(true);
-		$mail->setFrom('cs@pct.com','Open Order Desk');
-		$mail->CharSet = "UTF-8";
+    	$this->load->library("email");
+
+    	$this->email->isSendmail();
+		$this->email->IsHTML(true);
+		$this->email->setFrom('cs@pct.com','Open Order Desk');
+		$this->email->CharSet = "UTF-8";
 		
-		$mail->addAddress('hitesh.p@crestinfosystems.com', 'Open Order Desk');							
-		// $mail->addAddress($customer_email, $customer_name);							
-		$mail->Subject = "Sendgrid Test";
+		$this->email->addAddress('hitesh.p@crestinfosystems.com', 'Open Order Desk');							
+		// $this->email->addAddress($customer_email, $customer_name);							
+		$this->email->Subject = "Sendgrid Test";
 		// $prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
 		
-		$mail->Body = "Testing sendgrid";
-		$mail->AltBody = "Use an HTML compatible email client";
+		$this->email->Body = "Testing sendgrid";
+		$this->email->AltBody = "Use an HTML compatible email client";
 		
-		$mail->Send();
+		$this->email->Send();
     }
 }
 
