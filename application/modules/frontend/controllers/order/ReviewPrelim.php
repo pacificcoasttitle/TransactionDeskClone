@@ -9,7 +9,7 @@ class ReviewPrelim extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
         $this->load->library('order/order');
-        $this->load->library("phpmailer_library");
+        // $this->load->library("phpmailer_library");
         $this->load->model('order/document');
         $this->load->library('order/resware');
         $this->load->model('order/home_model');
@@ -389,5 +389,24 @@ class ReviewPrelim extends MX_Controller {
     	echo json_encode($result);
     }
     
+    public function testMail()
+    {
+    	$mail = $this->load->library("email");
+
+    	$mail->isSendmail();
+		$mail->IsHTML(true);
+		$mail->setFrom('cs@pct.com','Open Order Desk');
+		$mail->CharSet = "UTF-8";
+		
+		$mail->addAddress('hitesh.p@crestinfosystems.com', 'Open Order Desk');							
+		// $mail->addAddress($customer_email, $customer_name);							
+		$mail->Subject = "Sendgrid Test";
+		// $prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
+		
+		$mail->Body = "Testing sendgrid";
+		$mail->AltBody = "Use an HTML compatible email client";
+		
+		$mail->Send();
+    }
 }
 
