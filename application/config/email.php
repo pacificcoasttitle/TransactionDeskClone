@@ -1,8 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$config['protocol'] = 'smtp';
-$config['smtp_port'] = '587';
-$config['smtp_host'] = 'smtp.sendgrid.net';
+$config['protocol']    	= 'smtp';
+$config['smtp_host']    = 'smtp.sendgrid.net';
+$config['smtp_port']    = '25';
+$config['smtp_timeout'] = '60';
 $config['smtp_user'] = 'ghernandez@pct.com';
 $config['smtp_pass'] = 'Alpha637#';
+$config['charset']    	= 'utf-8';
+$config['newline']    	= "\r\n";
+$config['mailtype'] 	= 'text'; // or html
+$config['validation'] 	= TRUE; // bool whether to validate email or not      
