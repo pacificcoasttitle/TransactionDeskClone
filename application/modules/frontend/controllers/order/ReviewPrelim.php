@@ -394,7 +394,7 @@ class ReviewPrelim extends MX_Controller {
 		// $this->email->addAddress($customer_email, $customer_name);
 		$this->load->library('email');
 
-		$this->email->from("cs@pct.com", "Open Order Desk");
+		$this->email->from("ghernandez@pct.com", "Open Order Desk");
 		$this->email->to('hitesh.p@crestinfosystems.com'); 
 		$this->email->subject("Email Testing");
 		$this->email->message('Testing the email class.');  
