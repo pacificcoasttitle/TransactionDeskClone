@@ -283,8 +283,9 @@
 						previous: '<span class="fa fa-angle-left"></span>',
 					},
 					"emptyTable": "Record(s) not found.",
+					"search": "",
                 },
-                "searching": false,
+                /*"searching": false,*/
 				initComplete: function () {
 					
 					
@@ -404,7 +405,7 @@
 	        },
 	        select: function( event, ui ) {
 	            event.preventDefault();
-				$("#lender").val(ui.item.name);
+				$("#lender").val(ui.item.value);
 				$("#LenderId").val(ui.item.id);
 	            
 	        },
@@ -432,7 +433,7 @@
 	        },
 	        select: function( event, ui ) {
 	            event.preventDefault();
-				$("#edit_lender").val(ui.item.name);
+				$("#edit_lender").val(ui.item.value);
 				$("#edit_LenderId").val(ui.item.id);
 	            
 	        },
@@ -650,7 +651,7 @@ function editInformation(fileId)
                 	var loan_amount = res.loan_amount;
                 	var borrower = res.borrower;
                 	var secondary_borrower = res.secondary_borrower;
-                	var lenderName = res.lenderName;
+                	var lenderName = res.lender;
                 	var property_id = res.property_id;
                 	var transaction_id = res.transaction_id;
                 	var fileId = res.fileId;

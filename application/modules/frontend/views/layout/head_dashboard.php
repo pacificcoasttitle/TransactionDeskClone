@@ -41,4 +41,28 @@
 	.typography-section {
 		padding-bottom: 0px;
 	}
+
+	.dataTables_filter input {
+	    height: calc(1.5em + 0.5rem + 2px); 
+	    background: #fff;
+	    position: relative;
+	    vertical-align: top;
+	    border: 1px solid #cbd2d6;
+	    display: -moz-inline-stack;
+	    display: inline-block;
+	    color: #34495E;
+	    outline: none;
+	    height: 42px;
+	    width: 96%;
+	    zoom: 1;
+	    border-radius: 3px;
+	    margin: 0;
+	    font-size: 14px;
+	    font-family: "Roboto", Arial, Helvetica, sans-serif;
+	    font-weight: 400;
+	}
+
+	.button-color {
+	  color: #888888;
+	}
 </style>

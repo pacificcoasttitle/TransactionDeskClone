@@ -1534,6 +1534,7 @@ class Dashboard extends MX_Controller {
 	public function get_orders_prelim()
 	{
 		$params = array();  $data = array();
+
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -2354,17 +2355,17 @@ class Dashboard extends MX_Controller {
 			$data['orderId'] = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
 
 			$data['fileId'] = $fileId;
-			$lenderName = '';
+			$lender = '';
 
-			if(isset($orderDetails['lender_first_name']) && !empty($orderDetails['lender_first_name']))
+			if(isset($orderDetails['lender_company_name']) && !empty($orderDetails['lender_company_name']))
 			{
-				$lenderName = $orderDetails['lender_first_name'];
+				$lender = $orderDetails['lender_company_name'];
 			}
-			if(isset($orderDetails['lender_last_name']) && !empty($orderDetails['lender_last_name']))
+			if(isset($orderDetails['lender_email']) && !empty($orderDetails['lender_email']))
 			{
-				$lenderName .= " ".$orderDetails['lender_last_name'];
+				$lender .= " - ".$orderDetails['lender_email'];
 			}
-			$data['lenderName']= $lenderName;
+			$data['lender']= $lender;
 			$data['status'] = 'success';
 		}
 		else

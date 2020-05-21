@@ -334,18 +334,29 @@
                                                 </label>
                                             </div> -->
 									<!-- end section -->
-									<div id="clone-email-address">
+									<div class="spacer-b30 spacer-t30">
+										<div class="tagline"><span>Add Deliverables</span></div>
+										<!-- .tagline -->
+									</div>
+
+									<div class="frm-row">
+										<div class="section colm colm12" id="clone-email-address">
+											
 										<div class="toclone clone-widget">
 											<div class="spacer-b10">
 												<label class="field">
 													<input type="email" class="gui-input" name="AdditionalEmail"
-														id="AdditionalEmail" placeholder="Email Adderess">
+														id="AdditionalEmail" placeholder="Email Address">
 												</label>
 											</div>
 											<a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
 											<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
 										</div>
+									
+										</div><!-- end section -->
+
 									</div>
+									
 									<!-- start agent details -->
 									<div class="spacer-t30">
 										<div class="tagline"><span> Add Parties</span></div><!-- .tagline -->
@@ -498,7 +509,15 @@
 										<div class="spacer-b30">
 											<div class="tagline"><span> Add Lender Details</span></div><!-- .tagline -->
 										</div>
-
+										<div class="frm-row">
+											<div class="section colm colm12">
+												<label class="field prepend-icon">
+													<input type="text" name="LenderCompany" id="LenderCompany"
+														class="gui-input" placeholder="Lender Company Name">
+													<span class="field-icon"><i class="fa fa-user"></i></span>
+												</label>
+											</div><!-- end section -->
+										</div>
 										<div class="frm-row">
 											<div class="section colm colm12">
 												<label class="field prepend-icon">
@@ -528,15 +547,7 @@
 												</label>
 											</div><!-- end section -->
 										</div><!-- end frm-row section -->
-										<div class="frm-row">
-											<div class="section colm colm12">
-												<label class="field prepend-icon">
-													<input type="text" name="LenderCompany" id="LenderCompany"
-														class="gui-input" placeholder="Lender Company Name">
-													<span class="field-icon"><i class="fa fa-user"></i></span>
-												</label>
-											</div><!-- end section -->
-										</div>
+										
 
 
 									</div>

@@ -321,7 +321,7 @@ $(document).ready(function() {
     /* Listing Agent autocomplete */
 
     /* Lender autocomplete */
-    $("#LenderName").autocomplete({
+    $("#LenderCompany").autocomplete({
         // source: "php/usersearch.php",
         source: function(request, response) {
             $.ajax({

@@ -34,7 +34,7 @@
 								}?>
 						</div>
 						<?php } ?>
-						<div class="loader"></div>
+						<!-- <div class="loader"></div> -->
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">
@@ -279,8 +279,9 @@
 						previous: '<span class="fa fa-angle-left"></span>',
 					},
 					"emptyTable": "Record(s) not found.",
+					"search": "",
 				},
-				"searching": false,
+				/*"searching": false,*/
 				"bStateSave": true,
 				"fnStateSave": function (oSettings, oData) {
 					localStorage.setItem('offersDataTables', JSON.stringify(oData));

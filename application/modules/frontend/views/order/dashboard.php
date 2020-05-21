@@ -46,7 +46,7 @@
 							</div>
 						</div>
 						<div class="typography-sectionc">
-							<div class="col-md-12">
+							<div class="col-md-9">
 							
 							<!--
 							   <div class="col-md-3">
@@ -73,9 +73,9 @@
 								<a href="<?php echo base_url().'fees'; ?>">
 									<button class="btn1 btn-type-1g btn-lg" type="button">Fee Estimate</button>
 								</a>
-								<a href="<?php echo base_url().'notes'; ?>">
+								<!-- <a href="<?php // echo base_url().'notes'; ?>">
 									<button class="btn1 btn-type-1h btn-lg" type="button">Notes on Files</button>
-								</a> 
+								</a> --> 
 								
 								
 							</div>
