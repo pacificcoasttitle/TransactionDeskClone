@@ -675,7 +675,7 @@ class Home extends MX_Controller {
 
 
     	$condition = array(
-            'name' => $searchTerm,
+            'company_name' => $searchTerm,
             'is_escrow' => $isEscrow,
         );
 

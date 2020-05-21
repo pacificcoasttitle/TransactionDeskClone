@@ -63,8 +63,9 @@
 						previous: '<span class="fa fa-angle-left"></span>',
 					},
 					"emptyTable": "Record(s) not found.",
+					"search": "",
                 },
-                "searching": false,
+                /*"searching": false,*/
 				initComplete: function () {
 					
 					
