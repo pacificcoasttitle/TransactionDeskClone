@@ -934,8 +934,14 @@ class Dashboard extends MX_Controller {
 					$file_id = $order['file_id'];
 					$westcorFileId = $order['westcor_file_id'];
 					$westcorOrderId = $order['westcor_order_id'];
-					$nestedData[] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-					<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+					if ($order['natic_document_name']) {
+						$documentName = $order['natic_document_name'];
+						$nestedData[] = "<div style='display:flex;'><a href='./uploads/documents/$documentName' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+							<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+					} else {
+						$nestedData[] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+							<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+					}
 				} else {
 					$file_id = $order['file_id'];
 					$lender_id_flag = !empty($order['escrow_lender_id']) ? 1 : 0;
@@ -2631,7 +2637,23 @@ class Dashboard extends MX_Controller {
 		$this->load->library('order/natic');
 		$userdata = $this->session->userdata('user');
 		$fileId = $this->uri->segment(2);    
-		$content = $this->natic->getDocumentContentForCpl($fileId);
+		$orderDetails = $this->order->get_order_details($fileId);
+		$responseArr = $this->natic->getDocumentContentForCpl($fileId);
+		if ($responseArr['success']) {
+			$linkText = str_replace(' ', '-', $linkText); 
+			$document_name = "natic"."_".$fileId.".pdf";
+			file_put_contents('./uploads/documents/'.$document_name, base64_decode($responseArr['content']));
+			$this->home_model->update(array('natic_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+			$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
+		} else {
+			$errors[] = $responseArr['error'];
+		}
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'cpl-dashboard');
 	}
 
 }

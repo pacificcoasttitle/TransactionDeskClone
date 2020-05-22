@@ -41,21 +41,6 @@ class Resware
         }
     }
 
-    public function authorize()
-    {
-        $xmlData = "<?xml version='1.0' encoding='utf-8'?>
-                        <RequestWrapper>
-                            <UserName>teamrestine@eatonescrow.com</UserName>
-                            <Password>Pacific12</Password>
-                            <TransactionId>12345</TransactionId>
-                            <CompanyName>SoftwareCompany</CompanyName>
-                            <AuthorizationRequest>
-                                <PropertyState>CA</PropertyState>
-                                <RequestType>ClosingProtectionLetter</RequestType>
-                            </AuthorizationRequest>
-                        </RequestWrapper>";
-    }
-
     public function getDocumentContentForCpl($fileId)
     {
         $this->CI->load->library('order/order');
@@ -64,9 +49,7 @@ class Resware
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $xmlData = '';
 
-        
-
-        $lender = "<Field>
+        $xmlData = "<Field>
                     <FieldId>FileNumber</FieldId>
                     <Name>Agent's File Number</Name>
                     <Value>".$orderDetails['file_number']."</Value>
@@ -191,7 +174,7 @@ class Resware
                                 <PropertyState>CA</PropertyState>
                                 <DocumentList>
                                     <Document>
-                                        <DocumentId>".$documentId."</DocumentId>
+                                        <DocumentId>".NATIC_DOCUMENT_ID."</DocumentId>
                                         <ReferenceId>".rand(100000,999999)."</ReferenceId>
                                         <Name>CAStateLetter</Name>
                                         <RequestType>ClosingProtectionLetter</RequestType>
@@ -210,8 +193,12 @@ class Resware
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', NATIC_URL.$endPoint, $xmlData, array(), $orderDetails['order_id'], 0);                
         $resultDocument = $this->make_request($xmlData, $endPoint);
         $this->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', NATIC_URL.$endPoint, $xmlData, $resultDocument, $orderDetails['order_id'], $logid);
-        $ResponseData = $this->xml2array($resultDocument, 0);
-
+        $responseData = $this->xml2array($resultDocument, 0);
+        if(!empty($responseData['ResponseWrapper']['DocumentCollection']['DocumentList']['Document']['Content'])) {
+			return array('success'=> true, 'content' => $responseData['ResponseWrapper']['DocumentCollection']['DocumentList']['Document']['Content']);
+		} else {
+			return array('success'=> false, 'error' => $responseData['ResponseWrapper']['Error']['ErrorMessage']);
+		}
     }
 
     public function xml2array($contents, $get_attributes=1, $priority = 'tag') 
