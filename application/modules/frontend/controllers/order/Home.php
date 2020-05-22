@@ -222,18 +222,9 @@ class Home extends MX_Controller {
 									'file_number' => $orderNumber,
 								);					
 								$this->titlePointData->update($tpData,$condition);
-							}
-							$mail = $this->phpmailer_library->load();
-							$mail->isSendmail();
-							$mail->IsHTML(true);
-							$mail->setFrom($OpenEmail,$OpenName.' '.$OpenLastName);
-							$mail->CharSet = "UTF-8";
-							$mail->Encoding = "base64";
-							$mail->Timeout = 200;
-							$mail->ContentType = "text/html";
-							$mail->addAddress('cs@pct.com', 'Open Order Desk');							
-							$mail->Subject = "Order Placed at Resware";
+							}							
 
+							
 							$data = array(
 								'orderNumber'=> $orderNumber,
 								'OpenName'=> $OpenName.' '.$OpenLastName,
@@ -263,19 +254,24 @@ class Home extends MX_Controller {
 								'currYear'=> CURRENT_YEAR
 							 );
 
+							$from_name = 'Pacific Coast Title Company';
+							$from_mail = 'ghernandez@pct.com';
 							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
-							$mail->Body = $order_message_body;
-							$mail->AltBody = "Use an HTML compatible email client";
+							$message = $order_message_body; 
+							$subject = 'Order Placed at Resware';
+							$to = 'cs@pct.com';
+							$bcc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 							
+							$this->load->helper('sendemail');
+							
+							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,array(),'',$bcc);
 							//send order deatils to all parties						
-							if(isset($parties_email) && !empty($parties_email))
+							/*if(isset($parties_email) && !empty($parties_email))
 							{
 								foreach($parties_email as $email => $name){
 									$mail->AddBCC($email, $name);
 								}
-							}
-							
-							$mail->Send();
+							}*/
 						}
 						
 						$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
@@ -416,17 +412,7 @@ class Home extends MX_Controller {
 							{
 								move_uploaded_file($_FILES['orderfiles']['tmp_name'], FCPATH.'smuploads/' .$order_upload);
 									
-								$mail = $this->phpmailer_library->load();
-								$mail->isSendmail();
-								$mail->IsHTML(true);
-								$mail->setFrom($OpenEmail,$OpenEmail);
-								$mail->CharSet = "UTF-8";
-								$mail->Encoding = "base64";
-								$mail->Timeout = 200;
-								$mail->ContentType = "text/html";
-								$mail->addAddress(RECEIVER_EMAIL, RECEIVER_NAME);
-								$mail->Subject = RECEIVER_SUBJECT;
-								$mail->AddAttachment(FCPATH.'smuploads/'.$order_upload);
+								
 
 								$data = array(
 							       'OpenName'=> $OpenName,
@@ -447,27 +433,26 @@ class Home extends MX_Controller {
 								   'currYear'=> CURRENT_YEAR
 							    );
 
-								$message = $this->load->view('emails/smartmessage.php',$data,TRUE);	
-								$mail->Body = $message;
-								$mail->AltBody = "Use an HTML compatible email client";
-										
-								// For multiple email recepients from the form 
-								// Simply change recepients from false to true
-								// Then enter the recipients email addresses
-								// echo $message;
+								$from_name = 'Pacific Coast Title Company';
+								$from_mail = 'ghernandez@pct.com';
+								$message = $this->load->view('emails/smartmessage.php',$data,TRUE);
+								$subject = RECEIVER_SUBJECT;
+								$to = RECEIVER_EMAIL;
+								$file = FCPATH.'smuploads/'.$order_upload;
+								$bcc = array('rmcmahon@pct.com', 'openorders@pct.com');
+
 								$recipients = false;
-								if($recipients == true){
-									$recipients = array(
-										"rmcmahon@pct.com" => "Ryan",
-										"openorders@pct.com" => "Open Order Desk"
-									);
-									
-									foreach($recipients as $email => $name){
-										$mail->AddBCC($email, $name);
-									}	
+								$bcc = array();
+								if($recipients == true)
+								{
+									$bcc = array('rmcmahon@pct.com', 'openorders@pct.com');	
 								}
+
+								$this->load->helper('sendemail');
 								
-								if($mail->Send()) {
+								$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,array($file),'',$bcc);
+
+								if($mail_result) {
 									// -----------------------------------------------------------------
 									// : Generate the CSV file and post values if its true
 									// ----------------------------------------------------------------- 		
@@ -764,21 +749,17 @@ class Home extends MX_Controller {
 			if((isset($customer_id) && !empty($customer_id)) || (isset($first_name) && !empty($first_name)))
 			{
 				$message = '<h3>User Details:</h3><p>Customer Number: '.$customer_no.'</p><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p>';
-
-				$mail = $this->phpmailer_library->load();
-				$mail->isSendmail();
-				$mail->IsHTML(true);
-				$mail->setFrom($email_address,$first_name.' '.$last_name);
-				$mail->CharSet = "UTF-8";
-				$mail->Encoding = "base64";
-				$mail->Timeout = 200;
-				$mail->ContentType = "text/html";
-				$mail->addAddress('cs@pct.com', 'Find Property No Hit');					
-				$mail->Subject = "Notification for No Hit on property search";				
-				$mail->Body = $message;
-				$mail->AltBody = "Use an HTML compatible email client";
 				
-				if($mail->Send())
+				$from_name = 'Pacific Coast Title Company';
+				$from_mail = 'ghernandez@pct.com';
+				$subject = 'Notification for No Hit on property search';
+				$to = 'cs@pct.com';
+				
+				$this->load->helper('sendemail');
+				
+				$mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
+
+				if($mail_result)
 				{
 					echo 'success'; exit;
 				}
