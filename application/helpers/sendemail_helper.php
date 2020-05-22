@@ -35,15 +35,12 @@ if(!function_exists('send_email')){
         foreach($myPdf as $file){
             $instance->email->attach($file);
         }
-        $result = $instance->email->send();
-        var_dump($result);
-        echo "<pre>"; print_r($bcc);
-        echo $instance->email->print_debugger();die;
-        /*if($instance->email->send()){
+        
+        if($instance->email->send()){
          	return true;
         }else{
           	return false;
-        }*/
+        }
 	}          
 }
 
