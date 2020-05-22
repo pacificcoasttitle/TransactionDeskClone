@@ -7,7 +7,7 @@ if(!function_exists('send_email')){
 
 		$config['protocol']     = 'smtp';
         $config['smtp_host']    = 'smtp.sendgrid.net';
-        $config['smtp_port']    = '587';
+        $config['smtp_port']    = '25';
         $config['smtp_timeout'] = '120';
         $config['smtp_user']    = 'pacificcoasttitlecompany';
         $config['smtp_pass']    = 'Alpha637#';
@@ -15,7 +15,7 @@ if(!function_exists('send_email')){
         $config['newline']      = "\r\n";
         $config['mailtype']     = 'html'; // or html
         $config['validation']   = TRUE; // bool whether to validate email or not  
-		 $instance->email->initialize($config);
+		$instance->email->initialize($config);
 		    
 
         $instance->email->initialize($config);
@@ -32,17 +32,13 @@ if(!function_exists('send_email')){
             $instance->email->attach($file);
         }
         $result = $instance->email->send();
-        var_dump($result);
-        echo $instance->email->print_debugger();die;
-        /*if($instance->email->send()){
+        
+        if($instance->email->send()){
          	return true;
         }else{
           	return false;
-        }*/
-
-	} 
-
-          
+        }
+	}          
 }
 
 ?>
