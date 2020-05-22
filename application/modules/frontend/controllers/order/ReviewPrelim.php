@@ -9,10 +9,11 @@ class ReviewPrelim extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
         $this->load->library('order/order');
-        $this->load->library("phpmailer_library");
+        // $this->load->library("phpmailer_library");
         $this->load->model('order/document');
         $this->load->library('order/resware');
         $this->load->model('order/home_model');
+        $this->load->helper('sendemail');
     }
 
     
@@ -355,31 +356,21 @@ class ReviewPrelim extends MX_Controller {
 
 	    	$emailContent['tax'] = isset($email_data['tax']) && !empty($email_data['tax']) ? json_encode($email_data['tax']) : '';
 	    	$emailContent['liens'] = isset($email_data['liens']) && !empty($email_data['liens']) ? json_encode($email_data['liens']) : '';
-	    	
-	    	/*$this->load->library("phpmailer_library");
-	    	$mail = $this->phpmailer_library->load();
-	    	$mail->isSendmail();
-			$mail->IsHTML(true);
-			$mail->setFrom('cs@pct.com','Open Order Desk');
-			$mail->CharSet = "UTF-8";
-			
-			// $mail->addAddress('hitesh.p@crestinfosystems.com', 'Open Order Desk');							
-			$mail->addAddress($customer_email, $customer_name);							
-			$mail->Subject = "The Prelim Hot Sheet";
-			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
-			
-			$mail->Body = $prelim_message_body;
-			$mail->AltBody = "Use an HTML compatible email client";*/
-			$this->load->library('email');
 
-			$this->email->from("cs@pct.com", "Open Order Desk");
-			$this->email->to('hitesh.p@crestinfosystems.com'); 
-			// $this->email->to($customer_email); 
-			$this->email->subject("The Prelim Hot Sheet");
+			$from_name = 'Pacific Coast Title Company';
+			$from_mail = 'ghernandez@pct.com';
 			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
-			$this->email->message($prelim_message_body);
+			$message = $prelim_message_body; 
+			$subject = 'The Prelim Hot Sheet';
+			$to = 'hitesh.p@crestinfosystems.com';
+			// $to = $customer_email;
+			
+			$this->load->helper('sendemail');
+			
+			$mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
+
 			$result = array();
-			if($this->email->Send())
+			if($mail_result)
 			{
 				$result['mail_status'] = 'success';
 			}
