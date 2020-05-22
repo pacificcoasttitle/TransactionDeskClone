@@ -388,9 +388,7 @@ class ReviewPrelim extends MX_Controller {
     }
 
     public function testMail(){
-		echo 'calling herre ';
-		$this->phpmailer_library->load();
-		
+		echo 'calling herre ';		
 		$from_name = 'Open Order Desk';
 		$from_mail = 'cs@pct.com';
 		$message = 'This is dummy message here'; 
