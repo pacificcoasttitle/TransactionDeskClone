@@ -990,38 +990,7 @@ class Dashboard extends MX_Controller {
 
 		$primary_owner = explode(" ", $orderDetails['primary_owner']);
 		$secondary_owner = explode(" ", $orderDetails['secondary_owner']);
-		if ($orderDetails['purchase_type'] == '19' || $orderDetails['purchase_type'] == '33') {
-			$buyers[] = array (
-				'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
-				'Last' => $primary_owner[1],
-				'First' => $primary_owner[0],
-				'NameType' => 1,
-				'JoiningPhrase' => 'single',
-				'tvid' => 0,
-				'Sequence' => 1,
-				'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
-				'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
-				'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
-				'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
-			);
-			if(!empty($secondary_owner)) {
-				$buyers[] = array (
-					'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-					'Last' => $secondary_owner[1],
-					'First' => $secondary_owner[0],
-					'NameType' => 1,
-					'JoiningPhrase' => 'single',
-					'tvid' => 0,
-					'Sequence' => 2,
-					'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
-					'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
-					'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
-					'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
-				);	
-			}
-			$purchase_price = $orderDetails['loan_amount'];
-			$sellers = array();
-		} else if ($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32')  {
+		if (($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32') || $orderDetails['sales_amount'] > 0)  {
 			$sellers[] = array (
 				'NameID' =>  $orderDetails['westcor_seller_id'] ? $orderDetails['westcor_seller_id'] : 0,
 				'Last' => $primary_owner[1],
@@ -1086,102 +1055,36 @@ class Dashboard extends MX_Controller {
 				);	
 			} 
 		} else {
-			if (!empty($orderDetails['sales_amount'])) {
-				$sellers[] = array (
-					'NameID' =>  $orderDetails['westcor_seller_id'] ? $orderDetails['westcor_seller_id'] : 0,
-					'Last' => $primary_owner[1],
-					'First' => $primary_owner[0],
-					'NameType' => 2,
-					'JoiningPhrase' => 'single',
-					'tvid' => 0,
-					'Sequence' => 1,
-					'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
-					'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
-					'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
-					'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]),
-				);
-				$purchase_price = $orderDetails['sales_amount'];
-				if(!empty($secondary_owner)) {
-					$sellers[] = array (
-						'NameID' => $orderDetails['westcor_secondary_seller_id'] ? $orderDetails['westcor_secondary_seller_id'] : 0,
-						'Last' => $secondary_owner[1],
-						'First' => $secondary_owner[0],
-						'NameType' => 1,
-						'JoiningPhrase' => 'single',
-						'tvid' => 0,
-						'Sequence' => 2,
-						'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
-						'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
-						'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
-						'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
-					);	
-				}
-				$buyers = array();
-
-				if (!empty($orderDetails['borrower'])) {
-					$primary_owner = explode(' ', $orderDetails['borrower']);
-					$buyers[] = array (
-						'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-						'Last' => $primary_owner[1],
-						'First' => $primary_owner[0],
-						'NameType' => 1,
-						'JoiningPhrase' => 'single',
-						'tvid' => 0,
-						'Sequence' => 1,
-						'City' => null,
-						'State' => null,
-						'Zip' => null,
-						'Address' => null
-					);	
-				} 
-				if (!empty($orderDetails['secondary_borrower'])) {
-					$secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
-					$buyers[] = array (
-						'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-						'Last' => $secondary_owner[1],
-						'First' => $secondary_owner[0],
-						'NameType' => 1,
-						'JoiningPhrase' => 'single',
-						'tvid' => 0,
-						'Sequence' => 2,
-						'City' => null,
-						'State' => null,
-						'Zip' => null,
-						'Address' => null
-					);	
-				} 
-			} else {
+			$buyers[] = array (
+				'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
+				'Last' => $primary_owner[1],
+				'First' => $primary_owner[0],
+				'NameType' => 1,
+				'JoiningPhrase' => 'single',
+				'tvid' => 0,
+				'Sequence' => 1,
+				'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
+				'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
+				'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
+				'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
+			);
+			if(!empty($secondary_owner)) {
 				$buyers[] = array (
-					'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
-					'Last' => $primary_owner[1],
-					'First' => $primary_owner[0],
+					'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
+					'Last' => $secondary_owner[1],
+					'First' => $secondary_owner[0],
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
-					'Sequence' => 1,
+					'Sequence' => 2,
 					'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
 					'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
 					'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
 					'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
-				);
-				if(!empty($secondary_owner)) {
-					$buyers[] = array (
-						'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-						'Last' => $secondary_owner[1],
-						'First' => $secondary_owner[0],
-						'NameType' => 1,
-						'JoiningPhrase' => 'single',
-						'tvid' => 0,
-						'Sequence' => 2,
-						'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
-						'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
-						'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
-						'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
-					);	
-				}
-				$purchase_price = $orderDetails['loan_amount'];
-				$sellers = array();
+				);	
 			}
+			$purchase_price = $orderDetails['loan_amount'];
+			$sellers = array();
 		}
 
 		if (!empty($orderDetails['escrow_lender_id'])) {
@@ -1406,10 +1309,15 @@ class Dashboard extends MX_Controller {
 					$this->session->set_userdata($data);
 					redirect(base_url().'cpl-dashboard');
 				}
+
 				$order_details = array(
 					'westcor_cpl_id'	=> $resultResCPL['cpl'][0]['CPLID'],
-					'westcor_file_id'   => $resultResCPL['cpl'][0]['FileInformation']['FileAsDataVaultFileID']
-				 );
+					'westcor_file_id'   => $resultResCPL['cpl'][0]['FileInformation']['FileAsDataVaultFileID'],
+					'westcor_buyer_id'  => !empty($resultResCPL['buyers']) ? $resultResCPL['buyers'][0]['NameID'] : 0,
+					'westcor_seller_id'  => !empty($resultResCPL['sellers']) ? $resultResCPL['sellers'][0]['NameID'] : 0,
+					'westcor_secondary_buyer_id'  => !empty($resultResCPL['buyers']) ? $resultResCPL['buyers'][1]['NameID'] : 0,
+					'westcor_secondary_seller_id'  => !empty($resultResCPL['sellers']) ? $resultResCPL['sellers'][1]['NameID'] : 0
+				);
 				 
 				$condition = array(
 					'id' => $orderDetails['order_id']
@@ -2588,7 +2496,7 @@ class Dashboard extends MX_Controller {
 			$orderDetails['lender_name'] = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
 		}
 
-		if ($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32') {
+		if (($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32') || $orderDetails['sales_amount'] > 0) {
 			if (!empty($orderDetails['borrower'])) {
 				$primary_owner = explode(' ', $orderDetails['borrower']);
 				$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
@@ -2624,7 +2532,7 @@ class Dashboard extends MX_Controller {
 				$orderDetails['secondary_owner_first_name'] = '';
 				$orderDetails['secondary_owner_last_name'] = '';
 			}
-		}
+		} 
 
 		
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
