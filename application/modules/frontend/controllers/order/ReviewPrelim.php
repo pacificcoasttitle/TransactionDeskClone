@@ -390,7 +390,7 @@ class ReviewPrelim extends MX_Controller {
     public function testMail(){
 		echo 'calling herre ';		
 		$from_name = 'Open Order Desk';
-		$from_mail = 'cs@pct.com';
+		$from_mail = 'ghernandez@pct.com';
 		$message = 'This is dummy message here'; 
 		$subject = 'test email';
 		$to = 'hitesh.p@crestinfosystems.com';
