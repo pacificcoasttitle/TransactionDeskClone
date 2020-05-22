@@ -174,14 +174,14 @@
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="first_name" id="first_name" class="gui-input"
-												placeholder="First Name"  required="required">
+												placeholder="First Name">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="last_name" id="last_name" class="gui-input"
-												placeholder="Last Name"  required="required">
+												placeholder="Last Name">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>

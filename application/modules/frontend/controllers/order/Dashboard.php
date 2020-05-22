@@ -931,6 +931,7 @@ class Dashboard extends MX_Controller {
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
 				if (!empty($order['natic_document_name'])) {
+					$file_id = $order['file_id'];
 					$documentName = $order['natic_document_name'];
 					$nestedData[] = "<div style='display:flex;'><a href='./uploads/documents/$documentName' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
 						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
