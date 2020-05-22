@@ -87,7 +87,7 @@
               <tbody>
                 <tr>
                   <td class="o_bg-dark o_px o_py-md o_br-t o_sans o_text" align="center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;background-color: #03374f;border-radius: 4px 4px 0px 0px;padding-left: 16px;padding-right: 16px;padding-top: 24px;padding-bottom: 24px;">
-                    <p style="margin-top: 0px;margin-bottom: 0px;"><a class="o_text-white" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #ffffff;"><img src="<?php echo base_url(); ?>assets/frontend/images/e843a625-32d7-44e8-a0d4-7f13748fc720.jpg" width="215" height="36" alt="SimpleApp" style="max-width: 215px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a></p>
+                    <p style="margin-top: 0px;margin-bottom: 0px;"><a class="o_text-white" href="<?php echo base_url().'order'; ?>" style="text-decoration: none;outline: none;color: #ffffff;"><img src="<?php echo base_url(); ?>assets/frontend/images/e843a625-32d7-44e8-a0d4-7f13748fc720.gif" width="215" height="36" alt="SimpleApp" style="max-width: 215px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a></p>
                   </td>
                 </tr>
               </tbody>
@@ -112,7 +112,7 @@
                         <tr>
                           <td class="o_bb-white" height="40" width="32" style="border-bottom: 1px solid #ffffff;">&nbsp; </td>
                           <td rowspan="2" class="o_sans o_text o_text-white o_px o_py" align="center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;color: #ffffff;padding-left: 16px;padding-right: 16px;padding-top: 16px;padding-bottom: 16px;">
-                            <img src="<?php echo base_url(); ?>assets/frontend/images/0833af6a-7017-47ae-ae74-54e96e04049d.jpg" width="48" height="48" alt="" style="max-width: 48px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;">
+                            <img src="<?php echo base_url(); ?>assets/frontend/images/0833af6a-7017-47ae-ae74-54e96e04049d.gif" width="48" height="48" alt="" style="max-width: 48px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;">
                           </td>
                           <td class="o_bb-white" height="40" width="32" style="border-bottom: 1px solid #ffffff;">&nbsp; </td>
                         </tr>

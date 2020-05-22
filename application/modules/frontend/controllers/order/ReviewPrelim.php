@@ -356,7 +356,7 @@ class ReviewPrelim extends MX_Controller {
 	    	$emailContent['tax'] = isset($email_data['tax']) && !empty($email_data['tax']) ? json_encode($email_data['tax']) : '';
 	    	$emailContent['liens'] = isset($email_data['liens']) && !empty($email_data['liens']) ? json_encode($email_data['liens']) : '';
 	    	
-	    	$this->load->library("phpmailer_library");
+	    	/*$this->load->library("phpmailer_library");
 	    	$mail = $this->phpmailer_library->load();
 	    	$mail->isSendmail();
 			$mail->IsHTML(true);
@@ -369,16 +369,17 @@ class ReviewPrelim extends MX_Controller {
 			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
 			
 			$mail->Body = $prelim_message_body;
-			$mail->AltBody = "Use an HTML compatible email client";
-			/*$this->load->library('email');
+			$mail->AltBody = "Use an HTML compatible email client";*/
+			$this->load->library('email');
 
-			$this->email->from("ghernandez@pct.com", "Open Order Desk");
+			$this->email->from("cs@pct.com", "Open Order Desk");
 			$this->email->to('hitesh.p@crestinfosystems.com'); 
+			// $this->email->to($customer_email); 
 			$this->email->subject("The Prelim Hot Sheet");
 			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
-			$this->email->message($prelim_message_body);*/
+			$this->email->message($prelim_message_body);
 			$result = array();
-			if($mail->Send())
+			if($this->email->Send())
 			{
 				$result['mail_status'] = 'success';
 			}
