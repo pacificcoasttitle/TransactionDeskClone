@@ -1,7 +1,7 @@
 <?php 
 
 if(!function_exists('send_email')){
-	function send_email($fromemail, $from_name, $to, $subject, $content,$myPdf=array(),$ccTo=null){
+	function send_email($fromemail, $from_name, $to, $subject, $content,$myPdf=array(),$ccTo=null,$bcc=array()){
 		$instance = &get_instance();
 		$instance->load->library('email');
 
@@ -28,10 +28,13 @@ if(!function_exists('send_email')){
         $instance->email->subject($subject);
         $instance->email->message($content);  
 
+        if(isset($bcc) && !empty($bcc))
+        {
+            $instance->email->bcc($bcc);
+        }
         foreach($myPdf as $file){
             $instance->email->attach($file);
         }
-        $result = $instance->email->send();
         
         if($instance->email->send()){
          	return true;

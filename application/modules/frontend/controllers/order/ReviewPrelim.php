@@ -362,8 +362,7 @@ class ReviewPrelim extends MX_Controller {
 			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
 			$message = $prelim_message_body; 
 			$subject = 'The Prelim Hot Sheet';
-			$to = 'hitesh.p@crestinfosystems.com';
-			// $to = $customer_email;
+			$to = $customer_email;
 			
 			$this->load->helper('sendemail');
 			
@@ -387,21 +386,6 @@ class ReviewPrelim extends MX_Controller {
     	}
     	echo json_encode($result);
     }
-    
-    public function testMail1()
-    {							
-		// $this->email->addAddress($customer_email, $customer_name);
-		$this->load->library('email');
-
-		$this->email->from("ghernandez@pct.com", "Open Order Desk");
-		$this->email->to('hitesh.p@crestinfosystems.com'); 
-		$this->email->subject("Email Testing");
-		$this->email->message('Testing the email class.');  
-
-		$result = $this->email->send();
-		var_dump($result);
-		echo $this->email->print_debugger();die;
-    }
 
     public function testMail(){
 		echo 'calling herre ';
@@ -412,12 +396,12 @@ class ReviewPrelim extends MX_Controller {
 		$message = 'This is dummy message here'; 
 		$subject = 'test email';
 		$to = 'hitesh.p@crestinfosystems.com';
-		
+		$bcc = array('hitesh.p+1@crestinfosystems.com', 'hitesh.p+2@crestinfosystems.com');
 		
 		$this->load->helper('sendemail');
 		
-		$a = send_email($from_mail,$from_name, $to, $subject, $message, array($file));
-		echo "<pre>"; print_r($a); exit;
+		$a = send_email($from_mail,$from_name, $to, $subject, $message, array(),'',$bcc);
+		echo "<pre>here"; print_r($a); exit;
 	}
 }
 
