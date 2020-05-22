@@ -46,7 +46,7 @@ class Order
                 $this->CI->db->like('property_details.full_address', $keyword);            
                 $this->CI->db->or_like('order_details.file_number', $keyword);
             }
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl')
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.natic_document_name')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
             $this->CI->db->where('order_details.customer_id', $userdata['id']);
@@ -61,7 +61,7 @@ class Order
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
            
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id')
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.natic_document_name')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id');
 
@@ -81,7 +81,7 @@ class Order
         }
         else
         {
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl')
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.natic_document_name')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
             $this->CI->db->where('order_details.customer_id', $userdata['id']);
@@ -91,7 +91,7 @@ class Order
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
            
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id')
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.natic_document_name')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id');
 
