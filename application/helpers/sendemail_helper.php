@@ -31,12 +31,14 @@ if(!function_exists('send_email')){
         foreach($myPdf as $file){
             $instance->email->attach($file);
         }
-
-        if($instance->email->send()){
+        $result = $instance->email->send();
+        var_dump($result);
+        echo $instance->email->print_debugger();die;
+        /*if($instance->email->send()){
          	return true;
         }else{
           	return false;
-        }
+        }*/
 
 	} 
 
