@@ -1396,7 +1396,7 @@ class Dashboard extends MX_Controller {
 			'id' => $LenderId
 		);
 		$this->home_model->update($lender_details, $condition, 'customer_basic_details');
-		if ($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32') { 
+		if (($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32') || $orderDetails['sales_amount'] > 0) { 
 			$this->home_model->update(array('loan_amount' => $loan_amount, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner), array('id' => $orderDetails['transaction_id']), 'transaction_details');
 			$this->home_model->update(array('escrow_lender_id' => $LenderId), array('id' => $orderDetails['property_id']), 'property_details');
 		} else {
