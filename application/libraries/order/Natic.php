@@ -19,7 +19,7 @@ class Natic
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit','2048M');
-        
+
         $headers = array(
             "Content-type: text/xml",
             "Content-length: " . strlen($xml),
@@ -29,7 +29,7 @@ class Natic
         $ch = curl_init(); 
         curl_setopt($ch, CURLOPT_URL,getenv('NATIC_URL').$endpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT,500); 
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
