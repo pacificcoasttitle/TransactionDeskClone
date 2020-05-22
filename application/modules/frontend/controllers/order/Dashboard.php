@@ -930,18 +930,16 @@ class Dashboard extends MX_Controller {
 				$nestedData[] = $i;
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
-				if(!empty($order['westcor_file_id'])) {
+				if (!empty($order['natic_document_name'])) {
+					$documentName = $order['natic_document_name'];
+					$nestedData[] = "<div style='display:flex;'><a href='./uploads/documents/$documentName' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+				} else if(!empty($order['westcor_file_id'])) {
 					$file_id = $order['file_id'];
 					$westcorFileId = $order['westcor_file_id'];
 					$westcorOrderId = $order['westcor_order_id'];
-					if ($order['natic_document_name']) {
-						$documentName = $order['natic_document_name'];
-						$nestedData[] = "<div style='display:flex;'><a href='./uploads/documents/$documentName' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+					$nestedData[] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
 							<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
-					} else {
-						$nestedData[] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-							<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
-					}
 				} else {
 					$file_id = $order['file_id'];
 					$lender_id_flag = !empty($order['escrow_lender_id']) ? 1 : 0;
@@ -1460,6 +1458,7 @@ class Dashboard extends MX_Controller {
 	public function addLenderOnOrder()
 	{
 		$this->load->model('order/home_model');
+		$this->load->library('order/resware');
 		$userdata = $this->session->userdata('user');
 		$file_id = $this->input->post('file_id');
 		$LenderId = $this->input->post('LenderId');
@@ -1506,7 +1505,7 @@ class Dashboard extends MX_Controller {
 		if(!empty($resPartners)) {
 			$key = array_search(39919, array_column($resPartners['Partners'], 'PartnerID'));
 			if($key) {
-
+				redirect(base_url()."create-cpl-for-natic/".$file_id);
 			} else {
 				redirect(base_url()."create-cpl/".$file_id);
 			}
@@ -2635,12 +2634,12 @@ class Dashboard extends MX_Controller {
 	public function createCPlForNatic()
 	{
 		$this->load->library('order/natic');
+		$this->load->model('order/home_model');
 		$userdata = $this->session->userdata('user');
 		$fileId = $this->uri->segment(2);    
 		$orderDetails = $this->order->get_order_details($fileId);
 		$responseArr = $this->natic->getDocumentContentForCpl($fileId);
 		if ($responseArr['success']) {
-			$linkText = str_replace(' ', '-', $linkText); 
 			$document_name = "natic"."_".$fileId.".pdf";
 			file_put_contents('./uploads/documents/'.$document_name, base64_decode($responseArr['content']));
 			$this->home_model->update(array('natic_document_name' => $document_name), array('file_id' => $fileId), 'order_details');

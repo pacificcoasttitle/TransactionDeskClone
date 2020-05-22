@@ -2,7 +2,7 @@
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class Resware
+class Natic
 {
     public static $CI;
     
@@ -17,6 +17,9 @@ class Resware
 
     public function make_request($xml, $endpoint)
     {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit','2048M');
+        
         $headers = array(
             "Content-type: text/xml",
             "Content-length: " . strlen($xml),
@@ -24,14 +27,12 @@ class Resware
         );
 
         $ch = curl_init(); 
-        curl_setopt($ch, CURLOPT_URL,NATIC_URL.$endpoint);
+        curl_setopt($ch, CURLOPT_URL,getenv('NATIC_URL').$endpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $data = curl_exec($ch); 
         if(curl_errno($ch)) {
             return curl_error($ch);
@@ -45,9 +46,14 @@ class Resware
     {
         $this->CI->load->library('order/order');
         $userdata = $this->CI->session->userdata('user');
-        $orderDetails = $this->order->get_order_details($fileId);
+        $orderDetails = $this->CI->order->get_order_details($fileId);
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $xmlData = '';
+        $address = $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]);
+        $city = $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]);
+        $city = $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]);
+        $state = $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]);
+        $zipcode = $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]);
 
         $xmlData = "<Field>
                     <FieldId>FileNumber</FieldId>
@@ -59,7 +65,7 @@ class Resware
                 <Field>
                     <FieldId>PropertyAddress1</FieldId>
                     <Name>Property Address 1</Name>
-                    <Value>".$orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])."</Value>
+                    <Value>".$address."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -67,21 +73,21 @@ class Resware
                 <Field>
                     <FieldId>PropertyCity</FieldId>
                     <Name>Property City</Name>
-                    <Value>".$orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2])."</Value>
+                    <Value>".$city ."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>PropertyState</FieldId>
                     <Name>Property State</Name>
-                    <Value>".$orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3])."</Value>
+                    <Value>".$state."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>PropertyPostalCode</FieldId>
                     <Name>Property Postal Code</Name>
-                    <Value>".$orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4])."</Value>
+                    <Value>".$zipcode."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -166,15 +172,15 @@ class Resware
 
         $xmlData = "<?xml version='1.0' encoding='utf-8'?>
                         <RequestWrapper>
-                            <UserName>".NATIC_USERNAME."</UserName>
-                            <Password>".NATIC_PASSWORD."#</Password>
+                            <UserName>".getenv('NATIC_USERNAME')."</UserName>
+                            <Password>".getenv('NATIC_PASSWORD')."#</Password>
                             <TransactionId>".rand(10000,99999)."</TransactionId>
-                            <CompanyName>".NATIC_COMPANY."</CompanyName>
+                            <CompanyName>".getenv('NATIC_COMPANY')."</CompanyName>
                             <DocumentCollection>
                                 <PropertyState>CA</PropertyState>
                                 <DocumentList>
                                     <Document>
-                                        <DocumentId>".NATIC_DOCUMENT_ID."</DocumentId>
+                                        <DocumentId>".getenv('NATIC_DOCUMENT_ID')."</DocumentId>
                                         <ReferenceId>".rand(100000,999999)."</ReferenceId>
                                         <Name>CAStateLetter</Name>
                                         <RequestType>ClosingProtectionLetter</RequestType>
@@ -190,9 +196,9 @@ class Resware
 
         $endPoint = 'GetDocuments';
         $this->CI->load->model('order/apiLogs');
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', NATIC_URL.$endPoint, $xmlData, array(), $orderDetails['order_id'], 0);                
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', getenv('NATIC_URL').$endPoint, $xmlData, array(), $orderDetails['order_id'], 0);                
         $resultDocument = $this->make_request($xmlData, $endPoint);
-        $this->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', NATIC_URL.$endPoint, $xmlData, $resultDocument, $orderDetails['order_id'], $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', getenv('NATIC_URL').$endPoint, $xmlData, $resultDocument, $orderDetails['order_id'], $logid);
         $responseData = $this->xml2array($resultDocument, 0);
         if(!empty($responseData['ResponseWrapper']['DocumentCollection']['DocumentList']['Document']['Content'])) {
 			return array('success'=> true, 'content' => $responseData['ResponseWrapper']['DocumentCollection']['DocumentList']['Document']['Content']);
