@@ -9,7 +9,7 @@ class ReviewPrelim extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
         $this->load->library('order/order');
-        // $this->load->library("phpmailer_library");
+        $this->load->library("phpmailer_library");
         $this->load->model('order/document');
         $this->load->library('order/resware');
         $this->load->model('order/home_model');
@@ -397,7 +397,7 @@ class ReviewPrelim extends MX_Controller {
     	echo json_encode($result);
     }
     
-    public function testMail()
+    public function testMail1()
     {							
 		// $this->email->addAddress($customer_email, $customer_name);
 		$this->load->library('email');
@@ -411,5 +411,22 @@ class ReviewPrelim extends MX_Controller {
 		var_dump($result);
 		echo $this->email->print_debugger();die;
     }
+
+    public function testMail(){
+		echo 'calling herre ';
+		$this->phpmailer_library->load();
+		
+		$from_name = 'Open Order Desk';
+		$from_mail = 'cs@pct.com';
+		$message = 'This is dummy message here'; 
+		$subject = 'test email';
+		$to = 'hitesh.p@crestinfosystems.com';
+		
+		
+		$this->load->helper('sendemail');
+		
+		$a = send_email($from_mail,$from_name, $to, $subject, $message, array($file));
+		echo "<pre>"; print_r($a); exit;
+	}
 }
 
