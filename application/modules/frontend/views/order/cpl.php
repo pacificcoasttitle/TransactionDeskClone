@@ -69,7 +69,7 @@
 						<div class="modal-body search-result">
 							<div id="lender-details-fields" style="">
 								<div class="spacer-b20">
-									<div class="tagline"><span>Add or Edit Lender Details</span></div><!-- .tagline -->
+									<div class="tagline"><span>Lender Details</span></div><!-- .tagline -->
 								</div>
 
 								<div class="frm-row">
@@ -135,7 +135,7 @@
 								</div>
 
 								<div class="spacer-b20">
-									<div class="tagline"><span>Add or Edit Loan Amount</span></div><!-- .tagline -->
+									<div class="tagline"><span>Loan Amount</span></div><!-- .tagline -->
 								</div>
 
 								<div class="section colm colm12 spacer-b30">
@@ -145,7 +145,28 @@
 								</div>
 
 								<div class="spacer-b20">
-									<div class="tagline"><span>Add or Edit Second Borrower Information</span></div><!-- .tagline -->
+									<div class="tagline"><span>Primary Borrower Information</span></div><!-- .tagline -->
+								</div>
+
+								<div class="frm-row spacer-b15">
+									<div class="section colm colm6">
+										<label class="field prepend-icon">
+											<input type="text" name="primary_first_name" id="primary_first_name" class="gui-input"
+												placeholder="First Name"  required="required">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+									<div class="section colm colm6">
+										<label class="field prepend-icon">
+											<input type="text" name="primary_last_name" id="primary_last_name" class="gui-input"
+												placeholder="Last Name"  required="required">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+
+								<div class="spacer-b20">
+									<div class="tagline"><span>Secondary Borrower Information</span></div><!-- .tagline -->
 								</div>
 
 								<div class="frm-row">
@@ -345,6 +366,8 @@
 						$("#LenderCity").val(res.orderDetails['lender_city']);
 						$("#LenderZipcode").val(res.orderDetails['lender_zipcode']);
 						$("#LenderId").val(res.orderDetails['lender_id']);
+						$("#primary_first_name").val(res.orderDetails['primary_owner_first_name']);
+						$("#primary_last_name").val(res.orderDetails['primary_owner_last_name']);
 						$("#first_name").val(res.orderDetails['secondary_owner_first_name']);
 						$("#last_name").val(res.orderDetails['secondary_owner_last_name']);
 						$("#loan_amount").val(res.orderDetails['loan_amount']);

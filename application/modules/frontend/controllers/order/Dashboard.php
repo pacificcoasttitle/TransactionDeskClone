@@ -1047,6 +1047,39 @@ class Dashboard extends MX_Controller {
 			}
 			$purchase_price = $orderDetails['sales_amount'];
 			$buyers = array();
+
+			if (!empty($orderDetails['borrower'])) {
+				$primary_owner = explode(' ', $orderDetails['borrower']);
+				$buyers[] = array (
+					'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
+					'Last' => $primary_owner[1],
+					'First' => $primary_owner[0],
+					'NameType' => 1,
+					'JoiningPhrase' => 'single',
+					'tvid' => 0,
+					'Sequence' => 1,
+					'City' => null,
+					'State' => null,
+					'Zip' => null,
+					'Address' => null
+				);	
+			} 
+			if (!empty($orderDetails['secondary_borrower'])) {
+				$secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
+				$buyers[] = array (
+					'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
+					'Last' => $secondary_owner[1],
+					'First' => $secondary_owner[0],
+					'NameType' => 1,
+					'JoiningPhrase' => 'single',
+					'tvid' => 0,
+					'Sequence' => 2,
+					'City' => null,
+					'State' => null,
+					'Zip' => null,
+					'Address' => null
+				);	
+			} 
 		} else {
 			if (!empty($orderDetails['sales_amount'])) {
 				$sellers[] = array (
@@ -1063,7 +1096,6 @@ class Dashboard extends MX_Controller {
 					'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]),
 				);
 				$purchase_price = $orderDetails['sales_amount'];
-				$buyers = array();
 				if(!empty($secondary_owner)) {
 					$sellers[] = array (
 						'NameID' => $orderDetails['westcor_secondary_seller_id'] ? $orderDetails['westcor_secondary_seller_id'] : 0,
@@ -1079,6 +1111,40 @@ class Dashboard extends MX_Controller {
 						'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
 					);	
 				}
+				$buyers = array();
+
+				if (!empty($orderDetails['borrower'])) {
+					$primary_owner = explode(' ', $orderDetails['borrower']);
+					$buyers[] = array (
+						'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
+						'Last' => $primary_owner[1],
+						'First' => $primary_owner[0],
+						'NameType' => 1,
+						'JoiningPhrase' => 'single',
+						'tvid' => 0,
+						'Sequence' => 1,
+						'City' => null,
+						'State' => null,
+						'Zip' => null,
+						'Address' => null
+					);	
+				} 
+				if (!empty($orderDetails['secondary_borrower'])) {
+					$secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
+					$buyers[] = array (
+						'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
+						'Last' => $secondary_owner[1],
+						'First' => $secondary_owner[0],
+						'NameType' => 1,
+						'JoiningPhrase' => 'single',
+						'tvid' => 0,
+						'Sequence' => 2,
+						'City' => null,
+						'State' => null,
+						'Zip' => null,
+						'Address' => null
+					);	
+				} 
 			} else {
 				$buyers[] = array (
 					'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
@@ -1394,6 +1460,9 @@ class Dashboard extends MX_Controller {
 		$loan_amount = $this->input->post('loan_amount');
 		$first_name = $this->input->post('first_name');
 		$last_name = $this->input->post('last_name');
+		$primary_first_name = $this->input->post('primary_first_name');
+		$primary_last_name = $this->input->post('primary_last_name');
+		$primary_owner = $primary_first_name." ".$primary_last_name;
 		$secondaryOwner = $first_name." ".$last_name;
 		$name = explode(" ",$this->input->post('LenderName'));	
 		$editFlag = $this->input->post('editFlag');
@@ -1413,10 +1482,31 @@ class Dashboard extends MX_Controller {
 			'id' => $LenderId
 		);
 		$this->home_model->update($lender_details, $condition, 'customer_basic_details');
-		$this->home_model->update(array('escrow_lender_id' => $LenderId, 'secondary_owner' => $secondaryOwner), array('id' => $orderDetails['property_id']), 'property_details');
-		$this->home_model->update(array('loan_amount' => $loan_amount), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+		if ($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32') { 
+			$this->home_model->update(array('loan_amount' => $loan_amount, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+			$this->home_model->update(array('escrow_lender_id' => $LenderId), array('id' => $orderDetails['property_id']), 'property_details');
+		} else {
+			$this->home_model->update(array('loan_amount' => $loan_amount), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+			$this->home_model->update(array('escrow_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner), array('id' => $orderDetails['property_id']), 'property_details');
+		}
+	
 		$this->home_model->update(array('is_regenerate_cpl' => $editFlag), array('id' => $orderDetails['order_id']), 'order_details');
-		redirect(base_url()."create-cpl/".$file_id);
+
+		$endPoint = 'files/'. $file_id .'/partners';
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
+		$resultPartners = $this->resware->make_request('GET', $endPoint);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+		$resPartners = json_decode($resultPartners, true);
+		if(!empty($resPartners)) {
+			$key = array_search(39919, array_column($resPartners['Partners'], 'PartnerID'));
+			if($key) {
+
+			} else {
+				redirect(base_url()."create-cpl/".$file_id);
+			}
+		} else {
+			redirect(base_url()."create-cpl/".$file_id);
+		}
 	}
 
 	public function add_order_details()
@@ -2492,17 +2582,56 @@ class Dashboard extends MX_Controller {
 			$orderDetails['lender_name'] = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
 		}
 
-		if (!empty($orderDetails['secondary_owner'])) {
-			$secondary_owner = explode(' ', $orderDetails['secondary_owner']);
-			$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
-			$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+		if ($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32') {
+			if (!empty($orderDetails['borrower'])) {
+				$primary_owner = explode(' ', $orderDetails['borrower']);
+				$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
+				$orderDetails['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
+			} else {
+				$orderDetails['primary_owner_first_name'] = '';
+				$orderDetails['primary_owner_last_name'] = '';
+			}
+	
+			if (!empty($orderDetails['secondary_borrower'])) {
+				$secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
+				$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
+				$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+			} else {
+				$orderDetails['secondary_owner_first_name'] = '';
+				$orderDetails['secondary_owner_last_name'] = '';
+			}
 		} else {
-			$orderDetails['secondary_owner_first_name'] = '';
-			$orderDetails['secondary_owner_last_name'] = '';
+			if (!empty($orderDetails['primary_owner'])) {
+				$primary_owner = explode(' ', $orderDetails['primary_owner']);
+				$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
+				$orderDetails['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
+			} else {
+				$orderDetails['primary_owner_first_name'] = '';
+				$orderDetails['primary_owner_last_name'] = '';
+			}
+	
+			if (!empty($orderDetails['secondary_owner'])) {
+				$secondary_owner = explode(' ', $orderDetails['secondary_owner']);
+				$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
+				$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+			} else {
+				$orderDetails['secondary_owner_first_name'] = '';
+				$orderDetails['secondary_owner_last_name'] = '';
+			}
 		}
+
+		
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
 		$response = array('status'=>'success', 'orderDetails' => $orderDetails);
 		echo json_encode($response); exit;
+	}
+
+	public function createCPlForNatic()
+	{
+		$this->load->library('order/natic');
+		$userdata = $this->session->userdata('user');
+		$fileId = $this->uri->segment(2);    
+		$content = $this->natic->getDocumentContentForCpl($fileId);
 	}
 
 }
