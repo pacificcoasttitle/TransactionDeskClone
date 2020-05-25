@@ -74,6 +74,8 @@ class Home extends MX_Controller {
 	        	$TitleOfficer      = $this->input->post('TitleOfficer');
 	        	$LoanAmount      = $this->input->post('loanAmount');
 	        	$SalesAmount      = $this->input->post('salesAmount');
+	        	$primaryBorrower      = $this->input->post('primaryBorrower');
+	        	$secondaryBorrower      = $this->input->post('secondaryBorrower');
 	        	$TransactionTypeID = isset($_POST["TransactionTypeID"]) && !empty($_POST["TransactionTypeID"]) ? $_POST["TransactionTypeID"] : 3;
 	        	$ProductTypeID      = $this->input->post('ProductTypeID');
 	        	$CCR = isset($_POST["CCR"]) && !empty($_POST["CCR"]) ? 1 : 0;
@@ -312,6 +314,8 @@ class Home extends MX_Controller {
 							'additional_email' => $AdditionalEmail,
 							'additional_email_1' => $AdditionalEmail1,
 							'additional_email_2' => $AdditionalEmail2,
+							'borrower' => $primaryBorrower,
+							'secondary_borrower' => $secondaryBorrower,
 							'status'=> 1
 						);
 

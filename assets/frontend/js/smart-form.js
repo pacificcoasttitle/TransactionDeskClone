@@ -148,6 +148,20 @@
 				                        },
 				                    },
 				                },
+				                primaryBorrower:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("select[name=ProductTypeID]").val() == "20" || $("select[name=ProductTypeID]").val() == "32");
+				                        },
+				                    },
+				                },
+				                secondaryBorrower:{
+				                    required: {
+				                        depends: function(element) {
+				                            return ($("select[name=ProductTypeID]").val() == "20" || $("select[name=ProductTypeID]").val() == "32");
+				                        },
+				                    },
+				                },
 				                loanAmount:{
 				                    required: {
 				                        depends: function(element) {
@@ -242,6 +256,12 @@
 								},
 								salesAmount: {
 									required: 'Enter sales amount',
+								},
+								primaryBorrower: {
+									required: 'Enter primary borrower',
+								},
+								secondaryBorrower: {
+									required: 'Enter secondary borrower',
 								},
 								loanAmount: {
 									required: 'Enter loan amount',
