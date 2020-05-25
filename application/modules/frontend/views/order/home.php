@@ -293,6 +293,16 @@
 												<input type="text" class="gui-input" name="loanAmount" id="loanAmount"
 													placeholder="Loan Amount">
 											</label>
+											<div class="spacer-b10"></div>
+											<label class="field">
+												<input type="text" class="gui-input" name="primaryBorrower" id="primaryBorrower"
+													placeholder="Primary Borrower">
+											</label>
+											<div class="spacer-b10"></div>
+											<label class="field">
+												<input type="text" class="gui-input" name="secondaryBorrower" id="secondaryBorrower"
+													placeholder="Secondary Borrower">
+											</label>
 										</div>
 									</div>
 									<div class="spacer-t30">
@@ -560,7 +570,15 @@
 										<div class="spacer-b30">
 											<div class="tagline"><span> Add Escrow Details</span></div><!-- .tagline -->
 										</div>
-
+										<div class="frm-row">
+											<div class="section colm colm12">
+												<label class="field prepend-icon">
+													<input type="text" name="EscrowCompany" id="EscrowCompany"
+														class="gui-input" placeholder="Escrow Company Name">
+													<span class="field-icon"><i class="fa fa-user"></i></span>
+												</label>
+											</div><!-- end section -->
+										</div>
 										<div class="frm-row">
 											<div class="section colm colm12">
 												<label class="field prepend-icon">
@@ -577,7 +595,7 @@
 												<label class="field prepend-icon">
 													<input type="email" name="EscrowEmailAddress"
 														id="EscrowEmailAddress" class="gui-input"
-														placeholder="Escrow Email address" readonly="readonly">
+														placeholder="Escrow Email address">
 													<span class="field-icon"><i class="fa fa-envelope"></i></span>
 												</label>
 											</div><!-- end section -->
@@ -591,16 +609,7 @@
 												</label>
 											</div><!-- end section -->
 										</div><!-- end frm-row section -->
-										<div class="frm-row">
-											<div class="section colm colm12">
-												<label class="field prepend-icon">
-													<input type="text" name="EscrowCompany" id="EscrowCompany"
-														class="gui-input" placeholder="Escrow Company Name"
-														readonly="readonly">
-													<span class="field-icon"><i class="fa fa-user"></i></span>
-												</label>
-											</div><!-- end section -->
-										</div>
+										
 									</div>
 									<!-- end escrow details -->
 

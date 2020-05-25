@@ -356,7 +356,7 @@ $(document).ready(function() {
     /* Lender autocomplete */ 
 
     /* Escrow autocomplete */
-    $("#EscrowName").autocomplete({
+    $("#EscrowCompany").autocomplete({
         source: function(request, response) {
             $.ajax({
                 url: base_url+'home/getDetailsByName',
@@ -394,10 +394,14 @@ $(document).ready(function() {
         if($(this).val() == 19 || $(this).val() == 33)
         {
             $('#sales-loan-amount-fields #salesAmount').hide();
+            $('#sales-loan-amount-fields #primaryBorrower').hide();
+            $('#sales-loan-amount-fields #secondaryBorrower').hide();
         }
         else if($(this).val() == 20 || $(this).val() == 32)
         {
             $('#sales-loan-amount-fields #salesAmount').show();
+            $('#sales-loan-amount-fields #primaryBorrower').show();
+            $('#sales-loan-amount-fields #secondaryBorrower').show();
         }
         else
         {
