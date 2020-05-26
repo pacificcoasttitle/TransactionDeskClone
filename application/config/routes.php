@@ -145,6 +145,7 @@ $route['get-order-details'] = 'frontend/order/dashboard/get_order_details';
 $route['update-order-details'] = 'frontend/order/dashboard/update_order_details';
 $route['get-order-details-cpl'] = 'frontend/order/dashboard/getOrderDetailsCpl';
 $route['create-cpl-for-natic/:num'] = 'frontend/order/dashboard/createCPlForNatic';
+$route['import-product-types'] = 'frontend/order/cron/import_product_types';
 
 
 /* Route for PCT-Order backend*/

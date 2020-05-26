@@ -13,6 +13,7 @@ class Home extends MX_Controller {
 		$this->load->library('form_validation');
 		$this->load->library('order/order');
 		$this->load->model('order/titlePointData');
+		$this->load->model('order/productType');
 		$this->order->is_user();
     }
 
@@ -171,7 +172,15 @@ class Home extends MX_Controller {
 				}
 				elseif ($ProductTypeID == '20' || $ProductTypeID == '32') 
 				{
+					$borrowerName = explode(' ', $primaryBorrower);
+					$borrowerLastName = end($borrowerName);
+					$borrowerPrimaryName = array_slice($borrowerName, 0, -1);
+					$borrowerFirstName = implode(" ", $borrowerPrimaryName);
+					
+					$borrowers = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$borrowerFirstName,'Last'=>$borrowerLastName));
+
 					$place_order['Sellers'][] = $legalEntity;
+					$place_order['Buyers'][] = $borrowers;
 					$place_order['SalesPrice'] = $SalesAmount;
 					$ProductType = 'Residential: Sales: Purchase';
 				}		
@@ -553,6 +562,15 @@ class Home extends MX_Controller {
     	{
 			$data['title'] = 'Open Order | Pacific Coast Title Company';
 			$data['customer_data'] =  $this->home_model->get_user(array('id' => $userdata['id']));
+
+			$condition = array(
+	            'where' => array(
+	                'status' => 1,
+	                'transaction_type_id' => 3
+	            )
+	        );
+
+			$data['productType'] =  $this->productType->getProductTypes($condition);
 	        $this->load->view('layout/head',$data);
 	       	$this->load->view('order/home');
     	}

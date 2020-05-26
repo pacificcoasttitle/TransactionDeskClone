@@ -35,12 +35,18 @@
 								<a href="<?php echo base_url().'cpl-dashboard'; ?>">
 									<button class="btn1 btn-type-1b btn-lg" type="button">Generate CPL</button>
 								</a>
-								<a href="<?php echo base_url().'prelim-files'; ?>">
+								<a href="<?php echo base_url().'proposed-insured'; ?>">
+									<button class="btn1 btn-type-1e btn-lg" type="button">Proposed</button>
+								</a>
+								<a href="<?php echo base_url().'fees'; ?>">
+									<button class="btn1 btn-type-1g btn-lg" type="button">Fee Estimate</button>
+								</a>
+								<!-- <a href="<?php // echo base_url().'prelim-files'; ?>">
 									<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
 								</a>
-                  				<a href="<?php echo base_url().'attach-files'; ?>">
+                  				<a href="<?php // echo base_url().'attach-files'; ?>">
                   					<button class="btn1 btn-type-1d btn-lg" type="button">Upload Doc</button>
-                  				</a>
+                  				</a> -->
 								
 								
 							</div>
@@ -64,15 +70,15 @@
 							
 							
 							
-								<a href="<?php echo base_url().'proposed-insured'; ?>">
-									<button class="btn1 btn-type-1e btn-lg" type="button">Proposed Insured</button>
-								</a>
-								<a href="<?php echo base_url().'recordings'; ?>">
+								<!-- <a href="<?php // echo base_url().'proposed-insured'; ?>">
+									<button class="btn1 btn-type-1e btn-lg" type="button">Proposed</button>
+								</a> -->
+								<!-- <a href="<?php // echo base_url().'recordings'; ?>">
 									<button class="btn1 btn-type-1f btn-lg" style="" type="button">Confirmations</button>
-								</a>
-								<a href="<?php echo base_url().'fees'; ?>">
+								</a> -->
+								<!-- <a href="<?php // echo base_url().'fees'; ?>">
 									<button class="btn1 btn-type-1g btn-lg" type="button">Fee Estimate</button>
-								</a>
+								</a> -->
 								<!-- <a href="<?php // echo base_url().'notes'; ?>">
 									<button class="btn1 btn-type-1h btn-lg" type="button">Notes on Files</button>
 								</a> --> 
