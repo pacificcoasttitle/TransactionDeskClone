@@ -53,7 +53,7 @@
 							<li><a href="<?php echo base_url().'order'; ?>">Open Order</a></li>
 							<li><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></li>
 							<li><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed Insured</a></li>
-							<li><a href="<?php echo base_url().'prelim-files'; ?>">Review Prelims</a></li>
+							<!-- <li><a href="<?php // echo base_url().'prelim-files'; ?>">Review Prelims</a></li> -->
 							
                             
                             

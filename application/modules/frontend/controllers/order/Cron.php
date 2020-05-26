@@ -10,6 +10,8 @@ class Cron extends MX_Controller {
         $this->load->library('session');
         $this->load->model('order/home_model');
         $this->load->model('order/titlePointData');
+        $this->load->model('order/productType');
+        $this->load->model('order/apiLogs');
     }
 
     public function import_orders_all_users()
@@ -165,6 +167,7 @@ class Cron extends MX_Controller {
     public function make_request($http_method, $endpoint, $body_params='', $userdata)
     {
         $login =  $userdata['email'];
+        
         if ($userdata['email'] == 'ghernandez@pct.com') {
             $password= 'Alpha637#';
         } else {
@@ -349,5 +352,57 @@ class Cron extends MX_Controller {
         }
 
         return $tpData;
+    }
+
+    public function import_product_types()
+    {
+        if(empty($user)) 
+        {
+            $userdata = $this->session->userdata('user');
+        } 
+        else 
+        {
+            $userdata = $user;
+            $userdata['email'] = $userdata['email_address'];
+        }
+        
+        $endPoint = 'types/products';
+
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, array(), array(), 0, 0);
+        $result = $this->make_request('GET', $endPoint, '',$userdata);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, array(), $result, 0, $logid);
+        $response = json_decode($result,TRUE);
+
+        if(isset($response) && !empty($response))
+        {
+            foreach ($response as $key => $value) 
+            {
+                $display_name = '';
+                $status = 0;
+                if((isset($value['ProductTypeID']) && $value['ProductTypeID'] == 19) && (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3))
+                {
+                    $display_name = 'Loan: Refinance';
+                    $status = 1;
+                }
+                elseif((isset($value['ProductTypeID']) && $value['ProductTypeID'] == 20) && (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3))
+                {
+                    $display_name = 'Sales: Purchase';
+                    $status = 1;
+                }
+
+                $data = array(
+                    'transaction_type' =>trim($value['TransactionType']),
+                    'transaction_type_id' => trim($value['TransactionTypeID']),
+                    'product_type' => trim($value['ProductType']),
+                    'product_type_id' => trim($value['ProductTypeID']),
+                   'display_name' => $display_name,
+                   'status' => $status
+                );
+               $this->productType->insert($data);
+            }
+        }
+        
+
+        echo "Product types imported successfully.";
     }
 }

@@ -274,8 +274,17 @@
 											<label class="field select">
 												<select id="ProductTypeID" name="ProductTypeID">
 													<option value="">Select Product</option>
-													<option value="33">Loan: Refinance</option>
-													<option value="32">Sales: Purchase</option>
+												<?php
+													if(isset($productType) && !empty($productType))
+													{
+														foreach ($productType as $key => $value) 
+														{
+												?>
+															<option value="<?php echo $value['product_type_id']; ?>"><?php echo $value['display_name'];  ?></option>
+												<?php
+														}
+													} 
+												?>
 												</select>
 												<i class="arrow double"></i>
 											</label>
