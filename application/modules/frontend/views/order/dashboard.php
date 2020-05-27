@@ -128,8 +128,8 @@
 															<td><?php echo $order['full_address']; ?></td>
 															<td><?php echo $order['primary_owner']; ?></td>
 															<td>
-																<a href="<?php echo base_url()."upload-documents/".$order['file_id'];?>" style="margin-right:10px;"><i class="fa fa-upload" aria-hidden="true"></i></a>
-																<a href="<?php echo base_url()."get-notes/".$order['file_id'];?>"><i class="fa fa-sticky-note-o"></i></a>
+																<a href="<?php echo base_url()."cpl-dashboard";?>" style="margin-right:10px;"><i class="fa fa-upload" aria-hidden="true"></i></a>
+																<a href="<?php echo base_url()."proposed-insured/";?>"><i class="fa fa-sticky-note-o"></i></a>
 															</td>
 														</tr>
 													<?php } 
