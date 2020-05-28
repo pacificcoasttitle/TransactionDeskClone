@@ -204,6 +204,7 @@ class Home extends MX_Controller {
 				$this->load->library('order/resware');
 				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, array(), 0, 0);
 				$result = $this->resware->make_request('POST', 'orders', $order_data,$user_data);
+				echo "<pre>"; print_r($result); exit;
 				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, $result, 0, $logid);
 
 				if(isset($result) && !empty($result))
