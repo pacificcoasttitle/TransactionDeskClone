@@ -22,7 +22,9 @@ class Order
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
 
-        $this->CI->db->where('order_details.customer_id', $userdata['id']);
+        if ($userdata['is_master'] == 0) {
+            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+        }
         $this->CI->db->order_by("order_details.created_at", "desc");
         $this->CI->db->limit(10);
         $query = $this->CI->db->get();
@@ -49,7 +51,9 @@ class Order
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.natic_document_name')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
-            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            if ($userdata['is_master'] == 0) {
+                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            }
             $total_records =  $this->CI->db->count_all_results();
             
             if(isset($keyword) && !empty($keyword))
@@ -65,8 +69,9 @@ class Order
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id');
 
-            
-            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            if ($userdata['is_master'] == 0) {
+                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            }
             $this->CI->db->order_by("order_details.id", "desc");
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -84,7 +89,11 @@ class Order
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.natic_document_name')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
-            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+
+            if ($userdata['is_master'] == 0) {
+                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            }
+       
             $total_records =  $this->CI->db->count_all_results();
            
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -96,7 +105,9 @@ class Order
                 ->join('property_details', 'order_details.property_id = property_details.id');
 
             
-            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            if ($userdata['is_master'] == 0) {
+                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            }
             $this->CI->db->order_by("order_details.id", "desc");
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -127,6 +138,7 @@ class Order
 
     public function get_order_details($fileId)
     {
+        $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number, 
             order_details.id as order_id,
             order_details.file_id, 
@@ -177,6 +189,10 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left');
         $this->CI->db->where('file_id', $fileId);
+         
+        if ($userdata['is_master'] == 0) {
+            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+        }
         $query = $this->CI->db->get();
         
         return $query->row_array();
@@ -214,6 +230,7 @@ class Order
 
     public function get_order_documents($fileId)
     {
+        $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number, 
                 order_details.file_id, 
                 order_details.id as order_id, 
@@ -226,6 +243,9 @@ class Order
             ->from('order_details')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->CI->db->where('order_details.file_id', $fileId);
+        if ($userdata['is_master'] == 0) {
+            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+        }
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();
