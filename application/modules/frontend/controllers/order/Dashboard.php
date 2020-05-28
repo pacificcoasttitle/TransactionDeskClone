@@ -23,7 +23,9 @@ class Dashboard extends MX_Controller {
 	{
 		$userdata = $this->session->userdata('user');
 		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
+		$is_master = isset($userdata['is_master']) && !empty($userdata['is_master']) ? $userdata['is_master'] : '';
 		$data['name'] = $name;
+		$data['is_master'] = $is_master;
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);

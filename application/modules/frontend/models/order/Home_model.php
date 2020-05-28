@@ -63,11 +63,16 @@ class Home_model extends CI_Model
                     $this->db->like('first_name', $params['name']);
                 }elseif(array_key_exists("company_name", $params) && array_key_exists("is_escrow", $params))
                 {
-                	$this->db->select("CONCAT(company_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
-                	$this->db->where('is_escrow', $params['is_escrow']);
+                    $this->db->select("CONCAT(company_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                    $this->db->where('is_escrow', $params['is_escrow']);
+                    $this->db->like('company_name', $params['company_name']);
+                }elseif(array_key_exists("company_name", $params))
+                {
+                	$this->db->select("CONCAT(company_name, ' - ',email_address) AS value");
                 	$this->db->like('company_name', $params['company_name']);
                 }
                 $query = $this->db->get();
+                
                 $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
             }
         }
