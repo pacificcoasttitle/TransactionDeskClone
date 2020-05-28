@@ -2,6 +2,8 @@
 
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 
+use Dompdf\Dompdf as Dompdf;
+
 class Dashboard extends MX_Controller {
 
 	function __construct() {
@@ -1340,6 +1342,73 @@ class Dashboard extends MX_Controller {
 
 	public function donloadCplPdf()
 	{
+		$westcor_file_id = $this->input->post('westcor_file_id');
+		$pdf_file = './uploads/cpl_5366542.pdf';
+		
+		if (!file_exists($pdf_file)) { 
+			echo "ddfdf";exit;
+		}
+		$html_dir = './uploads/new1/';
+		$cmd = "pdftohtml -z 1.3 $pdf_file $html_dir";
+
+		exec($cmd, $out, $ret);
+		$str1 = '';
+
+		$str1 = file_get_contents("./uploads/new1/page1.html");
+		$str1 = str_replace('page1.png', './uploads/new1/page1.png', $str1); 
+		
+		$str1 = str_replace('This document was created using a ', '', $str1);   
+		$str1 = str_replace('Free version ', '', $str1); 
+		$str1 = str_replace('of GemBox.Document component.', '', $str1);   
+		$str1 = str_replace('To remove this message', '', $str1);   
+		$str1 = str_replace('purchase Professional version', '', $str1);   
+		$str1 = str_replace('1029', '', $str1);  
+		$str1 = str_replace('795', '900', $str1);  
+		//$str1 = str_replace('position:absolute; left:0px; top:0px', 'height:1100px !important;', $str1);    
+		//$str1 = str_replace('position:absolute; left:0px; top:0px', 'float:left; height: 1150px !important;position:absolute;  top:0px;margin-top:-45px', $str1);        
+		file_put_contents("./uploads/new1/page5.html", $str1);
+		
+		$str2 = file_get_contents("./uploads/new1/page2.html");
+		$str2 = str_replace('page2.png', './uploads/new1/page2.png', $str2); 
+		$str2 = str_replace('This document was created using a ', '', $str2);   
+		$str2 = str_replace('Free version ', '', $str2); 
+		$str2 = str_replace('of GemBox.Document component.', '', $str2);   
+		$str2 = str_replace('To remove this message', '', $str2);   
+		$str2 = str_replace('purchase Professional version', '', $str2);   
+		//$str2 = str_replace('position:absolute; left:0px; top:0px', 'float:left; height: 1150px !important;position:absolute;  top:0px;margin-top:-45px', $str2);         
+		$str2 = str_replace('position:absolute; left:0px; top:0px', 'margin-left:-40px;position:absolute; left:0px; top:0px;margin-top:-55px', $str2);    
+		 
+		 
+
+		$str3 = file_get_contents("./uploads/new1/page3.html");
+		$str3 = str_replace('page3.png', './uploads/new1/page3.png', $str3);   
+		$str3 = str_replace('This document was created using a ', '', $str3);   
+		$str3 = str_replace('Free version ', '', $str3); 
+		$str3 = str_replace('of GemBox.Document component.', '', $str3);   
+		$str3 = str_replace('To remove this message', '', $str3);   
+		$str3 = str_replace('purchase Professional version', '', $str3);   
+		//$str3 = str_replace('position:absolute; left:0px; top:0px', 'float:left; height: 1150px !important;position:absolute;  top:0px;margin-top:-45px', $str3);  
+		$str3 = str_replace('position:absolute; left:0px; top:0px', 'margin-left:-40px;position:absolute; left:0px; top:0px;margin-top:-55px', $str3);    
+		
+		
+		$oldfilename = uniqid() . ".pdf";
+		                             
+		$mpdf = new \Mpdf\Mpdf();
+        $mpdf->WriteHTML($str1);
+		$mpdf->AddPage();
+		$mpdf->WriteHTML($str2);
+		$mpdf->AddPage();
+		$mpdf->WriteHTML($str3);
+	   
+		
+        $targetFile = "./uploads/" . $oldfilename;
+        $mpdf->Output($targetFile, 'F');
+		echo "Exit code: $ret";exit;
+
+		
+
+		
+
 		$userdata = $this->session->userdata('user');
 		$this->load->library('order/westcor');
 		$this->load->model('order/apiLogs');
@@ -1360,7 +1429,52 @@ class Dashboard extends MX_Controller {
 		$result = $this->westcor->make_request('POST', $endPoint, $data, 0, $resToken['token']);
 		$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', WESTCORE_URL.$endPoint, $data, $result, $westcor_order_id, $logid);
 		if (isset($result) && !empty($result)) {
-			echo base64_encode($result);
+			//echo base64_encode($result);
+
+			if (!is_dir('uploads/documents')) {
+				mkdir('./uploads/documents', 0777, TRUE);
+			}
+			file_put_contents('./uploads/documents/testt.pdf', $result);
+			//$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
+
+			$source_pdf = './uploads/documents/testt.pdf';
+			\Gufy\PdfToHtml\Config::set('pdftohtml.bin', './bin/pdftohtml');
+			\Gufy\PdfToHtml\Config::set('pdfinfo.bin', './bin/pdfinfo');
+			\Gufy\PdfToHtml\Config::set('pdfimages.bin', './bin/pdfimages');
+			$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
+			
+			$total_pages = $pdf->getPages();
+			$html = '';
+			$dom = '';
+			$html .= $pdf->html(1);
+			$html .= $pdf->html(2);
+			$html .= $pdf->html(3);
+			
+				
+				
+				$dompdf = new Dompdf();
+				
+				//$dompdf->set_option('isHtml5ParserEnabled', true);
+
+
+// load the html content
+$dompdf->load_html($html);
+$dompdf->render();
+$output = $dompdf->output();
+file_put_contents("./uploads/documents/test.pdf", $output);
+
+
+
+
+				echo $html;exit;
+				$total_pages = $pdf->getPages();
+				$htmlDom = new DOMDocument;
+				@$htmlDom->loadHTML($html);
+				$links = $htmlDom->getElementsByTagName('a');
+				$extractedLinks = array();
+				
+				
+			
 		}	
 	}
 
