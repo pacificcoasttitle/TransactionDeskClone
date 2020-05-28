@@ -140,6 +140,7 @@ class Order
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number, 
+            order_details.customer_id,
             order_details.id as order_id,
             order_details.file_id, 
             order_details.westcor_order_id,

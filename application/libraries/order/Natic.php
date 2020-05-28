@@ -17,9 +17,6 @@ class Natic
 
     public function make_request($xml, $endpoint)
     {
-        ini_set('max_execution_time', 0);
-        ini_set('memory_limit','2048M');
-
         $headers = array(
             "Content-type: text/xml",
             "Content-length: " . strlen($xml),
