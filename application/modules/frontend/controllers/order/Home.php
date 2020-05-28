@@ -196,7 +196,7 @@ class Home extends MX_Controller {
 				$order_data = json_encode($place_order);
 				$user_data = array();
 				
-				if($is_master)
+				if(isset($userdata['is_master']) && !empty($userdata['is_master']))
 				{
 					$user_data['email'] = isset($_POST['OpenEmail']) && !empty($_POST['OpenEmail']) ? $_POST['OpenEmail'] : '';
 				}
