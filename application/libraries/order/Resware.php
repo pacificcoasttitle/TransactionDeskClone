@@ -15,16 +15,16 @@ class Resware
 		self::$CI = $this->CI;
     }
 
-   public function make_request($http_method, $endpoint, $body_params='',$data = array())
-   {
+    public function make_request($http_method, $endpoint, $body_params='',$data = array())
+    {
         $userdata = $this->CI->session->userdata('user');
         if(isset($userdata['is_master']) && !empty($userdata['is_master']))
         {
-            $login =  isset($data['email']) && !empty($data['email']) ? $data['email'] : '' ;
+            $login = isset($data['email']) && !empty($data['email']) ? $data['email'] : '' ;
         }
         else
         {
-            $login =  $userdata['email'];
+            $login = $userdata['email'];
         }
         if ($login == 'ghernandez@pct.com') {
             $password= 'Alpha637#';
@@ -33,19 +33,19 @@ class Resware
         } else {
             $password= 'Pacific2';
         }
-        $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
+        $ch = curl_init(RESWARE_ORDER_API.$endpoint);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
-            'Content-Length: ' . strlen($body_params))                                 
-        ); 
+            'Content-Length: ' . strlen($body_params))
+        );
         $error_msg = curl_error($ch);
         $result = curl_exec($ch);
         return $result;
-   }
+    }
     
 }

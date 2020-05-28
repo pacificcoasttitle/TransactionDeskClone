@@ -973,6 +973,8 @@ class Dashboard extends MX_Controller {
 		$res = array();
 
 		$resToken = $this->order->get_token();
+		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+
 		if ($resToken === false) {
 			$resToken = $this->westcor->createToken($orderDetails['order_id']);
 		} 
@@ -1113,7 +1115,7 @@ class Dashboard extends MX_Controller {
 			'tvid' =>  0,
 			'agentnumber' => $resToken['agent_number'],
 			'agent_file_number' => $orderDetails['file_number'],
-			'email_requestor' => $userdata['email'],
+			'email_requestor' => $orderUser['email_address'],
 			'purchase_price' => $purchase_price,
 			'property' =>  $propery,
 			'buyers' => $buyers,
@@ -1410,7 +1412,9 @@ class Dashboard extends MX_Controller {
 
 		$endPoint = 'files/'. $file_id .'/partners';
 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
-		$resultPartners = $this->resware->make_request('GET', $endPoint);
+		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+
+		$resultPartners = $this->resware->make_request('GET', $endPoint, '', array('email' => $orderUser['email_address']));
 		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
 		$resPartners = json_decode($resultPartners, true);
 		if(!empty($resPartners)) {
@@ -2552,6 +2556,9 @@ class Dashboard extends MX_Controller {
 		$responseArr = $this->natic->getDocumentContentForCpl($fileId);
 		if ($responseArr['success']) {
 			$document_name = "natic"."_".$fileId.".pdf";
+			if (!is_dir('uploads/documents')) {
+				mkdir('./uploads/documents', 0777, TRUE);
+			}
 			file_put_contents('./uploads/documents/'.$document_name, base64_decode($responseArr['content']));
 			$this->home_model->update(array('natic_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
 			$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
