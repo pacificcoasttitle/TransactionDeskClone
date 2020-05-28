@@ -38,9 +38,18 @@
 								<a href="<?php echo base_url().'proposed-insured'; ?>">
 									<button class="btn1 btn-type-1e btn-lg" type="button">Proposed</button>
 								</a>
-								<a href="<?php echo base_url().'fees'; ?>">
-									<button class="btn1 btn-type-1g btn-lg" type="button">Fee Estimate</button>
-								</a>
+								<?php
+									if(isset($is_master) && empty($is_master))
+									{
+								?>
+										<a href="<?php echo base_url().'fees'; ?>">
+											<button class="btn1 btn-type-1g btn-lg" type="button">Fee Estimate</button>
+										</a>
+								<?php
+									}
+
+								?>
+								
 								<!-- <a href="<?php // echo base_url().'prelim-files'; ?>">
 									<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
 								</a>

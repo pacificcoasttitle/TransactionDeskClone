@@ -22,9 +22,8 @@ class Home extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$this->load->model('order/apiLogs');
     	if(isset($_POST) && !empty($_POST))
-    	{
-    		$this->load->library("phpmailer_library");
-        
+    	{        
+    		// echo "<pre>"; print_r($_POST); exit;
     		$this->form_validation->set_rules('OpenName', 'First Name', 'required',array('required'=> 'Enter your first name'));
     		$this->form_validation->set_rules('OpenLastName', 'Last Name', 'required',array('required'=> 'Enter your last name'));
     		$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
@@ -195,10 +194,16 @@ class Home extends MX_Controller {
 				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
 
 				$order_data = json_encode($place_order);
-
+				$user_data = array();
+				
+				if($is_master)
+				{
+					$user_data['email'] = isset($_POST['OpenEmail']) && !empty($_POST['OpenEmail']) ? $_POST['OpenEmail'] : '';
+				}
+				
 				$this->load->library('order/resware');
 				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, array(), 0, 0);
-				$result = $this->resware->make_request('POST', 'orders', $order_data);
+				$result = $this->resware->make_request('POST', 'orders', $order_data,$user_data);
 				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, $result, 0, $logid);
 
 				if(isset($result) && !empty($result))
@@ -336,6 +341,7 @@ class Home extends MX_Controller {
 							'file_number' => $orderNumber,
 							'property_id' => $propertyId,
 							'transaction_id' => $transactionId,
+							'created_by' => $userdata['id'],
 							'status'=> 1
 						);
 
@@ -424,8 +430,6 @@ class Home extends MX_Controller {
 							if ($_FILES['orderfiles']['error'] == 0) 
 							{
 								move_uploaded_file($_FILES['orderfiles']['tmp_name'], FCPATH.'smuploads/' .$order_upload);
-									
-								
 
 								$data = array(
 							       'OpenName'=> $OpenName,
@@ -561,7 +565,9 @@ class Home extends MX_Controller {
     	else
     	{
 			$data['title'] = 'Open Order | Pacific Coast Title Company';
-			$data['customer_data'] =  $this->home_model->get_user(array('id' => $userdata['id']));
+			$customer_data =  $this->home_model->get_user(array('id' => $userdata['id']));
+
+			$is_master = isset($customer_data['is_master']) && !empty($customer_data['is_master']) ? $customer_data['is_master'] : '';
 
 			$condition = array(
 	            'where' => array(
@@ -569,10 +575,20 @@ class Home extends MX_Controller {
 	                'transaction_type_id' => 3
 	            )
 	        );
-
+			
 			$data['productType'] =  $this->productType->getProductTypes($condition);
-	        $this->load->view('layout/head',$data);
-	       	$this->load->view('order/home');
+	        
+	        if($is_master)
+	        {
+	        	$this->load->view('layout/head',$data);
+	        	$this->load->view('order/master_order');
+	        }
+	        else 
+	        {
+	        	$data['customer_data'] = $customer_data;
+	        	$this->load->view('layout/head',$data);
+	        	$this->load->view('order/home');
+	        }	       	
     	}
     }
 
@@ -678,13 +694,19 @@ class Home extends MX_Controller {
     function getDetailsByName()
     {
     	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
-    	$isEscrow = isset($_POST['is_escrow']) && !empty($_POST['is_escrow']) ? $_POST['is_escrow'] : 0;
+    	// $isEscrow = isset($_POST['is_escrow']) && !empty($_POST['is_escrow']) ? $_POST['is_escrow'] : 0;
 
 
     	$condition = array(
             'company_name' => $searchTerm,
-            'is_escrow' => $isEscrow,
+            // 'is_escrow' => $isEscrow,
         );
+
+    	if(isset($_POST['is_escrow']))
+    	{
+    		$isEscrow = $_POST['is_escrow'];
+    		$condition['is_escrow'] = $isEscrow;
+    	}
 
     	$userDetails = $this->home_model->get_customers($condition);
     	$userInfo = array();
@@ -697,12 +719,15 @@ class Home extends MX_Controller {
 	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
 
 	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
+	            $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
+	            $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
 	            $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
 	            $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
 				$data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
 				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
 				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
 				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
+				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
 	            // array_push($userInfo, $data); 
 	            $userInfo[] =$data;
     		}

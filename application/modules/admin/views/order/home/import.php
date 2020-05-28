@@ -11,7 +11,7 @@
 <?php } ?>
     <div id="import-result"></div>
     <div class="card mx-auto mt-5">
-      <div class="card-header">Import Customers</div>
+      <div class="card-header">Import Escrows</div>
         <div class="card-body">        
             <form id="importFrm" method="POST" enctype="multipart/form-data">
 

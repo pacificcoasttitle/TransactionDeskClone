@@ -15,14 +15,23 @@ class Resware
 		self::$CI = $this->CI;
     }
 
-   public function make_request($http_method, $endpoint, $body_params='')
+   public function make_request($http_method, $endpoint, $body_params='',$data = array())
    {
         $userdata = $this->CI->session->userdata('user');
-        $login =  $userdata['email'];
-        if ($userdata['email'] == 'ghernandez@pct.com') {
+        if(isset($userdata['is_master']) && !empty($userdata['is_master']))
+        {
+            $login =  isset($data['email']) && !empty($data['email']) ? $data['email'] : '' ;
+        }
+        else
+        {
+            $login =  $userdata['email'];
+        }
+        if ($login == 'ghernandez@pct.com') {
             $password= 'Alpha637#';
-        } else {
+        }elseif ($login == 'teamrestine@eatonescrow.com') {
             $password= 'Pacific12';
+        } else {
+            $password= 'Pacific2';
         }
         $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        

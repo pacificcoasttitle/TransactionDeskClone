@@ -30,24 +30,42 @@
 										<div class="tagline"><span>Your Details (Will Be AutoFilled) </span></div>
 										<!-- .tagline -->
 									</div>
-
 									<div class="frm-row">
 										<div class="section colm colm6">
 											<label class="field prepend-icon">
-												<input value="<?php echo $customer_data['first_name'];?>" type="text"
-													name="OpenName" id="OpenName" class="gui-input"
-													placeholder=" First Name" readonly="readonly">
+												<input value="" type="text"
+													name="CompanyName" id="CompanyName" class="gui-input"
+													placeholder="Company Name">
 												<span class="field-icon"><i class="fa fa-user"></i></span>
-												<input type="hidden" name="id" id="CustomerId"
-													value="<?php echo $customer_data['id'];?>" readonly="readonly">
 											</label>
 										</div><!-- end section -->
 
 										<div class="section colm colm6">
 											<label class="field prepend-icon">
-												<input value="<?php echo $customer_data['last_name'];?>" type="text"
+												<input value=""
+													type="email" name="OpenEmail" id="OpenEmail" class="gui-input"
+													placeholder="Email address">
+												<span class="field-icon"><i class="fa fa-envelope"></i></span>
+											</label>
+										</div><!-- end section -->
+									</div>
+									<div class="frm-row">
+										<div class="section colm colm6">
+											<label class="field prepend-icon">
+												<input value="" type="text"
+													name="OpenName" id="OpenName" class="gui-input"
+													placeholder=" First Name">
+												<span class="field-icon"><i class="fa fa-user"></i></span>
+												<input type="hidden" name="id" id="CustomerId"
+													value="">
+											</label>
+										</div><!-- end section -->
+
+										<div class="section colm colm6">
+											<label class="field prepend-icon">
+												<input value="" type="text"
 													name="OpenLastName" id="OpenLastName" class="gui-input"
-													placeholder="Last Name" readonly="readonly">
+													placeholder="Last Name">
 												<span class="field-icon"><i class="fa fa-user"></i></span>
 											</label>
 										</div><!-- end section -->
@@ -56,37 +74,17 @@
 									<div class="frm-row">
 										<div class="section colm colm6">
 											<label class="field prepend-icon">
-												<input value="<?php echo $customer_data['telephone_no'];?>" type="tel"
+												<input value="" type="tel"
 													name="Opentelephone" id="Opentelephone" class="gui-input"
-													placeholder="Telephone" readonly="readonly">
+													placeholder="Telephone">
 												<span class="field-icon"><i class="fa fa-phone-square"></i></span>
 											</label>
 										</div><!-- end section -->
 										<div class="section colm colm6">
 											<label class="field prepend-icon">
-												<input value="<?php echo $customer_data['email_address'];?>"
-													type="email" name="OpenEmail" id="OpenEmail" class="gui-input"
-													placeholder="Email address" readonly="readonly">
-												<span class="field-icon"><i class="fa fa-envelope"></i></span>
-											</label>
-										</div><!-- end section -->
-									</div><!-- end frm-row section -->
-
-									<div class="frm-row">
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input value="<?php echo $customer_data['company_name'];?>" type="text"
-													name="CompanyName" id="CompanyName" class="gui-input"
-													placeholder="Company Name" readonly="readonly">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-											</label>
-										</div><!-- end section -->
-
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input value="<?php echo $customer_data['street_address'];?>"
+												<input value=""
 													type="text" name="StreetAddress" id="StreetAddress"
-													class="gui-input" placeholder="Street Address" readonly="readonly">
+													class="gui-input" placeholder="Street Address">
 												<span class="field-icon"><i class="fa fa-envelope"></i></span>
 											</label>
 										</div><!-- end section -->
@@ -95,16 +93,16 @@
 									<div class="frm-row">
 										<div class="section colm colm6">
 											<label class="field prepend-icon">
-												<input value="<?php echo $customer_data['city'];?>" type="text"
-													name="City" id="City" class="gui-input" placeholder="City" readonly="readonly">
+												<input value="" type="text"
+													name="City" id="City" class="gui-input" placeholder="City">
 												<span class="field-icon"><i class="fa fa-user"></i></span>
 											</label>
 										</div><!-- end section -->
 
 										<div class="section colm colm6">
 											<label class="field prepend-icon">
-												<input value="<?php echo $customer_data['zip_code'];?>" type="text"
-													name="Zipcode" id="Zipcode" class="gui-input" placeholder="Zipcode" readonly="readonly">
+												<input value="" type="text"
+													name="Zipcode" id="Zipcode" class="gui-input" placeholder="Zipcode">
 												<span class="field-icon"><i class="fa fa-envelope"></i></span>
 											</label>
 										</div><!-- end section -->
@@ -391,14 +389,9 @@
 												</label>
 											</div><!-- end .option-group section -->
 										</div><!-- end .colm section -->
-										<?php 
-                                                    $is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ?  $customer_data['is_escrow'] : 0;
-                                                ?>
-										<?php 
-                                                    if($is_escrow == 1)
-                                                    {
-                                                ?>
-										<div class="section colm colm4" id="add-lender-section">
+										
+										
+										<div class="section colm colm4" id="add-lender-section" style="display: none;">
 											<div class="option-group field">
 												<label class="option block spacer-t10">
 													<input type="checkbox" name="add-lender-details"
@@ -407,14 +400,9 @@
 												</label>
 											</div><!-- end .option-group section -->
 										</div>
-										<?php
-                                                    }
-                                                ?>
-										<?php 
-                                                    if($is_escrow == 0)
-                                                    {
-                                                ?>
-										<div class="section colm colm4" id="add-escrow-section">
+										
+										
+										<div class="section colm colm4" id="add-escrow-section" style="display: none;">
 											<div class="option-group field">
 												<label class="option block spacer-t10">
 													<input type="checkbox" name="add-escrow-details"
@@ -423,10 +411,6 @@
 												</label>
 											</div><!-- end .option-group section -->
 										</div>
-										<?php
-                                                    }
-                                                ?>
-
 									</div>
 
 									<div id="agent-details-fields" style="display: none;">
@@ -791,8 +775,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-cloneya.min.js"></script>
 
 <script type="text/javascript">
-	var L_V_CreateService, L_V_GetRequestSummary, L_V_GetResultById;
-	var Tax_CreateService, Tax_GetRequestSummary, Tax_GetResultById;
+	
 	jQuery(document).ready(function ($) {
 
 		$('#clone-email-address').cloneya({
@@ -805,6 +788,60 @@
 				$(clone).remove();
 			})
 		});
+
+		$("#CompanyName").autocomplete({
+	        source: function(request, response) {
+	            $.ajax({
+	                url: base_url+'home/getDetailsByName',
+	                data: {
+	                    term : request.term,//the value of the input is here                 
+	                },
+	                type: "POST",
+	                dataType: "json",
+	                success: response
+	            });
+	        },
+	        select: function( event, ui ) {
+	        	// console.log(ui.item);
+	            event.preventDefault();
+	            $("#CompanyName").val(ui.item.company);
+	            $("#OpenEmail").val(ui.item.email_address).parent().addClass('state-success');
+	            $("#Opentelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+	            $("#OpenName").val(ui.item.fname).parent().addClass('state-success');
+	            $("#OpenLastName").val(ui.item.lname).parent().addClass('state-success');
+	            $("#StreetAddress").val(ui.item.address).parent().addClass('state-success');
+	            $("#City").val(ui.item.city).parent().addClass('state-success');
+	            $("#Zipcode").val(ui.item.zip_code).parent().addClass('state-success');
+	            $("#CustomerId").val(ui.item.id);
+
+	            var is_escrow = ui.item.is_escrow;
+
+	            if(is_escrow == 1)
+	            {
+	            	$('#add-lender-section').show();
+	            	$('#add-escrow-section').hide();
+	            }
+	            else
+	            {
+	            	$('#add-lender-section').hide();
+	            	$('#add-escrow-section').show();
+	            }
+	        },
+	        change: function( event, ui ) {
+	            if (ui.item == null)
+	            {
+	            	$("#CompanyName").parent().removeClass('state-success').addClass('state-error');
+		            $("#OpenEmail").val('').parent().removeClass('state-success').addClass('state-error');
+		            $("#Opentelephone").val('').parent().removeClass('state-success').addClass('state-error');
+		            $("#OpenName").val('').parent().removeClass('state-success').addClass('state-error');
+		            $("#OpenLastName").val('').parent().removeClass('state-success').addClass('state-error');
+		            $("#StreetAddress").val('').parent().removeClass('state-success').addClass('state-error');
+		            $("#City").val('').parent().removeClass('state-success').addClass('state-error');
+		            $("#Zipcode").val('').parent().removeClass('state-success').addClass('state-error');
+		            $("#CustomerId").val('');
+	            }
+	        }
+	    });
 	});
 
 </script>

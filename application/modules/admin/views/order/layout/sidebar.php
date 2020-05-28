@@ -2,8 +2,8 @@
 
 	<li class="nav-item <?php if($this->uri->uri_string() == 'dashboard') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'order/admin/dashboard'; ?>">
-			<i class="fas fa-fw fa-tachometer-alt"></i>
-			<span>Dashboard</span>
+			<i class="fas fa-fw fa-users"></i>
+			<span>Escrow</span>
 		</a>
 	</li>
 	<li
