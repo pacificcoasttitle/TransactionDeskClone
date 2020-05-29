@@ -58,6 +58,7 @@
 				"paging": true,
 				"lengthChange": false,
 				"language": {
+					searchPlaceholder: "Search File# or Address",
 					paginate: {
 						next: '<span class="fa fa-angle-right"></span>',
 						previous: '<span class="fa fa-angle-left"></span>',
