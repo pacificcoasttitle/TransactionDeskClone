@@ -23,7 +23,7 @@
 
 .modal-open #searchResultModal.modal {
     overflow-x: hidden;
-    overflow-y: auto
+    overflow-y: hidden
 }
 
 .modal-dialog {
