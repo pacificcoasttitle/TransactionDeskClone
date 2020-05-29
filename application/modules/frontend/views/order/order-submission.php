@@ -1,20 +1,9 @@
 <body>
     <?php
-        $this->load->view('layout/header');
+       // $this->load->view('layout/header');
+        $this->load->view('layout/header_dashboard');
     ?>
-<div class="section-title-page7q area-bg area-bg_blue area-bg_op_60 parallax">
-  <div class="area-bg__inner">
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
-          <h1 class="b-title-page"></h1>
-          <div class="b-title-page__info"></div>
-          <!-- end breadcrumb-->
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+
         <!-- end .b-title-page-->
         <article class="b-about section-default">
           <div class="container">
@@ -178,25 +167,25 @@
               <div class="b-advantages-group">
                   <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-screen"></i>
                     <div class="b-advantages__inner">
-                      <h3 class="b-advantages__title ui-title-inner"><a href="home.html">Order a Farm</a></h3>
+                      <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></h3>
                       <div class="b-advantages__info">Our customer service team is ready to help create a farm package to help you alert the neighbors about your new listing.</div>
-					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="#">Order</a>
+					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a>
                     </div>
                   </section>
                   <!-- end .b-advantages-->
                   <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-worldwide"></i>
                     <div class="b-advantages__inner">
-                      <h3 class="b-advantages__title ui-title-inner"><a href="https://www.pcttitletoolbox.com/#!/">Create a Farm</a></h3>
+                      <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed</a></h3>
                       <div class="b-advantages__info">Login in to our PCT Title Toolbox program and create your own farm package consisting of the various types of owners.</div>
-					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="https://www.pcttitletoolbox.com/#!/">Login</a>
+					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="<?php echo base_url().'proposed-insured'; ?>">Generate Proposed</a>
                     </div>
                   </section>
                   <!-- end .b-advantages-->
                   <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-analytics"></i>
                     <div class="b-advantages__inner">
-                      <h3 class="b-advantages__title ui-title-inner"><a href="home.html">Open New Order</a></h3>
+                      <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'order'; ?>">Open New Order</a></h3>
                       <div class="b-advantages__info">Need to open another order? That's fantastic. The link below will redirect you back to our Open Order form.</div>
-					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="#">Create</a>
+					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="<?php echo base_url().'order'; ?>">Create</a>
                     </div>
                   </section>
                   <!-- end .b-advantages-->
