@@ -809,10 +809,7 @@
 	                success: function (data) {
 						if (data.length > 0) {
                             response($.map(data, function (item) {
-                                return {
-                                    label: item.company + " - " + item.email_address,
-									value: item.company
-                                };
+                                return item;
                             }))
                         } else {
                             response([{ label: 'No results found.', val: -1}]);
@@ -823,7 +820,7 @@
 			delay: 0,
 			minLength: 2,
 	        select: function( event, ui ) {
-	        	// console.log(ui.item);
+	        	 console.log(ui.item);
 	            event.preventDefault();
 	            $("#CompanyName").val(ui.item.company);
 	            $("#OpenEmail").val(ui.item.email_address).parent().addClass('state-success');
