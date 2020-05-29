@@ -36,10 +36,10 @@
 											<label class="field prepend-icon">
 												<input value="<?php echo $customer_data['first_name'];?>" type="text"
 													name="OpenName" id="OpenName" class="gui-input"
-													placeholder=" First Name" readonly="readonly">
+													placeholder=" First Name">
 												<span class="field-icon"><i class="fa fa-user"></i></span>
 												<input type="hidden" name="id" id="CustomerId"
-													value="<?php echo $customer_data['id'];?>" readonly="readonly">
+													value="<?php echo $customer_data['id'];?>">
 											</label>
 										</div><!-- end section -->
 
@@ -47,7 +47,7 @@
 											<label class="field prepend-icon">
 												<input value="<?php echo $customer_data['last_name'];?>" type="text"
 													name="OpenLastName" id="OpenLastName" class="gui-input"
-													placeholder="Last Name" readonly="readonly">
+													placeholder="Last Name">
 												<span class="field-icon"><i class="fa fa-user"></i></span>
 											</label>
 										</div><!-- end section -->
@@ -58,7 +58,7 @@
 											<label class="field prepend-icon">
 												<input value="<?php echo $customer_data['telephone_no'];?>" type="tel"
 													name="Opentelephone" id="Opentelephone" class="gui-input"
-													placeholder="Telephone" readonly="readonly">
+													placeholder="Telephone">
 												<span class="field-icon"><i class="fa fa-phone-square"></i></span>
 											</label>
 										</div><!-- end section -->
@@ -66,7 +66,7 @@
 											<label class="field prepend-icon">
 												<input value="<?php echo $customer_data['email_address'];?>"
 													type="email" name="OpenEmail" id="OpenEmail" class="gui-input"
-													placeholder="Email address" readonly="readonly">
+													placeholder="Email address">
 												<span class="field-icon"><i class="fa fa-envelope"></i></span>
 											</label>
 										</div><!-- end section -->
@@ -77,7 +77,7 @@
 											<label class="field prepend-icon">
 												<input value="<?php echo $customer_data['company_name'];?>" type="text"
 													name="CompanyName" id="CompanyName" class="gui-input"
-													placeholder="Company Name" readonly="readonly">
+													placeholder="Company Name">
 												<span class="field-icon"><i class="fa fa-user"></i></span>
 											</label>
 										</div><!-- end section -->
@@ -86,7 +86,7 @@
 											<label class="field prepend-icon">
 												<input value="<?php echo $customer_data['street_address'];?>"
 													type="text" name="StreetAddress" id="StreetAddress"
-													class="gui-input" placeholder="Street Address" readonly="readonly">
+													class="gui-input" placeholder="Street Address">
 												<span class="field-icon"><i class="fa fa-envelope"></i></span>
 											</label>
 										</div><!-- end section -->
@@ -96,7 +96,7 @@
 										<div class="section colm colm6">
 											<label class="field prepend-icon">
 												<input value="<?php echo $customer_data['city'];?>" type="text"
-													name="City" id="City" class="gui-input" placeholder="City" readonly="readonly">
+													name="City" id="City" class="gui-input" placeholder="City">
 												<span class="field-icon"><i class="fa fa-user"></i></span>
 											</label>
 										</div><!-- end section -->
@@ -104,7 +104,7 @@
 										<div class="section colm colm6">
 											<label class="field prepend-icon">
 												<input value="<?php echo $customer_data['zip_code'];?>" type="text"
-													name="Zipcode" id="Zipcode" class="gui-input" placeholder="Zipcode" readonly="readonly">
+													name="Zipcode" id="Zipcode" class="gui-input" placeholder="Zipcode">
 												<span class="field-icon"><i class="fa fa-envelope"></i></span>
 											</label>
 										</div><!-- end section -->

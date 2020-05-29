@@ -4,6 +4,11 @@
         margin-left: 10%;
         margin-bottom: 0px !important;
     }
+
+	.ui-autocomplete {
+		max-height: 300px !important;
+	} 
+
 </style>
 
 <body>
@@ -31,7 +36,7 @@
 										<!-- .tagline -->
 									</div>
 									<div class="frm-row">
-										<div class="section colm colm6">
+										<div class="section colm colm12">
 											<label class="field prepend-icon">
 												<input value="" type="text"
 													name="CompanyName" id="CompanyName" class="gui-input"
@@ -39,16 +44,19 @@
 												<span class="field-icon"><i class="fa fa-user"></i></span>
 											</label>
 										</div><!-- end section -->
+									</div>
 
-										<div class="section colm colm6">
+									<div class="frm-row">
+										<div class="section colm colm12">
 											<label class="field prepend-icon">
 												<input value=""
 													type="email" name="OpenEmail" id="OpenEmail" class="gui-input"
 													placeholder="Email address">
 												<span class="field-icon"><i class="fa fa-envelope"></i></span>
 											</label>
-										</div><!-- end section -->
+										</div>
 									</div>
+
 									<div class="frm-row">
 										<div class="section colm colm6">
 											<label class="field prepend-icon">
@@ -800,7 +808,9 @@
 	                dataType: "json",
 	                success: response
 	            });
-	        },
+			},
+			delay: 0,
+			minLength: 2,
 	        select: function( event, ui ) {
 	        	// console.log(ui.item);
 	            event.preventDefault();
