@@ -806,7 +806,18 @@
 	                },
 	                type: "POST",
 	                dataType: "json",
-	                success: response
+	                success: function (data) {
+						if (data.length > 0) {
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.company + " - " + item.email_address,
+									value: item.company
+                                };
+                            }))
+                        } else {
+                            response([{ label: 'No results found.', val: -1}]);
+                        }
+					}
 	            });
 			},
 			delay: 0,
