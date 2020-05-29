@@ -1322,6 +1322,16 @@ class Dashboard extends MX_Controller {
 					'westcor_secondary_buyer_id'  => !empty($resultResCPL['buyers']) ? $resultResCPL['buyers'][1]['NameID'] : 0,
 					'westcor_secondary_seller_id'  => !empty($resultResCPL['sellers']) ? $resultResCPL['sellers'][1]['NameID'] : 0
 				);
+
+				if(!empty($resultResCPL['cpl'][0]['FileInformation']['FileAsBase64'])) {
+					$document_name = "westcor"."_".$fileId.".pdf";
+					if (!is_dir('uploads/documents')) {
+						mkdir('./uploads/documents', 0777, TRUE);
+					}
+					file_put_contents('./uploads/documents/'.$document_name, base64_decode($resultResCPL['cpl'][0]['FileInformation']['FileAsBase64']));
+					$this->home_model->update(array('natic_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+				}
+				
 				 
 				$condition = array(
 					'id' => $orderDetails['order_id']
