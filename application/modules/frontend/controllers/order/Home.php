@@ -551,7 +551,7 @@ class Home extends MX_Controller {
 				else
 				{
 					
-					$response = array('status'=>'error', 'message'=> 'Something went wrong. Please try again.');
+					$response = array('status'=>'error', 'message'=> 'Credentials error.');
 					echo json_encode($response); exit;
 				}
     		}
