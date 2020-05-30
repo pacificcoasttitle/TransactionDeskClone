@@ -193,7 +193,7 @@ class Home extends MX_Controller {
 
 				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
 
-				$place_order['Note'][]['APN'] = $apn;
+				$place_order['Note']['APN'] = $apn;
 
 				if (!empty($TitleOfficer)) {
 					$place_order['Note']['title_Officer'] = $TitleOfficer;
