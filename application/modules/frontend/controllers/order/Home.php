@@ -193,6 +193,27 @@ class Home extends MX_Controller {
 
 				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
 
+				$place_order['Note'][]['APN'] = $apn;
+
+				if (!empty($TitleOfficer)) {
+					$place_order['Note'][]['title_Officer'] = $TitleOfficer;
+				}
+				if (!empty($SalesRep)) {
+					$place_order['Note'][]['sales_rep'] = $SalesRep;
+				}
+				if (!empty($buyers_agent_details)) {
+					$place_order['Note'][]['buyers_agent'] = $buyers_agent_details;
+				}
+				if (!empty($listing_agent_details)) {
+					$place_order['Note'][]['listing_agent'] = $listing_agent_details;
+				}
+				if (!empty($lender_details)) {
+					$place_order['Note'][]['lender_details'] = $lender_details;
+				}
+				if (!empty($escrow_details)) {
+					$place_order['Note'][]['escrow_details'] = $escrow_details;
+				}
+				
 				$order_data = json_encode($place_order);
 				$user_data = array();
 				
