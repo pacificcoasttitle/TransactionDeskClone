@@ -28,9 +28,9 @@ class Resware
         }
         if ($login == 'ghernandez@pct.com') {
             $password= 'Alpha637#';
-        }elseif ($login == 'teamrestine@eatonescrow.com') {
+        }/*elseif ($login == 'teamrestine@eatonescrow.com') {
             $password= 'Pacific12';
-        } else {
+        }*/ else {
             $password= 'Pacific2';
         }
         
