@@ -144,6 +144,7 @@
                             
                             $docId = str_replace($year, '', $instrumentNumber);
                             $file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : ''; 
+                            $fips = isset($tp_data['fips']) && !empty($tp_data['fips']) ? $tp_data['fips'] : ''; 
                            
                         ?>
                         <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4,"<?php echo $file_number; ?>");'>Download L&V</a>
@@ -152,7 +153,7 @@
                 </div>
                 <div class="col-md-3">
                     <div id="instrumentInfoFile">
-                        <a href="javascript:void(0);" onclick='instrumentSearch("<?php echo $docId; ?>","<?php echo $recordedDate; ?>","<?php echo $state; ?>","<?php echo $county; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
+                        <a href="javascript:void(0);" onclick='generateGrantDeed("<?php echo $fips; ?>","<?php echo $year; ?>","<?php echo $docId; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
                     </div>
                     <div class="loader" style="display: none;"></div>
                 </div>

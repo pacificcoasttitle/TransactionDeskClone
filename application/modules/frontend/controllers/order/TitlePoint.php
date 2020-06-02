@@ -290,6 +290,8 @@ class TitlePoint extends MX_Controller {
 				$briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : 'No data found.';
 				
 	            $vesting = isset($result['Result']['Vesting']) && !empty($result['Result']['Vesting']) ? $result['Result']['Vesting'] : 'No data found.';
+
+	            $fips = isset($result['Result']['Fips']) && !empty($result['Result']['Fips']) ? $result['Result']['Fips'] : '';
 	            
 	            $instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber'] : '';
 	            $recordedDate = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate'] : '';
@@ -299,6 +301,7 @@ class TitlePoint extends MX_Controller {
 					'vesting_information' => $vesting,
 					'cs4_instrument_no' => $instrumentNumber,
 					'cs4_recorded_date' => $recordedDate,
+					'fips' => $fips,
 				);
 
 		       	if ($this->session->has_userdata('tp_api_id')) 
@@ -508,6 +511,60 @@ class TitlePoint extends MX_Controller {
 		$context = stream_context_create($opts);
 		$file = file_get_contents($request,false,$context);
 
+		echo trim($file);
+	}
+
+	function generateGrantDeed()
+	{
+		$fips = isset($_POST['fips']) && !empty($_POST['fips']) ? $_POST['fips'] : '';
+		$year = isset($_POST['year']) && !empty($_POST['year']) ? $_POST['year'] : '';
+		$docId = isset($_POST['docId']) && !empty($_POST['docId']) ? $_POST['docId'] : '';
+		$fileNumber = isset($_POST['fileNumber']) && !empty($_POST['fileNumber']) ? $_POST['fileNumber'] : '';
+
+		$requestParams = array(
+			'parameters'=>'FIPS='.$fips.',TYPE=REC,SUBTYPE=ALL,YEAR='.$year.',INST='.$docId.'',
+            'username' => TP_USERNAME,
+            'password' => TP_PASSWORD,            
+            'company'=>  '',
+            'department'=>  '',
+            'titleOfficer'=>  '',
+            'pages'=>  '',
+            'propertyOnly'=>  'FALSE',
+            'maxPageCount'=>  0,
+            'maxSizeInKB'=>  0,           	
+            'additionalInfo'=>  '',            
+            'customerRef'=>  '',
+            'fileType'=>  'PDF',
+        );
+
+        $request = GRANT_DEED_ENDPOINT.http_build_query($requestParams);
+
+        $opts = array(
+			"ssl"=>array(
+		        "verify_peer"=>false,
+		        "verify_peer_name"=>false,
+		    ),
+		);
+		$context = stream_context_create($opts);
+		$file = file_get_contents($request,false,$context);
+		$xmlData = simplexml_load_string($file);
+		$response = json_encode($xmlData);
+		$result = json_decode($response,TRUE);
+		
+		$responseStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
+		if($responseStatus == 'OK')
+		{
+			$base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && !empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
+
+			$bin = base64_decode($base64_data, true);		
+			
+			if (!is_dir('uploads/grant-deed')) {
+			    mkdir('./uploads/grant-deed', 0777, TRUE);
+			}
+			$pdfFilePath = './uploads/grant-deed/'.$fileNumber.'.pdf';
+			file_put_contents($pdfFilePath, $bin);
+		}
+		
 		echo trim($file);
 	}
 }

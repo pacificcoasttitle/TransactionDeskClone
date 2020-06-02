@@ -339,9 +339,9 @@
 										else if(res.status == 'success')
 										{
 											$('.result').html('<div class="alert alert-success">'+res.message+'</div>');
-											setTimeout(function () { 
+											/*setTimeout(function () { */
 						                    	window.location.replace(base_url+'order-submit/'+res.file_id)
-						                    }, 8000);
+						                    /*}, 8000);*/
 										}
 										if(res.mail_status != '')
 										{
