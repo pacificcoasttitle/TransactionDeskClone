@@ -195,6 +195,8 @@ class Home extends MX_Controller {
 				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
 
 				$place_order['Note']['APN'] = $apn;
+				$place_order['Note']['parcel_id'] = $apn;
+				$place_order['Note']['legal_description'] = $LegalDescription;
 
 				if (!empty($TitleOfficer)) {
 					$place_order['Note']['title_Officer'] = $TitleOfficer;
@@ -214,6 +216,8 @@ class Home extends MX_Controller {
 				if (!empty($escrow_details)) {
 					$place_order['Note']['escrow_details'] = $escrow_details;
 				}
+				
+				
 				
 				$order_data = json_encode($place_order);
 				$user_data = array();
