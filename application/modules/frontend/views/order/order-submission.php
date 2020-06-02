@@ -143,6 +143,7 @@
                             $year = date('Y',$time);
                             
                             $docId = str_replace($year, '', $instrumentNumber);
+                            $docId = (string)((int)($docId));
                             $file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : ''; 
                             $fips = isset($tp_data['fips']) && !empty($tp_data['fips']) ? $tp_data['fips'] : ''; 
                            
