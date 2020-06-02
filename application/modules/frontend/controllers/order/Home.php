@@ -315,6 +315,59 @@ class Home extends MX_Controller {
 						
 						$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
+						/* Buyers Agent */						
+						if(isset($BuyerAgentId) && !empty($BuyerAgentId))
+			        	{
+			        		$buyerData = array(
+								'name' => $BuyerAgentName,
+								'email_address' => $BuyerAgentEmailAddress,
+								'company' => $BuyerAgentCompany,
+								'telephone_no' => $BuyerAgentTelephone,
+								'status'=> 1
+							);
+							$condition = array(
+								'id' => $BuyerAgentId
+							);
+							
+							$buyeragentId = $this->agent_model->update($buyerData,$condition);
+			        	} else if (isset($agentDetailFlag)) {
+							$buyerData = array(
+								'name' => $BuyerAgentName,
+								'email_address' => $BuyerAgentEmailAddress,
+								'company' => $BuyerAgentCompany,
+								'telephone_no' => $BuyerAgentTelephone,
+								'status'=> 1
+							);
+							$buyeragentId = $this->agent_model->insert($buyerData);
+						}
+						/* Buyers Agent */
+
+						/* Listing Agent */					
+						if(isset($ListingAgentId) && !empty($ListingAgentId))
+			        	{
+			        		$listngAgentData = array(
+								'name' => $ListingAgentName,
+								'email_address' => $ListingAgentEmailAddress,
+								'company' => $ListingAgentCompany,
+								'telephone_no' => $ListingAgentTelephone,
+								'status'=> 1
+							);
+							$condition = array(
+								'id' => $ListingAgentId
+							);
+							$listingAgentId = $this->agent_model->update($listngAgentData,$condition);
+			        	} else if (isset($agentDetailFlag)) {
+			        		$listngAgentData = array(
+								'name' => $ListingAgentName,
+								'email_address' => $ListingAgentEmailAddress,
+								'company' => $ListingAgentCompany,
+								'telephone_no' => $ListingAgentTelephone,
+								'status'=> 1
+							);
+							$listingAgentId = $this->agent_model->insert($listngAgentData);
+						}
+						/* Listing Agent */
+
 						$propertyData = array(
 							'customer_id' => $customer_id,
 							'buyer_agent_id' => $BuyerAgentId,
@@ -369,59 +422,6 @@ class Home extends MX_Controller {
 						);
 
 						$orderId = $this->home_model->insert($orderData,'order_details');
-
-						/* Buyers Agent */						
-						if(isset($BuyerAgentId) && !empty($BuyerAgentId))
-			        	{
-			        		$buyerData = array(
-								'name' => $BuyerAgentName,
-								'email_address' => $BuyerAgentEmailAddress,
-								'company' => $BuyerAgentCompany,
-								'telephone_no' => $BuyerAgentTelephone,
-								'status'=> 1
-							);
-							$condition = array(
-								'id' => $BuyerAgentId
-							);
-							
-							$buyeragentId = $this->agent_model->update($buyerData,$condition);
-			        	} else if (isset($agentDetailFlag)) {
-							$buyerData = array(
-								'name' => $BuyerAgentName,
-								'email_address' => $BuyerAgentEmailAddress,
-								'company' => $BuyerAgentCompany,
-								'telephone_no' => $BuyerAgentTelephone,
-								'status'=> 1
-							);
-							$buyeragentId = $this->agent_model->insert($buyerData);
-						}
-						/* Buyers Agent */
-
-						/* Listing Agent */					
-						if(isset($ListingAgentId) && !empty($ListingAgentId))
-			        	{
-			        		$listngAgentData = array(
-								'name' => $ListingAgentName,
-								'email_address' => $ListingAgentEmailAddress,
-								'company' => $ListingAgentCompany,
-								'telephone_no' => $ListingAgentTelephone,
-								'status'=> 1
-							);
-							$condition = array(
-								'id' => $ListingAgentId
-							);
-							$listingAgentId = $this->agent_model->update($listngAgentData,$condition);
-			        	} else if (isset($agentDetailFlag)) {
-			        		$listngAgentData = array(
-								'name' => $ListingAgentName,
-								'email_address' => $ListingAgentEmailAddress,
-								'company' => $ListingAgentCompany,
-								'telephone_no' => $ListingAgentTelephone,
-								'status'=> 1
-							);
-							$listingAgentId = $this->agent_model->insert($listngAgentData);
-						}
-						/* Listing Agent */
 
 						/* Escrow Lender Details */					
 						if(isset($EscrowLenderId) && !empty($EscrowLenderId))

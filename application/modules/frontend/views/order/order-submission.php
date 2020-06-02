@@ -41,7 +41,7 @@
                                     }
                                     else
                                     {
-                                        echo 'No data found.';
+                                        echo 'Refer to grant deed below.';
                                     }
                                 ?>
                             </span>
@@ -58,7 +58,7 @@
                                     }
                                     else
                                     {
-                                        echo 'No data found.';
+                                        echo 'Refer to grant deed below.';
                                     }
                                 ?>
                             </span>
