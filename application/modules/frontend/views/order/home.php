@@ -4,6 +4,10 @@
         margin-left: 10%;
         margin-bottom: 0px !important;
     }
+	.progress {
+		height: auto;
+		margin-bottom: 0px;
+	}
 </style>
 
 <body>

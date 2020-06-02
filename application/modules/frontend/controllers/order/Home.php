@@ -83,10 +83,11 @@ class Home extends MX_Controller {
 				$Ease = isset($_POST["Ease"]) && !empty($_POST["Ease"]) ? 1 : 0;
 
 	        	$sendermessage      = $this->input->post('sendermessage');
-	        	$BuyerAgentId      = $this->input->post('BuyerAgentId');
+				$BuyerAgentId      = $this->input->post('BuyerAgentId');
+				$agentDetailFlag =  $this->input->post('add-agent-details');
 
 	        	$parties_email = $buyers_agent_details = $listing_agent_details = array();
-	        	if(isset($BuyerAgentId) && !empty($BuyerAgentId))
+	        	if((isset($BuyerAgentId) && !empty($BuyerAgentId)) || isset($agentDetailFlag))
 	        	{
 	        		$BuyerAgentName      = $this->input->post('BuyerAgentName');
 	        		$BuyerAgentEmailAddress      = $this->input->post('BuyerAgentEmailAddress');
@@ -96,11 +97,11 @@ class Home extends MX_Controller {
 	        		$parties_email[$BuyerAgentEmailAddress] = isset($_POST["BuyerAgentName"]) && !empty($_POST["BuyerAgentName"]) ? strip_tags(trim($_POST["BuyerAgentName"])) : '';
 
 	        		$buyers_agent_details = array('name'=>$BuyerAgentName, 'email'=>$BuyerAgentEmailAddress, 'telephone'=> $BuyerAgentTelephone,'company'=>$BuyerAgentCompany);
-	        	}
+	        	} 
 	        	
 	        	
 	        	$ListingAgentId      = $this->input->post('ListingAgentId');
-	        	if(isset($ListingAgentId) && !empty($ListingAgentId))
+	        	if((isset($ListingAgentId) && !empty($ListingAgentId)) || isset($agentDetailFlag))
 	        	{
 	        		$ListingAgentName      = $this->input->post('ListingAgentName');
 	        		$ListingAgentEmailAddress = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
