@@ -682,6 +682,7 @@ function download(filename, text) {
 
 function generateGrantDeed(fips,year,docId,fileNumber)
 {
+    $('#instrumentInfoFile').next('.loader').show();
     $.ajax({
         url: base_url+'generate-grant-deed',
         data: {
