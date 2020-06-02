@@ -83,10 +83,11 @@ class Home extends MX_Controller {
 				$Ease = isset($_POST["Ease"]) && !empty($_POST["Ease"]) ? 1 : 0;
 
 	        	$sendermessage      = $this->input->post('sendermessage');
-	        	$BuyerAgentId      = $this->input->post('BuyerAgentId');
+				$BuyerAgentId      = $this->input->post('BuyerAgentId');
+				$agentDetailFlag =  $this->input->post('add-agent-details');
 
 	        	$parties_email = $buyers_agent_details = $listing_agent_details = array();
-	        	if(isset($BuyerAgentId) && !empty($BuyerAgentId))
+	        	if((isset($BuyerAgentId) && !empty($BuyerAgentId)) || isset($agentDetailFlag))
 	        	{
 	        		$BuyerAgentName      = $this->input->post('BuyerAgentName');
 	        		$BuyerAgentEmailAddress      = $this->input->post('BuyerAgentEmailAddress');
@@ -96,11 +97,11 @@ class Home extends MX_Controller {
 	        		$parties_email[$BuyerAgentEmailAddress] = isset($_POST["BuyerAgentName"]) && !empty($_POST["BuyerAgentName"]) ? strip_tags(trim($_POST["BuyerAgentName"])) : '';
 
 	        		$buyers_agent_details = array('name'=>$BuyerAgentName, 'email'=>$BuyerAgentEmailAddress, 'telephone'=> $BuyerAgentTelephone,'company'=>$BuyerAgentCompany);
-	        	}
+	        	} 
 	        	
 	        	
 	        	$ListingAgentId      = $this->input->post('ListingAgentId');
-	        	if(isset($ListingAgentId) && !empty($ListingAgentId))
+	        	if((isset($ListingAgentId) && !empty($ListingAgentId)) || isset($agentDetailFlag))
 	        	{
 	        		$ListingAgentName      = $this->input->post('ListingAgentName');
 	        		$ListingAgentEmailAddress = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
@@ -384,7 +385,16 @@ class Home extends MX_Controller {
 							);
 							
 							$buyeragentId = $this->agent_model->update($buyerData,$condition);
-			        	}
+			        	} else if (isset($agentDetailFlag)) {
+							$buyerData = array(
+								'name' => $BuyerAgentName,
+								'email_address' => $BuyerAgentEmailAddress,
+								'company' => $BuyerAgentCompany,
+								'telephone_no' => $BuyerAgentTelephone,
+								'status'=> 1
+							);
+							$buyeragentId = $this->agent_model->insert($buyerData);
+						}
 						/* Buyers Agent */
 
 						/* Listing Agent */					
@@ -400,9 +410,17 @@ class Home extends MX_Controller {
 							$condition = array(
 								'id' => $ListingAgentId
 							);
-							
 							$listingAgentId = $this->agent_model->update($listngAgentData,$condition);
-			        	}
+			        	} else if (isset($agentDetailFlag)) {
+			        		$listngAgentData = array(
+								'name' => $ListingAgentName,
+								'email_address' => $ListingAgentEmailAddress,
+								'company' => $ListingAgentCompany,
+								'telephone_no' => $ListingAgentTelephone,
+								'status'=> 1
+							);
+							$listingAgentId = $this->agent_model->insert($listngAgentData);
+						}
 						/* Listing Agent */
 
 						/* Escrow Lender Details */					
@@ -718,6 +736,7 @@ class Home extends MX_Controller {
     	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
     	// $isEscrow = isset($_POST['is_escrow']) && !empty($_POST['is_escrow']) ? $_POST['is_escrow'] : 0;
 
+		$is_master_search = isset($_POST['is_master_search']) && !empty($_POST['is_master_search']) ? $_POST['is_master_search'] : 0;
 
     	$condition = array(
             'company_name' => $searchTerm,
@@ -730,7 +749,7 @@ class Home extends MX_Controller {
     		$condition['is_escrow'] = $isEscrow;
     	}
 
-    	$userDetails = $this->home_model->get_customers($condition);
+    	$userDetails = $this->home_model->get_customers($condition, $is_master_search);
     	$userInfo = array();
     	if(isset($userDetails) && !empty($userDetails))
     	{
