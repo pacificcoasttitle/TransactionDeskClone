@@ -802,7 +802,8 @@
 	            $.ajax({
 	                url: base_url+'home/getDetailsByName',
 	                data: {
-	                    term : request.term,//the value of the input is here                 
+						term : request.term,
+						is_master_search: 1           
 	                },
 	                type: "POST",
 	                dataType: "json",

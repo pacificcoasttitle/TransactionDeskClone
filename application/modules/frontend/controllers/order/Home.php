@@ -385,7 +385,16 @@ class Home extends MX_Controller {
 							);
 							
 							$buyeragentId = $this->agent_model->update($buyerData,$condition);
-			        	}
+			        	} else if (isset($agentDetailFlag)) {
+							$buyerData = array(
+								'name' => $BuyerAgentName,
+								'email_address' => $BuyerAgentEmailAddress,
+								'company' => $BuyerAgentCompany,
+								'telephone_no' => $BuyerAgentTelephone,
+								'status'=> 1
+							);
+							$buyeragentId = $this->agent_model->insert($buyerData);
+						}
 						/* Buyers Agent */
 
 						/* Listing Agent */					
@@ -401,9 +410,17 @@ class Home extends MX_Controller {
 							$condition = array(
 								'id' => $ListingAgentId
 							);
-							
 							$listingAgentId = $this->agent_model->update($listngAgentData,$condition);
-			        	}
+			        	} else if (isset($agentDetailFlag)) {
+			        		$listngAgentData = array(
+								'name' => $ListingAgentName,
+								'email_address' => $ListingAgentEmailAddress,
+								'company' => $ListingAgentCompany,
+								'telephone_no' => $ListingAgentTelephone,
+								'status'=> 1
+							);
+							$listingAgentId = $this->agent_model->insert($listngAgentData);
+						}
 						/* Listing Agent */
 
 						/* Escrow Lender Details */					
@@ -719,6 +736,7 @@ class Home extends MX_Controller {
     	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
     	// $isEscrow = isset($_POST['is_escrow']) && !empty($_POST['is_escrow']) ? $_POST['is_escrow'] : 0;
 
+		$is_master_search = isset($_POST['is_master_search']) && !empty($_POST['is_master_search']) ? $_POST['is_master_search'] : 0;
 
     	$condition = array(
             'company_name' => $searchTerm,
@@ -731,7 +749,7 @@ class Home extends MX_Controller {
     		$condition['is_escrow'] = $isEscrow;
     	}
 
-    	$userDetails = $this->home_model->get_customers($condition);
+    	$userDetails = $this->home_model->get_customers($condition, $is_master_search);
     	$userInfo = array();
     	if(isset($userDetails) && !empty($userDetails))
     	{

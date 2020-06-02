@@ -24,7 +24,7 @@ class Home_model extends CI_Model
         
     }
 
-    public function get_customers($params = array())
+    public function get_customers($params = array(), $is_master_search = 0)
     {
     	$table = $this->table;
 
@@ -69,10 +69,17 @@ class Home_model extends CI_Model
                 }elseif(array_key_exists("company_name", $params))
                 {
                 	$this->db->select("CONCAT(company_name, ' - ',email_address) AS value");
-                	$this->db->like('company_name', $params['company_name']);
+                    if ($is_master_search == 1 ) {
+                        $this->db->group_start()
+                            ->like('company_name', $params['company_name'])
+                            ->or_like("email_address", $params['company_name'])
+                            ->group_end();
+                    } else {
+                        $this->db->like('company_name', $params['company_name']);
+                    }
+                    
                 }
                 $query = $this->db->get();
-                
                 $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
             }
         }

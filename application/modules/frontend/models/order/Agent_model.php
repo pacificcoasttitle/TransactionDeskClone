@@ -68,4 +68,22 @@ class Agent_model extends CI_Model
         }
         return false;
     }
+
+    public function insert($data = array()) 
+    {
+        $table = $this->table;
+        if(!empty($data)){
+
+            if(!isset($data['created_at'])) {
+                $data['created_at'] = date("Y-m-d H:i:s");
+            }
+            
+            // Insert data
+            $insert = $this->db->insert($table, $data);
+            
+            // Return the status
+            return $insert?$this->db->insert_id():false;
+        }
+        return false;
+    }
 }
