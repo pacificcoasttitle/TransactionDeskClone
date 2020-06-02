@@ -333,7 +333,7 @@ class Home extends MX_Controller {
 								'id' => $BuyerAgentId
 							);
 							
-							$buyeragentId = $this->agent_model->update($buyerData,$condition);
+							$this->agent_model->update($buyerData,$condition);
 			        	} else if (isset($agentDetailFlag)) {
 							$buyerData = array(
 								'name' => $BuyerAgentName,
@@ -342,7 +342,7 @@ class Home extends MX_Controller {
 								'telephone_no' => $BuyerAgentTelephone,
 								'status'=> 1
 							);
-							$buyeragentId = $this->agent_model->insert($buyerData);
+							$BuyerAgentId = $this->agent_model->insert($buyerData);
 						}
 						/* Buyers Agent */
 
@@ -359,7 +359,7 @@ class Home extends MX_Controller {
 							$condition = array(
 								'id' => $ListingAgentId
 							);
-							$listingAgentId = $this->agent_model->update($listngAgentData,$condition);
+							$this->agent_model->update($listngAgentData,$condition);
 			        	} else if (isset($agentDetailFlag)) {
 			        		$listngAgentData = array(
 								'name' => $ListingAgentName,
@@ -368,7 +368,7 @@ class Home extends MX_Controller {
 								'telephone_no' => $ListingAgentTelephone,
 								'status'=> 1
 							);
-							$listingAgentId = $this->agent_model->insert($listngAgentData);
+							$ListingAgentId = $this->agent_model->insert($listngAgentData);
 						}
 						/* Listing Agent */
 
