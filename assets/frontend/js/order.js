@@ -679,3 +679,51 @@ function download(filename, text) {
 
     
 }
+
+function generateGrantDeed(fips,year,docId,fileNumber)
+{
+    $.ajax({
+        url: base_url+'generate-grant-deed',
+        data: {
+            fips: fips,
+            year: year,
+            docId: docId,
+            fileNumber: fileNumber,
+        },
+        dataType: "xml",
+        type: "POST"
+    })
+        .done(function(response, textStatus, jqXHR) {
+
+            var responseStatus = $(response).find('Documents:first').find('DocumentResponse:first').find('DocStatus:first').find('Msg:first').text();
+            
+            if (responseStatus == 'OK') 
+            {
+                var base64_data = $(response).find("Documents:first").find("DocumentResponse:first").find("Document:first").find("Body:first").find("Body:first").text();
+                var bin = atob(base64_data);                
+                if (navigator.msSaveBlob)
+                {
+                    var filename = "GrantDeed.pdf";
+                    download(filename, base64_data);
+                }
+                else
+                {
+                    download('GrantDeed.pdf', base64_data);
+                }
+                $('#instrumentInfoFile').next('.loader').hide();
+            }
+            else
+            {
+                $('#instrumentInfoFile').prev('.loader').hide();
+                $('#instrumentInfoFile').css('border','1px solid #000000');
+                $('#instrumentInfoFile').css('padding','15px');
+                $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
+            }
+        })
+        .fail(function(err) {
+            $('#instrumentInfoFile').prev('.loader').hide();
+            $('#instrumentInfoFile').css('border','1px solid #000000');
+            $('#instrumentInfoFile').css('padding','15px');
+            $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
+        });
+}

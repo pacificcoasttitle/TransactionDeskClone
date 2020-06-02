@@ -105,6 +105,7 @@ define("INSTRUMENT_SEARCH_SERVICE_TYPE",'TitlePoint.Geo.Document');
 define('TP_IMAGE_ENDPOINT', 'https://www.titlepoint.com/TitlePointServices/tpsgenerateimage.asmx/CreateRequest3?');
 define('TP_IMAGE_REQUEST_STATUS', 'https://www.titlepoint.com/TitlePointServices/tpsgenerateimage.asmx/GetRequestStatus?');
 define('TP_GENERATE_IMAGE', 'https://www.titlepoint.com/titlepointservices/TpsGenerateImage.asmx/GetGeneratedImage?');
+define("GRANT_DEED_ENDPOINT",'https://www.titlepoint.com/titlepointservices/TpsImage.asmx/GetDocumentsByParameters3?');
 
 /* Image API */
 /* End TP API */
