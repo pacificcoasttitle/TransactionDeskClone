@@ -1,3 +1,64 @@
+var counties = {
+    'Alameda': '06001',
+    'Alpine': '06003',
+    'Amador': '06005',
+    'Butte': '06007',
+    'Calaveras': '06009',
+    'Colusa': '06011',
+    'Contra Costa': '06013',
+    'Del Norte': '06015',
+    'El Dorado': '06017',
+    'Fresno': '06019',
+    'Glenn': '06021',
+    'Humboldt': '06023',
+    'Imperial': '06025',
+    'Inyo': '06027',
+    'Kern': '06029',
+    'Kings': '06031',
+    'Lake': '06033',
+    'Lassen': '06035',
+    'Los Angeles': '06037',
+    'Madera': '06039',
+    'Marin': '06041',
+    'Mariposa': '06043',
+    'Mendocino': '06045',
+    'Merced': '06047',
+    'Modoc': '06049',
+    'Mono': '06051',
+    'Monterey': '06053',
+    'Napa': '06055',
+    'Nevada': '06057',
+    'Orange': '06059',
+    'Placer': '06061',
+    'Plumas': '06063',
+    'Riverside': '06065',
+    'Sacramento': '06067',
+    'San Benito': '06069',
+    'San Bernardino': '06071',
+    'San Diego': '06073',
+    'San Francisco': '06075',
+    'San Joaquin': '06077',
+    'San Luis': '06079',
+    'San Mateo': '06081',
+    'Santa Barbara': '06083',
+    'Santa Clara': '06085',
+    'Santa Cruz': '06087',
+    'Shasta': '06089',
+    'Sierra': '06091',
+    'Siskiyou': '06093',
+    'Solano': '06095',
+    'Sonoma': '06097',
+    'Stanislaus': '06099',
+    'Sutter': '06101',
+    'Tehama': '06103',
+    'Trinity': '06105',
+    'Tulare': '06107',
+    'Tuolumne': '06109',
+    'Ventura': '06111',
+    'Yolo': '06113',
+    'Yuba': '06115',
+};
+
 $(document).ready(function() {
 	reportData = {};
 	apnInfo = {};
@@ -6,6 +67,9 @@ $(document).ready(function() {
 
 	autoComplete();
     $(document).on('click', '.search-property', getAddress);
+    $(document).on('click', '.search-apn', getAPN);
+    $(document).on('click', '.switch-apn-button', switchAPN);
+    $(document).on('click', '.switch-property-button', switchProperty);
 
     //customer no
     $('#getCustomerInfo').click(function(e){
@@ -799,3 +863,63 @@ function notifyAdmin()
         });
     }    
 }
+
+function switchAPN() 
+{
+    $('.pma-error').html('');
+    $('.pma-error').hide();
+    $('#apn').parent().removeClass('state-error');
+    $('#apn_county').parent().removeClass('state-error');
+    $('#address_container').hide();
+    $('#apn_container').show();
+}
+
+function switchProperty() 
+{
+    $('.pma-error').html('');
+    $('.pma-error').hide();
+    $('#property-search').parent().removeClass('state-error');
+    $('#address_container').show();
+    $('#apn_container').hide();       
+}
+
+function getAPN() 
+{
+    var apn = $.trim($('#apn').val());
+    var county = $.trim($('#apn_county').val());
+    if (apn == '') {
+        $('.pma-error').html('Please enter APN.');
+        $('.pma-error').show();
+        $('#apn').parent().addClass('state-error');
+        return;
+    } 
+    if (county == '') {
+        $('.pma-error').html('Please enter County Name.');
+        $('.pma-error').show();
+        $('#apn_county').parent().addClass('state-error');
+        return;
+    }
+    county = county.toUpperCase();
+    county = county.replace('COUNTY', '');
+    county = county.trim();
+    county = county.replace(/\w\S*/g, function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+    fips = counties[county];
+    if (fips) {
+        dataObj = {};
+        dataObj.apn = apn;
+        dataObj.FIPS = fips;
+        dataObj.ClientReference = '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
+        request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/ApnSearch?';
+        request += $.param(dataObj)
+        fetchReports('187');
+    } else {
+        $('.pma-error').html('Invalid County Name.');
+        $('.pma-error').show();
+        $('#apn_county').parent().addClass('state-error');
+    }
+}
+
+
+
