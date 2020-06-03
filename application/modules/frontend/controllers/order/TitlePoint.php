@@ -295,6 +295,7 @@ class TitlePoint extends MX_Controller {
 	            
 	            $instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber'] : '';
 	            $recordedDate = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate'] : '';
+	            $status = isset($result['Result']['Status']) && !empty($result['Result']['Status']) ? $result['Result']['Status'] : '';
 
 	            $tpData = 	array(
 					'legal_description' => $briefLegal,
@@ -302,6 +303,7 @@ class TitlePoint extends MX_Controller {
 					'cs4_instrument_no' => $instrumentNumber,
 					'cs4_recorded_date' => $recordedDate,
 					'fips' => $fips,
+					'cs4_result_id_status' => $status,
 				);
 
 		       	if ($this->session->has_userdata('tp_api_id')) 

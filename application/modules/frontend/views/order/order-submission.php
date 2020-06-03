@@ -131,33 +131,50 @@
                 <div class="col-md-12">
                     <h3>Grant Deed Information:</h3>
                 </div>
-                <div class="col-md-3"> 
-                    <div id="grantDeedInfoFile">
-                        <?php 
-                            $L_V_serviceId = isset($tp_data['cs4_service_id']) && !empty($tp_data['cs4_service_id']) ? $tp_data['cs4_service_id'] : '';
-                            $instrumentNumber = isset($tp_data['cs4_instrument_no']) && !empty($tp_data['cs4_instrument_no']) ? $tp_data['cs4_instrument_no'] : '';
-                            $state = isset($state) && !empty($state) ? $state : '';
-                            $county = isset($county) && !empty($county) ? $county : '';
-                            $recordedDate = isset($tp_data['cs4_recorded_date']) && !empty($tp_data['cs4_recorded_date']) ? $tp_data['cs4_recorded_date'] : '';
-                            $time = strtotime($recordedDate);
-                            $year = date('Y',$time);
-                            
-                            $docId = str_replace($year, '', $instrumentNumber);
-                            $docId = (string)((int)($docId));
-                            $file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : ''; 
-                            $fips = isset($tp_data['fips']) && !empty($tp_data['fips']) ? $tp_data['fips'] : ''; 
-                           
-                        ?>
-                        <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4,"<?php echo $file_number; ?>");'>Download L&V</a>
-                    </div>
-                    <div class="loader" style="display: none;"></div>
-                </div>
-                <div class="col-md-3">
-                    <div id="instrumentInfoFile">
-                        <a href="javascript:void(0);" onclick='generateGrantDeed("<?php echo $fips; ?>","<?php echo $year; ?>","<?php echo $docId; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
-                    </div>
-                    <div class="loader" style="display: none;"></div>
-                </div>
+                <?php 
+                    $cs4_result_id_status = isset($tp_data['cs4_result_id_status']) && !empty($tp_data['cs4_result_id_status']) ? $tp_data['cs4_result_id_status'] : '';
+
+                    if($cs4_result_id_status == 'Success')
+                    {
+                ?>
+                        <div class="col-md-3"> 
+                            <div id="grantDeedInfoFile">
+                                <?php 
+                                    $L_V_serviceId = isset($tp_data['cs4_service_id']) && !empty($tp_data['cs4_service_id']) ? $tp_data['cs4_service_id'] : '';
+                                    $instrumentNumber = isset($tp_data['cs4_instrument_no']) && !empty($tp_data['cs4_instrument_no']) ? $tp_data['cs4_instrument_no'] : '';
+                                    $state = isset($state) && !empty($state) ? $state : '';
+                                    $county = isset($county) && !empty($county) ? $county : '';
+                                    $recordedDate = isset($tp_data['cs4_recorded_date']) && !empty($tp_data['cs4_recorded_date']) ? $tp_data['cs4_recorded_date'] : '';
+                                    $time = strtotime($recordedDate);
+                                    $year = date('Y',$time);
+                                    
+                                    $docId = str_replace($year, '', $instrumentNumber);
+                                    $docId = (string)((int)($docId));
+                                    $file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : ''; 
+                                    $fips = isset($tp_data['fips']) && !empty($tp_data['fips']) ? $tp_data['fips'] : '';
+                                ?>
+                                <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4,"<?php echo $file_number; ?>");'>Download L&V</a>
+                            </div>
+                            <div class="loader" style="display: none;"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div id="instrumentInfoFile">
+                                <a href="javascript:void(0);" onclick='generateGrantDeed("<?php echo $fips; ?>","<?php echo $year; ?>","<?php echo $docId; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
+                            </div>
+                            <div class="loader" style="display: none;"></div>
+                        </div>
+                <?php
+                    }
+                    else
+                    {
+                ?>
+                        <div class="col-md-12">
+                            <h3>No grant deed available. Our customer service will look for it and contact you within X minutes.</h3>
+                        </div>
+                <?php
+                    }
+                ?>
+                
             </div>
           </div>
         </article>
