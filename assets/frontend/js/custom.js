@@ -885,6 +885,8 @@ function switchProperty()
 
 function getAPN() 
 {
+    isNewSearch=true;
+    event.preventDefault ? event.preventDefault() : event.returnValue = false;
     var apn = $.trim($('#apn_num').val());
     var county = $.trim($('#apn_county').val());
     if (apn == '') {

@@ -286,6 +286,7 @@
 													<option value="Richard Bohn">Richard Bohn</option>
 													<option value="Scott Smith">Scott Smith</option>
 													<option value="Sonia Flores">Sonia Flores</option>
+													<option value="Unknown">Unknown</option>
 												</select>
 												<i class="arrow double"></i>
 											</label>
@@ -295,10 +296,10 @@
 											<label class="field select">
 												<select id="TitleOfficer" name="TitleOfficer">
 													<option value="">Title Officer</option>
-													<option value="Albert Wassif">Albert Wassif</option>
 													<option value="Clive Virata">Clive Virata</option>
 													<option value="Eddie LasMarias">Eddie LasMarias</option>
 													<option value="Jim Jean">Jim Jean</option>
+													<option value="Rachel Barcena">Rachel Barcena</option>
 												</select>
 												<i class="arrow double"></i>
 											</label>
