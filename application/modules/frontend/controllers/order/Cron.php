@@ -375,8 +375,10 @@ class Cron extends MX_Controller {
 
         if(isset($response) && !empty($response))
         {
+            $insertCount = $updateCount = $rowCount = $notAddCount = 0;
             foreach ($response as $key => $value) 
             {
+                $rowCount++;
                 $display_name = '';
                 $status = 0;
                 if((isset($value['ProductTypeID']) && $value['ProductTypeID'] == 19) && (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3))
@@ -398,11 +400,40 @@ class Cron extends MX_Controller {
                    'display_name' => $display_name,
                    'status' => $status
                 );
-               $this->productType->insert($data);
+
+                $con = array(
+                    'where' => array(
+                        'transaction_type_id' => $value['TransactionTypeID'],
+                        'product_type_id' => $value['ProductTypeID']
+                    ),
+                    'returnType' => 'count'
+                );
+                $prevCount = $this->productType->getProductTypes($con);
+                if($prevCount > 0)
+                {
+                    $condition = array(
+                        'transaction_type_id' => $value['TransactionTypeID'],
+                        'product_type_id' => $value['ProductTypeID']
+                    );
+
+                    $update = $this->productType->update($data, $condition);
+                    if($update){
+                        $updateCount++;
+                    }
+                }
+                else
+                {
+                    $insert = $this->productType->insert($data);
+                    if($insert){
+                        $insertCount++;
+                    } 
+                }
+                $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                $successMsg = 'Product types imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';             
             }
         }
         
 
-        echo "Product types imported successfully.";
+        echo $successMsg;
     }
 }
