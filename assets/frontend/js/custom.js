@@ -472,6 +472,11 @@ $(document).ready(function() {
             $('#sales-loan-amount-fields').hide();
         }
     });
+
+    if($(".grant-deed-no-data").length)
+    {
+        notifyAdmin('Grant Deed Not Found');
+    }
 });
 
 function autoComplete() {
@@ -796,7 +801,7 @@ function displayError(responseStatus) {
             break;
         case 'NH':
             error = 'Valid address, but no hit';
-            notifyAdmin();
+            notifyAdmin('No Hit on property search');
             break;
         default:
             error = "Error"
@@ -835,7 +840,7 @@ function compileAPNRequest(dataobj) {
     fetchReports('187');
 }
 
-function notifyAdmin()
+function notifyAdmin(subject)
 {
     var customer_id = $("#CustomerId").val();
     var first_name = $("#OpenName").val();
@@ -856,7 +861,8 @@ function notifyAdmin()
                 street_address: $("#StreetAddress").val(),
                 city:$("#City").val(),
                 zipcode: $("#Zipcode").val(),
-                property: $('#property-full-address').val()
+                property: $('#property-full-address').val(),
+                subject: subject,
            },
            success: function (data) {
                 console.log(data);

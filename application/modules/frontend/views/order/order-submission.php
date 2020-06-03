@@ -148,8 +148,12 @@
                                     $time = strtotime($recordedDate);
                                     $year = date('Y',$time);
                                     
-                                    $docId = str_replace($year, '', $instrumentNumber);
-                                    $docId = (string)((int)($docId));
+                                    if(isset($instrumentNumber) && !empty($instrumentNumber))
+                                    {
+                                        $docId = str_replace($year, '', $instrumentNumber);
+                                        $docId = (string)((int)($docId));
+                                    }
+                                    
                                     $file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : ''; 
                                     $fips = isset($tp_data['fips']) && !empty($tp_data['fips']) ? $tp_data['fips'] : '';
                                 ?>
@@ -157,18 +161,34 @@
                             </div>
                             <div class="loader" style="display: none;"></div>
                         </div>
-                        <div class="col-md-3">
-                            <div id="instrumentInfoFile">
-                                <a href="javascript:void(0);" onclick='generateGrantDeed("<?php echo $fips; ?>","<?php echo $year; ?>","<?php echo $docId; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
+                    <?php
+                        if(isset($docId) && !empty($docId))
+                        {
+                    ?>
+                            <div class="col-md-3">
+                                <div id="instrumentInfoFile">
+                                    <a href="javascript:void(0);" onclick='generateGrantDeed("<?php echo $fips; ?>","<?php echo $year; ?>","<?php echo $docId; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
+                                </div>
+                                <div class="loader" style="display: none;"></div>
                             </div>
-                            <div class="loader" style="display: none;"></div>
-                        </div>
+                    <?php
+                        }
+                        else
+                        {
+                    ?>
+                            <span class="orderinfo1 grant-deed-no-data">
+                                <span style="padding-left: 30px;">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
+                            </span>
+                    <?php
+                        }
+                    ?>
+                        
                 <?php
                     }
                     else
                     {
                 ?>
-                        <span class="orderinfo1">
+                        <span class="orderinfo1 grant-deed-no-data">
                             <span style="padding-left: 30px;">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
                         </span>
                 <?php
@@ -238,22 +258,6 @@
 </html>
 <script type="text/javascript">
     var base_url = '<?php echo base_url(); ?>';
-    /*var address = "<?php // echo isset($address) && !empty($address) ? $address : ''; ?>";
-    var city = "<?php // echo isset($city) && !empty($city) ? $city : ''; ?>";
-    var apn = "<?php // echo isset($apn) && !empty($apn) ? $apn : '' ; ?>";
-    var state = "<?php // echo isset($state) && !empty($state) ? $state : ''; ?>";
-    var county = "<?php // echo isset($county) && !empty($county) ? $county : ''; ?>";
-    var fipCode = "<?php // echo isset($fipCode) && !empty($fipCode) ? $fipCode : ''; ?>";
-    var L_V_RequestId = "<?php // echo isset($L_V_RequestId) && !empty($L_V_RequestId) ? $L_V_RequestId : ''; ?>";
-    var L_V_CreateService = "<?php // echo isset($L_V_CreateService) && !empty($L_V_CreateService) ? $L_V_CreateService : ''; ?>";
-    var Tax_RequestId = "<?php // echo isset($Tax_RequestId) && !empty($Tax_RequestId) ? $Tax_RequestId : ''; ?>";
-    var Tax_CreateService = "<?php // echo isset($Tax_CreateService) && !empty($Tax_CreateService) ? $Tax_CreateService : ''; ?>";
-    var L_V_GetRequestSummary = "<?php // echo isset($L_V_GetRequestSummary) && !empty($L_V_GetRequestSummary) ? $L_V_GetRequestSummary : ''; ?>";
-    var L_V_ResultId = "<?php // echo isset($L_V_ResultId) && !empty($L_V_ResultId) ? $L_V_ResultId : ''; ?>";
-    var Tax_ResultId = "<?php // echo isset($Tax_ResultId) && !empty($Tax_ResultId) ? $Tax_ResultId : ''; ?>";
-    var Tax_GetRequestSummary = "<?php // echo isset($Tax_GetRequestSummary) && !empty($Tax_GetRequestSummary) ? $Tax_GetRequestSummary : ''; ?>";
-    var L_V_GetResultById = "<?php // echo isset($L_V_GetResultById) && !empty($L_V_GetResultById) ? $L_V_GetResultById : ''; ?>";
-    var Tax_GetResultById = "<?php // echo isset($Tax_GetResultById) && !empty($Tax_GetResultById) ? $Tax_GetResultById : ''; ?>";*/
 </script>
 
 <?php
