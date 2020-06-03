@@ -717,7 +717,7 @@ function parse187()
     $('#property-zip').val(zip);
     $('#property-state').val(state);
     $('#property-city').val(city);
-    $('#Property').val(address);
+    $('#property-search').val(address);
     $('#property-full-address').val(full_address.join(', ')).prop('readonly', true);
     $('#FullProperty').val(full_address.join(', ')).prop('readonly', true);
     $('#apn').val(apn).prop('readonly', true);
