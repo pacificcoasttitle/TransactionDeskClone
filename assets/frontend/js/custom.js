@@ -715,6 +715,9 @@ function parse187()
     var usecode = $(reportXML).find("PropertyProfile").find("UseCode").text();
     $('#property-type').val(usecode);
     $('#property-zip').val(zip);
+    $('#property-state').val(state);
+    $('#property-city').val(city);
+    $('#property-full-address').val(full_address.join(', ')).prop('readonly', true);
     $('#FullProperty').val(full_address.join(', ')).prop('readonly', true);
     $('#apn').val(apn).prop('readonly', true);
     $('#County').val(county).prop('readonly', true);
