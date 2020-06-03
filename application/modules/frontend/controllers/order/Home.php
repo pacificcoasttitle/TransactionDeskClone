@@ -837,6 +837,7 @@ class Home extends MX_Controller {
 			$city = $this->input->post('city');
 			$zipcode = $this->input->post('zipcode');
 			$property = $this->input->post('property');
+			$subject = $this->input->post('subject');
 
 			if((isset($customer_id) && !empty($customer_id)) || (isset($first_name) && !empty($first_name)))
 			{
@@ -844,7 +845,7 @@ class Home extends MX_Controller {
 				
 				$from_name = 'Pacific Coast Title Company';
 				$from_mail = 'ghernandez@pct.com';
-				$subject = 'Notification for No Hit on property search';
+				$subject = 'Notification for'.$subject;
 				$to = 'cs@pct.com';
 				
 				$this->load->helper('sendemail');

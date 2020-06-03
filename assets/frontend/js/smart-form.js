@@ -305,7 +305,10 @@
 
 									},
 									uploadProgress: function(event, position, total, percentComplete) {
-										
+										console.log(event);
+										console.log(position);
+										console.log(total);
+										console.log(percentComplete);
 										/*var percentVal = percentComplete + '%';
 										bar.width(percentVal);
 										percent.html(percentVal);*/
@@ -314,7 +317,7 @@
 					    	            $("#progressBar").animate({
 					    	                width: '' + percentValue + ''
 					    	            }, {
-					    	                duration: 5000,
+					    	                duration: 8000,
 					    	                easing: "linear",
 					    	                step: function (x) {
 					                        percentText = Math.round(x * 100 / percentComplete);
@@ -356,9 +359,10 @@
 										}
 										
 										swapButton(); 
-										$("#progressBar").stop();								
+																		
 										$('#progressDivId').show().delay(5000).fadeOut();
 										$('.form-footer').removeClass('progress');
+										$("#progressBar").stop();
 										$('.alert-success').show().delay(7000).fadeOut();
 										
 										$('.field').removeClass("state-error, state-success");
