@@ -120,28 +120,70 @@
 										</div><!-- .tagline -->
 									</div>
 
-									<div class="frm-row">
-										<div class="section colm colm10">
-											<label class="field prepend-icon">
-												<input type="text" name="Property" id="property-search"
-													class="gui-input" placeholder="Property Address">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-												<input type="hidden" name="property-state" id="property-state" value="">
-												<input type="hidden" name="property-city" id="property-city" value="">
-												<input type="hidden" name="property-fips" id="property-fips" value="">
-												<input type="hidden" name="property-full-address"
-													id="property-full-address" value="">
-												<input type="hidden" name="property-type" id="property-type" value="">
-												<input type="hidden" name="property-zip" id="property-zip" value="">
-											</label>
-										</div>
-										<div class="section colm colm2">
-											<!-- <button type="" data-btntext-sending="Searching..." class="button btn-primary">Search</button> -->
+									<input type="hidden" name="property-state" id="property-state" value="">
+									<input type="hidden" name="property-city" id="property-city" value="">
+									<input type="hidden" name="property-fips" id="property-fips" value="">
+									<input type="hidden" name="property-full-address"
+										id="property-full-address" value="">
+									<input type="hidden" name="property-type" id="property-type" value="">
+									<input type="hidden" name="property-zip" id="property-zip" value="">
 
-											<a class="button btn-primary search-property search-property-button"
-												href="javascript:void(0);" id="search-btn">Search</a>
+									<div id="address_container">
+										<div class="frm-row">
+											<div class="section colm colm12">
+												<label class="field prepend-icon">
+													<input type="text" name="Property" id="property-search"
+														class="gui-input" placeholder="Property Address">
+													<span class="field-icon"><i class="fa fa-user"></i></span>
+												</label>
+											</div>
+										</div>
+
+										<div class="frm-row">
+											<div class="section colm colm3">
+												<a class="button btn-primary search-property search-property-button"
+													href="javascript:void(0);" id="search-btn">Property Search</a>
+											</div>
+											<div class="section colm colm4">
+												<a class="button switch-apn-button search-property-button"
+													href="javascript:void(0);" id="switch-apn-btn">Switch To APN Search</a>
+											</div>
 										</div>
 									</div>
+
+									<div id="apn_container" style="display:none;">
+										<div class="frm-row">
+											<div class="section colm colm6">
+												<label class="field prepend-icon">
+													<input type="text" name="apn" id="apn"
+														class="gui-input" placeholder="APN">
+													<span class="field-icon"><i class="fa fa-user"></i></span>
+													
+												</label>
+											</div>
+
+											<div class="section colm colm6">
+												<label class="field prepend-icon">
+													<input type="text" name="apn_county" id="apn_county"
+														class="gui-input" placeholder="County">
+													<span class="field-icon"><i class="fa fa-envelope"></i></span>
+												</label>
+											</div>
+										</div>
+
+										<div class="frm-row">
+											<div class="section colm colm3">
+												<a class="button btn-primary search-apn search-apn-button"
+													href="javascript:void(0);" id="search-apn-btn">APN Search</a>
+											</div>
+											<div class="section colm colm5">
+												<a class="button switch-property-button search-apn-button"
+													href="javascript:void(0);" id="switch-property-btn">Switch To Property Search</a>
+											</div>
+										</div>
+									</div>
+									
+
 									<div class="pma-error alert alert-danger" style="display:none;"></div>
 									<div class="search-loader hidden"></div>
 
