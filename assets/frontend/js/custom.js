@@ -868,7 +868,7 @@ function switchAPN()
 {
     $('.pma-error').html('');
     $('.pma-error').hide();
-    $('#apn').parent().removeClass('state-error');
+    $('#apn_num').parent().removeClass('state-error');
     $('#apn_county').parent().removeClass('state-error');
     $('#address_container').hide();
     $('#apn_container').show();
@@ -885,12 +885,12 @@ function switchProperty()
 
 function getAPN() 
 {
-    var apn = $.trim($('#apn').val());
+    var apn = $.trim($('#apn_num').val());
     var county = $.trim($('#apn_county').val());
     if (apn == '') {
         $('.pma-error').html('Please enter APN.');
         $('.pma-error').show();
-        $('#apn').parent().addClass('state-error');
+        $('#apn_num').parent().addClass('state-error');
         return;
     } 
     if (county == '') {
