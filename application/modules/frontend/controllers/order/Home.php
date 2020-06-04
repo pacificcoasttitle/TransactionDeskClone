@@ -22,8 +22,7 @@ class Home extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$this->load->model('order/apiLogs');
     	if(isset($_POST) && !empty($_POST))
-    	{        
-    		// echo "<pre>"; print_r($_POST); exit;
+    	{
     		$this->form_validation->set_rules('OpenName', 'First Name', 'required',array('required'=> 'Enter your first name'));
     		$this->form_validation->set_rules('OpenLastName', 'Last Name', 'required',array('required'=> 'Enter your last name'));
     		$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
@@ -621,6 +620,14 @@ class Home extends MX_Controller {
 	        );
 			
 			$data['productType'] =  $this->productType->getProductTypes($condition);
+
+			$condition = array(
+                'where' => array(
+                    'status' => 1
+                )
+            );
+			$this->load->model('order/titleOfficer');
+			$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
 	        
 	        if($is_master)
 	        {
