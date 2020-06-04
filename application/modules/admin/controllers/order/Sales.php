@@ -1,0 +1,181 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Sales extends MX_Controller {
+
+	public function __construct()
+    {
+        parent::__construct();
+        $this->load->helper(
+            array('file', 'url','form')
+        );
+        $this->load->library('form_validation');
+        $this->load->model('order/sales_model');
+    }
+
+	public function index()
+	{
+        
+        $this->is_admin();
+		$data = array();
+        $data['title'] = 'PCT Order: Sales Rep.';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/sales/sales', $data);
+        $this->load->view('order/layout/footer', $data);
+	}
+
+    public function get_sales_rep_list()
+    {
+        $params = array();  $data = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $sales_rep_lists = $this->sales_model->get_sales_reps($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $sales_rep_lists = $this->sales_model->get_sales_reps($params);
+        }
+        
+        if (isset($sales_rep_lists['data']) && !empty($sales_rep_lists['data'])) {
+            foreach ($sales_rep_lists['data'] as $key => $value)  {
+                $nestedData=array();
+                $nestedData[] = $value['name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['telephone'];
+                
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $editOrderUrl = base_url().'order/admin/edit-sales-rep/'.$value['id'];
+                    $action = "<a href='".$editOrderUrl."' class='btn btn-action edit-agent'title ='Edit Sales Rep Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteSalesRep(".$value['id'].")' class='btn btn-action'  title='Delete Sales Rep'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $nestedData[] = $action;
+                }
+                $data[] = $nestedData;            
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $sales_rep_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $sales_rep_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function add_sales_rep()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Add Sales Rep.';
+        $salesRepData = array();
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('sales_rep_name', 'Sales Rep. Name', 'required', array('required'=> 'Please Enter Sales Rep. Name'));
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+            $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
+
+            if ($this->form_validation->run() == true) {
+                $salesRepData = array(
+                    'name' => $_POST['sales_rep_name'],
+                    'email_address' => $_POST['email_address'],
+                    'telephone' =>  $_POST['telephone'],
+                    'status' => 1
+                );
+                $insert = $this->sales_model->insert($salesRepData);
+                
+                if ($insert) {
+                    $data['success_msg'] = 'Sales Rep. added successfully.';
+                } else {
+                    $data['error_msg'] = 'Sales Rep. not added.';
+                } 
+                
+            } else {
+                $data['name_error_msg'] = form_error('sales_rep_name');
+                $data['email_error_msg'] = form_error('email_address');
+                $data['phone_error_msg'] = form_error('telephone');
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/sales/add_sales_rep', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function edit_sales_rep()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Edit Sales Rep.';
+        $id = $this->uri->segment('4');
+        
+        if (isset($id) && !empty($id)) {
+            if (isset($_POST) && !empty($_POST)) {
+                
+                $this->form_validation->set_rules('sales_rep_name', 'Sales Rep. Name', 'required', array('required'=> 'Please Enter Sales Rep. Name'));
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+                $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
+
+                if($this->form_validation->run() == true) {
+                    $salesRepData = array(
+                        'name' => $_POST['sales_rep_name'],
+                        'email_address' => $_POST['email_address'],
+                        'telephone' =>  $_POST['telephone'],
+                        'status' => 1
+                    );
+                    $condition = array('id' => $id);
+                    $update = $this->sales_model->update($salesRepData, $condition);
+                        
+                    if ($update) {
+                        $data['success_msg'] = 'Sales Rep. updated successfully.';
+                    } else {
+                        $data['error_msg'] = 'Error occurred while updating Sales Rep.';
+                    }
+                } else {
+                    $data['name_error_msg'] = form_error('sales_rep_name');
+                    $data['email_error_msg'] = form_error('email_address');
+                    $data['phone_error_msg'] = form_error('telephone');
+                }
+            }
+            $con = array('id' => $id);
+            $sales_rep_info = $this->sales_model->getSalesRep($con);
+        } else {
+            redirect('order/admin/sales-rep');
+        }
+
+        $data['sales_rep_info'] = $sales_rep_info;
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/sales/edit_sales_rep', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function delete_sales_rep()
+    {
+        $this->is_admin();
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+        if ($id) {
+            $salesRepData = array('status' => 0);
+            $condition = array('id' => $id);
+            $update = $this->sales_model->update($salesRepData, $condition);
+            if($update) {
+                $successMsg = 'Sales Rep. deleted successfully.';
+                $response = array('status' =>'success', 'message' => $successMsg);
+            }
+        } else {
+            $msg = 'Sales Rep. ID is required.';
+            $response = array('status' => 'error', 'message' => $msg);
+        }
+        echo json_encode($response);
+    }
+
+    public function is_admin()
+    {
+        $userdata = $this->session->userdata('admin');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
+
+        } else {
+            redirect(base_url().'order/admin');
+        }
+    }
+}

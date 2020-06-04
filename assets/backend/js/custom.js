@@ -1,8 +1,7 @@
 var customer_list ='';
 var agent_list ='';
 $(document).ready(function () {
-
-    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length)
+    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length)
     {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
         
@@ -40,7 +39,7 @@ $(document).ready(function () {
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-lenders-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
-                else
+                else if(this.context[0].sTableId == 'tbl-agents-listing')
                 {
                     var jsonResult = $.ajax({
                         type: "POST",
@@ -55,6 +54,38 @@ $(document).ready(function () {
                     var data = jsonResult.responseText;
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-agents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+                else if(this.context[0].sTableId == 'tbl-sales-rep-listing')
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"order/admin/get-sales-rep-list",
+                        data: {
+                            keyword: $('#tbl-sales-rep-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-sales-rep-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+                else 
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"order/admin/get-title-officer-list",
+                        data: {
+                            keyword: $('#tbl-title-officer-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-title-officer-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
                 
             }
@@ -387,6 +418,149 @@ $(document).ready(function () {
             }            
         });
     }
+
+    if ($('#tbl-sales-rep-listing').length) 
+    {
+        sales_rep_list = $('#tbl-sales-rep-listing').DataTable({
+           "paging": true,
+            "lengthChange": false,
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-sales-rep-data').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Sales Rep.',
+                    exportOptions: {
+                        columns: [0, 1, 2],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                return (column === 0 || column === 1|| column === 2) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"order/admin/get-sales-rep-list", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-sales-rep-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-sales-rep-listing_processing").css("display", "none");
+
+                }
+            }            
+        });
+    }
+
+    if ($('#tbl-title-officer-listing').length) 
+    {
+        title_officer_list = $('#tbl-title-officer-listing').DataTable({
+           "paging": true,
+            "lengthChange": false,
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-title-officer-data').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if(export_type)
+                    {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Title Officers',
+                    exportOptions: {
+                        columns: [0, 1, 2],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                return (column === 0 || column === 1|| column === 2) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"order/admin/get-title-officer-list", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-title-officer-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-title-officer-listing_processing").css("display", "none");
+
+                }
+            }            
+        });
+    }
     
 });
 
@@ -412,7 +586,6 @@ function deleteCustomer(id)
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#customer_success_msg").offset().top
                     }, 1000);
-
                     customer_list.ajax.reload( null, false );
                     setTimeout(function () {
                         $('#customer_success_msg').html('').hide();
@@ -491,6 +664,114 @@ function deleteAgent(id)
 
                 setTimeout(function () {
                     $('#agent_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}
+
+function deleteSalesRep(id)
+{
+	if (id=='') {
+        alert('Sales Rep. ID is required.');
+        return false;
+    }
+
+    var ready = confirm("Are you sure want to delete?");
+
+    if (ready) {
+        $.ajax({
+            url: base_url+"admin/order/sales/delete_sales_rep",
+            method: "POST",
+            data : {
+                id: id
+            },
+            success: function(data) {
+            	var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#sales_rep_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#sales_rep_success_msg").offset().top
+                    }, 1000);
+                    sales_rep_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#sales_rep_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#sales_rep_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#sales_rep_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#sales_rep_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#sales_rep_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#sales_rep_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#sales_rep_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}
+
+function deleteTitleOfficer(id)
+{
+	if (id=='') {
+        alert('Title Officer ID is required.');
+        return false;
+    }
+
+    var ready = confirm("Are you sure want to delete?");
+
+    if (ready) {
+        $.ajax({
+            url: base_url+"admin/order/title/delete_title_officer",
+            method: "POST",
+            data : {
+                id: id
+            },
+            success: function(data) {
+            	var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#title_officer_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#title_officer_success_msg").offset().top
+                    }, 1000);
+                    title_officer_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#title_officer_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#title_officer_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#title_officer_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#title_officer_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#title_officer_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#title_officer_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#title_officer_error_msg').html('').hide();
                 }, 4000);
             }
         })
