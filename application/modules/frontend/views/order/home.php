@@ -296,10 +296,17 @@
 											<label class="field select">
 												<select id="TitleOfficer" name="TitleOfficer">
 													<option value="">Title Officer</option>
-													<option value="Clive Virata">Clive Virata</option>
-													<option value="Eddie LasMarias">Eddie LasMarias</option>
-													<option value="Jim Jean">Jim Jean</option>
-													<option value="Rachel Barcena">Rachel Barcena</option>
+													<?php 
+														if(isset($titleOfficer) && !empty($titleOfficer))
+														{
+															foreach ($titleOfficer as $key => $value) 
+															{
+													?>
+																<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+													<?php
+															}
+														}
+													?>
 												</select>
 												<i class="arrow double"></i>
 											</label>
@@ -307,16 +314,6 @@
 									</div><!-- end frm-row section -->
 
 									<div class="frm-row">
-										<!-- <div class="section colm colm6">
-                                                    <label class="field select">
-                                                        <select id="TransactionTypeID" name="TransactionTypeID">
-                                                            <option value="">Select Transaction Type</option>
-                                                            <option value="3">Residential</option>
-                                                            <option value="2">Commercial</option>
-                                                        </select>
-                                                        <i class="arrow double"></i>
-                                                    </label>
-                                                </div> -->
 										<div class="section colm colm12">
 											<label class="field select">
 												<select id="ProductTypeID" name="ProductTypeID">

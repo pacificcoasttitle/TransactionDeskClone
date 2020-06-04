@@ -15,6 +15,7 @@ class Dashboard extends MX_Controller {
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
+        $this->load->model('order/titleOfficer');
 		$this->order->is_user();
 	}
 	
@@ -673,6 +674,15 @@ class Dashboard extends MX_Controller {
     public function proposed_insured()
     {
     	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+    	$condition = array(
+            'where' => array(
+                'status' => 1
+            )
+        );
+		
+		$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
+
+    	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $this->load->view('layout/head_dashboard',$data);
         $this->load->view('order/proposed_insured');
     }
@@ -747,18 +757,15 @@ class Dashboard extends MX_Controller {
 		$is_title_officer = 0;
 		if(isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer']))
 		{
-			$this->load->model('order/titleOfficer');
 			$condition = array(
-                'where' => array(
-                    'name' => $orderDetails['title_officer']
-                )
+                'id' => $orderDetails['title_officer']
             );
 			
 			$titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
-			// echo "<pre>"; print_r($titleOfficerDetails); exit;
-			$data['title_officer'] = $orderDetails['title_officer'];
-			$data['title_officer_email'] = isset($titleOfficerDetails[0]['email_address']) && !empty($titleOfficerDetails[0]['email_address']) ? $titleOfficerDetails[0]['email_address'] : '';
-			$data['title_officer_phone'] = isset($titleOfficerDetails[0]['phone']) && !empty($titleOfficerDetails[0]['phone']) ? $titleOfficerDetails[0]['phone'] : '';
+			
+			$data['title_officer'] = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';;
+			$data['title_officer_email'] = isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address']) ? $titleOfficerDetails['email_address'] : '';
+			$data['title_officer_phone'] = isset($titleOfficerDetails['phone']) && !empty($titleOfficerDetails['phone']) ? $titleOfficerDetails['phone'] : '';
 			
 			$is_title_officer = 1;
 		}
