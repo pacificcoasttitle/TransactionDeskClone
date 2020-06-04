@@ -189,9 +189,9 @@
                         else
                         {
                     ?>
-                            <span class="orderinfo1 grant-deed-no-data">
-                                <span style="padding-left: 30px;">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
-                            </span>
+                            <div class="col-md-6 grant-deed-no-data">
+                                <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
+                            </div>
                     <?php
                         }
                     ?>
