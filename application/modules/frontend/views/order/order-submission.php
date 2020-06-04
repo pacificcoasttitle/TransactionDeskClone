@@ -133,7 +133,7 @@
                 </div>
                 <?php 
                     $cs4_result_id_status = isset($tp_data['cs4_result_id_status']) && !empty($tp_data['cs4_result_id_status']) ? $tp_data['cs4_result_id_status'] : '';
-
+                    $cs4_result_id_status = 'Success';
                     if($cs4_result_id_status == 'Success')
                     {
                 ?>
@@ -145,12 +145,25 @@
                                     $state = isset($state) && !empty($state) ? $state : '';
                                     $county = isset($county) && !empty($county) ? $county : '';
                                     $recordedDate = isset($tp_data['cs4_recorded_date']) && !empty($tp_data['cs4_recorded_date']) ? $tp_data['cs4_recorded_date'] : '';
-                                    $time = strtotime($recordedDate);
-                                    $year = date('Y',$time);
-                                    
+    
                                     if(isset($instrumentNumber) && !empty($instrumentNumber))
                                     {
-                                        $docId = str_replace($year, '', $instrumentNumber);
+                                        $count = substr_count($instrumentNumber, '-');
+                                        if(isset($count) && !empty($count))
+                                        {
+                                            $detailDocInfo = explode('-', $instrumentNumber);
+                                            
+                                            $docId = isset($detailDocInfo['1']) && !empty($detailDocInfo['1']) ? $detailDocInfo['1'] : '';   
+                                        }
+                                        else
+                                        {
+                                            if(isset($recordedDate) && !empty($recordedDate))
+                                            {
+                                                $time = strtotime($recordedDate);
+                                                $year = date('Y',$time);
+                                            }
+                                            $docId = str_replace($year, '', $instrumentNumber);
+                                        }
                                         $docId = (string)((int)($docId));
                                     }
                                     
