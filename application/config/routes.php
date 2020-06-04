@@ -160,6 +160,14 @@ $route['order/admin/agents'] = 'admin/order/agent/index';
 $route['order/admin/edit-agent/:num'] = 'admin/order/agent/edit';
 $route['order/admin/import-agents'] = 'admin/order/agent/import_agents';
 $route['order/admin/logout'] = 'admin/order/home/logout';
+$route['order/admin/sales-rep'] = 'admin/order/sales/index';
+$route['order/admin/get-sales-rep-list'] = 'admin/order/sales/get_sales_rep_list';
+$route['order/admin/add-sales-rep'] = 'admin/order/sales/add_sales_rep';
+$route['order/admin/edit-sales-rep/:num'] = 'admin/order/sales/edit_sales_rep';
+$route['order/admin/title-officers'] = 'admin/order/title/index';
+$route['order/admin/get-title-officer-list'] = 'admin/order/title/get_title_officer_list';
+$route['order/admin/add-title-officer'] = 'admin/order/title/add_title_officer';
+$route['order/admin/edit-title-officer/:num'] = 'admin/order/title/edit_title_officer';
 
 
 
