@@ -262,32 +262,19 @@
 											<label class="field select">
 												<select id="SalesRep" name="SalesRep">
 													<option value="">Sales Rep...</option>
-													<option value="Angeline Ahn">Angeline Ahn</option>
-													<option value="Bethany Cummins">Bethany Cummins</option>
-													<option value="Cibeli Tregembo">Cibeli Tregembo</option>
-													<option value="Daphne Alt">Daphne Alt</option>
-													<option value="David Gomez">David Gomez</option>
-													<option value="Edgar Rivas">Edgar Rivas</option>
-													<option value="Eddie Castro">Eddie Castro</option>
-													<option value="Evelyn Lindgren">Evelyn Lindgren</option>
-													<option value="Felicia Pantoja">Felicia Pantoja</option>
-													<option value="Hai Tran">Hai Tran</option>
-													<option value="Hugo Lopez">Hugo Lopez</option>
-													<option value="Justin Nouri">Justin Nouri</option>
-													<option value="Kim Buchok">Kim Buchok</option>
-													<option value="Linda Ruiz">Linda Ruiz</option>
-													<option value="Lisa Lee">Lisa Lee</option>
-													<option value="Lou Morreale">Lou Morreale</option>
-													<option value="Malay Wadhwa">Malay Wadhwa</option>
-													<option value="Max Galindo">Max Galindo</option>
-													<option value="Meza Group">Meza Group</option>
-													<option value="Michael Nouri">Michael Nouri</option>
-													<option value="Mike Johnson">Mike Johnson</option>
-													<option value="Nelson Torres">Nelson Torres</option>
-													<option value="Richard Bohn">Richard Bohn</option>
-													<option value="Scott Smith">Scott Smith</option>
-													<option value="Sonia Flores">Sonia Flores</option>
-													<option value="Unknown">Unknown</option>
+													<?php
+														if(isset($salesRep) && !empty($salesRep))
+														{
+															foreach ($salesRep as $k => $v) 
+															{
+													?>
+																<option value="<?php
+																 echo $v['id']; ?>"><?php
+																 echo $v['name']; ?></option>
+													<?php
+															}
+														} 
+													?>
 												</select>
 												<i class="arrow double"></i>
 											</label>

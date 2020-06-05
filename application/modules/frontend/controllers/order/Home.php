@@ -627,7 +627,11 @@ class Home extends MX_Controller {
                 )
             );
 			$this->load->model('order/titleOfficer');
+			$this->load->model('order/salesRep');
+
 			$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
+
+			$data['salesRep'] = $this->salesRep->getSalesRepDetails($condition);
 	        
 	        if($is_master)
 	        {
