@@ -21,6 +21,7 @@ class Home extends MX_Controller {
     {
 		$userdata = $this->session->userdata('user');
 		$this->load->model('order/apiLogs');
+		$this->load->model('order/titleOfficer');
     	if(isset($_POST) && !empty($_POST))
     	{
     		$this->form_validation->set_rules('OpenName', 'First Name', 'required',array('required'=> 'Enter your first name'));
@@ -71,6 +72,16 @@ class Home extends MX_Controller {
 	        	$SecondaryOwner      = $this->input->post('SecondaryOwner');
 	        	$SalesRep      = $this->input->post('SalesRep');
 	        	$TitleOfficer      = $this->input->post('TitleOfficer');
+
+	        	/*Fetch details of Title Officer */
+	        	$condition = array(
+	                'id' => $TitleOfficer
+	            );
+				
+				$titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
+				$titleOfficerName = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';				
+				/*Fetch details of Title Officer */
+				
 	        	$LoanAmount      = $this->input->post('loanAmount');
 	        	$SalesAmount      = $this->input->post('salesAmount');
 	        	$primaryBorrower      = $this->input->post('primaryBorrower');
@@ -198,7 +209,7 @@ class Home extends MX_Controller {
 				$place_order['Note']['legal_description'] = $LegalDescription;
 
 				if (!empty($TitleOfficer)) {
-					$place_order['Note']['title_Officer'] = $TitleOfficer;
+					$place_order['Note']['title_Officer'] = $titleOfficerName;
 				}
 				if (!empty($SalesRep)) {
 					$place_order['Note']['sales_rep'] = $SalesRep;
@@ -284,7 +295,7 @@ class Home extends MX_Controller {
 								'PrimaryOwner'=> $PrimaryOwner,
 								'SecondaryOwner'=> $SecondaryOwner,
 								'SalesRep'=> $SalesRep,
-								'TitleOfficer'=> $TitleOfficer,
+								'TitleOfficer'=> $titleOfficerName,
 								'ProductType'=> $ProductType,
 								'SalesAmount'=> $SalesAmount,
 								'LoanAmount'=> $LoanAmount,
@@ -485,7 +496,7 @@ class Home extends MX_Controller {
 							       'PartnerRole'=> $PartnerRole,
 							       'Property'=> $Property,
 							       'SalesRep'=> $SalesRep,
-							       'TitleOfficer'=> $TitleOfficer,
+							       'TitleOfficer'=> $titleOfficerName,
 							       'LoanAmount'=> $LoanAmount,
 							       'sendermessage'=> $sendermessage,
 							       'poweredby_url'=> POWEREDBY_URL,
@@ -626,7 +637,7 @@ class Home extends MX_Controller {
                     'status' => 1
                 )
             );
-			$this->load->model('order/titleOfficer');
+			
 			$this->load->model('order/salesRep');
 
 			$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
