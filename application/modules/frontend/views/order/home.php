@@ -172,7 +172,7 @@
 										</div>
 
 										<div class="frm-row">
-											<div class="section colm colm3">
+											<div class="section colm colm3" style="width:auto !important;">
 												<a class="button btn-primary search-apn search-apn-button"
 													href="javascript:void(0);" id="search-apn-btn">APN Search</a>
 											</div>
