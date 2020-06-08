@@ -454,14 +454,16 @@ $(document).ready(function() {
     /* Escrow autocomplete */
 
     $('#ProductTypeID').change(function() {
+        var selectedText = $(this).find('option:selected').text();
+       
         $('#sales-loan-amount-fields').show();
-        if($(this).val() == 19 || $(this).val() == 33)
+        if(selectedText.includes("Loan"))
         {
             $('#sales-loan-amount-fields #salesAmount').hide();
             $('#sales-loan-amount-fields #primaryBorrower').hide();
             $('#sales-loan-amount-fields #secondaryBorrower').hide();
         }
-        else if($(this).val() == 20 || $(this).val() == 32)
+        else if(selectedText.includes("Sale"))
         {
             $('#sales-loan-amount-fields #salesAmount').show();
             $('#sales-loan-amount-fields #primaryBorrower').show();
@@ -471,6 +473,7 @@ $(document).ready(function() {
         {
             $('#sales-loan-amount-fields').hide();
         }
+        $('#ProductType').val(selectedText);
     });
 
     if($(".grant-deed-no-data").length)
@@ -945,7 +948,7 @@ function getProductTypes(county,state)
        url: base_url+'get-product-types',
        type: "POST",//type of posting the data
        data: {
-            county: county,
+            county: 'Alpine',
             state: state,
        },
        success: function (data) {

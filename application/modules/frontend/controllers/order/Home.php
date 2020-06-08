@@ -84,6 +84,7 @@ class Home extends MX_Controller {
 				
 	        	$LoanAmount      = $this->input->post('loanAmount');
 	        	$SalesAmount      = $this->input->post('salesAmount');
+	        	$ProductTypeTxt      = $this->input->post('ProductType');
 	        	$primaryBorrower      = $this->input->post('primaryBorrower');
 	        	$secondaryBorrower      = $this->input->post('secondaryBorrower');
 	        	$TransactionTypeID = isset($_POST["TransactionTypeID"]) && !empty($_POST["TransactionTypeID"]) ? $_POST["TransactionTypeID"] : 3;
@@ -175,7 +176,7 @@ class Home extends MX_Controller {
 
 				$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>$PropertyAddress, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
 
-				if($ProductTypeID == '19' || $ProductTypeID == '33')
+				/*if($ProductTypeID == '19' || $ProductTypeID == '33')
 				{
 					$place_order['Buyers'][] = $legalEntity;
 					$ProductType = 'Residential: Loan: Refinance';
@@ -193,7 +194,27 @@ class Home extends MX_Controller {
 					$place_order['Buyers'][] = $borrowers;
 					$place_order['SalesPrice'] = $SalesAmount;
 					$ProductType = 'Residential: Sales: Purchase';
-				}		
+				}*/
+
+				if(strpos($ProductTypeTxt, 'Loan') === true)
+				{
+					$place_order['Buyers'][] = $legalEntity;
+					$ProductType = 'Residential: Loan: Refinance';
+				}
+				elseif(strpos($ProductTypeTxt, 'Sale') === true)
+				{
+					$borrowerName = explode(' ', $primaryBorrower);
+					$borrowerLastName = end($borrowerName);
+					$borrowerPrimaryName = array_slice($borrowerName, 0, -1);
+					$borrowerFirstName = implode(" ", $borrowerPrimaryName);
+					
+					$borrowers = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$borrowerFirstName,'Last'=>$borrowerLastName));
+
+					$place_order['Sellers'][] = $legalEntity;
+					$place_order['Buyers'][] = $borrowers;
+					$place_order['SalesPrice'] = $SalesAmount;
+					$ProductType = 'Residential: Sales: Purchase';
+				}
 				
 				$place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID'=>$ProductTypeID);
 
