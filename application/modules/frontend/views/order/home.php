@@ -306,15 +306,15 @@
 												<select id="ProductTypeID" name="ProductTypeID">
 													<option value="">Select Product</option>
 												<?php
-													if(isset($productType) && !empty($productType))
+													/*if(isset($productType) && !empty($productType))
 													{
 														foreach ($productType as $key => $value) 
-														{
+														{*/
 												?>
-															<option value="<?php echo $value['product_type_id']; ?>"><?php echo $value['display_name'];  ?></option>
+															<!-- <option value="<?php // echo $value['product_type_id']; ?>"><?php // echo $value['display_name'];  ?></option> -->
 												<?php
-														}
-													} 
+														/*}
+													} */
 												?>
 												</select>
 												<i class="arrow double"></i>

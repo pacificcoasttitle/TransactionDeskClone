@@ -51,7 +51,7 @@ class Cron extends MX_Controller {
 
         $this->db->simple_query('SET SESSION group_concat_max_len=150000');
         $this->db->select('GROUP_CONCAT(file_id) as file_ids');
-        $this->db->from('order_details');	
+        $this->db->from('order_details');   
         $this->db->where('customer_id', $userdata['id']);
         $this->db->group_by('customer_id'); 
         $query = $this->db->get();
@@ -168,11 +168,14 @@ class Cron extends MX_Controller {
     {
         $login =  $userdata['email'];
         
-        if ($userdata['email'] == 'ghernandez@pct.com') {
+        if ($login == 'ghernandez@pct.com') {
             $password= 'Alpha637#';
-        } else {
+        }elseif ($login == 'teamrestine@eatonescrow.com') {
             $password= 'Pacific12';
+        } else {
+            $password= 'Pacific2';
         }
+
         $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
@@ -356,6 +359,8 @@ class Cron extends MX_Controller {
 
     public function import_product_types()
     {
+        ini_set('max_execution_time', 0); 
+        ini_set('memory_limit','2048M');
         if(empty($user)) 
         {
             $userdata = $this->session->userdata('user');
@@ -365,74 +370,95 @@ class Cron extends MX_Controller {
             $userdata = $user;
             $userdata['email'] = $userdata['email_address'];
         }
-        
+
+        $counties = array('Alameda','Alpine','Amador','Butte','Calaveras','Colusa','Contra Costa','Del Norte','El Dorado','Fresno','Glenn','Humboldt','Imperial','Inyo','Kern','Kings','Lake','Lassen','Los Angeles','Madera','Marin','Mariposa','Mendocino','Merced','Modoc','Mono','Monterey','Napa','Nevada','Orange','Placer','Plumas','Riverside','Sacramento','San Benito','San Bernardino','San Diego','San Francisco','San Joaquin','San Luis','San Mateo','Santa Barbara','Santa Clara','Santa Cruz','Shasta','Sierra','Siskiyou','Solano','Sonoma','Stanislaus','Sutter','Tehama','Trinity','Tulare','Tuolumne','Ventura','Yolo','Yuba');
+
         $endPoint = 'types/products';
 
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, array(), array(), 0, 0);
-        $result = $this->make_request('GET', $endPoint, '',$userdata);
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, array(), $result, 0, $logid);
-        $response = json_decode($result,TRUE);
-
-        if(isset($response) && !empty($response))
+        if(isset($counties) && !empty($counties))
         {
             $insertCount = $updateCount = $rowCount = $notAddCount = 0;
-            foreach ($response as $key => $value) 
+            foreach ($counties as $k => $v) 
             {
-                $rowCount++;
-                $display_name = '';
-                $status = 0;
-                if((isset($value['ProductTypeID']) && $value['ProductTypeID'] == 19) && (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3))
-                {
-                    $display_name = 'Loan: Refinance';
-                    $status = 1;
-                }
-                elseif((isset($value['ProductTypeID']) && $value['ProductTypeID'] == 20) && (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3))
-                {
-                    $display_name = 'Sales: Purchase';
-                    $status = 1;
-                }
+                $requestParams = json_encode(array('State'=>'CA','County'=>$v));
+                
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, $requestParams, array(), 0, 0);
+                $result = $this->make_request('GET', $endPoint, $requestParams,$userdata);
+                
+                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, array(), $result, 0, $logid);
+                $response = json_decode($result,TRUE);
 
-                $data = array(
-                    'transaction_type' =>trim($value['TransactionType']),
-                    'transaction_type_id' => trim($value['TransactionTypeID']),
-                    'product_type' => trim($value['ProductType']),
-                    'product_type_id' => trim($value['ProductTypeID']),
-                   'display_name' => $display_name,
-                   'status' => $status
-                );
+                if(isset($response) && !empty($response))
+                {                   
+                    foreach ($response as $key => $value) 
+                    {
+                        $rowCount++;
+                        // $display_name = '';
+                        $status = 0;
+                        /*if((isset($value['ProductTypeID']) && $value['ProductTypeID'] == 19) && (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3))
+                        {
+                            $display_name = 'Loan: Refinance';
+                            $status = 1;
+                        }
+                        elseif((isset($value['ProductTypeID']) && $value['ProductTypeID'] == 20) && (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3))
+                        {
+                            $display_name = 'Sales: Purchase';
+                            $status = 1;
+                        }*/
 
-                $con = array(
-                    'where' => array(
-                        'transaction_type_id' => $value['TransactionTypeID'],
-                        'product_type_id' => $value['ProductTypeID']
-                    ),
-                    'returnType' => 'count'
-                );
-                $prevCount = $this->productType->getProductTypes($con);
-                if($prevCount > 0)
-                {
-                    $condition = array(
-                        'transaction_type_id' => $value['TransactionTypeID'],
-                        'product_type_id' => $value['ProductTypeID']
-                    );
+                        if(isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3)
+                        {
+                            $status = 1;
+                        }
 
-                    $update = $this->productType->update($data, $condition);
-                    if($update){
-                        $updateCount++;
+                        $data = array(
+                            'transaction_type' =>trim($value['TransactionType']),
+                            'transaction_type_id' => trim($value['TransactionTypeID']),
+                            'product_type' => trim($value['ProductType']),
+                            'product_type_id' => trim($value['ProductTypeID']),
+                            'county' => trim($v),
+                            'state' => 'CA',
+                            'product_type_id' => trim($value['ProductTypeID']),
+                           // 'display_name' => $display_name,
+                           'status' => $status
+                        );
+
+                        $con = array(
+                            'where' => array(
+                                'transaction_type_id' => $value['TransactionTypeID'],
+                                'product_type_id' => $value['ProductTypeID'],
+                                'county' => $v,
+                                'state' => 'CA',
+                                'status' => $status
+                            ),
+                            'returnType' => 'count'
+                        );
+                        $prevCount = $this->productType->getProductTypes($con);
+                        if($prevCount > 0)
+                        {
+                            $condition = array(
+                                'transaction_type_id' => $value['TransactionTypeID'],
+                                'product_type_id' => $value['ProductTypeID']
+                            );
+
+                            $update = $this->productType->update($data, $condition);
+                            if($update){
+                                $updateCount++;
+                            }
+                        }
+                        else
+                        {
+                            $insert = $this->productType->insert($data);
+                            if($insert){
+                                $insertCount++;
+                            } 
+                        }
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'Product types imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';            
                     }
                 }
-                else
-                {
-                    $insert = $this->productType->insert($data);
-                    if($insert){
-                        $insertCount++;
-                    } 
-                }
-                $notAddCount = ($rowCount - ($insertCount + $updateCount));
-                $successMsg = 'Product types imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';             
-            }
+            }           
         }
-        
 
         echo $successMsg;
     }
