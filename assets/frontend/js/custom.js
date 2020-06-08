@@ -959,7 +959,7 @@ function getProductTypes(county,state)
                 var output = [];
                 output.push('<option value="">Select Product</option>')
                 $.each(res, function(key, value) {
-                    output.push('<option value="'+ value.id +'">'+ value.product_type +'</option>');
+                    output.push('<option value="'+ value.product_type_id +'">'+ value.product_type +'</option>');
                 });
                 $('#ProductTypeID').html(output.join(''));
             }
