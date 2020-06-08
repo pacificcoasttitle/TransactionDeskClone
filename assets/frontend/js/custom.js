@@ -601,7 +601,7 @@ function fetchReports(repNum)
                     var apn = $('#apn').val();
                     var state = $('#property-state').val();
                     var county = $('#County').val();
-                    
+                    getProductTypes(county,state);
                     createService4(fipCode,address,city);
                     createService3(apn,state,county);
                 }
@@ -715,6 +715,10 @@ function parse187()
 
     var apn = $(reportXML).find("PropertyProfile").find("APN").text();
     var county = $(reportXML).find("SubjectValueInfo").find("CountyName").text();
+    if(county)
+    {
+        getProductTypes(county,state);
+    }
     var legalDescription = $(reportXML).find("PropertyProfile").find("LegalBriefDescription").text();
     legalDescription = legalDescription.replace(/\s\s+/g, ' ');
     var usecode = $(reportXML).find("PropertyProfile").find("UseCode").text();
@@ -935,5 +939,30 @@ function getAPN()
     }
 }
 
-
-
+function getProductTypes(county,state)
+{
+    $.ajax({
+       url: base_url+'get-product-types',
+       type: "POST",//type of posting the data
+       data: {
+            county: county,
+            state: state,
+       },
+       success: function (data) {
+            var res = jQuery.parseJSON(data);
+            
+            if(res)
+            {
+                var output = [];
+                output.push('<option value="">Select Product</option>')
+                $.each(res, function(key, value) {
+                    output.push('<option value="'+ value.id +'">'+ value.product_type +'</option>');
+                });
+                $('#ProductTypeID').html(output.join(''));
+            }
+       },
+       error: function(xhr, ajaxOptions, thrownError){
+          
+       },
+  });
+}

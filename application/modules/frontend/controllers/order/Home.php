@@ -623,14 +623,14 @@ class Home extends MX_Controller {
 
 			$is_master = isset($customer_data['is_master']) && !empty($customer_data['is_master']) ? $customer_data['is_master'] : '';
 
-			$condition = array(
+			/*$condition = array(
 	            'where' => array(
 	                'status' => 1,
 	                'transaction_type_id' => 3
 	            )
 	        );
 			
-			$data['productType'] =  $this->productType->getProductTypes($condition);
+			$data['productType'] =  $this->productType->getProductTypes($condition);*/
 
 			$condition = array(
                 'where' => array(
@@ -891,5 +891,21 @@ class Home extends MX_Controller {
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/dashboard');
+    }
+
+    function getProductTypes()
+    {
+    	$state = isset($_POST['state']) && !empty($_POST['state']) ? $_POST['state'] : '';
+    	$county = isset($_POST['county']) && !empty($_POST['county']) ? $_POST['county'] : '';
+    	$condition = array(
+            'where' => array(
+                'transaction_type_id' => 3,
+                'state' => $state,
+                'county' => $county,
+                'status' => 1
+            )
+        );
+    	$productType = $this->productType->getProductTypes($condition);
+    	echo json_encode($productType); exit;
     }
 }
