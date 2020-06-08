@@ -948,7 +948,7 @@ function getProductTypes(county,state)
        url: base_url+'get-product-types',
        type: "POST",//type of posting the data
        data: {
-            county: 'Alpine',
+            county: county,
             state: state,
        },
        success: function (data) {
