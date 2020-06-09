@@ -754,22 +754,19 @@ class Dashboard extends MX_Controller {
 		$emptyData['property_id'] = $property_id;
 		$emptyData['fileId'] = $fileId;
 		$is_title_officer = 0;
-		echo "<pre>"; print_r($orderDetails);
-		echo "<pre>test:"; print_r(var_dump($orderDetails['title_officer']));
+		
 		if(isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer']))
 		{
-			if(is_int($orderDetails['title_officer']))
+			if(preg_match('/\\d/', $orderDetails['title_officer']) > 0)
 			{
 				$condition = array(
 	                'id' => $orderDetails['title_officer'],
 	                'status' => 1
 	            );
-	            $titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
-	            echo "<pre>"; print_r($titleOfficerDetails); 
+	            $titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition); 
 			}
 			else
 			{
-				echo "<pre>"; print_r("else"); 
 	            $condition = array(
 		            'where' => array(
 		                'name' => $orderDetails['title_officer'],
