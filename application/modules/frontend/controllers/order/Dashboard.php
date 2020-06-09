@@ -884,7 +884,7 @@ class Dashboard extends MX_Controller {
 		$emptyData['is_lender'] = $is_lender;
 
 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'proposed_insured', '', $data, array(), $orderId, 0);
-		echo "<pre>"; print_r($data); exit;
+		
 		if(empty($data['title_officer']) || empty($data['borrowers']) || empty($data['lender']) || empty($data['loan_number']) || empty($data['supplemental_report_date']) || empty($data['preliminary_report_date']))
 		{
 			$res = array('status'=>'dataRequired','data'=>$emptyData);
