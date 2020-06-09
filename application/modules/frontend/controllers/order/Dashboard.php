@@ -755,6 +755,7 @@ class Dashboard extends MX_Controller {
 		$emptyData['fileId'] = $fileId;
 		$is_title_officer = 0;
 		echo "<pre>"; print_r($orderDetails);
+		echo "<pre>test:"; print_r(is_int($orderDetails['title_officer']));
 		if(isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer']))
 		{
 			if(is_int($orderDetails['title_officer']))
@@ -764,9 +765,11 @@ class Dashboard extends MX_Controller {
 	                'status' => 1
 	            );
 	            $titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
+	            echo "<pre>"; print_r($titleOfficerDetails); 
 			}
 			else
 			{
+				echo "<pre>"; print_r("else"); 
 	            $condition = array(
 		            'where' => array(
 		                'name' => $orderDetails['title_officer'],
