@@ -754,7 +754,7 @@ class Dashboard extends MX_Controller {
 		$emptyData['property_id'] = $property_id;
 		$emptyData['fileId'] = $fileId;
 		$is_title_officer = 0;
-		
+		echo "<pre>"; print_r($orderDetails);
 		if(isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer']))
 		{
 			if(is_int($orderDetails['title_officer']))
@@ -776,6 +776,7 @@ class Dashboard extends MX_Controller {
 		        $officerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
 		        $titleOfficerDetails = isset($officerDetails[0]) && !empty($officerDetails[0]) ? $officerDetails[0] : array();
 			}
+			echo "<pre>"; print_r($titleOfficerDetails); exit;
 			$data['title_officer'] = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';;
 			$data['title_officer_email'] = isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address']) ? $titleOfficerDetails['email_address'] : '';
 			$data['title_officer_phone'] = isset($titleOfficerDetails['phone']) && !empty($titleOfficerDetails['phone']) ? $titleOfficerDetails['phone'] : '';
