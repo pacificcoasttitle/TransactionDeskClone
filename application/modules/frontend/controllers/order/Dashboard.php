@@ -776,7 +776,7 @@ class Dashboard extends MX_Controller {
 		        $officerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
 		        $titleOfficerDetails = isset($officerDetails[0]) && !empty($officerDetails[0]) ? $officerDetails[0] : array();
 			}
-			echo "<pre>"; print_r($titleOfficerDetails); exit;
+		
 			$data['title_officer'] = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';;
 			$data['title_officer_email'] = isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address']) ? $titleOfficerDetails['email_address'] : '';
 			$data['title_officer_phone'] = isset($titleOfficerDetails['phone']) && !empty($titleOfficerDetails['phone']) ? $titleOfficerDetails['phone'] : '';
