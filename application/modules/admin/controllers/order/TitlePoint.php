@@ -10,7 +10,7 @@ class TitlePoint extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
-        $this->load->model('order/titlepoint_model');
+        $this->load->model('order/titlePoint_model');
     }
 
 	public function index()
@@ -49,7 +49,7 @@ class TitlePoint extends MX_Controller {
         else
         {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $customer_lists = $this->customer_model->get_customers($params);            
+            $titlePointData = $this->titlepoint_model->gettitlePointDetails($params);          
         }
         $data = array(); 
         if(isset($titlePointData) && !empty($titlePointData))
