@@ -462,4 +462,57 @@ class Cron extends MX_Controller {
 
         echo $successMsg;
     }
+
+    public function check_update_password()
+    {
+        ini_set('max_execution_time', 0); 
+        ini_set('memory_limit','2048M');
+        /* Check if password updated */
+        $userdata = $this->session->userdata('admin');
+        
+        $condition = array(
+            'where' => array(
+                'status' => 1,
+                'is_password_updated' => 0,
+                'is_master' => 0,
+            )
+        );
+
+        $customer_lists = $this->home_model->get_customers($condition);
+        if(isset($customer_lists) && !empty($customer_lists))
+        {
+            foreach ($customer_lists as $key => $value) 
+            {
+                $userdata = $value;
+
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', $userdata, array(), 0, 0);
+
+                $result = $this->make_request('GET', 'me','',$userdata);
+                
+                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', array(), $result, 0, $logid);
+
+                if(isset($result) && !empty($result))
+                {
+                    $response = json_decode($result,true);
+                    if(isset($response['Me']) && !empty($response['Me']))
+                    {
+                        $condition = array(
+                            'id' => $value['id']
+                        );
+                        
+                        $customerData = array(
+                            'is_password_updated' => 1
+                        );
+
+                        $customerId = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                        $customer_data[] = $customerId;
+                    }
+                }
+            }
+            echo "<pre>"; print_r($customer_data); exit;
+        }
+        
+
+        /* Check if password updated */
+    }
 }

@@ -1,5 +1,4 @@
 <ul class="sidebar navbar-nav">
-<?php echo $this->uri->uri_string();?>
 	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/dashboard' || $this->uri->uri_string() == 'order/admin/import') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'order/admin/dashboard'; ?>">
 			<i class="fas fa-fw fa-users"></i>
@@ -29,5 +28,19 @@
 		<a class="nav-link" href="<?php echo base_url().'order/admin/title-officers'; ?>">
 			<i class="fas fa-fw fa-users"></i>
 			<span>Title Officer</span></a>
+	</li>
+
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/credentials-check') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/credentials-check'; ?>">
+			<i class="fas fa-fw fa-users"></i>
+			<span>Credentials Check</span></a>
+	</li>
+
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/lv-log') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/credentials-check'; ?>">
+			<i class="fas fa-fw fa-users"></i>
+			<span>LV Log</span></a>
 	</li>
 </ul>
