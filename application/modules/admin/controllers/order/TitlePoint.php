@@ -40,7 +40,7 @@ class TitlePoint extends MX_Controller {
 
             $pageno = ($params['start'] / $params['length'])+1;
 
-            $titlePointData = $this->titlepoint_model->gettitlePointDetails($params);
+            $titlePointData = $this->titlePoint_model->gettitlePointDetails($params);
 
             // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
 
@@ -49,7 +49,7 @@ class TitlePoint extends MX_Controller {
         else
         {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $titlePointData = $this->titlepoint_model->gettitlePointDetails($params);          
+            $titlePointData = $this->titlePoint_model->gettitlePointDetails($params);          
         }
         $data = array(); 
         if(isset($titlePointData) && !empty($titlePointData))
@@ -58,7 +58,7 @@ class TitlePoint extends MX_Controller {
             {
                 
                 $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
-                $order_details = $this->titlepoint_model->get_order_details($file_id);
+                $order_details = $this->titlePoint_model->get_order_details($file_id);
 
                 $nestedData=array();
                 /*$nestedData[] = $value['customer_number'];*/
