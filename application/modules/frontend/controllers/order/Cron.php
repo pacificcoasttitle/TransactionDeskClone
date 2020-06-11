@@ -166,6 +166,7 @@ class Cron extends MX_Controller {
 
     public function make_request($http_method, $endpoint, $body_params='', $userdata)
     {
+        echo "<pre>"; print_r($userdata); exit;
         $login =  $userdata['email'];
         
         if ($login == 'ghernandez@pct.com') {
