@@ -166,7 +166,6 @@ class Cron extends MX_Controller {
 
     public function make_request($http_method, $endpoint, $body_params='', $userdata)
     {
-        echo "<pre>"; print_r($userdata); exit;
         $login =  $userdata['email'];
         
         if ($login == 'ghernandez@pct.com') {
@@ -486,7 +485,7 @@ class Cron extends MX_Controller {
             foreach ($customer_lists as $key => $value) 
             {
                 $userdata = $value;
-
+                $userdata['email'] = $value['email_address'];
                 $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', $userdata, array(), 0, 0);
 
                 $result = $this->make_request('GET', 'me','',$userdata);
