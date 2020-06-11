@@ -1,0 +1,100 @@
+<?php
+class Customer_model extends CI_Model 
+{
+
+	function __construct() {
+        $this->table = 'customer_basic_details';
+    }
+	
+    public function get_customers($params = array())
+    {
+        $this->db->where('status', 1);
+        $this->db->where('is_master', 0);
+        $this->db->from($this->table);
+        $total_records =  $this->db->count_all_results();
+
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        
+        
+        $customer_lists =array();
+        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
+        {
+            $keyword = $params['searchvalue'];
+
+            if(isset($keyword) && !empty($keyword))
+            {
+                $this->db->like('first_name', $keyword);
+            }
+
+            $this->db->where('status', 1);
+            $this->db->where('is_master', 0);    
+            $this->db->from($this->table);
+            $filter_total_records =  $this->db->count_all_results();
+
+
+            if(isset($keyword) && !empty($keyword))
+            {
+                $this->db->like('first_name', $keyword);
+            }
+
+            $this->db->where('status', 1);
+            $this->db->where('is_master', 0);
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }           
+            $query = $this->db->get($this->table);
+
+            if ($query->num_rows() > 0) 
+            {
+                $customer_lists = $query->result_array();
+            }
+        }
+        else
+        {           
+
+            $this->db->where('status', 1);
+            $this->db->where('is_master', 0);
+            $this->db->from($this->table);
+
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->where('status', 1);
+            $this->db->where('is_master', 0);
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get($this->table);
+            
+            if ($query->num_rows() > 0) 
+            {
+                $customer_lists = $query->result_array();
+            } 
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $customer_lists
+        );
+    }
+
+    public function update($data, $condition = array()) 
+    {
+        if(!empty($data))
+        {          
+            
+            $data['updated_at'] = date("Y-m-d H:i:s");
+
+            // Update data
+            $update = $this->db->update($this->table, $data, $condition);
+            
+            // Return the status
+            return $update?true:false;
+        }
+        return false;
+    }
+}

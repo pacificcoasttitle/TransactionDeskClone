@@ -1,0 +1,156 @@
+<?php
+class TitlePoint_model extends CI_Model 
+{
+	function __construct() {
+        // Set table name
+        $this->table = 'pct_order_title_point_data';
+    }
+
+    public function gettitlePointDetails($params)
+    {
+        $table = $this->table;
+
+        $this->db->select('*');
+        $this->db->from($table);
+        
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
+        }
+        if(array_key_exists("status", $params)){
+            foreach($params['status'] as $key => $val){
+                $this->db->where($key."!=", $val);
+            }
+        }
+        
+        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+            $result = $this->db->count_all_results();
+        }else{
+            if(array_key_exists("id", $params)){
+                $this->db->where('id', $params['id']);
+                $query = $this->db->get();
+                $result = $query->row_array();
+            }
+            else
+            {
+                $this->db->order_by('id', 'asc');
+                if(array_key_exists("start",$params) && array_key_exists("limit",$params))
+                {
+                    $this->db->limit($params['limit'],$params['start']);
+                }
+                elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params))
+                {
+                    $this->db->limit($params['limit']);
+                }               
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+            }
+        }
+        
+        // Return fetched data
+        return $result;
+    }
+
+    public function getLvLogs($params)
+    {
+        $table = $this->table;
+
+        $this->db->select('*');
+        $this->db->from($table);
+        
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
+        }
+        
+        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+            $result = $this->db->count_all_results();
+        }else{
+            if(array_key_exists("id", $params)){
+                $this->db->where('id', $params['id']);
+                $query = $this->db->get();
+                $result = $query->row_array();
+            }
+            else
+            {
+                $this->db->order_by('id', 'asc');
+                if(array_key_exists("start",$params) && array_key_exists("limit",$params))
+                {
+                    $this->db->limit($params['limit'],$params['start']);
+                }
+                elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params))
+                {
+                    $this->db->limit($params['limit']);
+                }                
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+            }
+        }
+        
+        // Return fetched data
+        return $result;
+    }
+
+    public function get_order_details($fileId)
+    {
+        
+        $this->db->select('order_details.file_number, 
+            order_details.customer_id,
+            order_details.id as order_id,
+            order_details.file_id, 
+            order_details.westcor_order_id,
+            order_details.westcor_cpl_id, 
+            order_details.westcor_buyer_id,
+            order_details.westcor_seller_id, 
+            order_details.westcor_secondary_buyer_id,
+            order_details.westcor_secondary_seller_id,
+            order_details.westcor_lender_id,
+            order_details.is_regenerate_cpl,
+            order_details.created_at as opened_date, 
+            property_details.id as property_id, 
+            property_details.address, 
+            property_details.full_address, 
+            property_details.property_type, 
+            property_details.city as property_city, 
+            property_details.state as property_state, 
+            property_details.zip as property_zip, 
+            property_details.county, 
+            property_details.westcor_property_id, 
+            property_details.legal_description, 
+            property_details.primary_owner,
+            property_details.secondary_owner,
+            property_details.escrow_lender_id,
+            transaction_details.id as transaction_id,
+            transaction_details.sales_amount,
+            transaction_details.loan_amount,
+            transaction_details.loan_number,
+            transaction_details.transaction_type, 
+            transaction_details.title_officer,
+            transaction_details.purchase_type,
+            transaction_details.supplemental_report_date,
+            transaction_details.preliminary_report_date,
+            transaction_details.borrower, 
+            transaction_details.secondary_borrower,
+            customer_basic_details.id as lender_id,
+            customer_basic_details.street_address as lender_address,
+            customer_basic_details.city as lender_city,
+            customer_basic_details.zip_code as lender_zipcode,
+            customer_basic_details.company_name as lender_company_name,
+            customer_basic_details.first_name as lender_first_name,
+            customer_basic_details.last_name as lender_last_name,
+            customer_basic_details.email_address as lender_email,
+            customer_basic_details.telephone_no as lender_telephone_no')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left');
+        $this->db->where('file_id', $fileId);
+         
+        
+        $query = $this->db->get();
+        
+        return $query->row_array();
+    }
+}

@@ -146,6 +146,7 @@ $route['update-order-details'] = 'frontend/order/dashboard/update_order_details'
 $route['get-order-details-cpl'] = 'frontend/order/dashboard/getOrderDetailsCpl';
 $route['create-cpl-for-natic/:num'] = 'frontend/order/dashboard/createCPlForNatic';
 $route['import-product-types'] = 'frontend/order/cron/import_product_types';
+$route['check-update-password'] = 'frontend/order/cron/check_update_password';
 $route['generate-grant-deed'] = 'frontend/order/TitlePoint/generateGrantDeed';
 $route['get-product-types'] = 'frontend/order/home/getProductTypes';
 
@@ -169,7 +170,8 @@ $route['order/admin/title-officers'] = 'admin/order/title/index';
 $route['order/admin/get-title-officer-list'] = 'admin/order/title/get_title_officer_list';
 $route['order/admin/add-title-officer'] = 'admin/order/title/add_title_officer';
 $route['order/admin/edit-title-officer/:num'] = 'admin/order/title/edit_title_officer';
-
+$route['order/admin/credentials-check'] = 'admin/order/customer/index';
+$route['order/admin/lv-log'] = 'admin/order/TitlePoint/index';
 
 
 /* Route for PCT-Order backend*/
@@ -199,9 +201,3 @@ $route['calculator/admin_logout'] = 'admin/calc/admin/admin_logout';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-
-
-
-
-
-
