@@ -562,6 +562,90 @@ $(document).ready(function () {
         });
     }
 
+    if ($('#tbl-credentials-customers-listing').length) 
+    {
+        customer_list = $('#tbl-credentials-customers-listing').DataTable({
+           /*"pageLength": 2,*/
+           "paging": true,
+            "lengthChange": false,
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                // searchPlaceholder: "Customer Number",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-csv').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if(export_type)
+                    {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            // dom: 'Bfrtip',
+           /* buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Customers',
+                    exportOptions: {
+                        columns: [0,1, 2, 3, 4, 5, 6, 7,8],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                // Strip $ from salary column to make it numeric
+                                return (column === 0 || column === 1|| column === 2 || column === 3 || column === 4|| column === 5|| column === 6) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],*/
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/customer/get_customer_list", // json datasource
+                type: "post", // method  , by default get
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-credentials-customers-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-credentials-customers-listing_processing").css("display", "none");
+
+                }
+            },
+            "createdRow": function ( row, data, index ) {
+                
+                if ( data[9] == 1 ) {
+                    $(row).addClass('alert alert-success');
+                }
+                else
+                {
+                    $(row).addClass('alert alert-danger');
+                }
+            }            
+        });
+    }
+
     if ($('#tbl-lv-log-listing').length) 
     {
         customer_list = $('#tbl-lv-log-listing').DataTable({

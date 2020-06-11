@@ -58,7 +58,7 @@ class TitlePoint extends MX_Controller {
             {
                 
                 $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
-                if(isset($file_id) && empty($file_id))
+                if(isset($file_id) && !empty($file_id))
                 {
                     $order_details = $this->titlePoint_model->get_order_details($file_id);
 
