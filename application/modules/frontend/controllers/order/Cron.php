@@ -479,6 +479,7 @@ class Cron extends MX_Controller {
         );
 
         $customer_lists = $this->home_model->get_customers($condition);
+        echo "<pre>"; print_r($customer_lists); exit;
         if(isset($customer_lists) && !empty($customer_lists))
         {
             foreach ($customer_lists as $key => $value) 

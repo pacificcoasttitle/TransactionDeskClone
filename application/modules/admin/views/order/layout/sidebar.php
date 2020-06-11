@@ -39,7 +39,7 @@
 
 	<li
 		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/lv-log') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/credentials-check'; ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/lv-log'; ?>">
 			<i class="fas fa-fw fa-users"></i>
 			<span>LV Log</span></a>
 	</li>
