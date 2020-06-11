@@ -58,14 +58,18 @@ class TitlePoint extends MX_Controller {
             {
                 
                 $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
-                $order_details = $this->titlePoint_model->get_order_details($file_id);
+                if(isset($file_id) && empty($file_id))
+                {
+                    $order_details = $this->titlePoint_model->get_order_details($file_id);
 
-                $nestedData=array();
-                /*$nestedData[] = $value['customer_number'];*/
-                $nestedData[] = $value['file_number'];
-                $nestedData[] = $order_details['full_address'];
-                $nestedData[] = $value['cs4_result_id_status'];
-                $data[] = $nestedData;
+                    $nestedData=array();
+                    /*$nestedData[] = $value['customer_number'];*/
+                    $nestedData[] = $value['file_number'];
+                    $nestedData[] = $order_details['full_address'];
+                    $nestedData[] = $value['cs4_result_id_status'];
+                    $data[] = $nestedData;
+                }
+                
             }
         }
         
