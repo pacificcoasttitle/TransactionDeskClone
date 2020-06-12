@@ -622,15 +622,15 @@ $(document).ready(function () {
 
     if ($('#tbl-lv-log-listing').length) 
     {
-        customer_list = $('#tbl-lv-log-listing').DataTable({
+        log_list = $('#tbl-lv-log-listing').DataTable({
            /*"pageLength": 2,*/
-           "paging": false,
+           "paging": true,
             "lengthChange": false,
             "columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],
             "language": {
-                // searchPlaceholder: "Customer Number",
+                searchPlaceholder: "Order #",
                 paginate: {
                   next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                   previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -638,17 +638,7 @@ $(document).ready(function () {
                 "emptyTable": "Record(s) not found.",
             },
             initComplete: function() {
-                /*var $buttons = jQuery('.dt-buttons').hide();
-                jQuery('#export-csv').on('click', function() {
-                    var export_type = jQuery(this).attr('data-export-type');
-                    if(export_type)
-                    {
-                        var btnClass = '.buttons-' + export_type;
-                    }
-                    if (btnClass) $buttons.find(btnClass).click();
-                })*/
             },
-           // dom: 'Bfrtip',
             
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');

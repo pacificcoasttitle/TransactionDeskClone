@@ -26,7 +26,7 @@ class TitlePoint extends MX_Controller {
     public function get_logs()
     {
         $params = array();
-       
+
         if(isset($_POST['draw']) && !empty($_POST['draw']))
         {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -40,7 +40,7 @@ class TitlePoint extends MX_Controller {
 
             $pageno = ($params['start'] / $params['length'])+1;
 
-            $titlePointData = $this->titlePoint_model->gettitlePointDetails($params);
+            $logs_list = $this->titlePoint_model->getLvLogs($params);
 
             // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
 
@@ -49,14 +49,14 @@ class TitlePoint extends MX_Controller {
         else
         {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $titlePointData = $this->titlePoint_model->gettitlePointDetails($params);          
+            $logs_list = $this->titlePoint_model->getLvLogs($params);          
         }
         $data = array(); 
-        if(isset($titlePointData) && !empty($titlePointData))
+        
+        if(isset($logs_list['data']) && !empty($logs_list['data']))
         {
-            foreach ($titlePointData as $key => $value) 
+            foreach ($logs_list['data'] as $key => $value) 
             {
-                
                 $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
                 if(isset($file_id) && !empty($file_id))
                 {
@@ -69,12 +69,10 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $value['cs4_result_id_status'];
                     $data[] = $nestedData;
                 }
-                
             }
         }
-        
-        $json_data['recordsTotal'] = intval( $customer_lists['recordsTotal'] );
-        $json_data['recordsFiltered'] = intval( $customer_lists['recordsFiltered'] );
+        $json_data['recordsTotal'] = intval( $logs_list['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $logs_list['recordsFiltered'] );
         $json_data['data'] = $data;
         echo json_encode($json_data);
     }

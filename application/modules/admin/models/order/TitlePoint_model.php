@@ -54,43 +54,94 @@ class TitlePoint_model extends CI_Model
 
     public function getLvLogs($params)
     {
-        $table = $this->table;
+        if(array_key_exists("status", $params)){
+            foreach($params['status'] as $key => $val){
+                $this->db->where($key."!=", $val);
+            }
+        }
+        $this->db->from($this->table);
+        $total_records =  $this->db->count_all_results();
 
-        $this->db->select('*');
-        $this->db->from($table);
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         
-        if(array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
-                $this->db->where($key, $val);
-            }
-        }
         
-        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
-            $result = $this->db->count_all_results();
-        }else{
-            if(array_key_exists("id", $params)){
-                $this->db->where('id', $params['id']);
-                $query = $this->db->get();
-                $result = $query->row_array();
-            }
-            else
+        $logs_lists =array();
+        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
+        {
+            $keyword = $params['searchvalue'];
+
+            if(isset($keyword) && !empty($keyword))
             {
-                $this->db->order_by('id', 'asc');
-                if(array_key_exists("start",$params) && array_key_exists("limit",$params))
-                {
-                    $this->db->limit($params['limit'],$params['start']);
+                $this->db->like('file_number', $keyword);
+            }
+            if(array_key_exists("status", $params)){
+                foreach($params['status'] as $key => $val){
+                    $this->db->where($key."!=", $val);
                 }
-                elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params))
-                {
-                    $this->db->limit($params['limit']);
-                }                
-                $query = $this->db->get();
-                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+            }    
+            $this->db->from($this->table);
+            $filter_total_records =  $this->db->count_all_results();
+
+
+            if(isset($keyword) && !empty($keyword))
+            {
+                $this->db->like('file_number', $keyword);
+            }
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by('id', 'asc');
+            if(array_key_exists("status", $params)){
+                foreach($params['status'] as $key => $val){
+                    $this->db->where($key."!=", $val);
+                }
+            }         
+            $query = $this->db->get($this->table);
+
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
             }
         }
-        
-        // Return fetched data
-        return $result;
+        else
+        {     
+
+            if(array_key_exists("status", $params)){
+                foreach($params['status'] as $key => $val){
+                    $this->db->where($key."!=", $val);
+                }
+            }
+            $this->db->from($this->table);
+
+            $filter_total_records =  $this->db->count_all_results();
+
+            if(array_key_exists("status", $params)){
+                foreach($params['status'] as $key => $val){
+                    $this->db->where($key."!=", $val);
+                }
+            }
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by('id', 'asc');
+            $query = $this->db->get($this->table);
+            
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            } 
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $logs_lists
+        );
     }
 
     public function get_order_details($fileId)
