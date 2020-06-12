@@ -526,8 +526,6 @@ class Cron extends MX_Controller {
             $data = array('status'=>'success','msg'=>$successMsg);
             echo json_encode($data);
         }
-        
-
         /* Check if password updated */
     }
 }

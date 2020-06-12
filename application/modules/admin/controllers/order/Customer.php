@@ -55,9 +55,7 @@ class Customer extends MX_Controller {
         if(isset($customer_lists['data']) && !empty($customer_lists['data']))
         {
             foreach ($customer_lists['data'] as $key => $value) 
-            {
-                
-
+            {  
                 $nestedData=array();
                 /*$nestedData[] = $value['customer_number'];*/
                 $nestedData[] = $value['first_name'];

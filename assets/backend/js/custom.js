@@ -1,5 +1,6 @@
 var customer_list ='';
 var agent_list ='';
+var credentials_customer_list = '';
 $(document).ready(function () {
     if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length)
     {
@@ -564,12 +565,12 @@ $(document).ready(function () {
 
     if ($('#tbl-credentials-customers-listing').length) 
     {
-        customer_list = $('#tbl-credentials-customers-listing').DataTable({
+        credentials_customer_list = $('#tbl-credentials-customers-listing').DataTable({
            /*"pageLength": 2,*/
            "paging": true,
             "lengthChange": false,
             "columnDefs": [
-                { "searchable": false, "targets": [0,1] }
+                { "searchable": false, "targets": [0,1,2] }
             ],
             "language": {
                 // searchPlaceholder: "Customer Number",
@@ -580,35 +581,8 @@ $(document).ready(function () {
                 "emptyTable": "Record(s) not found.",
             },
             initComplete: function() {
-                var $buttons = jQuery('.dt-buttons').hide();
-                jQuery('#export-csv').on('click', function() {
-                    var export_type = jQuery(this).attr('data-export-type');
-                    if(export_type)
-                    {
-                        var btnClass = '.buttons-' + export_type;
-                    }
-                    if (btnClass) $buttons.find(btnClass).click();
-                })
+              
             },
-            // dom: 'Bfrtip',
-           /* buttons: [
-                {
-                    extend: 'csvHtml5',
-                    text: 'Export',
-                    title: 'Customers',
-                    exportOptions: {
-                        columns: [0,1, 2, 3, 4, 5, 6, 7,8],
-                        format: {
-                            body: function ( data, row, column, node ) {
-                                // Strip $ from salary column to make it numeric
-                                return (column === 0 || column === 1|| column === 2 || column === 3 || column === 4|| column === 5|| column === 6) ?
-                                    data.replace( /[$,]/g, '' ) :
-                                    data;
-                            }
-                        }
-                    }
-                },
-            ],*/
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
                 $('.dataTables_paginate > .pagination a').addClass('page-link');
@@ -707,6 +681,7 @@ $(document).ready(function () {
     if($('#refresh-data').length)
     {
         $('#refresh-data').click(function(e){
+            $('body').animate({ opacity: 0.5 }, "slow");
             $.ajax({
                 url: base_url+"/check-update-password",
                 method: "POST",
@@ -715,8 +690,9 @@ $(document).ready(function () {
                     console.log(data);
                     var result = jQuery.parseJSON(data);
                     console.log(result);
-                    /*if (result.status == 'success') {
-                        $('#customer_success_msg').html(result.message).show();
+                    if (result.status == 'success') {
+                        $('body').animate({ opacity: 1.0 }, "slow");
+                        $('#customer_success_msg').html(result.msg).show();
                         $([document.documentElement, document.body]).animate({
                             scrollTop: $("#customer_success_msg").offset().top
                         }, 1000);
@@ -733,7 +709,7 @@ $(document).ready(function () {
                         setTimeout(function () {
                             $('#customer_error_msg').html('').hide();
                         }, 4000);
-                    }*/
+                    }
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     $('#customer_error_msg').html('Something went wrong. Please try it again.').show();
