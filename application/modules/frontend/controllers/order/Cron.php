@@ -484,12 +484,12 @@ class Cron extends MX_Controller {
         {
             
             foreach (array_chunk($customer_lists,50) as $key => $value) 
-            {               
+            {        
+                $rowCount++;       
                 if(isset($value) && !empty($value))
                 {
                     foreach ($value as $k => $v) 
-                    {
-                        $rowCount++;
+                    {                        
                         $userdata = $v;
                         $userdata['email'] = $v['email_address'];
                         $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', $userdata, array(), 0, 0);
@@ -524,8 +524,9 @@ class Cron extends MX_Controller {
                 
             }
             $data = array('status'=>'success','msg'=>$successMsg);
-            echo json_encode($data);
+            
         }
+        echo json_encode($data);
         /* Check if password updated */
     }
 }
