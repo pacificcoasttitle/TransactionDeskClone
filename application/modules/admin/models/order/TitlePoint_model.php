@@ -54,6 +54,7 @@ class TitlePoint_model extends CI_Model
 
     public function getLvLogs($params)
     {
+        $this->db->where('file_id IS NOT NULL');
         if(array_key_exists("status", $params)){
             foreach($params['status'] as $key => $val){
                 $this->db->where($key."!=", $val);
@@ -80,7 +81,8 @@ class TitlePoint_model extends CI_Model
                 foreach($params['status'] as $key => $val){
                     $this->db->where($key."!=", $val);
                 }
-            }    
+            }
+            $this->db->where('file_id IS NOT NULL');    
             $this->db->from($this->table);
             $filter_total_records =  $this->db->count_all_results();
 
@@ -99,7 +101,8 @@ class TitlePoint_model extends CI_Model
                 foreach($params['status'] as $key => $val){
                     $this->db->where($key."!=", $val);
                 }
-            }         
+            }
+            $this->db->where('file_id IS NOT NULL');         
             $query = $this->db->get($this->table);
 
             if ($query->num_rows() > 0) 
