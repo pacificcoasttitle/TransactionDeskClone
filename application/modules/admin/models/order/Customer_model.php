@@ -26,6 +26,8 @@ class Customer_model extends CI_Model
             if(isset($keyword) && !empty($keyword))
             {
                 $this->db->like('first_name', $keyword);
+                $this->db->or_like('last_name', $keyword);
+                $this->db->or_like('email_address', $keyword);
             }
 
             $this->db->where('status', 1);
@@ -36,7 +38,9 @@ class Customer_model extends CI_Model
 
             if(isset($keyword) && !empty($keyword))
             {
-                $this->db->like('first_name', $keyword);
+                $this->db->like('first_name', $keyword);             
+                $this->db->or_like('last_name', $keyword);
+                $this->db->or_like('email_address', $keyword);
             }
 
             $this->db->where('status', 1);
@@ -44,7 +48,8 @@ class Customer_model extends CI_Model
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
-            }           
+            }
+            $this->db->order_by('is_password_updated', 'desc');         
             $query = $this->db->get($this->table);
 
             if ($query->num_rows() > 0) 
@@ -67,6 +72,7 @@ class Customer_model extends CI_Model
             {
                 $this->db->limit($limit, $offset);
             }
+            $this->db->order_by('is_password_updated', 'desc');
             $query = $this->db->get($this->table);
             
             if ($query->num_rows() > 0) 
