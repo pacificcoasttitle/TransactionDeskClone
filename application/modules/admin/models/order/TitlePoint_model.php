@@ -118,6 +118,7 @@ class TitlePoint_model extends CI_Model
                     $this->db->where($key."!=", $val);
                 }
             }
+            $this->db->where('file_id IS NOT NULL');
             $this->db->from($this->table);
 
             $filter_total_records =  $this->db->count_all_results();
@@ -127,6 +128,7 @@ class TitlePoint_model extends CI_Model
                     $this->db->where($key."!=", $val);
                 }
             }
+            $this->db->where('file_id IS NOT NULL');
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
