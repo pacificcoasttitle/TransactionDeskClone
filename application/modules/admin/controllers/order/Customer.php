@@ -26,7 +26,7 @@ class Customer extends MX_Controller {
     public function get_customer_list()
     {
         $params = array();
-       
+        
         if(isset($_POST['draw']) && !empty($_POST['draw']))
         {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
