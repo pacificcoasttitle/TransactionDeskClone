@@ -687,16 +687,14 @@ $(document).ready(function () {
                 method: "POST",
                 /*data : {id:id},*/
                 success: function(data){
-                    console.log(data);
                     var result = jQuery.parseJSON(data);
-                    console.log(result);
                     if (result.status == 'success') {
                         $('body').animate({ opacity: 1.0 }, "slow");
                         $('#customer_success_msg').html(result.msg).show();
                         $([document.documentElement, document.body]).animate({
                             scrollTop: $("#customer_success_msg").offset().top
                         }, 1000);
-                        customer_list.ajax.reload( null, false );
+                        credentials_customer_list.ajax.reload( null, false );
                         setTimeout(function () {
                             $('#customer_success_msg').html('').hide();
                         }, 4000);
