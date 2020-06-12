@@ -4,9 +4,9 @@
         <div class="card-header">
             <i class="fas fa-table"></i>
             Credentials Check
-            <!-- <div class="float-right">
-                <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-secondary"> Export </a>
-            </div> -->
+            <div class="float-right">
+                <a href="javascript:void(0);" id="refresh-data" class="btn btn-secondary"> Refresh </a>
+            </div>
         </div>
 
                 

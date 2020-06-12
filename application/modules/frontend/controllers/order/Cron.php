@@ -479,38 +479,52 @@ class Cron extends MX_Controller {
         );
 
         $customer_lists = $this->home_model->get_customers($condition);
-        
+        $insertCount = $updateCount = $rowCount = $notAddCount = 0;
         if(isset($customer_lists) && !empty($customer_lists))
         {
-            foreach ($customer_lists as $key => $value) 
+            
+            foreach (array_chunk($customer_lists,50) as $key => $value) 
             {
-                $userdata = $value;
-                $userdata['email'] = $value['email_address'];
-                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', $userdata, array(), 0, 0);
-
-                $result = $this->make_request('GET', 'me','',$userdata);
                 
-                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', array(), $result, 0, $logid);
-
-                if(isset($result) && !empty($result))
+                if(isset($value) && !empty($value))
                 {
-                    $response = json_decode($result,true);
-                    if(isset($response['Me']) && !empty($response['Me']))
+                    foreach ($value as $k => $v) 
                     {
-                        $condition = array(
-                            'id' => $value['id']
-                        );
-                        
-                        $customerData = array(
-                            'is_password_updated' => 1
-                        );
+                        $userdata = $v;
+                        $userdata['email'] = $v['email_address'];
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', $userdata, array(), 0, 0);
 
-                        $customerId = $this->home_model->update($customerData, $condition, 'customer_basic_details');
-                        $customer_data[] = $customerId;
+                        $result = $this->make_request('GET', 'me','',$userdata);
+                        
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', array(), $result, 0, $logid);
+
+                        if(isset($result) && !empty($result))
+                        {
+                            $response = json_decode($result,true);
+                            if(isset($response['Me']) && !empty($response['Me']))
+                            {
+                                $condition = array(
+                                    'id' => $userdata['id']
+                                );
+                                
+                                $customerData = array(
+                                    'is_password_updated' => 1
+                                );
+
+                                $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                                if($update)
+                                {
+                                    $updateCount++;                          
+                                }
+                                $successMsg = 'Password updated successfully. Total Rows ('.$rowCount.') | Updated ('.$updateCount.')';
+                            }
+                        }
                     }
                 }
+                
             }
-            echo "<pre>"; print_r($customer_data); exit;
+            $data = array('status'=>'success','msg'=>$successMsg);
+            echo json_encode($data);
         }
         
 

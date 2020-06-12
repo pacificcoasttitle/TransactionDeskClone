@@ -703,6 +703,51 @@ $(document).ready(function () {
                         
         });
     }
+
+    if($('#refresh-data').length)
+    {
+        $('#refresh-data').click(function(e){
+            $.ajax({
+                url: base_url+"/check-update-password",
+                method: "POST",
+                /*data : {id:id},*/
+                success: function(data){
+                    console.log(data);
+                    var result = jQuery.parseJSON(data);
+                    console.log(result);
+                    /*if (result.status == 'success') {
+                        $('#customer_success_msg').html(result.message).show();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#customer_success_msg").offset().top
+                        }, 1000);
+                        customer_list.ajax.reload( null, false );
+                        setTimeout(function () {
+                            $('#customer_success_msg').html('').hide();
+                        }, 4000);
+                    } else {
+                        $('#customer_error_msg').html(result.message).show();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#customer_error_msg").offset().top
+                        }, 1000);
+
+                        setTimeout(function () {
+                            $('#customer_error_msg').html('').hide();
+                        }, 4000);
+                    }*/
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('#customer_error_msg').html('Something went wrong. Please try it again.').show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#customer_success_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#customer_error_msg').html('').hide();
+                    }, 4000);
+                }
+            })
+        });
+    }
     
 });
 
