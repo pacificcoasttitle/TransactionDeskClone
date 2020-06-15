@@ -21,18 +21,17 @@ if(!function_exists('send_email')){
         $instance->email->initialize($config);
 		
 		$instance->email->from($fromemail, $from_name);
-        $to = 'hitesh.p@crestinfosystems.com';
         $instance->email->to($to); 
-        /*if(!is_null($ccTo)){
+        if(!is_null($ccTo)){
             $instance->email->cc($ccTo);
-        }*/
+        }
         $instance->email->subject($subject);
         $instance->email->message($content);  
 
-        /*if(isset($bcc) && !empty($bcc))
+        if(isset($bcc) && !empty($bcc))
         {
             $instance->email->bcc($bcc);
-        }*/
+        }
         foreach($myPdf as $file){
             $instance->email->attach($file);
         }
