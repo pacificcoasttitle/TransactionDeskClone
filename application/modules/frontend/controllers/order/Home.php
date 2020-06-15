@@ -196,15 +196,14 @@ class Home extends MX_Controller {
 					$ProductType = 'Residential: Sales: Purchase';
 				}*/
 echo "<pre>"; print_r($ProductTypeTxt);
-echo "<pre>"; print_r(strpos($ProductTypeTxt, 'Loan')); exit;
-				if(strpos($ProductTypeTxt, 'Loan') === true)
+				if(strpos($ProductTypeTxt, 'Loan') !== false)
 				{
 
 					$place_order['Buyers'][] = $legalEntity;
 					$ProductType = 'Residential: Loan: Refinance';
 					echo "<pre>if:"; print_r($place_order); exit;
 				}
-				elseif(strpos($ProductTypeTxt, 'Sale') === true)
+				elseif(strpos($ProductTypeTxt, 'Sale') !== false)
 				{
 					$borrowerName = explode(' ', $primaryBorrower);
 					$borrowerLastName = end($borrowerName);
