@@ -149,10 +149,12 @@
                                     if(isset($instrumentNumber) && !empty($instrumentNumber))
                                     {
                                         $count = substr_count($instrumentNumber, '-');
+
                                         if(isset($count) && !empty($count))
                                         {
                                             $detailDocInfo = explode('-', $instrumentNumber);
                                             
+                                            $year = isset($detailDocInfo['0']) && !empty($detailDocInfo['0']) ? $detailDocInfo['0'] : '';
                                             $docId = isset($detailDocInfo['1']) && !empty($detailDocInfo['1']) ? $detailDocInfo['1'] : '';   
                                         }
                                         else
@@ -170,7 +172,21 @@
                                     $file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : ''; 
                                     $fips = isset($tp_data['fips']) && !empty($tp_data['fips']) ? $tp_data['fips'] : '';
                                 ?>
-                                <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4,"<?php echo $file_number; ?>");'>Download L&V</a>
+                                <?php
+                                    if(isset($lv_file_url) && !empty($lv_file_url))
+                                    {
+                                ?>
+                                        <a href="<?php echo $lv_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="L&V.pdf">Download L&V</a>
+                                <?php
+                                    }
+                                    else
+                                    {
+                                ?>
+                                        <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4,"<?php echo $file_number; ?>");'>Download L&V</a>
+                                <?php
+                                    }
+                                ?>
+                                
                             </div>
                             <div class="loader" style="display: none;"></div>
                         </div>
@@ -180,7 +196,21 @@
                     ?>
                             <div class="col-md-3">
                                 <div id="instrumentInfoFile">
-                                    <a href="javascript:void(0);" onclick='generateGrantDeed("<?php echo $fips; ?>","<?php echo $year; ?>","<?php echo $docId; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
+                                    <?php
+                                        if(isset($deed_file_url) && !empty($deed_file_url))
+                                        {
+                                    ?>
+                                            <a href="<?php echo $deed_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="GrantDeed.pdf">Download Grant Deed</a>
+                                    <?php
+                                        }
+                                        else
+                                        {
+                                    ?>
+                                            <a href="javascript:void(0);" onclick='generateGrantDeed("<?php echo $fips; ?>","<?php echo $year; ?>","<?php echo $docId; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
+                                    <?php  
+                                        }
+                                    ?>
+                                    
                                 </div>
                                 <div class="loader" style="display: none;"></div>
                             </div>

@@ -296,8 +296,21 @@ class Home extends MX_Controller {
 									'file_number' => $orderNumber,
 								);					
 								$this->titlePointData->update($tpData,$condition);
-							}							
+								
+								$this->load->library('order/titlepoint');
 
+								$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+								
+								$serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
+								$result = $this->titlepoint->generateImg($serviceId,$orderNumber);
+
+								$instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && !empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
+
+								$recordedDate = isset($titlePointDetails['cs4_recorded_date']) && !empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
+								$fips = isset($titlePointDetails['fips']) && !empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
+
+								$deedresult = $this->titlepoint->generateGrantDeed($instrumentNumber,$recordedDate,$fips,$orderNumber);
+							}
 							
 							$data = array(
 								'orderNumber'=> $orderNumber,
@@ -335,10 +348,12 @@ class Home extends MX_Controller {
 							$subject = 'Order Placed at Resware';
 							$to = 'cs@pct.com';
 							$bcc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
-							
+							$lvfilename = $orderNumber.'.pdf';
+							$deedfilename = $orderNumber.'.pdf';
+							$file = array(base_url().'uploads/legal-vesting/'.$lvfilename,base_url().'uploads/legal-vesting/'.$deedfilename);
 							$this->load->helper('sendemail');
 							
-							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,array(),'',$bcc);
+							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,'',$bcc);
 							//send order deatils to all parties						
 							/*if(isset($parties_email) && !empty($parties_email))
 							{
@@ -838,6 +853,9 @@ class Home extends MX_Controller {
 			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 
 			$orderDetails = $this->order->get_order_details($fileId);
+
+			$file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] :'';
+
 			$property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] :'';
 			$propertyData = $this->home_model->get_property_details($property_id);
 			
@@ -846,7 +864,27 @@ class Home extends MX_Controller {
 			
 	        $propertyState = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] :'';
 	        
-	        $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] :'';			
+	        $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] :'';
+
+	        $lv_file_path = FCPATH.'uploads/legal-vesting/'.$file_number.'.pdf';
+
+	        $lv_file_url = '';
+
+			if (file_exists($lv_file_path)) 
+			{
+			    $lv_file_url = base_url().'uploads/legal-vesting/'.$file_number.'.pdf';
+			}
+			$data['lv_file_url'] = $lv_file_url;
+
+			$deed_file_path = FCPATH.'uploads/grant-deed/'.$file_number.'.pdf';
+
+	        $deed_file_url = '';
+
+			if (file_exists($deed_file_path)) 
+			{
+			    $deed_file_url = base_url().'uploads/grant-deed/'.$file_number.'.pdf';
+			}
+			$data['deed_file_url'] = $deed_file_url;		
 		}
 		
 		$data['tp_data'] = isset($titlePointDetails[0]) && !empty($titlePointDetails[0]) ? $titlePointDetails[0] : array();
