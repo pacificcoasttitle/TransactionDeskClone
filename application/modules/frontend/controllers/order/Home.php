@@ -195,13 +195,11 @@ class Home extends MX_Controller {
 					$place_order['SalesPrice'] = $SalesAmount;
 					$ProductType = 'Residential: Sales: Purchase';
 				}*/
-echo "<pre>"; print_r($ProductTypeTxt);
+
 				if(strpos($ProductTypeTxt, 'Loan') !== false)
 				{
-
 					$place_order['Buyers'][] = $legalEntity;
 					$ProductType = 'Residential: Loan: Refinance';
-					echo "<pre>if:"; print_r($place_order); exit;
 				}
 				elseif(strpos($ProductTypeTxt, 'Sale') !== false)
 				{
@@ -216,7 +214,6 @@ echo "<pre>"; print_r($ProductTypeTxt);
 					$place_order['Buyers'][] = $borrowers;
 					$place_order['SalesPrice'] = $SalesAmount;
 					$ProductType = 'Residential: Sales: Purchase';
-					echo "<pre>else:"; print_r($place_order); exit;
 				}
 				
 				$place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID'=>$ProductTypeID);
