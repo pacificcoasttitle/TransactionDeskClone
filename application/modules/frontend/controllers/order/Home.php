@@ -195,7 +195,8 @@ class Home extends MX_Controller {
 					$place_order['SalesPrice'] = $SalesAmount;
 					$ProductType = 'Residential: Sales: Purchase';
 				}*/
-echo "<pre>"; print_r($ProductTypeTxt); exit;
+echo "<pre>"; print_r($ProductTypeTxt);
+echo "<pre>"; print_r(strpos($ProductTypeTxt, 'Loan')); exit;
 				if(strpos($ProductTypeTxt, 'Loan') === true)
 				{
 
