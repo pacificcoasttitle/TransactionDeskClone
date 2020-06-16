@@ -882,6 +882,7 @@
 	            	$('#add-lender-section').hide();
 	            	$('#add-escrow-section').show();
 	            }
+	            getProductTypes();
 	        },
 	        change: function( event, ui ) {
 	            if (ui.item == null)
@@ -898,6 +899,39 @@
 	            }
 	        }
 	    });
+
+	    function getProductTypes()
+		{
+			var email = $('#OpenEmail').val();
+			var customerId = $('#CustomerId').val();
+			if(email)
+			{
+				$.ajax({
+			       url: base_url+'get-product-types',
+			       type: "POST",//type of posting the data
+			       data: {
+			            email: email,
+			            customerId: customerId
+			       },
+			       success: function (data) {
+			            var res = jQuery.parseJSON(data);
+			            
+			            if(res)
+			            {
+			                var output = [];
+			                output.push('<option value="">Select Product</option>')
+			                $.each(res, function(key, value) {
+			                    output.push('<option value="'+ key +'">'+ value +'</option>');
+			                });
+			                $('#ProductTypeID').html(output.join(''));
+			            }
+			       },
+			       error: function(xhr, ajaxOptions, thrownError){
+			          
+			       },
+			  });
+			}
+		}
 	});
 
 </script>

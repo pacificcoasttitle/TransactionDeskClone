@@ -954,17 +954,37 @@ class Home extends MX_Controller {
 
     function getProductTypes()
     {
-    	$state = isset($_POST['state']) && !empty($_POST['state']) ? $_POST['state'] : '';
-    	$county = isset($_POST['county']) && !empty($_POST['county']) ? $_POST['county'] : '';
+    	$userdata = $this->session->userdata('user');
+    	
+    	$email = isset($_POST['email']) && !empty($_POST['email']) ? $_POST['email'] : '';
+    	$customerId = isset($_POST['customerId']) && !empty($_POST['customerId']) ? $_POST['customerId'] : '';
+    	
     	$condition = array(
-            'where' => array(
-                'transaction_type_id' => 3,
-                'state' => $state,
-                'county' => $county,
-                'status' => 1
-            )
+            'id' => $customerId
         );
-    	$productType = $this->productType->getProductTypes($condition);
-    	echo json_encode($productType); exit;
+        $customerDetails = $this->home_model->get_customers($condition);
+        
+        $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
+        $data = array('email'=>$email_address);
+        $resware_user_id = isset($customerDetails['resware_user_id']) && !empty($customerDetails['resware_user_id']) ? $customerDetails['resware_user_id'] : '';
+        $endPoint = 'types/products?ClientsClientID='.$resware_user_id;
+    	// $logid = $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, $requestParams, array(), 0, 0);
+        $this->load->library('order/resware');
+        $result = $this->resware->make_request('GET', $endPoint, array(),$data);
+       // $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, array(), $result, 0, $logid);
+        $response = json_decode($result,TRUE);
+        $product_types = array();
+        if(isset($response) && !empty($response))
+        {        
+        	          
+            foreach ($response as $key => $value) 
+            {            	
+            	if(isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3)
+                {
+                    $product_types[$value['ProductTypeID']] = $value['ProductType']; 
+                }
+            }
+        }
+    	echo json_encode($product_types); exit;
     }
 }
