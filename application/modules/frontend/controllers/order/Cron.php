@@ -530,4 +530,70 @@ class Cron extends MX_Controller {
 
         /* Check if password updated */
     }
+
+    public function update_user_details()
+    {
+        ini_set('max_execution_time', 0); 
+        ini_set('memory_limit','2048M');
+
+        $condition = array(
+            'where' => array(
+                'status' => 1,
+                'is_master' => 0,
+            )
+        );
+
+        $customer_lists = $this->home_model->get_customers($condition);
+
+        $updateCount = $rowCount = $notAddCount = 0;
+        if(isset($customer_lists) && !empty($customer_lists))
+        {
+            
+            foreach (array_chunk($customer_lists,50) as $key => $value) 
+            {
+                if(isset($value) && !empty($value))
+                {
+                    foreach ($value as $k => $v) 
+                    {
+                        $rowCount++;
+                        $userdata = $v;
+                        $userdata['email'] = $v['email_address'];
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_user_partner_id', RESWARE_ORDER_API.'me', $userdata, array(), 0, 0);
+
+                        $result = $this->make_request('GET', 'me?IncludeCompany=true','',$userdata);
+                        
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', array(), $result, 0, $logid);
+
+                        if(isset($result) && !empty($result))
+                        {
+                            $response = json_decode($result,true);
+                            
+                            if(isset($response['Me']) && !empty($response['Me']))
+                            {
+                                $condition = array(
+                                    'id' => $userdata['id']
+                                );
+                                $userId = isset($response['Me']['UserID']) && !empty($response['Me']['UserID']) ? $response['Me']['UserID'] : ''; 
+                                $partnerId = isset($response['MyCompany']['PartnerID']) && !empty($response['MyCompany']['PartnerID']) ? $response['MyCompany']['PartnerID'] : ''; 
+                                $customerData = array(
+                                    'resware_user_id' => $userId,
+                                    'partner_id'=> $partnerId
+                                );
+
+                                $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                                if($update)
+                                {
+                                    $updateCount++;                  
+                                }
+                                $successMsg = 'Password updated successfully. Total Rows ('.$rowCount.') | Updated ('.$updateCount.')';
+                            }
+                        }
+                    }
+                }
+                
+            }
+            
+            echo $successMsg;
+        }
+    }
 }
