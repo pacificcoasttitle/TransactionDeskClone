@@ -604,7 +604,7 @@ function fetchReports(repNum)
                     var apn = $('#apn').val();
                     var state = $('#property-state').val();
                     var county = $('#County').val();
-                    getProductTypes(county,state);
+                    // getProductTypes(county,state);
                     createService4(fipCode,address,city);
                     createService3(apn,state,county);
                 }
@@ -718,10 +718,10 @@ function parse187()
 
     var apn = $(reportXML).find("PropertyProfile").find("APN").text();
     var county = $(reportXML).find("SubjectValueInfo").find("CountyName").text();
-    if(county)
+    /*if(county)
     {
         getProductTypes(county,state);
-    }
+    }*/
     var legalDescription = $(reportXML).find("PropertyProfile").find("LegalBriefDescription").text();
     legalDescription = legalDescription.replace(/\s\s+/g, ' ');
     var usecode = $(reportXML).find("PropertyProfile").find("UseCode").text();
@@ -942,7 +942,7 @@ function getAPN()
     }
 }
 
-function getProductTypes(county,state)
+/*function getProductTypes()
 {
     $.ajax({
        url: base_url+'get-product-types',
@@ -968,4 +968,4 @@ function getProductTypes(county,state)
           
        },
   });
-}
+}*/
