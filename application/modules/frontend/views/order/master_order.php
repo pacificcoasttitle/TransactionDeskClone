@@ -314,6 +314,7 @@
                                                 </div> -->
 										<div class="section colm colm12">
 											<label class="field select">
+												<input type="hidden" name="ProductType" id="ProductType">
 												<select id="ProductTypeID" name="ProductTypeID">
 													<option value="">Select Product</option>
 												<?php
