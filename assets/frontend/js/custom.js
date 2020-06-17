@@ -635,8 +635,9 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
                         var apn = $('#apn').val();
                         var state = $('#property-state').val();
                         var county = $('#County').val();
+                        var property_full_add = $('#property-full-address').val();
                         // getProductTypes(county,state);
-                        createService4(fipCode,address,city);
+                        createService4(fipCode,property_full_add,city);
                         createService3(apn,state,county);
                     }
                 }
@@ -784,7 +785,7 @@ function parse187()
     $("#searchResultModal").find(".apn-search-loader").addClass("hidden");
     $('#searchResultModal').modal('hide');
     var fipCode = $('#property-fips').val();
-
+    var property_full_add = $('#property-full-address').val();
     /*if (localStorage) 
     {
         localStorage.setItem('address',$('#property-search').val());
@@ -793,7 +794,7 @@ function parse187()
         localStorage.setItem('state',$('#property-state').val());
         localStorage.setItem('county',county);
     }*/
-    createService4(fipCode,address,city);
+    createService4(fipCode,property_full_add,city);
     createService3(apn,state,county);
 }
 
