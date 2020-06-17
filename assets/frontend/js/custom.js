@@ -515,6 +515,10 @@ function autoComplete() {
                     var state = place.address_components[i].short_name;
                     $('#property-zip').val(state);
                 }
+                else if (place.address_components[i].types[0] === "neighborhood"  && place.address_components[i].types.length>1 && place.address_components[i].types[1] === ("political")) { 
+                    var neighborhood = place.address_components[i].long_name;
+                    $('#neighbourhood').val(neighborhood);
+                }
             }
         }
     });
@@ -556,11 +560,21 @@ function getAddress() {
             locale += ', CA' // if locale is city rather than zip, add in state
         }
     }
-    data(address, locale);
+    neighbourhood = $('#neighbourhood').val();
+    neighbourhood = $.trim(neighbourhood);
+    if (isNaN(neighbourhood[0])) {
+        if(state!==''){
+            neighbourhood += ', '+state;
+        } else {
+            neighbourhood += ', CA' // if neighbourhood is city rather than zip, add in state
+        }
+    }
+    // data(address, locale);
+    data(address, locale,neighbourhood,false);
 }
 
 // creates data object for AJAX call to API
-function data(address, locale) 
+function data(address, locale,neighbourhood,retry) 
 {
     dataObj = {};
     dataObj.Address = address;
@@ -569,11 +583,23 @@ function data(address, locale)
     dataObj.OwnerName = '';
     request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
     request += $.param(dataObj);
-    fetchReports('187');
+    compileRequest(dataObj,neighbourhood,retry);
 }
 
+// create url for API request
+function compileRequest(dataObj,neighbourhood,retry) {
+    // var request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
+    var request ='http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?'
+    if(retry){
+        dataObj.LastLine = neighbourhood.toString();
+        console.log(dataObj.LastLine);
+    }
+    request += $.param(dataObj);
+   // runQueries(request,dataObj,neighbourhood,retry);
+    fetchReports(request,dataObj,neighbourhood,retry,'187');
+}
 
-function fetchReports(repNum) 
+function fetchReports(request,dataObj,neighbourhood,retry,repNum) 
 {
     reportNum = repNum;
     $.ajax({
@@ -596,7 +622,24 @@ function fetchReports(repNum)
             } 
             else if (responseStatus != 'OK') 
             {
-                displayError(responseStatus);
+                if(!retry){
+                    $("#search-btn").parents("form").find(".search-loader").removeClass("hidden");
+                    data(dataObj.Address,dataObj.LastLine,neighbourhood,true);
+                }else {
+                    displayError(responseStatus);
+                    if(base_url == 'http://localhost-pct.com/')
+                    {
+                        var fipCode = $('#property-fips').val();
+                        var city = $('#property-city').val();
+                        var apn = $('#apn').val();
+                        var state = $('#property-state').val();
+                        var county = $('#County').val();
+                        // getProductTypes(county,state);
+                        createService4(fipCode,address,city);
+                        createService3(apn,state,county);
+                    }
+                }
+                /*displayError(responseStatus);
                 if(base_url == 'http://localhost-pct.com/')
                 {
                     var fipCode = $('#property-fips').val();
@@ -607,7 +650,7 @@ function fetchReports(repNum)
                     // getProductTypes(county,state);
                     createService4(fipCode,address,city);
                     createService3(apn,state,county);
-                }
+                }*/
                 
             } 
             else 
