@@ -473,7 +473,7 @@ $(document).ready(function() {
         {
             $('#sales-loan-amount-fields').hide();
         }
-        $('#ProductType').val(selectedText);
+        $('#ProductType').val(trim(selectedText));
     });
 
     if($(".grant-deed-no-data").length)
@@ -583,6 +583,7 @@ function data(address, locale,neighbourhood,retry)
     dataObj.OwnerName = '';
     request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
     request += $.param(dataObj);
+    console.log(dataObj);
     compileRequest(dataObj,neighbourhood,retry);
 }
 
@@ -596,10 +597,10 @@ function compileRequest(dataObj,neighbourhood,retry) {
     }
     request += $.param(dataObj);
    // runQueries(request,dataObj,neighbourhood,retry);
-    fetchReports(request,dataObj,neighbourhood,retry,'187');
+    fetchReports('187',request,dataObj,neighbourhood,retry);
 }
 
-function fetchReports(request,dataObj,neighbourhood,retry,repNum) 
+function fetchReports(repNum,request,dataObj,neighbourhood,retry) 
 {
     reportNum = repNum;
     $.ajax({
@@ -889,7 +890,7 @@ function apnData(e) {
 function compileAPNRequest(dataobj) {
     request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/ApnSearch?';
     request += $.param(dataObj);
-    fetchReports('187');
+    fetchReports('187',request,dataObj);
 }
 
 function notifyAdmin(subject)
@@ -977,7 +978,8 @@ function getAPN()
         dataObj.ClientReference = '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
         request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/ApnSearch?';
         request += $.param(dataObj)
-        fetchReports('187');
+      //  fetchReports('187');
+        fetchReports('187',request,dataObj,'',true);
     } else {
         $('.pma-error').html('Invalid County Name.');
         $('.pma-error').show();
