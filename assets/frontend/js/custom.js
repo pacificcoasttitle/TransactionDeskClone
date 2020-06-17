@@ -746,7 +746,7 @@ function parse187()
     {
         full_address.push(city);
     }
-
+    var property_full_add = full_address.join(', ');
     var state = $(reportXML).find("PropertyProfile").find("SiteState").text();
     
     if(state)
@@ -785,7 +785,7 @@ function parse187()
     $("#searchResultModal").find(".apn-search-loader").addClass("hidden");
     $('#searchResultModal').modal('hide');
     var fipCode = $('#property-fips').val();
-    var property_full_add = $('#property-full-address').val();
+    // var property_full_add = $('#property-full-address').val();
     /*if (localStorage) 
     {
         localStorage.setItem('address',$('#property-search').val());
