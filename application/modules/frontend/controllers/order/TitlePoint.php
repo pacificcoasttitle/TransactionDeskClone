@@ -47,12 +47,13 @@ class TitlePoint extends MX_Controller {
 			$address = isset($_POST['address']) && !empty($_POST['address']) ? $_POST['address'] : '';
 			$city = isset($_POST['city']) && !empty($_POST['city']) ? $_POST['city'] : '';
 			$unit_no = isset($_POST['unit_no']) && !empty($_POST['unit_no']) ? $_POST['unit_no'] : '';
+			$apn = isset($_POST['apn']) && !empty($_POST['apn']) ? $_POST['apn'] : '';
 			if($unit_no)
 			{
 				$unitinfo =  'UnitNumber '.$unit_no.', '; 
 			}
 			$requestParams['serviceType'] = SERVICE_TYPE;
-			$requestParams['parameters'] = 'Address1='.$address.';City='.$city.';LvLookup=Address;LvLookupValue='.$address.', '.$unitinfo.$city.';LvReportFormat=LV;IncludeTaxAssessor=true';
+			$requestParams['parameters'] = 'Address1='.$address.';City='.$city.';Pin='.$apn.';LvLookup=Address;LvLookupValue='.$address.', '.$unitinfo.$city.';LvReportFormat=LV;IncludeTaxAssessor=true';
 			$requestParams['fipsCode'] = $fipsCode;
 			$requestUrl= TP_CREATE_SERVICE_ENDPOINT;
 		}
