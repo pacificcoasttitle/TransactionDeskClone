@@ -473,7 +473,7 @@ $(document).ready(function() {
         {
             $('#sales-loan-amount-fields').hide();
         }
-        $('#ProductType').val(trim(selectedText));
+        $('#ProductType').val(selectedText);
     });
 
     if($(".grant-deed-no-data").length)
