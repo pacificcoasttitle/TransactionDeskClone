@@ -105,7 +105,8 @@ class Home extends MX_Controller {
 	        		$BuyerAgentTelephone      = $this->input->post('BuyerAgentTelephone');
 	        		$BuyerAgentCompany      = $this->input->post('BuyerAgentCompany');
 
-	        		$parties_email[$BuyerAgentEmailAddress] = isset($_POST["BuyerAgentName"]) && !empty($_POST["BuyerAgentName"]) ? strip_tags(trim($_POST["BuyerAgentName"])) : '';
+	        		// $parties_email[$BuyerAgentEmailAddress] = isset($_POST["BuyerAgentName"]) && !empty($_POST["BuyerAgentName"]) ? strip_tags(trim($_POST["BuyerAgentName"])) : '';
+	        		$parties_email[] = $BuyerAgentEmailAddress;
 
 	        		$buyers_agent_details = array('name'=>$BuyerAgentName, 'email'=>$BuyerAgentEmailAddress, 'telephone'=> $BuyerAgentTelephone,'company'=>$BuyerAgentCompany);
 	        	} 
@@ -120,7 +121,8 @@ class Home extends MX_Controller {
 	        		$ListingAgentCompany      = $this->input->post('ListingAgentCompany');
 	        		
 
-					$parties_email[$ListingAgentEmailAddress] = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
+					/*$parties_email[$ListingAgentEmailAddress] = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';*/
+					$parties_email[] = $ListingAgentEmailAddress;
 
 					$listing_agent_details = array('name'=>$ListingAgentName, 'email'=>$ListingAgentEmailAddress, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
 	        	}
@@ -150,7 +152,8 @@ class Home extends MX_Controller {
 				}
 				if(isset($EscrowLenderEmail) && !empty($EscrowLenderEmail))
 				{
-					$parties_email[$EscrowLenderEmail] = $EscrowLenderName;
+					// $parties_email[$EscrowLenderEmail] = $EscrowLenderName;
+					$parties_email[] = $EscrowLenderEmail;
 				}
 				$AdditionalEmail = $this->input->post('AdditionalEmail');
 				$AdditionalEmail1 = $this->input->post('AdditionalEmail1');
@@ -158,19 +161,18 @@ class Home extends MX_Controller {
 
 				if(isset($AdditionalEmail) && !empty($AdditionalEmail))
 				{
-					$parties_email[$AdditionalEmai] = '';
+					$parties_email[] = $AdditionalEmail;
 				}
 
 				if(isset($AdditionalEmail1) && !empty($AdditionalEmail1))
 				{
-					$parties_email[$AdditionalEmail1] = '';
+					$parties_email[] = $AdditionalEmail1;
 				}
 
 				if(isset($AdditionalEmail2) && !empty($AdditionalEmail2))
 				{
-					$parties_email[$AdditionalEmail2] = '';
+					$parties_email[] = $AdditionalEmail2;
 				}
-
 				/* Start place order at resware */
 				$place_order = array();
 
@@ -260,7 +262,7 @@ class Home extends MX_Controller {
 				
 				$this->load->library('order/resware');
 				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, array(), 0, 0);
-				$result = $this->resware->make_request('POST', 'orders', $order_data,$user_data);
+				// $result = $this->resware->make_request('POST', 'orders', $order_data,$user_data);
 				
 				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, $result, 0, $logid);
 
