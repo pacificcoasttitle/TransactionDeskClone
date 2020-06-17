@@ -370,7 +370,7 @@ class Home extends MX_Controller {
 							$file = array(base_url().'uploads/legal-vesting/'.$lvfilename,base_url().'uploads/grant-deed/'.$deedfilename);
 							$this->load->helper('sendemail');
 							
-							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,'',$bcc);
+							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);
 							//send order deatils to all parties						
 							/*if(isset($parties_email) && !empty($parties_email))
 							{
