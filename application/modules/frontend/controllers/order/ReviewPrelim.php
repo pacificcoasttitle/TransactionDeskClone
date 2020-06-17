@@ -358,7 +358,7 @@ class ReviewPrelim extends MX_Controller {
 	    	$emailContent['liens'] = isset($email_data['liens']) && !empty($email_data['liens']) ? json_encode($email_data['liens']) : '';
 
 			$from_name = 'Pacific Coast Title Company';
-			$from_mail = 'ghernandez@pct.com';
+			$from_mail = env('FROM_EMAIL');
 			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
 			$message = $prelim_message_body; 
 			$subject = 'The Prelim Hot Sheet';
@@ -390,7 +390,7 @@ class ReviewPrelim extends MX_Controller {
    /* public function testMail(){
 		echo 'calling herre ';		
 		$from_name = 'Open Order Desk';
-		$from_mail = 'ghernandez@pct.com';
+		$from_mail = env('FROM_EMAIL');
 		$message = 'This is dummy message here'; 
 		$subject = 'test email';
 		$to = 'hitesh.p@crestinfosystems.com';
