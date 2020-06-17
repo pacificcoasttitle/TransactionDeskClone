@@ -124,6 +124,7 @@
 
 									<input type="hidden" name="property-state" id="property-state" value="">
 									<input type="hidden" name="property-city" id="property-city" value="">
+									<input type="hidden" name="neighbourhood" id="neighbourhood" value="">
 									<input type="hidden" name="property-fips" id="property-fips" value="">
 									<input type="hidden" name="property-full-address"
 										id="property-full-address" value="">
