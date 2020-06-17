@@ -2,7 +2,7 @@ $(document).ready(function() {
 });
 
 
-function createService4(fipCode,address,city,unit_no)
+function createService4(fipCode,address,city,unit_no,apn)
 {
 	$.ajax({
         // url: 'php/createservice.php',
@@ -12,6 +12,7 @@ function createService4(fipCode,address,city,unit_no)
             address: address,
             city: city,
             unit_no: unit_no,
+            apn: apn,
             methodId: 4,
         },
         type: "POST",
