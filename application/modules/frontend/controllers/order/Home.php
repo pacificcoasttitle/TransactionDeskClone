@@ -969,6 +969,7 @@ class Home extends MX_Controller {
 
     function getProductTypes()
     {
+    	$this->load->model('order/apiLogs');
     	$userdata = $this->session->userdata('user');
     	
     	$email = isset($_POST['email']) && !empty($_POST['email']) ? $_POST['email'] : '';
