@@ -22,13 +22,15 @@ class Home extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$this->load->model('order/apiLogs');
 		$this->load->model('order/titleOfficer');
+		$this->load->model('order/salesRep');
+
     	if(isset($_POST) && !empty($_POST))
     	{
     		$this->form_validation->set_rules('OpenName', 'First Name', 'required',array('required'=> 'Enter your first name'));
     		$this->form_validation->set_rules('OpenLastName', 'Last Name', 'required',array('required'=> 'Enter your last name'));
     		$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
     		// $this->form_validation->set_rules('sendermessage', 'Sender Message', 'required',array('required'=> 'Oops you forgot your message'));
-
+    		$parties_email = array();
     		if($this->form_validation->run($this) == true)
     		{
 	        	$OpenName      = $this->input->post('OpenName');
@@ -71,6 +73,15 @@ class Home extends MX_Controller {
 
 	        	$SecondaryOwner      = $this->input->post('SecondaryOwner');
 	        	$SalesRep      = $this->input->post('SalesRep');
+
+	        	/* Fetch details of Sales Rep */
+	        	$condition = array(
+	                'id' => $SalesRep	                
+	            );
+	        	$salesRepDetails = $this->salesRep->getSalesRepDetails($condition);
+	        	$parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
+	        	/* Fetch details of Sales Rep */
+
 	        	$TitleOfficer      = $this->input->post('TitleOfficer');
 
 	        	/*Fetch details of Title Officer */
@@ -79,7 +90,9 @@ class Home extends MX_Controller {
 	            );
 				
 				$titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
-				$titleOfficerName = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';				
+				$titleOfficerName = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';
+
+				$parties_email[] = isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address']) ? $titleOfficerDetails['email_address'] : '';				
 				/*Fetch details of Title Officer */
 				
 	        	$LoanAmount      = $this->input->post('loanAmount');
@@ -97,7 +110,7 @@ class Home extends MX_Controller {
 				$BuyerAgentId      = $this->input->post('BuyerAgentId');
 				$agentDetailFlag =  $this->input->post('add-agent-details');
 
-	        	$parties_email = $buyers_agent_details = $listing_agent_details = array();
+	        	$buyers_agent_details = $listing_agent_details = array();
 	        	if((isset($BuyerAgentId) && !empty($BuyerAgentId)) || isset($agentDetailFlag))
 	        	{
 	        		$BuyerAgentName      = $this->input->post('BuyerAgentName');
@@ -344,11 +357,13 @@ class Home extends MX_Controller {
 							 );
 
 							$from_name = 'Pacific Coast Title Company';
-							$from_mail = 'ghernandez@pct.com';
+							$from_mail = env('FROM_EMAIL');
 							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
 							$message = $order_message_body; 
 							$subject = 'Order Placed at Resware';
-							$to = 'cs@pct.com';
+							$to = $OpenEmail;
+							
+							$cc = array(env('ADMIN_EMAIL'));
 							$bcc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
@@ -543,7 +558,7 @@ class Home extends MX_Controller {
 							    );
 
 								$from_name = 'Pacific Coast Title Company';
-								$from_mail = 'ghernandez@pct.com';
+								$from_mail = env('FROM_EMAIL');
 								$message = $this->load->view('emails/smartmessage.php',$data,TRUE);
 								$subject = RECEIVER_SUBJECT;
 								$to = RECEIVER_EMAIL;
@@ -675,8 +690,6 @@ class Home extends MX_Controller {
                     'status' => 1
                 )
             );
-			
-			$this->load->model('order/salesRep');
 
 			$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
 
@@ -927,7 +940,7 @@ class Home extends MX_Controller {
 				$message = '<h3>User Details:</h3><p>Customer Number: '.$customer_no.'</p><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p>';
 				
 				$from_name = 'Pacific Coast Title Company';
-				$from_mail = 'ghernandez@pct.com';
+				$from_mail = env('FROM_EMAIL');
 				$subject = 'Notification for'.$subject;
 				$to = 'cs@pct.com';
 				
