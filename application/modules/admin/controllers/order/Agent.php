@@ -58,7 +58,7 @@ class Agent extends MX_Controller {
                         {
                             foreach($csvData as $row)
                             {
-
+                                exit;
                                 $rowCount++;
 
                                 // Prepare data for DB insertion
