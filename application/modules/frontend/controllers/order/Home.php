@@ -57,7 +57,8 @@ class Home extends MX_Controller {
 	        	$PropertyZip      = $this->input->post('property-zip');
 	        	$PropertyType      = ucwords($this->input->post('property-type'));
 	        	$FullProperty      = ucwords($this->input->post('FullProperty'));
-
+echo "<pre>"; print_r($PropertyAddress);
+echo "<pre>"; print_r(ucwords($PropertyAddress)); exit;
 	        	/*$AddressPropertyParts = explode(',', $FullProperty);	
 				$PropertyZip = trim(end($AddressPropertyParts));*/
 
