@@ -55,11 +55,12 @@ class TitlePoint_model extends CI_Model
     public function getLvLogs($params)
     {
         $this->db->where('file_id IS NOT NULL');
-        if(array_key_exists("status", $params)){
+        $this->db->where('cs4_result_id_status IS NOT NULL');
+        /*if(array_key_exists("status", $params)){
             foreach($params['status'] as $key => $val){
                 $this->db->where($key."!=", $val);
             }
-        }
+        }*/
         $this->db->from($this->table);
         $total_records =  $this->db->count_all_results();
 
@@ -77,12 +78,13 @@ class TitlePoint_model extends CI_Model
             {
                 $this->db->like('file_number', $keyword);
             }
-            if(array_key_exists("status", $params)){
+            /*if(array_key_exists("status", $params)){
                 foreach($params['status'] as $key => $val){
                     $this->db->where($key."!=", $val);
                 }
-            }
-            $this->db->where('file_id IS NOT NULL');    
+            }*/
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('cs4_result_id_status IS NOT NULL');    
             $this->db->from($this->table);
             $filter_total_records =  $this->db->count_all_results();
 
@@ -97,12 +99,13 @@ class TitlePoint_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by('id', 'asc');
-            if(array_key_exists("status", $params)){
+            /*if(array_key_exists("status", $params)){
                 foreach($params['status'] as $key => $val){
                     $this->db->where($key."!=", $val);
                 }
-            }
-            $this->db->where('file_id IS NOT NULL');         
+            }*/
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('cs4_result_id_status IS NOT NULL');        
             $query = $this->db->get($this->table);
 
             if ($query->num_rows() > 0) 
@@ -113,22 +116,24 @@ class TitlePoint_model extends CI_Model
         else
         {     
 
-            if(array_key_exists("status", $params)){
+            /*if(array_key_exists("status", $params)){
                 foreach($params['status'] as $key => $val){
                     $this->db->where($key."!=", $val);
                 }
-            }
+            }*/
             $this->db->where('file_id IS NOT NULL');
+            $this->db->where('cs4_result_id_status IS NOT NULL');
             $this->db->from($this->table);
 
             $filter_total_records =  $this->db->count_all_results();
 
-            if(array_key_exists("status", $params)){
+            /*if(array_key_exists("status", $params)){
                 foreach($params['status'] as $key => $val){
                     $this->db->where($key."!=", $val);
                 }
-            }
+            }*/
             $this->db->where('file_id IS NOT NULL');
+            $this->db->where('cs4_result_id_status IS NOT NULL');
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
