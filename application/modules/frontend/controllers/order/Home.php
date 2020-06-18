@@ -43,7 +43,7 @@ class Home extends MX_Controller {
 	        	$Zipcode      = $this->input->post('Zipcode');
 	        	$PropertyAddress      = ucwords($this->input->post('Property'));
 
-	        	$SplitPropertyAddress = explode(' ', $PropertyAddress);
+	        	$SplitPropertyAddress = explode(' ', ucwords($PropertyAddress));
 
 				$StreetNumber = isset($SplitPropertyAddress[0]) && !empty($SplitPropertyAddress[0]) ? $SplitPropertyAddress[0] : '';
 
@@ -193,7 +193,7 @@ class Home extends MX_Controller {
 				/* Start place order at resware */
 				$place_order = array();
 
-				$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>$PropertyAddress, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
+				$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>ucwords($PropertyAddress), 'City'=> ucwords($PropertyCity), 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
 
 				/*if($ProductTypeID == '19' || $ProductTypeID == '33')
 				{
@@ -246,11 +246,11 @@ class Home extends MX_Controller {
 					$loan['LoanNumber'] = $LoanNumber;
 				}
 				$place_order['Loans'][] = $loan;
-				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
+				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> ucwords($PropertyCity), 'State'=> $PropertyState, 'County'=> ucwords($County), 'Zip'=>$PropertyZip);
 
 				$place_order['Note']['APN'] = $apn;
 				$place_order['Note']['parcel_id'] = $apn;
-				$place_order['Note']['legal_description'] = $LegalDescription;
+				$place_order['Note']['legal_description'] = ucwords($LegalDescription);
 
 				if (!empty($TitleOfficer)) {
 					$place_order['Note']['title_Officer'] = $titleOfficerName;
@@ -348,11 +348,11 @@ class Home extends MX_Controller {
 								'StreetAddress'=> $StreetAddress,
 								'City'=> $City,
 								'Zipcode'=> $Zipcode,
-								'PropertyAddress'=> $PropertyAddress,
-								'FullProperty'=> $FullProperty,
+								'PropertyAddress'=> ucwords($PropertyAddress),
+								'FullProperty'=> ucwords($FullProperty),
 								'APN'=> $apn,
-								'County'=> $County,
-								'LegalDescription'=> $LegalDescription,
+								'County'=> ucwords($County),
+								'LegalDescription'=> ucwords($LegalDescription),
 								'PrimaryOwner'=> $PrimaryOwner,
 								'SecondaryOwner'=> $SecondaryOwner,
 								'SalesRep'=> $salesRepName,
@@ -455,15 +455,15 @@ class Home extends MX_Controller {
 							'buyer_agent_id' => $BuyerAgentId,
 							'listing_agent_id' => $ListingAgentId,
 							'escrow_lender_id' => $EscrowLenderId,
-							'address' => $PropertyAddress,
-							'city' => $PropertyCity,
+							'address' => ucwords($PropertyAddress),
+							'city' => ucwords($PropertyCity),
 							'state' => $PropertyState,
 							'zip' => $PropertyZip,
 							'property_type' => $PropertyType,
-							'full_address' => $FullProperty,
+							'full_address' => ucwords($FullProperty),
 							'apn' => $apn,
-							'county' => $County,
-							'legal_description' => $LegalDescription,
+							'county' => ucwords($County),
+							'legal_description' => ucwords($LegalDescription),
 							'primary_owner' => $PrimaryOwner,
 							'secondary_owner' => $SecondaryOwner,
 							// 'additional_details'=> $sendermessage,
