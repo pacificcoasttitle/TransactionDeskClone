@@ -213,7 +213,7 @@
                                                   {
                                                 ?>
                                                     <p><span style="font-weight:bold;font-size:16px">Escrow Number:</span> <?php echo $EscrowNumber; ?></p>
-                                                >?php
+                                                <?php
                                                   }
                                                 ?>
                                                 
