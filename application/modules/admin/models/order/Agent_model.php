@@ -27,6 +27,9 @@ class Agent_model extends CI_Model
                 /*$this->db->or_like('last_name', $keyword);*/
                 $this->db->or_like('email_address', $keyword);
                 $this->db->or_like('company', $keyword);
+                $this->db->or_like('address', $keyword);
+                $this->db->or_like('city', $keyword);
+                $this->db->or_like('zipcode', $keyword);
 			}
 
 			$this->db->where('status', 1);
@@ -39,6 +42,9 @@ class Agent_model extends CI_Model
                 /*$this->db->or_like('last_name', $keyword);*/
                 $this->db->or_like('email_address', $keyword);
                 $this->db->or_like('company', $keyword);
+                $this->db->or_like('address', $keyword);
+                $this->db->or_like('city', $keyword);
+                $this->db->or_like('zipcode', $keyword);
 			}
 
 			$this->db->where('status', 1);

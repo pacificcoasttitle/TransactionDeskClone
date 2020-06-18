@@ -36,6 +36,8 @@ class Home extends MX_Controller {
         if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
             redirect(base_url().'order/admin/dashboard');
         } else {
+            $data['msg'] = $this->session->userdata('msg');
+            $this->session->unset_userdata('msg');
             $this->load->view('order/layout/login_header', $data);
             $this->load->view('order/home/login', $data);
             $this->load->view('order/layout/login_footer', $data);
@@ -82,7 +84,7 @@ class Home extends MX_Controller {
                 {
                     $this->session->set_userdata('msg', 'Incorrect email or password');
                     // $result['msg'] = "Incorrect email or password";
-                    redirect(base_url());
+                    redirect(base_url().'order/admin');
                 }
             }
     	}

@@ -64,6 +64,90 @@
                         <?php } ?>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label for="address" class="col-sm-2 col-form-label">Address<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <?php
+                        // echo "<pre>"; print_r($company_error_msg); exit;
+                            $address = isset($agent_info['address']) ? $agent_info['address'] : '';
+                        ?>
+                        <input type="text" class="form-control" name="address" id="address" value="<?php echo $address; ?>" class="form-control" placeholder="Address">
+
+                        <?php if(!empty($address_error_msg)){ ?>                     
+                            <span class="error"><?php echo $address_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="city" class="col-sm-2 col-form-label">City<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <?php
+                        // echo "<pre>"; print_r($company_error_msg); exit;
+                            $city = isset($agent_info['city']) ? $agent_info['city'] : '';
+                        ?>
+                        <input type="text" class="form-control" name="city" id="city" value="<?php echo $city; ?>" class="form-control" placeholder="City">
+
+                        <?php if(!empty($city_error_msg)){ ?>                     
+                            <span class="error"><?php echo $city_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="zipcode" class="col-sm-2 col-form-label">Zipcode<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <?php
+                        // echo "<pre>"; print_r($company_error_msg); exit;
+                            $zipcode = isset($agent_info['zipcode']) ? $agent_info['zipcode'] : '';
+                        ?>
+                        <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo $zipcode; ?>" class="form-control" placeholder="Zipcode">
+
+                        <?php if(!empty($zipcode_error_msg)){ ?>                     
+                            <span class="error"><?php echo $zipcode_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="list_unit" class="col-sm-2 col-form-label">List Unit<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <?php
+                        // echo "<pre>"; print_r($company_error_msg); exit;
+                            $list_unit = isset($agent_info['list_unit']) ? $agent_info['list_unit'] : '';
+                        ?>
+                        <input type="text" class="form-control" name="list_unit" id="list_unit" value="<?php echo $list_unit; ?>" class="form-control" placeholder="List Unit">
+
+                        <?php if(!empty($list_unit_error_msg)){ ?>                     
+                            <span class="error"><?php echo $list_unit_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="list_volume" class="col-sm-2 col-form-label">List Volume<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <?php
+                        // echo "<pre>"; print_r($company_error_msg); exit;
+                            $list_volume = isset($agent_info['list_volume']) ? $agent_info['list_volume'] : '';
+                        ?>
+                        <input type="text" class="form-control" name="list_volume" id="list_volume" value="<?php echo $list_volume; ?>" class="form-control" placeholder="List Volume">
+
+                        <?php if(!empty($list_volume_error_msg)){ ?>                     
+                            <span class="error"><?php echo $list_volume_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="selected_revenue" class="col-sm-2 col-form-label">Selected Revenue<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <?php
+                        // echo "<pre>"; print_r($company_error_msg); exit;
+                            $selected_revenue = isset($agent_info['selected_revenue']) ? $agent_info['selected_revenue'] : '';
+                        ?>
+                        <input type="text" class="form-control" name="selected_revenue" id="selected_revenue" value="<?php echo $selected_revenue; ?>" class="form-control" placeholder="Selected Revenue">
+
+                        <?php if(!empty($selected_revenue_error_msg)){ ?>                     
+                            <span class="error"><?php echo $selected_revenue_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
                 <div class="pull-right">
                     <button type="submit" class="btn btn-secondary">Update</button>
                     <a href="<?php echo base_url().'order/admin/agents'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>

@@ -23,6 +23,7 @@
                             <th>Email Address</th>
                             <th>Telephone</th>
                             <th>Company</th>
+                            <th>Full Address</th>
                             <th>Action</th>
                         </tr>
                     </thead>                

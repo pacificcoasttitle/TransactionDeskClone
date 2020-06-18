@@ -170,7 +170,7 @@
 									<div class="tagline"><span>Secondary Borrower Information</span></div><!-- .tagline -->
 								</div>
 
-								<div class="frm-row">
+								<div class="frm-row spacer-b15">
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="first_name" id="first_name" class="gui-input"
@@ -184,6 +184,38 @@
 												placeholder="Last Name">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
+									</div>
+								</div>
+								<input type="hidden" id="cpl_api" name="cpl_api" value="">
+								<input type="hidden" id="agent_id" name="agent_id" value="">
+								<div id="fnf" style="display:none">
+									<div class="spacer-b20">
+										<div class="tagline"><span>Agent Details</span></div>
+									</div>
+
+									<div class="frm-row spacer-b15">
+										<div class="section colm colm12">
+											<label class="field prepend-icon">
+												<input type="text" name="agent_name" id="agent_name" class="gui-input ui-autocomplete-input"
+													placeholder="Agent Name">
+												<span class="field-icon"><i class="fa fa-user"></i></span>
+											</label>
+										</div>
+									</div>
+
+									<div class="spacer-b20">
+										<div class="tagline"><span>Select Branch</span></div>
+									</div>
+
+									<div class="frm-row">
+										<div class="section colm colm12">
+										<label class="field select">
+												<select id="branch" name="branch">
+													<option value="">Select Branch</option>
+												</select>
+												<i class="arrow double"></i>
+											</label>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -220,7 +252,6 @@
 <script>
 	/* Lender autocomplete */
     $("#LenderCompany").autocomplete({
-        // source: "php/usersearch.php",
         source: function(request, response) {
             $.ajax({
                 url: base_url+'home/getDetailsByName',
@@ -230,9 +261,19 @@
                 },
                 type: "POST",
                 dataType: "json",
-                success: response
+                success: function (data) {
+					if (data.length > 0) {
+						response($.map(data, function (item) {
+							return item;
+						}))
+					} else {
+						response([{ label: 'No results found.', val: -1}]);
+					}
+				}
             });
-        },
+		},
+		delay: 0,
+		minLength: 2,
         select: function( event, ui ) {
             event.preventDefault();
 			$("#LenderCompany").val(ui.item.company);
@@ -289,6 +330,40 @@
         }
     });
 	/* Lender autocomplete */ 
+
+	/* Agent autocomplete */
+    $("#agent_name").autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: base_url+'agent/getAgentDetails',
+                data: {
+                    term : request.term
+                },
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+					if (data.length > 0) {
+						response($.map(data, function (item) {
+							return item;
+						}))
+					} else {
+						response([{ label: 'No results found.', val: -1}]);
+					}
+				}
+            });
+		},
+		delay: 0,
+		minLength: 2,
+        select: function( event, ui ) {
+            event.preventDefault();
+			$("#agent_name").val(ui.item.name);
+			$("#agent_id").val(ui.item.id);
+        },
+        change: function( event, ui ) {
+            
+        }
+    });
+	/* Agent autocomplete */ 
 	
 	$(document).ready(function () {
 		if ($('#cpl_listing').length) {
@@ -346,10 +421,10 @@
 	
 	function lender_pop_up(lenderFlag, fileId) {
 		if (lenderFlag == 1) {
-			$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
-			$('#page-preloader').css('display', 'block');
 			$(this).form.submit();
 		} else {
+			$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+			$('#page-preloader').css('display', 'block');
 			$.ajax({
 				url: base_url + "get-order-details-cpl",
 				type: "post",
@@ -359,7 +434,29 @@
 				success: function (response) {
 					var res = jQuery.parseJSON(response);
 					if(res.status == 'success') {
+						if (res.orderDetails['cpl_api'] == 'fnf') {
+							$('#fnf').show();
+							var optionsAsString = "";
+							for(var i = 0; i < res.orderDetails['agents_data'].length; i++) {
+								var selected = '';
+								if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
+									selected = 'selected';
+								}
+								optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['location_city'] + "</option>";
+							}
+							$('select[name="branch"]').children('option:not(:first)').remove();
+							$( 'select[name="branch"]' ).append( optionsAsString );
+							$('#agent_name').val(res.orderDetails['agent_name']);
+							$('#agent_id').val(res.orderDetails['buyer_agent_id']);
+							$("#agent_name").prop('required',true);
+							$("#branch").prop('required',true);
+						} else {
+							$('#fnf').hide();
+							$("#agent_name").prop('required',false);
+							$("#branch").prop('required',false);
+						}
 						
+						$('#cpl_api').val(res.orderDetails['cpl_api']);
 						$("#LenderName").val(res.orderDetails['lender_name']);
 						$("#LenderEmailAddress").val(res.orderDetails['lender_email']);
 						$("#LenderTelephone").val(res.orderDetails['lender_telephone_no']);

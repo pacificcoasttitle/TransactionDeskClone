@@ -48,7 +48,7 @@ class Order
                 $this->CI->db->like('property_details.full_address', $keyword);            
                 $this->CI->db->or_like('order_details.file_number', $keyword);
             }
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.natic_document_name')
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name, order_details.cpl_document_name')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
             if ($userdata['is_master'] == 0) {
@@ -65,7 +65,7 @@ class Order
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
            
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.natic_document_name')
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name, order_details.cpl_document_name')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id');
 
@@ -86,7 +86,7 @@ class Order
         }
         else
         {
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.natic_document_name')
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name, order_details.cpl_document_name')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
 
@@ -100,7 +100,7 @@ class Order
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
            
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.natic_document_name')
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name, order_details.cpl_document_name')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id');
 
@@ -152,6 +152,8 @@ class Order
             order_details.westcor_lender_id,
             order_details.is_regenerate_cpl,
             order_details.created_at as opened_date, 
+            order_details.fnf_agent_id,
+            order_details.fnf_document_id,
             property_details.id as property_id, 
             property_details.address, 
             property_details.full_address, 
@@ -165,6 +167,7 @@ class Order
             property_details.primary_owner,
             property_details.secondary_owner,
             property_details.escrow_lender_id,
+            property_details.buyer_agent_id,
             transaction_details.id as transaction_id,
             transaction_details.sales_amount,
             transaction_details.loan_amount,
@@ -184,11 +187,21 @@ class Order
             customer_basic_details.first_name as lender_first_name,
             customer_basic_details.last_name as lender_last_name,
             customer_basic_details.email_address as lender_email,
-            customer_basic_details.telephone_no as lender_telephone_no')
+            customer_basic_details.telephone_no as lender_telephone_no,
+            agents.name as agent_name,
+            agents.address as agent_address,
+            agents.city as agent_city,
+            agents.zipcode as agent_zipcode,
+            agents.telephone_no as agent_telephone_no,
+            pct_order_fnf_agents.agent_number,
+            pct_order_fnf_agents.underwriter_code,
+            pct_order_fnf_agents.underwriter')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left');
+            ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
+            ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
+            ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left');
         $this->CI->db->where('file_id', $fileId);
          
         if ($userdata['is_master'] == 0) {
