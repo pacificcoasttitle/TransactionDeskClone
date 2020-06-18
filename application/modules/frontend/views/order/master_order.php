@@ -348,6 +348,11 @@
 											</label>
 											<div class="spacer-b10"></div>
 											<label class="field">
+												<input type="text" class="gui-input" name="loanNumber" id="loanNumber"
+													placeholder="Loan Number">
+											</label>
+											<div class="spacer-b10"></div>
+											<label class="field">
 												<input type="text" class="gui-input" name="primaryBorrower" id="primaryBorrower"
 													placeholder="Primary Borrower">
 											</label>
@@ -358,6 +363,16 @@
 											</label>
 										</div>
 									</div>
+									<label class="field">
+										<input type="text" class="gui-input" name="escrowNumber" id="escrowNumber"
+											placeholder="Escrow Number">
+									</label>
+									<div class="section spacer-t20">
+                                        <label class="field prepend-icon">
+                                            <textarea class="gui-textarea" id="notes" name="notes" placeholder="Additional details"></textarea>
+                                            <span class="field-icon"><i class="fa fa-comments"></i></span>        
+                                        </label>
+                                    </div>
 									<div class="spacer-t30">
 										<div class="tagline"><span> Special Instructions </span></div><!-- .tagline -->
 									</div>

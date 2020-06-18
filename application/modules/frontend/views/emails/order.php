@@ -37,12 +37,54 @@
                                                 <p><span style="font-weight:bold;font-size:16px">File #:</span> <?php echo $orderNumber; ?></p>
                                                 <p><span style="font-weight:bold;font-size:16px">Opened By:</span> <?php echo $OpenName; ?></p>
                                                 <p><span style="font-weight:bold;font-size:16px">Open Mail:</span> <?php echo $OpenEmail; ?></p>
-                                                <p><span style="font-weight:bold;font-size:16px">Open Telephone:</span> <?php echo $Opentelephone; ?></p>
-                                                <p><span style="font-weight:bold;font-size:16px">Company:</span> <?php echo $CompanyName; ?></p>
-                                                <p><span style="font-weight:bold;font-size:16px">Address:</span> <?php echo $StreetAddress; ?></p>
-                                                <p><span style="font-weight:bold;font-size:16px">City:</span> <?php echo $City; ?></p>
-                                                <p><span style="font-weight:bold;font-size:16px">Zipcode:</span> <?php echo $Zipcode; ?></p>
-                                                <p><span style="font-weight:bold;font-size:16px">Additional Details:</span> <?php echo $sendermessage; ?></p>
+                                                <?php 
+                                                  if(isset($Opentelephone) && !empty($Opentelephone))
+                                                  {
+                                                  ?>
+                                                      <p><span style="font-weight:bold;font-size:16px">Open Telephone:</span> <?php echo $Opentelephone; ?></p>
+                                                  <?php
+                                                  }
+                                                  ?>
+                                                <?php
+                                                  if(isset($CompanyName) && !empty($CompanyName))
+                                                  {
+                                                ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Company:</span> <?php echo $CompanyName; ?></p>
+                                                <?php
+                                                  }
+                                                ?>
+                                                <?php
+                                                  if(isset($StreetAddress) && !empty($StreetAddress))
+                                                  {
+                                                ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Address:</span> <?php echo $StreetAddress; ?></p>
+                                                <?php
+                                                  } 
+                                                ?>
+                                                <?php
+                                                  if(isset($City) && !empty($City))
+                                                  {
+                                                ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">City:</span> <?php echo $City; ?></p>
+                                                <?php
+                                                  }
+                                                ?>
+                                                <?php
+                                                  if(isset($Zipcode) && !empty($Zipcode))
+                                                  {
+                                                ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Zipcode:</span> <?php echo $Zipcode; ?></p>
+                                                <?php
+                                                  }
+                                                ?>
+                                                <?php
+                                                  if(isset($Notes) && !empty($Notes))
+                                                  {
+                                                ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Notes:</span> <?php echo $Notes; ?></p>
+                                                <?php
+                                                  }
+                                                ?>          
                                                 <br>
                                              </div>
                                           </td>
@@ -88,8 +130,22 @@
                                        <tr>
                                           <td style="color:#666;padding:15px; padding-bottom:0;font-size:14px;line-height:20px;font-family:arial;text-align:left">
                                              <div style="font-style:normal;padding-bottom:15px;font-family:arial;line-height:20px;text-align:left">
-                                                <p><span style="font-weight:bold;font-size:16px">Primary Owner:</span> <?php echo $PrimaryOwner; ?></p>
-                                                <p><span style="font-weight:bold;font-size:16px">Secondary Owner:</span> <?php echo $SecondaryOwner; ?></p>
+                                              <?php
+                                                  if(isset($PrimaryOwner) && !empty($PrimaryOwner))
+                                                  {
+                                              ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Primary Owner:</span> <?php echo $PrimaryOwner; ?></p>
+                                              <?php
+                                                  }
+                                                ?>
+                                                <?php
+                                                  if(isset($SecondaryOwner) && !empty($SecondaryOwner))
+                                                  {
+                                                ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Secondary Owner:</span> <?php echo $SecondaryOwner; ?></p>
+                                                <?php
+                                                  }
+                                                ?>          
                                                 <br>
                                              </div>
                                           </td>
@@ -110,11 +166,57 @@
                                        <tr>
                                           <td style="color:#666;padding:15px; padding-bottom:0;font-size:14px;line-height:20px;font-family:arial;text-align:left">
                                              <div style="font-style:normal;padding-bottom:15px;font-family:arial;line-height:20px;text-align:left">
-                                                <p><span style="font-weight:bold;font-size:16px">Sales Rep:</span> <?php echo $SalesRep; ?></p>
-                                                <p><span style="font-weight:bold;font-size:16px">Title Officer:</span> <?php echo $TitleOfficer; ?></p>
+                                              <?php
+                                                  if(isset($SalesRep) && !empty($SalesRep))
+                                                  {
+                                              ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Sales Rep:</span> <?php echo $SalesRep; ?></p>
+                                              <?php
+                                                  }
+                                                ?>
+                                                <?php
+                                                  if(isset($TitleOfficer) && !empty($TitleOfficer))
+                                                  {
+                                                ?>
+                                                      <p><span style="font-weight:bold;font-size:16px">Title Officer:</span> <?php echo $TitleOfficer; ?></p>
+                                                <?php
+                                                  }
+                                                ?>
+                                                
                                                 <p><span style="font-weight:bold;font-size:16px">Product:</span> <?php echo $ProductType; ?></p>
-                                                <p><span style="font-weight:bold;font-size:16px">Sales Price:</span> <?php echo $SalesAmount; ?></p>
-                                                <p><span style="font-weight:bold;font-size:16px">Loan Amount:</span> <?php echo $LoanAmount; ?></p>
+                                                <?php
+                                                  if(isset($SalesAmount) && !empty($SalesAmount))
+                                                  {
+                                                ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Sales Price:</span> <?php echo $SalesAmount; ?></p>
+                                                <?php
+                                                  }
+                                                ?>
+                                                <?php
+                                                  if(isset($LoanAmount) && !empty($LoanAmount))
+                                                  {
+                                                ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Loan Amount:</span> <?php echo $LoanAmount; ?></p>
+                                                <?php
+                                                  }
+                                                ?>
+                                                <?php
+                                                  if(isset($LoanNumber) && !empty($LoanNumber))
+                                                  {
+                                                ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Loan Number:</span> <?php echo $LoanNumber; ?></p>
+                                                <?php
+                                                  }
+                                                ?>
+                                                <?php
+                                                  if(isset($EscrowNumber) && !empty($EscrowNumber))
+                                                  {
+                                                ?>
+                                                    <p><span style="font-weight:bold;font-size:16px">Escrow Number:</span> <?php echo $EscrowNumber; ?></p>
+                                                >?php
+                                                  }
+                                                ?>
+                                                
                                                 <br>
                                              </div>
                                           </td>
