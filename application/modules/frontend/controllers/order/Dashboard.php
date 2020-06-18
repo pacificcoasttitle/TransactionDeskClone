@@ -1359,6 +1359,7 @@ class Dashboard extends MX_Controller {
 				);
 	
 				$this->home_model->update($order_details, $condition, 'order_details');
+				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $resultResCPL['cpl'][0]['FileInformation']['FileAsBase64']);
 				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
 			} else {
 				$errors[] = $resultCPL;
@@ -2621,6 +2622,7 @@ class Dashboard extends MX_Controller {
 			file_put_contents('./uploads/documents/'.$document_name, base64_decode($responseArr['content']));
 			$this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
 			$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
+			$this->uploadCPLDocumentToResware($document_name, $orderDetails, $responseArr['content']);
 		} else {
 			$errors[] = $responseArr['error'];
 		}
@@ -2688,6 +2690,7 @@ class Dashboard extends MX_Controller {
 				file_put_contents('./uploads/documents/'.$document_name, base64_decode($generateCplResponse['response']['a:Content']));
 				$this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('file_id' => $fileId), 'order_details');
 				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
+				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
 			} else {
 				$errors[] = $generateCplResponse['error'];
 			}
@@ -2708,41 +2711,41 @@ class Dashboard extends MX_Controller {
 		}	
 	}
 
-	public function uploadCPLDocumentToResware($document_name)
+	public function uploadCPLDocumentToResware($document_name, $orderDetails, $binaryData)
 	{
+		$this->load->model('order/document');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
 		$fileSize = filesize('./uploads/documents/'.$document_name);
 		$documentData = array(
 			'document_name' => $document_name,
-			'original_document_name' => $data['file_name'],
-			'document_type_id' => $this->input->post('document_type_'.$i),
+			'original_document_name' => $document_name,
+			'document_type_id' => 1024,
 			'document_size' => $fileSize,
 			'user_id' => $userdata['id'],
-			'order_id' => $orderId,
-			'description' => $this->input->post('description_'.$i),
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'CPL Document',
 			'is_sync' => 1,
 			'is_prelim_document' => 0
 		);
-		
 		$documentId = $this->document->insert($documentData);
-		
-		$endPoint = 'files/'.$fileId.'/documents';
-		
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
 		$documentApiData = array(			
-			'DocumentName' => $data['file_name'],
+			'DocumentName' => $document_name,
 			'DocumentType' => array(
-				'DocumentTypeID' => $this->input->post('document_type_'.$i),
+				'DocumentTypeID' => 1024,
 			),
-			'Description' => $this->input->post('description_'.$i),
+			'Description' => 'CPL Document',
 			'InternalOnly' => false,
 			'DocumentBody' => $binaryData
 		);
 		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, array(), $orderId, 0);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderId, $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-		$success[$i] = "Document #".$i.": uploaded successfully";
 	}
 }
