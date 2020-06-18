@@ -2707,4 +2707,42 @@ class Dashboard extends MX_Controller {
 			redirect(base_url().'cpl-dashboard');
 		}	
 	}
+
+	public function uploadCPLDocumentToResware($document_name)
+	{
+		$fileSize = filesize('./uploads/documents/'.$document_name);
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $data['file_name'],
+			'document_type_id' => $this->input->post('document_type_'.$i),
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderId,
+			'description' => $this->input->post('description_'.$i),
+			'is_sync' => 1,
+			'is_prelim_document' => 0
+		);
+		
+		$documentId = $this->document->insert($documentData);
+		
+		$endPoint = 'files/'.$fileId.'/documents';
+		
+		$documentApiData = array(			
+			'DocumentName' => $data['file_name'],
+			'DocumentType' => array(
+				'DocumentTypeID' => $this->input->post('document_type_'.$i),
+			),
+			'Description' => $this->input->post('description_'.$i),
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, array(), $orderId, 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderId, $logid);
+		$res = json_decode($result);
+		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+		$success[$i] = "Document #".$i.": uploaded successfully";
+	}
 }
