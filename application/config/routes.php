@@ -150,6 +150,7 @@ $route['check-update-password'] = 'frontend/order/cron/check_update_password';
 $route['generate-grant-deed'] = 'frontend/order/TitlePoint/generateGrantDeed';
 $route['get-product-types'] = 'frontend/order/home/getProductTypes';
 $route['update-user-details'] = 'frontend/order/cron/update_user_details';
+$route['create-cpl-for-fnf/:num'] = 'frontend/order/dashboard/createCPlForFnf';
 
 
 /* Route for PCT-Order backend*/

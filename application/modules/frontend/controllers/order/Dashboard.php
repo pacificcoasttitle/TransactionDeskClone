@@ -953,9 +953,9 @@ class Dashboard extends MX_Controller {
 				$nestedData[] = $i;
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
-				if (!empty($order['natic_document_name'])) {
+				if (!empty($order['cpl_document_name'])) {
 					$file_id = $order['file_id'];
-					$documentName = $order['natic_document_name'];
+					$documentName = $order['cpl_document_name'];
 					$nestedData[] = "<div style='display:flex;'><a href='./uploads/documents/$documentName' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
 						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
 				} else if(!empty($order['westcor_file_id'])) {
@@ -1015,7 +1015,7 @@ class Dashboard extends MX_Controller {
 
 		$primary_owner = explode(" ", $orderDetails['primary_owner']);
 		$secondary_owner = explode(" ", $orderDetails['secondary_owner']);
-		if (($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32') || $orderDetails['sales_amount'] > 0)  {
+		if ($orderDetails['sales_amount'] > 0)  {
 			$sellers[] = array (
 				'NameID' =>  $orderDetails['westcor_seller_id'] ? $orderDetails['westcor_seller_id'] : 0,
 				'Last' => $primary_owner[1],
@@ -1350,7 +1350,7 @@ class Dashboard extends MX_Controller {
 						mkdir('./uploads/documents', 0777, TRUE);
 					}
 					file_put_contents('./uploads/documents/'.$document_name, base64_decode($resultResCPL['cpl'][0]['FileInformation']['FileAsBase64']));
-					$this->home_model->update(array('natic_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+					$this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
 				}
 				
 				 
@@ -1359,6 +1359,7 @@ class Dashboard extends MX_Controller {
 				);
 	
 				$this->home_model->update($order_details, $condition, 'order_details');
+				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $resultResCPL['cpl'][0]['FileInformation']['FileAsBase64']);
 				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
 			} else {
 				$errors[] = $resultCPL;
@@ -1416,6 +1417,7 @@ class Dashboard extends MX_Controller {
 		$name = explode(" ",$this->input->post('LenderName'));	
 		$editFlag = $this->input->post('editFlag');
 		$orderDetails = $this->order->get_order_details($file_id);
+		$cplApi = $this->input->post('cpl_api');
 
 		$lender_details = array(
 			'first_name'	=> $name[0],
@@ -1430,33 +1432,33 @@ class Dashboard extends MX_Controller {
 		$condition = array(
 			'id' => $LenderId
 		);
+
 		$this->home_model->update($lender_details, $condition, 'customer_basic_details');
-		if (($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32') || $orderDetails['sales_amount'] > 0) { 
+		if ($orderDetails['sales_amount'] > 0) { 
 			$this->home_model->update(array('loan_amount' => $loan_amount, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-			$this->home_model->update(array('escrow_lender_id' => $LenderId), array('id' => $orderDetails['property_id']), 'property_details');
+			$propertyDetails = array('escrow_lender_id' => $LenderId);
+			if ($cplApi == 'fnf') {
+				$propertyDetails['buyer_agent_id'] = $this->input->post('agent_id');
+				$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
+			}
+			$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
 		} else {
 			$this->home_model->update(array('loan_amount' => $loan_amount), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-			$this->home_model->update(array('escrow_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner), array('id' => $orderDetails['property_id']), 'property_details');
+			$propertyDetails = array('escrow_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
+			if ($cplApi == 'fnf') {
+				$propertyDetails['buyer_agent_id'] = $this->input->post('agent_id');
+				$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
+			}
+			$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
 		}
 	
 		$this->home_model->update(array('is_regenerate_cpl' => $editFlag), array('id' => $orderDetails['order_id']), 'order_details');
-
-		$endPoint = 'files/'. $file_id .'/partners';
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
-		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-
-		$resultPartners = $this->resware->make_request('GET', $endPoint, '', array('email' => $orderUser['email_address']));
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
-		$resPartners = json_decode($resultPartners, true);
-		if(!empty($resPartners)) {
-			$key = array_search(39919, array_column($resPartners['Partners'], 'PartnerID'));
-			if($key) {
-				redirect(base_url()."create-cpl-for-natic/".$file_id);
-			} else {
-				redirect(base_url()."create-cpl/".$file_id);
-			}
-		} else {
+		if ($cplApi == 'natic') {
+			redirect(base_url()."create-cpl-for-natic/".$file_id);
+		} else if ($cplApi == 'westcor') {
 			redirect(base_url()."create-cpl/".$file_id);
+		} else {
+			redirect(base_url()."create-cpl-for-fnf/".$file_id);
 		}
 	}
 
@@ -2511,6 +2513,9 @@ class Dashboard extends MX_Controller {
 	}
 	public function getOrderDetailsCpl()
 	{
+		$this->load->library('order/fnf');
+		$this->load->model('order/home_model');
+		$this->load->library('order/resware');
 		$fileId = $this->input->post('fileId');
 		$orderDetails = $this->order->get_order_details($fileId);
 		$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
@@ -2533,7 +2538,7 @@ class Dashboard extends MX_Controller {
 			$orderDetails['lender_name'] = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
 		}
 
-		if (($orderDetails['purchase_type'] == '20' || $orderDetails['purchase_type'] == '32') || $orderDetails['sales_amount'] > 0) {
+		if ($orderDetails['sales_amount'] > 0) {
 			if (!empty($orderDetails['borrower'])) {
 				$primary_owner = explode(' ', $orderDetails['borrower']);
 				$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
@@ -2569,9 +2574,31 @@ class Dashboard extends MX_Controller {
 				$orderDetails['secondary_owner_first_name'] = '';
 				$orderDetails['secondary_owner_last_name'] = '';
 			}
-		} 
-
+		}
 		
+		$endPoint = 'files/'. $fileId .'/partners';
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
+		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+
+		$resultPartners = $this->resware->make_request('GET', $endPoint, '', array('email' => $orderUser['email_address']));
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+		$resPartners = json_decode($resultPartners, true);
+		if(!empty($resPartners)) {
+			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+ 			if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+				$orderDetails['cpl_api'] = 'natic';
+			} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
+				$orderDetails['cpl_api'] = 'westcor';
+			} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+				$orderDetails['cpl_api'] = 'fnf';
+				$agentsData = $this->fnf->getAgents();
+				if ($agentsData === false) {
+					$orderDetails['email'] = $orderUser['email_address'];
+					$agentsData = $this->fnf->getAgentsFromApi($orderDetails);
+				}
+				$orderDetails['agents_data'] = $agentsData;
+			}
+		}
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
 		$response = array('status'=>'success', 'orderDetails' => $orderDetails);
 		echo json_encode($response); exit;
@@ -2581,6 +2608,8 @@ class Dashboard extends MX_Controller {
 	{
 		$this->load->library('order/natic');
 		$this->load->model('order/home_model');
+		$errors = array();
+		$success = array();
 		$userdata = $this->session->userdata('user');
 		$fileId = $this->uri->segment(2);    
 		$orderDetails = $this->order->get_order_details($fileId);
@@ -2591,8 +2620,9 @@ class Dashboard extends MX_Controller {
 				mkdir('./uploads/documents', 0777, TRUE);
 			}
 			file_put_contents('./uploads/documents/'.$document_name, base64_decode($responseArr['content']));
-			$this->home_model->update(array('natic_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+			$this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
 			$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
+			$this->uploadCPLDocumentToResware($document_name, $orderDetails, $responseArr['content']);
 		} else {
 			$errors[] = $responseArr['error'];
 		}
@@ -2604,4 +2634,118 @@ class Dashboard extends MX_Controller {
 		redirect(base_url().'cpl-dashboard');
 	}
 
+	public function createCPlForFnf()
+	{
+		$this->load->library('order/fnf');
+		$this->load->model('order/home_model');
+		$errors = array();
+		$success = array();
+		$userdata = $this->session->userdata('user');
+		$fileId = $this->uri->segment(2);    
+		$orderDetails = $this->order->get_order_details($fileId);
+		$vendorTokenData = $this->fnf->get_vendor_token();
+
+        if ($vendorTokenData === false) {
+            $vendorTokenData = $this->fnf->generateVendorToken($orderDetails);
+		}
+
+		$userTokenData = $this->fnf->get_user_token();
+
+        if ($userTokenData === false) {
+            $userTokenData = $this->fnf->generateUserToken($orderDetails);
+		}
+
+		if (!empty($orderDetails['fnf_document_id'])) {
+			$editCplResponse = $this->fnf->editCpl($orderDetails, $vendorTokenData, $userTokenData);
+			if ($editCplResponse['success']) {
+				$document_name = "fnf"."_".$fileId.".pdf";
+				if (!is_dir('uploads/documents')) {
+					mkdir('./uploads/documents', 0777, TRUE);
+				}
+				file_put_contents('./uploads/documents/'.$document_name, base64_decode($editCplResponse['response']['a:Content']));
+				
+				$success[] = "CPL document edited successfully for file number - ".$orderDetails['file_number'];
+			} else {
+				$errors[] = $editCplResponse['error'];
+			}
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+			$this->session->set_userdata($data);
+			redirect(base_url().'cpl-dashboard');
+		}
+
+		$getCPLFormNameResponse = $this->fnf->getCPLForm($orderDetails, $vendorTokenData, $userTokenData);
+		if ($getCPLFormNameResponse['success'])  {
+			$key = array_search('Lender', array_column($getCPLFormNameResponse['response'], 'a:RecipientType'));
+			$orderDetails['formname'] = $getCPLFormNameResponse['response'][$key]['a:FormName'];
+			$generateCplResponse = $this->fnf->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
+			
+			if ($generateCplResponse['success']) {
+				$document_name = "fnf"."_".$fileId.".pdf";
+				if (!is_dir('uploads/documents')) {
+					mkdir('./uploads/documents', 0777, TRUE);
+				}
+				file_put_contents('./uploads/documents/'.$document_name, base64_decode($generateCplResponse['response']['a:Content']));
+				$this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('file_id' => $fileId), 'order_details');
+				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
+				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
+			} else {
+				$errors[] = $generateCplResponse['error'];
+			}
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+			$this->session->set_userdata($data);
+			redirect(base_url().'cpl-dashboard');
+		} else {
+			$errors[] = $getCPLFormNameResponse['error'];
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+			$this->session->set_userdata($data);
+			redirect(base_url().'cpl-dashboard');
+		}	
+	}
+
+	public function uploadCPLDocumentToResware($document_name, $orderDetails, $binaryData)
+	{
+		$this->load->model('order/document');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		$fileSize = filesize('./uploads/documents/'.$document_name);
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1024,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'CPL Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0
+		);
+		$documentId = $this->document->insert($documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1024,
+			),
+			'Description' => 'CPL Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+	}
 }

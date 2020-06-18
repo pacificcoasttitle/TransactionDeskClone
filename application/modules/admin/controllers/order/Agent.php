@@ -67,6 +67,12 @@ class Agent extends MX_Controller {
                                     'email_address' => $row['Email Address'],
                                     'company' => ucfirst(strtolower($row['Company'])),
                                     'telephone_no' => $row['Telephone'],
+                                    'address' => $row['Address'],
+                                    'city' => $row['City'],
+                                    'zipcode' => $row['Zip'],
+                                    'list_unit' => $row['List Unit'],
+                                    'list_volume' => $row['List Volume'],
+                                    'selected_revenue' => $row['Selected Revenue'],
                                     'status'=> 1,
                                 );
 
@@ -182,6 +188,7 @@ class Agent extends MX_Controller {
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['company'];
+                $nestedData[] = $value['address']." ".$value['city']." ".$value['zipcode'];
                 
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
                 {
@@ -248,6 +255,12 @@ class Agent extends MX_Controller {
                 $this->form_validation->set_rules('email_address', 'Email Address', 'required',array('required'=> 'Enter your email address'));
                 $this->form_validation->set_rules('telephone_no', 'Telephone', 'required',array('required'=> 'Enter your telephone no'));
                 $this->form_validation->set_rules('company', 'Company', 'required',array('required'=> 'Enter your company name'));
+                $this->form_validation->set_rules('address', 'Address', 'required',array('required'=> 'Enter your address'));
+                $this->form_validation->set_rules('city', 'City', 'required',array('required'=> 'Enter your city'));
+                $this->form_validation->set_rules('zipcode', 'Zipcode', 'required',array('required'=> 'Enter your zipcode'));
+                $this->form_validation->set_rules('list_unit', 'List Unit', 'required',array('required'=> 'Enter your list unit'));
+                $this->form_validation->set_rules('list_volume', 'List Volume', 'required',array('required'=> 'Enter your list volume'));
+                $this->form_validation->set_rules('selected_revenue', 'Selected Revenue', 'required',array('required'=> 'Enter your list unit'));
 
                 if($this->form_validation->run($this) == true)
                 {
@@ -256,6 +269,12 @@ class Agent extends MX_Controller {
                         'email_address' => isset($_POST['email_address']) && !empty($_POST['email_address']) ? $_POST['email_address'] : NULL ,
                         'telephone_no' => isset($_POST['telephone_no']) && !empty($_POST['telephone_no']) ? $_POST['telephone_no'] : NULL ,
                         'company' => isset($_POST['company']) && !empty($_POST['company']) ? $_POST['company'] : NULL,
+                        'address' => $_POST['address'],
+                        'city' => $_POST['city'],
+                        'zipcode' => $_POST['zipcode'],
+                        'list_unit' => $_POST['list_unit'],
+                        'list_volume' => $_POST['list_volume'],
+                        'selected_revenue' => $_POST['selected_revenue'],
                         'status' => 1
                     );
 
@@ -277,6 +296,12 @@ class Agent extends MX_Controller {
                     $data['email_address_error_msg'] = form_error('email_address');
                     $data['telephone_no_error_msg'] = form_error('telephone_no');
                     $data['company_error_msg'] = form_error('company');
+                    $data['address_error_msg'] = form_error('address');
+                    $data['city_error_msg'] = form_error('city');
+                    $data['zipcode_error_msg'] = form_error('zipcode');
+                    $data['list_unit_error_msg'] = form_error('list_unit');
+                    $data['list_volume_error_msg'] = form_error('list_volume');
+                    $data['selected_revenue_error_msg'] = form_error('selected_revenue');
                     
                 }
             }
