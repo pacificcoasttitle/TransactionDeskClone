@@ -41,9 +41,9 @@ class Home extends MX_Controller {
 	        	$StreetAddress      = $this->input->post('StreetAddress');
 	        	$City      = $this->input->post('City');
 	        	$Zipcode      = $this->input->post('Zipcode');
-	        	$PropertyAddress      = ucwords($this->input->post('Property'));
+	        	$PropertyAddress      = strtolower($this->input->post('Property'));
 
-	        	$SplitPropertyAddress = explode(' ', ucwords($PropertyAddress));
+	        	$SplitPropertyAddress = explode(' ', strtolower($PropertyAddress));
 
 				$StreetNumber = isset($SplitPropertyAddress[0]) && !empty($SplitPropertyAddress[0]) ? $SplitPropertyAddress[0] : '';
 
@@ -52,19 +52,18 @@ class Home extends MX_Controller {
 				$StreetName = isset($PrimaryStreetName) && !empty($PrimaryStreetName) ? implode(" ", $PrimaryStreetName) : '';
 
 	        	$PropertyState      = $this->input->post('property-state');
-	        	$PropertyCity      = ucwords($this->input->post('property-city'));
+	        	$PropertyCity      = strtolower($this->input->post('property-city'));
 	        	$PropertyFips      = $this->input->post('property-fips');
 	        	$PropertyZip      = $this->input->post('property-zip');
-	        	$PropertyType      = ucwords($this->input->post('property-type'));
-	        	$FullProperty      = ucwords($this->input->post('FullProperty'));
-echo "<pre>"; print_r($PropertyAddress);
-echo "<pre>"; print_r(strtolower($PropertyAddress)); exit;
+	        	$PropertyType      = strtolower($this->input->post('property-type'));
+	        	$FullProperty      = strtolower($this->input->post('FullProperty'));
+
 	        	/*$AddressPropertyParts = explode(',', $FullProperty);	
 				$PropertyZip = trim(end($AddressPropertyParts));*/
 
 	        	$apn      = $this->input->post('apn');
-	        	$County      = ucwords($this->input->post('County'));
-	        	$LegalDescription      = ucwords($this->input->post('LegalDescription'));
+	        	$County      = strtolower($this->input->post('County'));
+	        	$LegalDescription      = strtolower($this->input->post('LegalDescription'));
 	        	$PrimaryOwner      = $this->input->post('PrimaryOwner');
 
 	        	$SplitName = explode(' ', $PrimaryOwner);
@@ -194,7 +193,7 @@ echo "<pre>"; print_r(strtolower($PropertyAddress)); exit;
 				/* Start place order at resware */
 				$place_order = array();
 
-				$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>ucwords($PropertyAddress), 'City'=> ucwords($PropertyCity), 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
+				$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>strtolower($PropertyAddress), 'City'=> strtolower($PropertyCity), 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
 
 				/*if($ProductTypeID == '19' || $ProductTypeID == '33')
 				{
@@ -247,11 +246,11 @@ echo "<pre>"; print_r(strtolower($PropertyAddress)); exit;
 					$loan['LoanNumber'] = $LoanNumber;
 				}
 				$place_order['Loans'][] = $loan;
-				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> ucwords($PropertyCity), 'State'=> $PropertyState, 'County'=> ucwords($County), 'Zip'=>$PropertyZip);
+				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> strtolower($PropertyCity), 'State'=> $PropertyState, 'County'=> strtolower($County), 'Zip'=>$PropertyZip);
 
 				$place_order['Note']['APN'] = $apn;
 				$place_order['Note']['parcel_id'] = $apn;
-				$place_order['Note']['legal_description'] = ucwords($LegalDescription);
+				$place_order['Note']['legal_description'] = strtolower($LegalDescription);
 
 				if (!empty($TitleOfficer)) {
 					$place_order['Note']['title_Officer'] = $titleOfficerName;
@@ -349,11 +348,11 @@ echo "<pre>"; print_r(strtolower($PropertyAddress)); exit;
 								'StreetAddress'=> $StreetAddress,
 								'City'=> $City,
 								'Zipcode'=> $Zipcode,
-								'PropertyAddress'=> ucwords($PropertyAddress),
-								'FullProperty'=> ucwords($FullProperty),
+								'PropertyAddress'=> strtolower($PropertyAddress),
+								'FullProperty'=> strtolower($FullProperty),
 								'APN'=> $apn,
-								'County'=> ucwords($County),
-								'LegalDescription'=> ucwords($LegalDescription),
+								'County'=> strtolower($County),
+								'LegalDescription'=> strtolower($LegalDescription),
 								'PrimaryOwner'=> $PrimaryOwner,
 								'SecondaryOwner'=> $SecondaryOwner,
 								'SalesRep'=> $salesRepName,
@@ -456,15 +455,15 @@ echo "<pre>"; print_r(strtolower($PropertyAddress)); exit;
 							'buyer_agent_id' => $BuyerAgentId,
 							'listing_agent_id' => $ListingAgentId,
 							'escrow_lender_id' => $EscrowLenderId,
-							'address' => ucwords($PropertyAddress),
-							'city' => ucwords($PropertyCity),
+							'address' => strtolower($PropertyAddress),
+							'city' => strtolower($PropertyCity),
 							'state' => $PropertyState,
 							'zip' => $PropertyZip,
 							'property_type' => $PropertyType,
-							'full_address' => ucwords($FullProperty),
+							'full_address' => strtolower($FullProperty),
 							'apn' => $apn,
-							'county' => ucwords($County),
-							'legal_description' => ucwords($LegalDescription),
+							'county' => strtolower($County),
+							'legal_description' => strtolower($LegalDescription),
 							'primary_owner' => $PrimaryOwner,
 							'secondary_owner' => $SecondaryOwner,
 							// 'additional_details'=> $sendermessage,
