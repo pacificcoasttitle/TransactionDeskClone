@@ -41,7 +41,7 @@ class Home extends MX_Controller {
 	        	$StreetAddress      = $this->input->post('StreetAddress');
 	        	$City      = $this->input->post('City');
 	        	$Zipcode      = $this->input->post('Zipcode');
-	        	$PropertyAddress      = $this->input->post('Property');
+	        	$PropertyAddress      = ucwords($this->input->post('Property'));
 
 	        	$SplitPropertyAddress = explode(' ', $PropertyAddress);
 
@@ -52,18 +52,18 @@ class Home extends MX_Controller {
 				$StreetName = isset($PrimaryStreetName) && !empty($PrimaryStreetName) ? implode(" ", $PrimaryStreetName) : '';
 
 	        	$PropertyState      = $this->input->post('property-state');
-	        	$PropertyCity      = $this->input->post('property-city');
+	        	$PropertyCity      = ucwords($this->input->post('property-city'));
 	        	$PropertyFips      = $this->input->post('property-fips');
 	        	$PropertyZip      = $this->input->post('property-zip');
-	        	$PropertyType      = $this->input->post('property-type');
-	        	$FullProperty      = $this->input->post('FullProperty');
+	        	$PropertyType      = ucwords($this->input->post('property-type'));
+	        	$FullProperty      = ucwords($this->input->post('FullProperty'));
 
 	        	/*$AddressPropertyParts = explode(',', $FullProperty);	
 				$PropertyZip = trim(end($AddressPropertyParts));*/
 
 	        	$apn      = $this->input->post('apn');
-	        	$County      = $this->input->post('County');
-	        	$LegalDescription      = $this->input->post('LegalDescription');
+	        	$County      = ucwords($this->input->post('County'));
+	        	$LegalDescription      = ucwords($this->input->post('LegalDescription'));
 	        	$PrimaryOwner      = $this->input->post('PrimaryOwner');
 
 	        	$SplitName = explode(' ', $PrimaryOwner);
@@ -80,6 +80,7 @@ class Home extends MX_Controller {
 	            );
 	        	$salesRepDetails = $this->salesRep->getSalesRepDetails($condition);
 	        	$parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
+	        	$salesRepName = isset($salesRepDetails["name"]) && !empty($salesRepDetails["name"]) ? $salesRepDetails["name"] : '';
 	        	/* Fetch details of Sales Rep */
 
 	        	$TitleOfficer      = $this->input->post('TitleOfficer');
@@ -92,10 +93,13 @@ class Home extends MX_Controller {
 				$titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
 				$titleOfficerName = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';
 
-				$parties_email[] = isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address']) ? $titleOfficerDetails['email_address'] : '';				
+				// $parties_email[] = isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address']) ? $titleOfficerDetails['email_address'] : '';				
 				/*Fetch details of Title Officer */
 				
 	        	$LoanAmount      = $this->input->post('loanAmount');
+	        	$LoanNumber      = $this->input->post('loanNumber');
+	        	$EscrowNumber      = $this->input->post('escrowNumber');
+	        	$Notes      = $this->input->post('notes');
 	        	$SalesAmount      = $this->input->post('salesAmount');
 	        	$ProductTypeTxt      = $this->input->post('ProductType');
 	        	$primaryBorrower      = $this->input->post('primaryBorrower');
@@ -214,7 +218,7 @@ class Home extends MX_Controller {
 				if(strpos($ProductTypeTxt, 'Loan') !== false)
 				{
 					$place_order['Buyers'][] = $legalEntity;
-					$ProductType = 'Residential: Loan: Refinance';
+					// $ProductType = 'Residential: Loan: Refinance';
 				}
 				elseif(strpos($ProductTypeTxt, 'Sale') !== false)
 				{
@@ -228,16 +232,20 @@ class Home extends MX_Controller {
 					$place_order['Sellers'][] = $legalEntity;
 					$place_order['Buyers'][] = $borrowers;
 					$place_order['SalesPrice'] = $SalesAmount;
-					$ProductType = 'Residential: Sales: Purchase';
+					// $ProductType = 'Residential: Sales: Purchase';
 				}
 				
 				$place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID'=>$ProductTypeID);
-
+				$loan = array();
 				if(isset($LoanAmount) && !empty($LoanAmount))
 				{
-					$place_order['Loans'][]['LoanAmount'] = $LoanAmount;
+					$loan['LoanAmount'] = $LoanAmount;
 				}
-
+				if(isset($LoanNumber) && !empty($LoanNumber))
+				{
+					$loan['LoanNumber'] = $LoanNumber;
+				}
+				$place_order['Loans'][] = $loan;
 				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
 
 				$place_order['Note']['APN'] = $apn;
@@ -248,7 +256,7 @@ class Home extends MX_Controller {
 					$place_order['Note']['title_Officer'] = $titleOfficerName;
 				}
 				if (!empty($SalesRep)) {
-					$place_order['Note']['sales_rep'] = $SalesRep;
+					$place_order['Note']['sales_rep'] = $salesRepName;
 				}
 				if (!empty($buyers_agent_details)) {
 					$place_order['Note']['buyers_agent'] = $buyers_agent_details;
@@ -262,8 +270,12 @@ class Home extends MX_Controller {
 				if (!empty($escrow_details)) {
 					$place_order['Note']['escrow_details'] = $escrow_details;
 				}
-				
-				
+				if (!empty($EscrowNumber)) {
+					$place_order['Note']['EscrowNumber'] = $EscrowNumber;
+				}
+				if (!empty($Notes)) {
+					$place_order['Note']['Notes'] = $Notes;
+				}				
 				
 				$order_data = json_encode($place_order);
 				$user_data = array();
@@ -343,11 +355,14 @@ class Home extends MX_Controller {
 								'LegalDescription'=> $LegalDescription,
 								'PrimaryOwner'=> $PrimaryOwner,
 								'SecondaryOwner'=> $SecondaryOwner,
-								'SalesRep'=> $SalesRep,
+								'SalesRep'=> $salesRepName,
 								'TitleOfficer'=> $titleOfficerName,
-								'ProductType'=> $ProductType,
+								'ProductType'=> $ProductTypeTxt,
 								'SalesAmount'=> $SalesAmount,
 								'LoanAmount'=> $LoanAmount,
+								'LoanNumber'=> $LoanNumber,
+								'EscrowNumber'=> $EscrowNumber,
+								'Notes'=> $Notes,
 								'sendermessage'=> $sendermessage,
 								'buyers_agent'=> $buyers_agent_details,
 								'listing_agent'=> $listing_agent_details,

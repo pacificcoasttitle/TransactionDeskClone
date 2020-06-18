@@ -307,17 +307,6 @@
 												<input type="hidden" name="ProductType" id="ProductType">
 												<select id="ProductTypeID" name="ProductTypeID">
 													<option value="">Select Product</option>
-												<?php
-													/*if(isset($productType) && !empty($productType))
-													{
-														foreach ($productType as $key => $value) 
-														{*/
-												?>
-															<!-- <option value="<?php // echo $value['product_type_id']; ?>"><?php // echo $value['display_name'];  ?></option> -->
-												<?php
-														/*}
-													} */
-												?>
 												</select>
 												<i class="arrow double"></i>
 											</label>
@@ -337,6 +326,11 @@
 											</label>
 											<div class="spacer-b10"></div>
 											<label class="field">
+												<input type="text" class="gui-input" name="loanNumber" id="loanNumber"
+													placeholder="Loan Number">
+											</label>
+											<div class="spacer-b10"></div>
+											<label class="field">
 												<input type="text" class="gui-input" name="primaryBorrower" id="primaryBorrower"
 													placeholder="Primary Borrower">
 											</label>
@@ -347,6 +341,16 @@
 											</label>
 										</div>
 									</div>
+									<label class="field">
+										<input type="text" class="gui-input" name="escrowNumber" id="escrowNumber"
+											placeholder="Escrow Number">
+									</label>
+									<div class="section spacer-t20">
+                                        <label class="field prepend-icon">
+                                            <textarea class="gui-textarea" id="notes" name="notes" placeholder="Additional details"></textarea>
+                                            <span class="field-icon"><i class="fa fa-comments"></i></span>        
+                                        </label>
+                                    </div>
 									<div class="spacer-t30">
 										<div class="tagline"><span> Special Instructions </span></div><!-- .tagline -->
 									</div>
@@ -378,14 +382,6 @@
 											</div><!-- end .option-group section -->
 										</div><!-- end .colm section -->
 									</div>
-
-									<!-- <div class="section spacer-t20">
-                                                <label class="field prepend-icon">
-                                                    <textarea class="gui-textarea" id="sendermessage" name="sendermessage" placeholder="Additional details"></textarea>
-                                                    <span class="field-icon"><i class="fa fa-comments"></i></span>
-                                                    <span class="input-hint"> <strong>NOTE:</strong> Be as detailed as possible for better feedback.</span>   
-                                                </label>
-                                            </div> -->
 									<!-- end section -->
 									<div class="spacer-b30 spacer-t30">
 										<div class="tagline"><span>Add Deliverables</span></div>
