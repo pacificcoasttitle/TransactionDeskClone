@@ -52,58 +52,51 @@ class Agent extends MX_Controller {
                     // Insert/update CSV data into database
                     if(!empty($csvData))
                     {
-                        $chunks = array_chunk($csvData, 1000, true);
-
-                        foreach ($chunks as $key => $value) 
+                        foreach($csvData as $row)
                         {
-                            foreach($csvData as $row)
-                            {
-                                exit;
-                                $rowCount++;
+                            $rowCount++;
 
-                                // Prepare data for DB insertion
-                                $agentData = array(
-                                    'name' => ucfirst(strtolower($row['Name'])),
+                            // Prepare data for DB insertion
+                            $agentData = array(
+                                'name' => ucfirst(strtolower($row['Name'])),
+                                'email_address' => $row['Email Address'],
+                                'company' => ucfirst(strtolower($row['Company'])),
+                                'telephone_no' => $row['Telephone'],
+                                'address' => $row['Address'],
+                                'city' => $row['City'],
+                                'zipcode' => $row['Zip'],
+                                'list_unit' => $row['List Unit'],
+                                'list_volume' => $row['List Volume'],
+                                'selected_revenue' => $row['Selected Revenue'],
+                                'status'=> 1,
+                            );
+
+                            $con = array(
+                                'where' => array(
+                                    'name' => $row['Name'],
                                     'email_address' => $row['Email Address'],
-                                    'company' => ucfirst(strtolower($row['Company'])),
-                                    'telephone_no' => $row['Telephone'],
-                                    'address' => $row['Address'],
-                                    'city' => $row['City'],
-                                    'zipcode' => $row['Zip'],
-                                    'list_unit' => $row['List Unit'],
-                                    'list_volume' => $row['List Volume'],
-                                    'selected_revenue' => $row['Selected Revenue'],
-                                    'status'=> 1,
-                                );
-
-                                $con = array(
-                                    'where' => array(
-                                        'name' => $row['Name'],
-                                        'email_address' => $row['Email Address'],
-                                    ),
-                                    'returnType' => 'count'
-                                );
-                                $prevCount = $this->agent_model->get_rows($con);
-                              
-                                if($prevCount > 0){
-                                    // Update member data                                
-                                    $condition = array('name' => $row['Name'], 'email_address' => $row['Email Address']);
-                                    $update = $this->agent_model->update($agentData, $condition);
-                                    
-                                    if($update){
-                                        $updateCount++;
-                                    }
-                                }else{
-                                    // Insert member data
-                                    $insert = $this->agent_model->insert($agentData);
-                                    
-                                    if($insert){
-                                        $insertCount++;
-                                    }
+                                ),
+                                'returnType' => 'count'
+                            );
+                            $prevCount = $this->agent_model->get_rows($con);
+                            
+                            if($prevCount > 0){
+                                // Update member data                                
+                                $condition = array('name' => $row['Name'], 'email_address' => $row['Email Address']);
+                                $update = $this->agent_model->update($agentData, $condition);
+                                
+                                if($update){
+                                    $updateCount++;
+                                }
+                            }else{
+                                // Insert member data
+                                $insert = $this->agent_model->insert($agentData);
+                                
+                                if($insert){
+                                    $insertCount++;
                                 }
                             }
                         }
-                        
                         
                         // Status message with imported data count
                         $notAddCount = ($rowCount - ($insertCount + $updateCount));
