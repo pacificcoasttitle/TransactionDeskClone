@@ -311,7 +311,7 @@ class TitlePoint extends MX_Controller {
 					'cs4_instrument_no' => $instrumentNumber,
 					'cs4_recorded_date' => $recordedDate,
 					'fips' => $fips,
-					'cs4_result_id_status' => $status,
+					// 'cs4_result_id_status' => $status,
 				);
 
 		       	if ($this->session->has_userdata('tp_api_id')) 
