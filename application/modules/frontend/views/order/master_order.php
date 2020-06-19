@@ -346,11 +346,7 @@
 												<input type="text" class="gui-input" name="loanAmount" id="loanAmount"
 													placeholder="Loan Amount">
 											</label>
-											<div class="spacer-b10"></div>
-											<label class="field">
-												<input type="text" class="gui-input" name="loanNumber" id="loanNumber"
-													placeholder="Loan Number">
-											</label>
+											
 											<div class="spacer-b10"></div>
 											<label class="field">
 												<input type="text" class="gui-input" name="primaryBorrower" id="primaryBorrower"
@@ -366,6 +362,11 @@
 									<label class="field">
 										<input type="text" class="gui-input" name="escrowNumber" id="escrowNumber"
 											placeholder="Escrow Number">
+									</label>
+									<div class="spacer-b10"></div>
+									<label class="field">
+										<input type="text" class="gui-input" name="loanNumber" id="loanNumber"
+											placeholder="Loan Number">
 									</label>
 									<div class="section spacer-t20">
                                         <label class="field prepend-icon">
