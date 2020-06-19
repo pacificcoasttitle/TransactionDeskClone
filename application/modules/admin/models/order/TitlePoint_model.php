@@ -55,7 +55,7 @@ class TitlePoint_model extends CI_Model
     public function getLvLogs($params)
     {
         $this->db->where('file_id IS NOT NULL');
-        $this->db->where('cs4_result_id_status IS NOT NULL');
+        $this->db->where('cs4_message IS NOT NULL');
         /*if(array_key_exists("status", $params)){
             foreach($params['status'] as $key => $val){
                 $this->db->where($key."!=", $val);
@@ -84,7 +84,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_result_id_status IS NOT NULL');    
+            $this->db->where('cs4_message IS NOT NULL');    
             $this->db->from($this->table);
             $filter_total_records =  $this->db->count_all_results();
 
@@ -105,7 +105,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_result_id_status IS NOT NULL');        
+            $this->db->where('cs4_message IS NOT NULL');        
             $query = $this->db->get($this->table);
 
             if ($query->num_rows() > 0) 
@@ -122,7 +122,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_result_id_status IS NOT NULL');
+            $this->db->where('cs4_message IS NOT NULL');
             $this->db->from($this->table);
 
             $filter_total_records =  $this->db->count_all_results();
@@ -133,7 +133,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_result_id_status IS NOT NULL');
+            $this->db->where('cs4_message IS NOT NULL');
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);

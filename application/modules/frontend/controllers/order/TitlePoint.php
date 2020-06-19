@@ -72,6 +72,7 @@ class TitlePoint extends MX_Controller {
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
 		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+		
 		if($methodId == 4)
 		{
 			if($responseStatus == 'Success')
@@ -98,6 +99,11 @@ class TitlePoint extends MX_Controller {
 						$this->session->set_userdata('tp_api_id', $tpId);
 					}
 				}
+			}
+			else
+			{
+				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+				$this->addLogs($methodId,$responseStatus,'',$error);
 			}
 			
 		}
@@ -129,8 +135,13 @@ class TitlePoint extends MX_Controller {
 					}
 				}
 			}
-			
+			else
+			{
+				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+				$this->addLogs($methodId,$responseStatus,'',$error);
+			}
 		}
+		
 		echo trim($file); 
 	}
 
@@ -198,6 +209,11 @@ class TitlePoint extends MX_Controller {
 					}
 				}
 			}
+			else
+			{
+				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+				$this->addLogs($methodId,$responseStatus,'',$error);
+			}
 		}
 		if($methodId == 3)
 		{
@@ -225,25 +241,12 @@ class TitlePoint extends MX_Controller {
 					}
 				}
 			}
-		}
-		/*else if($responseStatus == 'Success' && $methodId == 3)
-		{
-			$serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
-
-			if ($this->session->has_userdata($apn)) 
-			{
-				$session_info = $this->session->userdata($apn);
-				$session_info['deedserviceId'] = $serviceId;
-				$this->session->set_userdata($apn, $session_info);
-			}
 			else
 			{
-				$session_data = array(
-		            "deedserviceId" => $serviceId
-		        );
-				$this->session->set_userdata($apn, $session_data);
+				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+				$this->addLogs($methodId,$responseStatus,'',$error);
 			}
-		}*/
+		}
 		echo trim($file); 
 	}
 
@@ -329,6 +332,12 @@ class TitlePoint extends MX_Controller {
 						$this->session->set_userdata('tp_api_id', $tpId);
 					}
 				}
+				$this->addLogs($methodId,$responseStatus,$status,$error);
+			}
+			else
+			{
+				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+				$this->addLogs($methodId,$responseStatus,'',$error);
 			}
 		}
 		if($methodId == 3)
@@ -346,7 +355,7 @@ class TitlePoint extends MX_Controller {
 				{
 					$secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];			
 				}
-
+				$status = isset($result['Result']['Status']) && !empty($result['Result']['Status']) ? $result['Result']['Status'] : '';
 				$tpData = 	array(
 					'first_installment' => json_encode($firstInstallment),
 					'second_installment' => json_encode($secondInstallment),
@@ -369,6 +378,12 @@ class TitlePoint extends MX_Controller {
 						$this->session->set_userdata('tp_api_id', $tpId);
 					}
 				}
+				$this->addLogs($methodId,$responseStatus,$status,$error);
+			}
+			else
+			{
+				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+				$this->addLogs($methodId,$responseStatus,'',$error);
 			}
 		}
 		echo trim($file);
@@ -574,4 +589,58 @@ class TitlePoint extends MX_Controller {
 		
 		echo trim($file);
 	}
+
+	public function addLogs($methodId,$returnStatus,$status='',$error)
+    {
+    	if($returnStatus == 'Failed')
+		{
+			if($methodId == 4)
+			{
+				$tpData = 	array(
+								'cs4_message' => $error,
+							);
+			}
+			elseif($methodId == 3)
+			{
+				$tpData = 	array(
+								'cs3_message' => $error,
+							);
+			}
+			
+		}
+		else
+		{
+			if($methodId == 4)
+			{
+				$tpData = 	array(
+								'cs4_message' => $status,
+							);
+			}
+			elseif($methodId == 3)
+			{
+				$tpData = 	array(
+								'cs3_message' => $status,
+							);
+			}
+		}
+
+   		if ($this->session->has_userdata('tp_api_id')) 
+		{
+			$id = $this->session->userdata('tp_api_id');
+			$condition = array(
+				'id' => $id
+			);					
+			$this->titlePointData->update($tpData,$condition);
+		}
+		else
+		{
+			$tpId = $this->titlePointData->insert($tpData);
+
+			if($tpId)
+			{
+				$this->session->set_userdata('tp_api_id', $tpId);
+			}
+		}
+		
+    }
 }
