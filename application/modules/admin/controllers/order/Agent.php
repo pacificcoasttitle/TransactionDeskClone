@@ -48,7 +48,7 @@ class Agent extends MX_Controller {
                     
                     // Parse data from CSV file
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
-                    $row = '';
+                    $rowNumber = '';
                     
                     // Insert/update CSV data into database
                     if(!empty($csvData))
@@ -90,8 +90,8 @@ class Agent extends MX_Controller {
                                 if($update){
                                     $updateCount++;
                                 } else {
-                                    $notAddCount;
-                                    $row .= $rowCount.",";
+                                    $notAddCount++;
+                                    $rowNumber .= $rowCount.",";
                                 }
                             }else{
                                 // Insert member data
@@ -100,8 +100,8 @@ class Agent extends MX_Controller {
                                 if($insert){
                                     $insertCount++;
                                 } else {
-                                    $notAddCount; 
-                                    $row .= $rowCount.",";
+                                    $notAddCount++; 
+                                    $rowNumber .= $rowCount.",";
                                 }
                             }
                         }
