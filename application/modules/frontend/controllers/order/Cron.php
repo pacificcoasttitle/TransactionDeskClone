@@ -650,7 +650,7 @@ class Cron extends MX_Controller {
                                     );
                                     $customerData = array(
                                         'is_password_updated' => 1,
-                                        'random_password' => md5($random_password),
+                                        'random_password' => $random_password,
                                         'password' => md5('Pacific1')
                                     );
                                     $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
