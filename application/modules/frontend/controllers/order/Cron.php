@@ -118,7 +118,7 @@ class Cron extends MX_Controller {
                     'legal_description' => $LegalDescription,
                     'primary_owner' => $primary_owner,
                     'secondary_owner' => $SecondaryOwner,
-                    'additional_details'=> '',
+                    // 'additional_details'=> '',
                     'status'=> 1
                 );
 
