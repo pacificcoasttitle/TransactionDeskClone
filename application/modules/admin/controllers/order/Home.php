@@ -198,15 +198,16 @@ class Home extends MX_Controller {
                             $rowCount++;
                             if(isset($row['Email']) && !empty($row['Email']))
                             {
+                                $email_address = str_replace(' ','',$row['Email']);
                                 // Prepare data for DB insertion
                                 $customerData = array(
                                     'resware_user_id' => $row['Partner Employee ID'],
                                     'partner_id' => $row['Partner Company ID'],
-                                    'first_name' => ucfirst(strtolower($row['First Name'])),
-                                    'last_name' => ucfirst(strtolower($row['Last Name'])),
-                                    'title' => ucfirst(strtolower($row['Title'])),
+                                    'first_name' => $row['First Name'],
+                                    'last_name' => $row['Last Name'],
+                                    'title' => $row['Title'],
                                     'telephone_no' => $row['Phone'],
-                                    'email_address' => strtolower(str_replace(' ','',$row['Email'])),
+                                    'email_address' => $email_address,
                                     'password' => $password,    
                                     'company_name' => $row['Company Name'],
                                     'street_address' => $row['Street1'],
@@ -220,7 +221,7 @@ class Home extends MX_Controller {
 
                                 $con = array(
                                     'where' => array(
-                                        'email_address' => strtolower(str_replace(' ','',$row['Email'])),
+                                        'email_address' => $email_address,
                                         'resware_user_id' => $row['Partner Employee ID'],
                                         'is_escrow' => 1
                                     ),
@@ -231,7 +232,7 @@ class Home extends MX_Controller {
                                 if($prevCount > 0){
                                     // Update member data
                                     // unset($customerData['customer_number']);
-                                    $condition = array('email_address' => strtolower(str_replace(' ','',$row['Email'])),'resware_user_id'=>$row['Partner Employee ID'],'is_escrow' => 1);
+                                    $condition = array('email_address' => $email_address,'resware_user_id'=>$row['Partner Employee ID'],'is_escrow' => 1);
                                     $update = $this->home_model->update($customerData, $condition);
                                     
                                     if($update){
@@ -381,15 +382,16 @@ class Home extends MX_Controller {
 
                             if(isset($row['Email']) && !empty($row['Email']))
                             {
+                                $email_address = str_replace(' ','',$row['Email']);
                                 // Prepare data for DB insertion
-                                $customerData = array(
+                                $lenderData = array(
                                     'resware_user_id' => $row['Partner Employee ID'],
                                     'partner_id' => $row['Partner Company ID'],
-                                    'first_name' => ucfirst(strtolower($row['First Name'])),
-                                    'last_name' => ucfirst(strtolower($row['Last Name'])),
-                                    'title' => ucfirst(strtolower($row['Title'])),
+                                    'first_name' => $row['First Name'],
+                                    'last_name' => $row['Last Name'],
+                                    'title' => $row['Title'],
                                     'telephone_no' => $row['Phone'],
-                                    'email_address' => strtolower(str_replace(' ','',$row['Email'])),
+                                    'email_address' => $email_address,
                                     'password' => $password,    
                                     'company_name' => $row['Company Name'],
                                     'street_address' => $row['Street1'],
@@ -404,7 +406,7 @@ class Home extends MX_Controller {
 
                                 $con = array(
                                     'where' => array(
-                                        'email_address' => strtolower(str_replace(' ','',$row['Email'])),
+                                        'email_address' => $email_address,
                                         'resware_user_id' => $row['Partner Employee ID'],
                                         'is_escrow' => 0
                                     ),
@@ -414,16 +416,15 @@ class Home extends MX_Controller {
                               
                                 if($prevCount > 0){
                                     // Update member data
-                                    // unset($customerData['customer_number']);
-                                    $condition = array('email_address' => strtolower(str_replace(' ','',$row['Email'])),'resware_user_id'=>$row['Partner Employee ID'],'is_escrow' => 0);
-                                    $update = $this->home_model->update($customerData, $condition);
+                                    $condition = array('email_address' => $email_address,'resware_user_id'=>$row['Partner Employee ID'],'is_escrow' => 0);
+                                    $update = $this->home_model->update($lenderData, $condition);
                                     
                                     if($update){
                                         $updateCount++;
                                     }
                                 }else{
                                     // Insert member data
-                                    $insert = $this->home_model->insert($customerData);
+                                    $insert = $this->home_model->insert($lenderData);
                                     
                                     if($insert){
                                         $insertCount++;
