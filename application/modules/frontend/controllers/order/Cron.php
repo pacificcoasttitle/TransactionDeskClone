@@ -166,16 +166,19 @@ class Cron extends MX_Controller {
 
     public function make_request($http_method, $endpoint, $body_params='', $userdata)
     {
-        $login =  $userdata['email'];
-        
-        if ($login == 'ghernandez@pct.com') {
-            $password= 'Alpha637#';
-        }elseif ($login == 'teamrestine@eatonescrow.com') {
-            $password= 'Pacific12';
+        if($userdata['email_address'] == 'admin@pct24.com') {
+            $login = 'gerardo.hernandez';
+            $password = 'ALPHAomega637';
         } else {
-            $password= 'Pacific2';
+            $login =  $userdata['email'];
+            if ($login == 'ghernandez@pct.com') {
+                $password= 'Alpha637#';
+            }elseif ($login == 'teamrestine@eatonescrow.com') {
+                $password= 'Pacific12';
+            } else {
+                $password= 'Pacific2';
+            }
         }
-
         $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
@@ -620,7 +623,7 @@ class Cron extends MX_Controller {
                     foreach ($value as $k => $v)  {
 
                         if (!empty($v['resware_user_id']) && !empty($v['partner_id']) && !empty($v['email_address'])) {
-                            $endPoint = '/admin/partners/'.$v['partner_id'].'/employees/'.$v['resware_user_id'];
+                            $endPoint = 'admin/partners/'.$v['partner_id'].'/employees/'.$v['resware_user_id'];
                             $userUpdateData = array(			
                                 'Password' => 'Pacific1',
                                 'Enabled' => true,
@@ -632,9 +635,9 @@ class Cron extends MX_Controller {
                                     'EmailAddress' => $v['email_address'],
                                 ),
                             );
-                           
+                            $userUpdateData = json_encode($userUpdateData);
                             $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, array(), 0, 0);
-                            $result = $this->resware->make_request('PUT', $endPoint, $userUpdateData);
+                            $result = $this->make_request('PUT', $endPoint, $userUpdateData, $userdata);
                             $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, $result, 0, $logid);
  
                             if (isset($result) && !empty($result)) {
