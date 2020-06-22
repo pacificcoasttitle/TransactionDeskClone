@@ -108,8 +108,8 @@ class Agent extends MX_Controller {
                         
                         
                         // Status message with imported data count
-                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
-                        $successMsg = 'Agents imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.') | Not Inserted Row Number ('.$row.')';
+                        //$notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'Agents imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.') | Not Inserted Row Number ('.$rowNumber.')';
                         // $this->session->set_userdata('success_msg', $successMsg);
                         $data['success_msg'] = $successMsg;
                     }
