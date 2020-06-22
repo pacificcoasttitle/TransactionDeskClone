@@ -148,7 +148,7 @@ class Natic
                 <Field>
                     <FieldId>LenderState</FieldId>
                     <Name>Lender State</Name>
-                    <Value>CA</Value>
+                    <Value>".$orderDetails['lender_state']."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>

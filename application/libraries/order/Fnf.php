@@ -299,7 +299,7 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender State]</a:Name>
-                                        <a:Value>CA</a:Value>
+                                        <a:Value>'.$orderDetails['lender_state'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Zip Code]</a:Name>
@@ -324,7 +324,7 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Property State]</a:Name>
-                                        <a:Value>CA</a:Value>
+                                        <a:Value>'.$propery['state'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Property Zip Code]</a:Name>
@@ -445,7 +445,7 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender State]</a:Name>
-                                        <a:Value>CA</a:Value>
+                                        <a:Value>'.$orderDetails['lender_state'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Zip Code]</a:Name>
@@ -470,7 +470,7 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Property State]</a:Name>
-                                        <a:Value>CA</a:Value>
+                                        <a:Value>'.$propery['state'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Property Zip Code]</a:Name>

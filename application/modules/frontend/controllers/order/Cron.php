@@ -596,4 +596,98 @@ class Cron extends MX_Controller {
             echo $successMsg;
         }
     }
+
+    public function updatePassword()
+    {
+        ini_set('max_execution_time', 0); 
+        ini_set('memory_limit','2048M');
+        $userdata = $this->session->userdata('admin');
+        $condition = array(
+            'where' => array(
+                'status' => 1,
+                'is_master' => 0,
+            )
+        );
+        $customer_lists = $this->home_model->get_customers($condition);
+        $updatePasswordCount = $notUpdatePasswordCount = 0;
+
+        if (isset($customer_lists) && !empty($customer_lists)) {
+
+            foreach (array_chunk($customer_lists,50) as $key => $value) {
+                
+                if (isset($value) && !empty($value)) {
+
+                    foreach ($value as $k => $v)  {
+
+                        if (!empty($v['resware_user_id']) && !empty($v['partner_id']) && !empty($v['email_address'])) {
+                            $endPoint = '/admin/partners/'.$v['partner_id'].'/employees/'.$v['resware_user_id'];
+                            $userUpdateData = array(			
+                                'Password' => 'Pacific1',
+                                'Enabled' => true,
+                                'WebsiteAccess' => true,
+                                'Name' => $v['first_name']." ".$v['last_name'],
+                                'FirstName' => $v['first_name'],
+                                'LastName' => $v['last_name'],
+                                'ContactInformation' => array(
+                                    'EmailAddress' => $v['email_address'],
+                                ),
+                            );
+                           
+                            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, array(), 0, 0);
+                            $result = $this->resware->make_request('PUT', $endPoint, $userUpdateData);
+                            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, $result, 0, $logid);
+ 
+                            if (isset($result) && !empty($result)) {
+                                $response = json_decode($result,true);
+                                
+                                if (isset($response['Employee']) && !empty($response['Employee'])) {
+                                    $random_password = $this->randomPassword();
+                                    $condition = array(
+                                        'id' => $v['id']
+                                    );
+                                    $customerData = array(
+                                        'is_password_updated' => 1,
+                                        'random_password' => md5($random_password),
+                                        'password' => md5('Pacific1')
+                                    );
+                                    $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+
+                                    if($update) {
+                                        $updatePasswordCount++;                          
+                                    }
+                                } else {
+                                    $notUpdatePasswordCount++;
+                                }
+                            } else {
+                                $notUpdatePasswordCount++;
+                            }
+                            $successMsg = 'Password updated successfully. Updated ('.$updatePasswordCount.') | Not Updated ('.$notUpdatePasswordCount.')';
+                        }
+                    }
+                }
+            }
+            echo $successMsg;
+        }
+    }
+
+    function randomPassword() 
+    {
+        $len = 8;
+        $sets = array();
+        $sets[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $sets[] = 'abcdefghijkmnopqrstuvwxyz';
+        $sets[] = '0123456789';
+        $sets[]  = '~!@#$%^&*(){}[],./?';
+        $password = '';
+        
+        foreach ($sets as $set) {
+            $password .= $set[array_rand(str_split($set))];
+        }
+    
+        while(strlen($password) < $len) {
+            $randomSet = $sets[array_rand($sets)];
+            $password .= $randomSet[array_rand(str_split($randomSet))]; 
+        }
+        return str_shuffle($password);
+    }
 }

@@ -55,11 +55,11 @@ class Agent extends MX_Controller {
                         foreach($csvData as $row)
                         {
                             $rowCount++;
-                            // Prepare data for DB insertion
+                            $name = explode(" ", $row['Name']);
                             $agentData = array(
-                                'name' => ucfirst(strtolower($row['Name'])),
+                                'name' => ucfirst($name[1])." ".ucfirst($name[0]),
                                 'email_address' => $row['Email Address'],
-                                'company' => ucfirst(strtolower($row['Company'])),
+                                'company' => ($row['Company']),
                                 'telephone_no' => $row['Telephone'],
                                 'address' => $row['Address'],
                                 'city' => $row['City'],
@@ -70,10 +70,12 @@ class Agent extends MX_Controller {
                                 'status'=> 1,
                             );
 
+                            //$this->db->replace('agents', $agentData);
                             $con = array(
                                 'where' => array(
-                                    'name' => $row['Name'],
+                                    'name' => ucfirst($name[1])." ".ucfirst($name[0]),
                                     'email_address' => $row['Email Address'],
+                                    'company' => $row['Company']
                                 ),
                                 'returnType' => 'count'
                             );
@@ -96,6 +98,7 @@ class Agent extends MX_Controller {
                                 }
                             }
                         }
+                        
                         
                         // Status message with imported data count
                         $notAddCount = ($rowCount - ($insertCount + $updateCount));

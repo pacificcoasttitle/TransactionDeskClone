@@ -986,6 +986,7 @@ class Dashboard extends MX_Controller {
 		$this->load->model('order/apiLogs');
 		$this->load->library('order/westcor');
 		$this->load->model('order/home_model');
+		$this->load->model('order/document');
 		$userdata = $this->session->userdata('user');
 		$fileId = $this->uri->segment(2);    
 		$errors = array();
@@ -1345,7 +1346,8 @@ class Dashboard extends MX_Controller {
 				);
 
 				if(!empty($resultResCPL['cpl'][0]['FileInformation']['FileAsBase64'])) {
-					$document_name = "westcor"."_".$fileId.".pdf";
+					$cplCount = $this->document->countCplDocument($fileId);
+					$document_name = "westcor_".$cplCount."_".$fileId.".pdf";
 					if (!is_dir('uploads/documents')) {
 						mkdir('./uploads/documents', 0777, TRUE);
 					}
@@ -2608,6 +2610,7 @@ class Dashboard extends MX_Controller {
 	{
 		$this->load->library('order/natic');
 		$this->load->model('order/home_model');
+		$this->load->model('order/document');
 		$errors = array();
 		$success = array();
 		$userdata = $this->session->userdata('user');
@@ -2615,7 +2618,8 @@ class Dashboard extends MX_Controller {
 		$orderDetails = $this->order->get_order_details($fileId);
 		$responseArr = $this->natic->getDocumentContentForCpl($fileId);
 		if ($responseArr['success']) {
-			$document_name = "natic"."_".$fileId.".pdf";
+			$cplCount = $this->document->countCplDocument($fileId);
+			$document_name = "natic_".$cplCount."_".$fileId.".pdf";
 			if (!is_dir('uploads/documents')) {
 				mkdir('./uploads/documents', 0777, TRUE);
 			}
@@ -2638,6 +2642,7 @@ class Dashboard extends MX_Controller {
 	{
 		$this->load->library('order/fnf');
 		$this->load->model('order/home_model');
+		$this->load->model('order/document');
 		$errors = array();
 		$success = array();
 		$userdata = $this->session->userdata('user');
@@ -2658,7 +2663,8 @@ class Dashboard extends MX_Controller {
 		if (!empty($orderDetails['fnf_document_id'])) {
 			$editCplResponse = $this->fnf->editCpl($orderDetails, $vendorTokenData, $userTokenData);
 			if ($editCplResponse['success']) {
-				$document_name = "fnf"."_".$fileId.".pdf";
+				$cplCount = $this->document->countCplDocument($fileId);
+				$document_name = "fnf_".$cplCount."_".$fileId.".pdf";
 				if (!is_dir('uploads/documents')) {
 					mkdir('./uploads/documents', 0777, TRUE);
 				}
@@ -2683,7 +2689,8 @@ class Dashboard extends MX_Controller {
 			$generateCplResponse = $this->fnf->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
 			
 			if ($generateCplResponse['success']) {
-				$document_name = "fnf"."_".$fileId.".pdf";
+				$cplCount = $this->document->countCplDocument($fileId);
+				$document_name = "fnf_".$cplCount."_".$fileId.".pdf";
 				if (!is_dir('uploads/documents')) {
 					mkdir('./uploads/documents', 0777, TRUE);
 				}
@@ -2747,5 +2754,27 @@ class Dashboard extends MX_Controller {
 		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+
+		$from_name = 'Pacific Coast Title Company';
+		$from_mail = env('FROM_EMAIL');
+		$order_message_body = 'Please check attachment for CPL document.';
+		$message = $order_message_body; 
+		$subject = 'CPL Document';
+		$to = $orderDetails['lender_email'];
+		$cc = array();
+		if (!empty($orderDetails['sales_representative'])) {
+			$this->db->select('*')
+            	->from('pct_order_sales_rep');
+			$this->db->where('id', $orderDetails['sales_representative']);
+			$query = $this->db->get();
+			$salesResult = $query->row_array();
+			if (!empty($salesResult)) {
+				$cc = array($salesResult['email_address']);
+			}
+		}
+		$bcc = array();
+		$file = array(base_url().'uploads/documents/'.$document_name);
+		$this->load->helper('sendemail');
+		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);
 	}
 }
