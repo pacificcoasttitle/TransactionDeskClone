@@ -184,7 +184,7 @@ class Order
             customer_basic_details.id as lender_id,
             customer_basic_details.street_address as lender_address,
             customer_basic_details.city as lender_city,
-            ustomer_basic_details.state as lender_state,
+            customer_basic_details.state as lender_state,
             customer_basic_details.zip_code as lender_zipcode,
             customer_basic_details.company_name as lender_company_name,
             customer_basic_details.first_name as lender_first_name,
