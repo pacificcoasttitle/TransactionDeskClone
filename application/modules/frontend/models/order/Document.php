@@ -42,4 +42,19 @@ class Document extends CI_Model
         }
         return false;
     }
+
+    
+    public function countCplDocument($fileId)
+    {
+        $this->db->select('*')
+            ->from('pct_order_documents');
+        
+        $this->db->like('document_name', '_'.$fileId.'.pdf');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->num_rows();
+        } else {
+            return 1;
+        }         
+    }
 }
