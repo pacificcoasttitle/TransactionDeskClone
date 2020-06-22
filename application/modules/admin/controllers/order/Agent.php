@@ -48,6 +48,7 @@ class Agent extends MX_Controller {
                     
                     // Parse data from CSV file
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+                    $row = '';
                     
                     // Insert/update CSV data into database
                     if(!empty($csvData))
@@ -88,6 +89,9 @@ class Agent extends MX_Controller {
                                 
                                 if($update){
                                     $updateCount++;
+                                } else {
+                                    $notAddCount;
+                                    $row .= $rowCount.",";
                                 }
                             }else{
                                 // Insert member data
@@ -95,6 +99,9 @@ class Agent extends MX_Controller {
                                 
                                 if($insert){
                                     $insertCount++;
+                                } else {
+                                    $notAddCount; 
+                                    $row .= $rowCount.",";
                                 }
                             }
                         }
@@ -102,7 +109,7 @@ class Agent extends MX_Controller {
                         
                         // Status message with imported data count
                         $notAddCount = ($rowCount - ($insertCount + $updateCount));
-                        $successMsg = 'Agents imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                        $successMsg = 'Agents imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.') | Not Inserted Row Number ('.$row.')';
                         // $this->session->set_userdata('success_msg', $successMsg);
                         $data['success_msg'] = $successMsg;
                     }
