@@ -1358,8 +1358,8 @@ class Dashboard extends MX_Controller {
 				);
 
 				if(!empty($resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64'])) {
-					$cplCount = $this->document->countCplDocument($fileId);
-					$document_name = "westcor_".$cplCount."_".$fileId.".pdf";
+					$cplDocumentCount = $this->document->countCplDocument($fileId);
+					$document_name = "westcor_".$cplDocumentCount."_".$fileId.".pdf";
 					if (!is_dir('uploads/documents')) {
 						mkdir('./uploads/documents', 0777, TRUE);
 					}
