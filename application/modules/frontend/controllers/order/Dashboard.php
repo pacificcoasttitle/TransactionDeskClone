@@ -15,7 +15,8 @@ class Dashboard extends MX_Controller {
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
-        $this->load->model('order/titleOfficer');
+		$this->load->model('order/titleOfficer');
+		$this->load->model('order/home_model');
 		$this->order->is_user();
 	}
 	
@@ -297,9 +298,18 @@ class Dashboard extends MX_Controller {
 						'DocumentBody' => $binaryData
 					);
 					$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+					if ($userdata['is_master'] == 1) {
+						$orderDetails = $this->order->get_order_details($fileId);
+						$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+						$user_data['email'] = $orderUser['email_address'];
+						$user_data['password'] = $orderUser['random_password'];
+					} else {
+						$user_data = array();
+					}
 					
 					$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, array(), $orderId, 0);
-					$result = $this->resware->make_request('POST', $endPoint, $document_api_data);
+					$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
 					$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderId, $logid);
 					$res = json_decode($result);
 					$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
@@ -1168,18 +1178,18 @@ class Dashboard extends MX_Controller {
 				'update_reinsurance' => false,
 				'update_priors' => false,
 			),
-			'partnerCode' => (int)WESTCORE_INTEGRATION_PARTNER,
+			'partnerCode' => (int)getenv('WESTCORE_INTEGRATION_PARTNER'),
 			'cpl' => null,
 			'priors' => null
 		);
 
 		if(empty($orderDetails['westcor_order_id'])) {
-			$endPointCreateOrder = 'VendorApi/Order/Update/'.WESTCORE_INTEGRATION_PARTNER;
+			$endPointCreateOrder = 'VendorApi/Order/Update/'.getenv('WESTCORE_INTEGRATION_PARTNER');
 			$cplPostData = json_encode($cplPostData);
 			$res = array();
-			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', WESTCORE_URL.$endPointCreateOrder, $cplPostData, array(), $orderDetails['order_id'], 0);
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', getenv('WESTCORE_URL').$endPointCreateOrder, $cplPostData, array(), $orderDetails['order_id'], 0);
 			$result = $this->westcor->make_request('POST', $endPointCreateOrder, $cplPostData, 0, $resToken['token']);
-			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', WESTCORE_URL.$endPointCreateOrder, $cplPostData, $result, $orderDetails['order_id'], $logid);
+			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', getenv('WESTCORE_URL').$endPointCreateOrder, $cplPostData, $result, $orderDetails['order_id'], $logid);
 			$res = json_decode($result, true);
 			if(is_array($res)) {
 				if ($res['Message']) {
@@ -1240,19 +1250,19 @@ class Dashboard extends MX_Controller {
 		
 		if(!empty($orderDetails['westcor_order_id'])) {
 			$res = array();
-			$endPointGetOrdeData = 'VendorApi/Order/'.$orderDetails['westcor_order_id'].'/'.WESTCORE_INTEGRATION_PARTNER;
-			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_order_data', WESTCORE_URL.$endPointGetOrdeData, array(), array(), $orderDetails['order_id'], 0);
+			$endPointGetOrdeData = 'VendorApi/Order/'.$orderDetails['westcor_order_id'].'/'.getenv('WESTCORE_INTEGRATION_PARTNER');
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_order_data', getenv('WESTCORE_URL').$endPointGetOrdeData, array(), array(), $orderDetails['order_id'], 0);
 			$resultForGetOrderData = $this->westcor->make_request('GET', $endPointGetOrdeData, array(), 0, $resToken['token']);
-			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_order_data', WESTCORE_URL.$endPointGetOrdeData, array(), $resultForGetOrderData, $orderDetails['order_id'], $logid);	
+			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_order_data', getenv('WESTCORE_URL').$endPointGetOrdeData, array(), $resultForGetOrderData, $orderDetails['order_id'], $logid);	
 			$res = json_decode($resultForGetOrderData, true);
 			$res['cpl'] = array();
 			
 
 			$resCPL = array();
-			$endPointForCPL = 'VendorApi/ClosingLetters/PrepareAddCPL/'.$orderDetails['westcor_order_id'].'/'.WESTCORE_INTEGRATION_PARTNER;
-			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_cpl_data', WESTCORE_URL.$endPointForCPL, array(), array(), $orderDetails['order_id'], 0);
+			$endPointForCPL = 'VendorApi/ClosingLetters/PrepareAddCPL/'.$orderDetails['westcor_order_id'].'/'.getenv('WESTCORE_INTEGRATION_PARTNER');
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_cpl_data', getenv('WESTCORE_URL').$endPointForCPL, array(), array(), $orderDetails['order_id'], 0);
 			$cplData = $this->westcor->make_request('GET', $endPointForCPL, array(), 0, $resToken['token']);
-			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_cpl_data', WESTCORE_URL.$endPointForCPL, array(), $cplData, $orderDetails['order_id'], $logid);	
+			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_cpl_data', getenv('WESTCORE_URL').$endPointForCPL, array(), $cplData, $orderDetails['order_id'], $logid);	
 			$resCPL = json_decode($cplData, true);
 			
 			$resCPL['CPL']['LetterName'] = $resCPL['CPL']['Forms'][1]['FormName'];
@@ -1318,11 +1328,11 @@ class Dashboard extends MX_Controller {
 			$res['purchase_price']= $purchase_price;
 			
 			$generateCplPostData = json_encode($res);
-			$endPointCreateCPL = 'VendorApi/Order/Update/'.WESTCORE_INTEGRATION_PARTNER;
+			$endPointCreateCPL = 'VendorApi/Order/Update/'.getenv('WESTCORE_INTEGRATION_PARTNER');
 			$resultResCPL = array();
-			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'generate_cpl', WESTCORE_URL.$endPointCreateCPL, $generateCplPostData, array(), $orderDetails['order_id'], 0);
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'generate_cpl', getenv('WESTCORE_URL').$endPointCreateCPL, $generateCplPostData, array(), $orderDetails['order_id'], 0);
 			$resultCPL = $this->westcor->make_request('POST', $endPointCreateCPL, $generateCplPostData, 0, $resToken['token']);
-			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'generate_cpl', WESTCORE_URL.$endPointCreateCPL, $generateCplPostData, $resultCPL, $orderDetails['order_id'], $logid);
+			$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'generate_cpl', getenv('WESTCORE_URL').$endPointCreateCPL, $generateCplPostData, $resultCPL, $orderDetails['order_id'], $logid);
 			$resultResCPL = json_decode($resultCPL, true);
 
 			if (is_array($resultResCPL)) {
@@ -1393,10 +1403,10 @@ class Dashboard extends MX_Controller {
 		if ($resToken === false) {
 			$resToken = $this->westcor->createToken($westcor_order_id);
 		} 
-		$endPoint = 'VendorApi/Attachments/Download/'.WESTCORE_INTEGRATION_PARTNER;
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', WESTCORE_URL.$endPoint, $data, array(), $westcor_order_id, 0);
+		$endPoint = 'VendorApi/Attachments/Download/'.getenv('WESTCORE_INTEGRATION_PARTNER');
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', getenv('WESTCORE_URL').$endPoint, $data, array(), $westcor_order_id, 0);
 		$result = $this->westcor->make_request('POST', $endPoint, $data, 0, $resToken['token']);
-		$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', WESTCORE_URL.$endPoint, $data, $result, $westcor_order_id, $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', getenv('WESTCORE_URL').$endPoint, $data, $result, $westcor_order_id, $logid);
 		if (isset($result) && !empty($result)) {
 			echo base64_encode($result);
 		}	
@@ -1455,12 +1465,12 @@ class Dashboard extends MX_Controller {
 		}
 	
 		$this->home_model->update(array('is_regenerate_cpl' => $editFlag), array('id' => $orderDetails['order_id']), 'order_details');
-		if ($cplApi == 'natic') {
-			redirect(base_url()."create-cpl-for-natic/".$file_id);
+		if ($cplApi == 'fnf') {
+			redirect(base_url()."create-cpl-for-fnf/".$file_id);
 		} else if ($cplApi == 'westcor') {
 			redirect(base_url()."create-cpl/".$file_id);
 		} else {
-			redirect(base_url()."create-cpl-for-fnf/".$file_id);
+			redirect(base_url()."create-cpl-for-natic/".$file_id);
 		}
 	}
 
@@ -1634,7 +1644,14 @@ class Dashboard extends MX_Controller {
 		$endPoint = 'files/'. $fileId .'/documents';
 		$userdata = $this->session->userdata('user');
 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
-		$resultDocuments = $this->resware->make_request('GET', $endPoint);
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		$resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
 		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), $resultDocuments, $orderDetails['order_id'], $logid);
 		$resDocuments = json_decode($resultDocuments, true);
 		$documentCount  = count($documents);
@@ -1682,7 +1699,7 @@ class Dashboard extends MX_Controller {
 
 							$endPoint = 'documents/'.$resDocument['DocumentID'].'?format=json';
 							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
-							$resultDocument = $this->resware->make_request('GET', $endPoint);
+							$resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
 							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $orderDetails['order_id'], $logid);
 							$resDocument = json_decode($resultDocument, true);
 
@@ -1836,7 +1853,7 @@ class Dashboard extends MX_Controller {
 
 							$endPoint = 'documents/'.$resDocument['DocumentID'].'?format=json';
 							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
-							$resultDocument = $this->resware->make_request('GET', $endPoint);
+							$resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
 							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $orderDetails['order_id'], $logid);
 							$resDocument = json_decode($resultDocument, true);
 
@@ -2223,10 +2240,18 @@ class Dashboard extends MX_Controller {
 		$order_id = $this->input->post('order_id');
 		$documentDetail = $this->order->get_document_detail($resware_document_id);
 		$is_sync = $this->input->post('is_sync');
+		if ($userdata['is_master'] == 1) {
+			$orderDetails = $this->order->get_rows(array('id' => $order_id));
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
 		if ($is_sync == 0) {
 			$endPoint = 'documents/'.$resware_document_id.'?format=json';
 			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $order_id, 0);
-			$resultDocument = $this->resware->make_request('GET', $endPoint);
+			$resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
 			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $order_id, $logid);
 			$resDocument = json_decode($resultDocument, true);
 			if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
@@ -2580,9 +2605,15 @@ class Dashboard extends MX_Controller {
 		
 		$endPoint = 'files/'. $fileId .'/partners';
 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
-		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-
-		$resultPartners = $this->resware->make_request('GET', $endPoint, '', array('email' => $orderUser['email_address']));
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
 		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
 		$resPartners = json_decode($resultPartners, true);
 		if(!empty($resPartners)) {
@@ -2599,6 +2630,8 @@ class Dashboard extends MX_Controller {
 					$agentsData = $this->fnf->getAgentsFromApi($orderDetails);
 				}
 				$orderDetails['agents_data'] = $agentsData;
+			} else {
+				$orderDetails['cpl_api'] = 'natic';
 			}
 		}
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
@@ -2748,9 +2781,17 @@ class Dashboard extends MX_Controller {
 			'DocumentBody' => $binaryData
 		);
 		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
 		
 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
-		$result = $this->resware->make_request('POST', $endPoint, $document_api_data);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
 		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
