@@ -132,7 +132,7 @@
                     <h3>Grant Deed Information:</h3>
                 </div>
                 <?php 
-                    $cs4_result_id_status = isset($tp_data['cs4_result_id_status']) && !empty($tp_data['cs4_result_id_status']) ? $tp_data['cs4_result_id_status'] : '';
+                    $cs4_result_id_status = isset($tp_data['cs4_message']) && !empty($tp_data['cs4_message']) ? $tp_data['cs4_message'] : '';
                     
                     if($cs4_result_id_status == 'Success')
                     {
