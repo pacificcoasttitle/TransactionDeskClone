@@ -195,26 +195,6 @@ class Home extends MX_Controller {
 
 				$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>strtolower($PropertyAddress), 'City'=> strtolower($PropertyCity), 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
 
-				/*if($ProductTypeID == '19' || $ProductTypeID == '33')
-				{
-					$place_order['Buyers'][] = $legalEntity;
-					$ProductType = 'Residential: Loan: Refinance';
-				}
-				elseif ($ProductTypeID == '20' || $ProductTypeID == '32') 
-				{
-					$borrowerName = explode(' ', $primaryBorrower);
-					$borrowerLastName = end($borrowerName);
-					$borrowerPrimaryName = array_slice($borrowerName, 0, -1);
-					$borrowerFirstName = implode(" ", $borrowerPrimaryName);
-					
-					$borrowers = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$borrowerFirstName,'Last'=>$borrowerLastName));
-
-					$place_order['Sellers'][] = $legalEntity;
-					$place_order['Buyers'][] = $borrowers;
-					$place_order['SalesPrice'] = $SalesAmount;
-					$ProductType = 'Residential: Sales: Purchase';
-				}*/
-
 				if(strpos($ProductTypeTxt, 'Loan') !== false)
 				{
 					$place_order['Buyers'][] = $legalEntity;
@@ -282,7 +262,12 @@ class Home extends MX_Controller {
 				
 				if(isset($userdata['is_master']) && !empty($userdata['is_master']))
 				{
-					$user_data['email'] = isset($_POST['OpenEmail']) && !empty($_POST['OpenEmail']) ? $_POST['OpenEmail'] : '';
+					$orderUser =  $this->home_model->get_user(array('id' => $_POST['CustomerId']));
+					
+					$user_data['email'] = $orderUser['email_address'];
+					$user_data['password'] = $orderUser['random_password'];
+					/*$user_data['email'] = isset($_POST['OpenEmail']) && !empty($_POST['OpenEmail']) ? $_POST['OpenEmail'] : '';
+					$user_data['password'] = isset($_POST['OpenEmail']) && !empty($_POST['OpenEmail']) ? $_POST['OpenEmail'] : '';*/
 				}
 				
 				$this->load->library('order/resware');
@@ -996,7 +981,9 @@ class Home extends MX_Controller {
         $customerDetails = $this->home_model->get_customers($condition);
         
         $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
-        $data = array('email'=>$email_address);
+        $password = isset($customerDetails['random_password']) && !empty($customerDetails['random_password']) ? $customerDetails['random_password'] : '';
+        $data = array('email'=>$email_address,'password'=>$password);
+
         $resware_user_id = isset($customerDetails['resware_user_id']) && !empty($customerDetails['resware_user_id']) ? $customerDetails['resware_user_id'] : '';
         $endPoint = 'types/products?ClientsClientID='.$resware_user_id;
     	$logid = $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, $requestParams, array(), 0, 0);
