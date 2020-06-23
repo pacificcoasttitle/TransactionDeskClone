@@ -15,17 +15,15 @@ class Resware
 		self::$CI = $this->CI;
     }
 
-    public function make_request($http_method, $endpoint, $body_params='',$data = array())
+    public function make_request($http_method, $endpoint, $body_params='', $data = array())
     {
         $userdata = $this->CI->session->userdata('user');
-        if(isset($userdata['is_master']) && !empty($userdata['is_master']))
-        {
+        if (isset($userdata['is_master']) && !empty($userdata['is_master'])) {
             $login = isset($data['email']) && !empty($data['email']) ? $data['email'] : '' ;
-        }
-        else
-        {
+        } else {
             $login = $userdata['email'];
         }
+        
         if ($login == 'ghernandez@pct.com') {
             $password= 'Alpha637#';
         }elseif ($login == 'teamrestine@eatonescrow.com') {

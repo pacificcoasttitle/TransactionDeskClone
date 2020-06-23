@@ -18,7 +18,8 @@ class Cron extends MX_Controller {
     {
         $condition = array(
             'where' => array(
-                'email_address' => 'ghernandez@pct.com',
+                'status' => 1,
+                'is_master' => 0,
             )
         );
         $customers = $this->home_model->get_customers($condition);
@@ -167,17 +168,11 @@ class Cron extends MX_Controller {
     public function make_request($http_method, $endpoint, $body_params='', $userdata)
     {
         if($userdata['email_address'] == 'admin@pct24.com') {
-            $login = 'gerardo.hernandez';
-            $password = 'ALPHAomega637';
+            $login = getenv('RESWARE_ADMIN_USERNAME');
+            $password = getenv('RESWARE_ADMIN_PASSWORD');
         } else {
             $login =  $userdata['email'];
-            if ($login == 'ghernandez@pct.com') {
-                $password= 'Alpha637#';
-            }elseif ($login == 'teamrestine@eatonescrow.com') {
-                $password= 'Pacific12';
-            } else {
-                $password= 'Pacific2';
-            }
+            $password = $userdata['random_password'];
         }
         $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
@@ -637,9 +632,9 @@ class Cron extends MX_Controller {
                                 ),
                             );
                             $userUpdateData = json_encode($userUpdateData);
-                            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, array(), 0, 0);
+                            $logid = $this->apiLogs->syncLogs($v['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, array(), 0, 0);
                             $result = $this->make_request('PUT', $endPoint, $userUpdateData, $userdata);
-                            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, $result, 0, $logid);
+                            $this->apiLogs->syncLogs($v['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, $result, 0, $logid);
  
                             if (isset($result) && !empty($result)) {
                                 $response = json_decode($result,true);
