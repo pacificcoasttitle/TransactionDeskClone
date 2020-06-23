@@ -1346,22 +1346,24 @@ class Dashboard extends MX_Controller {
 					redirect(base_url().'cpl-dashboard');
 				}
 
+				$cplCount = count($resultResCPL['cpl']) - 1;
+
 				$order_details = array(
-					'westcor_cpl_id'	=> $resultResCPL['cpl'][0]['CPLID'],
-					'westcor_file_id'   => $resultResCPL['cpl'][0]['FileInformation']['FileAsDataVaultFileID'],
+					'westcor_cpl_id'	=> $resultResCPL['cpl'][$cplCount]['CPLID'],
+					'westcor_file_id'   => $resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsDataVaultFileID'],
 					'westcor_buyer_id'  => !empty($resultResCPL['buyers']) ? $resultResCPL['buyers'][0]['NameID'] : 0,
 					'westcor_seller_id'  => !empty($resultResCPL['sellers']) ? $resultResCPL['sellers'][0]['NameID'] : 0,
 					'westcor_secondary_buyer_id'  => !empty($resultResCPL['buyers']) ? $resultResCPL['buyers'][1]['NameID'] : 0,
 					'westcor_secondary_seller_id'  => !empty($resultResCPL['sellers']) ? $resultResCPL['sellers'][1]['NameID'] : 0
 				);
 
-				if(!empty($resultResCPL['cpl'][0]['FileInformation']['FileAsBase64'])) {
+				if(!empty($resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64'])) {
 					$cplCount = $this->document->countCplDocument($fileId);
 					$document_name = "westcor_".$cplCount."_".$fileId.".pdf";
 					if (!is_dir('uploads/documents')) {
 						mkdir('./uploads/documents', 0777, TRUE);
 					}
-					file_put_contents('./uploads/documents/'.$document_name, base64_decode($resultResCPL['cpl'][0]['FileInformation']['FileAsBase64']));
+					file_put_contents('./uploads/documents/'.$document_name, base64_decode($resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']));
 					$this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
 				}
 				
@@ -1371,7 +1373,7 @@ class Dashboard extends MX_Controller {
 				);
 	
 				$this->home_model->update($order_details, $condition, 'order_details');
-				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $resultResCPL['cpl'][0]['FileInformation']['FileAsBase64']);
+				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']);
 				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
 			} else {
 				$errors[] = $resultCPL;
