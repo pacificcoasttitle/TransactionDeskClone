@@ -45,7 +45,9 @@ class Home_model extends CI_Model
 
     		if(isset($keyword) && !empty($keyword))
 			{
-				$this->db->like('first_name', $keyword);
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
+                $this->db->or_like('email_address',$keyword);
+				// $this->db->like('first_name', $keyword);
 			}
 
             $this->db->where('status', 1);
@@ -56,7 +58,8 @@ class Home_model extends CI_Model
 
 			if(isset($keyword) && !empty($keyword))
 			{
-				$this->db->like('first_name', $keyword);
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
+                $this->db->or_like('email_address',$keyword);
 			}
 
 			$this->db->where('status', 1);
@@ -194,5 +197,17 @@ class Home_model extends CI_Model
             return $insert?$this->db->insert_id():false;
         }
         return false;
+    }
+
+    public function get_user_with_duplicate_email()
+    {
+        $query = $this->db->query('SELECT * FROM customer_basic_details WHERE email_address IN (
+        SELECT email_address FROM customer_basic_details
+        GROUP BY email_address HAVING COUNT(*) > 1 
+        ) ORDER BY email_address ASC');
+
+        $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+
+        return $result;
     }
 }
