@@ -263,11 +263,9 @@ class Home extends MX_Controller {
 				if(isset($userdata['is_master']) && !empty($userdata['is_master']))
 				{
 					$orderUser =  $this->home_model->get_user(array('id' => $_POST['CustomerId']));
-					
+					echo "<pre>"; print_r($orderUser); exit;
 					$user_data['email'] = $orderUser['email_address'];
 					$user_data['password'] = $orderUser['random_password'];
-					/*$user_data['email'] = isset($_POST['OpenEmail']) && !empty($_POST['OpenEmail']) ? $_POST['OpenEmail'] : '';
-					$user_data['password'] = isset($_POST['OpenEmail']) && !empty($_POST['OpenEmail']) ? $_POST['OpenEmail'] : '';*/
 				}
 				
 				$this->load->library('order/resware');
