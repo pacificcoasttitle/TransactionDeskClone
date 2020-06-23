@@ -681,7 +681,7 @@ class Cron extends MX_Controller {
         $sets[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $sets[] = 'abcdefghijkmnopqrstuvwxyz';
         $sets[] = '0123456789';
-        $sets[]  = '~!@#$%^&*(){}[],./?';
+        // $sets[]  = '~!@#$%^&*(){}[],./?';
         $password = '';
         
         foreach ($sets as $set) {
