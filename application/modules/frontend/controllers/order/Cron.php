@@ -628,7 +628,8 @@ class Cron extends MX_Controller {
                                 'Password' => 'Pacific1',
                                 'Enabled' => true,
                                 'WebsiteAccess' => true,
-                                'Name' => $v['first_name']." ".$v['last_name'],
+                                'Name' => $v['email_address'],
+                                'PasswordExpirationDate' => '/Date(3025656585000-0000)/',
                                 'FirstName' => $v['first_name'],
                                 'LastName' => $v['last_name'],
                                 'ContactInformation' => array(
