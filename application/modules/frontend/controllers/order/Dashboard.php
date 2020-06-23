@@ -2544,6 +2544,7 @@ class Dashboard extends MX_Controller {
 		$this->load->model('order/home_model');
 		$this->load->library('order/resware');
 		$fileId = $this->input->post('fileId');
+		$userdata = $this->session->userdata('user');
 		$orderDetails = $this->order->get_order_details($fileId);
 		$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
 		$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
