@@ -86,7 +86,7 @@ class Fnf
     public function generateUserToken($orderDetails)
     {
         $vendorTokenData = $this->get_vendor_token();
-        if ($vendorToken === false) {
+        if ($vendorTokenData === false) {
             $vendorTokenData = $this->generateVendorToken($orderDetails);
         }
 
