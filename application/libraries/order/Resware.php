@@ -20,18 +20,12 @@ class Resware
         $userdata = $this->CI->session->userdata('user');
         if (isset($userdata['is_master']) && !empty($userdata['is_master'])) {
             $login = isset($data['email']) && !empty($data['email']) ? $data['email'] : '' ;
+            $password = isset($data['password']) && !empty($data['password']) ? $data['password'] : '' ;
         } else {
             $login = $userdata['email'];
+            $password = $userdata['random_password'];
         }
-        
-        if ($login == 'ghernandez@pct.com') {
-            $password= 'Alpha637#';
-        }elseif ($login == 'teamrestine@eatonescrow.com') {
-            $password= 'Pacific12';
-        } else {
-            $password= 'Pacific2';
-        }
-        
+
         $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   

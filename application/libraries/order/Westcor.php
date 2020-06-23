@@ -18,7 +18,7 @@ class Westcor
    public function make_request($http_method, $endpoint, $body_params, $is_token_call = 0, $bearerToken = '')
    {
         $userdata = $this->CI->session->userdata('user');
-        $ch = curl_init(WESTCORE_URL.$endpoint);                                    
+        $ch = curl_init(getenv('WESTCORE_URL').$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -38,10 +38,10 @@ class Westcor
    {
         $userdata = $this->CI->session->userdata('user');
         $endPoint = 'Token';
-        $postData = 'grant_type='.WESTCORE_GRANT_TYPE.'&username='.WESTCORE_USERNAME.'&password='.WESTCORE_PASSWORD.'&integrationpartner='.WESTCORE_INTEGRATION_PARTNER;
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, array(), $orderNumber, 0);
+        $postData = 'grant_type='.getenv('WESTCORE_GRANT_TYPE').'&username='.getenv('WESTCORE_USERNAME').'&password='.getenv('WESTCORE_PASSWORD').'&integrationpartner='.getenv('WESTCORE_INTEGRATION_PARTNER');
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', getenv('WESTCORE_URL').$endPoint, $postData, array(), $orderNumber, 0);
         $result = $this->CI->westcor->make_request('POST', $endPoint, $postData, 1);
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', WESTCORE_URL.$endPoint, $postData, $result, $orderNumber, $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', getenv('WESTCORE_URL').$endPoint, $postData, $result, $orderNumber, $logid);
         $resToken = json_decode($result, true);
         $resToken['groups'] = str_replace("[", "", $resToken['groups']);
         $groups = json_decode(str_replace("]", "", $resToken['groups']),true);

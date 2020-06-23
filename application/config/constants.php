@@ -129,13 +129,4 @@ define('CURRENT_YEAR', date("Y"));
 /* Recording API */
 define('GET_RECORDING_URL', 'https://dev-app.quickcloze.net/api/order-recorded/all?');
 define('RECORDING_API_TOKEN', 'testPCTGtoken');
-define('WESTCORE_GRANT_TYPE', "password");
-define('WESTCORE_USERNAME', "pacificCT");
-define('WESTCORE_PASSWORD', "P@ssw0rd1!");
-define('WESTCORE_INTEGRATION_PARTNER', "7758");
 
-if(ENVIRONMENT == 'development') {
-    define('WESTCORE_URL', "https://uatservices.ewestcor.com/");
-} else {
-    define('WESTCORE_URL', "https://services.ewestcor.com/");
-}
