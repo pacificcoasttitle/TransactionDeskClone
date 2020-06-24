@@ -43,4 +43,10 @@
 			<i class="fas fa-fw fa-list"></i>
 			<span>LV Log</span></a>
 	</li>
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/cpl-documents') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/cpl-documents'; ?>">
+			<i class="fas fa-fw fa-file"></i>
+			<span>CPL Documents</span></a>
+	</li>
 </ul>

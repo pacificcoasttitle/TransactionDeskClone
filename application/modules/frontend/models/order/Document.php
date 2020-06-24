@@ -44,12 +44,12 @@ class Document extends CI_Model
     }
 
     
-    public function countCplDocument($fileId)
+    public function countCplDocument($orderId)
     {
         $this->db->select('*')
             ->from('pct_order_documents');
-        
-        $this->db->like('document_name', '_'.$fileId.'.pdf');
+        $this->db->where('is_cpl_doc', 1);
+        $this->db->where('order_id', $orderId);
         $query = $this->db->get();
         if ($query->num_rows() > 0)  {
             return $query->num_rows();

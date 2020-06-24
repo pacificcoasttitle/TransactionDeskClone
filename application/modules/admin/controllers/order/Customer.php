@@ -71,7 +71,7 @@ class Customer extends MX_Controller {
                 if ($value['is_password_updated'] == 1 )  {
                     $nestedData[] = 'Correct';     
                 } else if($value['is_password_updated'] == 0 && !empty($value['random_password'])) {
-                    $nestedData[] = 'Not Correct';     
+                    $nestedData[] = 'Incorrect';     
                 } else {
                     $nestedData[] = 'Duplicate Email'; 
                 }       

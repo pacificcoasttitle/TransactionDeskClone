@@ -2,7 +2,7 @@ var customer_list ='';
 var agent_list ='';
 var credentials_customer_list = '';
 $(document).ready(function () {
-    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length)
+    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length)
     {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
         
@@ -87,6 +87,22 @@ $(document).ready(function () {
                     var data = jsonResult.responseText;
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-credentials-customers-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+                else if(this.context[0].sTableId == 'tbl-cpl-documents-listing')
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"admin/order/home/get_cpl_document_list",
+                        data: {
+                            keyword: $('#tbl-cpl-documents-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-cpl-documents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
                 else 
                 {
@@ -752,6 +768,77 @@ $(document).ready(function () {
                     }, 4000);
                 }
             })
+        });
+    }
+
+    if ($('#tbl-cpl-documents-listing').length) 
+    {
+        cpl_document_list = $('#tbl-cpl-documents-listing').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_cpl_documents').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'CPL Documents',
+                    exportOptions: {
+                        columns: [0, 1, 2],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                return (column === 0 || column === 1|| column === 2) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/home/get_cpl_document_list", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-cpl-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-cpl-documents-listing_processing").css("display", "none");
+
+                }
+            }            
         });
     }
     
