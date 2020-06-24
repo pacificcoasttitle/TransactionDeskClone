@@ -771,6 +771,100 @@ $(document).ready(function () {
         });
     }
 
+    if ($('#tbl-orders-listing').length) 
+    {
+        order_list = $('#tbl-orders-listing').DataTable({
+           /*"pageLength": 2,*/
+           "paging": true,
+            "lengthChange": false,
+            /*"columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],*/
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-agent-data').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if(export_type)
+                    {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                });
+
+
+            },
+            "dom": '<"FilterOrderListing">frtip',
+            //"dom": '<"row"<"col-sm-12"<"text-left"f>>>',
+            // dom: 'Bfrtip',
+            /*buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Agents',
+                    exportOptions: {
+                        columns: [0,1, 2, 3, 4],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                // Strip $ from salary column to make it numeric
+                                return (column === 0 || column === 1|| column === 2 || column === 3 || column === 4|| column === 5|| column === 6) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],*/
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/order/get_order_list", // json datasource
+                type: "post", // method  , by default get
+                data   : function( d ) {
+                  d.sales_rep= $('#FilterOrderListing').val();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-orders-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-orders-listing_processing").css("display", "none");
+
+                }
+            }            
+        });
+
+        if(sales_rep)
+        {
+            var obj = jQuery.parseJSON(sales_rep);
+            var options='';
+            $.each( obj, function( key, value ) {
+              options += '<option value="'+value.id+'">'+value.name+'</option>'
+            });
+            $("div.FilterOrderListing").html('<label> Sales Rep: <select name="FilterOrderListing" id="FilterOrderListing"> <option value="" > All </option>"'+options+'"</select></label>');   
+        }
+       
+    }
+    $("#FilterOrderListing").on("change", function(){
+        order_list.ajax.reload();
+    }); 
+
     if ($('#tbl-cpl-documents-listing').length) 
     {
         cpl_document_list = $('#tbl-cpl-documents-listing').DataTable({
@@ -843,6 +937,8 @@ $(document).ready(function () {
     }
     
 });
+
+
 
 function deleteCustomer(id)
 {
