@@ -34,7 +34,7 @@ class Login extends MX_Controller {
                 echo json_encode($response); exit;
             } else {
                 $email = $this->input->post('email_address');
-                $user =  $this->home_model->get_user(array('email_address' => $email, 'status' => 1));
+                $user =  $this->home_model->get_user(array('email_address' => $email, 'is_password_updated' => 1));
                 if (!empty($user)) {
                     $session_data = array(
                         "id" => isset($user['id']) && !empty($user['id']) ? $user['id'] : '',
