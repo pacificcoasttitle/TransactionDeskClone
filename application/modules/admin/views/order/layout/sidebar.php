@@ -43,4 +43,16 @@
 			<i class="fas fa-fw fa-list"></i>
 			<span>LV Log</span></a>
 	</li>
+	<!-- <li
+		class="nav-item <?php // if($this->uri->uri_string() == 'order/admin/user-check') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php // echo base_url().'order/admin/user-check'; ?>">
+			<i class="fas fa-fw fa-list"></i>
+			<span>User Check</span></a>
+	</li> -->
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/orders') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/orders'; ?>">
+			<i class="fas fa-fw fa-list"></i>
+			<span>Orders</span></a>
+	</li>
 </ul>
