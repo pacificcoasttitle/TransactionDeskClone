@@ -6,6 +6,7 @@
             Credentials Check
             <div class="float-right">
                 <a href="javascript:void(0);" id="refresh-data" class="btn btn-secondary"> Refresh </a>
+                <a href="javascript:void(0);" data-export-type="csv" id="export_customer" class="btn btn-secondary"> Export </a>
             </div>
         </div>
 
@@ -26,7 +27,7 @@
                             <th>City</th>
                             <th>Zipcode</th>
                             <th>Customer Type</th>
-                            <th>Password Updated</th>
+                            <th>Crediential</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>

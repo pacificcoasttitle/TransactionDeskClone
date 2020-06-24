@@ -67,8 +67,13 @@ class Customer extends MX_Controller {
                 $nestedData[] = $value['city'];
                 $nestedData[] = $value['zip_code'];
                 $type = isset($value['is_escrow']) && !empty($value['is_escrow']) ? 'Escrow' : 'Lender';            
-                $nestedData[] = $type;              
-                $nestedData[] = $value['is_password_updated'];               
+                $nestedData[] = $type;    
+                if ($value['is_password_updated'] == 1 )  {
+                    $nestedData[] = 'Correct';     
+                } else {
+                    $nestedData[] = 'Not Correct';     
+                }       
+                          
                 $data[] = $nestedData;            
                 // $cnt++;
             }
