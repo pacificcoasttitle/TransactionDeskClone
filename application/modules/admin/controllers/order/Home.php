@@ -531,4 +531,58 @@ class Home extends MX_Controller {
         $json_data['data'] = $data;
         echo json_encode($json_data);
     }
+
+    public function cpl_document()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: CPL Documents';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/cpl_document', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_cpl_document_list()
+    {
+        $params = array();
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $cpl_document_list = $this->home_model->get_cpl_document_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $cpl_document_list = $this->home_model->get_cpl_document_list($params);            
+        }
+
+        $data = array(); 
+        
+        if(isset($cpl_document_list['data']) && !empty($cpl_document_list['data'])) {
+            foreach ($cpl_document_list['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['document_name'];
+                $documentName = $value['document_name'];
+                if ($value['api_document_id'] > 0) {
+                    $nestedData[] = 'Yes';
+                } else {
+                    $nestedData[] = 'No';
+                }
+                $nestedData[] = "<div style='display:flex;'><a href='".base_url()."/uploads/documents/$documentName' download><i class='fas fa-fw fa-download'></i></a>
+                <a style='margin-left:10px;' target='_blank' href='".base_url()."/uploads/documents/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
+                $data[] = $nestedData;            
+            }
+        }
+        $json_data['recordsTotal'] = intval( $cpl_document_list['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $cpl_document_list['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
 }

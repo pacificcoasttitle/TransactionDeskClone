@@ -1358,7 +1358,7 @@ class Dashboard extends MX_Controller {
 				);
 
 				if(!empty($resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64'])) {
-					$cplDocumentCount = $this->document->countCplDocument($fileId);
+					$cplDocumentCount = $this->document->countCplDocument($orderDetails['order_id']);
 					$document_name = "westcor_".$cplDocumentCount."_".$fileId.".pdf";
 					if (!is_dir('uploads/documents')) {
 						mkdir('./uploads/documents', 0777, TRUE);
@@ -2654,7 +2654,7 @@ class Dashboard extends MX_Controller {
 		$orderDetails = $this->order->get_order_details($fileId);
 		$responseArr = $this->natic->getDocumentContentForCpl($fileId);
 		if ($responseArr['success']) {
-			$cplCount = $this->document->countCplDocument($fileId);
+			$cplCount = $this->document->countCplDocument($orderDetails['order_id']);
 			$document_name = "natic_".$cplCount."_".$fileId.".pdf";
 			if (!is_dir('uploads/documents')) {
 				mkdir('./uploads/documents', 0777, TRUE);
@@ -2699,7 +2699,7 @@ class Dashboard extends MX_Controller {
 		if (!empty($orderDetails['fnf_document_id'])) {
 			$editCplResponse = $this->fnf->editCpl($orderDetails, $vendorTokenData, $userTokenData);
 			if ($editCplResponse['success']) {
-				$cplCount = $this->document->countCplDocument($fileId);
+				$cplCount = $this->document->countCplDocument($orderDetails['order_id']);
 				$document_name = "fnf_".$cplCount."_".$fileId.".pdf";
 				if (!is_dir('uploads/documents')) {
 					mkdir('./uploads/documents', 0777, TRUE);
@@ -2725,7 +2725,7 @@ class Dashboard extends MX_Controller {
 			$generateCplResponse = $this->fnf->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
 			
 			if ($generateCplResponse['success']) {
-				$cplCount = $this->document->countCplDocument($fileId);
+				$cplCount = $this->document->countCplDocument($orderDetails['order_id']);
 				$document_name = "fnf_".$cplCount."_".$fileId.".pdf";
 				if (!is_dir('uploads/documents')) {
 					mkdir('./uploads/documents', 0777, TRUE);
@@ -2770,7 +2770,8 @@ class Dashboard extends MX_Controller {
 			'order_id' => $orderDetails['order_id'],
 			'description' => 'CPL Document',
 			'is_sync' => 1,
-			'is_prelim_document' => 0
+			'is_prelim_document' => 0,
+			'is_cpl_doc' => 1
 		);
 		$documentId = $this->document->insert($documentData);
 		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';

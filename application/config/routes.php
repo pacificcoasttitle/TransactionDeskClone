@@ -179,6 +179,7 @@ $route['order/admin/user-check'] = 'admin/order/home/user_check';
 $route['order/admin/get-user-check-list'] = 'admin/order/home/get_user_check_list';
 $route['order/admin/orders'] = 'admin/order/order/orders';
 $route['order/admin/get-order-list'] = 'admin/order/order/get_order_list';
+$route['order/admin/cpl-documents'] = 'admin/order/home/cpl_document';
 
 
 /* Route for PCT-Order backend*/

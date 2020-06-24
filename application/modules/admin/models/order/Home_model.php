@@ -210,4 +210,72 @@ class Home_model extends CI_Model
 
         return $result;
     }
+
+    public function get_cpl_document_list($params)
+    {
+        $this->db->from('order_details')
+                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+        $this->db->where('pct_order_documents.is_cpl_doc', 1);
+        $total_records =  $this->db->count_all_results();
+    
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $cpl_document_lists = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->like('order_details.file_number', $keyword);
+                $this->db->or_like('pct_order_documents.document_name', $keyword);
+            }
+
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('pct_order_documents.is_cpl_doc', 1);
+			$filter_total_records =  $this->db->count_all_results();
+
+			if(isset($keyword) && !empty($keyword)) {
+                $this->db->like('order_details.file_number', $keyword);
+                $this->db->or_like('pct_order_documents.document_name', $keyword);
+			}
+
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('pct_order_documents.is_cpl_doc', 1);
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }	
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $cpl_document_lists = $query->result_array();
+	        }
+    	} else {    		
+
+    		$this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('pct_order_documents.is_cpl_doc', 1);
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('pct_order_documents.is_cpl_doc', 1);
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $cpl_document_lists = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $cpl_document_lists
+        );
+    }
 }
