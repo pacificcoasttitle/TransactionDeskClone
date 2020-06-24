@@ -120,6 +120,7 @@ class Cron extends MX_Controller {
                     'primary_owner' => $primary_owner,
                     'secondary_owner' => $SecondaryOwner,
                     // 'additional_details'=> '',
+                    'is_imported'=> 1,
                     'status'=> 1
                 );
 
