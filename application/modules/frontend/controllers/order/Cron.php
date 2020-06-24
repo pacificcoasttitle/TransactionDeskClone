@@ -167,7 +167,7 @@ class Cron extends MX_Controller {
 
     public function make_request($http_method, $endpoint, $body_params='', $userdata)
     {
-        if($userdata['email_address'] == 'admin@pct24.com') {
+        if($userdata['email'] == 'admin@pct24.com') {
             $login = getenv('RESWARE_ADMIN_USERNAME');
             $password = getenv('RESWARE_ADMIN_PASSWORD');
         } else {
@@ -465,68 +465,74 @@ class Cron extends MX_Controller {
     {
         ini_set('max_execution_time', 0); 
         ini_set('memory_limit','2048M');
-        /* Check if password updated */
         $userdata = $this->session->userdata('admin');
-        
         $condition = array(
             'where' => array(
                 'status' => 1,
-                'is_password_updated' => 0,
                 'is_master' => 0,
             )
         );
-
         $customer_lists = $this->home_model->get_customers($condition);
-        $insertCount = $updateCount = $rowCount = $notAddCount = 0;
-        if(isset($customer_lists) && !empty($customer_lists))
-        {
+        $insertCount = $updateCount = $rowCount = $notUpdatePasswordCount = 0;
+
+        if (isset($customer_lists) && !empty($customer_lists)) {
             
-            foreach (array_chunk($customer_lists,50) as $key => $value) 
-            {
+            foreach (array_chunk($customer_lists,50) as $key => $value) {
                 
-                if(isset($value) && !empty($value))
-                {
-                    foreach ($value as $k => $v) 
-                    {
+                if (isset($value) && !empty($value)) {
+                    
+                    foreach ($value as $k => $v) {
                         $userdata = $v;
                         $userdata['email'] = $v['email_address'];
-                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', $userdata, array(), 0, 0);
+                        $condition = array(
+                            'id' => $userdata['id']
+                        );
 
-                        $result = $this->make_request('GET', 'me','',$userdata);
-                        
-                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', array(), $result, 0, $logid);
-
-                        if(isset($result) && !empty($result))
-                        {
-                            $response = json_decode($result,true);
-                            if(isset($response['Me']) && !empty($response['Me']))
-                            {
-                                $condition = array(
-                                    'id' => $userdata['id']
-                                );
+                        if (!empty($v['random_password'])) {
+                            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'password_check', RESWARE_ORDER_API.'me', array(), array(), 0, 0);
+                            $result = $this->make_request('GET', 'me','',$userdata);
+                            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'password_check', RESWARE_ORDER_API.'me', array(), $result, 0, $logid);
+                            
+                            if (isset($result) && !empty($result)) {
+                                $response = json_decode($result,true);
                                 
-                                $customerData = array(
-                                    'is_password_updated' => 1
-                                );
+                                if (isset($response['Me']) && !empty($response['Me'])) {
+                                    $customerData = array(
+                                        'is_password_updated' => 1
+                                    );
+                                    $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
 
-                                $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
-                                if($update)
-                                {
-                                    $updateCount++;                          
+                                    if ($update) {
+                                        $updateCount++;                          
+                                    }
+                                } else {
+                                    $customerData = array(
+                                        'is_password_updated' => 0
+                                    );
+                                    $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                                    $notUpdatePasswordCount++;
                                 }
-                                $successMsg = 'Password updated successfully. Total Rows ('.$rowCount.') | Updated ('.$updateCount.')';
+                            } else {
+                                $customerData = array(
+                                    'is_password_updated' => 0
+                                );
+                                $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                                $notUpdatePasswordCount++;
                             }
+                        } else {
+                            $customerData = array(
+                                'is_password_updated' => 0
+                            );
+                            $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                            $notUpdatePasswordCount++;
                         }
                     }
-                }
-                
+                    $successMsg = 'Password updated successfully. Total Rows ('.$rowCount.') | Updated ('.$updateCount.') | NotUpdated ('.$notUpdatePasswordCount.')';
+                } 
             }
             $data = array('status'=>'success','msg'=>$successMsg);
             echo json_encode($data);
         }
-        
-
-        /* Check if password updated */
     }
 
     public function update_user_details()
@@ -631,6 +637,7 @@ class Cron extends MX_Controller {
                                     'EmailAddress' => $v['email_address'],
                                 ),
                             );
+                            $userdata['email'] = $userdata['email_address'];
                             $userUpdateData = json_encode($userUpdateData);
                             $logid = $this->apiLogs->syncLogs($v['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, array(), 0, 0);
                             $result = $this->make_request('PUT', $endPoint, $userUpdateData, $userdata);
