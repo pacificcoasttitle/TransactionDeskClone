@@ -175,6 +175,7 @@ $route['order/admin/add-title-officer'] = 'admin/order/title/add_title_officer';
 $route['order/admin/edit-title-officer/:num'] = 'admin/order/title/edit_title_officer';
 $route['order/admin/credentials-check'] = 'admin/order/customer/index';
 $route['order/admin/lv-log'] = 'admin/order/TitlePoint/index';
+$route['order/admin/cpl-documents'] = 'admin/order/home/cpl_document';
 
 
 /* Route for PCT-Order backend*/
