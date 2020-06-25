@@ -132,7 +132,7 @@ $(document).ready(function () {
         customer_list = $('#tbl-customers-listing').DataTable({
            /*"pageLength": 2,*/
            "paging": true,
-            "lengthChange": false,
+           "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],
@@ -155,7 +155,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
@@ -276,7 +276,7 @@ $(document).ready(function () {
         agent_list = $('#tbl-agents-listing').DataTable({
            /*"pageLength": 2,*/
            "paging": true,
-            "lengthChange": false,
+           "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             /*"columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],*/
@@ -298,7 +298,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
@@ -383,7 +383,7 @@ $(document).ready(function () {
         customer_list = $('#tbl-lenders-listing').DataTable({
            /*"pageLength": 2,*/
            "paging": true,
-            "lengthChange": false,
+           "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],
@@ -406,7 +406,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
@@ -456,7 +456,7 @@ $(document).ready(function () {
     {
         sales_rep_list = $('#tbl-sales-rep-listing').DataTable({
            "paging": true,
-            "lengthChange": false,
+           "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],
@@ -478,7 +478,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
@@ -527,7 +527,7 @@ $(document).ready(function () {
     {
         title_officer_list = $('#tbl-title-officer-listing').DataTable({
            "paging": true,
-            "lengthChange": false,
+           "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],
@@ -550,7 +550,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
@@ -599,8 +599,8 @@ $(document).ready(function () {
     {
         credentials_customer_list = $('#tbl-credentials-customers-listing').DataTable({
            /*"pageLength": 2,*/
-           "paging": true,
-            "lengthChange": false,
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
                 { "searchable": false, "targets": [0,1,2] }
             ],
@@ -623,7 +623,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: 'Bfrtip',
+            dom: '<"FilterCredentialListing">lfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
@@ -650,7 +650,10 @@ $(document).ready(function () {
             "serverSide": true,
             "ajax": {                
                 url: base_url+"admin/order/customer/get_customer_list", // json datasource
-                type: "post", // method  , by default get
+                type: "post",
+                data   : function( d ) {
+                    d.credentials_check = $('#FilterCredentialListing').val();
+                }, // method  , by default get
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -676,14 +679,20 @@ $(document).ready(function () {
                 }
             }            
         });
+
+        $("div.FilterCredentialListing").html('<label style="margin-bottom:10px;"> Credentials Check: <select style="margin-top:10px;" class="custom-select" name="FilterCredentialListing" id="FilterCredentialListing"> <option value="" > All </option><option value="1" > Correct </option><option value="0" > Incorrect </option><option value="2" > Duplicate Email </option>"'+options+'"</select></label>');   
     }
+
+    $("#FilterCredentialListing").on("change", function(){
+        credentials_customer_list.ajax.reload();
+    });
 
     if ($('#tbl-lv-log-listing').length) 
     {
         log_list = $('#tbl-lv-log-listing').DataTable({
            /*"pageLength": 2,*/
            "paging": true,
-            "lengthChange": false,
+           "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],
@@ -697,7 +706,7 @@ $(document).ready(function () {
             },
             initComplete: function() {
             },
-            
+            dom: 'Blfrtip',
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
                 $('.dataTables_paginate > .pagination a').addClass('page-link');
@@ -869,7 +878,7 @@ $(document).ready(function () {
     {
         cpl_document_list = $('#tbl-cpl-documents-listing').DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],
@@ -891,7 +900,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
