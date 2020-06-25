@@ -1,3 +1,9 @@
+<style>
+.dataTables_length {
+    width: 250px !important;
+    float: left;
+}
+</style>
 <div class="container-fluid">
     <!-- DataTables Example -->
     <div class="card mb-3">

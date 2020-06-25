@@ -10,6 +10,15 @@ class Customer_model extends CI_Model
     {
         $this->db->where('status', 1);
         $this->db->where('is_master', 0);
+        if (isset($params['credentials_check']) && strlen($params['credentials_check']) > 0) {
+            if ($params['credentials_check'] == '1') {
+                $this->db->where('is_password_updated', 1);
+            } else if ($params['credentials_check'] == '0') {
+                $this->db->where('(is_password_updated = 0 and random_password is not null)');
+            } else {
+                $this->db->where('random_password is null');
+            }
+        }
         $this->db->from($this->table);
         $total_records =  $this->db->count_all_results();
 
@@ -30,6 +39,15 @@ class Customer_model extends CI_Model
                 $this->db->or_like('email_address', $keyword);
             }
 
+            if (isset($params['credentials_check']) && strlen($params['credentials_check']) > 0) {
+                if ($params['credentials_check'] == '1') {
+                    $this->db->where('is_password_updated', 1);
+                } else if ($params['credentials_check'] == '0') {
+                    $this->db->where('(is_password_updated = 0 and random_password is not null)');
+                } else {
+                    $this->db->where('random_password is null');
+                }
+            }
             $this->db->where('status', 1);
             $this->db->where('is_master', 0);    
             $this->db->from($this->table);
@@ -43,6 +61,15 @@ class Customer_model extends CI_Model
                 $this->db->or_like('email_address', $keyword);
             }
 
+            if (isset($params['credentials_check']) && strlen($params['credentials_check']) > 0) {
+                if ($params['credentials_check'] == '1') {
+                    $this->db->where('is_password_updated', 1);
+                } else if ($params['credentials_check'] == '0') {
+                    $this->db->where('(is_password_updated = 0 and random_password is not null)');
+                } else {
+                    $this->db->where('random_password is null');
+                }
+            }
             $this->db->where('status', 1);
             $this->db->where('is_master', 0);
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
@@ -62,10 +89,28 @@ class Customer_model extends CI_Model
 
             $this->db->where('status', 1);
             $this->db->where('is_master', 0);
+            if (isset($params['credentials_check']) && strlen($params['credentials_check']) > 0) {
+                if ($params['credentials_check'] == '1') {
+                    $this->db->where('is_password_updated', 1);
+                } else if ($params['credentials_check'] == '0') {
+                    $this->db->where('(is_password_updated = 0 and random_password is not null)');
+                } else {
+                    $this->db->where('random_password is null');
+                }
+            }
             $this->db->from($this->table);
 
             $filter_total_records =  $this->db->count_all_results();
 
+            if (isset($params['credentials_check']) && strlen($params['credentials_check']) > 0) {
+                if ($params['credentials_check'] == '1') {
+                    $this->db->where('is_password_updated', 1);
+                } else if ($params['credentials_check'] == '0') {
+                    $this->db->where('(is_password_updated = 0 and random_password is not null)');
+                } else {
+                    $this->db->where('random_password is null');
+                }
+            }
             $this->db->where('status', 1);
             $this->db->where('is_master', 0);
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
