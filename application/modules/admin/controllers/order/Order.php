@@ -10,6 +10,7 @@ class Order extends MX_Controller {
         $this->load->library('session');
         $this->load->model('order/order_model');
         $this->load->model('order/sales_model');
+        $this->load->model('order/home_model');
     }
 
     function orders() {
@@ -37,14 +38,14 @@ class Order extends MX_Controller {
         $data = array(); 
         $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;  
         foreach( $ordersList['data'] as $key => $value )
-        {   
+        {
             $nestedData=array();          
             $nestedData[] = $value['file_number'];
             $nestedData[] = $value['full_address'];
             $nestedData[] = $value['product_type'];
             $nestedData[] = $value['sales_rep_name'];
-
-            $action = "<a href='#' class='btn btn-xs view-icon action-btn-padding' title ='Edit Customer Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+            $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
+            $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
             $nestedData[] = $action;
             $data[] = $nestedData;            
             $cnt++;            
@@ -57,5 +58,43 @@ class Order extends MX_Controller {
         );
 
         echo json_encode($json_data);
+    }
+
+    function order_details()
+    {    	
+        $this->is_admin();
+        $file_id = $this->uri->segment(4);        
+        $data = array();
+        $data['title'] = 'PCT Order: Order Details';
+
+        if(isset($file_id) && !empty($file_id))
+        {
+        	$order_details = $this->order_model->get_order_details($file_id);
+        	$customer_id = $order_details['customer_id'];
+        	$con = array('id'=>$customer_id);
+        	$customer_details = $this->home_model->get_rows($con);
+        	$data['order_details'] = $order_details;
+        	$data['customer_details'] = $customer_details;
+        	// echo "<pre>"; print_r($data); exit;
+        	$this->load->view('order/layout/header', $data);
+	        $this->load->view('order/order/order_details', $data);
+	        $this->load->view('order/layout/footer', $data);
+        	
+        }
+        else
+        {
+            redirect('order/admin/orders');
+        }
+    }
+
+    public function is_admin()
+    {
+        $userdata = $this->session->userdata('admin');
+
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
+
+        } else {
+            redirect(base_url().'order/admin');
+        }
     }
 }
