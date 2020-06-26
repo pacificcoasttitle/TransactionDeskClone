@@ -2705,8 +2705,9 @@ class Dashboard extends MX_Controller {
 					mkdir('./uploads/documents', 0777, TRUE);
 				}
 				file_put_contents('./uploads/documents/'.$document_name, base64_decode($editCplResponse['response']['a:Content']));
-				
+				$this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('file_id' => $fileId), 'order_details');
 				$success[] = "CPL document edited successfully for file number - ".$orderDetails['file_number'];
+				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
 			} else {
 				$errors[] = $editCplResponse['error'];
 			}
