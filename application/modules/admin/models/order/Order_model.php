@@ -11,19 +11,20 @@ class Order_model extends CI_Model
     public function get_orders($params)
     {
         $sales_rep = isset($params['sales_rep']) && !empty($params['sales_rep']) ? $params['sales_rep'] : '';
+        if(isset($sales_rep) && !empty($sales_rep))
+        {
+            $this->db->where('transaction_details.sales_representative', $sales_rep);
+        }
         if(isset($params['searchValue']) && !empty($params['searchValue']))
         {
             $keyword = $params['searchValue'];
 
             if(isset($keyword) && !empty($keyword))
             {
-                // $this->db->where('property_details.full_address', $keyword);            
+                $this->db->like('property_details.full_address', $keyword);            
                 $this->db->or_like('order_details.file_number', $keyword);
             }
-            if(isset($sales_rep) && !empty($sales_rep))
-            {
-                $this->db->where('transaction_details.sales_representative', $sales_rep);
-            }
+            
             $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
@@ -32,16 +33,16 @@ class Order_model extends CI_Model
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
             ->where('is_imported=0');
             $total_records =  $this->db->count_all_results();
-            
-            if(isset($keyword) && !empty($keyword))
-            {
-               // $this->db->like('property_details.full_address', $keyword);            
-                $this->db->or_like('order_details.file_number', $keyword);
-            }
             if(isset($sales_rep) && !empty($sales_rep))
             {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
+            if(isset($keyword) && !empty($keyword))
+            {
+               $this->db->like('property_details.full_address', $keyword);            
+                $this->db->or_like('order_details.file_number', $keyword);
+            }
+            
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
@@ -178,6 +179,7 @@ class Order_model extends CI_Model
             transaction_details.loan_amount,
             transaction_details.loan_number,
             transaction_details.escrow_number,
+            transaction_details.notes,
             transaction_details.transaction_type, 
             transaction_details.title_officer,
             transaction_details.purchase_type,
@@ -185,7 +187,10 @@ class Order_model extends CI_Model
             transaction_details.supplemental_report_date,
             transaction_details.preliminary_report_date,
             transaction_details.borrower, 
-            CONCAT_WS(",",transaction_details.additional_email,transaction_details.additional_email_1,transaction_details.additional_email_2) as additional_emails, 
+            CONCAT_WS(",",transaction_details.additional_email,transaction_details.additional_email_1,transaction_details.additional_email_2) as additional_emails,
+            transaction_details.additional_email,
+            transaction_details.additional_email_1,
+            transaction_details.additional_email_2,
             transaction_details.secondary_borrower,
             property_details.escrow_lender_id,
             customer_basic_details.company_name as escrow_lender_company_name,

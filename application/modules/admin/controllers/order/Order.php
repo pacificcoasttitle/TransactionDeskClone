@@ -97,4 +97,112 @@ class Order extends MX_Controller {
             redirect(base_url().'order/admin');
         }
     }
+
+    function export_orders()
+    {
+    	$sales_rep = $this->input->post('sales_rep');
+    	$seachValue = $this->input->post('seachValue');
+
+    	$params = array();
+    	$params['sales_rep'] = $sales_rep;
+    	$params['seachValue'] = $seachValue;
+
+    	$ordersList = $this->order_model->get_orders($params);
+
+    	if(isset($ordersList['data']) && !empty($ordersList['data']))
+    	{
+			$export_data = array();
+    		foreach ($ordersList['data'] as $key => $value) 
+    		{
+    			$file_id = isset($value['file_id']) && !empty(!empty($value['file_id'])) ? $value['file_id'] : '';
+    			if($file_id)
+    			{
+    				$order_details = $this->order_model->get_order_details($file_id);
+    				$con = array('id'=>$order_details['customer_id']);
+        			$customer_details = $this->home_model->get_rows($con);
+    				
+    				$export_data[] = array(
+    					'file_number' => $order_details['file_number'],
+    					'file_id' => $order_details['file_id'],
+    					'opened_date' => $order_details['opened_date'],
+    					'company_name' => $customer_details['company_name'],
+    					'email_address' => $customer_details['email_address'],
+    					'first_name' => $customer_details['first_name'],
+    					'last_name' => $customer_details['last_name'],
+    					'telephone_no' => $customer_details['telephone_no'],
+    					'street_address' => $customer_details['street_address'],
+    					'city' => $customer_details['city'],
+    					'zip_code' => $customer_details['zip_code'],
+    					'full_address' => $order_details['full_address'],
+    					'apn' => $order_details['apn'],
+    					'county' => $order_details['county'],
+    					'legal_description' => $order_details['legal_description'],
+    					'primary_owner' => $order_details['primary_owner'],
+    					'secondary_owner' => $order_details['secondary_owner'],
+    					'borrower' => $order_details['borrower'],
+    					'secondary_borrower' => $order_details['secondary_borrower'],
+    					'sales_rep_name' => $order_details['sales_rep_name'],
+    					'title_officer_name' => $order_details['title_officer_name'],
+    					'product_type' => $order_details['product_type'],
+    					'loan_amount' => $order_details['loan_amount'],
+    					'sales_amount' => $order_details['sales_amount'],
+    					'loan_number' => $order_details['loan_number'],
+    					'escrow_number' => $order_details['escrow_number'],
+    					'notes' => $order_details['notes'],
+    					'additional_email' => $order_details['additional_email'],
+    					'additional_email_1' => $order_details['additional_email_1'],
+    					'additional_email_2' => $order_details['additional_email_2'],
+    					'buyer_agent_name' => $order_details['buyer_agent_name'],
+    					'buyer_agent_email_address' => $order_details['buyer_agent_email_address'],
+    					'buyer_agent_company' => $order_details['buyer_agent_company'],
+    					'buyer_agent_telephone_no' => $order_details['buyer_agent_telephone_no'],
+    					'listing_agent_name' => $order_details['listing_agent_name'],
+    					'listing_agent_email_address' => $order_details['listing_agent_email_address'],
+    					'listing_agent_company' => $order_details['listing_agent_company'],
+    					'listing_agent_telephone_no' => $order_details['listing_agent_telephone_no'],
+    					'escrow_lender_company_name' => $order_details['escrow_lender_company_name'],
+    					'escrow_lender_first_name' => $order_details['escrow_lender_first_name'],
+    					'escrow_lender_last_name' => $order_details['escrow_lender_last_name'],
+    					'escrow_lender_email' => $order_details['escrow_lender_email'],
+    					'escrow_lender_telephone_no' => $order_details['escrow_lender_telephone_no']
+    				);					
+    			}    			
+    		}
+    		if(isset($export_data) && !empty($export_data))
+    		{
+    			if (!is_dir('uploads/orders')) {
+			    	mkdir('./uploads/orders', 0777, TRUE);
+				}
+
+				$outputPath = './uploads/orders/output.csv';
+	    		$output = fopen($outputPath, "w");
+
+    			$header = array("Order #","File ID","Order Open At","Company Name","Email Address","First Name","Last Name","Telephone","Street Address","City","Zipcode","Property Address","APN","County","Brief Legal Description","Primary Owner","Secondary Owner","Primary Borrower","Secondary Borrower","Sales Rep","Title Officer","Product","Loan Amount","Sales Amount","Loan Number","Escrow Number","Notes","Additional Email Address","Additional Email Address1","Additional Email Address2","Buyer Agent Name","Buyer Agent Email Address","Buyer Agent Comapny","Buyer Agent Telephone","Listing Agent Name","Listing Agent Email Address","Listing Agent Comapny","Listing Agent Telephone","Lender/Escrow Name","Lender/Escrow Email Address","Lender/Escrow Comapny","Lender/Escrow Telephone");
+				fputcsv($output, $header);
+
+    			foreach ($export_data as $key => $value) 
+    			{
+    				fputcsv($output, $value);
+    			}
+
+    			header('Content-Type: application/json');
+    			$contents = file_get_contents($outputPath);
+    			$binaryData   = base64_encode($contents);
+    			unlink($outputPath);
+    			fclose($output);
+
+    			$res = array('status'=>'success','data'=>$binaryData);	
+    		}
+    		else
+	    	{
+	    		$res = array('status'=>'error','data'=>'No data found.');
+	    	}		
+    	}
+    	else
+    	{
+    		$res = array('status'=>'error','data'=>'No data found.');
+    	}
+
+    	echo json_encode($res); exit;
+    }
 }

@@ -14,7 +14,7 @@
             <i class="fas fa-table"></i>
             Orders
             <div class="float-right">
-                <a href="javascript:void(0);" data-export-type="csv" id="export-orders-data" class="btn btn-secondary"> Export </a>
+                <a href="javascript:void(0);" data-export-type="csv" onclick="exportOrders();" id="export-orders-data" class="btn btn-secondary"> Export </a>
             </div>
         </div>
 

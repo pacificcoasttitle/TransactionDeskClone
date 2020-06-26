@@ -449,23 +449,23 @@
                 </h5>
             </a>
         </div>
-        <div id="deliverablesDetails" class="collapse" role="tabpanel" aria-labelledby="deliverablesDetailsTab" data-parent="#accordionEx">
-            <div class="card-body">        
-                <?php
-                    if(isset($order_details['additional_emails']) && !empty($order_details['additional_emails']))
-                    {
-                ?>
+        <?php
+            if(isset($order_details['additional_emails']) && !empty($order_details['additional_emails']))
+            {
+        ?>
+                <div id="deliverablesDetails" class="collapse" role="tabpanel" aria-labelledby="deliverablesDetailsTab" data-parent="#accordionEx">
+                    <div class="card-body">
                         <div class="form-group row">
                             <label for="name" class="col-sm-3 col-form-label">Email Address:</label>
                             <div class="col-sm-9 col-form-label">
                                 <?php echo $order_details['additional_emails']; ?>
                             </div>
                         </div>
-                <?php
-                    }
-                ?>
-            </div>
-        </div>
+                    </div>
+                </div>
+        <?php
+            }
+        ?>
     </div>
     <?php 
         if(isset($order_details['buyer_agent_id']) && !empty($order_details['buyer_agent_id']))

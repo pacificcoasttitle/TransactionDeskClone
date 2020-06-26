@@ -1164,4 +1164,71 @@ function deleteTitleOfficer(id)
         return false;
     }
 }
+function download(filename, text) 
+{
+    if (navigator.msSaveBlob)
+    {
+        var csvData = base64toBlob(text,'application/octet-stream');
+        var csvURL = navigator.msSaveBlob(csvData, filename);
+        var element = document.createElement('a');
+        element.setAttribute('href', csvURL);
+        element.setAttribute('download', filename);
 
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        document.body.removeChild(element);
+    }
+    else
+    {
+        var csvURL = 'data:application/octet-stream;base64,'+text;
+        var element = document.createElement('a');
+        element.setAttribute('href', csvURL);
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+}
+
+function exportOrders()
+{
+    var sales_rep = $('#FilterOrderListing').val();
+    var seachValue = $('.dataTables_filter input').val();
+
+    $.ajax({
+        url: base_url+"admin/order/order/export_orders",
+        method: "POST",
+        data : {sales_rep:sales_rep,seachValue:seachValue },
+        success: function(data){
+            if(data.status == 'success')
+            {
+                download('users.csv', data.data);
+            }
+            else 
+            {
+                $('#order_error_msg').html(result.message).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#order_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#order_error_msg').html('').hide();
+                }, 4000);
+            }
+            
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#order_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#customer_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#order_error_msg').html('').hide();
+            }, 4000);
+        }
+    });
+}
