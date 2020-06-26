@@ -49,8 +49,9 @@
 			<i class="fas fa-fw fa-list"></i>
 			<span>User Check</span></a>
 	</li> -->
+	
 	<li
-		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/orders') { echo 'active'; } ?>">
+		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/orders' || $this->uri->segment(3) == 'order-details') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'order/admin/orders'; ?>">
 			<i class="fas fa-fw fa-list"></i>
 			<span>Orders</span></a>
