@@ -785,7 +785,8 @@ $(document).ready(function () {
         order_list = $('#tbl-orders-listing').DataTable({
            /*"pageLength": 2,*/
            "paging": true,
-            "lengthChange": false,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
             /*"columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],*/
@@ -797,39 +798,11 @@ $(document).ready(function () {
                 "emptyTable": "Record(s) not found.",
             },
             initComplete: function() {
-                var $buttons = jQuery('.dt-buttons').hide();
-                jQuery('#export-agent-data').on('click', function() {
-                    var export_type = jQuery(this).attr('data-export-type');
-                    if(export_type)
-                    {
-                        var btnClass = '.buttons-' + export_type;
-                    }
-                    if (btnClass) $buttons.find(btnClass).click();
-                });
+                
 
 
             },
             "dom": '<"FilterOrderListing">frtip',
-            //"dom": '<"row"<"col-sm-12"<"text-left"f>>>',
-            // dom: 'Bfrtip',
-            /*buttons: [
-                {
-                    extend: 'csvHtml5',
-                    text: 'Export',
-                    title: 'Agents',
-                    exportOptions: {
-                        columns: [0,1, 2, 3, 4],
-                        format: {
-                            body: function ( data, row, column, node ) {
-                                // Strip $ from salary column to make it numeric
-                                return (column === 0 || column === 1|| column === 2 || column === 3 || column === 4|| column === 5|| column === 6) ?
-                                    data.replace( /[$,]/g, '' ) :
-                                    data;
-                            }
-                        }
-                    }
-                },
-            ],*/
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
                 $('.dataTables_paginate > .pagination a').addClass('page-link');
