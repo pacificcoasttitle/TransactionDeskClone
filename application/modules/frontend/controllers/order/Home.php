@@ -361,7 +361,7 @@ class Home extends MX_Controller {
 							$subject = 'Order Placed at Resware';
 							$to = $OpenEmail;
 							
-							$cc = array(env('ADMIN_EMAIL'));
+							$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));
 							$bcc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';

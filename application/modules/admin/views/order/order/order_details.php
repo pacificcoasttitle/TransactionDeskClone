@@ -9,17 +9,70 @@
         <div class="alert alert-danger"><?php echo $error_msg; ?></div>
     </div>
 <?php } ?>
-<div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+<div class="accordion md-accordion" id="accordionEx">
     <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-        <div class="card-header" role="tab" id="customerDetailsTab">
-            <a data-toggle="collapse" style="color: #000000;" data-parent="#accordionEx" href="#customerDetails" aria-expanded="true"
+        <div class="card-header" role="tab" id="orderDetailsTab">
+            <a data-toggle="collapse" style="color: #000000;" data-parent="#accordionEx" href="#orderDetails" aria-expanded="true"
+            aria-controls="orderDetails">
+                <h5 class="mb-0">
+                Order Details <i class="fas fa-angle-down rotate-icon"></i>
+                </h5>
+            </a>
+        </div>
+        <div id="orderDetails" class="collapse show" role="tabpanel" aria-labelledby="orderDetailsTab" data-parent="#accordionEx">
+            <div class="card-body">        
+                <?php
+                    if(isset($order_details['file_number']) && !empty($order_details['file_number']))
+                    {
+                ?>
+                        <div class="form-group row">
+                            <label for="name" class="col-sm-3 col-form-label">Order Number:</label>
+                            <div class="col-sm-9 col-form-label">
+                                <?php echo $order_details['file_number']; ?>
+                            </div>
+                        </div>
+                <?php
+                    }
+                ?>
+                <?php
+                    if(isset($order_details['file_id']) && !empty($order_details['file_id']))
+                    {
+                ?>
+                        <div class="form-group row">
+                            <label for="name" class="col-sm-3 col-form-label">File ID:</label>
+                            <div class="col-sm-9 col-form-label">
+                                <?php echo $order_details['file_id']; ?>
+                            </div>
+                        </div>
+                <?php
+                    }
+                ?>
+                <?php
+                    if(isset($order_details['opened_date']) && !empty($order_details['opened_date']))
+                    {
+                ?>
+                        <div class="form-group row">
+                            <label for="name" class="col-sm-3 col-form-label">Order Open At:</label>
+                            <div class="col-sm-9 col-form-label">
+                                <?php echo date("m-d-Y H:i:s",strtotime($order_details['opened_date'])); ?>
+                            </div>
+                        </div>
+                <?php
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+        <div class="card-header" id="customerDetailsTab">
+            <a data-toggle="collapse" style="color: #000000;" data-parent="#accordionEx" href="#customerDetails" aria-expanded="false"
             aria-controls="customerDetails">
                 <h5 class="mb-0">
                 Customer Details <i class="fas fa-angle-down rotate-icon"></i>
                 </h5>
             </a>
         </div>
-        <div id="customerDetails" class="collapse show" role="tabpanel" aria-labelledby="customerDetailsTab" data-parent="#accordionEx">
+        <div id="customerDetails" class="collapse" role="tabpanel" aria-labelledby="customerDetailsTab" data-parent="#accordionEx">
             <div class="card-body">
             <?php
                 if(isset($customer_details['company_name']) && !empty($customer_details['company_name']))
@@ -137,14 +190,14 @@
     </div>
     <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
         <div class="card-header" role="tab" id="propertyDetailsTab">
-            <a data-toggle="collapse" style="color: #000000;" data-parent="#accordionEx" href="#propertyDetails" aria-expanded="true"
+            <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#propertyDetails" aria-expanded="false"
             aria-controls="propertyDetails">
                 <h5 class="mb-0">
                 Property Details <i class="fas fa-angle-down rotate-icon"></i>
                 </h5>
             </a>
         </div>
-        <div id="propertyDetails" class="collapse show" role="tabpanel" aria-labelledby="propertyDetailsTab" data-parent="#accordionEx">
+        <div id="propertyDetails" class="collapse" role="tabpanel" aria-labelledby="propertyDetailsTab" data-parent="#accordionEx">
             <div class="card-body">        
                 <?php
                     if(isset($order_details['full_address']) && !empty($order_details['full_address']))
@@ -264,14 +317,14 @@
 
     <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
         <div class="card-header" role="tab" id="transactionDetailsTab">
-            <a data-toggle="collapse" style="color: #000000;" data-parent="#accordionEx" href="#transactionDetails" aria-expanded="true"
+            <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#transactionDetails" aria-expanded="false"
             aria-controls="transactionDetails">
                 <h5 class="mb-0">
                 Transaction Details <i class="fas fa-angle-down rotate-icon"></i>
                 </h5>
             </a>
         </div>
-        <div id="transactionDetails" class="collapse show" role="tabpanel" aria-labelledby="transactionDetailsTab" data-parent="#accordionEx">
+        <div id="transactionDetails" class="collapse" role="tabpanel" aria-labelledby="transactionDetailsTab" data-parent="#accordionEx">
             <div class="card-body">        
                 <?php
                     if(isset($order_details['sales_rep_name']) && !empty($order_details['sales_rep_name']))
@@ -389,21 +442,21 @@
 
     <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
         <div class="card-header" role="tab" id="deliverablesDetailsTab">
-            <a data-toggle="collapse" style="color: #000000;" data-parent="#accordionEx" href="#deliverablesDetails" aria-expanded="true"
+            <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#deliverablesDetails" aria-expanded="false"
             aria-controls="deliverablesDetails">
                 <h5 class="mb-0">
                 Deliverables Details <i class="fas fa-angle-down rotate-icon"></i>
                 </h5>
             </a>
         </div>
-        <div id="deliverablesDetails" class="collapse show" role="tabpanel" aria-labelledby="deliverablesDetailsTab" data-parent="#accordionEx">
+        <div id="deliverablesDetails" class="collapse" role="tabpanel" aria-labelledby="deliverablesDetailsTab" data-parent="#accordionEx">
             <div class="card-body">        
                 <?php
                     if(isset($order_details['additional_emails']) && !empty($order_details['additional_emails']))
                     {
                 ?>
                         <div class="form-group row">
-                            <label for="name" class="col-sm-3 col-form-label">Sales Rep:</label>
+                            <label for="name" class="col-sm-3 col-form-label">Email Address:</label>
                             <div class="col-sm-9 col-form-label">
                                 <?php echo $order_details['additional_emails']; ?>
                             </div>
@@ -413,6 +466,246 @@
                 ?>
             </div>
         </div>
-    </div>    
+    </div>
+    <?php 
+        if(isset($order_details['buyer_agent_id']) && !empty($order_details['buyer_agent_id']))
+        {
+    ?>
+        <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+            <div class="card-header" role="tab" id="buyerAgentDetailsTab">
+                <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#buyerAgentDetails" aria-expanded="false"
+                aria-controls="buyerAgentDetails">
+                    <h5 class="mb-0">
+                    Buyer Agent Details <i class="fas fa-angle-down rotate-icon"></i>
+                    </h5>
+                </a>
+            </div>
+        
+            <div id="buyerAgentDetails" class="collapse" role="tabpanel" aria-labelledby="buyerAgentDetailsTab" data-parent="#accordionEx">
+                <div class="card-body">        
+                    <?php
+                        if(isset($order_details['buyer_agent_name']) && !empty($order_details['buyer_agent_name']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Buyer Agent Name:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['buyer_agent_name']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                    <?php
+                        if(isset($order_details['buyer_agent_email_address']) && !empty($order_details['buyer_agent_email_address']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Buyer Agent Email Address:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['buyer_agent_email_address']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                    <?php
+                        if(isset($order_details['buyer_agent_company']) && !empty($order_details['buyer_agent_company']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Buyer Agent Company:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['buyer_agent_company']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                    <?php
+                        if(isset($order_details['buyer_agent_telephone_no']) && !empty($order_details['buyer_agent_telephone_no']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Buyer Agent Telephone:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['buyer_agent_telephone_no']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                </div>
+            </div>
+        </div>
+    <?php
+        }
+    ?>
+    <?php 
+        if(isset($order_details['listing_agent_id']) && !empty($order_details['listing_agent_id']))
+        {
+    ?>
+        <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+            <div class="card-header" role="tab" id="listingAgentDetailsTab">
+                <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#listingAgentDetails" aria-expanded="false"
+                aria-controls="listingAgentDetails">
+                    <h5 class="mb-0">
+                    Listing Agent Details <i class="fas fa-angle-down rotate-icon"></i>
+                    </h5>
+                </a>
+            </div>
+        
+            <div id="listingAgentDetails" class="collapse" role="tabpanel" aria-labelledby="listingAgentDetailsTab" data-parent="#accordionEx">
+                <div class="card-body">        
+                    <?php
+                        if(isset($order_details['listing_agent_name']) && !empty($order_details['listing_agent_name']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Listing Agent Name:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['listing_agent_name']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                    <?php
+                        if(isset($order_details['listing_agent_email_address']) && !empty($order_details['listing_agent_email_address']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Listing Agent Email Address:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['listing_agent_email_address']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                    <?php
+                        if(isset($order_details['listing_agent_company']) && !empty($order_details['listing_agent_company']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Listing Agent Company:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['listing_agent_company']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                    <?php
+                        if(isset($order_details['listing_agent_telephone_no']) && !empty($order_details['listing_agent_telephone_no']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Listing Agent Telephone:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['listing_agent_telephone_no']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                </div>
+            </div>
+        </div>
+    <?php
+        }
+    ?> 
+    <?php 
+        if(isset($order_details['escrow_lender_id']) && !empty($order_details['escrow_lender_id']))
+        {
+    ?>
+        <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+            <div class="card-header" role="tab" id="lenderDetailsTab">
+                <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#lenderDetails" aria-expanded="false"
+                aria-controls="lenderDetails">
+                    <h5 class="mb-0">
+                    Lender/Escrow Details <i class="fas fa-angle-down rotate-icon"></i>
+                    </h5>
+                </a>
+            </div>
+        
+            <div id="lenderDetails" class="collapse" role="tabpanel" aria-labelledby="lenderDetailsTab" data-parent="#accordionEx">
+                <div class="card-body">        
+                    <?php
+                        if(isset($order_details['escrow_lender_first_name']) && !empty($order_details['escrow_lender_first_name']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">First Name:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['escrow_lender_first_name']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                    <?php
+                        if(isset($order_details['escrow_lender_last_name']) && !empty($order_details['escrow_lender_last_name']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Last Name:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['escrow_lender_last_name']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                    <?php
+                        if(isset($order_details['escrow_lender_email']) && !empty($order_details['escrow_lender_email']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Email Address:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['escrow_lender_email']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                    <?php
+                        if(isset($order_details['escrow_lender_company_name']) && !empty($order_details['escrow_lender_company_name']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Company:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['escrow_lender_company_name']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                    <?php
+                        if(isset($order_details['escrow_lender_telephone_no']) && !empty($order_details['escrow_lender_telephone_no']))
+                        {
+                    ?>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">Telephone:</label>
+                                <div class="col-sm-9 col-form-label">
+                                    <?php echo $order_details['escrow_lender_telephone_no']; ?>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    ?>
+                </div>
+            </div>
+        </div>
+    <?php
+        }
+    ?>   
 </div>
 </div>
+<style type="text/css">
+    #accordionEx .fas.fa-angle-down.rotate-icon {
+        float: right;
+    }
+</style>
