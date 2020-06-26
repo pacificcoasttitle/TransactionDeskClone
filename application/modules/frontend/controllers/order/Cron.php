@@ -611,6 +611,7 @@ class Cron extends MX_Controller {
             'where' => array(
                 'status' => 1,
                 'is_master' => 0,
+                'is_password_updated' => 0,
             )
         );
         $customer_lists = $this->home_model->get_customers($condition);
@@ -764,7 +765,7 @@ class Cron extends MX_Controller {
                                         'id' => $v['id']
                                     );
                                     $customerData = array(
-                                        'is_password_updated' => 1,
+                                        'is_password_updated' => 0,
                                         'random_password' => $random_password,
                                         'password' => md5('Pacific1')
                                     );

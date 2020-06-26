@@ -1,3 +1,16 @@
+<style>
+label {
+  padding-top: 0.20rem !important;
+  padding-bottom: 0.20rem !important;
+  font-size: 12px;
+  color: #777;
+}
+
+.input-fields {
+  padding-top: 1.25rem !important;
+  padding-bottom: .25rem !important;
+}
+</style>
 <div class="container">
     <div class="card card-login mx-auto mt-5">
       <div class="card-header">Login</div>
@@ -14,13 +27,13 @@
         <form id="login-form" name="login-form" method="POST" action="<?php echo base_url()?>order/admin/home/do_login">
           <div class="form-group">
             <div class="form-label-group">
-              <input type="email" id="email_address" name="email_address" class="form-control" autofocus="autofocus">
+              <input type="email" id="email_address" name="email_address" class="form-control input-fields">
               <label for="inputEmail">Email address</label>
             </div>
           </div>
           <div class="form-group">
             <div class="form-label-group">
-              <input type="password" id="password" name="password" class="form-control">
+              <input type="password" id="password" name="password" class="form-control input-fields">
               <label for="inputPassword">Password</label>
             </div>
           </div>

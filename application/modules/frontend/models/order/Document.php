@@ -52,7 +52,7 @@ class Document extends CI_Model
         $this->db->where('order_id', $orderId);
         $query = $this->db->get();
         if ($query->num_rows() > 0)  {
-            return $query->num_rows();
+            return $query->num_rows()+1;
         } else {
             return 1;
         }         
