@@ -181,6 +181,7 @@ $route['order/admin/orders'] = 'admin/order/order/orders';
 $route['order/admin/get-order-list'] = 'admin/order/order/get_order_list';
 $route['order/admin/cpl-documents'] = 'admin/order/home/cpl_document';
 $route['order/admin/order-details/:num'] = 'admin/order/order/order_details';
+$route['order/admin/export-orders'] = 'admin/order/order/export_orders';
 
 
 /* Route for PCT-Order backend*/
