@@ -439,8 +439,11 @@
             </div>
         </div>
     </div> 
-
-    <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+    <?php
+        if(isset($order_details['additional_emails']) && !empty($order_details['additional_emails']))
+        {
+    ?>
+            <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
         <div class="card-header" role="tab" id="deliverablesDetailsTab">
             <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#deliverablesDetails" aria-expanded="false"
             aria-controls="deliverablesDetails">
@@ -449,10 +452,7 @@
                 </h5>
             </a>
         </div>
-        <?php
-            if(isset($order_details['additional_emails']) && !empty($order_details['additional_emails']))
-            {
-        ?>
+        
                 <div id="deliverablesDetails" class="collapse" role="tabpanel" aria-labelledby="deliverablesDetailsTab" data-parent="#accordionEx">
                     <div class="card-body">
                         <div class="form-group row">
@@ -467,6 +467,7 @@
             }
         ?>
     </div>
+    
     <?php 
         if(isset($order_details['buyer_agent_id']) && !empty($order_details['buyer_agent_id']))
         {
