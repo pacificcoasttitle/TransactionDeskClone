@@ -511,9 +511,9 @@ class Fnf
                             </GenerateCPLRequest>
                         </s:Body>
                     </s:Envelope>';
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'fnf', 'generate_cpl', getenv('FNF_CPL_URL').$endPoint, $postData, array(), $orderDetails['order_id'], 0);                
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'fnf', 'edit_cpl', getenv('FNF_CPL_URL').$endPoint, $postData, array(), $orderDetails['order_id'], 0);                
         $resultForCPL = $this->make_request('POST', $endPoint, 'cpl', $postData, $vendorTokenData['token'], 'EditCPL');
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'fnf', 'generate_cpl', getenv('FNF_CPL_URL').$endPoint, $postData, $resultForCPL, $orderDetails['order_id'], $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'fnf', 'edit_cpl', getenv('FNF_CPL_URL').$endPoint, $postData, $resultForCPL, $orderDetails['order_id'], $logid);
         $responseData = $this->CI->natic->xml2array($resultForCPL, 0);
         
         if(!empty($responseData['s:Envelope']['s:Body']['GenerateCPLResponse']['CPLLetters']['a:CPLLetter'])) {

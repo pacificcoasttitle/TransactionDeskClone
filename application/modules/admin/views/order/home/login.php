@@ -27,7 +27,7 @@ label {
         <form id="login-form" name="login-form" method="POST" action="<?php echo base_url()?>order/admin/home/do_login">
           <div class="form-group">
             <div class="form-label-group">
-              <input type="email" id="email_address" name="email_address" class="form-control input-fields">
+              <input type="email" id="email_address" name="email_address" class="form-control input-fields" autofocus="autofocus">
               <label for="inputEmail">Email address</label>
             </div>
           </div>
