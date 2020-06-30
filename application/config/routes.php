@@ -152,6 +152,7 @@ $route['get-product-types'] = 'frontend/order/home/getProductTypes';
 $route['update-user-details'] = 'frontend/order/cron/update_user_details';
 $route['create-cpl-for-fnf/:num'] = 'frontend/order/dashboard/createCPlForFnf';
 $route['update-password'] = 'frontend/order/cron/updatePassword';
+$route['company-information'] = 'frontend/order/cron/getCompanyInformation';
 
 
 /* Route for PCT-Order backend*/
@@ -182,6 +183,8 @@ $route['order/admin/get-order-list'] = 'admin/order/order/get_order_list';
 $route['order/admin/cpl-documents'] = 'admin/order/home/cpl_document';
 $route['order/admin/order-details/:num'] = 'admin/order/order/order_details';
 $route['order/admin/export-orders'] = 'admin/order/order/export_orders';
+$route['order/admin/new-users'] = 'admin/order/home/newUsers';
+$route['order/admin/add-new-user'] = 'admin/order/home/addNewUser';
 
 
 /* Route for PCT-Order backend*/

@@ -18,7 +18,10 @@ class Resware
     public function make_request($http_method, $endpoint, $body_params='', $data = array())
     {
         $userdata = $this->CI->session->userdata('user');
-        if (isset($userdata['is_master']) && !empty($userdata['is_master'])) {
+        if (isset($data['admin_api']) && $data['admin_api'] == 1) {
+            $login = getenv('RESWARE_ADMIN_USERNAME');
+            $password = getenv('RESWARE_ADMIN_PASSWORD');
+        } else if (isset($userdata['is_master']) && !empty($userdata['is_master'])) {
             $login = isset($data['email']) && !empty($data['email']) ? $data['email'] : '' ;
             $password = isset($data['password']) && !empty($data['password']) ? $data['password'] : '' ;
         } else {
