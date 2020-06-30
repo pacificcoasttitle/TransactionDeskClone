@@ -740,7 +740,7 @@ class Home extends MX_Controller {
 
     public function addNewUserToResware($customerData)
     {
-        $this->load->model('frontend/order/apiLogs');
+        $this->load->model('order/apiLogs');
         $this->load->library('order/resware');
         $this->load->library('order/order');
         $userdata = $this->session->userdata('admin');
