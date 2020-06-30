@@ -606,6 +606,7 @@ class Cron extends MX_Controller {
     {
         ini_set('max_execution_time', 0); 
         ini_set('memory_limit','2048M');
+        $this->load->library('order/order');
         $userdata = $this->session->userdata('admin');
         $condition = array(
             'where' => array(
@@ -760,7 +761,7 @@ class Cron extends MX_Controller {
                                 $response = json_decode($result,true);
                                 
                                 if (isset($response['Employee']) && !empty($response['Employee'])) {
-                                    $random_password = $this->randomPassword();
+                                    $random_password = $this->order->randomPassword();
                                     $condition = array(
                                         'id' => $v['id']
                                     );
@@ -789,24 +790,60 @@ class Cron extends MX_Controller {
         }
     }
 
-    function randomPassword() 
+    public function getCompanyInformation()
     {
-        $len = 8;
-        $sets = array();
-        $sets[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $sets[] = 'abcdefghijkmnopqrstuvwxyz';
-        $sets[] = '0123456789';
-        // $sets[]  = '~!@#$%^&*(){}[],./?';
-        $password = '';
-        
-        foreach ($sets as $set) {
-            $password .= $set[array_rand(str_split($set))];
+        ini_set('max_execution_time', 0); 
+        ini_set('memory_limit','2048M');
+        $userdata = $this->session->userdata('admin');
+        $this->db->select('company_name, partner_id');
+        $this->db->group_by('company_name,partner_id'); 
+        $customer_lists = $this->db->get('customer_basic_details')->result_array();
+        $insertedPartnerInfo = $notInsertedPartnerInfo = 0;
+
+        if (isset($customer_lists) && !empty($customer_lists)) {
+
+            foreach (array_chunk($customer_lists,50) as $key => $value) {
+                
+                if (isset($value) && !empty($value)) {
+
+                    foreach ($value as $k => $v)  {
+
+                        if (!empty($v['company_name']) && !empty($v['partner_id'])) {
+                            $endPoint = 'admin/partners/'.$v['partner_id'];
+                            $userdata['email'] = $userdata['email_address'];
+                            $logid = $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', RESWARE_ORDER_API.$endPoint, array(), array(), 0, 0);
+                            $result = $this->make_request('GET', $endPoint, array(), $userdata);
+                            $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', RESWARE_ORDER_API.$endPoint, array(), $result, 0, $logid);
+
+                            if (isset($result) && !empty($result)) {
+                                $response = json_decode($result,true);
+                                
+                                if (isset($response['AdminPartner']) && !empty($response['AdminPartner'])) {
+                                    $customerData = array(
+                                        'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                                        'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                                        'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
+                                        'city' => trim($response['AdminPartner']['MailingAddress']['City']),
+                                        'state' => trim($response['AdminPartner']['MailingAddress']['State']),
+                                        'zip' => trim($response['AdminPartner']['MailingAddress']['Zip'])
+                                    );
+                                    $insert = $this->home_model->insert($customerData, 'pct_order_partner_company_info');
+
+                                    if($insert) {
+                                        $insertedPartnerInfo++;                          
+                                    }
+                                } else {
+                                    $notInsertedPartnerInfo++;
+                                }
+                            } else {
+                                $notInsertedPartnerInfo++;
+                            }
+                            $successMsg = 'Partner Information updated successfully. Inserted ('.$insertedPartnerInfo.') | Not Inserted ('.$notInsertedPartnerInfo.')';
+                        }
+                    }
+                }
+            }
+            echo $successMsg;
         }
-    
-        while(strlen($password) < $len) {
-            $randomSet = $sets[array_rand($sets)];
-            $password .= $randomSet[array_rand(str_split($randomSet))]; 
-        }
-        return str_shuffle($password);
     }
 }

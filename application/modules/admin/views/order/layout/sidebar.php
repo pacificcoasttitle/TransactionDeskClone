@@ -62,4 +62,10 @@
 			<i class="fas fa-fw fa-file"></i>
 			<span>CPL Documents</span></a>
 	</li>
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/new-users'; ?>">
+			<i class="fas fa-fw fa-users"></i>
+			<span>New Users</span></a>
+	</li>
 </ul>
