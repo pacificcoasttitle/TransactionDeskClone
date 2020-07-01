@@ -3,6 +3,9 @@
 		top: 14px !important;
 	}
 	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}  
+	.ui-autocomplete {
+		max-height: 300px !important;
+	} 
 </style>
 
 <body>
@@ -273,7 +276,7 @@
             });
 		},
 		delay: 0,
-		minLength: 2,
+		minLength: 3,
         select: function( event, ui ) {
             event.preventDefault();
 			$("#LenderCompany").val(ui.item.company);
@@ -353,7 +356,7 @@
             });
 		},
 		delay: 0,
-		minLength: 2,
+		minLength: 3,
         select: function( event, ui ) {
             event.preventDefault();
 			$("#agent_name").val(ui.item.name);

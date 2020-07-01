@@ -873,7 +873,7 @@
 	            });
 			},
 			delay: 0,
-			minLength: 2,
+			minLength: 3,
 	        select: function( event, ui ) {
 	            event.preventDefault();
 	            $("#CompanyName").val(ui.item.company);
