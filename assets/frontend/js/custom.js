@@ -719,10 +719,18 @@ function parse187()
     ownerNameSecondary = $.trim(ownerNameSecondary);
     ownerNamePrimary = toTitleCase(ownerNamePrimary);
     ownerNameSecondary = toTitleCase(ownerNameSecondary);
-    ownerNamePrimary = ownerNamePrimary.replace(',', '');
-    ownerNameSecondary = ownerNameSecondary.replace(',', '');
-    ownerNamePrimaryLast = ownerNamePrimary.split(' ')[0];
-    ownerNameSecondaryLast = ownerNameSecondary.split(' ')[0];
+    if (ownerNamePrimary.indexOf(',') !== -1) {
+        ownerNamePrimary = ownerNamePrimary.replace(',', '');
+        ownerNamePrimaryLast = ownerNamePrimary.split(' ')[0];
+    } else {
+        ownerNamePrimaryLast = '';
+    }
+    if (ownerNameSecondary.indexOf(',') !== -1) {
+        ownerNameSecondary = ownerNameSecondary.replace(',', '');
+        ownerNameSecondaryLast = ownerNameSecondary.split(' ')[0];
+    } else {
+        ownerNameSecondaryLast = '';
+    }
     ownerNamePrimary = ownerNamePrimary.substr(ownerNamePrimary.indexOf(" ") + 1) + ' ' + ownerNamePrimaryLast;
     if (ownerNameSecondary) {
         ownerNameSecondary = ownerNameSecondary.substr(ownerNameSecondary.indexOf(" ") + 1) + ' ' + ownerNameSecondaryLast;
