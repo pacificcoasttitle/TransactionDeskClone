@@ -324,9 +324,19 @@ $(document).ready(function() {
                 },
                 type: "POST",
                 dataType: "json",
-                success: response //response is a callable accepting data parameter. no reason to wrap in anonymous function.
+                success: function (data) {
+                    if (data.length > 0) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    } else {
+                        response([{ label: 'No results found.', val: -1}]);
+                    }
+                }
             });
         },
+        delay: 0,
+        minLength: 3,
         select: function( event, ui ) {
             event.preventDefault();
             $("#BuyerAgentName").val(ui.item.name);
@@ -359,9 +369,19 @@ $(document).ready(function() {
                 },
                 type: "POST",
                 dataType: "json",
-                success: response //response is a callable accepting data parameter. no reason to wrap in anonymous function.
+                success: function (data) {
+                    if (data.length > 0) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    } else {
+                        response([{ label: 'No results found.', val: -1}]);
+                    }
+                }
             });
         },
+        delay: 0,
+        minLength: 3,
         select: function( event, ui ) {
             event.preventDefault();
             $("#ListingAgentName").val(ui.item.name);
@@ -396,9 +416,19 @@ $(document).ready(function() {
                 },
                 type: "POST",
                 dataType: "json",
-                success: response
+                success: function (data) {
+                    if (data.length > 0) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    } else {
+                        response([{ label: 'No results found.', val: -1}]);
+                    }
+                }
             });
         },
+        delay: 0,
+        minLength: 3,
         select: function( event, ui ) {
             event.preventDefault();
             $("#LenderName").val(ui.item.name);
@@ -430,9 +460,19 @@ $(document).ready(function() {
                 },
                 type: "POST",
                 dataType: "json",
-                success: response //response is a callable accepting data parameter. no reason to wrap in anonymous function.
+                success: function (data) {
+                    if (data.length > 0) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    } else {
+                        response([{ label: 'No results found.', val: -1}]);
+                    }
+                }
             });
         },
+        delay: 0,
+        minLength: 3,
         select: function( event, ui ) {
             event.preventDefault();
             $("#EscrowName").val(ui.item.name);

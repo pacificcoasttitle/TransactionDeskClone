@@ -166,7 +166,7 @@
 	            });
 			},
 			delay: 0,
-			minLength: 2,
+			minLength: 3,
 	        select: function( event, ui ) {
 	            event.preventDefault();
 	            $("#company").val(ui.item.partner_name);

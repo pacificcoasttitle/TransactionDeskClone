@@ -16,6 +16,10 @@
 	table#orders_listing tr td:last-child {
 		display: inline-flex;
 	}
+
+	.ui-autocomplete {
+		max-height: 300px !important;
+	} 
 </style>
 <body>
 	<?php
@@ -408,9 +412,19 @@
 	                },
 	                type: "POST",
 	                dataType: "json",
-	                success: response
+	                success: function (data) {
+						if (data.length > 0) {
+							response($.map(data, function (item) {
+								return item;
+							}))
+						} else {
+							response([{ label: 'No results found.', val: -1}]);
+						}
+					}
 	            });
-	        },
+			},
+			delay: 0,
+			minLength: 3,
 	        select: function( event, ui ) {
 	            event.preventDefault();
 				$("#lender").val(ui.item.value);
@@ -436,9 +450,19 @@
 	                },
 	                type: "POST",
 	                dataType: "json",
-	                success: response
+	                success: function (data) {
+						if (data.length > 0) {
+							response($.map(data, function (item) {
+								return item;
+							}))
+						} else {
+							response([{ label: 'No results found.', val: -1}]);
+						}
+					}
 	            });
-	        },
+			},
+			delay: 0,
+			minLength: 3,
 	        select: function( event, ui ) {
 	            event.preventDefault();
 				$("#edit_lender").val(ui.item.value);
