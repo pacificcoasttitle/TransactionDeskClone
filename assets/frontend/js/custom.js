@@ -708,11 +708,13 @@ function parse187()
     var ownerNamePrimary = $(reportXML).find("PropertyProfile").find("PrimaryOwnerName").text();
     var ownerNameSecondary = $(reportXML).find("PropertyProfile").find("SecondaryOwnerName").text();
     
-    if(ownerNamePrimary.indexOf(';') !== -1)
-  	{
+    if (ownerNamePrimary.indexOf(';') !== -1) {
   		ownerNameSecondary = ownerNamePrimary.substr(ownerNamePrimary.indexOf(";") + 1)
   		ownerNamePrimary = ownerNamePrimary.slice(0, ownerNamePrimary.indexOf(";"));
-  	}
+  	} else if (ownerNamePrimary.indexOf('&') !== -1) {
+        ownerNameSecondary = ownerNamePrimary.substr(ownerNamePrimary.indexOf("&") + 1)
+  		ownerNamePrimary = ownerNamePrimary.slice(0, ownerNamePrimary.indexOf("&"));
+    }
     ownerNamePrimary = $.trim(ownerNamePrimary);
     ownerNameSecondary = $.trim(ownerNameSecondary);
     ownerNamePrimary = toTitleCase(ownerNamePrimary);

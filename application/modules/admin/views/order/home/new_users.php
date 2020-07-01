@@ -8,7 +8,7 @@
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-table"></i>
-            CPL Documents
+            New Users
             <div class="float-right">
                 <a href="<?php echo base_url()?>order/admin/add-new-user" class="btn btn-secondary"> Add New User </a>
                 <a href="javascript:void(0);" data-export-type="csv" id="export_new_user" class="btn btn-secondary"> Export </a>
