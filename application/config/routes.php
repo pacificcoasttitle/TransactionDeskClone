@@ -185,6 +185,8 @@ $route['order/admin/order-details/:num'] = 'admin/order/order/order_details';
 $route['order/admin/export-orders'] = 'admin/order/order/export_orders';
 $route['order/admin/new-users'] = 'admin/order/home/newUsers';
 $route['order/admin/add-new-user'] = 'admin/order/home/addNewUser';
+$route['order/admin/grant-deed-documents'] = 'admin/order/home/grant_deed_document';
+$route['order/admin/lv-documents'] = 'admin/order/home/lv_document';
 
 
 /* Route for PCT-Order backend*/

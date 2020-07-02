@@ -1,5 +1,5 @@
 <div id="page-preloader"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
-<div class="l-theme animated-css" style="height:fit-content;" data-header="sticky" data-header-top="200" data-canvas="container">
+<div class="l-theme animated-css" style="height:auto;" data-header="sticky" data-header-top="200" data-canvas="container">
     <div data-off-canvas="mobile-slidebar left overlay">
         <ul class="yamm nav navbar-nav">
             <li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>				

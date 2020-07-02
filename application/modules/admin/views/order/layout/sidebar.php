@@ -57,15 +57,28 @@
 			<span>Orders</span></a>
 	</li>
 	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/new-users'; ?>">
+			<i class="fas fa-fw fa-users"></i>
+			<span>New Users</span></a>
+	</li>
+	<li
 		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/cpl-documents') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'order/admin/cpl-documents'; ?>">
 			<i class="fas fa-fw fa-file"></i>
 			<span>CPL Documents</span></a>
 	</li>
 	<li
-		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/new-users'; ?>">
-			<i class="fas fa-fw fa-users"></i>
-			<span>New Users</span></a>
+		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/grant-deed-documents') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/grant-deed-documents'; ?>">
+			<i class="fas fa-fw fa-file"></i>
+			<span>Grant Deed Documents</span></a>
 	</li>
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'order/admin/lv-documents') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/lv-documents'; ?>">
+			<i class="fas fa-fw fa-file"></i>
+			<span>Legal & Vesting Documents</span></a>
+	</li>
+	
 </ul>

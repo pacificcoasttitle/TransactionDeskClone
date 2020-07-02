@@ -2765,7 +2765,7 @@ class Dashboard extends MX_Controller {
 		$documentData = array(
 			'document_name' => $document_name,
 			'original_document_name' => $document_name,
-			'document_type_id' => 1024,
+			'document_type_id' => 1051,
 			'document_size' => $fileSize,
 			'user_id' => $userdata['id'],
 			'order_id' => $orderDetails['order_id'],
@@ -2779,7 +2779,7 @@ class Dashboard extends MX_Controller {
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
 			'DocumentType' => array(
-				'DocumentTypeID' => 1024,
+				'DocumentTypeID' => 1051,
 			),
 			'Description' => 'CPL Document',
 			'InternalOnly' => false,
