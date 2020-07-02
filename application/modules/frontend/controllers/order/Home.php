@@ -1020,7 +1020,7 @@ class Home extends MX_Controller {
 		$documentData = array(
 			'document_name' => $document_name,
 			'original_document_name' => $document_name,
-			'document_type_id' => 1050,
+			'document_type_id' => 1023,
 			'document_size' => $fileSize,
 			'user_id' => $userdata['id'],
 			'order_id' => $orderDetails['order_id'],
@@ -1034,7 +1034,7 @@ class Home extends MX_Controller {
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
 			'DocumentType' => array(
-				'DocumentTypeID' => 1050,
+				'DocumentTypeID' => 1023,
 			),
 			'Description' => 'Legal & Vesting Document',
 			'InternalOnly' => false,
@@ -1072,7 +1072,7 @@ class Home extends MX_Controller {
 		$documentData = array(
 			'document_name' => $document_name,
 			'original_document_name' => $document_name,
-			'document_type_id' => 1047,
+			'document_type_id' => 1031,
 			'document_size' => $fileSize,
 			'user_id' => $userdata['id'],
 			'order_id' => $orderDetails['order_id'],
@@ -1086,7 +1086,7 @@ class Home extends MX_Controller {
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
 			'DocumentType' => array(
-				'DocumentTypeID' => 1047,
+				'DocumentTypeID' => 1031,
 			),
 			'Description' => 'Grant Deed Document',
 			'InternalOnly' => false,
