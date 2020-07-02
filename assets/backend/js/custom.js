@@ -2,6 +2,25 @@ var customer_list ='';
 var agent_list ='';
 var credentials_customer_list = '';
 $(document).ready(function () {
+
+    // Add active class to menu
+    if(jQuery('#users').children().hasClass('active')) {
+        jQuery('#users').parent('li').addClass('active');
+        jQuery('#users').addClass('show');
+    } else {
+        jQuery('#users').removeClass('show');
+        jQuery('#users').parent('li').removeClass('active');
+    }
+
+    // Add active class to menu
+    if(jQuery('#documents').children().hasClass('active')) {
+        jQuery('#documents').parent('li').addClass('active');
+        jQuery('#documents').addClass('show');
+    } else {
+        jQuery('#documents').removeClass('show');
+        jQuery('#documents').parent('li').removeClass('active');
+    }
+
     if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length)
     {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
