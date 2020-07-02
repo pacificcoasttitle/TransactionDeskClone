@@ -984,7 +984,7 @@ $(document).ready(function () {
             },
             initComplete: function() {
                 var $buttons = jQuery('.dt-buttons').hide();
-                jQuery('#export_cpl_documents').on('click', function() {
+                jQuery('#export_grant_documents').on('click', function() {
                     var export_type = jQuery(this).attr('data-export-type');
                     if (export_type) {
                         var btnClass = '.buttons-' + export_type;
@@ -997,7 +997,7 @@ $(document).ready(function () {
                 {
                     extend: 'csvHtml5',
                     text: 'Export',
-                    title: 'CPL Documents',
+                    title: 'Grant Deed Documents',
                     exportOptions: {
                         columns: [0, 1, 2],
                         format: {
@@ -1055,7 +1055,7 @@ $(document).ready(function () {
             },
             initComplete: function() {
                 var $buttons = jQuery('.dt-buttons').hide();
-                jQuery('#export_cpl_documents').on('click', function() {
+                jQuery('#export_lv_documents').on('click', function() {
                     var export_type = jQuery(this).attr('data-export-type');
                     if (export_type) {
                         var btnClass = '.buttons-' + export_type;
@@ -1068,7 +1068,7 @@ $(document).ready(function () {
                 {
                     extend: 'csvHtml5',
                     text: 'Export',
-                    title: 'CPL Documents',
+                    title: 'Legal & Vesting Documents',
                     exportOptions: {
                         columns: [0, 1, 2],
                         format: {
