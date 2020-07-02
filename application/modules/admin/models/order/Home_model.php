@@ -239,8 +239,10 @@ class Home_model extends CI_Model
 			$filter_total_records =  $this->db->count_all_results();
 
 			if(isset($keyword) && !empty($keyword)) {
-                $this->db->like('order_details.file_number', $keyword);
-                $this->db->or_like('pct_order_documents.document_name', $keyword);
+                $this->db->group_start()
+                        ->like('order_details.file_number', $keyword)
+                        ->or_like('pct_order_documents.document_name', $keyword)
+                        ->group_end();
 			}
 
             $this->db->from('order_details')
@@ -396,8 +398,10 @@ class Home_model extends CI_Model
 			$filter_total_records =  $this->db->count_all_results();
 
 			if(isset($keyword) && !empty($keyword)) {
-                $this->db->like('order_details.file_number', $keyword);
-                $this->db->or_like('pct_order_documents.document_name', $keyword);
+                $this->db->group_start()
+                        ->like('order_details.file_number', $keyword)
+                        ->or_like('pct_order_documents.document_name', $keyword)
+                        ->group_end();
 			}
 
             $this->db->from('order_details')
@@ -466,8 +470,10 @@ class Home_model extends CI_Model
 			$filter_total_records =  $this->db->count_all_results();
 
 			if(isset($keyword) && !empty($keyword)) {
-                $this->db->like('order_details.file_number', $keyword);
-                $this->db->or_like('pct_order_documents.document_name', $keyword);
+                $this->db->group_start()
+                        ->like('order_details.file_number', $keyword)
+                        ->or_like('pct_order_documents.document_name', $keyword)
+                        ->group_end();
 			}
 
             $this->db->from('order_details')
