@@ -1036,7 +1036,7 @@ class Home extends MX_Controller {
 			'DocumentType' => array(
 				'DocumentTypeID' => 1050,
 			),
-			'Description' => 'CPL Document',
+			'Description' => 'Legal & Vesting Document',
 			'InternalOnly' => false,
 			'DocumentBody' => $binaryData
 		);
@@ -1076,10 +1076,10 @@ class Home extends MX_Controller {
 			'document_size' => $fileSize,
 			'user_id' => $userdata['id'],
 			'order_id' => $orderDetails['order_id'],
-			'description' => 'Legal & Vesting Document',
+			'description' => 'Grant Deed Document',
 			'is_sync' => 1,
 			'is_prelim_document' => 0,
-			'is_lv_doc' => 1
+			'is_grant_doc' => 1
 		);
 		$documentId = $this->document->insert($documentData);
 		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
@@ -1088,7 +1088,7 @@ class Home extends MX_Controller {
 			'DocumentType' => array(
 				'DocumentTypeID' => 1047,
 			),
-			'Description' => 'CPL Document',
+			'Description' => 'Grant Deed Document',
 			'InternalOnly' => false,
 			'DocumentBody' => $binaryData
 		);

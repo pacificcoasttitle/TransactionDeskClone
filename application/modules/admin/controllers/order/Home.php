@@ -955,8 +955,8 @@ class Home extends MX_Controller {
                     $nestedData[] = 'No';
                 }
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."/uploads/documents/$documentName' download><i class='fas fa-fw fa-download'></i></a>
-                    <a style='margin-left:10px;' target='_blank' href='".base_url()."/uploads/documents/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."/uploads/grant-deed/$documentName' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='".base_url()."/uploads/grant-deed/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
                 }
                 $data[] = $nestedData;            
             }
@@ -1001,8 +1001,8 @@ class Home extends MX_Controller {
                     $nestedData[] = 'No';
                 }
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."/uploads/documents/$documentName' download><i class='fas fa-fw fa-download'></i></a>
-                    <a style='margin-left:10px;' target='_blank' href='".base_url()."/uploads/documents/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."/uploads/legal-vesting/$documentName' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='".base_url()."/uploads/legal-vesting/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
                 }
                 $data[] = $nestedData;            
             }
