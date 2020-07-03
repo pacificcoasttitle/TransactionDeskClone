@@ -756,7 +756,6 @@ $(document).ready(function () {
 
     if ($('#tbl-lv-log-listing').length) 
     {
-        console.log('hi');
         log_list = $('#tbl-lv-log-listing').DataTable({
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
