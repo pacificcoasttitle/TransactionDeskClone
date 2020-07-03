@@ -509,10 +509,10 @@ class TitlePoint extends MX_Controller {
 			}
 			if($methodId == 3)
 			{
-				if (!is_dir('uploads/grant-deed')) {
-				    mkdir('./uploads/grant-deed', 0777, TRUE);
+				if (!is_dir('uploads/tax')) {
+				    mkdir('./uploads/tax', 0777, TRUE);
 				}
-				$pdfFilePath = './uploads/grant-deed/'.$fileNumber.'.pdf';
+				$pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
 				file_put_contents($pdfFilePath, $bin);
 			}
 

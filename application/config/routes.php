@@ -153,7 +153,7 @@ $route['update-user-details'] = 'frontend/order/cron/update_user_details';
 $route['create-cpl-for-fnf/:num'] = 'frontend/order/dashboard/createCPlForFnf';
 $route['update-password'] = 'frontend/order/cron/updatePassword';
 $route['company-information'] = 'frontend/order/cron/getCompanyInformation';
-
+$route['generate-tax-doc'] = 'frontend/order/TitlePoint/generateTaxDoc';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

@@ -135,17 +135,7 @@ function getRequestSummaries(requestId,methodId)
             } 
             else if (responseStatus == 'Success') 
             {
-                $resultId = $(response).find("ResultThumbNail:first").find("ID").text();
-                /*if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
-                {
-                    serviceId = '';
-                    if(methodId == 4)
-                    {
-                        serviceId = $(response).find("RequestSummaries:first").find("RequestSummary:first").find("Order:first").find("Services:first").find("Service:first").find("ID:first").text();
-                        imageCreateRequest(serviceId,methodId);
-                    }
-                }*/
-                
+                $resultId = $(response).find("ResultThumbNail:first").find("ID").text();                
                 getResultById($resultId,methodId);
             }
         })
@@ -333,20 +323,18 @@ function imageCreateRequest(serviceId,methodId,fileNumber)
             if (responseStatus == 'Failed') 
             {
                 if(methodId == 4)
-                {
-                    
+                {                    
                     $('#grantDeedInfoFile').next('.loader').hide();
                     $('#grantDeedInfoFile').css('border','1px solid #000000');
                     $('#grantDeedInfoFile').css('padding','15px');
-                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>'); 
-                    
+                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');                    
                 }
                 else if(methodId == 3)
                 {
-                    $('#instrumentInfoFile').next('.loader').hide();
-                    $('#instrumentInfoFile').css('border','1px solid #000000');
-                    $('#instrumentInfoFile').css('padding','15px');
-                    $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
+                    $('#taxDocumentInfo').next('.loader').hide();
+                    $('#taxDocumentInfo').css('border','1px solid #000000');
+                    $('#taxDocumentInfo').css('padding','15px');
+                    $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
                 }                
             } 
             else if (responseStatus == 'Success') 
@@ -401,10 +389,10 @@ function getRequestStatus(requestId,methodId,fileNumber)
                 }
                 else if(methodId == 3)
                 {
-                    $('#instrumentInfoFile').next('.loader').hide();
-                    $('#instrumentInfoFile').css('border','1px solid #000000');
-                    $('#instrumentInfoFile').css('padding','15px');
-                    $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
+                    $('#taxDocumentInfo').next('.loader').hide();
+                    $('#taxDocumentInfo').css('border','1px solid #000000');
+                    $('#taxDocumentInfo').css('padding','15px');
+                    $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
                 }
             } 
             else if (responseStatus == 'Success') 
@@ -424,10 +412,10 @@ function getRequestStatus(requestId,methodId,fileNumber)
             }
             else if(methodId == 3)
             {
-                $('#instrumentInfoFile').next('.loader').hide();
-                $('#instrumentInfoFile').css('border','1px solid #000000');
-                $('#instrumentInfoFile').css('padding','15px');
-                $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
+                $('#taxDocumentInfo').next('.loader').hide();
+                $('#taxDocumentInfo').css('border','1px solid #000000');
+                $('#taxDocumentInfo').css('padding','15px');
+                $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
             }
         });
 }
@@ -460,10 +448,10 @@ function generateImage(requestId,methodId,fileNumber)
                 }
                 else if(methodId == 3)
                 {
-                    $('#instrumentInfoFile').prev('.loader').hide();
-                    $('#instrumentInfoFile').css('border','1px solid #000000');
-                    $('#instrumentInfoFile').css('padding','15px');
-                    $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
+                    $('#taxDocumentInfo').prev('.loader').hide();
+                    $('#taxDocumentInfo').css('border','1px solid #000000');
+                    $('#taxDocumentInfo').css('padding','15px');
+                    $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
                 }
                 
             } 
@@ -483,7 +471,7 @@ function generateImage(requestId,methodId,fileNumber)
                     {
                         download('GrantDeed.pdf', base64_data);
                     }
-                    $('#instrumentInfoFile').next('.loader').hide();
+                    $('#taxDocumentInfo').next('.loader').hide();
                 }
                 else if(methodId == 4)
                 {
@@ -512,18 +500,18 @@ function generateImage(requestId,methodId,fileNumber)
                 }
                 else if(methodId == 3)
                 {
-                    $('#instrumentInfoFile').prev('.loader').hide();
-                    $('#instrumentInfoFile').css('border','1px solid #000000');
-                    $('#instrumentInfoFile').css('padding','15px');
-                    $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
+                    $('#taxDocumentInfo').prev('.loader').hide();
+                    $('#taxDocumentInfo').css('border','1px solid #000000');
+                    $('#taxDocumentInfo').css('padding','15px');
+                    $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
                 }
             }
             else if(methodId == 3)
             {
-                $('#instrumentInfoFile').prev('.loader').hide();
-                $('#instrumentInfoFile').css('border','1px solid #000000');
-                $('#instrumentInfoFile').css('padding','15px');
-                $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
+                $('#taxDocumentInfo').prev('.loader').hide();
+                $('#taxDocumentInfo').css('border','1px solid #000000');
+                $('#taxDocumentInfo').css('padding','15px');
+                $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
             }
             
         });
@@ -728,5 +716,53 @@ function generateGrantDeed(fips,year,docId,fileNumber)
             $('#instrumentInfoFile').css('border','1px solid #000000');
             $('#instrumentInfoFile').css('padding','15px');
             $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
+        });
+}
+
+function generateTaxDoc(apn,serviceId,fileNumber)
+{
+    $('#taxDocumentInfo').next('.loader').show();
+    $.ajax({
+        url: base_url+'generate-tax-doc',
+        data: {
+            apn: apn,
+            serviceId: serviceId,
+            fileNumber: fileNumber
+        },
+        dataType: "xml",
+        type: "POST"
+    })
+        .done(function(response, textStatus, jqXHR) {
+
+            var responseStatus = $(response).find('Documents:first').find('DocumentResponse:first').find('DocStatus:first').find('Msg:first').text();
+            
+            if (responseStatus == 'OK') 
+            {
+                var base64_data = $(response).find("Documents:first").find("DocumentResponse:first").find("Document:first").find("Body:first").find("Body:first").text();
+                var bin = atob(base64_data);                
+                if (navigator.msSaveBlob)
+                {
+                    var filename = "GrantDeed.pdf";
+                    download(filename, base64_data);
+                }
+                else
+                {
+                    download('GrantDeed.pdf', base64_data);
+                }
+                $('#taxDocumentInfo').next('.loader').hide();
+            }
+            else
+            {
+                $('#taxDocumentInfo').prev('.loader').hide();
+                $('#taxDocumentInfo').css('border','1px solid #000000');
+                $('#taxDocumentInfo').css('padding','15px');
+                $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
+            }
+        })
+        .fail(function(err) {
+            $('#taxDocumentInfo').prev('.loader').hide();
+            $('#taxDocumentInfo').css('border','1px solid #000000');
+            $('#taxDocumentInfo').css('padding','15px');
+            $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
         });
 }

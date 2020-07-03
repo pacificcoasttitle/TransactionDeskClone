@@ -237,7 +237,34 @@
                 <?php
                     }
                 ?>
-                
+                <?php
+                        if(isset($apn) && !empty($apn))
+                        {
+                    ?>
+                            <div class="col-md-3">
+                                <div id="taxDocumentInfo">
+                                    <?php
+                                        if(isset($tax_file_url) && !empty($tax_file_url))
+                                        {
+                                    ?>
+                                            <a href="<?php echo $tax_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="Tax.pdf">Download Tax Document</a>
+                                    <?php
+                                        }
+                                        else
+                                        {
+                                            $tax_serviceId = isset($tp_data['cs3_service_id']) && !empty($tp_data['cs3_service_id']) ? $tp_data['cs3_service_id'] : '';
+                                    ?>
+                                            <a href="javascript:void(0);" onclick='imageCreateRequest("<?php echo $tax_serviceId; ?>",3,"<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-tax-doc">Download Tax Document</a>
+                                    <?php  
+                                        }
+                                    ?>
+                                    
+                                </div>
+                                <div class="loader" style="display: none;"></div>
+                            </div>
+                    <?php
+                        }
+                    ?>
             </div>
           </div>
         </article>
