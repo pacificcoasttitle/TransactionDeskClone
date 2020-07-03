@@ -324,8 +324,6 @@ class TitlePoint extends MX_Controller {
 	            	}
 	            	
 	            }
-	            echo "<pre>"; print_r($instrumentNumber);
-	            echo "<pre>"; print_r($recordedDate); exit;
 	            $status = isset($result['Result']['Status']) && !empty($result['Result']['Status']) ? $result['Result']['Status'] : '';
 
 	            $tpData = 	array(
@@ -365,6 +363,7 @@ class TitlePoint extends MX_Controller {
 		}
 		if($methodId == 3)
 		{
+			echo "<pre>"; print_r($result); exit;
 			if($responseStatus == 'Success')
 			{
 				$firstInstallment = $secondInstallment = array();
