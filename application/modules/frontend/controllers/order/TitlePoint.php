@@ -33,6 +33,7 @@ class TitlePoint extends MX_Controller {
         if($methodId == 3)
 		{
 			$apn = isset($_POST['apn']) && !empty($_POST['apn']) ? $_POST['apn'] : '';
+			$apn = str_replace('0000', '0-000', $apn);
 			$state = isset($_POST['state']) && !empty($_POST['state']) ? $_POST['state'] : '';
 			$county = isset($_POST['county']) && !empty($_POST['county']) ? $_POST['county'] : '';
 			$requestParams['serviceType'] = TAX_SEARCH_SERVICE_TYPE;
