@@ -363,7 +363,6 @@ class TitlePoint extends MX_Controller {
 		}
 		if($methodId == 3)
 		{
-			echo "<pre>"; print_r($result); exit;
 			if($responseStatus == 'Success')
 			{
 				$firstInstallment = $secondInstallment = array();
