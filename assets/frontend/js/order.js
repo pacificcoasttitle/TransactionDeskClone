@@ -464,7 +464,7 @@ function generateImage(requestId,methodId,fileNumber)
                 {
                     if (navigator.msSaveBlob)
                     {
-                        var filename = "GrantDeed.pdf";
+                        var filename = "Tax.pdf";
                         download(filename, base64_data);
                     }
                     else

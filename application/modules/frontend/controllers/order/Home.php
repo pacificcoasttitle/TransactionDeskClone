@@ -368,7 +368,8 @@ class Home extends MX_Controller {
 							$bcc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
-							$file = array(base_url().'uploads/legal-vesting/'.$lvfilename,base_url().'uploads/grant-deed/'.$deedfilename);
+							$taxfilename = $orderNumber.'.pdf';
+							$file = array(base_url().'uploads/legal-vesting/'.$lvfilename,base_url().'uploads/grant-deed/'.$deedfilename,base_url().'uploads/tax/'.$taxfilename);
 							$this->load->helper('sendemail');
 							
 							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);
