@@ -43,7 +43,8 @@ class Order extends MX_Controller {
             $nestedData[] = $value['file_number'];
             $nestedData[] = $value['full_address'];
             $nestedData[] = $value['product_type'];
-            $nestedData[] = $value['sales_rep_name'];
+			$nestedData[] = $value['sales_rep_name'];
+			$nestedData[] = $value['first_name']." ".$value['last_name'];
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
             $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
             $nestedData[] = $action;

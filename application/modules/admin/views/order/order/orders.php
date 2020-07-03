@@ -29,7 +29,8 @@
                             <th>Order#</th>
                             <th>Property Address</th>
                             <th>Product Type</th>
-                            <th>Sales Rep</th>         
+                            <th>Sales Rep</th> 
+                            <th>Created By</th>           
                             <th>Action</th>
                         </tr>
                     </thead>                
