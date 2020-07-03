@@ -220,9 +220,11 @@ class TitlePoint extends MX_Controller {
 			if($responseStatus == 'Success')
 			{
 				$resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : '';
+				$serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
 				
 				$tpData = 	array(
-					'cs3_result_id' => $resultId
+					'cs3_result_id' => $resultId,
+					'cs3_service_id' => $serviceId,
 				);
 				if ($this->session->has_userdata('tp_api_id')) 
 				{
@@ -293,6 +295,7 @@ class TitlePoint extends MX_Controller {
 		
 		if($methodId == 4)
 		{
+			echo "<pre>"; print_r($result); exit;
 			if($responseStatus == 'Success')
 			{
 				$briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : '';
