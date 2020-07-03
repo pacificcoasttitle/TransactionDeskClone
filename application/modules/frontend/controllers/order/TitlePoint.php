@@ -295,7 +295,6 @@ class TitlePoint extends MX_Controller {
 		
 		if($methodId == 4)
 		{
-			echo "<pre>"; print_r($result); exit;
 			if($responseStatus == 'Success')
 			{
 				$briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : '';
