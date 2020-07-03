@@ -240,6 +240,7 @@
                 <?php
                         if(isset($apn) && !empty($apn))
                         {
+                            $apn = str_replace('0000', '0-000', $apn);
                     ?>
                             <div class="col-md-3">
                                 <div id="taxDocumentInfo">
