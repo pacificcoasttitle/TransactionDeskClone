@@ -18,6 +18,7 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/sales-rep'; ?>">Sales Rep.</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/title-officers' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/title-officers'; ?>">Title Officer</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/new-users'; ?>">New Users</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/master-users'; ?>">Master Users</a>
         </div>
 	</li>
 	

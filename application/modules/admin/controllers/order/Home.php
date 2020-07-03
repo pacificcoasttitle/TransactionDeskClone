@@ -1012,4 +1012,107 @@ class Home extends MX_Controller {
         $json_data['data'] = $data;
         echo json_encode($json_data);
     }
+
+    public function masterUsers()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Master Users';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/master_users', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_master_users_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $master_users_lists = $this->home_model->get_master_users_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $master_users_lists = $this->home_model->get_master_users_list($params);        
+        }
+
+        $data = array(); 
+        if (isset($master_users_lists['data']) && !empty($master_users_lists['data'])) {
+            foreach ($master_users_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
+                $data[] = $nestedData;            
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $master_users_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $master_users_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function addNewMasterUser()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Add New Master User';
+        $salesRepData = array();
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
+            $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+            $this->form_validation->set_rules('company', 'Company', 'required', array('required'=> 'Please Enter Company'));
+            $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));
+            $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+            $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+            $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', array('required'=> 'Please Enter Zipcode'));
+            
+            if ($this->form_validation->run() == true) {
+                $customerData = array(
+                    'first_name' => $this->input->post('first_name'),
+                    'last_name' => $this->input->post('last_name'),
+                    'telephone_no' => $this->input->post('telephone_no'),
+                    'email_address' => $this->input->post('email_address'),
+                    'password' => 'Pacific1',    
+                    'company_name' => $this->input->post('company'),
+                    'street_address' => $this->input->post('address'),
+                    'city' => $this->input->post('city'),
+                    'state' => $this->input->post('state'),
+                    'zip_code' => $this->input->post('zipcode'),
+                    'is_escrow' => 0,
+                    'is_master' => 1,
+                    'is_password_updated' => 1,
+                    'is_new_user' => 0,
+                    'status'=> 1,
+                );
+                $insert = $this->home_model->insert($customerData);
+                if ($insert) {
+                    $data['success_msg'] = 'Master User added successfully.';
+                } else {
+                    $data['error_msg'] = 'User not added.';
+                } 
+            } else {
+                $data['first_name_error_msg'] = form_error('first_name');
+                $data['last_name_error_msg'] = form_error('last_name');
+                $data['email_address_error_msg'] = form_error('email_address');
+                $data['company_error_msg'] = form_error('company');
+                $data['address_error_msg'] = form_error('address');
+                $data['city_error_msg'] = form_error('city');
+                $data['state_error_msg'] = form_error('state');
+                $data['zipcode_error_msg'] = form_error('zipcode');
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/add_new_master_user', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
 }
