@@ -166,4 +166,86 @@ class Titlepoint
         }
         return $pdfFilePath;
     }
+
+    public function generateTaxDoc($serviceId,$fileNumber)
+    {
+        $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';
+        $opts = array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+        $context = stream_context_create($opts);
+        if($serviceId)
+        {   
+            $requestParams = array(
+                'username' => TP_USERNAME,
+                'password' => TP_PASSWORD,
+                'serviceId1' =>  $serviceId,
+                'serviceId2'=>  '',
+                'source'=>  '',
+                'clientKey1'=>  '',
+                'clientKey2'=>  '',
+                'sortOrder'=>  '',
+                'fileType'=>  'pdf',
+            );
+            $requestUrl= TP_IMAGE_ENDPOINT;
+        }
+
+        $request = $requestUrl.http_build_query($requestParams);
+
+        
+        $file = file_get_contents($request,false,$context);
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+        $result = json_decode($response,TRUE);
+        $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+
+        if(isset($requestId) && !empty($requestId))
+        {
+            $requestParams = array(
+                            'username' => TP_USERNAME,
+                            'password' => TP_PASSWORD,                    
+                            'requestId'=>  $requestId
+                        );
+            $request = TP_IMAGE_REQUEST_STATUS.http_build_query($requestParams);
+            
+            $file = file_get_contents($request,false,$context);
+            $xmlData = simplexml_load_string($file);
+            $response = json_encode($xmlData);
+            $result = json_decode($response,TRUE);
+            
+            $status = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+            if($status == 'Success')
+            {
+                $requestParams = array(
+                                'username' => TP_USERNAME,
+                                'password' => TP_PASSWORD,                    
+                                'requestId'=>  $requestId
+                            );
+
+                $request = TP_GENERATE_IMAGE.http_build_query($requestParams);
+                $file = file_get_contents($request,false,$context);
+
+                $xmlData = simplexml_load_string($file);
+                $response = json_encode($xmlData);
+                $result = json_decode($response,TRUE);
+                $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+                if($responseStatus == 'Success')
+                {
+                    $base64_data = isset($result['Data']) && !empty($result['Data']) ? $result['Data'] : '';
+                    $bin = base64_decode($base64_data, true);      
+                    
+                    if (!is_dir('uploads/tax')) {
+                        mkdir('./uploads/tax', 0777, TRUE);
+                    }
+                    $pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
+                    file_put_contents($pdfFilePath, $bin);                    
+                }
+            }
+        }
+        
+        return $pdfFilePath;
+    }
 }

@@ -314,6 +314,9 @@ class Home extends MX_Controller {
 								$serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
 								$result = $this->titlepoint->generateImg($serviceId,$orderNumber);
 
+								$tax_serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
+								$tax_result = $this->titlepoint->generateTaxDoc($tax_serviceId,$orderNumber);
+
 								$instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && !empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
 
 								$recordedDate = isset($titlePointDetails['cs4_recorded_date']) && !empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
@@ -875,6 +878,7 @@ class Home extends MX_Controller {
 			$propertyData = $this->home_model->get_property_details($property_id);
 			
 			$county = isset($propertyData['county']) && !empty($propertyData['county']) ? $propertyData['county'] :'';
+			$apn = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] :'';
 			$FullProperty = isset($propertyData['full_address']) && !empty($propertyData['full_address']) ? $propertyData['full_address'] :'';
 			
 	        $propertyState = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] :'';
@@ -899,13 +903,22 @@ class Home extends MX_Controller {
 			{
 			    $deed_file_url = base_url().'uploads/grant-deed/'.$file_number.'.pdf';
 			}
-			$data['deed_file_url'] = $deed_file_url;		
+			$data['deed_file_url'] = $deed_file_url;
+
+			$tax_file_url = '';
+			$tax_file_path = FCPATH.'uploads/tax/'.$file_number.'.pdf';
+			if (file_exists($tax_file_path)) 
+			{
+			    $tax_file_url = base_url().'uploads/tax/'.$file_number.'.pdf';
+			}
+			$data['tax_file_url'] = $tax_file_url;		
 		}
 		
 		$data['tp_data'] = isset($titlePointDetails[0]) && !empty($titlePointDetails[0]) ? $titlePointDetails[0] : array();
-		$data['state'] = isset($propertyState) && !empty($propertyState) ? $propertyState : array();
-		$data['city'] = isset($propertyCity) && !empty($propertyCity) ? $propertyCity : array();
-		$data['county'] = isset($county) && !empty($county) ? $county : array();
+		$data['state'] = isset($propertyState) && !empty($propertyState) ? $propertyState : '';
+		$data['city'] = isset($propertyCity) && !empty($propertyCity) ? $propertyCity : '';
+		$data['county'] = isset($county) && !empty($county) ? $county : '';
+		$data['apn'] = isset($apn) && !empty($apn) ? $apn : '';
 		
         $this->load->view('layout/head',$data);
        	$this->load->view('order/order-submission',$data);
