@@ -2,10 +2,13 @@
     $salesRep = isset($salesRep['data']) && !empty($salesRep['data']) ? $salesRep['data'] : array();
     
     $sales_rep = json_encode($salesRep);
+    
+    $master_users = json_encode($master_users);
 
 ?>
 <script type="text/javascript">
     var sales_rep = '<?php echo $sales_rep; ?>';
+    var master_users = '<?php echo $master_users; ?>';
 </script>
 <div class="container-fluid">
     <!-- DataTables Example -->

@@ -15,6 +15,12 @@ class Order_model extends CI_Model
         {
             $this->db->where('transaction_details.sales_representative', $sales_rep);
         }
+
+        $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
+        if(isset($created_by) && !empty($created_by))
+        {
+            $this->db->where('order_details.created_by', $created_by);
+        }
         if(isset($params['searchValue']) && !empty($params['searchValue']))
         {
             $keyword = $params['searchValue'];
@@ -37,6 +43,12 @@ class Order_model extends CI_Model
             {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
 
+            }
+
+            $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
+            if(isset($created_by) && !empty($created_by))
+            {
+                $this->db->where('order_details.created_by', $created_by);
             }
             if(isset($keyword) && !empty($keyword))
             {
@@ -73,6 +85,12 @@ class Order_model extends CI_Model
             {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
+
+            $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
+            if(isset($created_by) && !empty($created_by))
+            {
+                $this->db->where('order_details.created_by', $created_by);
+            }
             $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name')
             ->from('order_details')
             ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
@@ -91,6 +109,13 @@ class Order_model extends CI_Model
             {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
+
+            $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
+            if(isset($created_by) && !empty($created_by))
+            {
+                $this->db->where('order_details.created_by', $created_by);
+            }
+            
             $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name')
             ->from('order_details')
             ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')

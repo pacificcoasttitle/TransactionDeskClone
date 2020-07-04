@@ -896,6 +896,7 @@ $(document).ready(function () {
                 type: "post", // method  , by default get
                 data   : function( d ) {
                   d.sales_rep= $('#FilterOrderListing').val();
+                  d.created_by= $('#FilterCreatedBy').val();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -920,11 +921,26 @@ $(document).ready(function () {
             $.each( obj, function( key, value ) {
               options += '<option value="'+value.id+'">'+value.name+'</option>'
             });
-            $("div.FilterOrderListing").html('<label> Sales Rep: <select name="FilterOrderListing" id="FilterOrderListing"> <option value="" > All </option>"'+options+'"</select></label>');   
+            $("div.FilterOrderListing").html('<div class="col-sm-3" style="display:inline"><label> Sales Rep: <select name="FilterOrderListing" id="FilterOrderListing"> <option value="" > All </option>"'+options+'"</select></label></div>');   
+        }
+
+        if(master_users)
+        {
+            var obj = jQuery.parseJSON(master_users);
+            var options='';
+            $.each( obj, function( key, value ) {
+              options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
+            });
+            
+            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy"> <option value="" > All </option>"'+options+'"</select></label></div>'); 
         }
        
     }
     $("#FilterOrderListing").on("change", function(){
+        order_list.ajax.reload();
+    });
+
+    $("#FilterCreatedBy").on("change", function(){
         order_list.ajax.reload();
     }); 
 
