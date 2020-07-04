@@ -29,7 +29,7 @@ class Home extends MX_Controller {
     		$this->form_validation->set_rules('OpenName', 'First Name', 'required',array('required'=> 'Enter your first name'));
     		$this->form_validation->set_rules('OpenLastName', 'Last Name', 'required',array('required'=> 'Enter your last name'));
     		$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
-    		// $this->form_validation->set_rules('sendermessage', 'Sender Message', 'required',array('required'=> 'Oops you forgot your message'));
+    		
     		$parties_email = array();
     		if($this->form_validation->run($this) == true)
     		{
@@ -57,9 +57,6 @@ class Home extends MX_Controller {
 	        	$PropertyZip      = $this->input->post('property-zip');
 	        	$PropertyType      = strtolower($this->input->post('property-type'));
 	        	$FullProperty      = strtolower($this->input->post('FullProperty'));
-
-	        	/*$AddressPropertyParts = explode(',', $FullProperty);	
-				$PropertyZip = trim(end($AddressPropertyParts));*/
 
 	        	$apn      = $this->input->post('apn');
 	        	$County      = strtolower($this->input->post('County'));
@@ -91,9 +88,7 @@ class Home extends MX_Controller {
 	            );
 				
 				$titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
-				$titleOfficerName = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';
-
-				// $parties_email[] = isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address']) ? $titleOfficerDetails['email_address'] : '';				
+				$titleOfficerName = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';				
 				/*Fetch details of Title Officer */
 				
 	        	$LoanAmount      = $this->input->post('loanAmount');
@@ -122,7 +117,7 @@ class Home extends MX_Controller {
 	        		$BuyerAgentTelephone      = $this->input->post('BuyerAgentTelephone');
 	        		$BuyerAgentCompany      = $this->input->post('BuyerAgentCompany');
 
-	        		// $parties_email[$BuyerAgentEmailAddress] = isset($_POST["BuyerAgentName"]) && !empty($_POST["BuyerAgentName"]) ? strip_tags(trim($_POST["BuyerAgentName"])) : '';
+	        		
 	        		$parties_email[] = $BuyerAgentEmailAddress;
 
 	        		$buyers_agent_details = array('name'=>$BuyerAgentName, 'email'=>$BuyerAgentEmailAddress, 'telephone'=> $BuyerAgentTelephone,'company'=>$BuyerAgentCompany);
@@ -136,9 +131,7 @@ class Home extends MX_Controller {
 	        		$ListingAgentEmailAddress = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
 	        		$ListingAgentTelephone      = $this->input->post('ListingAgentTelephone');
 	        		$ListingAgentCompany      = $this->input->post('ListingAgentCompany');
-	        		
-
-					/*$parties_email[$ListingAgentEmailAddress] = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';*/
+	        
 					$parties_email[] = $ListingAgentEmailAddress;
 
 					$listing_agent_details = array('name'=>$ListingAgentName, 'email'=>$ListingAgentEmailAddress, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
@@ -169,7 +162,6 @@ class Home extends MX_Controller {
 				}
 				if(isset($EscrowLenderEmail) && !empty($EscrowLenderEmail))
 				{
-					// $parties_email[$EscrowLenderEmail] = $EscrowLenderName;
 					$parties_email[] = $EscrowLenderEmail;
 				}
 				$AdditionalEmail = $this->input->post('AdditionalEmail');
@@ -198,7 +190,6 @@ class Home extends MX_Controller {
 				if(strpos($ProductTypeTxt, 'Loan') !== false)
 				{
 					$place_order['Buyers'][] = $legalEntity;
-					// $ProductType = 'Residential: Loan: Refinance';
 				}
 				elseif(strpos($ProductTypeTxt, 'Sale') !== false)
 				{
@@ -212,7 +203,6 @@ class Home extends MX_Controller {
 					$place_order['Sellers'][] = $legalEntity;
 					$place_order['Buyers'][] = $borrowers;
 					$place_order['SalesPrice'] = $SalesAmount;
-					// $ProductType = 'Residential: Sales: Purchase';
 				}
 				
 				$place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID'=>$ProductTypeID);
@@ -295,6 +285,139 @@ class Home extends MX_Controller {
 
 						if($orderNumber)
 						{
+							$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+
+							/* Buyers Agent */				
+							if(isset($BuyerAgentId) && !empty($BuyerAgentId))
+				        	{
+				        		$buyerData = array(
+									'name' => $BuyerAgentName,
+									'email_address' => $BuyerAgentEmailAddress,
+									'company' => $BuyerAgentCompany,
+									'telephone_no' => $BuyerAgentTelephone,
+									'status'=> 1
+								);
+								$condition = array(
+									'id' => $BuyerAgentId
+								);
+								
+								$this->agent_model->update($buyerData,$condition);
+				        	} else if (isset($agentDetailFlag)) {
+								$buyerData = array(
+									'name' => $BuyerAgentName,
+									'email_address' => $BuyerAgentEmailAddress,
+									'company' => $BuyerAgentCompany,
+									'telephone_no' => $BuyerAgentTelephone,
+									'status'=> 1
+								);
+								$BuyerAgentId = $this->agent_model->insert($buyerData);
+							}
+							/* Buyers Agent */
+
+							/* Listing Agent */				
+							if(isset($ListingAgentId) && !empty($ListingAgentId))
+				        	{
+				        		$listngAgentData = array(
+									'name' => $ListingAgentName,
+									'email_address' => $ListingAgentEmailAddress,
+									'company' => $ListingAgentCompany,
+									'telephone_no' => $ListingAgentTelephone,
+									'status'=> 1
+								);
+								$condition = array(
+									'id' => $ListingAgentId
+								);
+								$this->agent_model->update($listngAgentData,$condition);
+				        	} else if (isset($agentDetailFlag)) {
+				        		$listngAgentData = array(
+									'name' => $ListingAgentName,
+									'email_address' => $ListingAgentEmailAddress,
+									'company' => $ListingAgentCompany,
+									'telephone_no' => $ListingAgentTelephone,
+									'status'=> 1
+								);
+								$ListingAgentId = $this->agent_model->insert($listngAgentData);
+							}
+							/* Listing Agent */
+
+							$propertyData = array(
+								'customer_id' => $customer_id,
+								'buyer_agent_id' => $BuyerAgentId,
+								'listing_agent_id' => $ListingAgentId,
+								'escrow_lender_id' => $EscrowLenderId,
+								'address' => strtolower($PropertyAddress),
+								'city' => strtolower($PropertyCity),
+								'state' => $PropertyState,
+								'zip' => $PropertyZip,
+								'property_type' => $PropertyType,
+								'full_address' => strtolower($FullProperty),
+								'apn' => $apn,
+								'county' => strtolower($County),
+								'legal_description' => strtolower($LegalDescription),
+								'primary_owner' => $PrimaryOwner,
+								'secondary_owner' => $SecondaryOwner,
+								// 'additional_details'=> $sendermessage,
+								'status'=> 1
+							);
+
+							$propertyId = $this->home_model->insert($propertyData,'property_details');				
+
+							$transactionData = array(
+								'customer_id' => $customer_id,
+								'sales_representative' => $SalesRep,
+								'title_officer' => $TitleOfficer,
+								'sales_amount' => $SalesAmount,
+								'loan_amount' => $LoanAmount,
+								'transaction_type' => $TransactionTypeID,
+								'purchase_type' => $ProductTypeID,
+								'is_ccr' => $CCR,
+								'is_underlying_docs' => $Docs,
+								'is_plotted_easements' => $Ease,
+								'additional_email' => $AdditionalEmail,
+								'additional_email_1' => $AdditionalEmail1,
+								'additional_email_2' => $AdditionalEmail2,
+								'borrower' => $primaryBorrower,
+								'secondary_borrower' => $secondaryBorrower,
+								'status'=> 1
+							);
+
+							$transactionId = $this->home_model->insert($transactionData,'transaction_details');
+
+							$orderData = array(
+								'customer_id' => $customer_id,
+								'file_id' => $file_id,
+								'file_number' => $orderNumber,
+								'property_id' => $propertyId,
+								'transaction_id' => $transactionId,
+								'created_by' => $userdata['id'],
+								'status'=> 1
+							);
+
+							$orderId = $this->home_model->insert($orderData,'order_details');
+
+							/* Escrow Lender Details */					
+							if(isset($EscrowLenderId) && !empty($EscrowLenderId))
+				        	{
+				        		$name = explode(' ', $EscrowLenderName);
+				        		$first_name = $name[0];
+				        		$last_name = $name[1];
+				        		$EscrowLenderData = array(
+									'first_name' => $first_name,
+									'last_name' => $last_name,
+									'email_address' => $EscrowLenderEmail,
+									'company_name' => $EscrowLenderCompany,
+									'telephone_no' => $EscrowLenderTelephone,
+									'status'=> 1
+								);
+								$condition = array(
+									'id' => $EscrowLenderId
+								);
+								
+								$lenderId = $this->home_model->update($EscrowLenderData,$condition);
+							}
+							$this->uploadLvDocsToResware($lvfilename, $file_id);
+							$this->uploadGrantDeedDocsToResware($deedfilename, $file_id);
+							/* Escrow Lender Details */
 							if($this->session->has_userdata('tp_api_id'))
 							{
 								$id = $this->session->userdata('tp_api_id');
@@ -373,288 +496,9 @@ class Home extends MX_Controller {
 							$this->load->helper('sendemail');
 							
 							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);
-							//send order deatils to all parties						
-							/*if(isset($parties_email) && !empty($parties_email))
-							{
-								foreach($parties_email as $email => $name){
-									$mail->AddBCC($email, $name);
-								}
-							}*/
 						}
-						
-						$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
-
-						/* Buyers Agent */						
-						if(isset($BuyerAgentId) && !empty($BuyerAgentId))
-			        	{
-			        		$buyerData = array(
-								'name' => $BuyerAgentName,
-								'email_address' => $BuyerAgentEmailAddress,
-								'company' => $BuyerAgentCompany,
-								'telephone_no' => $BuyerAgentTelephone,
-								'status'=> 1
-							);
-							$condition = array(
-								'id' => $BuyerAgentId
-							);
-							
-							$this->agent_model->update($buyerData,$condition);
-			        	} else if (isset($agentDetailFlag)) {
-							$buyerData = array(
-								'name' => $BuyerAgentName,
-								'email_address' => $BuyerAgentEmailAddress,
-								'company' => $BuyerAgentCompany,
-								'telephone_no' => $BuyerAgentTelephone,
-								'status'=> 1
-							);
-							$BuyerAgentId = $this->agent_model->insert($buyerData);
-						}
-						/* Buyers Agent */
-
-						/* Listing Agent */					
-						if(isset($ListingAgentId) && !empty($ListingAgentId))
-			        	{
-			        		$listngAgentData = array(
-								'name' => $ListingAgentName,
-								'email_address' => $ListingAgentEmailAddress,
-								'company' => $ListingAgentCompany,
-								'telephone_no' => $ListingAgentTelephone,
-								'status'=> 1
-							);
-							$condition = array(
-								'id' => $ListingAgentId
-							);
-							$this->agent_model->update($listngAgentData,$condition);
-			        	} else if (isset($agentDetailFlag)) {
-			        		$listngAgentData = array(
-								'name' => $ListingAgentName,
-								'email_address' => $ListingAgentEmailAddress,
-								'company' => $ListingAgentCompany,
-								'telephone_no' => $ListingAgentTelephone,
-								'status'=> 1
-							);
-							$ListingAgentId = $this->agent_model->insert($listngAgentData);
-						}
-						/* Listing Agent */
-
-						$propertyData = array(
-							'customer_id' => $customer_id,
-							'buyer_agent_id' => $BuyerAgentId,
-							'listing_agent_id' => $ListingAgentId,
-							'escrow_lender_id' => $EscrowLenderId,
-							'address' => strtolower($PropertyAddress),
-							'city' => strtolower($PropertyCity),
-							'state' => $PropertyState,
-							'zip' => $PropertyZip,
-							'property_type' => $PropertyType,
-							'full_address' => strtolower($FullProperty),
-							'apn' => $apn,
-							'county' => strtolower($County),
-							'legal_description' => strtolower($LegalDescription),
-							'primary_owner' => $PrimaryOwner,
-							'secondary_owner' => $SecondaryOwner,
-							// 'additional_details'=> $sendermessage,
-							'status'=> 1
-						);
-
-						$propertyId = $this->home_model->insert($propertyData,'property_details');				
-
-						$transactionData = array(
-							'customer_id' => $customer_id,
-							'sales_representative' => $SalesRep,
-							'title_officer' => $TitleOfficer,
-							'sales_amount' => $SalesAmount,
-							'loan_amount' => $LoanAmount,
-							'transaction_type' => $TransactionTypeID,
-							'purchase_type' => $ProductTypeID,
-							'is_ccr' => $CCR,
-							'is_underlying_docs' => $Docs,
-							'is_plotted_easements' => $Ease,
-							'additional_email' => $AdditionalEmail,
-							'additional_email_1' => $AdditionalEmail1,
-							'additional_email_2' => $AdditionalEmail2,
-							'borrower' => $primaryBorrower,
-							'secondary_borrower' => $secondaryBorrower,
-							'status'=> 1
-						);
-
-						$transactionId = $this->home_model->insert($transactionData,'transaction_details');
-
-						$orderData = array(
-							'customer_id' => $customer_id,
-							'file_id' => $file_id,
-							'file_number' => $orderNumber,
-							'property_id' => $propertyId,
-							'transaction_id' => $transactionId,
-							'created_by' => $userdata['id'],
-							'status'=> 1
-						);
-
-						$orderId = $this->home_model->insert($orderData,'order_details');
-
-						/* Escrow Lender Details */					
-						if(isset($EscrowLenderId) && !empty($EscrowLenderId))
-			        	{
-			        		$name = explode(' ', $EscrowLenderName);
-			        		$first_name = $name[0];
-			        		$last_name = $name[1];
-			        		$EscrowLenderData = array(
-								'first_name' => $first_name,
-								'last_name' => $last_name,
-								'email_address' => $EscrowLenderEmail,
-								'company_name' => $EscrowLenderCompany,
-								'telephone_no' => $EscrowLenderTelephone,
-								'status'=> 1
-							);
-							$condition = array(
-								'id' => $EscrowLenderId
-							);
-							
-							$lenderId = $this->home_model->update($EscrowLenderData,$condition);
-						}
-						$this->uploadLvDocsToResware($lvfilename, $file_id);
-						$this->uploadGrantDeedDocsToResware($deedfilename, $file_id);
-						/* Escrow Lender Details */
-
-						$order_file = uniqid();
-						$order_upload = $order_file.isset($_FILES['orderfiles']['name']) && !empty($_FILES['orderfiles']['name']) ? $_FILES['orderfiles']['name'] : '';	
-				
-						/*	----------------------------------------------------------------------
-							: Prepare form field variables for CSV export
-							----------------------------------------------------------------------- */
-				
-						/*if(GENERATE_CSV == true){
-							$csvFile = CSV_FILE_NAME;	
-							$csvData = array(
-								"$sendername",
-								"$emailaddress",
-								"$telephone",
-								"$senderwebsite",
-								"$orderservices",
-								"$orderbudget",
-								"$ordertimeframe"			
-							);
-						}*/
-						$mail_status= $mail_response = '';
-						if(isset($_FILES['orderfiles']) && !empty($_FILES['orderfiles']))
-						{
-							if ($_FILES['orderfiles']['error'] == 0) 
-							{
-								move_uploaded_file($_FILES['orderfiles']['tmp_name'], FCPATH.'smuploads/' .$order_upload);
-
-								$data = array(
-							       'OpenName'=> $OpenName,
-							       'OpenEmail'=> $OpenEmail,
-							       'Opentelephone'=> $Opentelephone,
-							       'OpenRole'=> $OpenRole,
-							       'PartnerName'=> $PartnerName,
-							       'ParnterEmailaddress'=> $ParnterEmailaddress,
-							       'PartnerTelephone'=> $PartnerTelephone,
-							       'PartnerRole'=> $PartnerRole,
-							       'Property'=> $Property,
-							       'SalesRep'=> $SalesRep,
-							       'TitleOfficer'=> $titleOfficerName,
-							       'LoanAmount'=> $LoanAmount,
-							       'sendermessage'=> $sendermessage,
-							       'poweredby_url'=> POWEREDBY_URL,
-								   'poweredby_name'=> POWEREDBY_NAME,
-								   'currYear'=> CURRENT_YEAR
-							    );
-
-								$from_name = 'Pacific Coast Title Company';
-								$from_mail = env('FROM_EMAIL');
-								$message = $this->load->view('emails/smartmessage.php',$data,TRUE);
-								$subject = RECEIVER_SUBJECT;
-								$to = RECEIVER_EMAIL;
-								$file = FCPATH.'smuploads/'.$order_upload;
-								$bcc = array('rmcmahon@pct.com', 'openorders@pct.com');
-
-								$recipients = false;
-								$bcc = array();
-								if($recipients == true)
-								{
-									$bcc = array('rmcmahon@pct.com', 'openorders@pct.com');	
-								}
-
-								$this->load->helper('sendemail');
-								
-								$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,array($file),'',$bcc);
-
-								if($mail_result) {
-									// -----------------------------------------------------------------
-									// : Generate the CSV file and post values if its true
-									// ----------------------------------------------------------------- 		
-									if(GENERATE_CSV == true){	
-										if (file_exists($csvFile)) {
-											$csvFileData = fopen($csvFile, 'a');
-											fputcsv($csvFileData, $csvData );
-										} else {
-											$csvFileData = fopen($csvFile, 'a'); 
-											$headerRowFields = array(
-												"Sender Name",
-												"Email Address",
-												"Telephone",
-												"Website",
-												"Services",
-												"Budget",
-												"Time Frame"										
-											);
-											fputcsv($csvFileData,$headerRowFields);
-											fputcsv($csvFileData, $csvData );
-										}
-										fclose($csvFileData);
-									}
-									
-									// ---------------------------------------------------------------------
-									// : Send the auto responder message if its true
-									// --------------------------------------------------------------------- 
-									if(AUTORESPONDER == true){
-										
-										$automail = $this->phpmailer_library->load();
-										$automail->isSendmail();
-										$automail->setFrom(RECEIVER_EMAIL,RECEIVER_NAME);
-										$automail->isHTML(true);                                 
-										$automail->CharSet = "UTF-8";
-										$automail->Encoding = "base64";
-										$automail->Timeout = 200;
-										$automail->ContentType = "text/html";
-										$automail->AddAddress($OpenEmail, $OpenName);
-										$automail->Subject = "Thank you for contacting us";
-										$data = array(
-									       'receiver_email'=> RECEIVER_EMAIL,
-									       'sendername'=> $OpenName,
-									       'poweredby_url'=> POWEREDBY_URL,
-									       'poweredby_name'=> POWEREDBY_NAME,
-									       'currYear'=> CURRENT_YEAR
-									    );
-									    $automessage = $this->load->view('emails/autoresponder.php',$data,TRUE);
-										$automail->Body = $automessage;
-										$automail->AltBody = "Use an HTML compatible email client";
-										$automail->Send();	 
-									}	
-								  	
-								  	$mail_status='success'; 
-								  	$mail_response='Your title order is being submitted. Please wait for confirmation.'; 
-								  
-									// Start delete function 
-									// Automatically deletes files from the smuploads folder after successful sending
-									// You can remove this function if you want to keep uploads on your server
-									$files = glob(FCPATH.'smuploads/*'); 
-									foreach($files as $file){ 
-									  if(is_file($file))
-										unlink($file); 
-									}	  
-								  
-									} 
-									else 
-									{
-										$mail_status='error'; 
-								  		$mail_response='Message not sent - server error occured!';	
-									}
-							}
-						}
-						
-						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','mail_status'=>$mail_status,'mail_response'=>$mail_response,'file_id'=>$file_id);
+													
+						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','file_id'=>$file_id);
 						echo json_encode($response); exit;
 					} 
 				}
