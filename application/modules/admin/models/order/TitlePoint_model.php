@@ -55,7 +55,8 @@ class TitlePoint_model extends CI_Model
     public function getLvLogs($params)
     {
         $this->db->where('file_id IS NOT NULL');
-        $this->db->where('cs4_message IS NOT NULL');
+        $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
+        
         /*if(array_key_exists("status", $params)){
             foreach($params['status'] as $key => $val){
                 $this->db->where($key."!=", $val);
@@ -84,7 +85,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_message IS NOT NULL');    
+            $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');    
             $this->db->from($this->table);
             $filter_total_records =  $this->db->count_all_results();
 
@@ -105,7 +106,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_message IS NOT NULL');        
+            $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');        
             $query = $this->db->get($this->table);
 
             if ($query->num_rows() > 0) 
@@ -122,7 +123,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_message IS NOT NULL');
+            $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
             $this->db->from($this->table);
 
             $filter_total_records =  $this->db->count_all_results();
@@ -133,7 +134,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_message IS NOT NULL');
+            $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
@@ -174,6 +175,7 @@ class TitlePoint_model extends CI_Model
             property_details.address, 
             property_details.full_address, 
             property_details.property_type, 
+            property_details.apn, 
             property_details.city as property_city, 
             property_details.state as property_state, 
             property_details.zip as property_zip, 
@@ -213,5 +215,88 @@ class TitlePoint_model extends CI_Model
         $query = $this->db->get();
         
         return $query->row_array();
+    }
+
+    public function getTaxLogs($params)
+    {
+        $this->db->where('file_id IS NOT NULL');
+        $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+        
+        $this->db->from($this->table);
+        $total_records =  $this->db->count_all_results();
+
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        
+        
+        $logs_lists =array();
+        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
+        {
+            $keyword = $params['searchvalue'];
+
+            if(isset($keyword) && !empty($keyword))
+            {
+                $this->db->like('file_number', $keyword);
+            }
+
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+
+            $this->db->from($this->table);
+            $filter_total_records =  $this->db->count_all_results();
+
+
+            if(isset($keyword) && !empty($keyword))
+            {
+                $this->db->like('file_number', $keyword);
+            }
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by('id', 'asc');
+            
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+
+            $query = $this->db->get($this->table);
+
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            }
+        }
+        else
+        {
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+
+            $this->db->from($this->table);
+
+            $filter_total_records =  $this->db->count_all_results();
+
+            
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by('id', 'asc');
+            $query = $this->db->get($this->table);
+            
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            } 
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $logs_lists
+        );
     }
 }

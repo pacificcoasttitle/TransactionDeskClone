@@ -189,7 +189,7 @@ $route['order/admin/grant-deed-documents'] = 'admin/order/home/grant_deed_docume
 $route['order/admin/lv-documents'] = 'admin/order/home/lv_document';
 $route['order/admin/master-users'] = 'admin/order/home/masterUsers';
 $route['order/admin/add-new-master-user'] = 'admin/order/home/addNewMasterUser';
-
+$route['order/admin/tax-log'] = 'admin/order/TitlePoint/taxLog';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  

@@ -36,6 +36,13 @@
 		</a>
 	</li>
 
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/tax-log') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/tax-log'; ?>">
+			<i class="fas fa-fw fa-list"></i>
+			<span>Tax Log</span>
+		</a>
+	</li>
+
 	<li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="documentDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-file"></i>
