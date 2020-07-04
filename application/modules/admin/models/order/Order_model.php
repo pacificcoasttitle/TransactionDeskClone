@@ -21,8 +21,7 @@ class Order_model extends CI_Model
 
             if(isset($keyword) && !empty($keyword))
             {
-                $this->db->like('property_details.full_address', $keyword);            
-                $this->db->or_like('order_details.file_number', $keyword);
+                $this->db->where("(property_details.full_address LIKE '%".$keyword."%' OR order_details.file_number LIKE '%".$keyword."%')");
             }
             
             $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name')
@@ -37,19 +36,20 @@ class Order_model extends CI_Model
             if(isset($sales_rep) && !empty($sales_rep))
             {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
+
             }
             if(isset($keyword) && !empty($keyword))
             {
-               $this->db->like('property_details.full_address', $keyword);            
-                $this->db->or_like('order_details.file_number', $keyword);
+                $this->db->where("(property_details.full_address LIKE '%".$keyword."%' OR order_details.file_number LIKE '%".$keyword."%')");
             }
             
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
            
-            $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type')
+            $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name')
             ->from('order_details')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
@@ -73,8 +73,9 @@ class Order_model extends CI_Model
             {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
-            $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type')
+            $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name')
             ->from('order_details')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
@@ -90,8 +91,9 @@ class Order_model extends CI_Model
             {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
-            $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type')
+            $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name')
             ->from('order_details')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
