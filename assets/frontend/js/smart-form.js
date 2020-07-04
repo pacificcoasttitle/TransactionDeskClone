@@ -346,18 +346,6 @@
 						                    	window.location.replace(base_url+'order-submit/'+res.file_id)
 						                    /*}, 8000);*/
 										}
-										if(res.mail_status != '')
-										{
-											if(res.mail_status == 'error')
-											{
-												$('.result').append('<div class="alert notification alert-error">'+res.mail_response+'</div>');
-											}
-											else if(res.status == 'success')
-											{
-												$('.result').append('<div class="alert alert-success">'+res.mail_response+'</div>');
-											}
-										}
-										
 										swapButton(); 
 																		
 										$('#progressDivId').show().delay(5000).fadeOut();
