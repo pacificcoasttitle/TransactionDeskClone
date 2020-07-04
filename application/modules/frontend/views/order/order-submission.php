@@ -238,7 +238,9 @@
                     }
                 ?>
                 <?php
-                        if(isset($apn) && !empty($apn))
+                        $cs3_message = isset($tp_data['cs3_message']) && !empty($tp_data['cs3_message']) ? $tp_data['cs3_message'] : '';
+                        
+                        if($cs3_message == 'Success')
                         {
                             $apn = str_replace('0000', '0-000', $apn);
                     ?>
