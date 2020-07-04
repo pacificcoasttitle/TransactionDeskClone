@@ -1310,6 +1310,20 @@ $(document).ready(function () {
             "columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],
+            "columns": [
+                {
+                    "width": "15%"
+                },
+                {
+                    "width": "30%"
+                },
+                {
+                    "width": "15%"
+                },
+                {
+                    "width": "40%"
+                },
+            ],
             "language": {
                 searchPlaceholder: "Order #",
                 paginate: {
