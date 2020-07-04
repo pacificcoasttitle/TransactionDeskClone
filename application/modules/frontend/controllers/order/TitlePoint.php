@@ -377,7 +377,16 @@ class TitlePoint extends MX_Controller {
 					$secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];			
 				}
 				
-				$status = isset($result['Result']['TaxReport']['OutputMessage']) && !empty($result['Result']['TaxReport']['OutputMessage']) ? $result['Result']['TaxReport']['OutputMessage'] : '';
+				$status = isset($result['Result']['TaxReport']['Status']) && !empty($result['Result']['TaxReport']['Status']) ? $result['Result']['TaxReport']['Status'] : '';
+				if($status == 'Success')
+				{
+					$message = 'Success';
+				}
+				else
+				{
+					$message = isset($result['Result']['TaxReport']['WarningMessage']) && !empty($result['Result']['TaxReport']['WarningMessage']) ? $result['Result']['TaxReport']['WarningMessage'] : '';
+				}
+				
 				$tpData = 	array(
 					'first_installment' => json_encode($firstInstallment),
 					'second_installment' => json_encode($secondInstallment),
@@ -400,7 +409,7 @@ class TitlePoint extends MX_Controller {
 						$this->session->set_userdata('tp_api_id', $tpId);
 					}
 				}
-				$this->addLogs($methodId,$responseStatus,$status,$error);
+				$this->addLogs($methodId,$responseStatus,$message,$error);
 			}
 			else
 			{
