@@ -369,15 +369,15 @@ class TitlePoint extends MX_Controller {
 				$firstInstallment = $secondInstallment = array();
 				if(isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]))
 				{
-					$firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];
-					
+					$firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];					
 				}
 
 				if(isset($result['Result']['TaxReport']['Installments']['Item'][1]) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]))
 				{
 					$secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];			
 				}
-				$status = isset($result['Result']['Status']) && !empty($result['Result']['Status']) ? $result['Result']['Status'] : '';
+				
+				$status = isset($result['Result']['TaxReport']['OutputMessage']) && !empty($result['Result']['TaxReport']['OutputMessage']) ? $result['Result']['TaxReport']['OutputMessage'] : '';
 				$tpData = 	array(
 					'first_installment' => json_encode($firstInstallment),
 					'second_installment' => json_encode($secondInstallment),
