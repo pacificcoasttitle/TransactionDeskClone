@@ -415,6 +415,11 @@ class Home extends MX_Controller {
 								
 								$lenderId = $this->home_model->update($EscrowLenderData,$condition);
 							}
+
+							$lvfilename = $orderNumber.'.pdf';
+							$deedfilename = $orderNumber.'.pdf';
+							$taxfilename = $orderNumber.'.pdf';
+							
 							$this->uploadLvDocsToResware($lvfilename, $file_id);
 							$this->uploadGrantDeedDocsToResware($deedfilename, $file_id);
 							/* Escrow Lender Details */
