@@ -169,7 +169,7 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $value['file_number'];
                     $nestedData[] = $order_details['full_address'];
                     $nestedData[] = $order_details['apn'];
-                    $nestedData[] = $value['cs4_message'];
+                    $nestedData[] = $value['cs3_message'];
                     $data[] = $nestedData;
                 }
             }
