@@ -492,17 +492,17 @@ class Home extends MX_Controller {
 							$taxfilename = $orderNumber.'.pdf';
 							$orderDetails = $this->order->get_order_details($file_id);
 
-							if (base_url().'uploads/legal-vesting/'.$lvfilename) {
+							if (file_exists(base_url().'uploads/legal-vesting/'.$lvfilename)) {
 								$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
 								$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
 							}
 
-							if (base_url().'uploads/grant-deed/'.$deedfilename) {
+							if (file_exists(base_url().'uploads/grant-deed/'.$deedfilename)) {
 								$file[] = base_url().'uploads/grant-deed/'.$deedfilename;
 								$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
 							}
 
-							if (base_url().'uploads/tax/'.$taxfilename) {
+							if (file_exists(base_url().'uploads/tax/'.$taxfilename)) {
 								$file[] = base_url().'uploads/tax/'.$taxfilename;
 								$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
 							}
