@@ -17,8 +17,7 @@
               <div class="col-md-6">
                 <footer class="b-about__footer">
 				<ul class="list list-mark-2">
-                    <?php 
-                    // echo "<pre>"; print_r($tp_data); exit;
+                    <?php
                         if(isset($tp_data['file_number']) && !empty($tp_data['file_number']))
                         {
                     ?>
@@ -26,6 +25,8 @@
                                 <h3>Order Number:</h3><br>
                                 <span class="orderinfo1" id="orderNumber"><?php echo $tp_data['file_number']; ?></span>
                             </li><br>
+                            <input type="hidden" name="id" id="CustomerId" value="<?php echo $customer_id;?>">
+                            <input type="hidden" name="property_full_address" id="property_full_address" value="<?php echo $property;?>">
                     <?php
                         }
                     ?>

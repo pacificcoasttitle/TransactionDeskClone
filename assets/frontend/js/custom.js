@@ -515,11 +515,6 @@ $(document).ready(function() {
         }
         $('#ProductType').val(selectedText);
     });
-
-    if($(".grant-deed-no-data").length)
-    {
-        notifyAdmin('Grant Deed Not Found');
-    }
 });
 
 function autoComplete() {
@@ -939,9 +934,8 @@ function compileAPNRequest(dataobj) {
 function notifyAdmin(subject)
 {
     var customer_id = $("#CustomerId").val();
-    var first_name = $("#OpenName").val();
 
-    if(customer_id || first_name)
+    if(customer_id)
     {
         $.ajax({
            // url: "php/notifyadmin.php",
@@ -949,14 +943,6 @@ function notifyAdmin(subject)
            type: "POST",//type of posting the data
            data: {
                 customer_id: customer_id,
-                first_name: first_name,
-                last_name: $("#OpenLastName").val(),
-                telephone_no: $("#Opentelephone").val(),
-                email_address: $("#OpenEmail").val(),
-                company_name: $("#CompanyName").val(),
-                street_address: $("#StreetAddress").val(),
-                city:$("#City").val(),
-                zipcode: $("#Zipcode").val(),
                 property: $('#property-full-address').val(),
                 subject: subject,
            },

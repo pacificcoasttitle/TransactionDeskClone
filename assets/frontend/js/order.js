@@ -1,4 +1,8 @@
-$(document).ready(function() {    
+$(document).ready(function() {
+    if($(".grant-deed-no-data").length)
+    {
+        notifyAdmin('Grant Deed Not Found');
+    }    
 });
 
 
@@ -765,4 +769,29 @@ function generateTaxDoc(apn,serviceId,fileNumber)
             $('#taxDocumentInfo').css('padding','15px');
             $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
         });
+}
+
+function notifyAdmin(subject)
+{
+    var customer_id = $("#CustomerId").val();
+    var property_full_address = $("#property_full_address").val();
+
+    if(customer_id)
+    {
+        $.ajax({
+           url: base_url+'notifyAdmin',
+           type: "POST",//type of posting the data
+           data: {
+                customer_id: customer_id,
+                property: property_full_address,
+                subject: subject,
+           },
+           success: function (data) {
+                console.log(data);
+           },
+           error: function(xhr, ajaxOptions, thrownError){
+              
+           },
+        });
+    }    
 }
