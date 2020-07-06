@@ -416,27 +416,6 @@ class Home extends MX_Controller {
 								$lenderId = $this->home_model->update($EscrowLenderData,$condition);
 							}
 
-							$file = array();
-							$lvfilename = $orderNumber.'.pdf';
-							$deedfilename = $orderNumber.'.pdf';
-							$taxfilename = $orderNumber.'.pdf';
-							$orderDetails = $this->order->get_order_details($file_id);
-
-							if (base_url().'uploads/legal-vesting/'.$lvfilename) {
-								$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
-								$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
-							}
-
-							if (base_url().'uploads/grant-deed/'.$deedfilename) {
-								$file[] = base_url().'uploads/grant-deed/'.$deedfilename;
-								$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
-							}
-
-							if (base_url().'uploads/tax/'.$taxfilename) {
-								$file[] = base_url().'uploads/tax/'.$taxfilename;
-								$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
-							}
-
 							/* Escrow Lender Details */
 							if($this->session->has_userdata('tp_api_id'))
 							{
@@ -506,6 +485,27 @@ class Home extends MX_Controller {
 							$message = $order_message_body; 
 							$subject = 'Order Placed at Resware';
 							$to = $OpenEmail;
+
+							$file = array();
+							$lvfilename = $orderNumber.'.pdf';
+							$deedfilename = $orderNumber.'.pdf';
+							$taxfilename = $orderNumber.'.pdf';
+							$orderDetails = $this->order->get_order_details($file_id);
+
+							if (base_url().'uploads/legal-vesting/'.$lvfilename) {
+								$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
+								$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
+							}
+
+							if (base_url().'uploads/grant-deed/'.$deedfilename) {
+								$file[] = base_url().'uploads/grant-deed/'.$deedfilename;
+								$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
+							}
+
+							if (base_url().'uploads/tax/'.$taxfilename) {
+								$file[] = base_url().'uploads/tax/'.$taxfilename;
+								$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
+							}
 							
 							$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));
 							$bcc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
