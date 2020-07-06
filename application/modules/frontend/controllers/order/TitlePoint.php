@@ -327,6 +327,7 @@ class TitlePoint extends MX_Controller {
 	            		{
 	            			$instrumentNumber = isset($value['InstrumentNumber']) && !empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
 	            			$recordedDate = isset($value['RecordedDate']) && !empty($value['RecordedDate']) ? $value['RecordedDate'] : '';
+	            			break;
 	            		}
 	            	}	            	
 	            }
