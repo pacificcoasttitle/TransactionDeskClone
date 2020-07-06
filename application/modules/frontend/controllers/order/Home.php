@@ -736,6 +736,7 @@ class Home extends MX_Controller {
 			$file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] :'';
 
 			$property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] :'';
+			$customer_id = isset($orderDetails['customer_id']) && !empty($orderDetails['customer_id']) ? $orderDetails['customer_id'] :'';
 			$propertyData = $this->home_model->get_property_details($property_id);
 			
 			$county = isset($propertyData['county']) && !empty($propertyData['county']) ? $propertyData['county'] :'';
@@ -780,6 +781,8 @@ class Home extends MX_Controller {
 		$data['city'] = isset($propertyCity) && !empty($propertyCity) ? $propertyCity : '';
 		$data['county'] = isset($county) && !empty($county) ? $county : '';
 		$data['apn'] = isset($apn) && !empty($apn) ? $apn : '';
+		$data['property'] = isset($FullProperty) && !empty($FullProperty) ? $FullProperty : '';
+		$data['customer_id'] = isset($customer_id) && !empty($customer_id) ? $customer_id : '';
 		
         $this->load->view('layout/head',$data);
        	$this->load->view('order/order-submission',$data);
@@ -798,25 +801,32 @@ class Home extends MX_Controller {
 		if($this->input->post())
 		{
 			$customer_id = $this->input->post('customer_id');
-			$first_name = $this->input->post('first_name');
-			$last_name = $this->input->post('last_name');
-			$telephone_no = $this->input->post('telephone_no');
-			$email_address = $this->input->post('email_address');
-			$company_name = $this->input->post('company_name');
-			$street_address = $this->input->post('street_address');
-			$city = $this->input->post('city');
-			$zipcode = $this->input->post('zipcode');
-			$property = $this->input->post('property');
 			$subject = $this->input->post('subject');
 
-			if((isset($customer_id) && !empty($customer_id)) || (isset($first_name) && !empty($first_name)))
+			if(isset($customer_id) && !empty($customer_id))
 			{
-				$message = '<h3>User Details:</h3><p>Customer Number: '.$customer_no.'</p><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p>';
+				$condition = array(
+		            'id' => $customer_id
+		        );
+		        $customerDetails = $this->home_model->get_customers($condition);
+		        $first_name = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
+		        $last_name = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
+		        $telephone_no = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
+		        $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
+		        $company_name = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
+		        $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
+		        $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
+		        $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
+
+		        $property = $this->input->post('property');
+
+				$message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p>';
 				
 				$from_name = 'Pacific Coast Title Company';
 				$from_mail = env('FROM_EMAIL');
 				$subject = 'Notification for'.$subject;
-				$to = 'cs@pct.com';
+				// $to = 'cs@pct.com';
+				$to = 'hitesh.p@crestinfosystems.com';
 				
 				$this->load->helper('sendemail');
 				
