@@ -416,12 +416,27 @@ class Home extends MX_Controller {
 								$lenderId = $this->home_model->update($EscrowLenderData,$condition);
 							}
 
+							$file = array();
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
 							$taxfilename = $orderNumber.'.pdf';
-							
-							$this->uploadLvDocsToResware($lvfilename, $file_id);
-							$this->uploadGrantDeedDocsToResware($deedfilename, $file_id);
+							$orderDetails = $this->order->get_order_details($file_id);
+
+							if (base_url().'uploads/legal-vesting/'.$lvfilename) {
+								$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
+								$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
+							}
+
+							if (base_url().'uploads/grant-deed/'.$deedfilename) {
+								$file[] = base_url().'uploads/grant-deed/'.$deedfilename;
+								$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
+							}
+
+							if (base_url().'uploads/tax/'.$taxfilename) {
+								$file[] = base_url().'uploads/tax/'.$taxfilename;
+								$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
+							}
+
 							/* Escrow Lender Details */
 							if($this->session->has_userdata('tp_api_id'))
 							{
@@ -494,10 +509,6 @@ class Home extends MX_Controller {
 							
 							$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));
 							$bcc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
-							$lvfilename = $orderNumber.'.pdf';
-							$deedfilename = $orderNumber.'.pdf';
-							$taxfilename = $orderNumber.'.pdf';
-							$file = array(base_url().'uploads/legal-vesting/'.$lvfilename,base_url().'uploads/grant-deed/'.$deedfilename,base_url().'uploads/tax/'.$taxfilename);
 							$this->load->helper('sendemail');
 							
 							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);
@@ -869,12 +880,11 @@ class Home extends MX_Controller {
     	echo json_encode($product_types); exit;
 	}
 	
-	public function uploadLvDocsToResware($document_name, $fileId)
+	public function uploadLvDocsToResware($document_name, $fileId, $orderDetails)
 	{
 		$this->load->model('order/document');
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
-		$orderDetails = $this->order->get_order_details($fileId);
 		$userdata = $this->session->userdata('user');
 		$fileSize = filesize(base_url().'uploads/legal-vesting/'.$document_name);
 		$contents = file_get_contents(base_url().'uploads/legal-vesting/'.$document_name);
@@ -883,7 +893,7 @@ class Home extends MX_Controller {
 		$documentData = array(
 			'document_name' => $document_name,
 			'original_document_name' => $document_name,
-			'document_type_id' => 1023,
+			'document_type_id' => 1031,
 			'document_size' => $fileSize,
 			'user_id' => $userdata['id'],
 			'order_id' => $orderDetails['order_id'],
@@ -897,7 +907,7 @@ class Home extends MX_Controller {
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
 			'DocumentType' => array(
-				'DocumentTypeID' => 1023,
+				'DocumentTypeID' => 1031,
 			),
 			'Description' => 'Legal & Vesting Document',
 			'InternalOnly' => false,
@@ -921,12 +931,11 @@ class Home extends MX_Controller {
     }
     
 
-    public function uploadGrantDeedDocsToResware($document_name, $fileId)
+    public function uploadGrantDeedDocsToResware($document_name, $fileId, $orderDetails)
 	{
 		$this->load->model('order/document');
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
-		$orderDetails = $this->order->get_order_details($fileId);
 		$userdata = $this->session->userdata('user');
 		$fileSize = filesize(base_url().'uploads/grant-deed/'.$document_name);
 		$contents = file_get_contents(base_url().'uploads/grant-deed/'.$document_name);
@@ -952,6 +961,56 @@ class Home extends MX_Controller {
 				'DocumentTypeID' => 1031,
 			),
 			'Description' => 'Grant Deed Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+	}
+
+	public function uploadTaxDocsToResware($document_name, $fileId, $orderDetails)
+	{
+		$this->load->model('order/document');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		$fileSize = filesize(base_url().'uploads/tax/'.$document_name);
+		$contents = file_get_contents(base_url().'uploads/tax/'.$document_name);
+		$binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1023,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Tax Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_tax_doc' => 1
+		);
+		$documentId = $this->document->insert($documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1023,
+			),
+			'Description' => 'Tax Document',
 			'InternalOnly' => false,
 			'DocumentBody' => $binaryData
 		);

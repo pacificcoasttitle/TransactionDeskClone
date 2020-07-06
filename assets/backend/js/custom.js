@@ -155,6 +155,22 @@ $(document).ready(function () {
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-lv-documents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
+                else if(this.context[0].sTableId == 'tbl-tax-documents-listing')
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"admin/order/home/get_tax_document_list",
+                        data: {
+                            keyword: $('#tbl-tax-documents-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-tax-documents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
                 else if(this.context[0].sTableId == 'tbl-new-users-listing')
                 {
                     var jsonResult = $.ajax({
@@ -1362,6 +1378,77 @@ $(document).ready(function () {
         });
     }
     /* Tax logs */
+
+    if ($('#tbl-tax-documents-listing').length) 
+    {
+        cpl_document_list = $('#tbl-tax-documents-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_cpl_documents').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Tax Documents',
+                    exportOptions: {
+                        columns: [0, 1, 2],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                return (column === 0 || column === 1|| column === 2) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/home/get_tax_document_list", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-tax-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-tax-documents-listing_processing").css("display", "none");
+
+                }
+            }            
+        });
+    }
 });
 
 
