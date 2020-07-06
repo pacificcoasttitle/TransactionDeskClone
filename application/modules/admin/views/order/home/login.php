@@ -1,7 +1,6 @@
 <style>
 label {
-  padding-top: 0.20rem !important;
-  padding-bottom: 0.20rem !important;
+  padding: 0.20rem 0.75rem !important;
   font-size: 12px;
   color: #777;
 }
