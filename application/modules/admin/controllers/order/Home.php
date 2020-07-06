@@ -1049,6 +1049,9 @@ class Home extends MX_Controller {
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<a href='javascript:void(0);' onclick='deleteMasterUser(".$value['id'].")' class='btn btn-action'  title='Delete Master User'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                }
                 $data[] = $nestedData;            
             }
         }
