@@ -1115,4 +1115,60 @@ class Home extends MX_Controller {
         $this->load->view('order/home/add_new_master_user', $data);
         $this->load->view('order/layout/footer', $data);
     }
+
+    public function tax_document()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Tax Documents';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/tax_document', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_tax_document_list()
+    {
+        $params = array();
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $tax_document_lists = $this->home_model->get_tax_document_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $tax_document_lists = $this->home_model->get_tax_document_list($params);            
+        }
+
+        $data = array(); 
+        
+        if(isset($tax_document_lists['data']) && !empty($tax_document_lists['data'])) {
+            foreach ($tax_document_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['document_name'];
+                $documentName = $value['document_name'];
+                if ($value['api_document_id'] > 0) {
+                    $nestedData[] = 'Yes';
+                } else {
+                    $nestedData[] = 'No';
+                }
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."/uploads/tax/$documentName' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='".base_url()."/uploads/tax/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
+                }
+                $data[] = $nestedData;            
+            }
+        }
+        $json_data['recordsTotal'] = intval( $tax_document_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $tax_document_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
 }
