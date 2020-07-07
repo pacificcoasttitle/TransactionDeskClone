@@ -1449,6 +1449,68 @@ $(document).ready(function () {
             }            
         });
     }
+
+    /* Tax logs */
+    if ($('#tbl-grant-deed-log-listing').length) 
+    {
+        log_list = $('#tbl-grant-deed-log-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "columns": [
+                {
+                    "width": "15%"
+                },
+                {
+                    "width": "30%"
+                },
+                {
+                    "width": "15%"
+                },
+                {
+                    "width": "40%"
+                },
+            ],
+            "language": {
+                searchPlaceholder: "Order #",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/titlePoint/get_grant_deed_logs", // json datasource
+                type: "post", // method  , by default get
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-grant-deed-log-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-grant-deed-log-listing_processing").css("display", "none");
+
+                }
+            },
+                        
+        });
+    }
+    /* Tax logs */
 });
 
 

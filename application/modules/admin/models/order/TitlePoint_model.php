@@ -299,4 +299,87 @@ class TitlePoint_model extends CI_Model
             'data' => $logs_lists
         );
     }
+
+    public function getGrantDeedLogs($params)
+    {
+        $this->db->where('file_id IS NOT NULL');
+        $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
+        
+        $this->db->from($this->table);
+        $total_records =  $this->db->count_all_results();
+
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        
+        
+        $logs_lists =array();
+        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
+        {
+            $keyword = $params['searchvalue'];
+
+            if(isset($keyword) && !empty($keyword))
+            {
+                $this->db->like('file_number', $keyword);
+            }
+
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
+
+            $this->db->from($this->table);
+            $filter_total_records =  $this->db->count_all_results();
+
+
+            if(isset($keyword) && !empty($keyword))
+            {
+                $this->db->like('file_number', $keyword);
+            }
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by('id', 'asc');
+            
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
+
+            $query = $this->db->get($this->table);
+
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            }
+        }
+        else
+        {
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
+
+            $this->db->from($this->table);
+
+            $filter_total_records =  $this->db->count_all_results();
+
+            
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by('id', 'asc');
+            $query = $this->db->get($this->table);
+            
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            } 
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $logs_lists
+        );
+    }
 }

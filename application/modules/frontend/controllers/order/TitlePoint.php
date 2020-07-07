@@ -309,7 +309,7 @@ class TitlePoint extends MX_Controller {
 	            {
 	            	$docType = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType'] : '';
 
-	            	if($docType == 'GRANT DEED' || $docType == 'Intrafamily Transfer & Dissolution')
+	            	if($docType == 'GRANT DEED' || $docType == 'Intrafamily Transfer & Dissolution' || $docType == 'QUIT CLAIM DEED')
 	            	{
 	            		$instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber'] : '';
 	            		$recordedDate = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate'] : '';
@@ -322,7 +322,7 @@ class TitlePoint extends MX_Controller {
 	            	{
 	            		$docType = isset($value['DocType']) && !empty($value['DocType']) ? $value['DocType'] : '';
 
-	            		if($docType == 'GRANT DEED' || $docType == 'Intrafamily Transfer & Dissolution')
+	            		if($docType == 'GRANT DEED' || $docType == 'Intrafamily Transfer & Dissolution' || $docType == 'QUIT CLAIM DEED')
 	            		{
 	            			$instrumentNumber = isset($value['InstrumentNumber']) && !empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
 	            			$recordedDate = isset($value['RecordedDate']) && !empty($value['RecordedDate']) ? $value['RecordedDate'] : '';
@@ -337,6 +337,7 @@ class TitlePoint extends MX_Controller {
 					'vesting_information' => $vesting,
 					'cs4_instrument_no' => $instrumentNumber,
 					'cs4_recorded_date' => $recordedDate,
+					'grant_deed_type' => $docType,
 					'fips' => $fips,
 					// 'cs4_result_id_status' => $status,
 				);
@@ -609,8 +610,9 @@ class TitlePoint extends MX_Controller {
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
 		
-		$responseStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
-		if($responseStatus == 'OK')
+		$responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
+		/*$responseStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';*/
+		if(strpos($responseStatus, 'Ok'))
 		{
 			$base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && !empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
 
@@ -622,7 +624,28 @@ class TitlePoint extends MX_Controller {
 			$pdfFilePath = './uploads/grant-deed/'.$fileNumber.'.pdf';
 			file_put_contents($pdfFilePath, $bin);
 		}
-		
+		$tpData = 	array(
+						'grant_deed_message' => $responseStatus
+					);
+
+       	if ($this->session->has_userdata('tp_api_id')) 
+		{
+			$id = $this->session->userdata('tp_api_id');
+			$condition = array(
+				'id' => $id
+			);					
+			$this->titlePointData->update($tpData,$condition);
+			
+		}
+		else
+		{
+			$tpId = $this->titlePointData->insert($tpData);
+
+			if($tpId)
+			{
+				$this->session->set_userdata('tp_api_id', $tpId);
+			}
+		}
 		echo trim($file);
 	}
 
