@@ -17,8 +17,6 @@ class TitlePoint extends MX_Controller {
 			$this->session->unset_userdata('tp_api_id');
 		}*/
 		$methodId = isset($_POST['methodId']) && !empty($_POST['methodId']) ? $_POST['methodId'] : '';
-echo "<pre>"; print_r(env('TP_USERNAME'));
-echo "<pre>"; print_r(env('TP_PASSWORD')); exit;
 		$requestParams = array(
             'userID' => env('TP_USERNAME'),
             'password' => env('TP_PASSWORD'),
