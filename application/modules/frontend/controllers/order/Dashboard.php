@@ -138,7 +138,7 @@ class Dashboard extends MX_Controller {
 	{
 		$userdata = $this->session->userdata('user');
 		$this->load->model('order/apiLogs');
-		$url = GET_RECORDING_URL.'date='.$date.'&api_token='.RECORDING_API_TOKEN;
+		$url = getenv('GET_RECORDING_URL').'date='.$date.'&api_token='.getenv('RECORDING_API_TOKEN');
 		$logId = $this->apiLogs->syncLogs($userdata['id'], 'recording', 'get_recordings', $url, array(), array());
 		$ch = curl_init($url);                                    
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                        
