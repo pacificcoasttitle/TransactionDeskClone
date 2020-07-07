@@ -872,9 +872,9 @@ class Home extends MX_Controller {
         $userdata['email'] = $userdata['email_address'];
         $userdata['admin_api'] = 1;
         $newUserData = json_encode($newUserData);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_user', RESWARE_ORDER_API.$endPoint, $newUserData, array(), 0, 0);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_user', env('RESWARE_ORDER_API').$endPoint, $newUserData, array(), 0, 0);
         $result = $this->resware->make_request('POST', $endPoint, $newUserData, $userdata);
-        $this->apiLogs->syncLogs($v['id'], 'resware', 'create_user', RESWARE_ORDER_API.$endPoint, $newUserData, $result, 0, $logid);
+        $this->apiLogs->syncLogs($v['id'], 'resware', 'create_user', env('RESWARE_ORDER_API').$endPoint, $newUserData, $result, 0, $logid);
 
         if (isset($result) && !empty($result)) {
             $response = json_decode($result,true);

@@ -308,9 +308,9 @@ class Dashboard extends MX_Controller {
 						$user_data = array();
 					}
 					
-					$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, array(), $orderId, 0);
+					$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderId, 0);
 					$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-					$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderId, $logid);
+					$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderId, $logid);
 					$res = json_decode($result);
 					$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 					$success[$i] = "Document #".$i.": uploaded successfully";
@@ -424,7 +424,7 @@ class Dashboard extends MX_Controller {
 
 
         $endPoint = 'estimates/closingfees';
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', RESWARE_ORDER_API.$endPoint, $fees_data, array(), $orderId, 0);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, array(), $orderId, 0);
         $result = $this->resware->make_request('POST', $endPoint, $fees_data);
 
         
@@ -490,7 +490,7 @@ class Dashboard extends MX_Controller {
         $data['productType'] = $productType;
         $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
         
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', RESWARE_ORDER_API.$endPoint, $fees_data, $result, $orderId, $logid);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, $result, $orderId, $logid);
 
         $this->load->model('order/fee');
         $feesData = array(
@@ -518,11 +518,11 @@ class Dashboard extends MX_Controller {
 
             $endPoint = '/estimates/closingfees/'.$closing_fee_id.'/receipt/pdf';
 
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fee_estimate_pdf', RESWARE_ORDER_API.$endPoint, $closing_fee_id, array(), 0, 0);
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fee_estimate_pdf', env('RESWARE_ORDER_API').$endPoint, $closing_fee_id, array(), 0, 0);
 
             $result = $this->resware->make_request('GET', $endPoint, array());
 
-            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fee_estimate_pdf', RESWARE_ORDER_API.$endPoint, $closing_fee_id, $result, 0, $logid);
+            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fee_estimate_pdf', env('RESWARE_ORDER_API').$endPoint, $closing_fee_id, $result, 0, $logid);
             
             if(isset($result) && !empty($result))
             {
@@ -595,11 +595,11 @@ class Dashboard extends MX_Controller {
         $request['FileID'] = $fileId;
 
         $notes_data = json_encode($request);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_notes', RESWARE_ORDER_API.$endPoint, $notes_data, array(), $orderId, 0);        
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_notes', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
 
         $result = $this->resware->make_request('GET', $endPoint, $notes_data);
 
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_notes', RESWARE_ORDER_API.$endPoint, $notes_data, $result, $orderId, $logid);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_notes', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
         
         if(isset($result) && !empty($result))
         {
@@ -637,11 +637,11 @@ class Dashboard extends MX_Controller {
 	        $request['FileID'] = $fileId;
 
 	        $notes_data = json_encode($request);
-	        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', RESWARE_ORDER_API.$endPoint, $notes_data, array(), $orderId, 0);        
+	        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
 
 	        $result = $this->resware->make_request('POST', $endPoint, $notes_data);
 
-	        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', RESWARE_ORDER_API.$endPoint, $notes_data, $result, $orderId, $logid);
+	        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
 	        
 	        if(isset($result) && !empty($result))
 	        {
@@ -1645,7 +1645,7 @@ class Dashboard extends MX_Controller {
 		$documents = $this->order->get_order_documents($fileId);
 		$endPoint = 'files/'. $fileId .'/documents';
 		$userdata = $this->session->userdata('user');
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
 		if ($userdata['is_master'] == 1) {
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 			$user_data['email'] = $orderUser['email_address'];
@@ -1654,7 +1654,7 @@ class Dashboard extends MX_Controller {
 			$user_data = array();
 		}
 		$resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', RESWARE_ORDER_API.$endPoint, array(), $resultDocuments, $orderDetails['order_id'], $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $orderDetails['order_id'], $logid);
 		$resDocuments = json_decode($resultDocuments, true);
 		$documentCount  = count($documents);
 		
@@ -1700,9 +1700,9 @@ class Dashboard extends MX_Controller {
 							$prelimDocument['is_prelim_document'] =  $is_prelim_document;
 
 							$endPoint = 'documents/'.$resDocument['DocumentID'].'?format=json';
-							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
 							$resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
-							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $orderDetails['order_id'], $logid);
+							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $orderDetails['order_id'], $logid);
 							$resDocument = json_decode($resultDocument, true);
 
 							if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
@@ -1854,9 +1854,9 @@ class Dashboard extends MX_Controller {
 							$prelimDocument['order_id'] = $orderDetails['order_id'];
 
 							$endPoint = 'documents/'.$resDocument['DocumentID'].'?format=json';
-							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
 							$resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
-							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $orderDetails['order_id'], $logid);
+							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $orderDetails['order_id'], $logid);
 							$resDocument = json_decode($resultDocument, true);
 
 							if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
@@ -2252,9 +2252,9 @@ class Dashboard extends MX_Controller {
 		}
 		if ($is_sync == 0) {
 			$endPoint = 'documents/'.$resware_document_id.'?format=json';
-			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), array(), $order_id, 0);
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order_id, 0);
 			$resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
-			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', RESWARE_ORDER_API.$endPoint, array(), $resultDocument, $order_id, $logid);
+			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order_id, $logid);
 			$resDocument = json_decode($resultDocument, true);
 			if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
 				$documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
@@ -2607,7 +2607,7 @@ class Dashboard extends MX_Controller {
 		}
 		
 		$endPoint = 'files/'. $fileId .'/partners';
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), array(), $orderDetails['order_id'], 0);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
 		if ($userdata['is_master'] == 1) {
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 			$user_data['email'] = $orderUser['email_address'];
@@ -2617,7 +2617,7 @@ class Dashboard extends MX_Controller {
 		}
 		
 		$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', RESWARE_ORDER_API.$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
 		$resPartners = json_decode($resultPartners, true);
 		if(!empty($resPartners)) {
 			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
@@ -2795,9 +2795,9 @@ class Dashboard extends MX_Controller {
 			$user_data = array();
 		}
 		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', RESWARE_ORDER_API.$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 
