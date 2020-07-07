@@ -27,8 +27,8 @@ class Titlepoint
         if($serviceId)
         {   
             $requestParams = array(
-                'username' => TP_USERNAME,
-                'password' => TP_PASSWORD,
+                'username' => env('TP_USERNAME'),
+                'password' => env('TP_PASSWORD'),
                 'serviceId1' =>  $serviceId,
                 'serviceId2'=>  '',
                 'source'=>  '',
@@ -37,7 +37,7 @@ class Titlepoint
                 'sortOrder'=>  '',
                 'fileType'=>  'pdf',
             );
-            $requestUrl= TP_IMAGE_ENDPOINT;
+            $requestUrl= env('TP_IMAGE_ENDPOINT');
         }
 
         $request = $requestUrl.http_build_query($requestParams);
@@ -52,11 +52,11 @@ class Titlepoint
         if(isset($requestId) && !empty($requestId))
         {
             $requestParams = array(
-                            'username' => TP_USERNAME,
-                            'password' => TP_PASSWORD,                    
+                            'username' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),                    
                             'requestId'=>  $requestId
                         );
-            $request = TP_IMAGE_REQUEST_STATUS.http_build_query($requestParams);
+            $request = env('TP_IMAGE_REQUEST_STATUS').http_build_query($requestParams);
             
             $file = file_get_contents($request,false,$context);
             $xmlData = simplexml_load_string($file);
@@ -67,12 +67,12 @@ class Titlepoint
             if($status == 'Success')
             {
                 $requestParams = array(
-                                'username' => TP_USERNAME,
-                                'password' => TP_PASSWORD,                    
+                                'username' => env('TP_USERNAME'),
+                                'password' => env('TP_PASSWORD'),                    
                                 'requestId'=>  $requestId
                             );
 
-                $request = TP_GENERATE_IMAGE.http_build_query($requestParams);
+                $request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
                 $file = file_get_contents($request,false,$context);
 
                 $xmlData = simplexml_load_string($file);
@@ -123,8 +123,8 @@ class Titlepoint
 
         $requestParams = array(
             'parameters'=>'FIPS='.$fips.',TYPE=REC,SUBTYPE=ALL,YEAR='.$year.',INST='.$docId.'',
-            'username' => TP_USERNAME,
-            'password' => TP_PASSWORD,            
+            'username' => env('TP_USERNAME'),
+            'password' => env('TP_PASSWORD'),            
             'company'=>  '',
             'department'=>  '',
             'titleOfficer'=>  '',
@@ -137,7 +137,7 @@ class Titlepoint
             'fileType'=>  'PDF',
         );
 
-        $request = GRANT_DEED_ENDPOINT.http_build_query($requestParams);
+        $request = env('GRANT_DEED_ENDPOINT').http_build_query($requestParams);
 
         $opts = array(
             "ssl"=>array(
@@ -180,8 +180,8 @@ class Titlepoint
         if($serviceId)
         {   
             $requestParams = array(
-                'username' => TP_USERNAME,
-                'password' => TP_PASSWORD,
+                'username' => env('TP_USERNAME'),
+                'password' => env('TP_PASSWORD'),
                 'serviceId1' =>  $serviceId,
                 'serviceId2'=>  '',
                 'source'=>  '',
@@ -190,7 +190,7 @@ class Titlepoint
                 'sortOrder'=>  '',
                 'fileType'=>  'pdf',
             );
-            $requestUrl= TP_IMAGE_ENDPOINT;
+            $requestUrl= env('TP_IMAGE_ENDPOINT');
         }
 
         $request = $requestUrl.http_build_query($requestParams);
@@ -205,11 +205,11 @@ class Titlepoint
         if(isset($requestId) && !empty($requestId))
         {
             $requestParams = array(
-                            'username' => TP_USERNAME,
-                            'password' => TP_PASSWORD,                    
+                            'username' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),                    
                             'requestId'=>  $requestId
                         );
-            $request = TP_IMAGE_REQUEST_STATUS.http_build_query($requestParams);
+            $request = env('TP_IMAGE_REQUEST_STATUS').http_build_query($requestParams);
             
             $file = file_get_contents($request,false,$context);
             $xmlData = simplexml_load_string($file);
@@ -220,12 +220,12 @@ class Titlepoint
             if($status == 'Success')
             {
                 $requestParams = array(
-                                'username' => TP_USERNAME,
-                                'password' => TP_PASSWORD,                    
+                                'username' => env('TP_USERNAME'),
+                                'password' => env('TP_PASSWORD'),                    
                                 'requestId'=>  $requestId
                             );
 
-                $request = TP_GENERATE_IMAGE.http_build_query($requestParams);
+                $request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
                 $file = file_get_contents($request,false,$context);
 
                 $xmlData = simplexml_load_string($file);

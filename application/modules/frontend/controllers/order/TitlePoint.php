@@ -19,8 +19,8 @@ class TitlePoint extends MX_Controller {
 		$methodId = isset($_POST['methodId']) && !empty($_POST['methodId']) ? $_POST['methodId'] : '';
 
 		$requestParams = array(
-            'userID' => TP_USERNAME,
-            'password' => TP_PASSWORD,
+            'userID' => env('TP_USERNAME'),
+            'password' => env('TP_PASSWORD'),
             'orderNo' =>  '',
             'customerRef'=>  '',
             'company'=>  '',
@@ -36,11 +36,11 @@ class TitlePoint extends MX_Controller {
 			$apn = str_replace('0000', '0-000', $apn);
 			$state = isset($_POST['state']) && !empty($_POST['state']) ? $_POST['state'] : '';
 			$county = isset($_POST['county']) && !empty($_POST['county']) ? $_POST['county'] : '';
-			$requestParams['serviceType'] = TAX_SEARCH_SERVICE_TYPE;
+			$requestParams['serviceType'] = env('TAX_SEARCH_SERVICE_TYPE');
 			$requestParams['parameters'] = 'Tax.APN='.$apn.';General.AutoSearchTaxes=true;General.AutoSearchProperty=false';
 			$requestParams['state'] = $state;
 			$requestParams['county'] = $county;
-			$requestUrl= TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT;
+			$requestUrl= env('TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT');
 		}
 		else if($methodId == 4)
 		{
@@ -53,10 +53,10 @@ class TitlePoint extends MX_Controller {
 			{
 				$unitinfo =  'UnitNumber '.$unit_no.', '; 
 			}
-			$requestParams['serviceType'] = SERVICE_TYPE;
+			$requestParams['serviceType'] = env('SERVICE_TYPE');
 			$requestParams['parameters'] = 'Address1='.$address.';City='.$city.';Pin='.$apn.';LvLookup=Address;LvLookupValue='.$address.', '.$unitinfo.$city.';LvReportFormat=LV;IncludeTaxAssessor=true';
 			$requestParams['fipsCode'] = $fipsCode;
-			$requestUrl= TP_CREATE_SERVICE_ENDPOINT;
+			$requestUrl= env('TP_CREATE_SERVICE_ENDPOINT');
 		}
 		$request = $requestUrl.http_build_query($requestParams);
 
@@ -154,8 +154,8 @@ class TitlePoint extends MX_Controller {
 		$apn = isset($_POST['apn']) && !empty($_POST['apn']) ? $_POST['apn'] : '';
 
 		$requestParams = array(
-		                    'userID' => TP_USERNAME,
-		                    'password' => TP_PASSWORD,
+		                    'userID' => env('TP_USERNAME'),
+		                    'password' => env('TP_PASSWORD'),
 		                    'company'=>  '',
 		                    'department'=>  '',
 		                    'titleOfficer'=>  '',
@@ -163,7 +163,7 @@ class TitlePoint extends MX_Controller {
 		                    'maxWaitSeconds'=>  20
 		                );
 
-		$request = TP_REQUEST_SUMMARY_ENDPOINT.http_build_query($requestParams);
+		$request = env('TP_REQUEST_SUMMARY_ENDPOINT').http_build_query($requestParams);
 
 		$opts = array(
 			"ssl"=>array(
@@ -260,20 +260,20 @@ class TitlePoint extends MX_Controller {
 		$apn = isset($_POST['apn']) && !empty($_POST['apn']) ? $_POST['apn'] : '';
 
 		$requestParams = array(
-		                    'userID' => TP_USERNAME,
-		                    'password' => TP_PASSWORD,
+		                    'userID' => env('TP_USERNAME'),
+		                    'password' => env('TP_PASSWORD'),
 		                    'company'=>  '',
 		                    'department'=>  '',
 		                    'titleOfficer'=>  '',
 		                    'resultID'=>  $resultId
 		                );
 
-		$resultUrl = TP_GET_RESULT_BY_ID;
+		$resultUrl = env('TP_GET_RESULT_BY_ID');
 
 		if($methodId == 3)
 		{
 		    $requestParams['requestingTPXML'] = 'true';
-		    $resultUrl = TP_GET_RESULT_BY_ID_3;
+		    $resultUrl = env('TP_GET_RESULT_BY_ID_3');
 		}
 
 		$request = $resultUrl.http_build_query($requestParams);
@@ -433,8 +433,8 @@ class TitlePoint extends MX_Controller {
 		if($serviceId)
 		{	
 			$requestParams = array(
-		        'username' => TP_USERNAME,
-		        'password' => TP_PASSWORD,
+		        'username' => env('TP_USERNAME'),
+		        'password' => env('TP_PASSWORD'),
 		        'serviceId1' =>  $serviceId,
 		        'serviceId2'=>  '',
 		        'source'=>  '',
@@ -465,8 +465,8 @@ class TitlePoint extends MX_Controller {
 		$requestId = isset($_POST['requestId']) && !empty($_POST['requestId']) ? $_POST['requestId'] : '';
 
 		$requestParams = array(
-		                    'username' => TP_USERNAME,
-		                    'password' => TP_PASSWORD,                    
+		                    'username' => env('TP_USERNAME'),
+		                    'password' => env('TP_PASSWORD'),                    
 		                    'requestId'=>  $requestId
 		                );
 
@@ -490,8 +490,8 @@ class TitlePoint extends MX_Controller {
 		$fileNumber = isset($_POST['fileNumber']) && !empty($_POST['fileNumber']) ? $_POST['fileNumber'] : '';
 
 		$requestParams = array(
-		                    'username' => TP_USERNAME,
-		                    'password' => TP_PASSWORD,                    
+		                    'username' => env('TP_USERNAME'),
+		                    'password' => env('TP_PASSWORD'),                    
 		                    'requestId'=>  $requestId
 		                );
 
@@ -544,8 +544,8 @@ class TitlePoint extends MX_Controller {
 		$recDate = isset($_POST['recDate']) && !empty($_POST['recDate']) ? $_POST['recDate'] : '';
 
 		$requestParams = array(
-            'userID' => TP_USERNAME,
-            'password' => TP_PASSWORD,
+            'userID' => env('TP_USERNAME'),
+            'password' => env('TP_PASSWORD'),
             'orderNo' =>  '',
             'customerRef'=>  '',
             'company'=>  '',
@@ -553,13 +553,13 @@ class TitlePoint extends MX_Controller {
             'titleOfficer'=>  '',
             'orderComment'=>  '',
             'starterRemarks'=>  '',
-            'serviceType'=>  INSTRUMENT_SEARCH_SERVICE_TYPE,
+            'serviceType'=>  env('INSTRUMENT_SEARCH_SERVICE_TYPE'),
             'parameters'=>  'Document.SearchType=Instrument;Document.RecordDate='.$recDate.'; Document.InstrumentNumber='.$docId.'',
             'state'=>  $state,
             'county'=>  $county,
         );
 
-        $request = TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT.http_build_query($requestParams);
+        $request = env('TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT').http_build_query($requestParams);
 
         $opts = array(
 			"ssl"=>array(
@@ -582,8 +582,8 @@ class TitlePoint extends MX_Controller {
 
 		$requestParams = array(
 			'parameters'=>'FIPS='.$fips.',TYPE=REC,SUBTYPE=ALL,YEAR='.$year.',INST='.$docId.'',
-            'username' => TP_USERNAME,
-            'password' => TP_PASSWORD,            
+            'username' => env('TP_USERNAME'),
+            'password' => env('TP_PASSWORD'),            
             'company'=>  '',
             'department'=>  '',
             'titleOfficer'=>  '',
@@ -596,7 +596,7 @@ class TitlePoint extends MX_Controller {
             'fileType'=>  'PDF',
         );
 
-        $request = GRANT_DEED_ENDPOINT.http_build_query($requestParams);
+        $request = env('GRANT_DEED_ENDPOINT').http_build_query($requestParams);
 
         $opts = array(
 			"ssl"=>array(

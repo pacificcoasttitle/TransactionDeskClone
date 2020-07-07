@@ -45,9 +45,9 @@ class Cron extends MX_Controller {
             $userdata['email'] = $userdata['email_address'];
         }
         
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_orders', RESWARE_ORDER_API.'files/search', array(), array(), 0, 0);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', array(), array(), 0, 0);
         $res = $this->make_request('POST', 'files/search', '',  $userdata);
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_orders', RESWARE_ORDER_API.'files/search', array(), $res, 0, $logid);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', array(), $res, 0, $logid);
         $result = json_decode($res);
 
         $this->db->simple_query('SET SESSION group_concat_max_len=150000');
@@ -175,7 +175,7 @@ class Cron extends MX_Controller {
             $login =  $userdata['email'];
             $password = $userdata['random_password'];
         }
-        $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
+        $ch = curl_init(env('RESWARE_ORDER_API').$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -250,8 +250,8 @@ class Cron extends MX_Controller {
     public function getTPData($address, $city, $fips)
     {
         $requestParams = array(
-            'userID' => TP_USERNAME,
-            'password' => TP_PASSWORD,
+            'userID' => env('TP_USERNAME'),
+            'password' => env('TP_PASSWORD'),
             'orderNo' =>  '',
             'customerRef'=>  '',
             'company'=>  '',
@@ -261,10 +261,10 @@ class Cron extends MX_Controller {
             'starterRemarks'=>  '',
         );
 
-        $requestParams['serviceType'] = SERVICE_TYPE;
+        $requestParams['serviceType'] = env('SERVICE_TYPE');
         $requestParams['parameters'] = 'Address1='.$address.';City='.$city.';LvLookup=Address;LvLookupValue='.$address.', '.$city.';LvReportFormat=LV;IncludeTaxAssessor=true';
         $requestParams['fipsCode'] = $fips;
-        $requestUrl= TP_CREATE_SERVICE_ENDPOINT;
+        $requestUrl= env('TP_CREATE_SERVICE_ENDPOINT');
         $request = $requestUrl.http_build_query($requestParams);
 
         $opts = array(
@@ -288,8 +288,8 @@ class Cron extends MX_Controller {
             if($requestId)
             {
                 $summary_requestParams = array(
-                    'userID' => TP_USERNAME,
-                    'password' => TP_PASSWORD,
+                    'userID' => env('TP_USERNAME'),
+                    'password' => env('TP_PASSWORD'),
                     'company'=>  '',
                     'department'=>  '',
                     'titleOfficer'=>  '',
@@ -297,7 +297,7 @@ class Cron extends MX_Controller {
                     'maxWaitSeconds'=>  20
                 );
 
-                $summary_request = TP_REQUEST_SUMMARY_ENDPOINT.http_build_query($summary_requestParams);
+                $summary_request = env('TP_REQUEST_SUMMARY_ENDPOINT').http_build_query($summary_requestParams);
 
                 $context = stream_context_create($opts);
                 $summary_file = file_get_contents($summary_request,false,$context);
@@ -315,15 +315,15 @@ class Cron extends MX_Controller {
                     $tpData['cs4_service_id'] = $serviceId;
 
                     $output_requestParams = array(
-                        'userID' => TP_USERNAME,
-                        'password' => TP_PASSWORD,
+                        'userID' => env('TP_USERNAME'),
+                        'password' => env('TP_PASSWORD'),
                         'company'=>  '',
                         'department'=>  '',
                         'titleOfficer'=>  '',
                         'resultID'=>  $resultId
                     );
 
-                    $output_resultUrl = TP_GET_RESULT_BY_ID;
+                    $output_resultUrl = env('TP_GET_RESULT_BY_ID');
 
                     $output_request = $output_resultUrl.http_build_query($output_requestParams);
                     $context = stream_context_create($opts);
@@ -381,10 +381,10 @@ class Cron extends MX_Controller {
             {
                 $requestParams = json_encode(array('State'=>'CA','County'=>$v));
                 
-                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, $requestParams, array(), 0, 0);
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API').$endPoint, $requestParams, array(), 0, 0);
                 $result = $this->make_request('GET', $endPoint, $requestParams,$userdata);
                 
-                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', RESWARE_ORDER_API.$endPoint, array(), $result, 0, $logid);
+                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API').$endPoint, array(), $result, 0, $logid);
                 $response = json_decode($result,TRUE);
 
                 if(isset($response) && !empty($response))
@@ -490,9 +490,9 @@ class Cron extends MX_Controller {
                         );
 
                         if (!empty($v['random_password'])) {
-                            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'password_check', RESWARE_ORDER_API.'me', array(), array(), 0, 0);
+                            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'password_check', env('RESWARE_ORDER_API').'me', array(), array(), 0, 0);
                             $result = $this->make_request('GET', 'me','',$userdata);
-                            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'password_check', RESWARE_ORDER_API.'me', array(), $result, 0, $logid);
+                            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'password_check', env('RESWARE_ORDER_API').'me', array(), $result, 0, $logid);
                             
                             if (isset($result) && !empty($result)) {
                                 $response = json_decode($result,true);
@@ -563,11 +563,11 @@ class Cron extends MX_Controller {
                         $rowCount++;
                         $userdata = $v;
                         $userdata['email'] = $v['email_address'];
-                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_user_partner_id', RESWARE_ORDER_API.'me', $userdata, array(), 0, 0);
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_user_partner_id', env('RESWARE_ORDER_API').'me', $userdata, array(), 0, 0);
 
                         $result = $this->make_request('GET', 'me?IncludeCompany=true','',$userdata);
                         
-                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', RESWARE_ORDER_API.'me', array(), $result, 0, $logid);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', env('RESWARE_ORDER_API').'me', array(), $result, 0, $logid);
 
                         if(isset($result) && !empty($result))
                         {
@@ -754,9 +754,9 @@ class Cron extends MX_Controller {
                             $userdata['email'] = $userdata['email_address'];
                             $userUpdateData = json_encode($userUpdateData);
                             
-                            $logid = $this->apiLogs->syncLogs($v['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, array(), 0, 0);
+                            $logid = $this->apiLogs->syncLogs($v['id'], 'resware', 'update_password', env('RESWARE_ORDER_API').$endPoint, $userUpdateData, array(), 0, 0);
                             $result = $this->make_request('PUT', $endPoint, $userUpdateData, $userdata);
-                            $this->apiLogs->syncLogs($v['id'], 'resware', 'update_password', RESWARE_ORDER_API.$endPoint, $userUpdateData, $result, 0, $logid);
+                            $this->apiLogs->syncLogs($v['id'], 'resware', 'update_password', env('RESWARE_ORDER_API').$endPoint, $userUpdateData, $result, 0, $logid);
                             if (isset($result) && !empty($result)) {
                                 $response = json_decode($result,true);
                                 
@@ -811,9 +811,9 @@ class Cron extends MX_Controller {
                         if (!empty($v['company_name']) && !empty($v['partner_id'])) {
                             $endPoint = 'admin/partners/'.$v['partner_id'];
                             $userdata['email'] = $userdata['email_address'];
-                            $logid = $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', RESWARE_ORDER_API.$endPoint, array(), array(), 0, 0);
+                            $logid = $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
                             $result = $this->make_request('GET', $endPoint, array(), $userdata);
-                            $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', RESWARE_ORDER_API.$endPoint, array(), $result, 0, $logid);
+                            $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), $result, 0, $logid);
 
                             if (isset($result) && !empty($result)) {
                                 $response = json_decode($result,true);
