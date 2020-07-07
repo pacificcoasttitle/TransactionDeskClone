@@ -126,7 +126,3 @@ define('AUTORESPONDER', "FALSE");
 define('CURRENT_YEAR', date("Y"));
 /* settings.php */
 
-/* Recording API */
-define('GET_RECORDING_URL', 'https://dev-app.quickcloze.net/api/order-recorded/all?');
-define('RECORDING_API_TOKEN', 'testPCTGtoken');
-
