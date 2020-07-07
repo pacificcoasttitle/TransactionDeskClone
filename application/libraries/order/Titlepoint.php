@@ -148,11 +148,13 @@ class Titlepoint
         $context = stream_context_create($opts);
         $file = file_get_contents($request,false,$context);
         $xmlData = simplexml_load_string($file);
+        
         $response = json_encode($xmlData);
         $result = json_decode($response,TRUE);
-        
-        $responseStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
-        if($responseStatus == 'OK')
+
+        $responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
+        /*$responseStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';*/
+        if(strpos($responseStatus, 'Ok'))
         {
             $base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && !empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
 
