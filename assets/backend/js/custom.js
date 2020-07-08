@@ -21,6 +21,15 @@ $(document).ready(function () {
         jQuery('#documents').parent('li').removeClass('active');
     }
 
+    // Add active class to logs menu
+    if(jQuery('#logs').children().hasClass('active')) {
+        jQuery('#logs').parent('li').addClass('active');
+        jQuery('#logs').addClass('show');
+    } else {
+        jQuery('#logs').removeClass('show');
+        jQuery('#logs').parent('li').removeClass('active');
+    }
+
     if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length)
     {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {

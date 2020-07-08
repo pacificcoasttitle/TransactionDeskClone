@@ -29,31 +29,18 @@
 		</a>
 	</li>
 
-	<!-- <li class="nav-item <?php // if($this->uri->uri_string() == 'order/admin/lv-log') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php // echo base_url().'order/admin/lv-log'; ?>">
-			<i class="fas fa-fw fa-list"></i>
-			<span>LV Log</span>
-		</a>
-	</li> -->
-	
 	<li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="logsDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="#" id=logsDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-file"></i>
 			<span>Logs</span>
         </a>
-		<div class="dropdown-menu" aria-labelledby="logsDropDown" id="logs">
-			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/lv-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lv-log'; ?>">			
-				<span>LV Log</span>
-			</a>
-			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/tax-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-log'; ?>">			
-				<span>Grant Deed Log</span>
-			</a>
-			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/tax-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-log'; ?>">			
-				<span>Tax Log</span>
-			</a>
-	
+		<div class="dropdown-menu" aria-labelledby=logsDropDown" id="logs">
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/lv-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lv-log'; ?>">LV Logs</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/grant-deed-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/grant-deed-log'; ?>">Grant Deed Logs</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/tax-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-log'; ?>">Tax Logs</a>
         </div>
 	</li>
+
 	<li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="documentDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-file"></i>
@@ -66,4 +53,5 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/tax-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-documents'; ?>">Tax</a>
         </div>
 	</li>
+
 </ul>
