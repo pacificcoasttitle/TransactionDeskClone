@@ -840,7 +840,7 @@ function parse187()
         async: false,
         success: function (data) {
             var res = jQuery.parseJSON(data);
-            if (res.success === false) {
+            if (res.success === true) {
                 $('.pma-error').text('Order is already exist for this address.');
                 $('.pma-error').show();
                 return false;
