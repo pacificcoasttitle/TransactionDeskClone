@@ -485,7 +485,7 @@ function generateImage(requestId,methodId,fileNumber='')
                 }
                 else if(methodId == 4)
                 {
-                    if (navigator.msSaveBlob)
+                    /*if (navigator.msSaveBlob)
                     {
                         var filename = "L&V.pdf";                            
                         download(filename, base64_data);
@@ -493,7 +493,7 @@ function generateImage(requestId,methodId,fileNumber='')
                     else
                     {
                         download('L&V.pdf', base64_data);
-                    }
+                    }*/
                     $('#grantDeedInfoFile').next('.loader').hide();
                 }
             }
