@@ -35,11 +35,19 @@ class Home extends MX_Controller {
 			$config['max_size'] = 20000;
 			$this->load->library('upload', $config);
 
-			if (! $this->upload->do_upload('upload_curative')) {
-				$response = array('status'=>'error', 'message'=> $this->upload->display_errors());
+			if (!empty($_FILES['upload_curative']['name'])) {
+				if (! $this->upload->do_upload('upload_curative')) {
+					$response = array('status'=>'error', 'message'=> $this->upload->display_errors());
+					echo json_encode($response); exit;
+				}
+			}
+
+			$result = $this->order->checkDuplicateOrder($this->input->post('apn'));
+			if ($result) {	
+				$response = array('status'=>'error', 'message'=> 'Order is already exist for this property.');
 				echo json_encode($response); exit;
 			}
-			
+
     		$parties_email = array();
     		if($this->form_validation->run($this) == true)
     		{
@@ -1074,7 +1082,7 @@ class Home extends MX_Controller {
 		$contents = file_get_contents($data['full_path']);
 		$binaryData   = base64_encode($contents); 
 		$document_name = date('YmdHis')."_".$data['file_name'];
-		rename(FCPATH."/uploads/curative/".$data['file_name'], FCPATH."/uploads/documents/".$document_name);
+		rename(FCPATH."/uploads/curative/".$data['file_name'], FCPATH."/uploads/curative/".$document_name);
 		
 		$documentData = array(
 			'document_name' => $document_name,
@@ -1085,7 +1093,7 @@ class Home extends MX_Controller {
 			'order_id' => $orderDetails['order_id'],
 			'description' => 'Curative Documents',
 			'is_sync' => 1,
-			'is_prelim_document' => 0
+			'is_curative_doc' => 1
 		);
 		
 		$documentId = $this->document->insert($documentData);

@@ -673,11 +673,14 @@
 											<div class="tagline"><span> Upload Curative Document</span></div>
 										</div>
 										<div class="frm-row">
-											<div class="section colm colm4" id="upload_1003">
+											<div class="section colm colm12" id="upload_1003">
 												<div class="option-group field">
-													<label class="button btn-primary search-file-btn spacer-t20">
-														<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload 1003</span>
-													</label>
+													<div class="spacer-t20">
+														<label class="button btn-primary search-file-btn">
+															<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload 1003</span>
+														</label>
+														<span></span>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -688,12 +691,14 @@
 											<div class="tagline"><span> Upload Curative Document</span></div>
 										</div>
 										<div class="frm-row">
-											<div class="section colm colm4" id="upload_rpa">
+											<div class="section colm colm12" id="upload_rpa">
 												<div class="option-group field">
-													<label class="button btn-primary search-file-btn spacer-t20">
-														<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload RPA</span>
-													</label>
-													
+													<div class="spacer-t20">
+														<label class="button btn-primary search-file-btn">
+															<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload RPA</span>
+														</label>
+														<span></span>
+													</div>
 												</div><!-- end .option-group section -->
 											</div>
 										</div>
@@ -881,6 +886,12 @@
 			$(clone).slideToggle('slow', function () {
 				$(clone).remove();
 			})
+		});
+
+		$('.search-file-btn').children("input").bind('change', function() {
+			var fileName = '';
+			fileName = $(this).val().split("\\").slice(-1)[0];
+			$(this).parent().parent().children("span").html(fileName);
 		});
 
 		$("#CompanyName").autocomplete({
