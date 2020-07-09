@@ -457,12 +457,6 @@ class TitlePoint extends MX_Controller {
 		$context = stream_context_create($opts);
 		$file = file_get_contents($request,false,$context);
 
-		$xmlData = simplexml_load_string($file);
-		$response = json_encode($xmlData);
-		$result = json_decode($response,TRUE);
-		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
-		$responseMsg = isset($result['ReturnMessages']) && !empty($result['ReturnMessages']) ? $result['ReturnMessages'] : '';
-		$this->addLogs($methodId,$responseStatus,$responseMsg);
 		echo trim($file);
 	}
 
@@ -485,16 +479,6 @@ class TitlePoint extends MX_Controller {
 		);
 		$context = stream_context_create($opts);
 		$file = file_get_contents($request,false,$context);
-
-		$xmlData = simplexml_load_string($file);
-		$response = json_encode($xmlData);
-		$result = json_decode($response,TRUE);
-		$responseStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
-
-		
-		$msg = isset($result['Message']) && !empty($result['Message']) ? $result['Message'] : '';
-		$this->addLogs($methodId,$responseStatus,$msg);
-		
 		echo trim($file); 
 	}
 
@@ -551,11 +535,6 @@ class TitlePoint extends MX_Controller {
 				file_put_contents($pdfFilePath, $bin);
 			}
 		}
-		$responseStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
-
-		
-		$msg = isset($result['Message']) && !empty($result['Message']) ? $result['Message'] : '';
-		$this->addLogs($methodId,$responseStatus,$msg);
 		echo trim($file);
 	}
 
