@@ -895,8 +895,8 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
-		$fileSize = filesize(base_url().'uploads/legal-vesting/'.$document_name);
-		$contents = file_get_contents(base_url().'uploads/legal-vesting/'.$document_name);
+		$fileSize = filesize(FCPATH.'uploads/legal-vesting/'.$document_name);
+		$contents = file_get_contents(FCPATH.'uploads/legal-vesting/'.$document_name);
 		$binaryData   = base64_encode($contents); 
 
 		$documentData = array(
@@ -946,8 +946,8 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
-		$fileSize = filesize(base_url().'uploads/grant-deed/'.$document_name);
-		$contents = file_get_contents(base_url().'uploads/grant-deed/'.$document_name);
+		$fileSize = filesize(FCPATH.'uploads/grant-deed/'.$document_name);
+		$contents = file_get_contents(FCPATH.'uploads/grant-deed/'.$document_name);
 		$binaryData   = base64_encode($contents); 
 
 		$documentData = array(
@@ -996,8 +996,8 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
-		$fileSize = filesize(base_url().'uploads/tax/'.$document_name);
-		$contents = file_get_contents(base_url().'uploads/tax/'.$document_name);
+		$fileSize = filesize(FCPATH.'uploads/tax/'.$document_name);
+		$contents = file_get_contents(FCPATH.'uploads/tax/'.$document_name);
 		$binaryData   = base64_encode($contents); 
 
 		$documentData = array(
