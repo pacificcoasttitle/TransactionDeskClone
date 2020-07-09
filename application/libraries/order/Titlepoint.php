@@ -288,7 +288,7 @@ class Titlepoint
                     $reqMessage = isset($result['Message']) && !empty($result['Message']) ? $result['Message'] : '';
                     if($status == 'Success')
                     {
-                        if($reqStatus == 'Success')
+                        if($reqStatus == 'Success' || $reqStatus == 'Processing')
                         {
                             $requestParams = array(
                                         'username' => env('TP_USERNAME'),
@@ -303,7 +303,7 @@ class Titlepoint
                             $response = json_encode($xmlData);
                             $result = json_decode($response,TRUE);
                             $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
-                            if($responseStatus == 'Success')
+                            if($responseStatus == 'Success' || $reqStatus == 'Processing')
                             {
                                 $reqStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
                                 $reqMessage = isset($result['Message']) && !empty($result['Message']) ? $result['Message'] : '';

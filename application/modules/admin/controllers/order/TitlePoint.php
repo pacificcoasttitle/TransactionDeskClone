@@ -234,7 +234,7 @@ class TitlePoint extends MX_Controller {
                     /*$nestedData[] = $value['customer_number'];*/
                     $nestedData[] = $value['file_number'];
                     $nestedData[] = $order_details['full_address'];
-                    $nestedData[] = $order_details['grant_deed_type'];
+                    $nestedData[] = $value['grant_deed_type'];
                     $nestedData[] = $value['grant_deed_message'];
                     $nestedData[] = date("m-d-Y H:i:s", strtotime($value['created_at']));
                     $data[] = $nestedData;

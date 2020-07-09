@@ -99,7 +99,7 @@ class TitlePoint_model extends CI_Model
             {
                 $this->db->limit($limit, $offset);
             }
-            $this->db->order_by('id', 'asc');
+            $this->db->order_by('id', 'desc');
             /*if(array_key_exists("status", $params)){
                 foreach($params['status'] as $key => $val){
                     $this->db->where($key."!=", $val);
@@ -139,7 +139,7 @@ class TitlePoint_model extends CI_Model
             {
                 $this->db->limit($limit, $offset);
             }
-            $this->db->order_by('id', 'asc');
+            $this->db->order_by('id', 'desc');
             $query = $this->db->get($this->table);
             
             if ($query->num_rows() > 0) 
@@ -210,6 +210,7 @@ class TitlePoint_model extends CI_Model
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left');
         $this->db->where('file_id', $fileId);
+       // $this->db->order_by('order_details.id', 'desc');
          
         
         $query = $this->db->get();
@@ -256,7 +257,7 @@ class TitlePoint_model extends CI_Model
             {
                 $this->db->limit($limit, $offset);
             }
-            $this->db->order_by('id', 'asc');
+            $this->db->order_by('id', 'desc');
             
             $this->db->where('file_id IS NOT NULL');
             $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
@@ -284,7 +285,7 @@ class TitlePoint_model extends CI_Model
             {
                 $this->db->limit($limit, $offset);
             }
-            $this->db->order_by('id', 'asc');
+            $this->db->order_by('id', 'dsc');
             $query = $this->db->get($this->table);
             
             if ($query->num_rows() > 0) 
@@ -339,7 +340,7 @@ class TitlePoint_model extends CI_Model
             {
                 $this->db->limit($limit, $offset);
             }
-            $this->db->order_by('id', 'asc');
+            $this->db->order_by('id', 'desc');
             
             $this->db->where('file_id IS NOT NULL');
             $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
@@ -367,7 +368,7 @@ class TitlePoint_model extends CI_Model
             {
                 $this->db->limit($limit, $offset);
             }
-            $this->db->order_by('id', 'asc');
+            $this->db->order_by('id', 'desc');
             $query = $this->db->get($this->table);
             
             if ($query->num_rows() > 0) 
