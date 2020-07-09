@@ -28,8 +28,18 @@ class Home extends MX_Controller {
     	{
     		$this->form_validation->set_rules('OpenName', 'First Name', 'required',array('required'=> 'Enter your first name'));
     		$this->form_validation->set_rules('OpenLastName', 'Last Name', 'required',array('required'=> 'Enter your last name'));
-    		$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
-    		
+			$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
+			
+			$config['upload_path'] = './uploads/curative/';
+			$config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';   
+			$config['max_size'] = 20000;
+			$this->load->library('upload', $config);
+
+			if (! $this->upload->do_upload('upload_curative')) {
+				$response = array('status'=>'error', 'message'=> $this->upload->display_errors());
+				echo json_encode($response); exit;
+			}
+			
     		$parties_email = array();
     		if($this->form_validation->run($this) == true)
     		{
@@ -137,7 +147,6 @@ class Home extends MX_Controller {
 					$listing_agent_details = array('name'=>$ListingAgentName, 'email'=>$ListingAgentEmailAddress, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
 	        	}
 	        	
-
 				$EscrowLenderId = '';
 				$lender_details = $escrow_details = array();
 				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
@@ -491,6 +500,10 @@ class Home extends MX_Controller {
 							$deedfilename = $orderNumber.'.pdf';
 							$taxfilename = $orderNumber.'.pdf';
 							$orderDetails = $this->order->get_order_details($file_id);
+
+							if (!empty($_FILES['upload_curative']['name'])) {
+								$this->uploadCurativeDocsToResware($orderDetails); 
+							}
 
 							if (file_exists(FCPATH.'uploads/legal-vesting/'.$lvfilename)) {
 								$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
@@ -1039,4 +1052,70 @@ class Home extends MX_Controller {
 		$res = json_decode($result);
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 	}
+
+	public function checkDuplicateOrder()
+    {
+		$apn = $this->input->post('apn');
+		$result = $this->order->checkDuplicateOrder($apn);
+		if ($result) {
+			echo json_encode(array('success' => true)); 
+		} else {
+			echo json_encode(array('success' => false)); 
+		} 
+	}
+
+	public function uploadCurativeDocsToResware($orderDetails)
+	{
+		$this->load->model('order/document');
+		$this->load->model('order/apiLogs');
+		$this->load->library('order/resware');
+		$userdata = $this->session->userdata('user');
+		$data = $this->upload->data();
+		$contents = file_get_contents($data['full_path']);
+		$binaryData   = base64_encode($contents); 
+		$document_name = date('YmdHis')."_".$data['file_name'];
+		rename(FCPATH."/uploads/curative/".$data['file_name'], FCPATH."/uploads/documents/".$document_name);
+		
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $data['file_name'],
+			'document_type_id' => 1033,
+			'document_size' => ($data['file_size'] * 1000),
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Curative Documents',
+			'is_sync' => 1,
+			'is_prelim_document' => 0
+		);
+		
+		$documentId = $this->document->insert($documentData);
+		
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		
+		$documentApiData = array(			
+			'DocumentName' => $data['file_name'],
+			'DocumentType' => array(
+				'DocumentTypeID' => 1033,
+			),
+			'Description' => 'Curative Documents',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+	}
+	
 }

@@ -437,6 +437,7 @@
 												</label>
 											</div><!-- end .option-group section -->
 										</div>
+
 										<?php
                                                     }
                                                 ?>
@@ -453,6 +454,7 @@
 												</label>
 											</div><!-- end .option-group section -->
 										</div>
+
 										<?php
                                                     }
                                                 ?>
@@ -652,6 +654,37 @@
 									</div>
 									<!-- end escrow details -->
 
+									<?php if($is_escrow == 0) { ?>
+										<div class="spacer-b20 spacer-t30">
+											<div class="tagline"><span> Upload Curative Document</span></div>
+										</div>
+										<div class="frm-row">
+											<div class="section colm colm4" id="upload_1003">
+												<div class="option-group field">
+													<label class="button btn-primary search-file-btn spacer-t20">
+														<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload 1003</span>
+													</label>
+												</div>
+											</div>
+										</div>
+									<?php } ?>
+
+									<?php if($is_escrow == 1) { ?>
+										<div class="spacer-b20 spacer-t30">
+											<div class="tagline"><span> Upload Curative Document</span></div>
+										</div>
+										<div class="frm-row">
+											<div class="section colm colm4" id="upload_rpa">
+												<div class="option-group field">
+													<label class="button btn-primary search-file-btn spacer-t20">
+														<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload RPA</span>
+													</label>
+													
+												</div><!-- end .option-group section -->
+											</div>
+										</div>
+									<?php } ?>
+
 									<div class="result spacer-b10"></div><!-- end .result  section -->
 
 									<!-- <div class="section progress-section">
@@ -837,6 +870,12 @@
 		});
 
 		getProductTypes();
+
+		$('.search-file-btn').children("input").bind('change', function() {
+			var fileName = '';
+			fileName = $(this).val().split("\\").slice(-1)[0];
+			$(this).parent().parent().children("span").html(fileName);
+		});
 	});
 	function getProductTypes()
 	{

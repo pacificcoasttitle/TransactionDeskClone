@@ -831,6 +831,22 @@ function parse187()
         localStorage.setItem('state',$('#property-state').val());
         localStorage.setItem('county',county);
     }*/
+    $.ajax({
+        url: base_url+'home/checkDuplicateOrder',
+        type: "POST",
+        data: {
+             customer_no: customer_no
+        },
+        async: false,
+        success: function (data) {
+            var res = jQuery.parseJSON(data);
+            if (res.success === false) {
+                $('.pma-error').text('Order is already exist for this address.');
+                $('.pma-error').show();
+                return false;
+            }
+        }
+    });
     createService4(fipCode,address,city,unit_no,apn);
     createService3(apn,state,county);
 }
