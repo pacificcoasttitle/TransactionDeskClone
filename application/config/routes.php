@@ -154,6 +154,7 @@ $route['create-cpl-for-fnf/:num'] = 'frontend/order/dashboard/createCPlForFnf';
 $route['update-password'] = 'frontend/order/cron/updatePassword';
 $route['company-information'] = 'frontend/order/cron/getCompanyInformation';
 $route['generate-tax-doc'] = 'frontend/order/TitlePoint/generateTaxDoc';
+$route['home/checkDuplicateOrder'] = 'frontend/order/home/checkDuplicateOrder';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
