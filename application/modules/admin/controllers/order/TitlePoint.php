@@ -51,8 +51,7 @@ class TitlePoint extends MX_Controller {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
             $logs_list = $this->titlePoint_model->getLvLogs($params);          
         }
-        $data = array(); 
-        
+        $data = array();
         if(isset($logs_list['data']) && !empty($logs_list['data']))
         {
             foreach ($logs_list['data'] as $key => $value) 
@@ -67,6 +66,7 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $value['file_number'];
                     $nestedData[] = $order_details['full_address'];
                     $nestedData[] = $value['cs4_message'];
+                    $nestedData[] = date("m-d-Y H:i:s", strtotime($value['created_at']));
                     $data[] = $nestedData;
                 }
             }
@@ -170,6 +170,7 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $order_details['full_address'];
                     $nestedData[] = $order_details['apn'];
                     $nestedData[] = $value['cs3_message'];
+                    $nestedData[] = date("m-d-Y H:i:s", strtotime($value['created_at']));
                     $data[] = $nestedData;
                 }
             }
@@ -235,6 +236,7 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $order_details['full_address'];
                     $nestedData[] = $order_details['grant_deed_type'];
                     $nestedData[] = $value['grant_deed_message'];
+                    $nestedData[] = date("m-d-Y H:i:s", strtotime($value['created_at']));
                     $data[] = $nestedData;
                 }
             }

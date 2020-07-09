@@ -306,8 +306,8 @@ class TitlePoint_model extends CI_Model
         $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
         
         $this->db->from($this->table);
+        
         $total_records =  $this->db->count_all_results();
-
 
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';

@@ -1340,13 +1340,16 @@ $(document).ready(function () {
                     "width": "15%"
                 },
                 {
-                    "width": "30%"
+                    "width": "25%"
                 },
                 {
                     "width": "15%"
                 },
                 {
-                    "width": "40%"
+                    "width": "30%"
+                },
+                {
+                    "width": "15%"
                 },
             ],
             "language": {
@@ -1473,13 +1476,16 @@ $(document).ready(function () {
                     "width": "15%"
                 },
                 {
-                    "width": "30%"
+                    "width": "25%"
                 },
                 {
                     "width": "15%"
                 },
                 {
-                    "width": "40%"
+                    "width": "30%"
+                },
+                {
+                    "width": "15%"
                 },
             ],
             "language": {

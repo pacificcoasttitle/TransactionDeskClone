@@ -26,6 +26,7 @@
                             <th>Order No</th>
                             <th>Property Address</th>
                             <th>Message</th>
+                            <th>Created at</th>
                             <!-- <th>Customer</th> -->
                         </tr>
                     </thead>                

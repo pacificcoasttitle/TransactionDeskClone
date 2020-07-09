@@ -27,6 +27,7 @@
                             <th>Property Address</th>
                             <th>APN</th>
                             <th>Message</th>
+                            <th>Created at</th>
                             <!-- <th>Customer</th> -->
                         </tr>
                     </thead>                

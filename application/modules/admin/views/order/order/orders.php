@@ -34,6 +34,7 @@
                             <th>Product Type</th>
                             <th>Sales Rep</th> 
                             <th>Created By</th>           
+                            <th>Created At</th>           
                             <th>Action</th>
                         </tr>
                     </thead>                
