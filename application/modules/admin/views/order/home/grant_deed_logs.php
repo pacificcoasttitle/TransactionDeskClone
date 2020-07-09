@@ -27,6 +27,7 @@
                             <th>Property Address</th>
                             <th>Document Type</th>
                             <th>Message</th>
+                            <th>Created at</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>

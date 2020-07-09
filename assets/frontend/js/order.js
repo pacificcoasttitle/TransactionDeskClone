@@ -139,13 +139,7 @@ function getRequestSummaries(requestId,methodId)
             } 
             else if (responseStatus == 'Success') 
             {
-                $resultId = $(response).find("ResultThumbNail:first").find("ID").text();
-                serviceId = '';
-                if(methodId == 4)
-                {
-                    serviceId = $(response).find("RequestSummaries:first").find("RequestSummary:first").find("Order:first").find("Services:first").find("Service:first").find("ID:first").text();
-                    imageCreateRequest(serviceId,methodId);
-                }                
+                $resultId = $(response).find("ResultThumbNail:first").find("ID").text();                
                 getResultById($resultId,methodId);
             }
         })
@@ -311,7 +305,7 @@ function getResultById(resultId,methodId)
         });
 }
 
-function imageCreateRequest(serviceId,methodId)
+function imageCreateRequest(serviceId,methodId,fileNumber)
 {
     if(methodId == 4)
     {
@@ -350,7 +344,7 @@ function imageCreateRequest(serviceId,methodId)
             else if (responseStatus == 'Success') 
             {
                 $requestId = $(response).find('RequestID').text();
-                getRequestStatus($requestId,methodId);
+                getRequestStatus($requestId,methodId,fileNumber);
             }
         })
         .fail(function(err) {
@@ -372,7 +366,7 @@ function imageCreateRequest(serviceId,methodId)
         });
 }
 
-function getRequestStatus(requestId,methodId)
+function getRequestStatus(requestId,methodId,fileNumber)
 {
     $.ajax({
         url: base_url+'getRequestStatus',
@@ -408,7 +402,7 @@ function getRequestStatus(requestId,methodId)
             else if (responseStatus == 'Success') 
             {
                 $resultId = $(response).find("RequestId:first").text();
-                generateImage($resultId,methodId);
+                generateImage($resultId,methodId,fileNumber);
             }
         })
         .fail(function(err) {
@@ -430,7 +424,7 @@ function getRequestStatus(requestId,methodId)
         });
 }
 
-function generateImage(requestId,methodId,fileNumber='')
+function generateImage(requestId,methodId,fileNumber)
 {
     $.ajax({
         url: base_url+'generateImage',
@@ -485,7 +479,7 @@ function generateImage(requestId,methodId,fileNumber='')
                 }
                 else if(methodId == 4)
                 {
-                    /*if (navigator.msSaveBlob)
+                    if (navigator.msSaveBlob)
                     {
                         var filename = "L&V.pdf";                            
                         download(filename, base64_data);
@@ -493,7 +487,7 @@ function generateImage(requestId,methodId,fileNumber='')
                     else
                     {
                         download('L&V.pdf', base64_data);
-                    }*/
+                    }
                     $('#grantDeedInfoFile').next('.loader').hide();
                 }
             }
