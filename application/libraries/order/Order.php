@@ -373,5 +373,19 @@ class Order
         }
         return str_shuffle($password);
     }
+
+    public function checkDuplicateOrder($apn)
+    {
+        $this->CI->db->select('*')
+            ->from('property_details');
+        
+        $this->CI->db->where('apn', $apn);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return true;
+        } else {
+            return false;
+        }     
+    }
        
 }

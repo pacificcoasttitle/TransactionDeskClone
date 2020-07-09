@@ -668,6 +668,38 @@
 									</div>
 									<!-- end escrow details -->
 
+									<div id="upload_lender" style="display: none;">
+										<div class="spacer-b20 spacer-t30">
+											<div class="tagline"><span> Upload Curative Document</span></div>
+										</div>
+										<div class="frm-row">
+											<div class="section colm colm4" id="upload_1003">
+												<div class="option-group field">
+													<label class="button btn-primary search-file-btn spacer-t20">
+														<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload 1003</span>
+													</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div id="upload_escrow" style="display: none;">
+										<div class="spacer-b20 spacer-t30">
+											<div class="tagline"><span> Upload Curative Document</span></div>
+										</div>
+										<div class="frm-row">
+											<div class="section colm colm4" id="upload_rpa">
+												<div class="option-group field">
+													<label class="button btn-primary search-file-btn spacer-t20">
+														<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload RPA</span>
+													</label>
+													
+												</div><!-- end .option-group section -->
+											</div>
+										</div>
+									</div>
+									
+
 									<div class="result spacer-b10"></div><!-- end .result  section -->
 
 									<!-- <div class="section progress-section">
@@ -891,12 +923,16 @@
 	            if(is_escrow == 1)
 	            {
 	            	$('#add-lender-section').show();
-	            	$('#add-escrow-section').hide();
+					$('#add-escrow-section').hide();
+					$('#upload_lender').hide();
+					$('#upload_escrow').show();
 	            }
 	            else
 	            {
 	            	$('#add-lender-section').hide();
-	            	$('#add-escrow-section').show();
+					$('#add-escrow-section').show();
+					$('#upload_lender').show();
+					$('#upload_escrow').hide();
 	            }
 	            getProductTypes();
 	        },
