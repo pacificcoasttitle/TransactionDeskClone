@@ -835,7 +835,7 @@ function parse187()
         url: base_url+'home/checkDuplicateOrder',
         type: "POST",
         data: {
-             customer_no: customer_no
+            apn: apn
         },
         async: false,
         success: function (data) {
