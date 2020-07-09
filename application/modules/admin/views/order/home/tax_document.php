@@ -24,6 +24,7 @@
                             <th>File Number</th>
                             <th>Document Name</th>
                             <th>Sent To Resware</th>
+                            <th>Created At</th>
                             <th>Action</th>
                         </tr>
                     </thead>                

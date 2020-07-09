@@ -575,6 +575,7 @@ class Home extends MX_Controller {
                 } else {
                     $nestedData[] = 'No';
                 }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/documents/$documentName' download><i class='fas fa-fw fa-download'></i></a>
                     <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/documents/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
@@ -954,6 +955,7 @@ class Home extends MX_Controller {
                 } else {
                     $nestedData[] = 'No';
                 }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/grant-deed/$documentName' download><i class='fas fa-fw fa-download'></i></a>
                     <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/grant-deed/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
@@ -1000,6 +1002,7 @@ class Home extends MX_Controller {
                 } else {
                     $nestedData[] = 'No';
                 }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/legal-vesting/$documentName' download><i class='fas fa-fw fa-download'></i></a>
                     <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/legal-vesting/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
@@ -1162,6 +1165,7 @@ class Home extends MX_Controller {
                 } else {
                     $nestedData[] = 'No';
                 }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/tax/$documentName' download><i class='fas fa-fw fa-download'></i></a>
                     <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/tax/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
