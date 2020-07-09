@@ -139,7 +139,13 @@ function getRequestSummaries(requestId,methodId)
             } 
             else if (responseStatus == 'Success') 
             {
-                $resultId = $(response).find("ResultThumbNail:first").find("ID").text();                
+                $resultId = $(response).find("ResultThumbNail:first").find("ID").text();
+                serviceId = '';
+                if(methodId == 4)
+                {
+                    serviceId = $(response).find("RequestSummaries:first").find("RequestSummary:first").find("Order:first").find("Services:first").find("Service:first").find("ID:first").text();
+                    imageCreateRequest(serviceId,methodId);
+                }                
                 getResultById($resultId,methodId);
             }
         })
@@ -305,7 +311,7 @@ function getResultById(resultId,methodId)
         });
 }
 
-function imageCreateRequest(serviceId,methodId,fileNumber)
+function imageCreateRequest(serviceId,methodId)
 {
     if(methodId == 4)
     {
@@ -344,7 +350,7 @@ function imageCreateRequest(serviceId,methodId,fileNumber)
             else if (responseStatus == 'Success') 
             {
                 $requestId = $(response).find('RequestID').text();
-                getRequestStatus($requestId,methodId,fileNumber);
+                getRequestStatus($requestId,methodId);
             }
         })
         .fail(function(err) {
@@ -366,7 +372,7 @@ function imageCreateRequest(serviceId,methodId,fileNumber)
         });
 }
 
-function getRequestStatus(requestId,methodId,fileNumber)
+function getRequestStatus(requestId,methodId)
 {
     $.ajax({
         url: base_url+'getRequestStatus',
@@ -402,7 +408,7 @@ function getRequestStatus(requestId,methodId,fileNumber)
             else if (responseStatus == 'Success') 
             {
                 $resultId = $(response).find("RequestId:first").text();
-                generateImage($resultId,methodId,fileNumber);
+                generateImage($resultId,methodId);
             }
         })
         .fail(function(err) {
@@ -424,7 +430,7 @@ function getRequestStatus(requestId,methodId,fileNumber)
         });
 }
 
-function generateImage(requestId,methodId,fileNumber)
+function generateImage(requestId,methodId,fileNumber='')
 {
     $.ajax({
         url: base_url+'generateImage',

@@ -443,7 +443,7 @@ class TitlePoint extends MX_Controller {
 		        'sortOrder'=>  '',
 		        'fileType'=>  'pdf',
 		    );
-			$requestUrl= TP_IMAGE_ENDPOINT;
+			$requestUrl= env('TP_IMAGE_ENDPOINT');
 		}
 
 		$request = $requestUrl.http_build_query($requestParams);
@@ -465,12 +465,11 @@ class TitlePoint extends MX_Controller {
 		$requestId = isset($_POST['requestId']) && !empty($_POST['requestId']) ? $_POST['requestId'] : '';
 
 		$requestParams = array(
-		                    'username' => env('TP_USERNAME'),
-		                    'password' => env('TP_PASSWORD'),                    
-		                    'requestId'=>  $requestId
-		                );
-
-		$request = TP_IMAGE_REQUEST_STATUS.http_build_query($requestParams);
+                            'username' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),                    
+                            'requestId'=>  $requestId
+                        );
+        $request = env('TP_IMAGE_REQUEST_STATUS').http_build_query($requestParams);
 
 		$opts = array(
 			"ssl"=>array(
@@ -495,7 +494,7 @@ class TitlePoint extends MX_Controller {
 		                    'requestId'=>  $requestId
 		                );
 
-		$request = TP_GENERATE_IMAGE.http_build_query($requestParams);
+		$request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
 
 		$opts = array(
 			"ssl"=>array(
@@ -514,7 +513,11 @@ class TitlePoint extends MX_Controller {
 		{
 			$base64_data = isset($result['Data']) && !empty($result['Data']) ? $result['Data'] : '';
 			$bin = base64_decode($base64_data, true);
-			
+
+			if ($this->session->has_userdata('tp_api_id')) 
+			{
+				$fileNumber = $this->session->userdata('tp_api_id');
+			}
 			if($methodId == 4)
 			{
 				if (!is_dir('uploads/legal-vesting')) {
@@ -531,7 +534,6 @@ class TitlePoint extends MX_Controller {
 				$pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
 				file_put_contents($pdfFilePath, $bin);
 			}
-
 		}
 		echo trim($file);
 	}
