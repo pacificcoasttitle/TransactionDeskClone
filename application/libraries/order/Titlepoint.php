@@ -306,9 +306,9 @@ class Titlepoint
                 echo "<pre>test:"; print_r($requestId);
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $response = $this->getImageRequestStatus($requestId,4);
-                    echo "<pre>tax: "; print_r($response);
-                    $imgResult = json_decode($response, TRUE);
+                    $imgresponse = $this->getImageRequestStatus($requestId,4);
+                    echo "<pre>tax: "; print_r($imgresponse);
+                    $imgResult = json_decode($imgresponse, TRUE);
                     echo "<pre>tax:"; print_r($imgResult); exit;
                     $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
                     $status = isset($imgResult['Status']) && !empty($imgResult['Status']) ? $imgResult['Status'] : '';
