@@ -218,9 +218,11 @@ class Order
     public function is_user()
     {
         $userdata = $this->CI->session->userdata('user');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 0) {
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 0 && $userdata['is_special_lender'] == 1 ) {
+            redirect(base_url().'special-lender-dashboard');
+        } else if (!empty($userdata['id']) && $userdata['is_admin'] == 0 && $userdata['is_special_lender'] == 0 ) {
             
-        } else {
+        }  else {
             redirect(base_url().'order/login');
         }
     }
@@ -386,6 +388,129 @@ class Order
         } else {
             return false;
         }     
+    }
+
+    public function get_special_lenders_orders($params)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like("property_details.full_address", $keyword)
+                    ->or_like('order_details.file_number',$keyword)
+                    ->group_end();
+            }
+            $this->CI->db->select('order_details.file_number, 
+                order_details.file_id,
+                property_details.full_address,
+                order_details.id, 
+                customer_basic_details.company_name, 
+                pct_order_sales_rep.name, 
+                order_details.created_at, 
+                property_details.primary_owner')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_order_sales_rep', 'pct_order_sales_rep.id = transaction_details.sales_representative', 'left');
+            $this->CI->db->where('property_details.escrow_lender_id', $userdata['id']);
+            
+            $total_records =  $this->CI->db->count_all_results();
+            
+            if(isset($keyword) && !empty($keyword))
+            {
+                $this->CI->db->group_start()
+                    ->like("property_details.full_address", $keyword)
+                    ->or_like('order_details.file_number',$keyword)
+                    ->group_end();
+            }
+            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+            $orders_lists = array();
+           
+            $this->CI->db->select('order_details.file_number, 
+                order_details.file_id,
+                property_details.full_address,
+                order_details.id, 
+                customer_basic_details.company_name, 
+                pct_order_sales_rep.name, 
+                order_details.created_at, 
+                property_details.primary_owner')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_order_sales_rep', 'pct_order_sales_rep.id = transaction_details.sales_representative', 'left');
+            $this->CI->db->where('property_details.escrow_lender_id', $userdata['id']);
+            $this->CI->db->order_by("order_details.id", "desc");
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+
+            if ($query->num_rows() > 0)  {
+                $orders_lists = $query->result_array();
+            }
+        }
+        else
+        {
+            $this->CI->db->select('order_details.file_number, 
+                order_details.file_id,
+                property_details.full_address,
+                order_details.id, 
+                customer_basic_details.company_name, 
+                pct_order_sales_rep.name, 
+                order_details.created_at, 
+                property_details.primary_owner')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_order_sales_rep', 'pct_order_sales_rep.id = transaction_details.sales_representative', 'left');
+            $this->CI->db->where('property_details.escrow_lender_id', $userdata['id']);
+       
+            $total_records =  $this->CI->db->count_all_results();
+           
+            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+            $orders_lists = array();
+           
+            $this->CI->db->select('order_details.file_number, 
+                order_details.file_id,
+                property_details.full_address,
+                order_details.id, 
+                customer_basic_details.company_name, 
+                pct_order_sales_rep.name, 
+                order_details.created_at, 
+                property_details.primary_owner')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_order_sales_rep', 'pct_order_sales_rep.id = transaction_details.sales_representative', 'left');
+            $this->CI->db->where('property_details.escrow_lender_id', $userdata['id']);
+            $this->CI->db->order_by("order_details.id", "desc");
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+
+            if ($query->num_rows() > 0)  {
+                $orders_lists = $query->result_array();
+            } 
+        }
+        
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $total_records,
+            'data' => $orders_lists
+        );
     }
        
 }

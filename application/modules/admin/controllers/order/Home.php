@@ -506,12 +506,16 @@ class Home extends MX_Controller {
                 $nestedData[] = $value['first_name'];
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
-                $nestedData[] = $value['telephone_no'];
+                // $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['company_name'];
                 $nestedData[] = $value['street_address'];
                 $nestedData[] = $value['city'];
                 $nestedData[] = $value['zip_code'];
-                $nestedData[] = $value['lender_type'];
+                $specialSel = $value['is_special_lender'] == 1 ? 'selected' : '';
+                $normalSel = $value['is_special_lender'] == 0 ? 'selected' : '';
+                $id = $value['id'];
+                $nestedData[] = "<select onchange='changeLenderUserType($id, this.value);' id='user_type' name='user_type'><option $normalSel value='0'>Normal</option><option $specialSel value='1'>Special</option></select>";
+                // $nestedData[] = $value['lender_type'];
                          
                 
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
@@ -1235,4 +1239,20 @@ class Home extends MX_Controller {
         $json_data['data'] = $data;
         echo json_encode($json_data);
     }
+
+    public function changeLenderUserType()
+    {
+        $selectValue = $this->input->post('selectValue');
+        $user_id = $this->input->post('user_id');
+		$customerData = array('is_special_lender' => $selectValue);
+        $condition = array('id' => $user_id);
+        $update = $this->home_model->update($customerData, $condition);
+
+		if ($update) {
+			echo json_encode(array('success' => true)); 
+		} else {
+			echo json_encode(array('success' => false)); 
+		} 
+    }
+
 }

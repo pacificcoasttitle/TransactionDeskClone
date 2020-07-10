@@ -84,6 +84,7 @@ $route['glendale'] = 'frontend/contact/glendale';
 /* Route for PCT-Order Frontside*/
 $route['order'] = 'frontend/order/home/index';
 $route['dashboard'] = 'frontend/order/dashboard/index';
+$route['special-dashboard'] = 'frontend/order/dashboard/index';
 $route['order/login'] = 'frontend/order/login/index';
 $route['do_login'] = 'frontend/order/login/do_login';
 $route['logout'] = 'frontend/order/home/logout';
@@ -155,6 +156,9 @@ $route['update-password'] = 'frontend/order/cron/updatePassword';
 $route['company-information'] = 'frontend/order/cron/getCompanyInformation';
 $route['generate-tax-doc'] = 'frontend/order/TitlePoint/generateTaxDoc';
 $route['home/checkDuplicateOrder'] = 'frontend/order/home/checkDuplicateOrder';
+$route['special-lender-dashboard'] = 'frontend/order/SpecialDashboard/index';
+$route['get-special-lenders-orders'] = 'frontend/order/SpecialDashboard/get_special_lenders_orders';
+
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
