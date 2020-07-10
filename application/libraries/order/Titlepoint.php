@@ -299,7 +299,7 @@ class Titlepoint
             $result = json_decode($response,TRUE);
             $returnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
             $returnStatus = strtolower($returnStatus);
-            
+            echo "<pre>"; print_r($result); exit;
             if($returnStatus == 'success')
             {
                 $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
