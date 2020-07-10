@@ -299,8 +299,7 @@ class Titlepoint
             $result = json_decode($response,TRUE);
             $returnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
             $returnStatus = strtolower($returnStatus);
-            echo "<pre>"; print_r($returnStatus);
-            echo "<pre>"; print_r($result); exit;
+            
             if($returnStatus == 'success')
             {
                 $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
@@ -318,7 +317,7 @@ class Titlepoint
                     if($imgReturnStatus == 'success' && $status == 'success')
                     {
                         $generateImgResponse = $this->generateImage($requestId,4);
-
+echo "<pre>"; print_r($generateImgResponse); exit;
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
                         $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
                         $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
