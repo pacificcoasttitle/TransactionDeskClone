@@ -397,8 +397,10 @@ class Order
             $keyword = $params['searchvalue'];
 
             if (isset($keyword) && !empty($keyword)) {
-                $this->CI->db->like('property_details.full_address', $keyword);            
-                $this->CI->db->or_like('order_details.file_number', $keyword);
+                $this->CI->db->group_start()
+                    ->like("property_details.full_address", $keyword)
+                    ->or_like('order_details.file_number',$keyword)
+                    ->group_end();
             }
             $this->CI->db->select('order_details.file_number, 
                 order_details.file_id,
@@ -419,8 +421,10 @@ class Order
             
             if(isset($keyword) && !empty($keyword))
             {
-                $this->CI->db->like('property_details.full_address', $keyword);            
-                $this->CI->db->or_like('order_details.file_number', $keyword);
+                $this->CI->db->group_start()
+                    ->like("property_details.full_address", $keyword)
+                    ->or_like('order_details.file_number',$keyword)
+                    ->group_end();
             }
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
