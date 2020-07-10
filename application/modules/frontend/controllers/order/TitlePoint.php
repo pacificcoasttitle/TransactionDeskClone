@@ -308,8 +308,9 @@ class TitlePoint extends MX_Controller {
 	            if (count($legal_vesting_info) == count($legal_vesting_info, COUNT_RECURSIVE))
 	            {
 	            	$docType = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType'] : '';
+	            	$docType = strtolower($docType);
 
-	            	if($docType == 'GRANT DEED' || $docType == 'Intrafamily Transfer & Dissolution' || $docType == 'QUIT CLAIM DEED')
+	            	if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed')
 	            	{
 	            		$instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber'] : '';
 	            		$recordedDate = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate'] : '';
@@ -321,8 +322,9 @@ class TitlePoint extends MX_Controller {
 	            	foreach ($legal_vesting_info as $key => $value) 
 	            	{
 	            		$docType = isset($value['DocType']) && !empty($value['DocType']) ? $value['DocType'] : '';
-
-	            		if($docType == 'GRANT DEED' || $docType == 'Intrafamily Transfer & Dissolution' || $docType == 'QUIT CLAIM DEED')
+	            		$docType = strtolower($docType);
+	            		
+	            		if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed')
 	            		{
 	            			$instrumentNumber = isset($value['InstrumentNumber']) && !empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
 	            			$recordedDate = isset($value['RecordedDate']) && !empty($value['RecordedDate']) ? $value['RecordedDate'] : '';
@@ -613,22 +615,35 @@ class TitlePoint extends MX_Controller {
 		$result = json_decode($response,TRUE);
 		
 		$responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
-		/*$responseStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';*/
-		if(strpos($responseStatus, 'Ok'))
+		$docStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
+		$docStatus = strtolower($docStatus);
+
+        if(isset($docStatus) && !empty($docStatus) && $docStatus == 'ok')
 		{
 			$base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && !empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
 
-			$bin = base64_decode($base64_data, true);		
+			if(isset($base64_data) && !empty($base64_data))
+			{
+				$bin = base64_decode($base64_data, true);		
 			
-			if (!is_dir('uploads/grant-deed')) {
-			    mkdir('./uploads/grant-deed', 0777, TRUE);
+				if (!is_dir('uploads/grant-deed')) {
+				    mkdir('./uploads/grant-deed', 0777, TRUE);
+				}
+				$pdfFilePath = './uploads/grant-deed/'.$fileNumber.'.pdf';
+				file_put_contents($pdfFilePath, $bin);
 			}
-			$pdfFilePath = './uploads/grant-deed/'.$fileNumber.'.pdf';
-			file_put_contents($pdfFilePath, $bin);
+			$tpData = array(
+                'grant_deed_status' => $docStatus,
+                'grant_deed_message' => 'Success'
+            );
 		}
-		$tpData = 	array(
-						'grant_deed_message' => $responseStatus
-					);
+		else
+		{
+			$tpData = array(
+                'grant_deed_status' => 'Failed',
+                'grant_deed_message' => $docStatus
+            );
+		}
 
        	if ($this->session->has_userdata('tp_api_id')) 
 		{
