@@ -21,7 +21,8 @@ class SpecialDashboard extends MX_Controller {
 		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
 		$is_master = isset($userdata['is_master']) && !empty($userdata['is_master']) ? $userdata['is_master'] : '';
 		$data['name'] = $name;
-		$data['is_master'] = $is_master;
+        $data['is_master'] = $is_master;
+        $data['is_special_lender'] = $userdata['is_special_lender'] == 1 ? 1 : 0;
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
@@ -66,5 +67,13 @@ class SpecialDashboard extends MX_Controller {
 		$json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
 		$json_data['data'] = $data;
 		echo json_encode($json_data);
+    }
+    
+    function logout()
+	{
+		$this->session->sess_destroy();
+		$this->session->unset_userdata('user');
+		redirect(base_url().'order');
 	}
+
 }
