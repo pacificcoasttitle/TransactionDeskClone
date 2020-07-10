@@ -1178,4 +1178,61 @@ class Home extends MX_Controller {
         $json_data['data'] = $data;
         echo json_encode($json_data);
     }
+
+    public function curative_document()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Curative Documents';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/curative_document', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_curative_document_list()
+    {
+        $params = array();
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $curative_document_lists = $this->home_model->get_curative_document_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $curative_document_lists = $this->home_model->get_curative_document_list($params);            
+        }
+
+        $data = array(); 
+        
+        if(isset($curative_document_lists['data']) && !empty($curative_document_lists['data'])) {
+            foreach ($curative_document_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['document_name'];
+                $documentName = $value['document_name'];
+                if ($value['api_document_id'] > 0) {
+                    $nestedData[] = 'Yes';
+                } else {
+                    $nestedData[] = 'No';
+                }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/curative/$documentName' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/curative/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
+                }
+                $data[] = $nestedData;            
+            }
+        }
+        $json_data['recordsTotal'] = intval( $curative_document_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $curative_document_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
 }
