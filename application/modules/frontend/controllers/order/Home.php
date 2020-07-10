@@ -451,10 +451,12 @@ class Home extends MX_Controller {
 
 								$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 
-								$serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
-								$this->titlepoint->generateImg($serviceId,$orderNumber);
 								$tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
 								$this->titlepoint->generateTaxDoc($tax_serviceId,$orderNumber);
+								
+								$serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
+								$this->titlepoint->generateImg($serviceId,$orderNumber);
+								
 								$instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && !empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
 
 								$recordedDate = isset($titlePointDetails['cs4_recorded_date']) && !empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
