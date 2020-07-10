@@ -536,6 +536,10 @@ class Titlepoint
                         $this->CI->titlePointData->update($tpData,$condition);  
                     }
                 }
+                else
+                {
+                    return $response;
+                }
             }
             else if($status == 'processing') 
             {           
