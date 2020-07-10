@@ -158,6 +158,8 @@ $route['generate-tax-doc'] = 'frontend/order/TitlePoint/generateTaxDoc';
 $route['home/checkDuplicateOrder'] = 'frontend/order/home/checkDuplicateOrder';
 $route['special-lender-dashboard'] = 'frontend/order/SpecialDashboard/index';
 $route['get-special-lenders-orders'] = 'frontend/order/SpecialDashboard/get_special_lenders_orders';
+$route['special-dashboard/logout'] = 'frontend/order/SpecialDashboard/logout';
+
 
 
 /* Route for PCT-Order backend*/
