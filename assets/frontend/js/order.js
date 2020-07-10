@@ -143,7 +143,11 @@ function getRequestSummaries(requestId,methodId)
                 if($resultId)
                 {
                     getResultById($resultId,methodId);
-                }                
+                }
+                else
+                {
+                    getRequestSummaries($resultId,methodId);
+                }              
                 
             }
         })
