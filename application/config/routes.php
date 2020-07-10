@@ -193,6 +193,7 @@ $route['order/admin/add-new-master-user'] = 'admin/order/home/addNewMasterUser';
 $route['order/admin/tax-log'] = 'admin/order/TitlePoint/taxLog';
 $route['order/admin/tax-documents'] = 'admin/order/home/tax_document';
 $route['order/admin/grant-deed-log'] = 'admin/order/TitlePoint/grantDeedLog';
+$route['order/admin/curative-documents'] = 'admin/order/home/curative_document';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  

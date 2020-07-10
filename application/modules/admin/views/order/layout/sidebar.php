@@ -51,6 +51,7 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/grant-deed-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/grant-deed-documents'; ?>">Grant Deed</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/lv-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lv-documents'; ?>">Legal & Vesting</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/tax-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-documents'; ?>">Tax</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/curative-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/curative-documents'; ?>">Curative</a>
         </div>
 	</li>
 
