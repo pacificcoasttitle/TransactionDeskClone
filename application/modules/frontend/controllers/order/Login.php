@@ -38,11 +38,12 @@ class Login extends MX_Controller {
                 if (!empty($user)) {
                     $session_data = array(
                         "id" => isset($user['id']) && !empty($user['id']) ? $user['id'] : '',
-                        "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name'] : '',
+                        "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name'].$user['last_name'] : '',
                         "email" => isset($user['email_address']) && !empty($user['email_address']) ? $user['email_address'] : '',
                         "random_password" => isset($user['random_password']) && !empty($user['random_password']) ? $user['random_password'] : '',
                         "is_admin" => 0,
-                        "is_master" =>  $user['is_master']
+                        "is_master" =>  $user['is_master'],
+                        "is_special_lender" =>  isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                     );
                     $this->session->set_userdata('user', $session_data);
                     $response = array('status'=>'success', 'message'=> '');
