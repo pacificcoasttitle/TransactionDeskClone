@@ -446,16 +446,16 @@ class Titlepoint
             }
             else if($status == 'processing') 
             {           
-                if($this->count < 3)
-                {
-                    $this->count = $this->count + 1;
-                    $this->getImageRequestStatus($requestId,4);                    
-                }
+                /*if($this->count < 3)
+                {*/
+                    // $this->count = $this->count + 1;
+                    $this->getImageRequestStatus($requestId,$methodId);                    
+                /*}
                 else
                 {
                     $this->count = 0;
                     return $response;
-                }   
+                } */  
                 
             }
             else
