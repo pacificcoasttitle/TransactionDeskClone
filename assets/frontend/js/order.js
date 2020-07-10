@@ -146,7 +146,7 @@ function getRequestSummaries(requestId,methodId)
                 }
                 else
                 {
-                    getRequestSummaries($resultId,methodId);
+                    getRequestSummaries($requestId,methodId);
                 }              
                 
             }
