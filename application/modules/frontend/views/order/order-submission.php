@@ -149,22 +149,22 @@
     
                                     if(isset($instrumentNumber) && !empty($instrumentNumber))
                                     {
+                                        if(isset($recordedDate) && !empty($recordedDate))
+                                        {
+                                            $time = strtotime($recordedDate);
+                                            $year = date('Y',$time);
+                                        }
+
                                         $count = substr_count($instrumentNumber, '-');
 
                                         if(isset($count) && !empty($count))
                                         {
                                             $detailDocInfo = explode('-', $instrumentNumber);
                                             
-                                            $year = isset($detailDocInfo['0']) && !empty($detailDocInfo['0']) ? $detailDocInfo['0'] : '';
                                             $docId = isset($detailDocInfo['1']) && !empty($detailDocInfo['1']) ? $detailDocInfo['1'] : '';   
                                         }
                                         else
                                         {
-                                            if(isset($recordedDate) && !empty($recordedDate))
-                                            {
-                                                $time = strtotime($recordedDate);
-                                                $year = date('Y',$time);
-                                            }
                                             $docId = str_replace($year, '', $instrumentNumber);
                                         }
                                         $docId = (string)((int)($docId));

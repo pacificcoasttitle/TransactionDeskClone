@@ -54,7 +54,8 @@
                         <div class="form-group row">
                             <label for="name" class="col-sm-3 col-form-label">Order Open At:</label>
                             <div class="col-sm-9 col-form-label">
-                                <?php echo date("m-d-Y H:i:s",strtotime($order_details['opened_date'])); ?>
+                                <?php echo date("m/d/Y h:i:s A", strtotime($order_details['opened_date']));
+                                ?>
                             </div>
                         </div>
                 <?php

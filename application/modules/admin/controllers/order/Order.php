@@ -54,7 +54,7 @@ class Order extends MX_Controller {
             $nestedData[] = $value['product_type'];
 			$nestedData[] = $value['sales_rep_name'];
 			$nestedData[] = $value['first_name']." ".$value['last_name'];
-            $nestedData[] = date("m-d-Y H:i:s", strtotime($value['created_at']));
+            $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
             $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
             $nestedData[] = $action;
