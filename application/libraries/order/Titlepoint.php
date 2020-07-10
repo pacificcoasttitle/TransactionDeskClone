@@ -449,7 +449,6 @@ class Titlepoint
                 {
                     if($imgReturnStatus == 'success' && $status == 'success')
                     {
-                        echo "<pre>"; print_r("here"); exit;
                         $generateImgResponse = $this->generateImage($requestId,3);
 
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
