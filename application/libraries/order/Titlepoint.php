@@ -4,6 +4,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Titlepoint
 {
+    public $count = 0;
     public static $CI;
     
 	public function __construct($params = array())
@@ -56,6 +57,7 @@ class Titlepoint
                 if(isset($requestId) && !empty($requestId))
                 {
                     $response = $this->getImageRequestStatus($requestId,4);
+                    
                     $imgResult = json_decode($response, TRUE);
                     
                     $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
@@ -303,7 +305,7 @@ class Titlepoint
 
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $response = $this->getImageRequestStatus($requestId,4);
+                    $response = $this->getImageRequestStatus($requestId,3);
                     $imgResult = json_decode($response, TRUE);
                     
                     $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
@@ -312,7 +314,7 @@ class Titlepoint
                     $status = strtolower($status);
                     if($imgReturnStatus == 'success' && $status == 'success')
                     {
-                        $generateImgResponse = $this->generateImage($requestId,4);
+                        $generateImgResponse = $this->generateImage($requestId,3);
 
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
                         $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
@@ -419,6 +421,7 @@ class Titlepoint
 
     public function getImageRequestStatus($requestId,$methodId)
     {
+        
         $requestParams = array(
                             'username' => env('TP_USERNAME'),
                             'password' => env('TP_PASSWORD'),                    
@@ -442,8 +445,18 @@ class Titlepoint
                 return $response;
             }
             else if($status == 'processing') 
-            {                
-                $this->getImageRequestStatus($requestId,4);
+            {           
+                if($this->count < 3)
+                {
+                    $this->count = $this->count + 1;
+                    $this->getImageRequestStatus($requestId,4);                    
+                }
+                else
+                {
+                    $this->count = 0;
+                    return $response;
+                }   
+                
             }
             else
             {
