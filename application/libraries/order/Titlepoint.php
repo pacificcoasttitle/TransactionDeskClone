@@ -436,7 +436,7 @@ echo "<pre>"; print_r($generateImgResponse); exit;
         $response = json_encode($xmlData);
 
         $imgResult = json_decode($response, TRUE);
-        echo "<pre>"; print_r($response);
+       // echo "<pre>"; print_r($response);
         echo "<pre>"; print_r($imgResult);
         $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
         $imgReturnStatus = strtolower($imgReturnStatus);
@@ -446,6 +446,7 @@ echo "<pre>"; print_r($generateImgResponse); exit;
             $status = strtolower($status);
             if($status == 'success')
             {
+                echo "<pre>"; print_r($response); 
                 return $response;
             }
             else if($status == 'processing') 
