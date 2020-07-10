@@ -305,7 +305,7 @@ class Titlepoint
 
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $response = $this->getImageRequestStatus($requestId,3);
+                    $response = $this->getImageRequestStatus($requestId,4);
                     $imgResult = json_decode($response, TRUE);
                     
                     $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
@@ -322,7 +322,7 @@ class Titlepoint
 
                         $generateImgMsg = isset($generateImgResult['Message']) && !empty($generateImgResult['Message']) ? $generateImgResult['Message'] : '';
                         $generateImgReturnStatus = strtolower($generateImgReturnStatus);
-                        $generateImgStatus = strtolower($generateImgReturnStatus);
+                        $generateImgStatus = strtolower($generateImgStatus);
                         if($generateImgReturnStatus == 'success' && $generateImgStatus == 'success')
                         {
                             $base64_data = isset($generateImgResult['Data']) && !empty($generateImgResult['Data']) ? $generateImgResult['Data'] : '';
