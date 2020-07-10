@@ -139,8 +139,12 @@ function getRequestSummaries(requestId,methodId)
             } 
             else if (responseStatus == 'Success') 
             {
-                $resultId = $(response).find("ResultThumbNail:first").find("ID").text();                
-                getResultById($resultId,methodId);
+                $resultId = $(response).find("ResultThumbNail:first").find("ID").text();
+                if($resultId)
+                {
+                    getResultById($resultId,methodId);
+                }                
+                
             }
         })
         .fail(function(err) {
