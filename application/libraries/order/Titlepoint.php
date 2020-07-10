@@ -309,7 +309,7 @@ class Titlepoint
                     $response = $this->getImageRequestStatus($requestId,4);
                     
                     $imgResult = json_decode($response, TRUE);
-                    
+                   // echo "<pre>"; print_r($imgResult); exit;
                     $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
                     $status = isset($imgResult['Status']) && !empty($imgResult['Status']) ? $imgResult['Status'] : '';
                     $imgReturnStatus = strtolower($imgReturnStatus);
