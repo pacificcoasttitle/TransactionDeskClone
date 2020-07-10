@@ -314,7 +314,7 @@ class Titlepoint
                     $status = strtolower($status);
                     if($imgReturnStatus == 'success' && $status == 'success')
                     {
-                        $generateImgResponse = $this->generateImage($requestId,3);
+                        $generateImgResponse = $this->generateImage($requestId,4);
 
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
                         $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
