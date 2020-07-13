@@ -330,7 +330,7 @@ class Titlepoint
                 if(isset($requestId) && !empty($requestId))
                 {
                     $imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
-                    
+                    echo "<pre>"; print_r($imgresponse); exit;
                     $imgResult = json_decode($imgresponse, TRUE);
                     
                     $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
@@ -669,10 +669,12 @@ class Titlepoint
             $status = strtolower($status);
             if($status == 'success')
             {
+                echo "<pre>success: "; print_r($response);
                 return $response;
             }
             else if($status == 'processing') 
-            {           
+            {     
+            echo "<pre>processing: "; print_r($response);       
                 /*if($this->count < 3)
                 {*/
                     // $this->count = $this->count + 1;
