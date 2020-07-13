@@ -5,6 +5,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Titlepoint
 {
     public $count = 0;
+    public $taxcount = 0;
     public static $CI;
     
 	public function __construct($params = array())
@@ -330,7 +331,6 @@ class Titlepoint
                 if(isset($requestId) && !empty($requestId))
                 {
                     $imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
-                    echo "<pre>"; print_r($imgresponse); exit;
                     $imgResult = json_decode($imgresponse, TRUE);
                     
                     $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
@@ -595,16 +595,16 @@ class Titlepoint
             }
             else if($status == 'processing') 
             {           
-                /*if($this->count < 3)
-                {*/
-                    // $this->count = $this->count + 1;
-                    $this->getImageRequestStatus($requestId,$orderId);                    
-                /*}
+                if($this->count < 5)
+                {
+                    $this->count = $this->count + 1;
+                    return $this->getImageRequestStatus($requestId,$orderId);                    
+                }
                 else
                 {
                     $this->count = 0;
                     return $response;
-                } */  
+                }   
                 
             }
             else
@@ -669,22 +669,20 @@ class Titlepoint
             $status = strtolower($status);
             if($status == 'success')
             {
-                echo "<pre>success: "; print_r($response);
                 return $response;
             }
             else if($status == 'processing') 
-            {     
-            echo "<pre>processing: "; print_r($response);       
-                /*if($this->count < 3)
-                {*/
-                    // $this->count = $this->count + 1;
+            {       
+                if($this->taxcount < 5)
+                {
+                    $this->taxcount = $this->taxcount + 1;
                     return $this->getTaxImageRequestStatus($requestId,$orderId);                    
-                /*}
+                }
                 else
                 {
-                    $this->count = 0;
+                    $this->taxcount = 0;
                     return $response;
-                } */  
+                }   
                 
             }
             else
