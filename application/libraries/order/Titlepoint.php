@@ -678,7 +678,7 @@ class Titlepoint
                 /*if($this->count < 3)
                 {*/
                     // $this->count = $this->count + 1;
-                    $this->getTaxImageRequestStatus($requestId,$orderId);                    
+                    return $this->getTaxImageRequestStatus($requestId,$orderId);                    
                 /*}
                 else
                 {
