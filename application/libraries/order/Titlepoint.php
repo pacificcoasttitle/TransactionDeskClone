@@ -13,11 +13,13 @@ class Titlepoint
 		$this->CI->load->database();
         $this->CI->load->library('session');
         $this->CI->load->model('order/titlePointData');
+        $this->CI->load->model('order/apiLogs');
 		self::$CI = $this->CI;
     }
 
-    public function generateImg($serviceId,$fileNumber)
+    public function generateImg($serviceId,$fileNumber,$orderId)
     {
+        $userdata = $this->CI->session->userdata('user');
         $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';
         $opts = array(
             "ssl"=>array(
@@ -43,11 +45,16 @@ class Titlepoint
             $requestUrl= env('TP_IMAGE_ENDPOINT');
 
             $request = $requestUrl.http_build_query($requestParams);
-        
+
+            $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_lv_image_request', $request, $requestParams, array(), $orderId, 0);
+
             $file = file_get_contents($request,false,$context);
             $xmlData = simplexml_load_string($file);
             $response = json_encode($xmlData);
             $result = json_decode($response,TRUE);
+
+            $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_lv_image_request', $request, $requestParams, $result, $orderId, $logid);
+
             $returnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
             $returnStatus = strtolower($returnStatus);
             if($returnStatus == 'success')
@@ -56,102 +63,106 @@ class Titlepoint
 
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $response = $this->getImageRequestStatus($requestId,4);
+                    $response = $this->getImageRequestStatus($requestId,$orderId);
                     
                     $imgResult = json_decode($response, TRUE);
                     
-                    $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
-                    $status = isset($imgResult['Status']) && !empty($imgResult['Status']) ? $imgResult['Status'] : '';
-                    $imgReturnStatus = strtolower($imgReturnStatus);
-                    $status = strtolower($status);
-                    if($imgReturnStatus == 'success' && $status == 'success')
+                    if(isset($imgResult) && !empty($imgResult))
                     {
-                        $generateImgResponse = $this->generateImage($requestId,4);
-
-                        $generateImgResult = json_decode($generateImgResponse, TRUE);
-                        $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
-                        $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
-
-                        $generateImgMsg = isset($generateImgResult['Message']) && !empty($generateImgResult['Message']) ? $generateImgResult['Message'] : '';
-                        $generateImgReturnStatus = strtolower($generateImgReturnStatus);
-                        $generateImgStatus = strtolower($generateImgStatus);
-                        if($generateImgReturnStatus == 'success' && $generateImgStatus == 'success')
+                        $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
+                        $status = isset($imgResult['Status']) && !empty($imgResult['Status']) ? $imgResult['Status'] : '';
+                        $imgReturnStatus = strtolower($imgReturnStatus);
+                        $status = strtolower($status);
+                        if($imgReturnStatus == 'success' && $status == 'success')
                         {
-                            $base64_data = isset($generateImgResult['Data']) && !empty($generateImgResult['Data']) ? $generateImgResult['Data'] : '';
-                            
-                            if(isset($base64_data) && !empty($base64_data))
+                            $generateImgResponse = $this->generateImage($requestId,$orderId);
+
+                            $generateImgResult = json_decode($generateImgResponse, TRUE);
+                            $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
+                            $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
+
+                            $generateImgMsg = isset($generateImgResult['Message']) && !empty($generateImgResult['Message']) ? $generateImgResult['Message'] : '';
+                            $generateImgReturnStatus = strtolower($generateImgReturnStatus);
+                            $generateImgStatus = strtolower($generateImgStatus);
+                            if($generateImgReturnStatus == 'success' && $generateImgStatus == 'success')
                             {
-                                $bin = base64_decode($base64_data, true);      
-                            
-                                if (!is_dir('uploads/legal-vesting')) {
-                                    mkdir('./uploads/legal-vesting', 0777, TRUE);
-                                }
+                                $base64_data = isset($generateImgResult['Data']) && !empty($generateImgResult['Data']) ? $generateImgResult['Data'] : '';
                                 
-                                $pdfFilePath = './uploads/legal-vesting/'.$fileNumber.'.pdf';
-                                file_put_contents($pdfFilePath, $bin); 
-                            }
+                                if(isset($base64_data) && !empty($base64_data))
+                                {
+                                    $bin = base64_decode($base64_data, true);      
+                                
+                                    if (!is_dir('uploads/legal-vesting')) {
+                                        mkdir('./uploads/legal-vesting', 0777, TRUE);
+                                    }
+                                    
+                                    $pdfFilePath = './uploads/legal-vesting/'.$fileNumber.'.pdf';
+                                    file_put_contents($pdfFilePath, $bin); 
+                                }
 
-                            $tpData = array(
-                                'lv_file_status' => $generateImgStatus,
-                                'lv_file_message' => $generateImgMsg
-                            );
+                                $tpData = array(
+                                    'lv_file_status' => $generateImgStatus,
+                                    'lv_file_message' => $generateImgMsg
+                                );
+                            }
+                            else if($generateImgReturnStatus == 'success' && $generateImgStatus != 'success')
+                            {
+                                
+                                $tpData = array(
+                                    'lv_file_status' => $generateImgStatus,
+                                    'lv_file_message' => $generateImgMsg
+                                );
+                                /*$condition =array(
+                                    'file_number' => $fileNumber
+                                );
+                                $this->CI->titlePointData->update($tpData,$condition);*/
+                            }
+                            else
+                            {
+                              $error = isset($generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+
+                                $tpData = array(
+                                    'lv_file_status' => $generateImgReturnStatus,
+                                    'lv_file_message' => $error
+                                );
+                                /*$condition =array(
+                                    'file_number' => $fileNumber
+                                );
+                                $this->CI->titlePointData->update($tpData,$condition);*/  
+                            }
+                            $condition =array(
+                                    'file_number' => $fileNumber
+                                );
+                            $this->CI->titlePointData->update($tpData,$condition); 
+
                         }
-                        else if($generateImgReturnStatus == 'success' && $generateImgStatus != 'success')
+                        else if($imgReturnStatus == 'success' && $status != 'success')
                         {
-                            
+                            $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
                             $tpData = array(
-                                'lv_file_status' => $generateImgStatus,
-                                'lv_file_message' => $generateImgMsg
+                                'lv_file_status' => $status,
+                                'lv_file_message' => $message
                             );
-                            /*$condition =array(
+                            $condition =array(
                                 'file_number' => $fileNumber
                             );
-                            $this->CI->titlePointData->update($tpData,$condition);*/
+                            $this->CI->titlePointData->update($tpData,$condition);
                         }
                         else
                         {
-                          $error = isset($generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                          $error = isset($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $imgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
 
                             $tpData = array(
-                                'lv_file_status' => $generateImgReturnStatus,
+                                'lv_file_status' => $imgReturnStatus,
                                 'lv_file_message' => $error
                             );
-                            /*$condition =array(
+                            $condition =array(
                                 'file_number' => $fileNumber
                             );
-                            $this->CI->titlePointData->update($tpData,$condition);*/  
+                            $this->CI->titlePointData->update($tpData,$condition);  
                         }
-                        $condition =array(
-                                'file_number' => $fileNumber
-                            );
-                        $this->CI->titlePointData->update($tpData,$condition); 
-
                     }
-                    else if($imgReturnStatus == 'success' && $status != 'success')
-                    {
-                        $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
-                        $tpData = array(
-                            'lv_file_status' => $status,
-                            'lv_file_message' => $message
-                        );
-                        $condition =array(
-                            'file_number' => $fileNumber
-                        );
-                        $this->CI->titlePointData->update($tpData,$condition);
-                    }
-                    else
-                    {
-                      $error = isset($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $imgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-
-                        $tpData = array(
-                            'lv_file_status' => $imgReturnStatus,
-                            'lv_file_message' => $error
-                        );
-                        $condition =array(
-                            'file_number' => $fileNumber
-                        );
-                        $this->CI->titlePointData->update($tpData,$condition);  
-                    }
+                    
                 }
             }
             else
@@ -170,8 +181,9 @@ class Titlepoint
         }
     }
     
-    public function generateGrantDeed($instrumentNumber,$recordedDate,$fips,$fileNumber)
+    public function generateGrantDeed($instrumentNumber,$recordedDate,$fips,$fileNumber,$orderId)
     {
+        $userdata = $this->CI->session->userdata('user');
         if(isset($instrumentNumber) && !empty($instrumentNumber))
         {
             if(isset($recordedDate) && !empty($recordedDate))
@@ -221,11 +233,16 @@ class Titlepoint
         );
 
         $context = stream_context_create($opts);
+
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_grant_deed', $request, $requestParams, array(), $orderId, 0);
+
         $file = file_get_contents($request,false,$context);
         $xmlData = simplexml_load_string($file);
         
         $response = json_encode($xmlData);
         $result = json_decode($response,TRUE);
+
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_grant_deed', $request, $requestParams, $result, $orderId, $logid);
 
         $responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
         
@@ -265,8 +282,9 @@ class Titlepoint
         $this->CI->titlePointData->update($tpData,$condition);
     }
 
-    /*public function generateTaxDoc($serviceId,$fileNumber)
+    public function generateTaxDoc($serviceId,$fileNumber,$orderId)
     {
+        $userdata = $this->CI->session->userdata('user');
         $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';
         $opts = array(
             "ssl"=>array(
@@ -292,11 +310,16 @@ class Titlepoint
             $requestUrl= env('TP_IMAGE_ENDPOINT');
 
             $request = $requestUrl.http_build_query($requestParams);
-        
+
+            $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_tax_image_request', $request, $requestParams, array(), $orderId, 0);
+
             $file = file_get_contents($request,false,$context);
             $xmlData = simplexml_load_string($file);
             $response = json_encode($xmlData);
             $result = json_decode($response,TRUE);
+
+            $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_tax_image_request', $request, $requestParams, $result, $orderId, $logid);
+
             $returnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
             $returnStatus = strtolower($returnStatus);
             
@@ -306,7 +329,7 @@ class Titlepoint
                 
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $imgresponse = $this->getImageRequestStatus($requestId,3);
+                    $imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
                     
                     $imgResult = json_decode($imgresponse, TRUE);
                     
@@ -316,7 +339,7 @@ class Titlepoint
                     $status = strtolower($status);
                     if($imgReturnStatus == 'success' && $status == 'success')
                     {
-                        $generateImgResponse = $this->generateImage($requestId,3);
+                        $generateImgResponse = $this->generateTaxImage($requestId,$orderId);
 
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
                         $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
@@ -410,9 +433,9 @@ class Titlepoint
                 $this->CI->titlePointData->update($tpData,$condition);  
             }
         }
-    }*/
+    }
 
-    public function generateTaxDoc($serviceId,$fileNumber)
+    /*public function generateTaxDoc($serviceId,$fileNumber)
     {
         $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';
         $opts = array(
@@ -537,12 +560,12 @@ class Titlepoint
             }
             
         }
-    }
+    }*/
     
 
-    public function getImageRequestStatus($requestId,$methodId)
+    public function getImageRequestStatus($requestId,$orderId)
     {
-        
+        $userdata = $this->CI->session->userdata('user');
         $requestParams = array(
                             'username' => env('TP_USERNAME'),
                             'password' => env('TP_PASSWORD'),                    
@@ -550,12 +573,16 @@ class Titlepoint
                         );
         $request = env('TP_IMAGE_REQUEST_STATUS').http_build_query($requestParams);
         
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'lv_image_request_status', $request, $requestParams, array(), $orderId, 0);
+
         $file = file_get_contents($request,false,$context);
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
 
         $imgResult = json_decode($response, TRUE);
-       
+
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'lv_image_request_status', $request, $requestParams, $imgResult, $orderId, $logid);
+
         $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
         $imgReturnStatus = strtolower($imgReturnStatus);
         if($imgReturnStatus == 'success')
@@ -571,7 +598,7 @@ class Titlepoint
                 /*if($this->count < 3)
                 {*/
                     // $this->count = $this->count + 1;
-                    $this->getImageRequestStatus($requestId,$methodId);                    
+                    $this->getImageRequestStatus($requestId,$orderId);                    
                 /*}
                 else
                 {
@@ -591,8 +618,87 @@ class Titlepoint
         }
     }
 
-    public function generateImage($requestId,$methodId)
+    public function generateImage($requestId,$orderId)
     {
+        $userdata = $this->CI->session->userdata('user');
+        $requestParams = array(
+                            'username' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),                    
+                            'requestId'=>  $requestId
+                        );
+
+        $request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
+
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_lv_image', $request, $requestParams, array(), $orderId, 0);
+        $file = file_get_contents($request,false,$context);
+
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+        $result = json_decode($response, TRUE);
+
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_lv_image', $request, $requestParams, $result, $orderId, $logid);
+
+        return $response;
+    }
+
+    public function getTaxImageRequestStatus($requestId,$orderId)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $requestParams = array(
+                            'username' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),                    
+                            'requestId'=>  $requestId
+                        );
+        $request = env('TP_IMAGE_REQUEST_STATUS').http_build_query($requestParams);
+
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'tax_image_request_status', $request, $requestParams, array(), $orderId, 0);
+
+        $file = file_get_contents($request,false,$context);
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+
+        $imgResult = json_decode($response, TRUE);
+
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'tax_image_request_status', $request, $requestParams, $imgResult, $orderId, $logid);
+
+        $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
+        $imgReturnStatus = strtolower($imgReturnStatus);
+        if($imgReturnStatus == 'success')
+        {
+            $status = isset($imgResult['Status']) && !empty($imgResult['Status']) ? $imgResult['Status'] : '';
+            $status = strtolower($status);
+            if($status == 'success')
+            {
+                return $response;
+            }
+            else if($status == 'processing') 
+            {           
+                /*if($this->count < 3)
+                {*/
+                    // $this->count = $this->count + 1;
+                    $this->getTaxImageRequestStatus($requestId,$orderId);                    
+                /*}
+                else
+                {
+                    $this->count = 0;
+                    return $response;
+                } */  
+                
+            }
+            else
+            {
+                return $response;
+            }
+        }
+        else
+        {
+          return $response; 
+        }
+    }
+
+    public function generateTaxImage($requestId,$orderId)
+    {
+        $userdata = $this->CI->session->userdata('user');
         $requestParams = array(
                             'username' => env('TP_USERNAME'),
                             'password' => env('TP_PASSWORD'),                    
@@ -602,8 +708,14 @@ class Titlepoint
         $request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
         $file = file_get_contents($request,false,$context);
 
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image', $request, $requestParams, array(), $orderId, 0);
+
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
+        $result = json_decode($response, TRUE);
+
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image', $request, $requestParams, $result, $orderId, $logid);
+
         return $response;
     }
 }
