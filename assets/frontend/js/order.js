@@ -754,12 +754,12 @@ function generateTaxDoc(apn,serviceId,fileNumber)
                 var bin = atob(base64_data);                
                 if (navigator.msSaveBlob)
                 {
-                    var filename = "GrantDeed.pdf";
+                    var filename = "Tax.pdf";
                     download(filename, base64_data);
                 }
                 else
                 {
-                    download('GrantDeed.pdf', base64_data);
+                    download('Tax.pdf', base64_data);
                 }
                 $('#taxDocumentInfo').next('.loader').hide();
             }
