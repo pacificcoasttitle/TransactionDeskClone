@@ -257,7 +257,6 @@ class TitlePoint extends MX_Controller {
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
-            // $params['status']['cs4_result_id_status'] = 'Success';
 
             $pageno = ($params['start'] / $params['length'])+1;
 
