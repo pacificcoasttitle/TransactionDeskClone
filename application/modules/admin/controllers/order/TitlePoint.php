@@ -79,7 +79,17 @@ class TitlePoint extends MX_Controller {
                     }
                     else
                     {
-                        $nestedData[] = $value['cs4_message'];
+                        $lv_file_path = FCPATH.'uploads/legal-vesting/'.$value['file_number'].'.pdf';
+
+                        if (file_exists($lv_file_path)) 
+                        {
+                            $nestedData[] = 'success';
+                        }
+                        else
+                        {
+                            $nestedData[] = $value['cs4_message'];
+                        }
+                        
                     }
                     
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
@@ -200,7 +210,16 @@ class TitlePoint extends MX_Controller {
                     }
                     else
                     {
-                        $nestedData[] = $value['cs3_message'];
+                        $tax_file_path = FCPATH.'uploads/tax/'.$file_number.'.pdf';
+                        if (file_exists($tax_file_path)) 
+                        {
+                            $nestedData[] = 'success';
+                        }
+                        else
+                        {
+                            $nestedData[] = $value['cs3_message'];
+                        }
+                        
                     }
 
                     // $nestedData[] = $value['cs3_message'];
