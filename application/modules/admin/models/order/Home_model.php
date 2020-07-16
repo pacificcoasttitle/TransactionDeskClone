@@ -165,10 +165,12 @@ class Home_model extends CI_Model
     }
 
 
-    public function update($data, $condition = array()) 
+    public function update($data, $condition = array(), $table = '') 
     {
-    	$table = $this->table;
-
+        if (empty($table)) {
+            $table = $this->table;
+        }
+    	
         if(!empty($data))
         {          
             
@@ -183,9 +185,11 @@ class Home_model extends CI_Model
         return false;
     }
 
-    public function insert($data = array()) 
+    public function insert($data = array(), $table = '') 
     {
-    	$table = $this->table;
+        if (empty($table)) {
+            $table = $this->table;
+        }
         if(!empty($data)){
 
         	$data['created_at'] = date("Y-m-d H:i:s");
@@ -752,6 +756,69 @@ class Home_model extends CI_Model
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $curative_document_lists
+        );
+    }
+
+    public function get_companies_list($params)
+    {
+    	$this->db->from('pct_order_partner_company_info');
+		$total_records =  $this->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $company_lists =array();
+        
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like("partner_id", $keyword)
+                    ->or_like('partner_name',$keyword)
+                    ->or_like('address1',$keyword)
+                    ->or_like('city', $keyword)
+                    ->or_like('state', $keyword)
+                    ->or_like('zip', $keyword)
+                    ->group_end();
+			}
+
+	    	$this->db->from('pct_order_partner_company_info');
+			$filter_total_records =  $this->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like("partner_id", $keyword)
+                    ->or_like('partner_name',$keyword)
+                    ->or_like('address1',$keyword)
+                    ->or_like('city', $keyword)
+                    ->or_like('state', $keyword)
+                    ->or_like('zip', $keyword)
+                    ->group_end();
+			}
+			
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }			
+			$query = $this->db->get('pct_order_partner_company_info');
+			if ($query->num_rows() > 0) {
+	            $customer_lists = $query->result_array();
+	        }
+    	} else {    		
+	    	$this->db->from('pct_order_partner_company_info');
+            $filter_total_records =  $this->db->count_all_results();
+ 
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+			$query = $this->db->get('pct_order_partner_company_info');
+			
+			if ($query->num_rows() > 0) {
+	            $customer_lists = $query->result_array();
+	        } 
+    	}
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $customer_lists
         );
     }
 

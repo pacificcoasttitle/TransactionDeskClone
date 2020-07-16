@@ -512,5 +512,19 @@ class Order
             'data' => $orders_lists
         );
     }
+
+    public function checkCompanyExist($partner_company_id)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_partner_company_info');
+        
+        $this->CI->db->where('partner_id', $partner_company_id);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return true;
+        } else {
+            return false;
+        }     
+    }
        
 }

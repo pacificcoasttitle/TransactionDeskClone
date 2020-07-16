@@ -1255,4 +1255,120 @@ class Home extends MX_Controller {
 		} 
     }
 
+    public function companies()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Companies';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/companies', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_companies_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $company_lists = $this->home_model->get_companies_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $company_lists = $this->home_model->get_companies_list($params);        
+        }
+
+        $data = array(); 
+        if (isset($company_lists['data']) && !empty($company_lists['data'])) {
+            foreach ($company_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $value['partner_id'];
+                $nestedData[] = $value['partner_name'];
+                $nestedData[] = $value['address1'];
+                $nestedData[] = $value['city'];
+                $nestedData[] = $value['state'];
+                $nestedData[] = $value['zip'];
+                $data[] = $nestedData;            
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $company_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $company_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function addCompany()
+    {
+        $this->load->model('order/apiLogs');
+        $this->load->library('order/order');
+        $this->load->library('order/resware');
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Add Company';
+        $userdata = $this->session->userdata('admin');
+        $userdata['email'] = $userdata['email_address'];
+        $userdata['admin_api'] = 1;
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('resware_company_id', 'Resware Partner Company Id', 'required', array('required'=> 'Please Enter Resware Partner Company Id'));
+        
+            if ($this->form_validation->run() == true) {
+                $partner_id = $this->input->post('resware_company_id');
+                $endPoint = 'admin/partners/'.$partner_id;
+                $userdata['email'] = $userdata['email_address'];
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+                $result = $this->resware->make_request('GET', $endPoint, array(), $userdata);
+                $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), $result, 0, $logid);
+
+                if (isset($result) && !empty($result)) {
+                    $response = json_decode($result,true);
+                    
+                    if (isset($response['AdminPartner']) && !empty($response['AdminPartner'])) {
+                        $companyData = array(
+                            'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                            'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                            'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
+                            'city' => trim($response['AdminPartner']['MailingAddress']['City']),
+                            'state' => trim($response['AdminPartner']['MailingAddress']['State']),
+                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip'])
+                        );
+                        $companyExist = $this->order->checkCompanyExist($partner_id);
+                        if ($companyExist) {
+                            $condition = array(
+                                'partner_id' => $response['AdminPartner']['PartnerCompanyID']
+                            );
+                            unset($companyData['partner_id']);
+                            $update = $this->home_model->update($companyData, $condition, 'pct_order_partner_company_info');
+                            $data['success_msg'] = 'Company information updated successfully.';
+                           
+                        } else {
+                            $insert = $this->home_model->insert($companyData, 'pct_order_partner_company_info');
+                            $data['success_msg'] = 'Company information added successfully.';
+                        }
+                        
+                    } else {
+                        $data['error_msg'] = 'User is not found with this id on Resware side.';
+                    }
+                } else {
+                    $data['error_msg'] = 'Something went wrong. Please try again.';
+                }
+
+               
+            } else {
+                $data['resware_company_id_error_msg'] = form_error('resware_company_id');
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/add_company', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+
+
 }
