@@ -2,6 +2,16 @@ $(document).ready(function() {
     if($(".grant-deed-no-data").length)
     {
         notifyAdmin('Grant Deed Not Found');
+    }
+
+    if($(".tax-no-data").length)
+    {
+        notifyAdmin('Tax Document Not Found');
+    }
+
+    if($(".legal-vesting-no-data").length)
+    {
+        notifyAdmin('Legal Vesting Document Not Found');
     }    
 });
 
