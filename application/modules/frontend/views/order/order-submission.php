@@ -135,8 +135,8 @@
                 <?php 
                     $cs4_result_id_status = isset($tp_data['cs4_message']) && !empty($tp_data['cs4_message']) ? $tp_data['cs4_message'] : '';
                     
-                    if($cs4_result_id_status == 'Success')
-                    {
+                    /*if($cs4_result_id_status == 'Success')
+                    {*/
                 ?>
                         <div class="col-md-3"> 
                             <div id="grantDeedInfoFile">
@@ -183,7 +183,10 @@
                                     else
                                     {
                                 ?>
-                                        <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4,"<?php echo $file_number; ?>");'>Download L&V</a>
+                                        <!-- <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php // echo $L_V_serviceId; ?>",4,"<?php // echo $file_number; ?>");'>Download L&V</a> -->
+                                        <div class="legal-vesting-no-data">
+                                            <span class="orderinfo1">No legal vesting available. Our customer service will look for it and contact you within X minutes.</span>
+                                        </div>
                                 <?php
                                     }
                                 ?>
@@ -192,8 +195,8 @@
                             <div class="loader" style="display: none;"></div>
                         </div>
                     <?php
-                        if(isset($docId) && !empty($docId))
-                        {
+                        /*if(isset($docId) && !empty($docId))
+                        {*/
                     ?>
                             <div class="col-md-3">
                                 <div id="instrumentInfoFile">
@@ -207,7 +210,10 @@
                                         else
                                         {
                                     ?>
-                                            <a href="javascript:void(0);" onclick='generateGrantDeed("<?php echo $fips; ?>","<?php echo $year; ?>","<?php echo $docId; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
+                                            <!-- <a href="javascript:void(0);" onclick='generateGrantDeed("<?php // echo $fips; ?>","<?php // echo $year; ?>","<?php // echo $docId; ?>","<?php // echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a> -->
+                                            <div class="grant-deed-no-data">
+                                                <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
+                                            </div>
                                     <?php  
                                         }
                                     ?>
@@ -216,33 +222,33 @@
                                 <div class="loader" style="display: none;"></div>
                             </div>
                     <?php
-                        }
+                        /*}
                         else
-                        {
+                        {*/
                     ?>
-                            <div class="col-md-6 grant-deed-no-data">
+                            <!-- <div class="col-md-6 grant-deed-no-data">
                                 <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
-                            </div>
+                            </div> -->
                     <?php
-                        }
+                        /*}*/
                     ?>
                         
                 <?php
-                    }
+                    /*}
                     else
-                    {
+                    {*/
                 ?>
-                        <div class="col-md-6 grant-deed-no-data">
+                        <!-- <div class="col-md-6 grant-deed-no-data">
                             <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
-                        </div>
+                        </div> -->
                 <?php
-                    }
+                    /*}*/
                 ?>
                 <?php
                         $cs3_message = isset($tp_data['cs3_message']) && !empty($tp_data['cs3_message']) ? $tp_data['cs3_message'] : '';
                         
-                        if($cs3_message == 'Success')
-                        {
+                        /*if($cs3_message == 'Success')
+                        {*/
                             $apn = str_replace('0000', '0-000', $apn);
                     ?>
                             <div class="col-md-3">
@@ -258,7 +264,10 @@
                                         {
                                             $tax_serviceId = isset($tp_data['cs3_service_id']) && !empty($tp_data['cs3_service_id']) ? $tp_data['cs3_service_id'] : '';
                                     ?>
-                                            <a href="javascript:void(0);" onclick='imageCreateRequest("<?php echo $tax_serviceId; ?>",3,"<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-tax-doc">Download Tax Document</a>
+                                            <!-- <a href="javascript:void(0);" onclick='imageCreateRequest("<?php // echo $tax_serviceId; ?>",3,"<?php // echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-tax-doc">Download Tax Document</a> -->
+                                            <div class="tax-no-data">
+                                                <span class="orderinfo1">No tax document available. Our customer service will look for it and contact you within X minutes.</span>
+                                            </div>
                                     <?php  
                                         }
                                     ?>
@@ -267,7 +276,7 @@
                                 <div class="loader" style="display: none;"></div>
                             </div>
                     <?php
-                        }
+                        /*}*/
                     ?>
             </div>
           </div>
