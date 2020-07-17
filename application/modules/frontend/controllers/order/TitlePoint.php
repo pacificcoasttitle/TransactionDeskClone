@@ -6,16 +6,14 @@ class TitlePoint extends MX_Controller {
 
 	function __construct() {
         parent::__construct();
-        // $this->load->model('order/apiLogs');
+        $this->load->model('order/apiLogs');
 		$this->load->model('order/titlePointData');
 	}
 
 	function createService()
 	{
-		/*if($this->session->has_userdata('tp_api_id'))
-		{
-			$this->session->unset_userdata('tp_api_id');
-		}*/
+		$userdata = $this->session->userdata('user');
+		
 		$methodId = isset($_POST['methodId']) && !empty($_POST['methodId']) ? $_POST['methodId'] : '';
 		$requestParams = array(
             'userID' => env('TP_USERNAME'),
@@ -40,6 +38,7 @@ class TitlePoint extends MX_Controller {
 			$requestParams['state'] = $state;
 			$requestParams['county'] = $county;
 			$requestUrl= env('TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT');
+			$request_type= 'create_service_3';
 		}
 		else if($methodId == 4)
 		{
@@ -56,8 +55,11 @@ class TitlePoint extends MX_Controller {
 			$requestParams['parameters'] = 'Address1='.$address.';City='.$city.';Pin='.$apn.';LvLookup=Address;LvLookupValue='.$address.', '.$unitinfo.$city.';LvReportFormat=LV;IncludeTaxAssessor=true';
 			$requestParams['fipsCode'] = $fipsCode;
 			$requestUrl= env('TP_CREATE_SERVICE_ENDPOINT');
+			$request_type= 'create_service_4';
 		}
 		$request = $requestUrl.http_build_query($requestParams);
+
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', $request_type, $request, $requestParams, array(), 0, 0);
 
 		$opts = array(
 			"ssl"=>array(
@@ -71,6 +73,9 @@ class TitlePoint extends MX_Controller {
 		$xmlData = simplexml_load_string($file);
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
+
+		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', $request_type, $request, $requestParams, $result, 0, $logid);
+
 		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 		
 		if($methodId == 4)
@@ -148,6 +153,7 @@ class TitlePoint extends MX_Controller {
 
 	function getRequestSummaries()
 	{
+		$userdata = $this->session->userdata('user');
 		$requestId = isset($_POST['requestId']) && !empty($_POST['requestId']) ? $_POST['requestId'] : '';
 		$methodId = isset($_POST['methodId']) && !empty($_POST['methodId']) ? $_POST['methodId'] : '';
 		$apn = isset($_POST['apn']) && !empty($_POST['apn']) ? $_POST['apn'] : '';
@@ -164,6 +170,8 @@ class TitlePoint extends MX_Controller {
 
 		$request = env('TP_REQUEST_SUMMARY_ENDPOINT').http_build_query($requestParams);
 
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_request_summary_'.$methodId, $request, $requestParams, array(), 0, 0);
+
 		$opts = array(
 			"ssl"=>array(
 		        "verify_peer"=>false,
@@ -176,6 +184,8 @@ class TitlePoint extends MX_Controller {
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
 		
+		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_request_summary_'.$methodId, $request, $requestParams, $result, 0, $logid);
+
 		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 		$session_data = array();
 
@@ -277,6 +287,7 @@ class TitlePoint extends MX_Controller {
 
 	function getResultById()
 	{
+		$userdata = $this->session->userdata('user');
 		$resultId = isset($_POST['resultId']) && !empty($_POST['resultId']) ? $_POST['resultId'] : '';
 		$methodId = isset($_POST['methodId']) && !empty($_POST['methodId']) ? $_POST['methodId'] : '';
 		$apn = isset($_POST['apn']) && !empty($_POST['apn']) ? $_POST['apn'] : '';
@@ -300,6 +311,8 @@ class TitlePoint extends MX_Controller {
 
 		$request = $resultUrl.http_build_query($requestParams);
 
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_result_by_id_'.$methodId, $request, $requestParams, array(), 0, 0);
+
 		$opts = array(
 			"ssl"=>array(
 		        "verify_peer"=>false,
@@ -312,7 +325,8 @@ class TitlePoint extends MX_Controller {
 		$xmlData = simplexml_load_string($file);
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
-		
+
+		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_result_by_id_'.$methodId, $request, $requestParams, $result, 0, $logid);
 		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 		$session_data = array();
 		
@@ -453,6 +467,7 @@ class TitlePoint extends MX_Controller {
 
 	function imageCreateRequest()
 	{
+		$userdata = $this->session->userdata('user');
 		$serviceId = isset($_POST['serviceId']) && !empty($_POST['serviceId']) ? $_POST['serviceId'] : '';
 
 		if($serviceId)
@@ -473,6 +488,8 @@ class TitlePoint extends MX_Controller {
 
 		$request = $requestUrl.http_build_query($requestParams);
 
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_image_request', $request, $requestParams, array(), 0, 0);
+
 		$opts = array(
 			"ssl"=>array(
 		        "verify_peer"=>false,
@@ -482,11 +499,17 @@ class TitlePoint extends MX_Controller {
 		$context = stream_context_create($opts);
 		$file = file_get_contents($request,false,$context);
 
+		$xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+        $result = json_decode($response,TRUE);
+
+        $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_image_request', $request, $requestParams, $result, 0, $logid);
 		echo trim($file);
 	}
 
 	function getRequestStatus()
 	{
+		$userdata = $this->session->userdata('user');
 		$requestId = isset($_POST['requestId']) && !empty($_POST['requestId']) ? $_POST['requestId'] : '';
 
 		$requestParams = array(
@@ -496,6 +519,8 @@ class TitlePoint extends MX_Controller {
                         );
         $request = env('TP_IMAGE_REQUEST_STATUS').http_build_query($requestParams);
 
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'image_request_status', $request, $requestParams, array(), 0, 0);
+
 		$opts = array(
 			"ssl"=>array(
 		        "verify_peer"=>false,
@@ -504,11 +529,18 @@ class TitlePoint extends MX_Controller {
 		);
 		$context = stream_context_create($opts);
 		$file = file_get_contents($request,false,$context);
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+
+        $result = json_decode($response, TRUE);
+
+        $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'image_request_status', $request, $requestParams, $result, 0, $logid);
 		echo trim($file); 
 	}
 
 	function generateImage()
 	{
+		$userdata = $this->session->userdata('user');
 		$requestId = isset($_POST['requestId']) && !empty($_POST['requestId']) ? $_POST['requestId'] : '';
 		$methodId = isset($_POST['methodId']) && !empty($_POST['methodId']) ? $_POST['methodId'] : '';
 		$fileNumber = isset($_POST['fileNumber']) && !empty($_POST['fileNumber']) ? $_POST['fileNumber'] : '';
@@ -520,6 +552,8 @@ class TitlePoint extends MX_Controller {
 		                );
 
 		$request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
+
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_image', $request, $requestParams, array(), 0, 0);
 
 		$opts = array(
 			"ssl"=>array(
@@ -533,6 +567,9 @@ class TitlePoint extends MX_Controller {
 		$xmlData = simplexml_load_string($file);
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
+
+		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_image', $request, $requestParams, $result, 0, $logid);
+
 		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 		if($responseStatus == 'Success')
 		{
@@ -602,6 +639,7 @@ class TitlePoint extends MX_Controller {
 
 	function generateGrantDeed()
 	{
+		$userdata = $this->session->userdata('user');
 		$fips = isset($_POST['fips']) && !empty($_POST['fips']) ? $_POST['fips'] : '';
 		$year = isset($_POST['year']) && !empty($_POST['year']) ? $_POST['year'] : '';
 		$docId = isset($_POST['docId']) && !empty($_POST['docId']) ? $_POST['docId'] : '';
@@ -632,11 +670,15 @@ class TitlePoint extends MX_Controller {
 		    ),
 		);
 		$context = stream_context_create($opts);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_grant_deed', $request, $requestParams, array(), 0, 0);
+
 		$file = file_get_contents($request,false,$context);
 		$xmlData = simplexml_load_string($file);
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
 		
+		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_grant_deed', $request, $requestParams, $result, 0, $logid);
+
 		$responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
 		$docStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
 		$docStatus = strtolower($docStatus);
