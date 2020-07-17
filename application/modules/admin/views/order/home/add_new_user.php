@@ -24,6 +24,14 @@
       <div class="card-header">Add New User</div>
         <div class="card-body">        
             <form id="add-new-user" method="POST">
+
+                <div class="form-group row">
+                    <label for="resware_client_id" class="col-sm-4 col-form-label">Resware Client Id</label>
+                    <div class="col-sm-8">
+                        <input type="number" class="form-control" name="resware_client_id" id="resware_client_id" value="<?php echo set_value('resware_client_id')?>" class="form-control" placeholder="Resware Client Id">
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <label for="first_name" class="col-sm-2 col-form-label">First Name<span class="required"> *</span></label>
                     <div class="col-sm-10">
