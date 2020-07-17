@@ -669,6 +669,7 @@ class Home extends MX_Controller {
             if ($this->form_validation->run() == true) {
                 $customerData = array(
                     'partner_id' =>  $this->input->post('partner_id'),
+                    'resware_user_id' =>  !empty($this->input->post('resware_client_id')) ? $this->input->post('resware_client_id') : 0,
                     'first_name' => $this->input->post('first_name'),
                     'last_name' => $this->input->post('last_name'),
                     'telephone_no' => $this->input->post('telephone_no'),
@@ -689,9 +690,28 @@ class Home extends MX_Controller {
                 if ($response['success']) {
                     $customerData['resware_user_id'] = $response['resware_user_id'];
                     $customerData['random_password'] = $this->order->randomPassword();
-                    $insert = $this->home_model->insert($customerData);
+                    if (!empty($this->input->post('resware_client_id'))) {
+                        $condition = array(
+                            'where' => array(
+                                'partner_id' => $this->input->post('partner_id'),
+                                'resware_user_id' => $this->input->post('resware_client_id'),
+                            ),
+                            'returnType' => 'count'
+                        );
+                        $prevCount = $this->home_model->get_rows($condition);
+                        if ($prevCount > 0) {
+                            $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                        } else {
+                            $insert = $this->home_model->insert($customerData);
+                        }
+                    } else {
+                        $insert = $this->home_model->insert($customerData);
+                    }
+                
                     if ($insert) {
                         $data['success_msg'] = 'User added successfully.';
+                    } else if($update) {
+                        $data['success_msg'] = 'User updated successfully.';
                     } else {
                         $data['error_msg'] = 'User not added.';
                     } 
@@ -749,7 +769,17 @@ class Home extends MX_Controller {
         $this->load->library('order/resware');
         $this->load->library('order/order');
         $userdata = $this->session->userdata('admin');
-        $endPoint = 'admin/partners/'.$customerData['partner_id'].'/employees';
+
+        if(!empty($customerData['resware_user_id'])) {
+            $endPoint = 'admin/partners/'.$customerData['partner_id'].'/employees/'.$customerData['resware_user_id'];
+            $method = 'PUT';
+            $apiType = 'update_user';
+        } else {
+            $endPoint = 'admin/partners/'.$customerData['partner_id'].'/employees';
+            $method = 'POST';
+            $apiType = 'create_user';
+        }
+        
         $newUserData = array(			
             'Password' => 'Pacific1',
             'Enabled' => true,
@@ -877,16 +907,16 @@ class Home extends MX_Controller {
         $userdata['email'] = $userdata['email_address'];
         $userdata['admin_api'] = 1;
         $newUserData = json_encode($newUserData);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_user', env('RESWARE_ORDER_API').$endPoint, $newUserData, array(), 0, 0);
-        $result = $this->resware->make_request('POST', $endPoint, $newUserData, $userdata);
-        $this->apiLogs->syncLogs($v['id'], 'resware', 'create_user', env('RESWARE_ORDER_API').$endPoint, $newUserData, $result, 0, $logid);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, array(), 0, 0);
+        $result = $this->resware->make_request($method, $endPoint, $newUserData, $userdata);
+        $this->apiLogs->syncLogs($v['id'], 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, $result, 0, $logid);
 
         if (isset($result) && !empty($result)) {
             $response = json_decode($result,true);
             if (isset($response['Employee']) && !empty($response['Employee'])) {
                 $res = array(
                     'resware_user_id' => $response['Employee']['UserID'],
-                    'msg' => 'User created successfully on Resware Side',
+                    'msg' => !empty($customerData['resware_user_id']) ? 'User created successfully on Resware Side' : 'User updated successfully on Resware Side',
                     'success' => true
                 );
             } else {
