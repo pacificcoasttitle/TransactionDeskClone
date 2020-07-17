@@ -845,10 +845,14 @@ function parse187()
                 $('.pma-error').show();
                 return false;
             }
+            else
+            {
+                createService4(fipCode,address,city,unit_no,apn);
+                createService3(apn,state,county);
+            }
         }
     });
-    createService4(fipCode,address,city,unit_no,apn);
-    createService3(apn,state,county);
+    
 }
 
 
