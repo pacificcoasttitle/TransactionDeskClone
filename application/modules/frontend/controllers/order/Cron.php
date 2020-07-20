@@ -467,12 +467,24 @@ class Cron extends MX_Controller {
         ini_set('max_execution_time', 0); 
         ini_set('memory_limit','2048M');
         $userdata = $this->session->userdata('admin');
-        $condition = array(
-            'where' => array(
-                'status' => 1,
-                'is_master' => 0,
-            )
-        );
+
+        if($this->input->post('new_users') == 1) {
+            $condition = array(
+                'where' => array(
+                    'status' => 1,
+                    'is_master' => 0,
+                    'is_new_user' => 1
+                )
+            );
+        } else {
+            $condition = array(
+                'where' => array(
+                    'status' => 1,
+                    'is_master' => 0,
+                )
+            );
+        }
+        
         $customer_lists = $this->home_model->get_customers($condition);
         $insertCount = $updateCount = $rowCount = $notUpdatePasswordCount = 0;
 
@@ -499,7 +511,8 @@ class Cron extends MX_Controller {
                                 
                                 if (isset($response['Me']) && !empty($response['Me'])) {
                                     $customerData = array(
-                                        'is_password_updated' => 1
+                                        'is_password_updated' => 1,
+                                        'is_new_user' => 0
                                     );
                                     $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
 

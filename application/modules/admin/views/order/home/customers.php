@@ -11,7 +11,8 @@
             <i class="fas fa-table"></i>
             Credentials Check
             <div class="float-right">
-                <a href="javascript:void(0);" id="refresh-data" class="btn btn-secondary"> Refresh </a>
+                <a href="javascript:void(0);" id="refresh-data" class="btn btn-secondary">All Users</a>
+                <a href="javascript:void(0);" id="refresh-new-users-data" class="btn btn-secondary">New Users</a>
                 <a href="javascript:void(0);" data-export-type="csv" id="export_customer" class="btn btn-secondary"> Export </a>
             </div>
         </div>

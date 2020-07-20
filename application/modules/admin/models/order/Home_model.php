@@ -295,6 +295,7 @@ class Home_model extends CI_Model
     public function get_new_users_list($params)
     {
         $this->db->where('is_new_user', 1);
+        $this->db->where('is_password_updated', 0);
     	$this->db->where('status', 1);
     	$this->db->from('customer_basic_details');
 		$total_records =  $this->db->count_all_results();
@@ -317,6 +318,7 @@ class Home_model extends CI_Model
 			}
 
             $this->db->where('status', 1);
+            $this->db->where('is_password_updated', 0);
 			$this->db->where('is_new_user', 1);
 	    	$this->db->from('customer_basic_details');
 			$filter_total_records =  $this->db->count_all_results();
@@ -331,7 +333,8 @@ class Home_model extends CI_Model
                     ->or_like('random_password', $keyword)
                     ->group_end();
 			}
-			$this->db->where('status', 1);
+            $this->db->where('status', 1);
+            $this->db->where('is_password_updated', 0);
             $this->db->where('is_new_user', 1);
 
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -342,12 +345,14 @@ class Home_model extends CI_Model
 	            $customer_lists = $query->result_array();
 	        }
     	} else {    		
-    		$this->db->where('status', 1);
+            $this->db->where('status', 1);
+            $this->db->where('is_password_updated', 0);
             $this->db->where('is_new_user', 1);
 	    	$this->db->from('customer_basic_details');
             $filter_total_records =  $this->db->count_all_results();
 
             $this->db->where('is_new_user', 1);
+            $this->db->where('is_password_updated', 0);
             $this->db->where('status', 1);
             
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
