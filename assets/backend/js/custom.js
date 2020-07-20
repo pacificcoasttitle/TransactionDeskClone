@@ -880,7 +880,56 @@ $(document).ready(function () {
             $.ajax({
                 url: base_url+"/check-update-password",
                 method: "POST",
-                /*data : {id:id},*/
+                data : {
+                    new_users: 0
+                },
+                success: function(data){
+                    var result = jQuery.parseJSON(data);
+                    if (result.status == 'success') {
+                        $('body').animate({ opacity: 1.0 }, "slow");
+                        $('#customer_success_msg').html(result.msg).show();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#customer_success_msg").offset().top
+                        }, 1000);
+                        credentials_customer_list.ajax.reload( null, false );
+                        setTimeout(function () {
+                            $('#customer_success_msg').html('').hide();
+                        }, 4000);
+                    } else {
+                        $('#customer_error_msg').html(result.message).show();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#customer_error_msg").offset().top
+                        }, 1000);
+
+                        setTimeout(function () {
+                            $('#customer_error_msg').html('').hide();
+                        }, 4000);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('#customer_error_msg').html('Something went wrong. Please try it again.').show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#customer_success_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#customer_error_msg').html('').hide();
+                    }, 4000);
+                }
+            })
+        });
+    }
+
+    if($('#refresh-new-users-data').length)
+    {
+        $('#refresh-new-users-data').click(function(e){
+            $('body').animate({ opacity: 0.5 }, "slow");
+            $.ajax({
+                url: base_url+"/check-update-password",
+                method: "POST",
+                data : {
+                    new_users: 1
+                },
                 success: function(data){
                     var result = jQuery.parseJSON(data);
                     if (result.status == 'success') {
