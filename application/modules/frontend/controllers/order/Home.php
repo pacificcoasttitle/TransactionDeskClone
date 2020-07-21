@@ -613,6 +613,7 @@ class Home extends MX_Controller {
 		        "verify_peer_name"=>false,
 		    )
         );
+        echo "<pre>"; print_r($request); exit;
         $context = stream_context_create($opts);
         $file = file_get_contents($request,false,$context);
         echo trim($file);
