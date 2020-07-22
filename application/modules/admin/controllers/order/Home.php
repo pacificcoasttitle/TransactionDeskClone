@@ -195,7 +195,42 @@ class Home extends MX_Controller {
                     if(!empty($csvData)){                        
                         foreach($csvData as $row)
                         { 
-                            $rowCount++;
+                            // echo "<pre>"; print_r($csvData); exit;
+                            /*$len = strlen($row['Email']);
+                            
+                            if($len > 30)
+                            {
+                                echo "<pre>"; print_r($row['Email']." : ".$len);
+                            }*/
+
+                            $old_email = substr($row['Email'],0,30);
+                            
+                            $con = array(
+                                    'where' => array(
+                                        'email_address' => $old_email,
+                                        'is_escrow' => 1
+                                    ),
+                                    'returnType' => 'count'
+                                );
+                                $prevCount = $this->home_model->get_rows($con);
+                              
+                                if($prevCount > 0){
+                                    // Update member data
+                                    // unset($customerData['customer_number']);
+                                    $customerData = array(
+                                    
+                                        'email_address' => $row['Email'],
+                                        'is_escrow' => 1,
+                                        'status'=> 1,
+                                    );
+                                    $condition = array('email_address' => $old_email,'is_escrow' => 1);
+                                    $update = $this->home_model->update($customerData, $condition);
+                                    
+                                    if($update){
+                                        $updateCount++;
+                                    }
+                                }
+                            /*$rowCount++;
                             if(isset($row['Email']) && !empty($row['Email']))
                             {
                                 $email_address = str_replace(' ','',$row['Email']);
@@ -246,9 +281,9 @@ class Home extends MX_Controller {
                                         $insertCount++;
                                     }
                                 }
-                            }   
+                            } */  
                             
-                        }
+                        } exit;
                         
                         // Status message with imported data count
                         $notAddCount = ($rowCount - ($insertCount + $updateCount));
