@@ -623,9 +623,10 @@ class Cron extends MX_Controller {
         $userdata = $this->session->userdata('admin');
         $condition = array(
             'where' => array(
-                'status' => 1,
-                'is_master' => 0,
-                'is_password_updated' => 0,
+                //'status' => 1,
+                //'is_master' => 0,
+                //'is_password_updated' => 0,
+                'tmp_password_updated' => 1
             )
         );
         $customer_lists = $this->home_model->get_customers($condition);
