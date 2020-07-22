@@ -781,6 +781,7 @@ class Cron extends MX_Controller {
                                     );
                                     $customerData = array(
                                         'is_password_updated' => 0,
+                                        'is_new_user' => 1,
                                         'random_password' => $random_password,
                                         'password' => md5('Pacific1')
                                     );
