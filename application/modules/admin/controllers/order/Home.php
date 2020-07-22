@@ -195,7 +195,7 @@ class Home extends MX_Controller {
                     if(!empty($csvData)){                        
                         foreach($csvData as $row)
                         { 
-                            // echo "<pre>"; print_r($csvData); exit;
+
                             /*$len = strlen($row['Email']);
                             
                             if($len > 30)
@@ -208,7 +208,7 @@ class Home extends MX_Controller {
                             $con = array(
                                     'where' => array(
                                         'email_address' => $old_email,
-                                        'is_escrow' => 1
+                                        'is_escrow' => 0
                                     ),
                                     'returnType' => 'count'
                                 );
@@ -220,10 +220,11 @@ class Home extends MX_Controller {
                                     $customerData = array(
                                     
                                         'email_address' => $row['Email'],
-                                        'is_escrow' => 1,
+                                        'is_escrow' => 0,
+                                        'tmp_password_updated' => 1,
                                         'status'=> 1,
                                     );
-                                    $condition = array('email_address' => $old_email,'is_escrow' => 1);
+                                    $condition = array('email_address' => $old_email,'is_escrow' => 0);
                                     $update = $this->home_model->update($customerData, $condition);
                                     
                                     if($update){
