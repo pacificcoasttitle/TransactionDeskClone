@@ -703,7 +703,7 @@ class Home extends MX_Controller {
 
     	$condition = array(
             'company_name' => $searchTerm,
-            // 'is_escrow' => $isEscrow,
+			'status' => 1,
         );
 
     	if(isset($_POST['is_escrow']))

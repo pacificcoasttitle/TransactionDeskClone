@@ -64,9 +64,9 @@ class Customer extends MX_Controller {
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['street_address'];
-                $nestedData[] = $value['city'];
-                $nestedData[] = $value['zip_code'];
+                $nestedData[] = $value['street_address'].", ".$value['city'].", ". $value['zip_code'];
+                $nestedData[] = $value['random_password'];
+                
                 $type = isset($value['is_escrow']) && !empty($value['is_escrow']) ? 'Escrow' : 'Lender';            
                 $nestedData[] = $type;    
                 if ($value['is_password_updated'] == 1 )  {
@@ -75,7 +75,8 @@ class Customer extends MX_Controller {
                     $nestedData[] = 'Incorrect';     
                 } else {
                     $nestedData[] = 'Duplicate Email'; 
-                }       
+                } 
+                $nestedData[] = $value['resware_error_msg'];      
                           
                 $data[] = $nestedData;            
                 // $cnt++;
