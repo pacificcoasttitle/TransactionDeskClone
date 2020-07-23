@@ -30,11 +30,11 @@
                             <th>Email Address</th>
                             <th>Telephone</th>
                             <th>Company Name</th>
-                            <th>Street Address</th>
-                            <th>City</th>
-                            <th>Zipcode</th>
+                            <th>property Address</th>
+                            <th>Password</th>
                             <th>Customer Type</th>
                             <th>Crediential</th>
+                            <th>Error Message</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>

@@ -810,7 +810,7 @@ $(document).ready(function () {
             },
             "createdRow": function ( row, data, index ) {
                 
-                if ( data[9] == 'Correct' ) {
+                if ( data[8] == 'Correct' ) {
                     $(row).addClass('alert alert-success');
                 }
                 else
