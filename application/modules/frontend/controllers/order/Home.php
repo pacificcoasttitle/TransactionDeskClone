@@ -702,8 +702,7 @@ class Home extends MX_Controller {
 		$is_master_search = isset($_POST['is_master_search']) && !empty($_POST['is_master_search']) ? $_POST['is_master_search'] : 0;
 
     	$condition = array(
-            'company_name' => $searchTerm,
-			'status' => 1,
+            'company_name' => $searchTerm
         );
 
     	if(isset($_POST['is_escrow']))
