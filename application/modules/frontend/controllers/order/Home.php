@@ -896,13 +896,34 @@ class Home extends MX_Controller {
        $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API').$endPoint, array(), $result, 0, $logid);
         $response = json_decode($result,TRUE);
         $product_types = array();
+
         if(isset($response) && !empty($response))
-        {        
-        	          
+        {	          
             foreach ($response as $key => $value) 
-            {            	
+            {
             	if(isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3)
                 {
+                	$con = array(
+                        'where' => array(
+                            'product_type_id' => $value['ProductTypeID'],
+                            'status' => 1
+                        ),
+                        'returnType' => 'count'
+                    );
+                    $prevCount = $this->home_model->get_product_types($con);
+                    if(empty($prevCount))
+                    {
+                    	$productData = array(
+                                    'transaction_type'=> trim($value['TransactionType']),
+                                    'transaction_type_id'=> $value['TransactionTypeID'],
+                                    'product_type'=> trim($value['ProductType']),
+                                    'product_type_id'=> $value['ProductTypeID'],
+                                    'state'=> 'CA',
+                                    'status'=> 1,
+                                );
+                    	$insert = $this->home_model->insert($productData,'pct_order_product_types');
+                    }
+
                     $product_types[$value['ProductTypeID']] = $value['ProductType']; 
                 }
             }
