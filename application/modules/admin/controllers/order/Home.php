@@ -1399,6 +1399,55 @@ class Home extends MX_Controller {
         $this->load->view('order/layout/footer', $data);
     }
 
+    public function user_check()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Primary Account';
 
+        $users = $this->home_model->get_user_with_duplicate_email($params);
 
+        if(isset($users) && !empty($users))
+        {
+            $new_users = array();
+            foreach ($users as $key => $value) 
+            {
+                $new_users[$value['email_address']][] = $value;
+            }
+        }
+        
+        $data['users'] = $new_users;
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/users_check', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function make_customer_primary()
+    {
+        $this->is_admin();
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+        $email = isset($_POST['email']) && !empty($_POST['email']) ? $_POST['email'] : '';
+
+        if($id)
+        {
+            $customerData = array('is_primary' => 1);
+
+            $condition = array('id' => $id);
+
+            $update = $this->home_model->update($customerData, $condition);
+
+            if($update)
+            {
+                $successMsg = 'Customer marked as primary successfully.';
+                $response = array('status'=>'success', 'message'=>$successMsg);
+            }
+        }
+        else
+        {
+            $msg = 'Customer ID is required.';
+            $response = array('status' => 'error','message'=>$msg);
+        }
+
+        echo json_encode($response);
+    }
 }
