@@ -48,7 +48,6 @@ class Home_model extends CI_Model
             else
             {
                 $this->db->order_by('id', 'asc');
-                $this->db->where('is_password_updated', 1);
                 if(array_key_exists("start",$params) && array_key_exists("limit",$params))
                 {
                     $this->db->limit($params['limit'],$params['start']);
@@ -78,6 +77,7 @@ class Home_model extends CI_Model
                     } else {
                         $this->db->like('company_name', $params['company_name']);
                     }
+                    $this->db->where('is_password_updated', 1);
                     
                 }
                 
