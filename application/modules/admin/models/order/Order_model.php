@@ -2,11 +2,11 @@
 class Order_model extends CI_Model 
 {
 
-	function __construct() {
+    function __construct() {
         // Set table name
         $this->table = 'order_details';
     }
-	
+    
 
     public function get_orders($params)
     {
@@ -32,11 +32,11 @@ class Order_model extends CI_Model
             
             $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
             ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
-            ->join('property_details', 'order_details.property_id = property_details.id')
-            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
+            ->join('property_details', 'order_details.property_id = property_details.id', 'left')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'left')
+            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id', 'left')
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
             ->where('is_imported=0');
             $total_records =  $this->db->count_all_results();
             if(isset($sales_rep) && !empty($sales_rep))
@@ -61,11 +61,11 @@ class Order_model extends CI_Model
            
             $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
             ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
-            ->join('property_details', 'order_details.property_id = property_details.id')
-            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
+            ->join('property_details', 'order_details.property_id = property_details.id', 'left')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'left')
+            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id', 'left')
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
             ->where('is_imported=0');
             $this->db->order_by("order_details.id", "desc");
 
@@ -93,11 +93,11 @@ class Order_model extends CI_Model
             }
             $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
             ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
-            ->join('property_details', 'order_details.property_id = property_details.id')
-            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
+            ->join('property_details', 'order_details.property_id = property_details.id', 'left')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'left')
+            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id', 'left')
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
             ->where('is_imported=0');
        
             $total_records =  $this->db->count_all_results();
@@ -118,11 +118,11 @@ class Order_model extends CI_Model
             
             $this->db->select('order_details.file_number, order_details.file_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,pct_order_sales_rep.name as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
             ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
-            ->join('property_details', 'order_details.property_id = property_details.id')
-            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
+            ->join('property_details', 'order_details.property_id = property_details.id', 'left')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'left')
+            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id', 'left')
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
             ->where('is_imported=0');
 
             $this->db->order_by("order_details.id", "desc");
@@ -147,7 +147,7 @@ class Order_model extends CI_Model
 
     public function update($data, $condition = array()) 
     {
-    	$table = $this->table;
+        $table = $this->table;
 
         if(!empty($data))
         {          
@@ -165,10 +165,10 @@ class Order_model extends CI_Model
 
     public function insert($data = array()) 
     {
-    	$table = $this->table;
+        $table = $this->table;
         if(!empty($data)){
 
-        	$data['created_at'] = date("Y-m-d H:i:s");
+            $data['created_at'] = date("Y-m-d H:i:s");
 
             // Insert data
             $insert = $this->db->insert($table, $data);
