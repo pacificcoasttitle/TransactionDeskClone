@@ -546,6 +546,9 @@ class Cron extends MX_Controller {
             }
             $data = array('status'=>'success','msg'=>$successMsg);
             echo json_encode($data);
+        } else {
+            $data = array('status'=>'success','msg'=> 'No records found for credential check.');
+            echo json_encode($data);
         }
     }
 
