@@ -57,9 +57,10 @@ class Agent extends MX_Controller {
                         {
                             $rowCount++;
                             $name = explode(" ", $row['Name']);
+                            $email = strtolower($row['Email Address']);
                             $agentData = array(
                                 'name' => ucfirst($name[1])." ".ucfirst($name[0]),
-                                'email_address' => $row['Email Address'],
+                                'email_address' => $email,
                                 'company' => ($row['Company']),
                                 'telephone_no' => $row['Telephone'],
                                 'address' => $row['Address'],
@@ -75,7 +76,7 @@ class Agent extends MX_Controller {
                             $con = array(
                                 'where' => array(
                                     'name' => ucfirst($name[1])." ".ucfirst($name[0]),
-                                    'email_address' => $row['Email Address'],
+                                    'email_address' => $email,
                                     'company' => $row['Company']
                                 ),
                                 'returnType' => 'count'
@@ -84,7 +85,7 @@ class Agent extends MX_Controller {
                             
                             if($prevCount > 0){
                                 // Update member data                                
-                                $condition = array('name' => $row['Name'], 'email_address' => $row['Email Address']);
+                                $condition = array('name' => $row['Name'], 'email_address' => $email);
                                 $update = $this->agent_model->update($agentData, $condition);
                                 
                                 if($update){

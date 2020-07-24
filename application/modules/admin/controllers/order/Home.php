@@ -199,6 +199,7 @@ class Home extends MX_Controller {
                             if(isset($row['Email']) && !empty($row['Email']))
                             {
                                 $email_address = str_replace(' ','',$row['Email']);
+                                $email_address = strtolower($email_address);
                                 // Prepare data for DB insertion
                                 $customerData = array(
                                     'resware_user_id' => $row['Partner Employee ID'],
@@ -383,6 +384,7 @@ class Home extends MX_Controller {
                             if(isset($row['Email']) && !empty($row['Email']))
                             {
                                 $email_address = str_replace(' ','',$row['Email']);
+                                $email_address = strtolower($email_address);
                                 // Prepare data for DB insertion
                                 $lenderData = array(
                                     'resware_user_id' => $row['Partner Employee ID'],
