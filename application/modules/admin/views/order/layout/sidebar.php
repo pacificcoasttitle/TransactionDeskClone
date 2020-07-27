@@ -57,8 +57,8 @@
         </div>
 	</li>
 
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/user-check') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/user-check'; ?>">
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/primary-check') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/primary-check'; ?>">
 			<i class="fas fa-fw fa-list"></i>
 			<span>Primary Accounts</span>
 		</a>

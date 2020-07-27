@@ -2195,19 +2195,14 @@ function makePrimary(i)
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#customer_success_msg").offset().top
                     }, 1000);
-                   // customer_list.ajax.reload( null, false );
                     setTimeout(function () {
-                        $('#customer_success_msg').html('').hide();
-                    }, 4000);
+                        location.reload();
+                    }, 5000);
                 } else {
                     $('#customer_error_msg').html(result.message).show();
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#customer_error_msg").offset().top
                     }, 1000);
-
-                    setTimeout(function () {
-                        $('#customer_error_msg').html('').hide();
-                    }, 4000);
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
