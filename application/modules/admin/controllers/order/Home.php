@@ -1759,7 +1759,7 @@ class Home extends MX_Controller {
                 $nestedData[] = $type;    
                 $nestedData[] = 'Incorrect';
 
-                $action = "<a href='javascript:void(0);' onclick='resetPassword(".$value['id'].")' class='btn btn-secondary'  title='Reset Password'>Reset Password</a>";
+                $action = "<a href='javascript:void(0);' onclick='resetPassword(".$value['id'].")' class='btn btn-secondary'  title='Reset Password'>Reset</a>";
                 $nestedData[] = $action;       
                           
                 $data[] = $nestedData;            

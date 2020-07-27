@@ -26,8 +26,8 @@
             <form id="add-new-user" method="POST">
 
                 <div class="form-group row">
-                    <label for="resware_client_id" class="col-sm-4 col-form-label">Resware Client Id</label>
-                    <div class="col-sm-8">
+                    <label for="resware_client_id" class="col-sm-2 col-form-label">Resware Client Id</label>
+                    <div class="col-sm-10">
                         <input type="number" class="form-control" name="resware_client_id" id="resware_client_id" value="<?php echo set_value('resware_client_id')?>" class="form-control" placeholder="Resware Client Id">
                     </div>
                 </div>
