@@ -85,7 +85,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');    
+            // $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');    
             $this->db->from($this->table);
             $filter_total_records =  $this->db->count_all_results();
 
@@ -106,7 +106,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');        
+            // $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');        
             $query = $this->db->get($this->table);
 
             if ($query->num_rows() > 0) 
@@ -123,7 +123,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
+            // $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
             $this->db->from($this->table);
 
             $filter_total_records =  $this->db->count_all_results();
@@ -134,7 +134,7 @@ class TitlePoint_model extends CI_Model
                 }
             }*/
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
+            // $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
@@ -242,7 +242,7 @@ class TitlePoint_model extends CI_Model
             }
 
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+            // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
 
             $this->db->from($this->table);
             $filter_total_records =  $this->db->count_all_results();
@@ -260,7 +260,7 @@ class TitlePoint_model extends CI_Model
             $this->db->order_by('id', 'desc');
             
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+            // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
 
             $query = $this->db->get($this->table);
 
@@ -272,7 +272,7 @@ class TitlePoint_model extends CI_Model
         else
         {
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+            // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
 
             $this->db->from($this->table);
 
@@ -280,7 +280,7 @@ class TitlePoint_model extends CI_Model
 
             
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+            // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
@@ -325,7 +325,7 @@ class TitlePoint_model extends CI_Model
             }
 
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
+            // $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
 
             $this->db->from($this->table);
             $filter_total_records =  $this->db->count_all_results();
@@ -343,7 +343,7 @@ class TitlePoint_model extends CI_Model
             $this->db->order_by('id', 'desc');
             
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
+            // $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
 
             $query = $this->db->get($this->table);
 
@@ -355,7 +355,7 @@ class TitlePoint_model extends CI_Model
         else
         {
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
+            // $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
 
             $this->db->from($this->table);
 
@@ -363,7 +363,7 @@ class TitlePoint_model extends CI_Model
 
             
             $this->db->where('file_id IS NOT NULL');
-            $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
+            // $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
