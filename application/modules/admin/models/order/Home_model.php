@@ -827,7 +827,6 @@ class Home_model extends CI_Model
         );
     }
 
-
     public function get_incorrect_customers($params)
     {
         $query = $this->db->query('SELECT * 
@@ -966,4 +965,17 @@ class Home_model extends CI_Model
             'data' => $customer_lists
         );
     }
+    
+    public function getUsersForEmail($email, $id) 
+    {
+        $this->db->select('*');
+        $this->db->from('customer_basic_details');
+        $this->db->where('random_password is not null');
+        $this->db->where('email_address', $email);
+        $this->db->where("id !=", $id);
+        $query = $this->db->get();
+        $usersLists = $query->result_array();  
+        return $usersLists;  
+    }
+
 }

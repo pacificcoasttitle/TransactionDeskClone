@@ -651,6 +651,8 @@ class Home extends MX_Controller {
 
     public function addNewUser()
     {
+        $this->load->model('order/apiLogs');
+        $userdata = $this->session->userdata('admin');
         $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Add New User';
@@ -692,6 +694,21 @@ class Home extends MX_Controller {
                 if ($response['success']) {
                     $customerData['resware_user_id'] = $response['resware_user_id'];
                     $customerData['random_password'] = $this->order->randomPassword();
+
+                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+                    $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+                    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                    $responsePwd = json_decode($updatePwdResult,true);
+                    $condition = array(
+                        'id' => $userInfo['id']
+                    );
+                    $customerData = array(
+                        'is_password_updated' => 0,
+                        'random_password' => $random_password,
+                        'password' => 'Pacific1',
+                        'is_primary' => 1
+                    );
+
                     if (!empty($this->input->post('resware_client_id'))) {
                         $condition = array(
                             'where' => array(
@@ -709,6 +726,8 @@ class Home extends MX_Controller {
                     } else {
                         $insert = $this->home_model->insert($customerData);
                     }
+
+                    
                 
                     if ($insert) {
                         $data['success_msg'] = 'User added successfully.';
@@ -1401,7 +1420,7 @@ class Home extends MX_Controller {
         $this->load->view('order/layout/footer', $data);
     }
 
-    public function user_check()
+    public function primaryCheck()
     {
         $this->is_admin();
         $data = array();
@@ -1426,30 +1445,265 @@ class Home extends MX_Controller {
 
     public function make_customer_primary()
     {
+        $this->load->model('order/apiLogs');
+        $this->load->library('order/order');
+        $this->load->library('order/resware');
         $this->is_admin();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         $email = isset($_POST['email']) && !empty($_POST['email']) ? $_POST['email'] : '';
+        $userdata = $this->session->userdata('admin');
+        $userdata['email'] = $userdata['email_address'];
+        $userdata['admin_api'] = 1;
 
-        if($id)
-        {
-            $customerData = array('is_primary' => 1);
+        if($id) {
+            $userLists = $this->home_model->getUsersForEmail($email, $id);
 
-            $condition = array('id' => $id);
+            if(!empty($userLists)) {
 
-            $update = $this->home_model->update($customerData, $condition);
+                foreach($userLists as $user) {
 
-            if($update)
-            {
-                $successMsg = 'Customer marked as primary successfully.';
-                $response = array('status'=>'success', 'message'=>$successMsg);
+                    if (!empty($user['resware_user_id']) && !empty($user['partner_id']) && !empty($user['email_address'])) {
+                        $endPoint = 'admin/partners/'.$user['partner_id'].'/employees/'.$user['resware_user_id'];
+                        $userUpdateData = array(			
+                            'Enabled' => false,
+                            'WebsiteAccess' => false,
+                            'FirstName' => $user['first_name'],
+                            'LastName' => $user['last_name'],
+                            'ContactInformation' => array(
+                                'EmailAddress' => $user['email_address'],
+                            ),
+                        );
+                        $userUpdateData = json_encode($userUpdateData);
+                        $logid = $this->apiLogs->syncLogs($user['id'], 'resware', 'update_password', env('RESWARE_ORDER_API').$endPoint, $userUpdateData, array(), 0, 0);
+                        $result = $this->resware->make_request('PUT', $endPoint, $userUpdateData, $userdata);
+                        $this->apiLogs->syncLogs($user['id'], 'resware', 'update_password', env('RESWARE_ORDER_API').$endPoint, $userUpdateData, $result, 0, $logid);
+
+                        if (isset($result) && !empty($result)) {
+                            $response = json_decode($result,true);
+                            
+                            if (isset($response['Employee']) && !empty($response['Employee'])) {
+                                $condition = array(
+                                    'id' => $user['id']
+                                );
+                                $customerData = array(
+                                    'is_password_updated' => 0,
+                                    'is_new_user' => 0,
+                                    'random_password' => '',
+                                    'password' => 'Pacific1',
+                                    'is_primary' => 0
+                                );
+                                $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                            } else {
+                                $msg = 'Something went wrong. Please try again.';
+                                $response = array('status' => 'error', 'message' => $msg);
+                                echo json_encode($response);exit;
+                            }
+                        } else {
+                            $msg = 'Something went wrong. Please try again.';
+                            $response = array('status' => 'error', 'message' => $msg);
+                            echo json_encode($response);exit;
+                        }
+                    }
+                }
             }
-        }
-        else
-        {
+
+            $params = array(
+                'id' => $id
+            );
+            $userInfo = $this->home_model->get_rows($params);
+            $userUpdateData = array();
+
+            if (!empty($userInfo['resware_user_id']) && !empty($userInfo['partner_id']) && !empty($userInfo['email_address'])) {
+                $endPoint = 'admin/partners/'.$userInfo['partner_id'].'/employees/'.$userInfo['resware_user_id'];
+                $userUpdateData = array(			
+                    'Password' => 'Pacific1',
+                    'Enabled' => true,
+                    'Roles' => array (
+                        0 => array (
+                            'RoleID' => 5033,
+                            'Name' => 'Web Services: Access All Files for ResWare-to-ResWare Services',
+                        ),
+                        1 => 
+                        array (
+                        'RoleID' => 6013,
+                        'Name' => 'Web Services: Add Actions',
+                        ),
+                        2 => 
+                        array (
+                        'RoleID' => 6005,
+                        'Name' => 'Web Services: Add Documents',
+                        ),
+                        3 => 
+                        array (
+                        'RoleID' => 6002,
+                        'Name' => 'Web Services: Add Notes',
+                        ),
+                        4 => 
+                        array (
+                        'RoleID' => 6009,
+                        'Name' => 'Web Services: Add Partners',
+                        ),
+                        5 => 
+                        array (
+                        'RoleID' => 6015,
+                        'Name' => 'Web Services: Add WebURL Documents',
+                        ),
+                        6 => 
+                        array (
+                        'RoleID' => 5027,
+                        'Name' => 'Web Services: Bypass Address Validation',
+                        ),
+                        7 => 
+                        array (
+                        'RoleID' => 6003,
+                        'Name' => 'Web Services: Cancel Files',
+                        ),
+                        8 => 
+                        array (
+                        'RoleID' => 5023,
+                        'Name' => 'Web Services: Estimate Costs as 2010 HUD',
+                        ),
+                        9 => 
+                        array (
+                        'RoleID' => 6016,
+                        'Name' => 'Web Services: Expense Reports',
+                        ),
+                        10 => 
+                        array (
+                        'RoleID' => 6012,
+                        'Name' => 'Web Services: Get Actions',
+                        ),
+                        11 => 
+                        array (
+                        'RoleID' => 6007,
+                        'Name' => 'Web Services: Get Custom Fields',
+                        ),
+                        12 => 
+                        array (
+                        'RoleID' => 6006,
+                        'Name' => 'Web Services: Get Documents',
+                        ),
+                        13 => 
+                        array (
+                        'RoleID' => 6001,
+                        'Name' => 'Web Services: Get Notes',
+                        ),
+                        14 => 
+                        array (
+                        'RoleID' => 6010,
+                        'Name' => 'Web Services: Get Partners',
+                        ),
+                        15 => 
+                        array (
+                        'RoleID' => 69,
+                        'Name' => 'Web Services: Order Placement',
+                        ),
+                        16 => 
+                        array (
+                        'RoleID' => 6004,
+                        'Name' => 'Web Services: Override Property Address Validation and Reformatting',
+                        ),
+                        17 => 
+                        array (
+                        'RoleID' => 6011,
+                        'Name' => 'Web Services: Remove Partners',
+                        ),
+                        18 => 
+                        array (
+                        'RoleID' => 6014,
+                        'Name' => 'Web Services: Search Files',
+                        ),
+                        19 => 
+                        array (
+                        'RoleID' => 6019,
+                        'Name' => 'Web Services: Update Partner',
+                        ),
+                        20 => 
+                        array (
+                        'RoleID' => 6008,
+                        'Name' => 'Web Services: Write Custom Fields',
+                        ),
+                        21 => 
+                        array (
+                        'RoleID' => 51,
+                        'Name' => 'Website',
+                        ),
+                    ),
+                    'WebsiteAccess' => true,
+                    'Name' => $userInfo['email_address'],
+                    'PasswordExpirationDate' => '/Date(3025656585000-0000)/',
+                    'FirstName' => $userInfo['first_name'],
+                    'LastName' => $userInfo['last_name'],
+                    'ContactInformation' => array(
+                        'EmailAddress' => $userInfo['email_address'],
+                    ),
+                );
+                $userUpdateData = json_encode($userUpdateData);
+                $logid = $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'update_password', env('RESWARE_ORDER_API').$endPoint, $userUpdateData, array(), 0, 0);
+                $result = $this->resware->make_request('PUT', $endPoint, $userUpdateData, $userdata);
+                $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'update_password', env('RESWARE_ORDER_API').$endPoint, $userUpdateData, $result, 0, $logid);
+                
+                if (isset($result) && !empty($result)) {
+                    $response = json_decode($result,true);
+                    
+                    if (isset($response['Employee']) && !empty($response['Employee'])) {
+                        $random_password = $this->order->randomPassword();
+                        $reswareUpdatePwdData = array(
+                            'user_name' =>  $userInfo['email_address'],
+                            'password' => 'Pacific1',
+                            'new_password' => $random_password,
+                        );
+                        
+                        $logid = $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+                        $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+                        $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'update_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                        $responsePwd = json_decode($updatePwdResult,true);
+                        $condition = array(
+                            'id' => $userInfo['id']
+                        );
+                        $customerData = array(
+                            'is_password_updated' => 0,
+                            'random_password' => $random_password,
+                            'password' => 'Pacific1',
+                            'is_primary' => 1
+                        );
+
+                        if(!empty($responsePwd['message'])) {
+                            $customerData['is_password_updated'] = 0;
+                            $customerData['resware_error_msg'] = $responsePwd['message'];
+                            $response = array('status' => 'error', 'message' =>  'Password update failed due to: '.$responsePwd['message']);
+                        } else {
+                            $customerData['is_password_updated'] = 1;
+                            $response = array('status' => 'success', 'message' =>  'Password updated successfully for email user: '. $userInfo['email_address']);
+                        }
+                        
+                        $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                        echo json_encode($response);exit;
+                    } else {
+                        $msg = $response['ResponseStatus']['Errors'][0]['Message'];
+                        $condition = array(
+                            'id' => $userInfo['id']
+                        );
+                        $customerData = array(
+                            'is_password_updated' => 0,
+                            'password' => 'Pacific1',
+                            'is_primary' => 1,
+                            'resware_error_msg' => $msg
+                        );
+                        $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                        $response = array('status' => 'error', 'message' => $msg);
+                        echo json_encode($response);exit;
+                    }
+                } else {
+                    $msg = 'Something went wrong. Please try again.';
+                    $response = array('status' => 'error', 'message' => $msg);
+                    echo json_encode($response);exit;
+                }
+            }
+        } else {
             $msg = 'Customer ID is required.';
             $response = array('status' => 'error','message'=>$msg);
         }
-
         echo json_encode($response);
     }
 
@@ -1527,5 +1781,22 @@ class Home extends MX_Controller {
     {
         $this->is_admin();
         $id = $this->input->post('id');
+    }
+    
+    public function updatePasswordResware($postData)
+    {
+        $body_params = http_build_query($postData);
+        $ch = curl_init(env('RESWARE_UPDATE_PWD_API'));    
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
+        $result = curl_exec($ch);
+        return $result;
     }
 }

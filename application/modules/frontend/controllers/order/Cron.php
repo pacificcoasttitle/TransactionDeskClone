@@ -511,8 +511,7 @@ class Cron extends MX_Controller {
                                 
                                 if (isset($response['Me']) && !empty($response['Me'])) {
                                     $customerData = array(
-                                        'is_password_updated' => 1,
-                                        'is_new_user' => 0
+                                        'is_password_updated' => 1
                                     );
                                     $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
 
@@ -784,7 +783,6 @@ class Cron extends MX_Controller {
                                     );
                                     $customerData = array(
                                         'is_password_updated' => 0,
-                                        'is_new_user' => 1,
                                         'random_password' => $random_password,
                                         'password' => md5('Pacific1')
                                     );
