@@ -1452,4 +1452,80 @@ class Home extends MX_Controller {
 
         echo json_encode($response);
     }
+
+    public function incorrect_users()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Incorrect Users';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/incorrect_users', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_incorrect_customer_list()
+    {
+        $params = array();
+        
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['where']['status'] = 1;
+
+            $pageno = ($params['start'] / $params['length'])+1;
+
+            $incorrect_customer_lists = $this->home_model->get_incorrect_customers($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $incorrect_customer_lists = $this->home_model->get_incorrect_customers($params);            
+        }
+        $data = array(); 
+        
+        if(isset($incorrect_customer_lists['data']) && !empty($incorrect_customer_lists['data']))
+        {
+            foreach ($incorrect_customer_lists['data'] as $key => $value) 
+            {  
+                $nestedData=array();
+                /*$nestedData[] = $value['customer_number'];*/
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['telephone_no'];
+                $nestedData[] = $value['company_name'];
+                $nestedData[] = $value['street_address'].", ".$value['city'].", ". $value['zip_code'];
+                $nestedData[] = $value['random_password'];
+                
+                $type = isset($value['is_escrow']) && !empty($value['is_escrow']) ? 'Escrow' : 'Lender';            
+                $nestedData[] = $type;    
+                $nestedData[] = 'Incorrect';
+
+                $action = "<a href='javascript:void(0);' onclick='resetPassword(".$value['id'].")' class='btn btn-secondary'  title='Reset Password'>Reset Password</a>";
+                $nestedData[] = $action;       
+                          
+                $data[] = $nestedData;            
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal'] = intval( $incorrect_customer_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $incorrect_customer_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function reset_user_password()
+    {
+        $this->is_admin();
+        $id = $this->input->post('id');
+    }
 }

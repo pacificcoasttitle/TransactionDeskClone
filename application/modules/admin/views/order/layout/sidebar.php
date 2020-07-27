@@ -20,6 +20,7 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/new-users'; ?>">New Users</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/master-users'; ?>">Master Users</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/companies' || $this->uri->uri_string() == 'order/admin/add-company') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/companies'; ?>">Companies</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/incorrect-users') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/incorrect-users'; ?>">Incorrect Users</a>
         </div>
 	</li>
 	

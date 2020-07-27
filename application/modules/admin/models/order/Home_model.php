@@ -827,4 +827,143 @@ class Home_model extends CI_Model
         );
     }
 
+
+    public function get_incorrect_customers($params)
+    {
+        $query = $this->db->query('SELECT * 
+                                FROM
+                                  customer_basic_details 
+                                WHERE email_address IN 
+                                  (SELECT 
+                                    email_address 
+                                  FROM
+                                    customer_basic_details 
+                                  WHERE random_password IS NOT NULL 
+                                    AND is_password_updated = 0 AND email_address != "") 
+                                GROUP BY email_address 
+                                HAVING COUNT(email_address) = 1');
+
+        $total_records =  $query->num_rows();
+
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        
+        
+        $customer_lists =array();
+        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
+        {
+            $keyword = $params['searchvalue'];
+
+            if(isset($keyword) && !empty($keyword))
+            {
+                $where = ' AND first_name LIKE "%'.$keyword.'%"';
+                $where .= ' OR last_name LIKE "%'.$keyword.'%"';
+                $where .= ' OR email_address LIKE "%'.$keyword.'%"';
+            }
+
+            
+            $query = $this->db->query('SELECT * 
+                                FROM
+                                  customer_basic_details 
+                                WHERE email_address IN 
+                                  (SELECT 
+                                    email_address 
+                                  FROM
+                                    customer_basic_details 
+                                  WHERE random_password IS NOT NULL 
+                                    AND is_password_updated = 0 AND email_address != "")'.$where.' 
+                                GROUP BY email_address 
+                                HAVING COUNT(email_address) = 1');
+
+            $filter_total_records =  $query->num_rows();
+
+
+            if(isset($keyword) && !empty($keyword))
+            {
+                if(isset($keyword) && !empty($keyword))
+                {
+                    $where = ' AND first_name LIKE "%'.$keyword.'%"';
+                    $where .= ' OR last_name LIKE "%'.$keyword.'%"';
+                    $where .= ' OR email_address LIKE "%'.$keyword.'%"';
+                }
+            }
+
+            if(isset($limit) && !empty($limit))
+            {
+                $limit = ' LIMIT ' .$limit;
+            }
+            if((isset($offset) && !empty($offset)))
+            {
+                $offset = ' OFFSET '.$offset;
+            }
+            
+            $query = $this->db->query('SELECT * 
+                                FROM
+                                  customer_basic_details 
+                                WHERE email_address IN 
+                                  (SELECT 
+                                    email_address 
+                                  FROM
+                                    customer_basic_details 
+                                  WHERE random_password IS NOT NULL 
+                                    AND is_password_updated = 0 AND email_address != "")'.$where.' 
+                                GROUP BY email_address 
+                                HAVING COUNT(email_address) = 1'.$limit.$offset);
+            if ($query->num_rows() > 0) 
+            {
+                $customer_lists = $query->result_array();
+            }
+        }
+        else
+        {   
+
+            $query = $this->db->query('SELECT * 
+                                FROM
+                                  customer_basic_details 
+                                WHERE email_address IN 
+                                  (SELECT 
+                                    email_address 
+                                  FROM
+                                    customer_basic_details 
+                                  WHERE random_password IS NOT NULL 
+                                    AND is_password_updated = 0 AND email_address != "") 
+                                GROUP BY email_address 
+                                HAVING COUNT(email_address) = 1');
+
+            $filter_total_records =  $query->num_rows();
+            if(isset($limit) && !empty($limit))
+            {
+                $limit = ' LIMIT ' .$limit;
+            }
+            if((isset($offset) && !empty($offset)))
+            {
+                $offset = ' OFFSET '.$offset;
+            }
+            
+            $query = $this->db->query('SELECT * 
+                                FROM
+                                  customer_basic_details 
+                                WHERE email_address IN 
+                                  (SELECT 
+                                    email_address 
+                                  FROM
+                                    customer_basic_details 
+                                  WHERE random_password IS NOT NULL 
+                                    AND is_password_updated = 0 AND email_address != "") 
+                                GROUP BY email_address 
+                                HAVING COUNT(email_address) = 1'.$limit.$offset);
+
+            if ($query->num_rows() > 0) 
+            {
+                $customer_lists = $query->result_array();
+            }
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $customer_lists
+        );
+    }
 }
