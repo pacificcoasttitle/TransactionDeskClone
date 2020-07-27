@@ -691,23 +691,28 @@ class Home extends MX_Controller {
                     'status'=> 1,
                 );
                 $response = $this->addNewUserToResware($customerData);
+
                 if ($response['success']) {
                     $customerData['resware_user_id'] = $response['resware_user_id'];
                     $customerData['random_password'] = $this->order->randomPassword();
-
+                    $reswareUpdatePwdData = array(
+                        'user_name' =>  $this->input->post('email_address'),
+                        'password' => 'Pacific1',
+                        'new_password' => $customerData['random_password'],
+                    );
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
                     $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
-                    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'update_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
                     $responsePwd = json_decode($updatePwdResult,true);
-                    $condition = array(
-                        'id' => $userInfo['id']
-                    );
-                    $customerData = array(
-                        'is_password_updated' => 0,
-                        'random_password' => $random_password,
-                        'password' => 'Pacific1',
-                        'is_primary' => 1
-                    );
+
+                    if(!empty($responsePwd['message'])) {
+                        $customerData['resware_error_msg'] = $responsePwd['message'];
+                        $data['error_msg'] = 'Password update failed due to: '.$responsePwd['message'];
+                        
+                    } else {
+                        $customerData['is_password_updated'] = 1;
+                        $data['success_msg'] = 'Password updated successfully for email user: '. $userInfo['email_address'];
+                    }
 
                     if (!empty($this->input->post('resware_client_id'))) {
                         $condition = array(
@@ -726,16 +731,6 @@ class Home extends MX_Controller {
                     } else {
                         $insert = $this->home_model->insert($customerData);
                     }
-
-                    
-                
-                    if ($insert) {
-                        $data['success_msg'] = 'User added successfully.';
-                    } else if($update) {
-                        $data['success_msg'] = 'User updated successfully.';
-                    } else {
-                        $data['error_msg'] = 'User not added.';
-                    } 
                 } else {
                     $data['error_msg'] = $response['msg'];
                 }
@@ -1656,7 +1651,7 @@ class Home extends MX_Controller {
                         
                         $logid = $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
                         $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
-                        $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'update_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                        $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
                         $responsePwd = json_decode($updatePwdResult,true);
                         $condition = array(
                             'id' => $userInfo['id']
@@ -1779,12 +1774,45 @@ class Home extends MX_Controller {
 
     public function reset_user_password()
     {
+        $this->load->model('order/apiLogs');
         $this->is_admin();
         $id = $this->input->post('id');
+        $params = array(
+            'id' => $id
+        );
+        $userInfo = $this->home_model->get_rows($params);
+        $reswareUpdatePwdData = array(
+            'user_name' =>  $userInfo['email_address'],
+            'password' => 'Pacific1',
+            'new_password' => $userInfo['random_password'],
+        );
+        $logid = $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+        $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+        $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+        $responsePwd = json_decode($updatePwdResult,true);
+        $condition = array(
+            'id' => $userInfo['id']
+        );
+        $customerData = array(
+            'password' => 'Pacific1',
+        );
+
+        if(!empty($responsePwd['message'])) {
+            $customerData['is_password_updated'] = 0;
+            $customerData['resware_error_msg'] = $responsePwd['message'];
+            $response = array('status' => 'error', 'message' =>  'Password update failed due to: '.$responsePwd['message']);
+        } else {
+            $customerData['is_password_updated'] = 1;
+            $response = array('status' => 'success', 'message' =>  'Password updated successfully for email user: '. $userInfo['email_address']);
+        }
+
+        $this->home_model->update($customerData, $condition, 'customer_basic_details');
+        echo json_encode($response);exit;
     }
     
     public function updatePasswordResware($postData)
     {
+        $this->is_admin();
         $body_params = http_build_query($postData);
         $ch = curl_init(env('RESWARE_UPDATE_PWD_API'));    
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);

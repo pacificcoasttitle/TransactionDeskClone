@@ -2241,25 +2241,19 @@ function resetPassword(id)
             },
             success: function(data){
                 var result = jQuery.parseJSON(data);
-                console.log(data);
                 if (result.status == 'success') {
                     $('#customer_success_msg').html(result.message).show();
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#customer_success_msg").offset().top
                     }, 1000);
-                   // customer_list.ajax.reload( null, false );
                     setTimeout(function () {
-                        $('#customer_success_msg').html('').hide();
-                    }, 4000);
+                        incorrect_customer_list.ajax.reload();
+                    }, 5000);
                 } else {
                     $('#customer_error_msg').html(result.message).show();
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#customer_error_msg").offset().top
                     }, 1000);
-
-                    setTimeout(function () {
-                        $('#customer_error_msg').html('').hide();
-                    }, 4000);
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
