@@ -211,15 +211,12 @@ class TitlePoint extends MX_Controller {
                     else
                     {
                         $tax_file_path = FCPATH.'uploads/tax/'.$file_number.'.pdf';
-                        echo "<pre>"; print_r($tax_file_path);
                         if (file_exists($tax_file_path)) 
                         {
-                            echo "<pre>"; print_r("if"); exit;
                             $nestedData[] = 'success';
                         }
                         else
                         {
-                            echo "<pre>"; print_r("else"); exit;
                             $nestedData[] = $value['cs3_message'];
                         }
                         
