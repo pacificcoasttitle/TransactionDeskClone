@@ -55,7 +55,7 @@ class TitlePoint_model extends CI_Model
     public function getLvLogs($params)
     {
         $this->db->where('file_id IS NOT NULL');
-        $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
+       // $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
         
         /*if(array_key_exists("status", $params)){
             foreach($params['status'] as $key => $val){
@@ -221,7 +221,7 @@ class TitlePoint_model extends CI_Model
     public function getTaxLogs($params)
     {
         $this->db->where('file_id IS NOT NULL');
-        $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+       // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
         
         $this->db->from($this->table);
         $total_records =  $this->db->count_all_results();
@@ -304,7 +304,7 @@ class TitlePoint_model extends CI_Model
     public function getGrantDeedLogs($params)
     {
         $this->db->where('file_id IS NOT NULL');
-        $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
+       // $this->db->where('grant_deed_message IS NOT NULL AND grant_deed_message != ""');
         
         $this->db->from($this->table);
         
