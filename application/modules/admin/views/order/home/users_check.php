@@ -85,6 +85,10 @@
                                             <?php 
                                                 if($k == 0)
                                                 {
+                                                    if ($v['is_password_updated'] == 1 )
+                                                    {
+                                                        $class = 'disabled';
+                                                    }
                                             ?>
                                                     <td style="vertical-align: middle; border-bottom: 3px solid black;" align="center" rowspan="<?php echo $count; ?>"><a href="javascript:void(0);" onclick="makePrimary(<?php echo $i; ?>);"  class="btn btn-secondary <?php echo $class; ?>"> Make Primary </a></td>
                                             <?php
