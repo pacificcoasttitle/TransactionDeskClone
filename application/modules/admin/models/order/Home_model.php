@@ -208,7 +208,7 @@ class Home_model extends CI_Model
         $query = $this->db->query('SELECT * FROM customer_basic_details WHERE email_address IN (
         SELECT email_address FROM customer_basic_details
         GROUP BY email_address HAVING COUNT(*) > 1 
-        ) ORDER BY email_address ASC');
+        ) ORDER BY email_address ASC, is_password_updated DESC');
 
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
 

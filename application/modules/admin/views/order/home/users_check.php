@@ -25,10 +25,10 @@
                             <th style="width: 8%;">Partner ID</th>
                             <th style="width: 10%;">First Name</th>
                             <th style="width: 10%;">Last Name</th>
-                            <th style="width: 20%;">Email Address</th>
-                            <th style="width: 15%;">Company</th>
-                            <th style="width: 15%;">Credential</th>
-                            <th style="width: 14%;">Action</th>
+                            <th style="width: 25%;">Email Address</th>
+                            <th style="width: 14%;">Company</th>
+                            <th style="width: 12%;">Credential</th>
+                            <th style="width: 13%;">Action</th>
                         </tr>
                     </thead>                
                     <tbody>
@@ -85,6 +85,10 @@
                                             <?php 
                                                 if($k == 0)
                                                 {
+                                                    if ($v['is_password_updated'] == 1 )
+                                                    {
+                                                        $class = 'disabled';
+                                                    }
                                             ?>
                                                     <td style="vertical-align: middle; border-bottom: 3px solid black;" align="center" rowspan="<?php echo $count; ?>"><a href="javascript:void(0);" onclick="makePrimary(<?php echo $i; ?>);"  class="btn btn-secondary <?php echo $class; ?>"> Make Primary </a></td>
                                             <?php
