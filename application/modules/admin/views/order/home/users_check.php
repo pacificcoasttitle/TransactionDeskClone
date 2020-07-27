@@ -26,9 +26,9 @@
                             <th style="width: 10%;">First Name</th>
                             <th style="width: 10%;">Last Name</th>
                             <th style="width: 25%;">Email Address</th>
-                            <th style="width: 14%;">Company</th>
+                            <th style="width: 13%;">Company</th>
                             <th style="width: 12%;">Credential</th>
-                            <th style="width: 13%;">Action</th>
+                            <th style="width: 14%;">Action</th>
                         </tr>
                     </thead>                
                     <tbody>
