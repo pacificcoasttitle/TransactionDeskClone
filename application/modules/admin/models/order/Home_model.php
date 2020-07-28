@@ -203,10 +203,18 @@ class Home_model extends CI_Model
         return false;
     }
 
-    public function get_user_with_duplicate_email()
+    public function get_user_with_duplicate_email($params)
     {
+        if (isset($params['keyword']) && !empty($params['keyword'])) 
+        {
+            $keyword = $params['keyword'];
+
+            /*$where = ' WHERE first_name LIKE "%'.$keyword.'%"';
+            $where .= ' OR last_name LIKE "%'.$keyword.'%"';*/
+            $where .= ' WHERE email_address LIKE "%'.$keyword.'%"';
+        }
         $query = $this->db->query('SELECT * FROM customer_basic_details WHERE email_address IN (
-        SELECT email_address FROM customer_basic_details
+        SELECT email_address FROM customer_basic_details'.$where.'
         GROUP BY email_address HAVING COUNT(*) > 1 
         ) ORDER BY email_address ASC, is_password_updated DESC');
 
