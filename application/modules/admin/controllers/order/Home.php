@@ -1750,14 +1750,14 @@ class Home extends MX_Controller {
                 $nestedData[] = $value['first_name'];
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
-                $nestedData[] = $value['telephone_no'];
+               
                 $nestedData[] = $value['company_name'];
                 $nestedData[] = $value['street_address'].", ".$value['city'].", ". $value['zip_code'];
                 $nestedData[] = $value['random_password'];
                 
                 $type = isset($value['is_escrow']) && !empty($value['is_escrow']) ? 'Escrow' : 'Lender';            
                 $nestedData[] = $type;    
-                $nestedData[] = 'Incorrect';
+                $nestedData[] = $value['resware_error_msg'];
 
                 $action = "<a href='javascript:void(0);' onclick='resetPassword(".$value['id'].")' class='btn btn-secondary'  title='Reset Password'>Reset</a>";
                 $nestedData[] = $action;       

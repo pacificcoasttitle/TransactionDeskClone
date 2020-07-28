@@ -17,12 +17,11 @@
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email Address</th>
-                            <th>Telephone</th>
                             <th>Company Name</th>
                             <th>property Address</th>
                             <th>Password</th>
                             <th>Customer Type</th>
-                            <th>Credential</th>
+                            <th>Error Message</th>
                             <th>Action</th>
                         </tr>
                     </thead>                
