@@ -1759,11 +1759,11 @@ class Home extends MX_Controller {
                 $nestedData[] = $value['email_address'];
                
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['street_address'].", ".$value['city'].", ". $value['zip_code'];
+               // $nestedData[] = $value['street_address'].", ".$value['city'].", ". $value['zip_code'];
                 $nestedData[] = $value['random_password'];
                 
                 $type = isset($value['is_escrow']) && !empty($value['is_escrow']) ? 'Escrow' : 'Lender';            
-                $nestedData[] = $type;    
+               // $nestedData[] = $type;    
                 $nestedData[] = $value['resware_error_msg'];
 
                 $action = "<a href='javascript:void(0);' onclick='resetPassword(".$value['id'].")' class='btn btn-secondary'  title='Reset Password'>Reset</a>";
