@@ -1824,6 +1824,11 @@ $(document).ready(function () {
             },            
         }); 
     }
+
+    $('#frmSearch #btnClear').click(function () {
+        $('#frmSearch #keyword').val('');
+        $('#frmSearch #btnSearch').click();
+    });
 });
 
 

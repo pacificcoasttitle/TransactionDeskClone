@@ -17,6 +17,17 @@
         <div class="card-body">
             <div id="customer_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="customer_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+            <form name="frmSearch" id="frmSearch" method="POST">
+                <div class="form-group row">
+                       <div class="col-sm-3">
+                            <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Search" value="<?php echo isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : ''; ?>">
+                        </div>
+                        <div class="">
+                            <button type="submit" class="btn btn-secondary" id="btnSearch">Search</button>
+                            <a href="javascript:void(0);" id="btnClear" name="cancel" class="btn btn-secondary">Clear</a>
+                        </div>
+                </div>
+            </form>
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-user-check-listing" style="table-layout: fixed;" cellspacing="0" width="100%">
                     <thead>

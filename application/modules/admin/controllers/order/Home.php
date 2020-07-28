@@ -1420,7 +1420,14 @@ class Home extends MX_Controller {
         $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Primary Account';
-
+        $params = array();
+        if(isset($_POST) && !empty($_POST))
+        {
+            $keyword = $this->input->post('keyword');
+            $params['keyword'] = $keyword;
+        }
+        
+        
         $users = $this->home_model->get_user_with_duplicate_email($params);
 
         if(isset($users) && !empty($users))
