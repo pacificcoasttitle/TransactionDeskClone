@@ -18,9 +18,7 @@
                             <th>Last Name</th>
                             <th>Email Address</th>
                             <th>Company Name</th>
-                            <th>property Address</th>
                             <th>Password</th>
-                            <th>Customer Type</th>
                             <th>Error Message</th>
                             <th>Action</th>
                         </tr>
