@@ -114,7 +114,15 @@
                         <?php
                                     $i++;
                                 }
-                            } 
+                            }
+                            else
+                            {
+                        ?>
+                                <tr class="odd">
+                                    <td valign="top" colspan="8" style="text-align: center;">No matching records found</td>
+                                </tr>
+                        <?php                                
+                            }
                         ?>
                     </tbody>
                 </table>
