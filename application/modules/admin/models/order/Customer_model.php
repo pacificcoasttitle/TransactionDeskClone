@@ -14,7 +14,7 @@ class Customer_model extends CI_Model
             if ($params['credentials_check'] == '1') {
                 $this->db->where('is_password_updated', 1);
             } else if ($params['credentials_check'] == '0') {
-                $this->db->where('(is_password_updated = 0 and random_password is not null)');
+                $this->db->where('(is_password_updated = 0 and random_password != "")');
             } else {
                 $this->db->where('random_password is null');
             }
@@ -43,7 +43,7 @@ class Customer_model extends CI_Model
                 if ($params['credentials_check'] == '1') {
                     $this->db->where('is_password_updated', 1);
                 } else if ($params['credentials_check'] == '0') {
-                    $this->db->where('(is_password_updated = 0 and random_password is not null)');
+                    $this->db->where('(is_password_updated = 0 and random_password != "")');
                 } else {
                     $this->db->where('random_password is null');
                 }
@@ -65,7 +65,7 @@ class Customer_model extends CI_Model
                 if ($params['credentials_check'] == '1') {
                     $this->db->where('is_password_updated', 1);
                 } else if ($params['credentials_check'] == '0') {
-                    $this->db->where('(is_password_updated = 0 and random_password is not null)');
+                    $this->db->where('(is_password_updated = 0 and random_password != "")');
                 } else {
                     $this->db->where('random_password is null');
                 }
@@ -93,7 +93,7 @@ class Customer_model extends CI_Model
                 if ($params['credentials_check'] == '1') {
                     $this->db->where('is_password_updated', 1);
                 } else if ($params['credentials_check'] == '0') {
-                    $this->db->where('(is_password_updated = 0 and random_password is not null)');
+                    $this->db->where('(is_password_updated = 0 and random_password != "")');
                 } else {
                     $this->db->where('random_password is null');
                 }
@@ -106,7 +106,7 @@ class Customer_model extends CI_Model
                 if ($params['credentials_check'] == '1') {
                     $this->db->where('is_password_updated', 1);
                 } else if ($params['credentials_check'] == '0') {
-                    $this->db->where('(is_password_updated = 0 and random_password is not null)');
+                    $this->db->where('(is_password_updated = 0 and random_password != "")');
                 } else {
                     $this->db->where('random_password is null');
                 }

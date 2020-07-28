@@ -837,7 +837,7 @@ class Home_model extends CI_Model
                                     email_address 
                                   FROM
                                     customer_basic_details 
-                                  WHERE random_password IS NOT NULL 
+                                  WHERE random_password != "" 
                                     AND is_password_updated = 0 AND email_address != "") 
                                 GROUP BY email_address 
                                 HAVING COUNT(email_address) = 1');
@@ -870,7 +870,7 @@ class Home_model extends CI_Model
                                     email_address 
                                   FROM
                                     customer_basic_details 
-                                  WHERE random_password IS NOT NULL 
+                                  WHERE random_password != ""
                                     AND is_password_updated = 0 AND email_address != "")'.$where.' 
                                 GROUP BY email_address 
                                 HAVING COUNT(email_address) = 1');
@@ -905,7 +905,7 @@ class Home_model extends CI_Model
                                     email_address 
                                   FROM
                                     customer_basic_details 
-                                  WHERE random_password IS NOT NULL 
+                                  WHERE random_password != ""
                                     AND is_password_updated = 0 AND email_address != "")'.$where.' 
                                 GROUP BY email_address 
                                 HAVING COUNT(email_address) = 1'.$limit.$offset);
@@ -925,7 +925,7 @@ class Home_model extends CI_Model
                                     email_address 
                                   FROM
                                     customer_basic_details 
-                                  WHERE random_password IS NOT NULL 
+                                  WHERE random_password != ""
                                     AND is_password_updated = 0 AND email_address != "") 
                                 GROUP BY email_address 
                                 HAVING COUNT(email_address) = 1');
@@ -948,7 +948,7 @@ class Home_model extends CI_Model
                                     email_address 
                                   FROM
                                     customer_basic_details 
-                                  WHERE random_password IS NOT NULL 
+                                  WHERE random_password != "" 
                                     AND is_password_updated = 0 AND email_address != "") 
                                 GROUP BY email_address 
                                 HAVING COUNT(email_address) = 1'.$limit.$offset);
@@ -970,7 +970,7 @@ class Home_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('customer_basic_details');
-        $this->db->where('random_password is not null');
+        $this->db->where('random_password != ""');
         $this->db->where('email_address', $email);
         $this->db->where("id !=", $id);
         $query = $this->db->get();
