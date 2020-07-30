@@ -43,6 +43,13 @@
                         <?php } ?>
                     </div>
                 </div>
+
+                <div class="form-group row">
+                    <label for="telephone" class="col-sm-2 col-form-label">&nbsp;</label>
+                    <div class="col-sm-10">
+                        <input type="checkbox" class="" style="height:18px;width:18px;margin-right:10px;" name="is_mail_notification" id="is_mail_notification" class="form-control" placeholder="Mail Notification">Mail Notification
+                    </div>
+                </div>
                 
                 <div class="pull-right">
                     <button type="submit" id="add-sales-rep" name="add-sales-rep" class="btn btn-secondary">Add</button>
