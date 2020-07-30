@@ -94,8 +94,10 @@ class Home extends MX_Controller {
 	        	$condition = array(
 	                'id' => $SalesRep	                
 	            );
-	        	$salesRepDetails = $this->salesRep->getSalesRepDetails($condition);
-	        	$parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
+				$salesRepDetails = $this->salesRep->getSalesRepDetails($condition);
+				if ($salesRepDetails["is_mail_notification"] == 1) {
+					$parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
+				}
 	        	$salesRepName = isset($salesRepDetails["name"]) && !empty($salesRepDetails["name"]) ? $salesRepDetails["name"] : '';
 	        	/* Fetch details of Sales Rep */
 

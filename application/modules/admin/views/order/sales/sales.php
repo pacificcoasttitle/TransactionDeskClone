@@ -25,6 +25,7 @@
                             <th>Name</th>
                             <th>Email Address</th>
                             <th>Telephone</th>
+                            <th>Mail Notification</th>
                             <th>Action</th>
                         </tr>
                     </thead>                

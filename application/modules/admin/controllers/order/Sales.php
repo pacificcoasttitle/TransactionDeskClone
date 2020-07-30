@@ -48,6 +48,7 @@ class Sales extends MX_Controller {
                 $nestedData[] = $value['name'];
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['telephone'];
+                $nestedData[] = ($value['is_mail_notification'] == 1) ? 'On' : 'Off';
                 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editOrderUrl = base_url().'order/admin/edit-sales-rep/'.$value['id'];
@@ -82,6 +83,7 @@ class Sales extends MX_Controller {
                     'name' => $_POST['sales_rep_name'],
                     'email_address' => $_POST['email_address'],
                     'telephone' =>  $_POST['telephone'],
+                    'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
                     'status' => 1
                 );
                 $insert = $this->sales_model->insert($salesRepData);
@@ -122,6 +124,7 @@ class Sales extends MX_Controller {
                         'name' => $_POST['sales_rep_name'],
                         'email_address' => $_POST['email_address'],
                         'telephone' =>  $_POST['telephone'],
+                        'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
                         'status' => 1
                     );
                     $condition = array('id' => $id);
