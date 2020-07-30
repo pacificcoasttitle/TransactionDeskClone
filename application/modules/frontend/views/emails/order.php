@@ -81,7 +81,7 @@
                         <div class="o_col o_col-2" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
                           <div style="font-size: 24px; line-height: 24px; height: 24px;">&nbsp; </div>
                           <div class="o_px-xs o_sans o_text o_left o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;text-align: left;padding-left: 8px;padding-right: 8px; margin-top:10px;">
-                            <p style="margin-top: 0px;margin-bottom: 0px;"><a class="o_text-white" href="https://example.com/" style="text-decoration: none;outline: none;color: #ffffff;"><img src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/b1f021fa-a459-4540-81d1-50d5efe17786.png" width="222px" height="" alt="Pacific Coast Title" style="max-width: 222px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a></p>
+                            <p style="margin-top: 0px;margin-bottom: 0px;"><a class="o_text-white" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #ffffff;"><img src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/b1f021fa-a459-4540-81d1-50d5efe17786.png" width="222px" height="" alt="Pacific Coast Title" style="max-width: 222px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a></p>
                           </div>
                         </div>
                         <!--[if mso]></td><td width="400" align="right" valign="top" style="padding:0px 8px;"><![endif]-->
@@ -185,7 +185,7 @@
                         ?>
                         <?php
                         ?>
-                        <p class="o_text-xs o_text-light" style="font-size: 14px;line-height: 21px;color: #82899a;margin-top: 0px;margin-bottom: 0px;">Placed on March 14, 2018</p>
+                        <!-- <p class="o_text-xs o_text-light" style="font-size: 14px;line-height: 21px;color: #82899a;margin-top: 0px;margin-bottom: 0px;">Placed on March 14, 2018</p> -->
                       </td>
                     </tr>
                   </tbody>
@@ -934,7 +934,7 @@
                     </tr>
                     <tr>
                       <td class="o_bg-dark o_px-md o_pb-lg o_br-b o_sans o_text-xs o_text-dark_light" align="center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;background-color: #242b3d;color: #a0a3ab;border-radius: 0px 0px 4px 4px;padding-left: 24px;padding-right: 24px;padding-bottom: 32px;">
-                         <p style="margin-top: 0px;margin-bottom: 0px;"><a class="o_text-white" href="https://example.com/" style="text-decoration: none;outline: none;color: #ffffff;"><img src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/b1f021fa-a459-4540-81d1-50d5efe17786.png" width="222px" height="" alt="Pacific Coast Title" style="max-width: 222px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a></p>
+                         <p style="margin-top: 0px;margin-bottom: 0px;"><a class="o_text-white" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #ffffff;"><img src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/b1f021fa-a459-4540-81d1-50d5efe17786.png" width="222px" height="" alt="Pacific Coast Title" style="max-width: 222px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a></p>
                         <p class="o_mb-xs" style="margin-top: 25px;margin-bottom: 8px;">©2020 Pacific Coast Title Company<br>
                          www.pct.com
                         </p>
