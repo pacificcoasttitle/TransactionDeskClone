@@ -724,7 +724,11 @@ class Home extends MX_Controller {
                         );
                         $prevCount = $this->home_model->get_rows($condition);
                         if ($prevCount > 0) {
-                            $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                            $updateCondition = array(
+                                'partner_id' => $this->input->post('partner_id'),
+                                'resware_user_id' => $this->input->post('resware_client_id')
+                            );
+                            $update = $this->home_model->update($customerData, $updateCondition);
                         } else {
                             $insert = $this->home_model->insert($customerData);
                         }
