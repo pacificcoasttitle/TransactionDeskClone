@@ -81,7 +81,7 @@
                         <div class="o_col o_col-2" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
                           <div style="font-size: 24px; line-height: 24px; height: 24px;">&nbsp; </div>
                           <div class="o_px-xs o_sans o_text o_left o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;text-align: left;padding-left: 8px;padding-right: 8px; margin-top:10px;">
-                            <p style="margin-top: 0px;margin-bottom: 0px;"><a class="o_text-white" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #ffffff;"><img src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/b1f021fa-a459-4540-81d1-50d5efe17786.png" width="222px" height="" alt="Pacific Coast Title" style="max-width: 222px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a></p>
+                            <p style="margin-top: 0px;margin-bottom: 0px;"><a class="o_text-white" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #ffffff;"><img src="<?php echo base_url().'assets/frontend/images/confirmation_logo.png';?>" alt="Pacific Coast Title" style="max-width: 222px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a></p>
                           </div>
                         </div>
                         <!--[if mso]></td><td width="400" align="right" valign="top" style="padding:0px 8px;"><![endif]-->
