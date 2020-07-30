@@ -114,6 +114,18 @@
 												<span class="field-icon"><i class="fa fa-envelope"></i></span>
 											</label>
 										</div><!-- end section -->
+										<div class="section colm colm4" id="email-notification-section" style="display: none;">
+											<div class="option-group field">
+												<label class="option block spacer-t10">
+													<input type="checkbox" name="email_notification"
+
+													id="email-notification" value="">
+													<span class="checkbox"></span> Email Notification
+												</label>
+											</div><!-- end .option-group section -->
+										</div>
+
+										
 									</div>
 
 									<div class="spacer-b30 spacer-t30">
@@ -937,11 +949,13 @@
 					$('#add-escrow-section').hide();
 					$('#upload_lender').hide();
 					$('#upload_escrow').show();
+					$('#email-notification-section').hide();
 	            }
 	            else
 	            {
 	            	$('#add-lender-section').hide();
 					$('#add-escrow-section').show();
+					$('#email-notification-section').show();
 					$('#upload_lender').show();
 					$('#upload_escrow').hide();
 	            }
@@ -963,6 +977,17 @@
 	        }
 	    });
 
+		$('#email-notification').on('click' , function(){
+			if ( $(this).is(":checked") ) 
+			{
+			    $(this).val(1);
+			}
+			else 
+			{
+			    $(this).val(0);
+			}
+			alert($(this).val());
+		});
 	    function getProductTypes()
 		{
 			var email = $('#OpenEmail').val();

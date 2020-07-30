@@ -504,8 +504,17 @@ class Home extends MX_Controller {
 							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
 							$message = $order_message_body; 
 							$subject = 'Order Placed at Resware';
-							$to = $OpenEmail;
+							$email_notification = $this->input->post('email_notification');
 
+							
+							if(($is_escrow == 0) && (isset($userdata['is_master']) && !empty($userdata['is_master'])) && (empty($email_notification)))
+							{
+								$to = '';
+							}
+							else
+							{
+								$to = $OpenEmail;
+							}
 							$file = array();
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
