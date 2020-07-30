@@ -986,7 +986,6 @@
 			{
 			    $(this).val(0);
 			}
-			alert($(this).val());
 		});
 	    function getProductTypes()
 		{
