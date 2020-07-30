@@ -509,12 +509,17 @@ class Home extends MX_Controller {
 							
 							if(($is_escrow == 0) && (isset($userdata['is_master']) && !empty($userdata['is_master'])) && (empty($email_notification)))
 							{
-								$to = '';
+								$to = env('OPEN_ORDER_ADMIN_EMAIL');
+								$cc = array();
 							}
 							else
 							{
 								$to = $OpenEmail;
+								$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));
 							}
+
+							
+
 							$file = array();
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
@@ -540,7 +545,7 @@ class Home extends MX_Controller {
 								$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
 							}
 							
-							$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));
+							/*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
 							$bcc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 							$this->load->helper('sendemail');
 							
