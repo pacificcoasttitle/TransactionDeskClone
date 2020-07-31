@@ -25,6 +25,8 @@
                             <th>Name</th>
                             <th>Email Address</th>
                             <th>Telephone</th>
+                            <th>Partner Id</th>
+                            <th>Partner Type Id</th>
                             <th>Mail Notification</th>
                             <th>Action</th>
                         </tr>

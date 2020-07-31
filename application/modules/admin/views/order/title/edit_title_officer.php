@@ -43,6 +43,27 @@
                         <?php } ?>
                     </div>
                 </div>
+
+                <div class="form-group row">
+                    <label for="partner_id" class="col-sm-2 col-form-label">Partner Id<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" name="partner_id" id="partner_id" class="form-control" placeholder="Partner Id" value="<?php echo isset($title_officer_info['partner_id']) && !empty($title_officer_info['partner_id']) ? $title_officer_info['partner_id'] : ''?>">
+                        <?php if(!empty($partner_id_error_msg)){ ?>                     
+                            <span class="error"><?php echo $partner_id_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="partner_type_id" class="col-sm-2 col-form-label">Partner Type Id<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" name="partner_type_id" id="partner_type_id" class="form-control" placeholder="Partner Type Id" value="<?php echo isset($title_officer_info['partner_type_id']) && !empty($title_officer_info['partner_type_id']) ? $title_officer_info['partner_type_id'] : ''?>">
+                        <?php if(!empty($partner_type_id_error_msg)){ ?>                     
+                            <span class="error"><?php echo $partner_type_id_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
                 
                 <div class="pull-right">
                     <button type="submit" id="edit-title-officer" name="add-title-officer" class="btn btn-secondary">Edit</button>
