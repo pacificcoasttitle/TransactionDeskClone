@@ -377,7 +377,7 @@
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong><span style="font-family: Helvetica;">Order Summary</span></strong></span>
                       </p>
-                      <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581">
+                      <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
                         <?php 
                             if(isset($OpenName) && !empty($OpenName))
                             {
@@ -492,7 +492,7 @@
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong>Property Details</strong></span>
                       </p>
-                      <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581">
+                      <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
                         <?php
                             if(isset($PropertyAddress) && !empty($PropertyAddress))
                             {
@@ -576,7 +576,7 @@
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong>Seller/Owner Details</strong></span>
                       </p>
-                      <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581">
+                      <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
                         <?php
                             if(isset($PrimaryOwner) && !empty($PrimaryOwner))
                             {
@@ -611,12 +611,12 @@
                       </table>
 
                       <p style="text-align:center;">
-                          
+                         
                       </p>
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong>Transaction Details</strong></span>
                       </p>
-                      <table style="height:32px;margin-left:auto;margin-right:auto;" border="1" width="581">
+                      <table style="height:32px;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
                         <?php
                             if(isset($SalesRep) && !empty($SalesRep))
                             {
@@ -729,12 +729,14 @@
                         if(isset($buyers_agent) && !empty($buyers_agent))
                         {
                     ?>
-                            <p style="text-align:center;"></p>
+                            <p style="text-align:center;">
+                         
+                      </p>
 
                           <p style="text-align:center;">
-                            <span style="font-size: 18px; color: #d35411;"><strong>Buyers Agent Details:</strong></span>
+                            <span style="font-size: 18px; color: #d35411;"><strong>Buyers Agent Details</strong></span>
                           </p>
-                          <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581">
+                          <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
                             <?php
                                 if(isset($buyers_agent['name']) && !empty($buyers_agent['name']))
                                 {
@@ -803,12 +805,14 @@
                         if(isset($listing_agent) && !empty($listing_agent))
                         {
                     ?>
-                            <p style="text-align:center;"></p>
+                            <p style="text-align:center;">
+                         
+                      </p>
 
                           <p style="text-align:center;">
-                            <span style="font-size: 18px; color: #d35411;"><strong>Listing Agent Details:</strong></span>
+                            <span style="font-size: 18px; color: #d35411;"><strong>Listing Agent Details</strong></span>
                           </p>
-                          <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581">
+                          <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
                             <?php
                                 if(isset($listing_agent['name']) && !empty($listing_agent['name']))
                                 {
@@ -877,12 +881,14 @@
                         if(isset($lender_details) && !empty($lender_details))
                         {
                     ?>
-                            <p style="text-align:center;"></p>
+                            <p style="text-align:center;">
+                         
+                      </p>
 
                           <p style="text-align:center;">
-                            <span style="font-size: 18px; color: #d35411;"><strong>Lenders Details:</strong></span>
+                            <span style="font-size: 18px; color: #d35411;"><strong>Lenders Details</strong></span>
                           </p>
-                          <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581">
+                          <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
                             <?php
                                 if(isset($lender_details['name']) && !empty($lender_details['name']))
                                 {
@@ -951,12 +957,14 @@
                         if(isset($escrow_details) && !empty($escrow_details))
                         {
                     ?>
-                            <p style="text-align:center;"></p>
+                            <p style="text-align:center;">
+                         
+                      </p>
 
                           <p style="text-align:center;">
-                            <span style="font-size: 18px; color: #d35411;"><strong>Escrow Details:</strong></span>
+                            <span style="font-size: 18px; color: #d35411;"><strong>Escrow Details</strong></span>
                           </p>
-                          <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581">
+                          <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
                             <?php
                                 if(isset($escrow_details['name']) && !empty($escrow_details['name']))
                                 {
