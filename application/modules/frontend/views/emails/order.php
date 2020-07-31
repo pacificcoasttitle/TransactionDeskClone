@@ -371,9 +371,9 @@
                       <p style="text-align:center;">
                         <span style="text-decoration: underline; font-size: 18px;"><strong><span style="color: #424651; font-family: Helvetica; text-decoration: underline;">Your Order Details Are Below:</span></strong></span>
                       </p>
-                      <p style="text-align:center;">
+                      <!-- <p style="text-align:center;">
                          
-                      </p>
+                      </p> -->
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong><span style="font-family: Helvetica;">Order Summary</span></strong></span>
                       </p>
@@ -486,9 +486,9 @@
                         ?>
                         
                       </table>
-                      <p style="text-align:center;">
+                      <!-- <p style="text-align:center;">
                          
-                      </p>
+                      </p> -->
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong>Property Details</strong></span>
                       </p>
@@ -570,9 +570,9 @@
                         ?>
                         
                       </table>
-                      <p style="text-align:center;">
+                      <!-- <p style="text-align:center;">
                          
-                      </p>
+                      </p> -->
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong>Seller/Owner Details</strong></span>
                       </p>
@@ -610,9 +610,9 @@
                         
                       </table>
 
-                      <p style="text-align:center;">
+                      <!-- <p style="text-align:center;">
                          
-                      </p>
+                      </p> -->
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong>Transaction Details</strong></span>
                       </p>
@@ -729,9 +729,9 @@
                         if(isset($buyers_agent) && !empty($buyers_agent))
                         {
                     ?>
-                            <p style="text-align:center;">
+                            <!-- <p style="text-align:center;">
                          
-                      </p>
+                      </p> -->
 
                           <p style="text-align:center;">
                             <span style="font-size: 18px; color: #d35411;"><strong>Buyers Agent Details</strong></span>
@@ -805,9 +805,9 @@
                         if(isset($listing_agent) && !empty($listing_agent))
                         {
                     ?>
-                            <p style="text-align:center;">
+                            <!-- <p style="text-align:center;">
                          
-                      </p>
+                      </p> -->
 
                           <p style="text-align:center;">
                             <span style="font-size: 18px; color: #d35411;"><strong>Listing Agent Details</strong></span>
@@ -881,9 +881,9 @@
                         if(isset($lender_details) && !empty($lender_details))
                         {
                     ?>
-                            <p style="text-align:center;">
+                            <!-- <p style="text-align:center;">
                          
-                      </p>
+                      </p> -->
 
                           <p style="text-align:center;">
                             <span style="font-size: 18px; color: #d35411;"><strong>Lenders Details</strong></span>
@@ -957,9 +957,9 @@
                         if(isset($escrow_details) && !empty($escrow_details))
                         {
                     ?>
-                            <p style="text-align:center;">
+                            <!-- <p style="text-align:center;">
                          
-                      </p>
+                      </p> -->
 
                           <p style="text-align:center;">
                             <span style="font-size: 18px; color: #d35411;"><strong>Escrow Details</strong></span>
