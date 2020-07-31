@@ -341,6 +341,15 @@
                   <td class="h2" style="font-family:'Open Sans', Arial, sans-serif;line-height:1.074;font-size:28px;font-weight:700;color:#111111;text-align:center;">
                     Title Order Opened!<br><span style="color: #d35400; font-size: 22px;">Order Details Below</span>
                     <br>
+                    <?php 
+                        if(isset($orderNumber) && !empty($orderNumber))
+                        {
+                    ?>
+                            <span style="color: #000000; font-size: 22px;">Order Number: <?php echo $orderNumber; ?></span><br>
+                    <?php
+                        }
+                    ?>
+                    
                   </td>
                 </tr>
                 <tr>
