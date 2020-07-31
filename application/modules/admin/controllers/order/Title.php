@@ -47,6 +47,8 @@ class Title extends MX_Controller {
                 $nestedData[] = $value['name'];
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['phone'];
+                $nestedData[] = $value['partner_id'];
+                $nestedData[] = $value['partner_type_id'];
                 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editOrderUrl = base_url().'order/admin/edit-title-officer/'.$value['id'];
@@ -75,12 +77,16 @@ class Title extends MX_Controller {
             $this->form_validation->set_rules('title_officer_name', 'Title Officer Name', 'required', array('required'=> 'Please Enter Title Officer Name'));
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
             $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
+            $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
+            $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
 
             if ($this->form_validation->run() == true) {
                 $titleOfficerData = array(
                     'name' => $_POST['title_officer_name'],
                     'email_address' => $_POST['email_address'],
                     'phone' =>  $_POST['telephone'],
+                    'partner_id' => $_POST['partner_id'],
+                    'partner_type_id' =>  $_POST['partner_type_id'],
                     'status' => 1
                 );
                 $insert = $this->title_model->insert($titleOfficerData);
@@ -95,6 +101,8 @@ class Title extends MX_Controller {
                 $data['name_error_msg'] = form_error('title_officer_name');
                 $data['email_error_msg'] = form_error('email_address');
                 $data['phone_error_msg'] = form_error('telephone');
+                $data['partner_id_error_msg'] = form_error('partner_id');
+                $data['partner_type_id_error_msg'] = form_error('partner_type_id');
             }                                       
         }
         $this->load->view('order/layout/header', $data);
@@ -115,12 +123,16 @@ class Title extends MX_Controller {
                 $this->form_validation->set_rules('title_officer_name', 'Title Officer Name', 'required', array('required'=> 'Please Enter Title Officer Name'));
                 $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
                 $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
+                $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
+                $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
 
                 if($this->form_validation->run() == true) {
                     $titleOfficerData = array(
                         'name' => $_POST['title_officer_name'],
                         'email_address' => $_POST['email_address'],
                         'phone' =>  $_POST['telephone'],
+                        'partner_id' => $_POST['partner_id'],
+                        'partner_type_id' =>  $_POST['partner_type_id'],
                         'status' => 1
                     );
                     $condition = array('id' => $id);
@@ -135,6 +147,8 @@ class Title extends MX_Controller {
                     $data['name_error_msg'] = form_error('title_officer_name');
                     $data['email_error_msg'] = form_error('email_address');
                     $data['phone_error_msg'] = form_error('telephone');
+                    $data['partner_id_error_msg'] = form_error('partner_id');
+                    $data['partner_type_id_error_msg'] = form_error('partner_type_id');
                 }
             }
             $con = array('id' => $id);

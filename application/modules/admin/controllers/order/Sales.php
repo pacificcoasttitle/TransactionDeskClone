@@ -48,6 +48,8 @@ class Sales extends MX_Controller {
                 $nestedData[] = $value['name'];
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['telephone'];
+                $nestedData[] = $value['partner_id'];
+                $nestedData[] = $value['partner_type_id'];
                 $nestedData[] = ($value['is_mail_notification'] == 1) ? 'On' : 'Off';
                 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -77,12 +79,16 @@ class Sales extends MX_Controller {
             $this->form_validation->set_rules('sales_rep_name', 'Sales Rep. Name', 'required', array('required'=> 'Please Enter Sales Rep. Name'));
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
             $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
+            $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
+            $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
 
             if ($this->form_validation->run() == true) {
                 $salesRepData = array(
                     'name' => $_POST['sales_rep_name'],
                     'email_address' => $_POST['email_address'],
                     'telephone' =>  $_POST['telephone'],
+                    'partner_id' => $_POST['partner_id'],
+                    'partner_type_id' =>  $_POST['partner_type_id'],
                     'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
                     'status' => 1
                 );
@@ -98,6 +104,8 @@ class Sales extends MX_Controller {
                 $data['name_error_msg'] = form_error('sales_rep_name');
                 $data['email_error_msg'] = form_error('email_address');
                 $data['phone_error_msg'] = form_error('telephone');
+                $data['partner_id_error_msg'] = form_error('partner_id');
+                $data['partner_type_id_error_msg'] = form_error('partner_type_id');
             }                                       
         }
         $this->load->view('order/layout/header', $data);
@@ -118,12 +126,17 @@ class Sales extends MX_Controller {
                 $this->form_validation->set_rules('sales_rep_name', 'Sales Rep. Name', 'required', array('required'=> 'Please Enter Sales Rep. Name'));
                 $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
                 $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
+                $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
+                $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
+
 
                 if($this->form_validation->run() == true) {
                     $salesRepData = array(
                         'name' => $_POST['sales_rep_name'],
                         'email_address' => $_POST['email_address'],
                         'telephone' =>  $_POST['telephone'],
+                        'partner_id' => $_POST['partner_id'],
+                        'partner_type_id' =>  $_POST['partner_type_id'],
                         'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
                         'status' => 1
                     );
@@ -139,6 +152,8 @@ class Sales extends MX_Controller {
                     $data['name_error_msg'] = form_error('sales_rep_name');
                     $data['email_error_msg'] = form_error('email_address');
                     $data['phone_error_msg'] = form_error('telephone');
+                    $data['partner_id_error_msg'] = form_error('partner_id');
+                    $data['partner_type_id_error_msg'] = form_error('partner_type_id');
                 }
             }
             $con = array('id' => $id);
