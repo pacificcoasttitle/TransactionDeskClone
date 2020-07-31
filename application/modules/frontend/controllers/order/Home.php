@@ -330,7 +330,7 @@ class Home extends MX_Controller {
 								}
 							}
 
-							$partnerData = json_encode($partners);
+							$partnerData = json_encode(array('Partners' => $partners));
 							$endPoint = 'files/'.$file_id.'/partners';
 							$partnerUserData = array(
 								'admin_api' => 1
