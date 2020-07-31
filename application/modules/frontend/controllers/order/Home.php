@@ -305,6 +305,40 @@ class Home extends MX_Controller {
 
 						if($orderNumber)
 						{
+							$partners = array();
+							if (!empty($salesRepDetails)) {
+								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
+									$partners[] = array(
+										'PartnerTypeID' => $salesRepDetails['partner_type_id'],
+										'PartnerID' => $salesRepDetails['partner_id'],
+										'PartnerType' => array(
+											'PartnerTypeID' => $salesRepDetails['partner_type_id']
+										)
+									);
+								}
+							}
+
+							if (!empty($titleOfficerDetails)) {
+								if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
+									$partners[] = array(
+										'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
+										'PartnerID' => $titleOfficerDetails['partner_id'],
+										'PartnerType' => array(
+											'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
+										)
+									);
+								}
+							}
+
+							$partnerData = json_encode($partners);
+							$endPoint = 'files/'.$file_id.'/partners';
+							$partnerUserData = array(
+								'admin_api' => 1
+							);
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
+							$resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
+							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
+
 							$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
 							/* Buyers Agent */				
