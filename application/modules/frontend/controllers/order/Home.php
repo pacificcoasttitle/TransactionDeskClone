@@ -503,7 +503,7 @@ class Home extends MX_Controller {
 							$from_mail = env('FROM_EMAIL');
 							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
 							$message = $order_message_body; 
-							$subject = 'Order Placed at Resware';
+							$subject = 'Title Order Placed: PCT';
 							$email_notification = $this->input->post('email_notification');
 
 							
