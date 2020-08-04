@@ -11,6 +11,7 @@ class Order extends MX_Controller {
         $this->load->model('order/order_model');
         $this->load->model('order/sales_model');
         $this->load->model('order/home_model');
+        $this->load->model('order/apiLogs');
     }
 
     function orders() {
@@ -215,5 +216,82 @@ class Order extends MX_Controller {
     	}
 
     	echo json_encode($res); exit;
+    }
+
+    function partnerApiLogs()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Partner Api Log';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/partner_api_logs', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    function get_partner_api_logs()
+    {
+        $params = array();
+
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            // $params['status']['cs4_result_id_status'] = 'Success';
+
+            $pageno = ($params['start'] / $params['length'])+1;
+            
+            $logs_list = $this->apiLogs->get_partner_api_logs($params);
+
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $logs_list = $this->apiLogs->get_partner_api_logs($params);    
+        }
+        $data = array(); 
+        
+        if(isset($logs_list['data']) && !empty($logs_list['data']))
+        {
+            foreach ($logs_list['data'] as $key => $value) 
+            {
+                $req_url = $value['request_url'];
+                $path = parse_url($req_url,PHP_URL_PATH);
+                $path_info = explode('/', $path);
+                
+                $file_id = isset($path_info[3]) && !empty($path_info[3]) ? $path_info[3] : '';
+                if(isset($file_id) && !empty($file_id))
+                {
+                    $order_details = $this->order_model->get_order_details($file_id);
+                    $nestedData=array();
+                    /*$nestedData[] = $value['customer_number'];*/
+                    $nestedData[] = $order_details['file_number'];
+                    $response_data = $value['response_data'];
+                    $response = json_decode($response_data,TRUE);
+                    if(empty($response))
+                    {
+                        $nestedData[] = 'Success';
+                    }
+                    else
+                    {
+                        $msg = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message']: '';
+                        $nestedData[] = $msg;
+                    }
+                    $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+                    $data[] = $nestedData;
+                }
+            }
+        }
+        $json_data['recordsTotal'] = intval( $logs_list['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $logs_list['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
     }
 }

@@ -203,7 +203,7 @@ $route['order/admin/curative-documents'] = 'admin/order/home/curative_document';
 $route['order/admin/companies'] = 'admin/order/home/companies';
 $route['order/admin/add-company'] = 'admin/order/home/addCompany';
 $route['order/admin/incorrect-users'] = 'admin/order/home/incorrect_users';
-/*$route['order/admin/get-user-check-list'] = 'admin/order/home/get_user_check_list';*/
+$route['order/admin/partner-api-log'] = 'admin/order/order/partnerApiLogs';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
