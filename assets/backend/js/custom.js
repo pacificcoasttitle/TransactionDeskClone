@@ -1833,6 +1833,7 @@ $(document).ready(function () {
     if ($('#tbl-partner-api-log-listing').length) 
     {
         partner_log_list = $('#tbl-partner-api-log-listing').DataTable({
+            "searching": false,
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
