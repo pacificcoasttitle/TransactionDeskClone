@@ -64,13 +64,11 @@ class ApiLogs extends CI_Model
 
             $this->db->where('api_type', 'resware');
             $this->db->where('request_type', 'add_partner');
-            
-
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
             }
-            $query = $this->db->from('pct_order_api_logs');;
+            $query = $this->db->get('pct_order_api_logs');
             
             if ($query->num_rows() > 0) 
             {
