@@ -20,14 +20,14 @@
             <div id="customer_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="customer_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
-                <table class="table table-bordered" id="tbl-partner-api-log-listing" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="tbl-partner-api-log-listing" width="100%" cellspacing="0" style="table-layout: fixed;">
                     <thead>
                         <tr>
-                            <th>Order No</th>
-                            <th>Message</th>
+                            <th style="width: 25%;">Order No</th>
+                            <th style="width: 50%;">Message</th>
                             <!-- <th>Partner Name</th>
                             <th>Partner Type</th> -->
-                            <th>Created at</th>
+                            <th style="width: 25%;">Created at</th>
                             <!-- <th>Customer</th> -->
                         </tr>
                     </thead>                
