@@ -273,6 +273,8 @@ class Order extends MX_Controller {
                     $nestedData=array();
                     /*$nestedData[] = $value['customer_number'];*/
                     $nestedData[] = $order_details['file_number'];
+                    $nestedData[] = $order_details['title_officer_name'];
+                    $nestedData[] = $order_details['sales_rep_name'];
                     $response_data = $value['response_data'];
                     $response = json_decode($response_data,TRUE);
                     if(empty($response))
