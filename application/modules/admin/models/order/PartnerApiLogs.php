@@ -9,6 +9,19 @@ class PartnerApiLogs extends CI_Model
 
     public function get_partner_api_logs($params)
     {
+        $sales_rep = isset($params['sales_rep']) && !empty($params['sales_rep']) ? $params['sales_rep'] : '';
+        
+        if(isset($sales_rep) && !empty($sales_rep))
+        {
+            $this->db->where('transaction_details.sales_representative', $sales_rep);
+        }
+
+        $title_officer = isset($params['title_officer']) && !empty($params['title_officer']) ? $params['title_officer'] : '';
+
+        if(isset($title_officer) && !empty($title_officer))
+        {
+            $this->db->where('transaction_details.title_officer', $title_officer);
+        }
         $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             pct_order_sales_rep.name as sales_rep_name,
@@ -25,12 +38,21 @@ class PartnerApiLogs extends CI_Model
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $logs_lists =array();
 
-        if(isset($params['searchValue']) && !empty($params['searchValue']))
+        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
         {
+            $keyword = $params['searchvalue'];
 
-        }
-        else
-        {
+            $this->db->like('file_number', $keyword);
+            if(isset($sales_rep) && !empty($sales_rep))
+            {
+                $this->db->where('transaction_details.sales_representative', $sales_rep);
+            }
+
+            if(isset($title_officer) && !empty($title_officer))
+            {
+                $this->db->where('transaction_details.title_officer', $title_officer);
+            }
+
             $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             pct_order_sales_rep.name as sales_rep_name,
@@ -41,7 +63,82 @@ class PartnerApiLogs extends CI_Model
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
             ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id');
+
             $filter_total_records =  $this->db->count_all_results();
+
+            if(isset($keyword) && !empty($keyword))
+            {
+                $this->db->like('file_number', $keyword);
+            }
+            if(isset($sales_rep) && !empty($sales_rep))
+            {
+                $this->db->where('transaction_details.sales_representative', $sales_rep);
+            }
+
+            if(isset($title_officer) && !empty($title_officer))
+            {
+                $this->db->where('transaction_details.title_officer', $title_officer);
+            }
+
+            $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
+            transaction_details.sales_representative,
+            pct_order_sales_rep.name as sales_rep_name,
+            transaction_details.title_officer,
+            pct_order_title_officer.name as title_officer_name')
+            ->from('pct_order_partner_api_logs')
+            ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
+            ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id');
+            $this->db->order_by("pct_order_partner_api_logs.id", "desc");
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+            $query = $this->db->get();
+            
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            }
+
+        }
+        else
+        {
+            if(isset($sales_rep) && !empty($sales_rep))
+            {
+                $this->db->where('transaction_details.sales_representative', $sales_rep);
+            }
+
+            if(isset($title_officer) && !empty($title_officer))
+            {
+                $this->db->where('transaction_details.title_officer', $title_officer);
+            }
+
+            $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
+            transaction_details.sales_representative,
+            pct_order_sales_rep.name as sales_rep_name,
+            transaction_details.title_officer,
+            pct_order_title_officer.name as title_officer_name')
+            ->from('pct_order_partner_api_logs')
+            ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
+            ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id');
+
+            $filter_total_records =  $this->db->count_all_results();
+
+            if(isset($sales_rep) && !empty($sales_rep))
+            {
+                $this->db->where('transaction_details.sales_representative', $sales_rep);
+            }
+
+            if(isset($title_officer) && !empty($title_officer))
+            {
+                $this->db->where('transaction_details.title_officer', $title_officer);
+            }
+            
             $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             pct_order_sales_rep.name as sales_rep_name,

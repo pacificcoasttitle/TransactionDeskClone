@@ -10,6 +10,7 @@ class Order extends MX_Controller {
         $this->load->library('session');
         $this->load->model('order/order_model');
         $this->load->model('order/sales_model');
+        $this->load->model('order/title_model');
         $this->load->model('order/home_model');
         $this->load->model('order/apiLogs');
     }
@@ -223,6 +224,14 @@ class Order extends MX_Controller {
         $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Partner Api Log';
+
+        $salesRep = $this->sales_model->get_sales_reps(array());
+        $data['salesRep'] = $salesRep;
+
+        $titleOfficer = $this->title_model->get_title_officers(array());
+
+        $data['titleOfficer'] = $titleOfficer;
+
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/home/partner_api_logs', $data);
         $this->load->view('order/layout/footer', $data);
@@ -246,7 +255,9 @@ class Order extends MX_Controller {
             // $params['status']['cs4_result_id_status'] = 'Success';
 
             $pageno = ($params['start'] / $params['length'])+1;
-            
+            $params['sales_rep'] = $this->input->post('sales_rep');
+            $params['title_officer'] = $this->input->post('title_officer');
+
             $logs_list = $this->partnerApiLogs->get_partner_api_logs($params);
 
             // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
