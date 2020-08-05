@@ -36,7 +36,7 @@ class ApiLogs extends CI_Model
     }
 
 
-    public function get_partner_api_logs()
+    public function get_partner_api_logs($params)
     {
         $this->db->where('api_type', 'resware');
         $this->db->where('request_type', 'add_partner');
@@ -46,8 +46,6 @@ class ApiLogs extends CI_Model
 
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        
-        
         $logs_lists =array();
 
         if(isset($params['searchValue']) && !empty($params['searchValue']))
