@@ -230,6 +230,8 @@ class Order extends MX_Controller {
 
     function get_partner_api_logs()
     {
+        $this->load->model('order/partnerApiLogs');
+
         $params = array();
 
         if(isset($_POST['draw']) && !empty($_POST['draw']))
@@ -245,7 +247,7 @@ class Order extends MX_Controller {
 
             $pageno = ($params['start'] / $params['length'])+1;
             
-            $logs_list = $this->apiLogs->get_partner_api_logs($params);
+            $logs_list = $this->partnerApiLogs->get_partner_api_logs($params);
 
             // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
 
@@ -254,7 +256,7 @@ class Order extends MX_Controller {
         else
         {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $logs_list = $this->apiLogs->get_partner_api_logs($params);    
+            $logs_list = $this->partnerApiLogs->get_partner_api_logs($params);    
         }
         $data = array(); 
         
@@ -262,19 +264,18 @@ class Order extends MX_Controller {
         {
             foreach ($logs_list['data'] as $key => $value) 
             {
-                $req_url = $value['request_url'];
+                /* $req_url = $value['request_url'];
                 $path = parse_url($req_url,PHP_URL_PATH);
                 $path_info = explode('/', $path);
                 
                 $file_id = isset($path_info[3]) && !empty($path_info[3]) ? $path_info[3] : '';
                 if(isset($file_id) && !empty($file_id))
-                {
-                    $order_details = $this->order_model->get_order_details($file_id);
+                {*/
+                    // $order_details = $this->order_model->get_order_details($file_id);
                     $nestedData=array();
-                    /*$nestedData[] = $value['customer_number'];*/
-                    $nestedData[] = $order_details['file_number'];
-                    $nestedData[] = $order_details['title_officer_name'];
-                    $nestedData[] = $order_details['sales_rep_name'];
+                    $nestedData[] = $value['file_number'];
+                    $nestedData[] = $value['title_officer_name'];
+                    $nestedData[] = $value['sales_rep_name'];
                     $response_data = $value['response_data'];
                     $response = json_decode($response_data,TRUE);
                     if(empty($response))
@@ -288,7 +289,7 @@ class Order extends MX_Controller {
                     }
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
                     $data[] = $nestedData;
-                }
+                /*}*/
             }
         }
         $json_data['recordsTotal'] = intval( $logs_list['recordsTotal'] );
