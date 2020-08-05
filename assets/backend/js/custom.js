@@ -1839,7 +1839,23 @@ $(document).ready(function () {
             "columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],
-            
+            "columns": [
+                {
+                    "width": "10%"
+                },
+                {
+                    "width": "20%"
+                },
+                {
+                    "width": "20%"
+                },
+                {
+                    "width": "30%"
+                },
+                {
+                    "width": "20%"
+                },
+            ],
             "language": {
                 searchPlaceholder: "Order #",
                 paginate: {
