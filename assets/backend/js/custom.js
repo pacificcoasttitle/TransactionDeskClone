@@ -1833,12 +1833,13 @@ $(document).ready(function () {
     if ($('#tbl-partner-api-log-listing').length) 
     {
         partner_log_list = $('#tbl-partner-api-log-listing').DataTable({
-            "searching": false,
+           // "searching": false,
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
                 { "searchable": false, "targets": [0,1] }
             ],
+            
             "language": {
                 searchPlaceholder: "Order #",
                 paginate: {
@@ -1849,6 +1850,7 @@ $(document).ready(function () {
             },
             initComplete: function() {
             },
+            "dom": 'lf<"custom_filter">rtip',
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
                 $('.dataTables_paginate > .pagination a').addClass('page-link');
@@ -1859,6 +1861,10 @@ $(document).ready(function () {
             "ajax": {                
                 url: base_url+"admin/order/order/get_partner_api_logs", // json datasource
                 type: "post", // method  , by default get
+                data   : function( d ) {
+                  d.sales_rep = $('#log_sales_rep').val();
+                  d.title_officer = $('#log_title_officer').val();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -1875,7 +1881,35 @@ $(document).ready(function () {
             },
                         
         });
+
+        if(sales_rep)
+        {
+            var obj = jQuery.parseJSON(sales_rep);
+            var options='';
+            $.each( obj, function( key, value ) {
+              options += '<option value="'+value.id+'">'+value.name+'</option>'
+            });
+            $("div.custom_filter").html('<label> Sales Rep: <select style="width:auto;" class="custom-select custom-select-sm form-control form-control-sm" name="log_sales_rep" id="log_sales_rep"> <option value="" > All </option>"'+options+'"</select></label>');   
+        }
+
+        if(title_officer)
+        {
+            var obj = jQuery.parseJSON(title_officer);
+            var options='';
+            $.each( obj, function( key, value ) {
+              options += '<option value="'+value.id+'">'+value.name+'</option>'
+            });
+            $("div.custom_filter").append('<div class="col-sm-3" style="display:inline"><label> Title Officer: <select style="width:auto;" class="custom-select custom-select-sm form-control form-control-sm" name="log_title_officer" id="log_title_officer"> <option value="" > All </option>"'+options+'"</select></label>');   
+        }
     }
+
+    $("#log_sales_rep").on("change", function(){
+        partner_log_list.ajax.reload();
+    });
+
+    $("#log_title_officer").on("change", function(){
+        partner_log_list.ajax.reload();
+    });
 });
 
 
