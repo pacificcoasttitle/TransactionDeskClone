@@ -764,7 +764,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: '<"FilterCredentialListing">lfrtip',
+            dom: 'lf<"FilterCredentialListing">rtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
@@ -821,7 +821,7 @@ $(document).ready(function () {
             }            
         });
 
-        $("div.FilterCredentialListing").html('<label style="margin-bottom:10px;"> Credentials Check: <select style="margin-top:10px;" class="custom-select" name="FilterCredentialListing" id="FilterCredentialListing"> <option value="" > All </option><option value="1" > Correct </option><option value="0" > Incorrect </option><option value="2" > Duplicate Email </option>"'+options+'"</select></label>');   
+        $("div.FilterCredentialListing").html('<label style="margin-bottom:10px;"> Credentials Check: <select style="width:auto;" class="custom-select custom-select-sm form-control form-control-sm" name="FilterCredentialListing" id="FilterCredentialListing"> <option value="" > All </option><option value="1" > Correct </option><option value="0" > Incorrect </option><option value="2" > Duplicate Email </option></select></label>');   
     }
 
     $("#FilterCredentialListing").on("change", function(){
