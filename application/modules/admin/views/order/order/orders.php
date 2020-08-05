@@ -10,6 +10,12 @@
     var sales_rep = '<?php echo $sales_rep; ?>';
     var master_users = '<?php echo $master_users; ?>';
 </script>
+<style>
+.dataTables_length {
+    width: 250px !important;
+    float: left;
+}
+</style>
 <div class="container-fluid">
     <!-- DataTables Example -->
     <div class="card mb-3">

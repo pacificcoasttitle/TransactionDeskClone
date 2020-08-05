@@ -990,7 +990,7 @@ $(document).ready(function () {
 
 
             },
-            "dom": '<"FilterOrderListing">frtip',
+            "dom": 'lf<"FilterOrderListing">rtip',
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
                 $('.dataTables_paginate > .pagination a').addClass('page-link');
@@ -1028,7 +1028,7 @@ $(document).ready(function () {
             $.each( obj, function( key, value ) {
               options += '<option value="'+value.id+'">'+value.name+'</option>'
             });
-            $("div.FilterOrderListing").html('<div class="col-sm-3" style="display:inline"><label> Sales Rep: <select name="FilterOrderListing" id="FilterOrderListing"> <option value="" > All </option>"'+options+'"</select></label></div>');   
+            $("div.FilterOrderListing").html('<label> Sales Rep: <select style="width:auto;" name="FilterOrderListing" id="FilterOrderListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"'+options+'"</select></label>');   
         }
 
         if(master_users)
@@ -1039,7 +1039,7 @@ $(document).ready(function () {
               options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
             });
             
-            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy"> <option value="" > All </option>"'+options+'"</select></label></div>'); 
+            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"'+options+'"</select></label></div>'); 
         }
        
     }
