@@ -23,6 +23,7 @@ class Home extends MX_Controller {
 		$this->load->model('order/apiLogs');
 		$this->load->model('order/titleOfficer');
 		$this->load->model('order/salesRep');
+		$this->load->model('order/partnerApiLogs');
 		$this->load->library('order/titlepoint');
 
     	if(isset($_POST) && !empty($_POST))
@@ -339,6 +340,16 @@ class Home extends MX_Controller {
 							$resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
 							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
 
+							/* Add partner api logs */
+							$partnerApiData = array(
+								'request_url' => env('RESWARE_ORDER_API').$endPoint,
+								'request_data' => $partnerData,
+								'response_data' => $resultPartner
+							);
+
+							$partnerApiId = $this->partnerApiLogs->insert($partnerApiData);
+							/* Add partner api logs */
+
 							$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
 							/* Buyers Agent */				
@@ -443,6 +454,7 @@ class Home extends MX_Controller {
 								'file_number' => $orderNumber,
 								'property_id' => $propertyId,
 								'transaction_id' => $transactionId,
+								'partner_api_log_id' => $partnerApiId,
 								'created_by' => $userdata['id'],
 								'status'=> 1
 							);

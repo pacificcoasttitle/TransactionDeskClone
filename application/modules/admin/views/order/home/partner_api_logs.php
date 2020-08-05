@@ -29,7 +29,7 @@
                             <th style="width: 25%;">Message</th>
                             <!-- <th>Partner Name</th>
                             <th>Partner Type</th> -->
-                            <th style="width: 15%;">Created at</th>
+                            <th style="width: 15%;">Created At</th>
                             <!-- <th>Customer</th> -->
                         </tr>
                     </thead>                

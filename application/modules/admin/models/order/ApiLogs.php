@@ -34,49 +34,4 @@ class ApiLogs extends CI_Model
             $this->db->update($this->table, $data, array('id' => $logId));
         }
     }
-
-
-    public function get_partner_api_logs($params)
-    {
-        $this->db->where('api_type', 'resware');
-        $this->db->where('request_type', 'add_partner');
-        $this->db->from('pct_order_api_logs');
-        $total_records =  $this->db->count_all_results();
-
-
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $logs_lists =array();
-
-        if(isset($params['searchValue']) && !empty($params['searchValue']))
-        {
-
-        }
-        else
-        {
-            $this->db->where('api_type', 'resware');
-            $this->db->where('request_type', 'add_partner');
-            $this->db->from('pct_order_api_logs');
-
-            $filter_total_records =  $this->db->count_all_results();
-
-            $this->db->where('api_type', 'resware');
-            $this->db->where('request_type', 'add_partner');
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
-            {
-                $this->db->limit($limit, $offset);
-            }
-            $query = $this->db->get('pct_order_api_logs');
-            
-            if ($query->num_rows() > 0) 
-            {
-                $logs_lists = $query->result_array();
-            } 
-        }
-        return array(
-            'recordsTotal' => $total_records,
-            'recordsFiltered' => $filter_total_records,
-            'data' => $logs_lists
-        );
-    }
 }
