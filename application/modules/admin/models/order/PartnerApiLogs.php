@@ -90,7 +90,7 @@ class PartnerApiLogs extends CI_Model
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
             ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id');
-            $this->db->order_by("pct_order_partner_api_logs.id", "desc");
+            $this->db->order_by("pct_order_partner_api_logs.created_at", "desc");
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
@@ -149,7 +149,7 @@ class PartnerApiLogs extends CI_Model
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
             ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id');
-            $this->db->order_by("pct_order_partner_api_logs.id", "desc");
+            $this->db->order_by("pct_order_partner_api_logs.created_at", "desc");
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
@@ -168,5 +168,16 @@ class PartnerApiLogs extends CI_Model
             'recordsFiltered' => $filter_total_records,
             'data' => $logs_lists
         );
+    }
+
+    public function get_api_logs()
+    {
+        $query = $this->db->get('pct_order_partner_api_logs');
+
+        if ($query->num_rows() > 0) {
+            $data = $query->result_array();
+        }
+
+        return $data;
     }
 }

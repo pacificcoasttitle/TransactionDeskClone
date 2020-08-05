@@ -308,4 +308,32 @@ class Order extends MX_Controller {
         $json_data['data'] = $data;
         echo json_encode($json_data);
     }
+
+    function update_order_details()
+    {
+        $this->load->model('order/partnerApiLogs');
+        $logs_list = $this->partnerApiLogs->get_api_logs();
+        $count = 0;
+        foreach ($logs_list as $key => $value) 
+        {
+            $url = $value['request_url'];
+
+            $path = parse_url($url,PHP_URL_PATH);
+            $a = explode('/', $path);
+            $file_id = $a[3];
+            $order_details = $this->order_model->get_order_details($file_id);
+            $id = $order_details['order_id'];
+
+            $condition = array('id' => $id);
+
+            $data = array('partner_api_log_id' => $value['id']);
+
+            $update = $this->order_model->update($data, $condition);
+            if($update)
+            {
+                $count++;
+            }
+        }
+        echo "<pre>"; print_r($count); exit;
+    }
 }
