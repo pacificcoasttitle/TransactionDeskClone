@@ -46,8 +46,6 @@ class ApiLogs extends CI_Model
 
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        
-        echo "<pre>"; print_r($params); exit;
         $logs_lists =array();
 
         if(isset($params['searchValue']) && !empty($params['searchValue']))
