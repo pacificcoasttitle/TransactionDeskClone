@@ -163,6 +163,7 @@ class Home extends MX_Controller {
 				$lender_details = $escrow_details = array();
 				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
 				{
+					$is_escrow =1;
 					$EscrowLenderId = $_POST['EscrowId'];
 					$EscrowLenderName = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
 					$EscrowLenderEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
@@ -174,6 +175,7 @@ class Home extends MX_Controller {
 				}
 				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
 				{
+					$is_escrow =0;
 					$EscrowLenderId = $_POST['LenderId'];
 					$EscrowLenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
 					$EscrowLenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
