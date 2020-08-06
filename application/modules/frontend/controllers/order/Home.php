@@ -163,7 +163,6 @@ class Home extends MX_Controller {
 				$lender_details = $escrow_details = array();
 				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
 				{
-					$is_escrow = 1;
 					$EscrowLenderId = $_POST['EscrowId'];
 					$EscrowLenderName = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
 					$EscrowLenderEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
@@ -175,7 +174,6 @@ class Home extends MX_Controller {
 				}
 				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
 				{
-					$is_escrow = 0;
 					$EscrowLenderId = $_POST['LenderId'];
 					$EscrowLenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
 					$EscrowLenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
@@ -231,21 +229,7 @@ class Home extends MX_Controller {
 				{
 					$parties_email[] = $AdditionalEmail2;
 				}
-				$email_notification = $this->input->post('email_notification');
-
 							
-				if(($is_escrow == 0) && (isset($userdata['is_master']) && !empty($userdata['is_master'])) && (empty($email_notification)))
-				{
-					$to = env('OPEN_ORDER_ADMIN_EMAIL');
-					/*$cc = array();*/
-				}
-				else
-				{
-					$to = $OpenEmail;
-					$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
-				}
-				echo "<pre>"; print_r($to);
-				echo "<pre>"; print_r($parties_email); exit;
 				/* Start place order at resware */
 				$place_order = array();
 
@@ -317,7 +301,7 @@ class Home extends MX_Controller {
 				if(isset($userdata['is_master']) && !empty($userdata['is_master']))
 				{
 					$orderUser =  $this->home_model->get_user(array('id' => $_POST['id']));
-					
+					$is_escrow = $orderUser['is_escrow'];
 					$user_data['email'] = $orderUser['email_address'];
 					$user_data['password'] = $orderUser['random_password'];
 				}
