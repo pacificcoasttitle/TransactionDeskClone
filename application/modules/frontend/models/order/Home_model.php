@@ -61,6 +61,7 @@ class Home_model extends CI_Model
                     $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     $this->db->where('is_escrow', $params['is_escrow']);
                     $this->db->like('first_name', $params['name']);
+                    $this->db->where('is_password_updated', 1);
                 }elseif(array_key_exists("company_name", $params) && array_key_exists("is_escrow", $params))
                 {
                     $this->db->select("CONCAT(company_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
@@ -69,6 +70,7 @@ class Home_model extends CI_Model
                         ->like('company_name', $params['company_name'])
                         ->or_like("email_address", $params['company_name'])
                         ->group_end();
+                        $this->db->where('is_password_updated', 1);
                 }elseif(array_key_exists("company_name", $params))
                 {
                 	$this->db->select("CONCAT(company_name, ' - ',email_address) AS value");

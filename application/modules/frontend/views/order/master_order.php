@@ -947,6 +947,8 @@
 	            {
 	            	$('#add-lender-section').show();
 					$('#add-escrow-section').hide();
+					$('#escrow-details-fields').hide();
+					$("#add-escrow-details").prop( "checked", false );
 					$('#upload_lender').hide();
 					$('#upload_escrow').show();
 					$('#email-notification-section').hide();
@@ -954,6 +956,8 @@
 	            else
 	            {
 	            	$('#add-lender-section').hide();
+	            	$('#lender-details-fields').hide();
+	            	$("#add-lender-details").prop( "checked", false );
 					$('#add-escrow-section').show();
 					$('#email-notification-section').show();
 					$('#upload_lender').show();
