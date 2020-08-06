@@ -231,6 +231,21 @@ class Home extends MX_Controller {
 				{
 					$parties_email[] = $AdditionalEmail2;
 				}
+				$email_notification = $this->input->post('email_notification');
+
+							
+				if(($is_escrow == 0) && (isset($userdata['is_master']) && !empty($userdata['is_master'])) && (empty($email_notification)))
+				{
+					$to = env('OPEN_ORDER_ADMIN_EMAIL');
+					/*$cc = array();*/
+				}
+				else
+				{
+					$to = $OpenEmail;
+					$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
+				}
+				echo "<pre>"; print_r($to);
+				echo "<pre>"; print_r($parties_email); exit;
 				/* Start place order at resware */
 				$place_order = array();
 
