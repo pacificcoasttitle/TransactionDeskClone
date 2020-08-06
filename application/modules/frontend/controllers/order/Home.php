@@ -159,7 +159,7 @@ class Home extends MX_Controller {
 					$listing_agent_details = array('name'=>$ListingAgentName, 'email'=>$ListingAgentEmailAddress, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
 	        	}
 	        	
-				$EscrowLenderId = '';
+				$EscrowLenderId = $escrowLenderPartnerTypeID ='';
 				$lender_details = $escrow_details = array();
 				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
 				{
@@ -170,6 +170,7 @@ class Home extends MX_Controller {
 	        		$EscrowLenderCompany      = $this->input->post('EscrowCompany');
 
 					$escrow_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
+					$escrowLenderPartnerTypeID = '10006';
 				}
 				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
 				{
@@ -180,7 +181,32 @@ class Home extends MX_Controller {
 	        		$EscrowLenderCompany      = $this->input->post('LenderCompany');
 
 					$lender_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
+					$escrowLenderPartnerTypeID = '3';
 				}
+
+				/* Partners API */
+				$secondaryPartners = array();
+				if(isset($EscrowLenderId) && !empty($EscrowLenderId))
+				{
+					$escrow_lender_user_details = $this->home_model->get_user(array('id' => $EscrowLenderId));
+
+					$escrow_lender_resware_user_id = isset($escrow_lender_user_details['resware_user_id']) && !empty($escrow_lender_user_details['resware_user_id']) ? $escrow_lender_user_details['resware_user_id'] : '';
+
+					$escrow_lender_partner_id = isset($escrow_lender_user_details['partner_id']) && !empty($escrow_lender_user_details['partner_id']) ? $escrow_lender_user_details['partner_id'] : '';
+
+					$secondaryEmp[] = array('UserID'=> $escrow_lender_resware_user_id);
+
+					$secondaryPartners = array(
+							'SecondaryEmployees'=> $secondaryEmp,
+							'PartnerTypeID' => $escrowLenderPartnerTypeID,
+							'PartnerID' => $escrow_lender_partner_id,
+							'PartnerType' => array(
+								'PartnerTypeID' => $escrowLenderPartnerTypeID
+							)
+					);
+				}
+				/* Partners API */
+
 				if(isset($EscrowLenderEmail) && !empty($EscrowLenderEmail))
 				{
 					$parties_email[] = $EscrowLenderEmail;
@@ -307,6 +333,12 @@ class Home extends MX_Controller {
 						if($orderNumber)
 						{
 							$partners = array();
+							
+							if(isset($secondaryPartners) && !empty($secondaryPartners))
+							{
+								$partners[] = $secondaryPartners;
+							}
+
 							if (!empty($salesRepDetails)) {
 								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
 									$partners[] = array(
@@ -556,12 +588,12 @@ class Home extends MX_Controller {
 							if(($is_escrow == 0) && (isset($userdata['is_master']) && !empty($userdata['is_master'])) && (empty($email_notification)))
 							{
 								$to = env('OPEN_ORDER_ADMIN_EMAIL');
-								$cc = array();
+								/*$cc = array();*/
 							}
 							else
 							{
 								$to = $OpenEmail;
-								$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));
+								$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
 							}
 
 							
@@ -592,10 +624,10 @@ class Home extends MX_Controller {
 							}
 							
 							/*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
-							$bcc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
+							$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 							$this->load->helper('sendemail');
 							
-							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);
+							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
 						}
 													
 						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','file_id'=>$file_id);
