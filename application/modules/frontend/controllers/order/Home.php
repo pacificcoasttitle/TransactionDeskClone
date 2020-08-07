@@ -519,21 +519,26 @@ class Home extends MX_Controller {
 							if($this->session->has_userdata('tp_api_id'))
 							{
 								$session_id = $this->session->userdata('tp_api_id');
+
 								$condition = array(
-						            'where' => array(
-						                'session_id' => $session_id
-						            )
-						        );
-						        
+									'session_id' => $session_id
+								);
 								$tpData = array(
 									'file_id' => $file_id,
 									'file_number' => $orderNumber,
-								);					
+								);
 								$this->titlePointData->update($tpData,$condition);
+								
+								$read_condition = array(
+						            'where' => array(
+						                'session_id' => $session_id
+						            )
+						        );					
+								
 								
 								$this->load->library('order/titlepoint');
 
-								$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+								$titlePointDetails = $this->titlePointData->gettitlePointDetails($read_condition);
 
 								$tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
 								$this->titlepoint->generateTaxDoc($tax_serviceId,$orderNumber,$orderId);
