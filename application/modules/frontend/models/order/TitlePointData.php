@@ -61,6 +61,11 @@ class TitlePointData extends CI_Model
                 $query = $this->db->get();
                 $result = $query->row_array();
             }
+            else if(array_key_exists("session_id", $params)){
+                $this->db->where('session_id', $params['session_id']);
+                $query = $this->db->get();
+                $result = $query->row_array();
+            }
             else
             {
                 $this->db->order_by('id', 'asc');
