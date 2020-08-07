@@ -518,9 +518,9 @@ class Home extends MX_Controller {
 							/* Escrow Lender Details */
 							if($this->session->has_userdata('tp_api_id'))
 							{
-								$id = $this->session->userdata('tp_api_id');
+								$session_id = $this->session->userdata('tp_api_id');
 								$condition = array(
-									'id' => $id
+									'session_id' => $session_id
 								);
 								$tpData = array(
 									'file_id' => $file_id,
