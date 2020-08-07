@@ -520,8 +520,11 @@ class Home extends MX_Controller {
 							{
 								$session_id = $this->session->userdata('tp_api_id');
 								$condition = array(
-									'session_id' => $session_id
-								);
+						            'where' => array(
+						                'session_id' => $session_id
+						            )
+						        );
+						        
 								$tpData = array(
 									'file_id' => $file_id,
 									'file_number' => $orderNumber,
