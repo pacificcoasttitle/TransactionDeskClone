@@ -663,6 +663,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
                     data(dataObj.Address,dataObj.LastLine,neighbourhood,true);
                 }else {
                     displayError(responseStatus);
+                    
                     if(base_url == 'http://localhost-pct.com/')
                     {
                         var fipCode = $('#property-fips').val();
@@ -672,8 +673,10 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
                         var county = $('#County').val();
                         var property_full_add = $('#property-full-address').val();
                         // getProductTypes(county,state);
-                        createService4(fipCode,property_full_add,city);
-                        createService3(apn,state,county);
+                        var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
+                       // unit_no = 1;
+                       createService4(fipCode,address,city,unit_no,apn,random_number);
+                        createService3(apn,state,county,random_number);
                     }
                 }
                 /*displayError(responseStatus);
@@ -847,8 +850,9 @@ function parse187()
             }
             else
             {
-                createService4(fipCode,address,city,unit_no,apn);
-                createService3(apn,state,county);
+                var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
+                createService4(fipCode,address,city,unit_no,apn,random_number);
+                createService3(apn,state,county,random_number);
             }
         }
     });

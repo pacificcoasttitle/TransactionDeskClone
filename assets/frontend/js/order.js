@@ -16,7 +16,7 @@ $(document).ready(function() {
 });
 
 
-function createService4(fipCode,address,city,unit_no,apn)
+function createService4(fipCode,address,city,unit_no,apn,random_number)
 {
 	$.ajax({
         // url: 'php/createservice.php',
@@ -28,6 +28,7 @@ function createService4(fipCode,address,city,unit_no,apn)
             unit_no: unit_no,
             apn: apn,
             methodId: 4,
+            random_number:random_number
         },
         type: "POST",
         dataType: "xml"
@@ -51,7 +52,7 @@ function createService4(fipCode,address,city,unit_no,apn)
             else if (responseStatus == 'Success') 
             {
                 $requestId = $(response).find('RequestID').text();
-                getRequestSummaries($requestId,'4');
+                getRequestSummaries($requestId,'4',random_number);
             }
         })
         .fail(function(err) {
@@ -65,7 +66,7 @@ function createService4(fipCode,address,city,unit_no,apn)
         });
 }
 
-function createService3(apn,state,county)
+function createService3(apn,state,county,random_number)
 {
 	$.ajax({
         // url: 'php/createservice.php',
@@ -75,6 +76,7 @@ function createService3(apn,state,county)
             state: state,
             county: county,
             methodId: 3,
+            random_number: random_number,
         },
         dataType: "xml",
         type: "POST"
@@ -96,7 +98,7 @@ function createService3(apn,state,county)
             else if (responseStatus == 'Success') 
             {
                 $requestId = $(response).find('RequestID').text();
-                getRequestSummaries($requestId,'3');
+                getRequestSummaries($requestId,'3',random_number);
             }
         })
         .fail(function(err) {
@@ -110,7 +112,7 @@ function createService3(apn,state,county)
         });
 }
 
-function getRequestSummaries(requestId,methodId)
+function getRequestSummaries(requestId,methodId,random_number)
 {
     var apn = $("#apn").val();
 	$.ajax({
@@ -119,6 +121,7 @@ function getRequestSummaries(requestId,methodId)
             requestId: requestId,
             methodId: methodId,
             apn: apn,
+            random_number: random_number,
         },
         dataType: "xml",
         type: "POST"
@@ -152,11 +155,11 @@ function getRequestSummaries(requestId,methodId)
                 $resultId = $(response).find("ResultThumbNail:first").find("ID").text();
                 if($resultId)
                 {
-                    getResultById($resultId,methodId);
+                    getResultById($resultId,methodId,random_number);
                 }
                 else
                 {
-                    getRequestSummaries($requestId,methodId);
+                    getRequestSummaries($requestId,methodId,random_number);
                 }              
                 
             }
@@ -181,7 +184,7 @@ function getRequestSummaries(requestId,methodId)
         });
 }
 
-function getResultById(resultId,methodId)
+function getResultById(resultId,methodId,random_number)
 {
     var apn = $("#apn").val();
 	$.ajax({
@@ -189,7 +192,8 @@ function getResultById(resultId,methodId)
         data: {
             resultId: resultId,
             apn: apn,
-            methodId: methodId
+            methodId: methodId,
+            random_number: random_number
         },
         dataType: "xml",
         type: "POST"
