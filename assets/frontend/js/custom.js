@@ -830,7 +830,7 @@ function parse187()
     $('#searchResultModal').modal('hide');
     var fipCode = $('#property-fips').val();
     
-    /*$.ajax({
+    $.ajax({
         url: base_url+'home/checkDuplicateOrder',
         type: "POST",
         data: {
@@ -845,7 +845,7 @@ function parse187()
                 return false;
             }
             else
-            {*/
+            {
                 var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
 
                 if($('#random_number').length)
@@ -854,9 +854,9 @@ function parse187()
                 }
                 createService4(fipCode,address,city,unit_no,apn,random_number);
                 createService3(apn,state,county,random_number);
-            /*}
+            }
         }
-    });*/
+    });
     
 }
 

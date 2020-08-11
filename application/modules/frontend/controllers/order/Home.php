@@ -44,11 +44,11 @@ class Home extends MX_Controller {
 				}
 			}
 
-			/*$result = $this->order->checkDuplicateOrder($this->input->post('apn'));
+			$result = $this->order->checkDuplicateOrder($this->input->post('apn'));
 			if ($result) {	
 				$response = array('status'=>'error', 'message'=> 'Order is already exist for this property.');
 				echo json_encode($response); exit;
-			}*/
+			}
 
     		$parties_email = array();
     		if($this->form_validation->run($this) == true)
@@ -634,6 +634,7 @@ class Home extends MX_Controller {
 							}
 							
 							/*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
+							$parties_email[] = env('ORDER_ADMIN_EMAIL');
 							$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 							$this->load->helper('sendemail');
 							
