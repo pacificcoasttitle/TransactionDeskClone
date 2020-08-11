@@ -825,16 +825,8 @@ function parse187()
     $("#searchResultModal").find(".apn-search-loader").addClass("hidden");
     $('#searchResultModal').modal('hide');
     var fipCode = $('#property-fips').val();
-    // var property_full_add = $('#property-full-address').val();
-    /*if (localStorage) 
-    {
-        localStorage.setItem('address',$('#property-search').val());
-        localStorage.setItem('city',$('#property-city').val());
-        localStorage.setItem('apn',apn);
-        localStorage.setItem('state',$('#property-state').val());
-        localStorage.setItem('county',county);
-    }*/
-    $.ajax({
+    
+    /*$.ajax({
         url: base_url+'home/checkDuplicateOrder',
         type: "POST",
         data: {
@@ -849,13 +841,13 @@ function parse187()
                 return false;
             }
             else
-            {
+            {*/
                 var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
                 createService4(fipCode,address,city,unit_no,apn,random_number);
                 createService3(apn,state,county,random_number);
-            }
+            /*}
         }
-    });
+    });*/
     
 }
 
