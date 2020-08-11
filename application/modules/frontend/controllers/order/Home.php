@@ -514,11 +514,12 @@ class Home extends MX_Controller {
 								
 								$lenderId = $this->home_model->update($EscrowLenderData,$condition);
 							}
-
 							/* Escrow Lender Details */
-							if($this->session->has_userdata('tp_api_id'))
+
+							$random_number = $this->input->post('random_number');
+							if($this->session->has_userdata('tp_api_id_'.$random_number))
 							{
-								$session_id = $this->session->userdata('tp_api_id');
+								$session_id = 'tp_api_id_'.$random_number;
 
 								$condition = array(
 									'session_id' => $session_id
@@ -844,7 +845,7 @@ class Home extends MX_Controller {
     function orderSubmit()
     {
     	$fileId = $this->uri->segment(2);
-    	$this->session->unset_userdata('tp_api_id');
+    	
 		
 		if($fileId)
 		{
@@ -854,6 +855,10 @@ class Home extends MX_Controller {
 	            )
 	        );
 			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+			
+			$session_id = isset($titlePointDetails[0]['session_id']) && !empty($titlePointDetails[0]['session_id']) ? $titlePointDetails[0]['session_id'] : '';
+
+			$this->session->unset_userdata($session_id);
 
 			$orderDetails = $this->order->get_order_details($fileId);
 

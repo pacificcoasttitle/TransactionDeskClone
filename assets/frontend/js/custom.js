@@ -674,6 +674,10 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
                         var property_full_add = $('#property-full-address').val();
                         // getProductTypes(county,state);
                         var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
+                        if($('#random_number').length)
+                        {
+                           $('#random_number').val(random_number); 
+                        }
                        // unit_no = 1;
                        createService4(fipCode,address,city,unit_no,apn,random_number);
                         createService3(apn,state,county,random_number);
@@ -843,6 +847,11 @@ function parse187()
             else
             {*/
                 var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
+
+                if($('#random_number').length)
+                {
+                   $('#random_number').val(random_number); 
+                }
                 createService4(fipCode,address,city,unit_no,apn,random_number);
                 createService3(apn,state,county,random_number);
             /*}
