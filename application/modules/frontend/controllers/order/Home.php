@@ -44,11 +44,11 @@ class Home extends MX_Controller {
 				}
 			}
 
-			$result = $this->order->checkDuplicateOrder($this->input->post('apn'));
+			/*$result = $this->order->checkDuplicateOrder($this->input->post('apn'));
 			if ($result) {	
 				$response = array('status'=>'error', 'message'=> 'Order is already exist for this property.');
 				echo json_encode($response); exit;
-			}
+			}*/
 
     		$parties_email = array();
     		if($this->form_validation->run($this) == true)
