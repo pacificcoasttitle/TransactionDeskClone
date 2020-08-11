@@ -66,7 +66,7 @@ class TitlePoint extends MX_Controller {
                     
                     $nestedData[] = $value['file_number'];
                     $nestedData[] = $order_details['full_address'];
-                    if(strtolower($value['cs4_message']) == 'success')
+                    /*if(strtolower($value['cs4_message']) == 'success')
                     {
                         if(strtolower($value['lv_file_status']) == 'success')
                         {
@@ -94,8 +94,21 @@ class TitlePoint extends MX_Controller {
                             $nestedData[] = $value['cs4_message'];
                         }
                         
+                    }*/
+                    $lv_file_path = FCPATH.'uploads/legal-vesting/'.$value['file_number'].'.pdf';
+
+                    if (file_exists($lv_file_path)) 
+                    {
+                        $nestedData[] = 'success';
                     }
-                    
+                    else if(strtolower($value['lv_file_status']) != 'success')
+                    {
+                        $nestedData[] = $value['lv_file_status'];
+                    }
+                    else
+                    {
+                        $nestedData[] = $value['cs4_message'];
+                    }
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
 
                     $data[] = $nestedData;
@@ -201,7 +214,7 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $order_details['full_address'];
                     $nestedData[] = $order_details['apn'];
                     
-                    if(strtolower($value['cs3_message']) == 'success')
+                    /*if(strtolower($value['cs3_message']) == 'success')
                     {
                         if(strtolower($value['tax_file_status']) == 'success')
                         {
@@ -230,8 +243,22 @@ class TitlePoint extends MX_Controller {
                             $nestedData[] = isset($value['cs3_message']) && !empty($value['cs3_message']) ? $value['cs3_message'] : 'Failed';
                         }
                         
-                    }
+                    }*/
 
+                    $tax_file_path = FCPATH.'uploads/tax/'.$value['file_number'].'.pdf';
+
+                    if (file_exists($tax_file_path)) 
+                    {
+                        $nestedData[] = 'success';
+                    }
+                    else if(strtolower($value['tax_file_status']) != 'success')
+                    {
+                        $nestedData[] = $value['tax_file_status'];
+                    }
+                    else
+                    {
+                        $nestedData[] = $value['cs3_message'];
+                    }
                     // $nestedData[] = $value['cs3_message'];
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
                     $data[] = $nestedData;
