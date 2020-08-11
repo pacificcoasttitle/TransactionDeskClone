@@ -844,10 +844,7 @@ class Home extends MX_Controller {
     function orderSubmit()
     {
     	$fileId = $this->uri->segment(2);
-    	echo "<pre>data:"; print_r($this->session->userdata('tp_api_id'));
     	$this->session->unset_userdata('tp_api_id');
-    	echo "<pre>data1:"; print_r($this->session->userdata('tp_api_id')); exit;
-    	// $this->session->unset_userdata('tp_api_id');
 		
 		if($fileId)
 		{
