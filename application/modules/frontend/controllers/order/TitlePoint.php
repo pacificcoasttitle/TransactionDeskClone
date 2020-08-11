@@ -19,7 +19,7 @@ class TitlePoint extends MX_Controller {
 		$random_number = isset($_POST['random_number']) && !empty($_POST['random_number']) ? $_POST['random_number'] : '';
 
 		/* Insert into table */
-		if($this->session->userdata('tp_api_id') != 'tp_api_id_'.$random_number) 
+		if(!$this->session->userdata('tp_api_id_'.$random_number)) 
 		{
 			if($random_number)
 			{
@@ -27,10 +27,10 @@ class TitlePoint extends MX_Controller {
 							'session_id' => 'tp_api_id_'.$random_number,
 						);
 				$tpId = $this->titlePointData->insert($tpData);
-				$this->session->set_userdata('tp_api_id', 'tp_api_id_'.$random_number);
+
+				$this->session->set_userdata('tp_api_id_'.$random_number,1);
 			}
 		}
-		
 		/* Insert into table */
 
 		$requestParams = array(
@@ -105,9 +105,9 @@ class TitlePoint extends MX_Controller {
 								'cs4_request_id' => $requestId,
 							);
 
-				if ($this->session->has_userdata('tp_api_id')) 
+				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
 				{
-					$session_id = $this->session->userdata('tp_api_id');
+					$session_id = 'tp_api_id_'.$random_number;
 					$condition = array(
 						'session_id' => $session_id
 					);				
@@ -120,7 +120,7 @@ class TitlePoint extends MX_Controller {
 
 					$tpId = $this->titlePointData->insert($tpData);
 
-					$this->session->set_userdata('tp_api_id', 'tp_api_id_'.$random_number);
+					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
 
 				}
 			}
@@ -141,23 +141,22 @@ class TitlePoint extends MX_Controller {
 								'cs3_request_id' => $requestId,
 							);
 
-				if ($this->session->has_userdata('tp_api_id')) 
+				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
 				{
-					$session_id = $this->session->userdata('tp_api_id');
+					$session_id = 'tp_api_id_'.$random_number;
 					$condition = array(
 						'session_id' => $session_id
-					);					
+					);				
 					$this->titlePointData->update($tpData,$condition);
 				}
 				else
 				{
-
 					$tpData['session_id'] = 'tp_api_id_'.$random_number;
 					
 
 					$tpId = $this->titlePointData->insert($tpData);
-					
-					$this->session->set_userdata('tp_api_id', 'tp_api_id_'.$random_number);
+
+					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
 
 				}
 			}
@@ -235,9 +234,9 @@ class TitlePoint extends MX_Controller {
 					);
 				}
 
-				if ($this->session->has_userdata('tp_api_id')) 
+				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
 				{
-					$session_id = $this->session->userdata('tp_api_id');
+					$session_id = 'tp_api_id_'.$random_number;
 					$condition = array(
 						'session_id' => $session_id
 					);				
@@ -246,10 +245,12 @@ class TitlePoint extends MX_Controller {
 				else
 				{
 					$tpData['session_id'] = 'tp_api_id_'.$random_number;
+					
 
 					$tpId = $this->titlePointData->insert($tpData);
 
-					$this->session->set_userdata('tp_api_id', 'tp_api_id_'.$random_number);
+					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
 				}
 			}
 			else
@@ -281,9 +282,9 @@ class TitlePoint extends MX_Controller {
 				}
 				
 				
-				if ($this->session->has_userdata('tp_api_id')) 
+				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
 				{
-					$session_id = $this->session->userdata('tp_api_id');
+					$session_id = 'tp_api_id_'.$random_number;
 					$condition = array(
 						'session_id' => $session_id
 					);				
@@ -292,10 +293,12 @@ class TitlePoint extends MX_Controller {
 				else
 				{
 					$tpData['session_id'] = 'tp_api_id_'.$random_number;
+					
 
 					$tpId = $this->titlePointData->insert($tpData);
 
-					$this->session->set_userdata('tp_api_id', 'tp_api_id_'.$random_number);
+					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
 				}
 			}
 			else
@@ -304,7 +307,9 @@ class TitlePoint extends MX_Controller {
 				$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
 			}
 		}
-		echo trim($file); 
+		
+		echo trim($file);
+		
 	}
 
 	function getResultById()
@@ -403,22 +408,23 @@ class TitlePoint extends MX_Controller {
 					// 'cs4_result_id_status' => $status,
 				);
 
-		       	if ($this->session->has_userdata('tp_api_id')) 
+		       	if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
 				{
-					$session_id = $this->session->userdata('tp_api_id');
+					$session_id = 'tp_api_id_'.$random_number;
 					$condition = array(
 						'session_id' => $session_id
 					);				
 					$this->titlePointData->update($tpData,$condition);
-					
 				}
 				else
 				{
 					$tpData['session_id'] = 'tp_api_id_'.$random_number;
+					
 
 					$tpId = $this->titlePointData->insert($tpData);
 
-					$this->session->set_userdata('tp_api_id', 'tp_api_id_'.$random_number);
+					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
 				}
 				$this->addLogs($methodId,$responseStatus,$status,$error,$random_number);
 			}
@@ -458,9 +464,9 @@ class TitlePoint extends MX_Controller {
 					'second_installment' => json_encode($secondInstallment),
 				);
 
-				if ($this->session->has_userdata('tp_api_id')) 
+				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
 				{
-					$session_id = $this->session->userdata('tp_api_id');
+					$session_id = 'tp_api_id_'.$random_number;
 					$condition = array(
 						'session_id' => $session_id
 					);				
@@ -469,10 +475,12 @@ class TitlePoint extends MX_Controller {
 				else
 				{
 					$tpData['session_id'] = 'tp_api_id_'.$random_number;
+					
 
 					$tpId = $this->titlePointData->insert($tpData);
 
-					$this->session->set_userdata('tp_api_id', 'tp_api_id_'.$random_number);
+					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
 				}
 				$this->addLogs($methodId,$responseStatus,$message,$error,$random_number);
 			}
@@ -785,10 +793,9 @@ class TitlePoint extends MX_Controller {
 			}
 		}
 
-   		if ($this->session->has_userdata('tp_api_id')) 
+   		if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
 		{
-			$session_id = $this->session->userdata('tp_api_id');
-			
+			$session_id = 'tp_api_id_'.$random_number;
 			$condition = array(
 				'session_id' => $session_id
 			);				
@@ -796,11 +803,13 @@ class TitlePoint extends MX_Controller {
 		}
 		else
 		{
-			$tpData['session_id'] = 'tp_api_id_'.$random_number;					
+			$tpData['session_id'] = 'tp_api_id_'.$random_number;
+			
 
 			$tpId = $this->titlePointData->insert($tpData);
 
-			$this->session->set_userdata('tp_api_id', 'tp_api_id_'.$random_number);
+			$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
 		}
 		
     }
