@@ -850,7 +850,12 @@ function parse187()
 
                 if($('#random_number').length)
                 {
+                    console.log("random_number if"+ random_number);
                    $('#random_number').val(random_number); 
+                }
+                else
+                {
+                    console.log("random_number else");
                 }
                 createService4(fipCode,address,city,unit_no,apn,random_number);
                 createService3(apn,state,county,random_number);
