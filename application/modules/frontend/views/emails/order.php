@@ -26,7 +26,7 @@
                 height: 100%;
                 margin: 0;
                 padding: 0;
-                background-color: #393939;
+                background-color: #c0c0c0;
                 -webkit-font-smoothing: antialiased;
             }
 
@@ -61,7 +61,7 @@
                 height: 100%;
                 margin: 0;
                 padding: 0;
-                background-color: #393939;
+                background-color: #c0c0c0;
                 -webkit-font-smoothing: antialiased;
             }
 
@@ -276,8 +276,8 @@
             }        
         </style>
     </head>
-    <body style="-webkit-text-size-adjust: none; margin: 0; padding: 0; font-family: 'Open Sans', Arial, sans-serif; background-color: #393939; color: #505050;">
-    <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" style="background-color:#393939;">
+    <body style="-webkit-text-size-adjust: none; margin: 0; padding: 0; font-family: 'Open Sans', Arial, sans-serif; background-color: #c0c0c0; color: #505050;">
+    <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" style="background-color:#c0c0c0;">
     <tr>
     <td align="center">
     <table class="main-table" width="100%" align="center" cellpadding="0" cellspacing="0" border="0" style="max-width:800px;min-width:700px;">
@@ -287,7 +287,7 @@
         <!-- Pre-header 1 -->
         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
-            <td align="center" class="color-bg" style="background-color:#393939;">
+            <td align="center" class="color-bg" style="background-color:#c0c0c0;">
               <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
                 <tr>
                   <td class="spacer" height="14" style="line-height:14px;">
@@ -1115,7 +1115,7 @@
     <!-- Footer -->
     <table class="footer" width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td class="color-bg" align="center" style="background-color:#393939;">
+        <td class="color-bg" align="center" style="background-color:#c0c0c0;">
           <table class="container" align="center" width="610" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
             <!-- Spacer -->
             <tr>
