@@ -854,7 +854,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/additional-methods.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/custom.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/custom.js?random=<?php echo uniqid(); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-cloneya.min.js"></script>
