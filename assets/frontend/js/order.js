@@ -34,7 +34,6 @@ function createService4(fipCode,address,city,unit_no,apn,random_number)
         dataType: "xml"
     })
     	.done(function(response, textStatus, jqXHR) {
-
             var responseStatus = $(response).find('ReturnStatus').text();
             
             if (responseStatus == 'Failed') 
@@ -56,13 +55,15 @@ function createService4(fipCode,address,city,unit_no,apn,random_number)
             }
         })
         .fail(function(err) {
+
             $('#legalDescription, #vestingInformation').prev('.loader').hide();
             $('#legalDescription').html('No data found.');
             $('#vestingInformation').html('No data found.');
             $('#grantDeedInfoFile').prev('.loader').hide();
             $('#grantDeedInfoFile').css('border','1px solid #000000');
             $('#grantDeedInfoFile').css('padding','15px');
-            $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');         
+            $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
+            alert('Something went wrong.Please hard refresh your page.');         
         });
 }
 
@@ -102,13 +103,14 @@ function createService3(apn,state,county,random_number)
             }
         })
         .fail(function(err) {
-            $('#firstInstallment, #secondInstallment').prev('.loader').hide();
+            /*$('#firstInstallment, #secondInstallment').prev('.loader').hide();
             $('#firstInstallment').css('border','1px solid #000000');
             $('#firstInstallment').css('padding','15px');
             $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
             $('#secondInstallment').css('border','1px solid #000000');
             $('#secondInstallment').css('padding','15px');
-            $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
+            $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');*/
+            alert('Something went wrong.Please hard refresh(Ctrl+F5) your page.'); 
         });
 }
 
@@ -165,7 +167,7 @@ function getRequestSummaries(requestId,methodId,random_number)
             }
         })
         .fail(function(err) {
-                $('#legalDescription, #vestingInformation').prev('.loader').hide();
+                /*$('#legalDescription, #vestingInformation').prev('.loader').hide();
                 $('#legalDescription').html('No data found.');
                 $('#vestingInformation').html('No data found.');
                 
@@ -180,7 +182,8 @@ function getRequestSummaries(requestId,methodId,random_number)
                 $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
                 $('#secondInstallment').css('border','1px solid #000000');
                 $('#secondInstallment').css('padding','15px');
-                $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
+                $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');*/
+            alert('Something went wrong.Please hard refresh(Ctrl+F5) your page.'); 
         });
 }
 
@@ -314,7 +317,7 @@ function getResultById(resultId,methodId,random_number)
         })
         .fail(function(err) {
             
-                $('#legalDescription, #vestingInformation').prev('.loader').hide();
+                /*$('#legalDescription, #vestingInformation').prev('.loader').hide();
                 $('#legalDescription').html('No data found.');
                 $('#vestingInformation').html('No data found.');
                 $('#firstInstallment, #secondInstallment').prev('.loader').hide();
@@ -323,7 +326,8 @@ function getResultById(resultId,methodId,random_number)
                 $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
                 $('#secondInstallment').css('border','1px solid #000000');
                 $('#secondInstallment').css('padding','15px');
-                $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
+                $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');*/
+                alert('Something went wrong.Please hard refresh(Ctrl+F5) your page.');
         });
 }
 
