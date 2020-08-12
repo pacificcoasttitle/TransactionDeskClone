@@ -28,6 +28,29 @@ class Home extends MX_Controller {
 
     	if(isset($_POST) && !empty($_POST))
     	{
+    		$random_number = $this->input->post('random_number');
+    		if(isset($random_number) && !empty($random_number))
+    		{
+    			$condition = array(
+		            'where' => array(
+		                'session_id' => 'tp_api_id_'.$random_number,
+		            ),
+		            'returnType' => 'count'
+		        );
+
+				$count = $this->titlePointData->gettitlePointDetails($condition);
+
+				if($count != 1)
+				{
+					$response = array('status'=>'error', 'message'=> 'Something went wrong.Please hard refresh(Ctrl+F5) your page.');
+					echo json_encode($response); exit;
+				}
+    		}
+    		else
+    		{
+    			$response = array('status'=>'error', 'message'=> 'Something went wrong.Please hard refresh (Ctrl+F5) your page.');
+				echo json_encode($response); exit;
+    		}
     		$this->form_validation->set_rules('OpenName', 'First Name', 'required',array('required'=> 'Enter your first name'));
     		$this->form_validation->set_rules('OpenLastName', 'Last Name', 'required',array('required'=> 'Enter your last name'));
 			$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
@@ -516,7 +539,7 @@ class Home extends MX_Controller {
 							}
 							/* Escrow Lender Details */
 
-							$random_number = $this->input->post('random_number');
+							
 							if($this->session->has_userdata('tp_api_id_'.$random_number))
 							{
 								$session_id = 'tp_api_id_'.$random_number;

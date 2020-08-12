@@ -8,6 +8,7 @@ class TitlePoint extends MX_Controller {
         parent::__construct();
         $this->load->model('order/apiLogs');
 		$this->load->model('order/titlePointData');
+		// $this->order->is_user();
 	}
 
 	function createService()
@@ -18,6 +19,11 @@ class TitlePoint extends MX_Controller {
 
 		$random_number = isset($_POST['random_number']) && !empty($_POST['random_number']) ? $_POST['random_number'] : '';
 
+		if (empty($random_number)) 
+		{	
+			$response = array('status'=>'error','message'=> 'Empty random number');
+			echo json_encode($response); exit;
+		}
 		/* Insert into table */
 		if(!$this->session->userdata('tp_api_id_'.$random_number)) 
 		{
@@ -77,7 +83,7 @@ class TitlePoint extends MX_Controller {
 		}
 		$request = $requestUrl.http_build_query($requestParams);
 
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', $request_type, $request, $requestParams, array(), 0, 0);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', $request_type, $request, $requestParams, array(), $random_number, 0);
 
 		$opts = array(
 			"ssl"=>array(
@@ -92,7 +98,7 @@ class TitlePoint extends MX_Controller {
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
 
-		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', $request_type, $request, $requestParams, $result, 0, $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', $request_type, $request, $requestParams, $result, $random_number, $logid);
 
 		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 		
@@ -178,7 +184,13 @@ class TitlePoint extends MX_Controller {
 		$methodId = isset($_POST['methodId']) && !empty($_POST['methodId']) ? $_POST['methodId'] : '';
 		$apn = isset($_POST['apn']) && !empty($_POST['apn']) ? $_POST['apn'] : '';
 		$random_number = isset($_POST['random_number']) && !empty($_POST['random_number']) ? $_POST['random_number'] : '';
+		$random_number = isset($_POST['random_number']) && !empty($_POST['random_number']) ? $_POST['random_number'] : '';
 
+		if (empty($random_number)) 
+		{	
+			$response = array('status'=>'error','message'=> 'Empty random number');
+			echo json_encode($response); exit;
+		}
 		$requestParams = array(
 		                    'userID' => env('TP_USERNAME'),
 		                    'password' => env('TP_PASSWORD'),
@@ -191,7 +203,7 @@ class TitlePoint extends MX_Controller {
 
 		$request = env('TP_REQUEST_SUMMARY_ENDPOINT').http_build_query($requestParams);
 
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_request_summary_'.$methodId, $request, $requestParams, array(), 0, 0);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_request_summary_'.$methodId, $request, $requestParams, array(), $random_number, 0);
 
 		$opts = array(
 			"ssl"=>array(
@@ -205,7 +217,7 @@ class TitlePoint extends MX_Controller {
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
 		
-		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_request_summary_'.$methodId, $request, $requestParams, $result, 0, $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_request_summary_'.$methodId, $request, $requestParams, $result, $random_number, $logid);
 
 		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 		$session_data = array();
@@ -319,6 +331,11 @@ class TitlePoint extends MX_Controller {
 		$methodId = isset($_POST['methodId']) && !empty($_POST['methodId']) ? $_POST['methodId'] : '';
 		$apn = isset($_POST['apn']) && !empty($_POST['apn']) ? $_POST['apn'] : '';
 		$random_number = isset($_POST['random_number']) && !empty($_POST['random_number']) ? $_POST['random_number'] : '';
+		if (empty($random_number)) 
+		{	
+			$response = array('status'=>'error','message'=> 'Empty random number');
+			echo json_encode($response); exit;
+		}
 		$requestParams = array(
 		                    'userID' => env('TP_USERNAME'),
 		                    'password' => env('TP_PASSWORD'),
@@ -338,7 +355,7 @@ class TitlePoint extends MX_Controller {
 
 		$request = $resultUrl.http_build_query($requestParams);
 
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_result_by_id_'.$methodId, $request, $requestParams, array(), 0, 0);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_result_by_id_'.$methodId, $request, $requestParams, array(), $random_number, 0);
 
 		$opts = array(
 			"ssl"=>array(
@@ -353,7 +370,7 @@ class TitlePoint extends MX_Controller {
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
 
-		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_result_by_id_'.$methodId, $request, $requestParams, $result, 0, $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_result_by_id_'.$methodId, $request, $requestParams, $result, $random_number, $logid);
 		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 		$session_data = array();
 		
