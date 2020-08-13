@@ -257,7 +257,7 @@ class TitlePoint extends MX_Controller {
                     {
                         $nestedData[] = 'success';
                     }
-                    else if((strtolower($value['tax_file_status']) != 'success') && !empty($value['lv_file_status']))
+                    else if((strtolower($value['tax_file_status']) != 'success') && !empty($value['tax_file_status']))
                     {
                         $nestedData[] = $value['tax_file_status'];
                     }
