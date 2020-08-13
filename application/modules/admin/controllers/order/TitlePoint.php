@@ -55,13 +55,12 @@ class TitlePoint extends MX_Controller {
 
         if(isset($logs_list['data']) && !empty($logs_list['data']))
         {
-            $count = 0;
+            $count = $params['start'] + 1;
             foreach ($logs_list['data'] as $key => $value) 
             {
                 $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
                 if(isset($file_id) && !empty($file_id))
                 {
-                    $count++;
                     $order_details = $this->titlePoint_model->get_order_details($file_id);
 
                     $nestedData=array();
@@ -115,6 +114,7 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
 
                     $data[] = $nestedData;
+                    $count++;
                 }
             }
         }
@@ -204,7 +204,7 @@ class TitlePoint extends MX_Controller {
         
         if(isset($logs_list['data']) && !empty($logs_list['data']))
         {
-            $count = 0;
+            $count = $params['start'] + 1;
             foreach ($logs_list['data'] as $key => $value) 
             {
                 $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
@@ -212,7 +212,6 @@ class TitlePoint extends MX_Controller {
                 {
                     $order_details = $this->titlePoint_model->get_order_details($file_id);
 
-                    $count++;
                     $nestedData=array();
                     /*$nestedData[] = $value['customer_number'];*/
                     $nestedData[] = $count;
@@ -268,6 +267,7 @@ class TitlePoint extends MX_Controller {
                     // $nestedData[] = $value['cs3_message'];
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
                     $data[] = $nestedData;
+                    $count++;
                 }
             }
         }
@@ -318,14 +318,14 @@ class TitlePoint extends MX_Controller {
         
         if(isset($logs_list['data']) && !empty($logs_list['data']))
         {
-            $count=0;
+            $count = $params['start'] + 1;
             foreach ($logs_list['data'] as $key => $value) 
             {
                 $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
                 if(isset($file_id) && !empty($file_id))
                 {
                     $order_details = $this->titlePoint_model->get_order_details($file_id);
-                    $count++;
+                    
 
                     $nestedData=array();
                     
@@ -338,6 +338,7 @@ class TitlePoint extends MX_Controller {
                     
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
                     $data[] = $nestedData;
+                    $count++;
                 }
             }
         }
