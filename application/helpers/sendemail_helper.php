@@ -32,36 +32,18 @@ if(!function_exists('send_email')){
         {
             $instance->email->bcc($bcc);
         }
+
+
         foreach($myPdf as $file){
             $instance->email->attach($file);
-        }
-        if (!is_dir('uploads/logs')) 
-        {
-            mkdir('./uploads/logs', 0777, TRUE);
-        }
-
-        $file = FCPATH.'uploads/logs/email.log';
-        if (file_exists($file)) 
-        {
-          $fh = fopen($file, 'a');
-        } 
-        else 
-        {
-          $fh = fopen($file, 'w');
         }
 
         if($instance->email->send())
         {
-            $res = "Mail sent successfully";
-            fwrite($fh, date("Y-m-d H:i:s").": ".$res."\n");
-            fclose($fh);
          	return true;
         }
         else
         {
-            $res = $instance->email->print_debugger();
-            fwrite($fh, date("Y-m-d H:i:s").": ".$res."\n");
-            fclose($fh);
           	return false;
         }
         

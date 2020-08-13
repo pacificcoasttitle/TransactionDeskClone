@@ -595,8 +595,9 @@ class Titlepoint
             }
             else if($status == 'processing') 
             {           
-                if($this->count < 5)
+                if($this->count < 3)
                 {
+                    sleep(1000);
                     $this->count = $this->count + 1;
                     return $this->getImageRequestStatus($requestId,$orderId);                    
                 }
@@ -672,9 +673,10 @@ class Titlepoint
                 return $response;
             }
             else if($status == 'processing') 
-            {       
-                if($this->taxcount < 5)
+            {
+                if($this->taxcount < 3)
                 {
+                    sleep(1000);
                     $this->taxcount = $this->taxcount + 1;
                     return $this->getTaxImageRequestStatus($requestId,$orderId);                    
                 }
