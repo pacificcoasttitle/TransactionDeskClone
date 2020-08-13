@@ -659,7 +659,7 @@ class Home extends MX_Controller {
 								'from_name'=>$from_name, 
 								'to'=>$to,
 								'subject'=>$subject,
-								'message'=>$message,
+								'message'=>json_encode($data),
 								'file'=>json_encode($file),
 								'cc'=>json_encode($cc)
 							);
