@@ -50,9 +50,9 @@ if(!function_exists('send_email')){
           $fh = fopen($file, 'w');
         }
 
-        if($result = $instance->email->send())
+        if($instance->email->send())
         {
-            $res = $instance->email->print_debugger();
+            $res = "Mail sent successfully";
             fwrite($fh, date("Y-m-d H:i:s").": ".$res."\n");
             fclose($fh);
          	return true;
