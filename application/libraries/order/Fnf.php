@@ -107,7 +107,7 @@ class Fnf
         $tokenData = array(
             'token' => $resToken['user_token'], 
             'username' => $resToken['username'],
-            'user_id' => $userdata['is_master'] == 1 ? $orderDetails['user_id'] : $userdata['id'],
+            'user_id' => $userdata['is_master'] == 1 ? $orderDetails['customer_id'] : $userdata['id'],
             'expires_in' => $resToken['expires_in'],
             'create_token_time' => date('Y-m-d H:i:s'), 
             'created_at' => date('Y-m-d H:i:s'),
