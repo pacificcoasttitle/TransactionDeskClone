@@ -48,11 +48,11 @@ class Order extends MX_Controller {
         
         $data = array(); 
         $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
-        $count = 0;
+        $count = $params['start'] + 1;
         foreach( $ordersList['data'] as $key => $value )
         {
             $nestedData=array();
-            $count++;        
+                  
             $nestedData[] = $count;
             $nestedData[] = $value['file_number'];
             $nestedData[] = $value['full_address'];
@@ -64,7 +64,7 @@ class Order extends MX_Controller {
             $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
             $nestedData[] = $action;
             $data[] = $nestedData;            
-            $cnt++;            
+            $count++;          
         }  
                       
         $json_data = array(            
@@ -273,13 +273,11 @@ class Order extends MX_Controller {
             $logs_list = $this->partnerApiLogs->get_partner_api_logs($params);    
         }
         $data = array(); 
-        
+        $count = $params['start'] + 1;
         if(isset($logs_list['data']) && !empty($logs_list['data']))
         {
-            $count = 0;
             foreach ($logs_list['data'] as $key => $value) 
             {
-                $count++;
                 $nestedData=array();
                 $nestedData[] = $count;
                 $nestedData[] = $value['file_number'];
@@ -298,7 +296,7 @@ class Order extends MX_Controller {
                 }
                 $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
                 $data[] = $nestedData;
-                
+                $count++;
             }
         }
         $json_data['recordsTotal'] = intval( $logs_list['recordsTotal'] );
