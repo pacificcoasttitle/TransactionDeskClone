@@ -121,6 +121,12 @@
                                 <p>TaxYear: <?php echo isset($secondInstallment['TaxYear']) && !empty($secondInstallment['TaxYear']) ? $secondInstallment['TaxYear'] : '-'?></p>
                         <?php
                             }
+                            else
+                            {
+                        ?>
+                                <span class="orderinfo1">No data found.</span>
+                        <?php
+                            }
                         ?>
                     </div>                           
                     </div>
