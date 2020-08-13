@@ -52,14 +52,14 @@ if(!function_exists('send_email')){
 
         if($result = $instance->email->send())
         {
-            $res = $this->email->print_debugger();
+            $res = $instance->email->print_debugger();
             fwrite($fh, date("Y-m-d H:i:s").": ".$res."\n");
             fclose($fh);
          	return true;
         }
         else
         {
-            $res = $this->email->print_debugger();
+            $res = $instance->email->print_debugger();
             fwrite($fh, date("Y-m-d H:i:s").": ".$res."\n");
             fclose($fh);
           	return false;
