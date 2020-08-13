@@ -667,7 +667,7 @@ class Home extends MX_Controller {
 
 							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
 
-							// $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), $orderNumber, $logid);
+							$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), $orderNumber, $logid);
 
 							
 						}
