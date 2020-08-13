@@ -35,12 +35,36 @@ if(!function_exists('send_email')){
         foreach($myPdf as $file){
             $instance->email->attach($file);
         }
-        
-        if($instance->email->send()){
+        if (!is_dir('uploads/logs')) 
+        {
+            mkdir('./uploads/logs', 0777, TRUE);
+        }
+
+        $file = FCPATH.'uploads/logs/email.log';
+        if (file_exists($file)) 
+        {
+          $fh = fopen($file, 'a');
+        } 
+        else 
+        {
+          $fh = fopen($file, 'w');
+        }
+
+        if($result = $instance->email->send())
+        {
+            $res = $this->email->print_debugger();
+            fwrite($fh, date("Y-m-d H:i:s").": ".$res."\n");
+            fclose($fh);
          	return true;
-        }else{
+        }
+        else
+        {
+            $res = $this->email->print_debugger();
+            fwrite($fh, date("Y-m-d H:i:s").": ".$res."\n");
+            fclose($fh);
           	return false;
         }
+        
 	}          
 }
 

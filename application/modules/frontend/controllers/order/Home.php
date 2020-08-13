@@ -25,7 +25,7 @@ class Home extends MX_Controller {
 		$this->load->model('order/salesRep');
 		$this->load->model('order/partnerApiLogs');
 		$this->load->library('order/titlepoint');
-
+					
     	if(isset($_POST) && !empty($_POST))
     	{
     		$random_number = $this->input->post('random_number');
@@ -552,13 +552,6 @@ class Home extends MX_Controller {
 									'file_number' => $orderNumber,
 								);
 								$this->titlePointData->update($tpData,$condition);
-								
-								/*$read_condition = array(
-						            'where' => array(
-						                'session_id' => $session_id
-						            )
-						        );	*/				
-								
 								
 								$this->load->library('order/titlepoint');
 
