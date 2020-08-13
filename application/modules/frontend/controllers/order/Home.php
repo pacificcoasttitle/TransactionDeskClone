@@ -654,7 +654,22 @@ class Home extends MX_Controller {
 							$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 							$this->load->helper('sendemail');
 							
+							$mailParams= array(
+								'from_mail'=>$from_mail, 
+								'from_name'=>$from_name, 
+								'to'=>$to,
+								'subject'=>$subject,
+								'message'=>$message,
+								'file'=>json_encode($file),
+								'cc'=>json_encode($cc)
+							);
+							$logid = $this->apiLogs->syncLogs($userdata['id'], '', 'send_confirmation_mail', '', $mailParams, array(), 0, 0);
+
 							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+
+							$this->apiLogs->syncLogs($userdata['id'], '', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), 0, 0);
+
+							
 						}
 													
 						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','file_id'=>$file_id);
