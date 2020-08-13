@@ -1139,7 +1139,7 @@ class Dashboard extends MX_Controller {
 				'assignment' => null,
 				'mortgageType' => null,
 				'amount' => 0,
-				'loan_number' => null,
+				'loan_number' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
 				'vendorInternalID' => $orderDetails['escrow_lender_id']
 			);
 		} 
@@ -1423,6 +1423,7 @@ class Dashboard extends MX_Controller {
 		$file_id = $this->input->post('file_id');
 		$LenderId = $this->input->post('LenderId');
 		$loan_amount = $this->input->post('loan_amount');
+		$loan_number = $this->input->post('loan_number');
 		$first_name = $this->input->post('first_name');
 		$last_name = $this->input->post('last_name');
 		$primary_first_name = $this->input->post('primary_first_name');
@@ -1450,7 +1451,7 @@ class Dashboard extends MX_Controller {
 
 		$this->home_model->update($lender_details, $condition, 'customer_basic_details');
 		if ($orderDetails['sales_amount'] > 0) { 
-			$this->home_model->update(array('loan_amount' => $loan_amount, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+			$this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner), array('id' => $orderDetails['transaction_id']), 'transaction_details');
 			$propertyDetails = array('escrow_lender_id' => $LenderId);
 			if ($cplApi == 'fnf') {
 				$propertyDetails['buyer_agent_id'] = $this->input->post('agent_id');
@@ -1458,7 +1459,7 @@ class Dashboard extends MX_Controller {
 			}
 			$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
 		} else {
-			$this->home_model->update(array('loan_amount' => $loan_amount), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+			$this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
 			$propertyDetails = array('escrow_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
 			if ($cplApi == 'fnf') {
 				$propertyDetails['buyer_agent_id'] = $this->input->post('agent_id');
@@ -2639,6 +2640,7 @@ class Dashboard extends MX_Controller {
 			}
 		}
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
+		$orderDetails['loan_number'] = $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '';
 		$response = array('status'=>'success', 'orderDetails' => $orderDetails);
 		echo json_encode($response); exit;
 	}

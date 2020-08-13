@@ -571,8 +571,10 @@ class Home extends MX_Controller {
         $data = array(); 
         
         if(isset($cpl_document_list['data']) && !empty($cpl_document_list['data'])) {
+            $i = $params['start'] + 1;
             foreach ($cpl_document_list['data'] as $key => $value) {
                 $nestedData=array();
+                $nestedData[] = $i;
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
@@ -586,7 +588,8 @@ class Home extends MX_Controller {
                     $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/documents/$documentName' download><i class='fas fa-fw fa-download'></i></a>
                     <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/documents/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
                 }
-                $data[] = $nestedData;            
+                $data[] = $nestedData;   
+                $i++;         
             }
         }
         $json_data['recordsTotal'] = intval( $cpl_document_list['recordsTotal'] );
@@ -999,8 +1002,10 @@ class Home extends MX_Controller {
         $data = array(); 
         
         if(isset($grant_document_lists['data']) && !empty($grant_document_lists['data'])) {
+            $i = $params['start'] + 1;
             foreach ($grant_document_lists['data'] as $key => $value) {
                 $nestedData=array();
+                $nestedData[] = $i;
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
@@ -1014,7 +1019,8 @@ class Home extends MX_Controller {
                     $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/grant-deed/$documentName' download><i class='fas fa-fw fa-download'></i></a>
                     <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/grant-deed/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
                 }
-                $data[] = $nestedData;            
+                $data[] = $nestedData;  
+                $i++;          
             }
         }
         $json_data['recordsTotal'] = intval( $grant_document_lists['recordsTotal'] );
@@ -1046,8 +1052,10 @@ class Home extends MX_Controller {
         $data = array(); 
         
         if(isset($lv_document_lists['data']) && !empty($lv_document_lists['data'])) {
+            $i = $params['start'] + 1;
             foreach ($lv_document_lists['data'] as $key => $value) {
                 $nestedData=array();
+                $nestedData[] = $i;
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
@@ -1061,7 +1069,8 @@ class Home extends MX_Controller {
                     $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/legal-vesting/$documentName' download><i class='fas fa-fw fa-download'></i></a>
                     <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/legal-vesting/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
                 }
-                $data[] = $nestedData;            
+                $data[] = $nestedData;  
+                $i++;          
             }
         }
         $json_data['recordsTotal'] = intval( $lv_document_lists['recordsTotal'] );
@@ -1209,8 +1218,10 @@ class Home extends MX_Controller {
         $data = array(); 
         
         if(isset($tax_document_lists['data']) && !empty($tax_document_lists['data'])) {
+            $i = $params['start'] + 1;
             foreach ($tax_document_lists['data'] as $key => $value) {
                 $nestedData=array();
+                $nestedData[] = $i;
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
@@ -1224,7 +1235,8 @@ class Home extends MX_Controller {
                     $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/tax/$documentName' download><i class='fas fa-fw fa-download'></i></a>
                     <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/tax/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
                 }
-                $data[] = $nestedData;            
+                $data[] = $nestedData;  
+                $i++;          
             }
         }
         $json_data['recordsTotal'] = intval( $tax_document_lists['recordsTotal'] );
@@ -1266,8 +1278,10 @@ class Home extends MX_Controller {
         $data = array(); 
         
         if(isset($curative_document_lists['data']) && !empty($curative_document_lists['data'])) {
+            $i = $params['start'] + 1;
             foreach ($curative_document_lists['data'] as $key => $value) {
                 $nestedData=array();
+                $nestedData[] = $i;
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
@@ -1281,7 +1295,8 @@ class Home extends MX_Controller {
                     $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/curative/$documentName' download><i class='fas fa-fw fa-download'></i></a>
                     <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/curative/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
                 }
-                $data[] = $nestedData;            
+                $data[] = $nestedData;  
+                $i++;          
             }
         }
         $json_data['recordsTotal'] = intval( $curative_document_lists['recordsTotal'] );
