@@ -35,6 +35,7 @@
                 <table class="table table-bordered" id="tbl-orders-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>Sr No</th>
                             <th>Order#</th>
                             <th>Property Address</th>
                             <th>Product Type</th>

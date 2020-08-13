@@ -23,6 +23,7 @@
                 <table class="table table-bordered" id="tbl-lv-log-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>Sr No</th>
                             <th>Order No</th>
                             <th>Property Address</th>
                             <th>Message</th>

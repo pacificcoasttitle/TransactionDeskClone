@@ -47,10 +47,13 @@ class Order extends MX_Controller {
         $ordersList = $this->order_model->get_orders($params);   
         
         $data = array(); 
-        $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;  
+        $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+        $count = 0;
         foreach( $ordersList['data'] as $key => $value )
         {
-            $nestedData=array();          
+            $nestedData=array();
+            $count++;        
+            $nestedData[] = $count;
             $nestedData[] = $value['file_number'];
             $nestedData[] = $value['full_address'];
             $nestedData[] = $value['product_type'];
@@ -273,34 +276,29 @@ class Order extends MX_Controller {
         
         if(isset($logs_list['data']) && !empty($logs_list['data']))
         {
+            $count = 0;
             foreach ($logs_list['data'] as $key => $value) 
             {
-                /* $req_url = $value['request_url'];
-                $path = parse_url($req_url,PHP_URL_PATH);
-                $path_info = explode('/', $path);
+                $count++;
+                $nestedData=array();
+                $nestedData[] = $count;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['title_officer_name'];
+                $nestedData[] = $value['sales_rep_name'];
+                $response_data = $value['response_data'];
+                $response = json_decode($response_data,TRUE);
+                if(empty($response))
+                {
+                    $nestedData[] = 'Success';
+                }
+                else
+                {
+                    $msg = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message']: '';
+                    $nestedData[] = $msg;
+                }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+                $data[] = $nestedData;
                 
-                $file_id = isset($path_info[3]) && !empty($path_info[3]) ? $path_info[3] : '';
-                if(isset($file_id) && !empty($file_id))
-                {*/
-                    // $order_details = $this->order_model->get_order_details($file_id);
-                    $nestedData=array();
-                    $nestedData[] = $value['file_number'];
-                    $nestedData[] = $value['title_officer_name'];
-                    $nestedData[] = $value['sales_rep_name'];
-                    $response_data = $value['response_data'];
-                    $response = json_decode($response_data,TRUE);
-                    if(empty($response))
-                    {
-                        $nestedData[] = 'Success';
-                    }
-                    else
-                    {
-                        $msg = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message']: '';
-                        $nestedData[] = $msg;
-                    }
-                    $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
-                    $data[] = $nestedData;
-                /*}*/
             }
         }
         $json_data['recordsTotal'] = intval( $logs_list['recordsTotal'] );

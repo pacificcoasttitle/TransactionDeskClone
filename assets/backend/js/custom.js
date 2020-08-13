@@ -1419,19 +1419,21 @@ $(document).ready(function () {
             ],
             "columns": [
                 {
-                    "width": "15%"
+                    "width": "5%"
                 },
                 {
-                    "width": "25%"
-                },
-                {
-                    "width": "15%"
+                    "width": "10%"
                 },
                 {
                     "width": "30%"
                 },
                 {
-                    "width": "15%"
+                    "width": "20%"
+                },
+                {
+                    "width": "17%"
+                },{
+                    "width": "18%"
                 },
             ],
             "language": {
@@ -1544,7 +1546,7 @@ $(document).ready(function () {
         });
     }
 
-    /* Tax logs */
+    /* Grant deed logs */
     if ($('#tbl-grant-deed-log-listing').length) 
     {
         log_list = $('#tbl-grant-deed-log-listing').DataTable({
@@ -1555,19 +1557,21 @@ $(document).ready(function () {
             ],
             "columns": [
                 {
-                    "width": "15%"
+                    "width": "5%"
                 },
                 {
-                    "width": "25%"
-                },
-                {
-                    "width": "15%"
+                    "width": "10%"
                 },
                 {
                     "width": "30%"
                 },
                 {
-                    "width": "15%"
+                    "width": "20%"
+                },
+                {
+                    "width": "17%"
+                },{
+                    "width": "18%"
                 },
             ],
             "language": {
@@ -1607,7 +1611,7 @@ $(document).ready(function () {
                         
         });
     }
-    /* Tax logs */
+    /* Grant deed logs */
 
     if ($('#tbl-curative-documents-listing').length) 
     {
@@ -1841,16 +1845,19 @@ $(document).ready(function () {
             ],
             "columns": [
                 {
+                    "width": "5%"
+                },
+                {
                     "width": "10%"
                 },
                 {
-                    "width": "20%"
+                    "width": "15%"
                 },
                 {
-                    "width": "20%"
+                    "width": "15%"
                 },
                 {
-                    "width": "30%"
+                    "width": "35%"
                 },
                 {
                     "width": "20%"
