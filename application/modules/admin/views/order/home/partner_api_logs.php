@@ -37,6 +37,7 @@
                 <table class="table table-bordered" id="tbl-partner-api-log-listing" width="100%" cellspacing="0" >
                     <thead>
                         <tr>
+                            <th>Sr No</th>
                             <th>Order No</th>
                             <th>Title Officer</th>
                             <th>Sales Rep</th>

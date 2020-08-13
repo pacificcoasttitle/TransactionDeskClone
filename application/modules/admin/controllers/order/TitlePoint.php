@@ -55,15 +55,18 @@ class TitlePoint extends MX_Controller {
 
         if(isset($logs_list['data']) && !empty($logs_list['data']))
         {
+            $count = 0;
             foreach ($logs_list['data'] as $key => $value) 
             {
                 $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
                 if(isset($file_id) && !empty($file_id))
                 {
+                    $count++;
                     $order_details = $this->titlePoint_model->get_order_details($file_id);
 
                     $nestedData=array();
                     
+                    $nestedData[] = $count;
                     $nestedData[] = $value['file_number'];
                     $nestedData[] = $order_details['full_address'];
                     /*if(strtolower($value['cs4_message']) == 'success')
@@ -201,6 +204,7 @@ class TitlePoint extends MX_Controller {
         
         if(isset($logs_list['data']) && !empty($logs_list['data']))
         {
+            $count = 0;
             foreach ($logs_list['data'] as $key => $value) 
             {
                 $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
@@ -208,8 +212,10 @@ class TitlePoint extends MX_Controller {
                 {
                     $order_details = $this->titlePoint_model->get_order_details($file_id);
 
+                    $count++;
                     $nestedData=array();
                     /*$nestedData[] = $value['customer_number'];*/
+                    $nestedData[] = $count;
                     $nestedData[] = $value['file_number'];
                     $nestedData[] = $order_details['full_address'];
                     $nestedData[] = $order_details['apn'];
@@ -312,15 +318,18 @@ class TitlePoint extends MX_Controller {
         
         if(isset($logs_list['data']) && !empty($logs_list['data']))
         {
+            $count=0;
             foreach ($logs_list['data'] as $key => $value) 
             {
                 $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
                 if(isset($file_id) && !empty($file_id))
                 {
                     $order_details = $this->titlePoint_model->get_order_details($file_id);
+                    $count++;
 
                     $nestedData=array();
-                    /*$nestedData[] = $value['customer_number'];*/
+                    
+                    $nestedData[] = $count;
                     $nestedData[] = $value['file_number'];
                     $nestedData[] = $order_details['full_address'];
                     $nestedData[] = $value['grant_deed_type'];
