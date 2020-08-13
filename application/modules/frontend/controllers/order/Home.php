@@ -1053,7 +1053,7 @@ class Home extends MX_Controller {
 		$documentData = array(
 			'document_name' => $document_name,
 			'original_document_name' => $document_name,
-			'document_type_id' => 1031,
+			'document_type_id' => 1037,
 			'document_size' => $fileSize,
 			'user_id' => $userdata['id'],
 			'order_id' => $orderDetails['order_id'],
@@ -1067,7 +1067,7 @@ class Home extends MX_Controller {
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
 			'DocumentType' => array(
-				'DocumentTypeID' => 1031,
+				'DocumentTypeID' => 1037,
 			),
 			'Description' => 'Legal & Vesting Document',
 			'InternalOnly' => false,
@@ -1104,7 +1104,7 @@ class Home extends MX_Controller {
 		$documentData = array(
 			'document_name' => $document_name,
 			'original_document_name' => $document_name,
-			'document_type_id' => 1031,
+			'document_type_id' => 1037,
 			'document_size' => $fileSize,
 			'user_id' => $userdata['id'],
 			'order_id' => $orderDetails['order_id'],
@@ -1118,7 +1118,7 @@ class Home extends MX_Controller {
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
 			'DocumentType' => array(
-				'DocumentTypeID' => 1031,
+				'DocumentTypeID' => 1037,
 			),
 			'Description' => 'Grant Deed Document',
 			'InternalOnly' => false,
@@ -1154,7 +1154,7 @@ class Home extends MX_Controller {
 		$documentData = array(
 			'document_name' => $document_name,
 			'original_document_name' => $document_name,
-			'document_type_id' => 1023,
+			'document_type_id' => 1037,
 			'document_size' => $fileSize,
 			'user_id' => $userdata['id'],
 			'order_id' => $orderDetails['order_id'],
@@ -1168,7 +1168,7 @@ class Home extends MX_Controller {
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
 			'DocumentType' => array(
-				'DocumentTypeID' => 1023,
+				'DocumentTypeID' => 1037,
 			),
 			'Description' => 'Tax Document',
 			'InternalOnly' => false,

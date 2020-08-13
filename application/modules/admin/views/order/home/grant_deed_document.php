@@ -21,6 +21,7 @@
                 <table class="table table-bordered" id="tbl-grant-documents-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>Sr No</th>
                             <th>File Number</th>
                             <th>Document Name</th>
                             <th>Sent To Resware</th>

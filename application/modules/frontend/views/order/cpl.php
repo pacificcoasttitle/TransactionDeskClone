@@ -139,13 +139,20 @@
 								</div>
 
 								<div class="spacer-b20">
-									<div class="tagline"><span>Loan Amount</span></div><!-- .tagline -->
+									<div class="tagline"><span>Loan Details</span></div><!-- .tagline -->
 								</div>
 
-								<div class="section colm colm12 spacer-b30">
-									<label class="field">
-										<input required="required" type="text" class="gui-input" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
-									</label>
+								<div class="frm-row spacer-b15">
+									<div class="section colm colm6">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
+										</label>
+									</div>
+									<div class="section colm colm6">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="loan_number" id="loan_number" placeholder="Loan Number">
+										</label>
+									</div>
 								</div>
 
 								<div class="spacer-b20">
@@ -473,6 +480,7 @@
 						$("#first_name").val(res.orderDetails['secondary_owner_first_name']);
 						$("#last_name").val(res.orderDetails['secondary_owner_last_name']);
 						$("#loan_amount").val(res.orderDetails['loan_amount']);
+						$("#loan_number").val(res.orderDetails['loan_number']);
 					}  
 					$('#page-preloader').css('display', 'none');
 					$('#lender_information').modal('show');
