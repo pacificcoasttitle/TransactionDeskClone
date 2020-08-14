@@ -167,6 +167,7 @@ class Order
             property_details.primary_owner,
             property_details.secondary_owner,
             property_details.escrow_lender_id,
+            property_details.cpl_lender_id,
             property_details.buyer_agent_id,
             transaction_details.id as transaction_id,
             transaction_details.sales_representative,
