@@ -2564,15 +2564,27 @@ class Dashboard extends MX_Controller {
 		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 			
 		if ($orderUser['is_escrow'] == 1) {
-			$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
-			$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
-			$orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
-			$orderDetails['lender_telephone_no'] = $orderDetails['lender_telephone_no'] ? $orderDetails['lender_telephone_no'] : '';
-			$orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
-			$orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
-			$orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
-			$orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
-			$orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
+			if ($orderDetails['is_escrow'] == 1) {
+				$orderDetails['lender_first_name'] =  '';
+				$orderDetails['lender_last_name'] ='';
+				$orderDetails['lender_email'] = '';
+				$orderDetails['lender_telephone_no'] = '';
+				$orderDetails['lender_company_name'] = '';
+				$orderDetails['lender_address'] = '';
+				$orderDetails['lender_city'] = '';
+				$orderDetails['lender_zipcode'] = '';
+				$orderDetails['lender_id'] = '';
+			} else {			
+				$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
+				$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
+				$orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
+				$orderDetails['lender_telephone_no'] = $orderDetails['lender_telephone_no'] ? $orderDetails['lender_telephone_no'] : '';
+				$orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
+				$orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
+				$orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
+				$orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+				$orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
+			}
 		} else {
 			if (!empty($orderDetails['cpl_lender_id'])) {
 				$lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
