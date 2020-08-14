@@ -83,14 +83,14 @@
 								BuyerAgentName:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=BuyerAgentEmailAddress]").val() != "" || $("input[name=BuyerAgentTelephone]").val() != "" || $("input[name=BuyerAgentCompany]").val() != "");
 				                        },
 				                    },
 				                },
 				                BuyerAgentEmailAddress:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=BuyerAgentName]").val() != "" || $("input[name=BuyerAgentTelephone]").val() != "" || $("input[name=BuyerAgentCompany]").val() != "");
 				                        },
 				                    },
 				                    email: true,
@@ -98,28 +98,28 @@
 				                BuyerAgentTelephone:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=BuyerAgentName]").val() != "" || $("input[name=BuyerAgentEmailAddress]").val() != "" || $("input[name=BuyerAgentCompany]").val() != "");
 				                        },
 				                    },
 				                },
 				                BuyerAgentCompany:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=BuyerAgentName]").val() != "" || $("input[name=BuyerAgentEmailAddress]").val() != "" || $("input[name=BuyerAgentTelephone]").val() != "");
 				                        },
 				                    },
 				                },
 				                ListingAgentName:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=ListingAgentEmailAddress]").val() != "" || $("input[name=ListingAgentTelephone]").val() != "" || $("input[name=ListingAgentCompany]").val() != "");
 				                        },
 				                    },
 				                },
 				                ListingAgentEmailAddress:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=ListingAgentName]").val() != "" || $("input[name=ListingAgentTelephone]").val() != "" || $("input[name=ListingAgentCompany]").val() != "");
 				                        },
 				                    },
 				                    email: true,
@@ -127,14 +127,14 @@
 				                ListingAgentTelephone:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=ListingAgentName]").val() != "" || $("input[name=ListingAgentEmailAddress]").val() != "" || $("input[name=ListingAgentCompany]").val() != "");
 				                        },
 				                    },
 				                },
 				                ListingAgentCompany:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=ListingAgentName]").val() != "" || $("input[name=ListingAgentEmailAddress]").val() != "" || $("input[name=ListingAgentTelephone]").val() != "");
 				                        },
 				                    },
 				                },
@@ -155,13 +155,6 @@
 				                        },
 				                    },
 				                },
-				                // secondaryBorrower:{
-				                //     required: {
-				                //         depends: function(element) {
-				                //             return ($("select[name=ProductTypeID]").val() == "20" || $("select[name=ProductTypeID]").val() == "32");
-				                //         },
-				                //     },
-				                // },
 				                loanAmount:{
 				                    required: {
 				                        depends: function(element) {
@@ -287,6 +280,7 @@
 						/* @ajax form submition 
 						---------------------------------------------------- */
 						submitHandler:function(form) {
+							alert('validate');
 							$(form).ajaxSubmit({
 									target:'.result',			   
 									beforeSubmit:function(){

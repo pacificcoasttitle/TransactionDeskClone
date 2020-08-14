@@ -577,6 +577,7 @@
 												</label>
 											</div><!-- end section -->
 										</div>
+										<div style="display: none;" class="alert notification alert-error" id="required-agent-details">Enter Buyers Agent or Listing Agent details</div>
 									</div>
 									<!-- end agent details -->
 
@@ -735,7 +736,7 @@
 
 								</div><!-- end .form-body section -->
 								<div class="form-footer">
-									<button type="submit" data-btntext-sending="Sending..."
+									<button id="btn-place-order" type="submit" data-btntext-sending="Sending..."
 										class="button btn-primary">Submit</button>
 									<button type="reset" class="button">Cancel</button>
 									<a style="border: 0;height: 42px;color: #243140;line-height: 1;font-size: 15px;cursor: pointer;padding: 0 18px;text-align: center;vertical-align: top;background: #bdc3c7;display: inline-block;-webkit-user-drag: none;text-shadow: 0 1px rgba(255, 255, 255, 0.2);margin-right: 10px;margin-bottom: 5px;text-decoration: none;border-radius: 3px;padding-top: 13px;"

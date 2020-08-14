@@ -72,6 +72,19 @@ $(document).ready(function() {
     $(document).on('click', '.switch-property-button', switchProperty);
 
     //customer no
+    $('#btn-place-order').click(function(e){
+
+            if($("input[name=add-agent-details]").is(":checked")) 
+            { 
+                $('#required-agent-details').show(); 
+            } 
+            else 
+            {
+                $('#required-agent-details').hide(); 
+            } 
+        
+    });
+
     $('#getCustomerInfo').click(function(e){
         var customer_no = $('#CustomerNumber').val();
 
@@ -278,6 +291,7 @@ $(document).ready(function() {
             $("#ListingAgentCompany").val('').parent().removeClass('state-success');
             $("#ListingAgentId").val('');
             $('#agent-details-fields').hide();
+            $('#required-agent-details').hide();
         }        
     });
 
@@ -339,6 +353,7 @@ $(document).ready(function() {
         minLength: 3,
         select: function( event, ui ) {
             event.preventDefault();
+            $('#required-agent-details').hide(); 
             $("#BuyerAgentName").val(ui.item.name);
             /*$("#AgentFirstName").val(ui.item.first_name);
             $("#AgentLastName").val(ui.item.last_name).attr('readonly','readonly').parent().addClass('state-success');*/
@@ -383,6 +398,7 @@ $(document).ready(function() {
         delay: 0,
         minLength: 3,
         select: function( event, ui ) {
+            $('#required-agent-details').hide(); 
             event.preventDefault();
             $("#ListingAgentName").val(ui.item.name);
             
