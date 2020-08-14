@@ -1448,19 +1448,30 @@ class Dashboard extends MX_Controller {
 		$condition = array(
 			'id' => $LenderId
 		);
+		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 
 		$this->home_model->update($lender_details, $condition, 'customer_basic_details');
 		if ($orderDetails['sales_amount'] > 0) { 
+			if ($orderUser['is_escrow'] == 1) {
+				$propertyDetails = array('escrow_lender_id' => $LenderId);
+			} else {
+				$propertyDetails = array('cpl_lender_id' => $LenderId);
+			}
+			
 			$this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-			$propertyDetails = array('escrow_lender_id' => $LenderId);
 			if ($cplApi == 'fnf') {
 				$propertyDetails['buyer_agent_id'] = $this->input->post('agent_id');
 				$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
 			}
 			$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
 		} else {
+			if ($orderUser['is_escrow'] == 1) {
+				$propertyDetails = array('escrow_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
+			} else {
+				$propertyDetails = array('cpl_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
+			}
 			$this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-			$propertyDetails = array('escrow_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
+			
 			if ($cplApi == 'fnf') {
 				$propertyDetails['buyer_agent_id'] = $this->input->post('agent_id');
 				$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
