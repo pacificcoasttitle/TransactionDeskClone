@@ -597,7 +597,7 @@ class Titlepoint
             {           
                 if($this->count < 3)
                 {
-                    // sleep(1);
+                    sleep(1);
                     $this->count = $this->count + 1;
                     return $this->getImageRequestStatus($requestId,$orderId);                    
                 }
@@ -676,7 +676,7 @@ class Titlepoint
             {
                 if($this->taxcount < 3)
                 {
-                    // sleep(1);
+                    sleep(1);
                     $this->taxcount = $this->taxcount + 1;
                     return $this->getTaxImageRequestStatus($requestId,$orderId);                    
                 }
