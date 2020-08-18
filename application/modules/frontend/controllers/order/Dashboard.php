@@ -17,6 +17,7 @@ class Dashboard extends MX_Controller {
         $this->load->model('order/reviewPrelimData');
 		$this->load->model('order/titleOfficer');
 		$this->load->model('order/home_model');
+		$this->load->model('order/fees_model');
 		$this->order->is_user();
 	}
 	
@@ -411,6 +412,12 @@ class Dashboard extends MX_Controller {
         if(isset($loanAmount) && !empty($loanAmount))
         {
             $request['Loans'][]['LoanAmount'] = $loanAmount;
+            $condition = array(
+	            'where' => array(
+	                'transaction_type' => 'loan',
+	                'status' => 1
+	            )
+	        );
         }
 
         $salesAmount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
@@ -418,6 +425,12 @@ class Dashboard extends MX_Controller {
         if(isset($salesAmount) && !empty($salesAmount))
         {
             $request['SalesPrice'] = $salesAmount;
+            $condition = array(
+	            'where' => array(
+	                'transaction_type' => 'sale',
+	                'status' => 1
+	            )
+	        );
         }
 
         $fees_data = json_encode($request);
@@ -428,13 +441,11 @@ class Dashboard extends MX_Controller {
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, array(), $orderId, 0);
         $result = $this->resware->make_request('POST', $endPoint, $fees_data);
 
-        
+        $fees = array();
         if(isset($result) && !empty($result))
         {
             $response = json_decode($result,TRUE);
             $closing_fee_estimate_id = isset($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) && !empty($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) ? $response['ClosingFeeEstimate']['ClosingFeeEstimateID'] : '';
-
-            $fees = array();
 
             if(isset($response['ClosingFeeEstimate']['HUDFees']) && !empty(isset($response['ClosingFeeEstimate']['HUDFees'])))
             {
@@ -461,24 +472,19 @@ class Dashboard extends MX_Controller {
                 }
             }
         }
+        $feesInfo = $this->fees_model->get_rows($condition);
+        if(isset($feesInfo) && !empty(isset($feesInfo)))
+        {
+            foreach ($feesInfo as $k => $v) 
+            {
+                $fees['AdditionalFees'][] = array('amount' => $v['value'], 'description' => $v['name']);
+            }
+        }
         $data['fees'] = $fees;
         $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
         $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
         $data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
         $data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
-
-        /*if(isset($orderDetails['purchase_type']) && !empty($orderDetails['purchase_type']))
-        {
-            $productTypeID = $orderDetails['purchase_type'];
-            if($productTypeID == '19' || $productTypeID == '33')
-            {
-                $productType = 'Residential: Loan: Refinance';
-            }
-            elseif ($productTypeID == '20' || $productTypeID == '32') 
-            {
-                $productType = 'Residential: Sales: Purchase';
-            }
-        }*/
         if(isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']))
         {
         	$productType = 'Residential: Sales: Purchase';
