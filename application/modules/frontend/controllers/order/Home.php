@@ -401,33 +401,33 @@ class Home extends MX_Controller {
 								}
 							}
 
-							if (!empty($companyData)) {
-								if ($companyData[0]['underwriter'] == 'north_american') {
-									$partners[] = array(
-										'PartnerTypeID' => 7,
-										'PartnerID' => 39919,
-										'PartnerType' => array(
-											'PartnerTypeID' => 7
-										)
-									);
-								} else if ($companyData[0]['underwriter'] == 'commonwealth') {
-									$partners[] = array(
-										'PartnerTypeID' => 7,
-										'PartnerID' => 6,
-										'PartnerType' => array(
-											'PartnerTypeID' => 7
-										)
-									);
-								} else {
-									$partners[] = array(
-										'PartnerTypeID' => 7,
-										'PartnerID' => 201324,
-										'PartnerType' => array(
-											'PartnerTypeID' => 7
-										)
-									);
-								}
-							}
+							// if (!empty($companyData)) {
+							// 	if ($companyData[0]['underwriter'] == 'north_american') {
+							// 		$partners[] = array(
+							// 			'PartnerTypeID' => 7,
+							// 			'PartnerID' => 39919,
+							// 			'PartnerType' => array(
+							// 				'PartnerTypeID' => 7
+							// 			)
+							// 		);
+							// 	} else if ($companyData[0]['underwriter'] == 'commonwealth') {
+							// 		$partners[] = array(
+							// 			'PartnerTypeID' => 7,
+							// 			'PartnerID' => 6,
+							// 			'PartnerType' => array(
+							// 				'PartnerTypeID' => 7
+							// 			)
+							// 		);
+							// 	} else {
+							// 		$partners[] = array(
+							// 			'PartnerTypeID' => 7,
+							// 			'PartnerID' => 201324,
+							// 			'PartnerType' => array(
+							// 				'PartnerTypeID' => 7
+							// 			)
+							// 		);
+							// 	}
+							// }
 
 							$partnerData = json_encode(array('Partners' => $partners));
 							$endPoint = 'files/'.$file_id.'/partners';
