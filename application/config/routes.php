@@ -208,6 +208,8 @@ $route['order/admin/update-order-details'] = 'admin/order/order/update_order_det
 $route['order/admin/fees'] = 'admin/order/fees/index';
 $route['order/admin/add-fee'] = 'admin/order/fees/add_fee';
 $route['order/admin/edit-fee/:num'] = 'admin/order/fees/edit_fee';
+$route['order/admin/import-underwriters'] = 'admin/order/home/import_underwriters';
+$route['order/admin/update-underwriter'] = 'admin/order/home/updateUnderwriter';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  

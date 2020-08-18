@@ -327,6 +327,20 @@ class Home extends MX_Controller {
 					$is_escrow = $orderUser['is_escrow'];
 					$user_data['email'] = $orderUser['email_address'];
 					$user_data['password'] = $orderUser['random_password'];
+					$con = array(
+						'where' => array(
+							'partner_id' => $orderUser['partner_id'],
+						)
+					);
+					$companyData = $this->home_model->get_company_rows($con);
+				} else {
+					$orderUser =  $this->home_model->get_user(array('id' => $userdata['id']));
+					$con = array(
+						'where' => array(
+							'partner_id' => $orderUser['partner_id'],
+						)
+					);
+					$companyData = $this->home_model->get_company_rows($con);
 				}
 				
 				$this->load->library('order/resware');
@@ -382,6 +396,34 @@ class Home extends MX_Controller {
 										'PartnerID' => $titleOfficerDetails['partner_id'],
 										'PartnerType' => array(
 											'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
+										)
+									);
+								}
+							}
+
+							if (!empty($companyData)) {
+								if ($companyData[0]['underwriter'] == 'north_american') {
+									$partners[] = array(
+										'PartnerTypeID' => 7,
+										'PartnerID' => 39919,
+										'PartnerType' => array(
+											'PartnerTypeID' => 7
+										)
+									);
+								} else if ($companyData[0]['underwriter'] == 'commonwealth') {
+									$partners[] = array(
+										'PartnerTypeID' => 7,
+										'PartnerID' => 6,
+										'PartnerType' => array(
+											'PartnerTypeID' => 7
+										)
+									);
+								} else {
+									$partners[] = array(
+										'PartnerTypeID' => 7,
+										'PartnerID' => 201324,
+										'PartnerType' => array(
+											'PartnerTypeID' => 7
 										)
 									);
 								}

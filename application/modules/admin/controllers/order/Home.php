@@ -1347,18 +1347,30 @@ class Home extends MX_Controller {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
             $company_lists = $this->home_model->get_companies_list($params);        
         }
-
+       
         $data = array(); 
         if (isset($company_lists['data']) && !empty($company_lists['data'])) {
+            $i = $params['start'] + 1;
             foreach ($company_lists['data'] as $key => $value) {
                 $nestedData=array();
+                $nestedData[] = $i;
                 $nestedData[] = $value['partner_id'];
                 $nestedData[] = $value['partner_name'];
-                $nestedData[] = $value['address1'];
-                $nestedData[] = $value['city'];
-                $nestedData[] = $value['state'];
-                $nestedData[] = $value['zip'];
-                $data[] = $nestedData;            
+                $nestedData[] = $value['address1'].", ".$value['city'].", ".$value['state'].", ".$value['zip'];
+                if (!empty($value['underwriter'])) {
+                    $underwriter = $value['underwriter'];
+                } else {
+                    $underwriter = 'westcor';
+                }
+                $underwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].', this.value);" id="underwriter_name" name="underwriter_name">
+                                    <option value="westcor">Westcor</option>
+                                    <option value="north_american">North American</option>
+                                    <option value="commonwealth">Commonwealth</option>
+                                </select>'; 
+                $underwriterSelection = str_replace('value="' .  $underwriter . '"','value="' .  $underwriter . '" selected', $underwriterSelection);          
+                $nestedData[] = $underwriterSelection;
+                $data[] = $nestedData; 
+                $i++;           
             }
         }
 
@@ -1852,5 +1864,83 @@ class Home extends MX_Controller {
         curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
         $result = curl_exec($ch);
         return $result;
+    }
+
+    public function import_underwriters()
+    {    
+        $this->is_admin();  
+        $data = array();
+        $successMsg = '';
+        $data['title'] = 'PCT Order: Import Underwriters';
+
+        if ($this->input->post()) {
+            ini_set('max_execution_time', 0); 
+            ini_set('memory_limit','2048M');
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+            
+            if ($this->form_validation->run($this) == true) {
+                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
+
+                if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                    $this->load->library('CSVReader');
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+                    $password = md5('Pacific1');
+
+                    if (!empty($csvData)) {
+
+                        foreach ($csvData as $row) {
+                            $rowCount++;
+
+                            if (isset($row['Partner Company ID']) && !empty($row['Partner Company ID'])) {
+                                $con = array(
+                                    'where' => array(
+                                        'partner_id' => trim($row['Partner Company ID']),
+                                    ),
+                                    'returnType' => 'count'
+                                );
+                                $prevCount = $this->home_model->get_company_rows($con);
+                              
+                                if ($prevCount > 0) {
+
+                                    if (strpos(strtolower(trim($row['Underwriter'])), 'commonwealth') !== false) {
+                                        $underwriter = 'commonwealth';
+                                    } else if (strpos(strtolower(trim($row['Underwriter'])), 'north american') !== false) {
+                                        $underwriter = 'north_american';
+                                    } else {
+                                        $underwriter = 'westcor';
+                                    }
+                                    $condition = array('partner_id' => trim($row['Partner Company ID']));
+                                    $update = $this->home_model->update(array('underwriter' => $underwriter), $condition, 'pct_order_partner_company_info');
+                                    
+                                    if ($update) {
+                                        $insertCount++;
+                                    }
+                                }
+                            }                              
+                        }
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'Underwriters imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Not Inserted ('.$notAddCount.')';
+                        $data['success_msg'] = $successMsg;
+                    }
+                } else {
+                    $data['error_msg'] = 'Error on file upload, please try again.';
+                }
+            } else {
+                $data['error_msg'] = 'Invalid file, please select only CSV file.';
+            }
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/import_underwriter', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function updateUnderwriter()
+    {
+        $partner_id = $this->input->post('partner_id');
+        $underwriter = $this->input->post('underwriter');
+        $condition = array('partner_id' => $partner_id);
+        $this->home_model->update(array('underwriter' => $underwriter), $condition, 'pct_order_partner_company_info');
+        $data = array('status'=>'success', 'msg'=> 'Underwriter updated successfully.');
+        echo json_encode($data);
     }
 }

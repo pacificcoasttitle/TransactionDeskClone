@@ -12,6 +12,8 @@
             Companies
             <div class="float-right">
                 <a href="<?php echo base_url()?>order/admin/add-company" class="btn btn-secondary"> Add Company </a>
+                <a href="<?php echo base_url()?>order/admin/import-underwriters" class="btn btn-secondary"> Import Underwriter </a>
+                <a href="javascript:void(0);" id="refresh-company-data" class="btn btn-secondary"> Refresh </a>
                 <a href="javascript:void(0);" data-export-type="csv" id="export_companies" class="btn btn-secondary"> Export </a>
             </div>
         </div>
@@ -23,12 +25,11 @@
                 <table class="table table-bordered" id="tbl-companies-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>Sr No</th>
                             <th>Partner Company Id</th>
                             <th>Partner Company Name</th>
                             <th>Address</th>
-                            <th>City</th>
-                            <th>State</th>
-                            <th>Zipcode</th>
+                            <th>Underwriter</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>
