@@ -205,6 +205,9 @@ $route['order/admin/add-company'] = 'admin/order/home/addCompany';
 $route['order/admin/incorrect-users'] = 'admin/order/home/incorrect_users';
 $route['order/admin/partner-api-log'] = 'admin/order/order/partnerApiLogs';
 $route['order/admin/update-order-details'] = 'admin/order/order/update_order_details';
+$route['order/admin/fees'] = 'admin/order/fees/index';
+$route['order/admin/add-fee'] = 'admin/order/fees/add_fee';
+$route['order/admin/edit-fee/:num'] = 'admin/order/fees/edit_fee';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
