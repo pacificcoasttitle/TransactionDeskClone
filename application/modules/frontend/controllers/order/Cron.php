@@ -815,7 +815,7 @@ class Cron extends MX_Controller {
         $this->db->select('company_name, partner_id');
         $this->db->group_by('company_name,partner_id'); 
         $customer_lists = $this->db->get('customer_basic_details')->result_array();
-        $insertedPartnerInfo = $notInsertedPartnerInfo = 0;
+        $insertedPartnerInfo = $updatedPartnerInfo = $notInsertedPartnerInfo = 0;
 
         if (isset($customer_lists) && !empty($customer_lists)) {
 
@@ -836,18 +836,44 @@ class Cron extends MX_Controller {
                                 $response = json_decode($result,true);
                                 
                                 if (isset($response['AdminPartner']) && !empty($response['AdminPartner'])) {
-                                    $customerData = array(
-                                        'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
-                                        'partner_name' => trim($response['AdminPartner']['PartnerName']),
-                                        'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
-                                        'city' => trim($response['AdminPartner']['MailingAddress']['City']),
-                                        'state' => trim($response['AdminPartner']['MailingAddress']['State']),
-                                        'zip' => trim($response['AdminPartner']['MailingAddress']['Zip'])
-                                    );
-                                    $insert = $this->home_model->insert($customerData, 'pct_order_partner_company_info');
 
-                                    if($insert) {
-                                        $insertedPartnerInfo++;                          
+                                    $con = array(
+                                        'where' => array(
+                                            'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                                        ),
+                                        'returnType' => 'count'
+                                    );
+                                    $prevCount = $this->home_model->get_company_rows($con);
+                                  
+                                    if ($prevCount > 0) {
+                                        $customerData = array(
+                                            'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                                            'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
+                                            'city' => trim($response['AdminPartner']['MailingAddress']['City']),
+                                            'state' => trim($response['AdminPartner']['MailingAddress']['State']),
+                                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip'])
+                                        );
+                                        $condition = array('partner_id' => trim($response['AdminPartner']['PartnerCompanyID']));
+                                        $update = $this->home_model->update($customerData, $condition, 'pct_order_partner_company_info');
+                                        
+                                        if ($update) {
+                                            $updatedPartnerInfo++;
+                                        }
+                                    } else {
+                                        $customerData = array(
+                                            'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                                            'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                                            'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
+                                            'city' => trim($response['AdminPartner']['MailingAddress']['City']),
+                                            'state' => trim($response['AdminPartner']['MailingAddress']['State']),
+                                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
+                                            'underwriter' => 'westcor'
+                                        );
+                                        $insert = $this->home_model->insert($customerData, 'pct_order_partner_company_info');
+    
+                                        if($insert) {
+                                            $insertedPartnerInfo++;                          
+                                        }
                                     }
                                 } else {
                                     $notInsertedPartnerInfo++;
@@ -855,12 +881,13 @@ class Cron extends MX_Controller {
                             } else {
                                 $notInsertedPartnerInfo++;
                             }
-                            $successMsg = 'Partner Information updated successfully. Inserted ('.$insertedPartnerInfo.') | Not Inserted ('.$notInsertedPartnerInfo.')';
+                            $successMsg = 'Partner Information updated successfully. Inserted ('.$insertedPartnerInfo.') | Updated ('.$updatedPartnerInfo.') | Not Inserted ('.$notInsertedPartnerInfo.')';
                         }
                     }
                 }
             }
-            echo $successMsg;
+            $data = array('status'=>'success', 'msg'=>$successMsg);
+            echo json_encode($data);exit;
         }
     }
 }

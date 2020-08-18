@@ -969,6 +969,50 @@ $(document).ready(function () {
         });
     }
 
+    if($('#refresh-company-data').length)
+    {
+        $('#refresh-company-data').click(function(e){
+            $('body').animate({ opacity: 0.5 }, "slow");
+            $.ajax({
+                url: base_url+"/company-information",
+                method: "POST",
+                success: function(data){
+                    var result = jQuery.parseJSON(data);
+                    if (result.status == 'success') {
+                        $('body').animate({ opacity: 1.0 }, "slow");
+                        $('#companies_success_msg').html(result.msg).show();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#companies_success_msg").offset().top
+                        }, 1000);
+                        companies_list.ajax.reload( null, false );
+                        setTimeout(function () {
+                            $('#companies_success_msg').html('').hide();
+                        }, 4000);
+                    } else {
+                        $('#companies_error_msg').html(result.message).show();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#companies_error_msg").offset().top
+                        }, 1000);
+
+                        setTimeout(function () {
+                            $('#companies_error_msg').html('').hide();
+                        }, 4000);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('#companies_error_msg').html('Something went wrong. Please try it again.').show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#companies_success_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#companies_error_msg').html('').hide();
+                    }, 4000);
+                }
+            })
+        });
+    }
+
     if ($('#tbl-orders-listing').length) 
     {
         order_list = $('#tbl-orders-listing').DataTable({
@@ -1686,7 +1730,7 @@ $(document).ready(function () {
 
     if ($('#tbl-companies-listing').length) 
     {
-        cpl_document_list = $('#tbl-companies-listing').DataTable({
+        companies_list = $('#tbl-companies-listing').DataTable({
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
@@ -2500,5 +2544,50 @@ function deleteFees(id)
     {
         return false;
     }
+}
     
+function updateUnderwriter(partner_id, underwriter)
+{
+    $('body').animate({ opacity: 0.5 }, "slow");
+    $.ajax({
+        url: base_url+"order/admin/update-underwriter",
+        method: "POST",
+        data : {
+            partner_id: partner_id,
+            underwriter: underwriter
+        },
+        success: function(data){
+            var result = jQuery.parseJSON(data);
+            if (result.status == 'success') {
+                $('body').animate({ opacity: 1.0 }, "slow");
+                $('#companies_success_msg').html(result.msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#companies_success_msg").offset().top
+                }, 1000);
+                companies_list.ajax.reload( null, false );
+                setTimeout(function () {
+                    $('#companies_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#companies_error_msg').html(result.message).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#companies_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#companies_error_msg').html('').hide();
+                }, 4000);
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#companies_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#companies_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#companies_error_msg').html('').hide();
+            }, 4000);
+        }
+    });
 }
