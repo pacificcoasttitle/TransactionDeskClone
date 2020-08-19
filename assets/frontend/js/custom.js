@@ -664,6 +664,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
     	.done(function(response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('StatusCode').text();
+            responseStatus = 'NH';
             $("#search-btn").parents("form").find(".search-loader").addClass("hidden");
             
             if (responseStatus == 'MM') 
@@ -896,7 +897,6 @@ function toTitleCase(str)
 function displayError(responseStatus) {
     // determine and display specific error
     var errorDisplay = "";
-    responseStatus = 'NH';
     switch (responseStatus) {
         case 'NM':
             error = 'No exact match';
