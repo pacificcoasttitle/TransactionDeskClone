@@ -202,13 +202,15 @@ class Order
             agents.telephone_no as agent_telephone_no,
             pct_order_fnf_agents.agent_number,
             pct_order_fnf_agents.underwriter_code,
-            pct_order_fnf_agents.underwriter')
+            pct_order_fnf_agents.underwriter,
+            pct_order_product_types.product_type')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
             ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
-            ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left');
+            ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->CI->db->where('file_id', $fileId);
          
         if ($userdata['is_master'] == 0) {
