@@ -14,6 +14,7 @@ class DashboardMail extends MX_Controller {
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
 		$this->load->model('order/home_model');
+        $this->load->model('order/fees_model');
     }
 
     public function generateCplFromMail()
@@ -59,8 +60,146 @@ class DashboardMail extends MX_Controller {
         $fileId = $this->uri->segment(2);    
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
+
+        $orderDetails = $this->order->get_order_details($fileId);
+
+        $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+
+        /* start get fees details from resware */
+        $request = array();
+
+        $TransactionTypeID = isset($orderDetails['transaction_type']) && !empty($orderDetails['transaction_type']) ? $orderDetails['transaction_type'] : '';
+        $ProductTypeID = isset($orderDetails['purchase_type']) && !empty($orderDetails['purchase_type']) ? $orderDetails['purchase_type'] : '';
+        $request['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID'=>$ProductTypeID);
+
+        $propertyAddress = isset($orderDetails['address']) && !empty($orderDetails['address']) ? $orderDetails['address'] : '';
+
+        $addressParts = explode(' ', $propertyAddress);
+
+        $streetNumber = isset($addressParts[0]) && !empty($addressParts[0]) ? $addressParts[0] : '';
+
+        $primaryStreetName = array_slice($addressParts, 1);
+        $streetName = isset($primaryStreetName) && !empty($primaryStreetName) ? implode(" ", $primaryStreetName) : '';
+
+        $FullProperty = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+               
+        $PropertyZip = isset($orderDetails['property_zip']) && !empty($orderDetails['property_zip']) ? $orderDetails['property_zip'] : '';
+        
+        $propertyState = isset($orderDetails['property_state']) && !empty($orderDetails['property_state']) ? $orderDetails['property_state'] : '';
+
+        $propertyCity = isset($orderDetails['property_city']) && !empty($orderDetails['property_city']) ? $orderDetails['property_city'] : '';      
+        
+        $county = isset($orderDetails['county']) && !empty($orderDetails['county']) ? $orderDetails['county'] : '';
+
+        $request['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$streetNumber, 'StreetName'=> $streetName, 'City'=> $propertyCity, 'State'=> $propertyState, 'County'=> $county, 'Zip'=>$PropertyZip);
+
+        $loanAmount = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+        if(isset($loanAmount) && !empty($loanAmount))
+        {
+            $request['Loans'][]['LoanAmount'] = $loanAmount;
+            $condition = array(
+                'where' => array(
+                    'transaction_type' => 'loan',
+                    'status' => 1
+                )
+            );
+        }
+
+        $salesAmount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+
+        if(isset($salesAmount) && !empty($salesAmount))
+        {
+            $request['SalesPrice'] = $salesAmount;
+            $condition = array(
+                'where' => array(
+                    'transaction_type' => 'sale',
+                    'status' => 1
+                )
+            );
+        }
+
+        $fees_data = json_encode($request);
+        $this->load->library('order/resware');
+
+
+        $endPoint = 'estimates/closingfees';
+
+        $logid = $this->apiLogs->syncLogs('', 'resware', 'mail_get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, array(), $orderId, 0);
+        $result = $this->resware->make_request('POST', $endPoint, $fees_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'mail_get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, $result, $orderId, $logid);
+
+        $fees = array();
+        if(isset($result) && !empty($result))
+        {
+            $response = json_decode($result,TRUE);
+            $closing_fee_estimate_id = isset($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) && !empty($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) ? $response['ClosingFeeEstimate']['ClosingFeeEstimateID'] : '';
+
+            if(isset($response['ClosingFeeEstimate']['HUDFees']) && !empty(isset($response['ClosingFeeEstimate']['HUDFees'])))
+            {
+                
+                foreach ($response['ClosingFeeEstimate']['HUDFees'] as $key => $value) 
+                {
+                    $fees['HUDFees'][$key] = array('amount' => $value['Amount'], 'description' => $value['Description']);
+                }
+            }
+
+            if(isset($response['ClosingFeeEstimate']['GFE']) && !empty(isset($response['ClosingFeeEstimate']['GFE'])))
+            {
+                foreach ($response['ClosingFeeEstimate']['GFE'] as $k => $v) 
+                {
+                    $fees['GFE'][$k] = array('amount' => $v['Amount'], 'description' => $v['Description']);
+                }
+            }
+
+            if(isset($response['ClosingFeeEstimate']['Premiums']) && !empty(isset($response['ClosingFeeEstimate']['Premiums'])))
+            {
+                foreach ($response['ClosingFeeEstimate']['Premiums'] as $k => $v) 
+                {
+                    $fees['Premiums'][] = array('amount' => $v, 'description' => $k);
+                }
+            }
+        }
+        $feesInfo = $this->fees_model->get_rows($condition);
+        if(isset($feesInfo) && !empty(isset($feesInfo)))
+        {
+            foreach ($feesInfo as $k => $v) 
+            {
+                $fees['AdditionalFees'][] = array('amount' => $v['value'], 'description' => $v['name']);
+            }
+        }
+        $data['fees'] = $fees;
+        $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+        $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        $data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+        $data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+        /*if(isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']))
+        {
+            $productType = 'Residential: Sales: Purchase';
+        }
+        if(isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']))
+        {
+            $productType = 'Residential: Loan: Refinance';
+        }*/
+
+        $data['productType'] = isset($orderDetails['product_type']) && !empty($orderDetails['product_type']) ? $orderDetails['product_type'] : '';
+        $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
+        
+        
+
+        /*$this->load->model('order/fee');
+        $feesData = array(
+            'closing_fee_estimate_id' => $closing_fee_estimate_id,
+            'user_id' => $userdata['id'],
+            'order_id' => $orderId
+        );
+
+        $feeId = $this->fee->insert($feesData);*/
+
+        /* end get fees details from resware */
+
+        
 		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('emails/mail_fees');
+		$this->load->view('order/mail_fees');
     }
 
     public function addLenderOnOrder()
