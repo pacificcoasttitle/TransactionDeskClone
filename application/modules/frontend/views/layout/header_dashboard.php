@@ -11,20 +11,22 @@
                         <!-- Mobile Trigger End-->
                         <a class="navbar-brand scroll" href="<?php echo base_url(); ?>"><img class="normal-logo" src="<?php echo base_url(); ?>assets/media/general/logo2.png" alt="logo"><img class="scroll-logo hidden-xs" src="<?php echo base_url(); ?>assets/media/general/logo2-dark.png" alt="logo"></a>
                     </div>
-                    <div class="header-navibox-2">
-                        <ul class="yamm nav navbar-nav">
-                            <?php if($is_special_lender == 0) { ?>
-                                <li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>
-                                <li><a href="<?php echo base_url().'order'; ?>">Open Order</a></li>
-                                <li><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></li>
-                                <li><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed Insured</a></li>
-                                <!-- <li><a href="<?php // echo base_url().'prelim-files'; ?>">Review Prelims</a></li> -->
-                                <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>    
-                            <?php } else { ?>
-                                <li><a href="<?php echo base_url().'special-dashboard/logout'; ?>">Logout</a></li>    
-                            <?php } ?>
-                        </ul>
-                    </div>
+                    <?php if(!isset($mail_dashboard)) {?>
+                        <div class="header-navibox-2">
+                            <ul class="yamm nav navbar-nav">
+                                <?php if($is_special_lender == 0) { ?>
+                                    <li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>
+                                    <li><a href="<?php echo base_url().'order'; ?>">Open Order</a></li>
+                                    <li><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></li>
+                                    <li><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed Insured</a></li>
+                                    <!-- <li><a href="<?php // echo base_url().'prelim-files'; ?>">Review Prelims</a></li> -->
+                                    <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>    
+                                <?php } else { ?>
+                                    <li><a href="<?php echo base_url().'special-dashboard/logout'; ?>">Logout</a></li>    
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    <?php }?>
                 </div>
             </nav>
         </div>
