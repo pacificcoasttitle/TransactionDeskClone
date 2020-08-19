@@ -280,7 +280,6 @@
 						/* @ajax form submition 
 						---------------------------------------------------- */
 						submitHandler:function(form) {
-							alert('validate');
 							$(form).ajaxSubmit({
 									target:'.result',			   
 									beforeSubmit:function(){

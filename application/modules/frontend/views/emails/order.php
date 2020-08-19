@@ -84,7 +84,7 @@
             }
             .btn-primary,
             .btn-primary:active {
-                color: #fff;
+                color: #fff !important;
                 text-shadow: 0 1px rgba(0, 0, 0, 0.08);
             }
             .btn-primary:active,
