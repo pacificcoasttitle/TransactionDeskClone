@@ -1069,10 +1069,11 @@
                     <p style="text-align:center;">
                          
                     </p>
-                    <a href="<?php echo base_url().'generate-cpl/'. $orderId; ?>" class="button btn-primary" role="button">Generate CPL</a>
-                    <a href="<?php echo base_url().'generate-fees/'. $orderId; ?>" class="button btn-primary" role="button">Generate Fees</a>
+                    <?php if(isset($OpenEmail) && !empty($OpenEmail) && $OpenEmail == 'djorns@capstoneescrow.com') {?>
+                      <a href="<?php echo base_url().'generate-cpl/'. $orderId; ?>" class="button btn-primary" role="button">Generate CPL</a>
+                      <a href="<?php echo base_url().'generate-fees/'. $orderId; ?>" class="button btn-primary" role="button">Generate Fees</a>
                     <!-- <a href="javascript:void(0);" class="button btn-primary" role="button">Generate Proposed Insured</a> -->
-
+                    <?php } ?>
                       <p></p>
                      <p></p>
                   <p></p>
