@@ -664,7 +664,6 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
     	.done(function(response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('StatusCode').text();
-            responseStatus = 'NH';
             $("#search-btn").parents("form").find(".search-loader").addClass("hidden");
             
             if (responseStatus == 'MM') 
