@@ -77,7 +77,35 @@
             .full-image img {
                 width: 100% !important;
             }
-
+            /* button css */
+            a.button {
+                line-height: 42px;
+                text-decoration: none;
+            }
+            .btn-primary,
+            .btn-primary:active {
+                color: #fff;
+                text-shadow: 0 1px rgba(0, 0, 0, 0.08);
+            }
+            .btn-primary:active,
+            .btn-primary:focus,
+            .btn-primary:hover {
+                background-color: #032f44 !important;
+            }
+            .button {
+                background-color: #04415D;
+                border: 0;
+                height: 42px;
+                line-height: 1;
+                font-size: 15px;
+                cursor: pointer;
+                padding: 0 18px;
+                text-align: center;
+                vertical-align: top;
+                display: inline-block;
+                -webkit-user-drag: none;
+            }
+            /* button css */
             @media only screen and (max-width: 768px) {
                 .main-table {
                     width: 100% !important;
@@ -380,9 +408,9 @@
                       <p style="text-align:center;">
                         <span style="text-decoration: underline; font-size: 18px;"><strong><span style="color: #424651; font-family: Helvetica; text-decoration: underline;">Your Order Details Are Below:</span></strong></span>
                       </p>
-                      <!-- <p style="text-align:center;">
+                      <p style="text-align:center;">
                          
-                      </p> -->
+                      </p>
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong><span style="font-family: Helvetica;">Order Summary</span></strong></span>
                       </p>
@@ -495,9 +523,9 @@
                         ?>
                         
                       </table>
-                      <!-- <p style="text-align:center;">
+                      <p style="text-align:center;">
                          
-                      </p> -->
+                      </p>
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong>Property Details</strong></span>
                       </p>
@@ -579,9 +607,9 @@
                         ?>
                         
                       </table>
-                      <!-- <p style="text-align:center;">
+                      <p style="text-align:center;">
                          
-                      </p> -->
+                      </p>
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong>Seller/Owner Details</strong></span>
                       </p>
@@ -619,9 +647,9 @@
                         
                       </table>
 
-                      <!-- <p style="text-align:center;">
+                      <p style="text-align:center;">
                          
-                      </p> -->
+                      </p>
                       <p style="text-align:center;">
                         <span style="font-size: 18px; color: #d35411;"><strong>Transaction Details</strong></span>
                       </p>
@@ -738,9 +766,9 @@
                         if(isset($buyers_agent) && !empty($buyers_agent))
                         {
                     ?>
-                            <!-- <p style="text-align:center;">
+                            <p style="text-align:center;">
                          
-                      </p> -->
+                            </p>
 
                           <p style="text-align:center;">
                             <span style="font-size: 18px; color: #d35411;"><strong>Buyers Agent Details</strong></span>
@@ -810,13 +838,13 @@
                     <?php
                         }
                     ?>
-                    <?php 
+                    <?php
                         if(isset($listing_agent) && !empty($listing_agent))
                         {
                     ?>
-                            <!-- <p style="text-align:center;">
+                            <p style="text-align:center;">
                          
-                      </p> -->
+                            </p>
 
                           <p style="text-align:center;">
                             <span style="font-size: 18px; color: #d35411;"><strong>Listing Agent Details</strong></span>
@@ -886,13 +914,13 @@
                     <?php
                         }
                     ?>  
-                    <?php 
+                    <?php  
                         if(isset($lender_details) && !empty($lender_details))
                         {
                     ?>
-                            <!-- <p style="text-align:center;">
+                            <p style="text-align:center;">
                          
-                      </p> -->
+                            </p>
 
                           <p style="text-align:center;">
                             <span style="font-size: 18px; color: #d35411;"><strong>Lenders Details</strong></span>
@@ -966,9 +994,9 @@
                         if(isset($escrow_details) && !empty($escrow_details))
                         {
                     ?>
-                            <!-- <p style="text-align:center;">
+                            <p style="text-align:center;">
                          
-                      </p> -->
+                            </p>
 
                           <p style="text-align:center;">
                             <span style="font-size: 18px; color: #d35411;"><strong>Escrow Details</strong></span>
@@ -1038,9 +1066,17 @@
                     <?php
                         }
                     ?>
+                    <p style="text-align:center;">
+                         
+                    </p>
+                    <a href="<?php echo base_url().'generate-cpl/'. $orderId; ?>" class="button btn-primary" role="button">Generate CPL</a>
+                    <a href="<?php echo base_url().'generate-fees/'. $orderId; ?>" class="button btn-primary" role="button">Generate Fees</a>
+                    <!-- <a href="javascript:void(0);" class="button btn-primary" role="button">Generate Proposed Insured</a> -->
+
                       <p></p>
                      <p></p>
                   <p></p>
+
               </td>
             </tr>
             <tr>

@@ -22,8 +22,18 @@ class Dashboard extends MX_Controller {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         
+        $this->load->view('layout/head_dashboard',$data);
+        $this->load->view('order/mail_cpl');
+    }
+
+    public function generateFeesFromMail()
+    {
+        $fileId = $this->uri->segment(2);    
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        
 		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/mail_cpl');
+		$this->load->view('emails/mail_fees');
     }
     
 }
