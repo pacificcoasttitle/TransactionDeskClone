@@ -13,12 +13,12 @@
         $this->load->view('layout/header_dashboard');
     ?>
 
-	<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
+	<section class="section-type-4a section-defaulta" style="padding-bottom:100px;">
 		<div class="container">
 			<div class="row">
 				<div class="row">
 					<div class="col-xs-12">
-						<div class="typography-section__inner">
+						<div class="typography-section__inner" style="padding: 0px 17px;">
 							<h2 class="ui-title-block ui-title-block_light">Closing Protection Letters</h2>
 							<div class="ui-decor-1a bg-accent"></div>
 							<h3 class="ui-title-block_light">Generate your CPL</h3>
@@ -51,7 +51,12 @@
 											</tr>
 										</thead>
 										<tbody>
-
+                                            <tr role="row" class="odd">
+                                                <td>1</td>
+                                                <td><?php echo $file_number;?></td>
+                                                <td><?php echo $full_address;?></td>
+                                                <td><?php echo $action;?></td> 
+                                            </tr>
 										</tbody>
 									</table>
 								</div>
@@ -67,7 +72,7 @@
 		aria-labelledby="Lender Infromation" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 			<div class="modal-content">
-				<form method="POST" action="<?php echo base_url();?>add-lender-order" enctype="multipart/form-data">
+				<form method="POST" action="<?php echo base_url();?>add-lender-order-mail" enctype="multipart/form-data">
 					<div class="smart-forms smart-container wrap-2" style="margin:30px">
 						<div class="modal-body search-result">
 							<div id="lender-details-fields" style="">

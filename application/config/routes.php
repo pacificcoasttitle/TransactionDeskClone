@@ -161,6 +161,10 @@ $route['get-special-lenders-orders'] = 'frontend/order/SpecialDashboard/get_spec
 $route['special-dashboard/logout'] = 'frontend/order/SpecialDashboard/logout';
 $route['generate-cpl/:num'] = 'frontend/order/dashboardMail/generateCplFromMail';
 $route['generate-fees/:num'] = 'frontend/order/dashboardMail/generateFeesFromMail';
+$route['add-lender-order-mail'] = 'frontend/order/dashboardMail/addLenderOnOrder';
+$route['create-cpl-for-fnf-mail/:num'] = 'frontend/order/dashboardMail/createCPlForFnf';
+$route['create-cpl-mail/:num'] = 'frontend/order/dashboardMail/create_cpl';
+$route['create-cpl-for-natic-mail/:num'] = 'frontend/order/dashboardMail/createCPlForNatic';
 
 
 
