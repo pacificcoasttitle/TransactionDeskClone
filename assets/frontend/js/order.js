@@ -800,8 +800,7 @@ function generateTaxDoc(apn,serviceId,fileNumber)
 function notifyAdmin(subject)
 {
     var customer_id = $("#CustomerId").val();
-    var property_full_address = $("#property_full_address").val();
-
+    var property_full_address = $("#property-full-address").val();
     if(customer_id)
     {
         $.ajax({

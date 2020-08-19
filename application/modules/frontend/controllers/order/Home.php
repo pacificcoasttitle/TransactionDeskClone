@@ -776,9 +776,15 @@ class Home extends MX_Controller {
 
     function getSearchResults()
     {
+    	$userdata = $this->session->userdata('user');
+    	
     	ini_set('max_execution_time', 300);
-    	$request = $_GET['requrl'];        
-		$request .= '&key=' . '22C75EF7-5DBF-4B26-B2DB-998BE080F29C';
+    	$request = $_GET['requrl'];
+    	$api_key = env('BLACK_KNIGHT_KEY');        
+		$request .= '&key=' . $api_key;
+
+		$query_string = parse_url($request,PHP_URL_QUERY);
+        parse_str($query_string, $requestParams);
         
         $getsortedresults = isset($_GET['getsortedresults'])?$_GET['getsortedresults']:'false';
         
@@ -792,7 +798,18 @@ class Home extends MX_Controller {
 		    )
         );
         $context = stream_context_create($opts);
+        $this->load->model('order/apiLogs');
+
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, $requestParams, array(), 0, 0);
+
         $file = file_get_contents($request,false,$context);
+        $xmlData = simplexml_load_string($file);
+		$response = json_encode($xmlData);
+		$result = json_decode($response,TRUE);
+
+		$this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, array(), $result, 0, $logid);
+
+        
         echo trim($file);
     }
 
@@ -1027,8 +1044,9 @@ class Home extends MX_Controller {
 				
 				$from_name = 'Pacific Coast Title Company';
 				$from_mail = env('FROM_EMAIL');
-				$subject = 'Notification for'.$subject;
-				$to = env('ADMIN_EMAIL');
+				$subject = 'Notification for '.$subject;
+				// $to = env('ADMIN_EMAIL');
+				$to = 'crestdev@protonmail.com';
 				
 				$this->load->helper('sendemail');
 				

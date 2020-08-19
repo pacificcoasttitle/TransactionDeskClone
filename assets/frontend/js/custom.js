@@ -698,20 +698,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
                        createService4(fipCode,address,city,unit_no,apn,random_number);
                         createService3(apn,state,county,random_number);
                     }
-                }
-                /*displayError(responseStatus);
-                if(base_url == 'http://localhost-pct.com/')
-                {
-                    var fipCode = $('#property-fips').val();
-                    var city = $('#property-city').val();
-                    var apn = $('#apn').val();
-                    var state = $('#property-state').val();
-                    var county = $('#County').val();
-                    // getProductTypes(county,state);
-                    createService4(fipCode,address,city);
-                    createService3(apn,state,county);
-                }*/
-                
+                }                
             } 
             else 
             {
@@ -909,6 +896,7 @@ function toTitleCase(str)
 function displayError(responseStatus) {
     // determine and display specific error
     var errorDisplay = "";
+    responseStatus = 'NH';
     switch (responseStatus) {
         case 'NM':
             error = 'No exact match';
@@ -972,14 +960,13 @@ function compileAPNRequest(dataobj) {
     fetchReports('187',request,dataObj);
 }
 
-function notifyAdmin(subject)
+function notifyAdminPlat(subject)
 {
     var customer_id = $("#CustomerId").val();
 
     if(customer_id)
     {
         $.ajax({
-           // url: "php/notifyadmin.php",
            url: base_url+'notifyAdmin',
            type: "POST",//type of posting the data
            data: {

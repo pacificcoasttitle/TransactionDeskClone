@@ -146,7 +146,7 @@ function displayError(responseStatus) {
             break;
         case 'NH':
             error = 'Valid address, but no hit';
-            notifyAdmin();
+            notifyAdminPlat('No Hit on property search');
             break;
         default:
             error = "Error"
