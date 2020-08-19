@@ -160,6 +160,7 @@ $route['special-lender-dashboard'] = 'frontend/order/SpecialDashboard/index';
 $route['get-special-lenders-orders'] = 'frontend/order/SpecialDashboard/get_special_lenders_orders';
 $route['special-dashboard/logout'] = 'frontend/order/SpecialDashboard/logout';
 $route['generate-cpl/:num'] = 'frontend/order/dashboardMail/generateCplFromMail';
+$route['generate-fees/:num'] = 'frontend/order/dashboardMail/generateFeesFromMail';
 
 
 

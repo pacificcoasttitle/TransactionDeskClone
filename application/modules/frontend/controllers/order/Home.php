@@ -615,6 +615,7 @@ class Home extends MX_Controller {
 							
 							$data = array(
 								'orderNumber'=> $orderNumber,
+								'orderId'=> $orderId,
 								'OpenName'=> $OpenName.' '.$OpenLastName,
 								'Opentelephone'=> $Opentelephone,
 								'OpenEmail'=> $OpenEmail,
