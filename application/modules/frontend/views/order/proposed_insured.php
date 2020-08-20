@@ -388,7 +388,6 @@
 						{
 							$('#lender_information').modal('hide');
 							generateProposedInsured(res.fileId);
-							location.reload(true);
 						}
 						else if(res.status == 'error')
 						{
@@ -535,8 +534,8 @@
 		            	var res = JSON.parse(response);
 						if(res.status == 'success')
 						{			
-							generateProposedInsured(fileId);				
 							$('#edit-data-result').html('<div class="alert alert-success">Data updated successfully</div>');
+							generateProposedInsured(fileId);				
 						}
 						else if(res.status == 'error')
 						{
@@ -544,7 +543,6 @@
 						}
 						$('#edit-data-result').fadeOut( 5000, function() {
 						    $('#edit_information').modal('hide');
-						    location.reload(true);
 						});						
 		            }
 		        });
@@ -634,6 +632,7 @@ function generateProposedInsured(fileId)
                 }
             }
         });
+        location.reload(true);
 	}
 	else
 	{
