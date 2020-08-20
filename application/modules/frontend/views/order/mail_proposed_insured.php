@@ -26,12 +26,12 @@
         $this->load->view('layout/header_dashboard');
     ?>
 
-	<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
+	<section class="section-type-4a section-defaulta" style="padding-bottom:100px;">
 		<div class="container">
 			<div class="row">
 				<div class="row">
 					<div class="col-xs-12">
-						<div class="typography-section__inner">
+						<div class="typography-section__inner" style="padding: 0px 17px;">
 							<h2 class="ui-title-block ui-title-block_light">Generate Proposed Insured</h2>
 							<div class="ui-decor-1a bg-accent"></div>
 							<h3 class="ui-title-block_light">Below are all files</h3>
@@ -45,7 +45,7 @@
 												<th>#</th>
 												<th>File Number</th>
 												<th>Property Address</th>
-												<th style="text-align: center;">Action</th>
+												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>

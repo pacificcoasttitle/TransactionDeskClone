@@ -51,8 +51,8 @@ class DashboardMail extends MX_Controller {
             $data['action'] = "<div style='display:flex;'><form onclick='return lender_pop_up($lender_id_flag, $file_id);' action='".base_url()."create-cpl/".$file_id."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form>
                                 <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
         }        
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/mail_cpl');
+        $this->load->view('layout/head_dashboard', $data);
+        $this->load->view('order/mail_cpl', $data);
     }
 
     public function generateFeesFromMail()
@@ -882,14 +882,14 @@ class DashboardMail extends MX_Controller {
 		}
         $fileId = $this->uri->segment(2);    
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $data['mail_dashboard'] = 1;
-        $orderDetails = $this->order->get_order_details($fileId);
+		$data['mail_dashboard'] = 1;
+		$orderDetails = $this->order->get_order_details($fileId);
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
 		$data['action'] = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$orderDetails['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
 		$data['action'] .= '<a href="javascript:void(0);" onclick="editInformation('.$orderDetails['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
         $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/mail_proposed_insured');
+        $this->load->view('order/mail_proposed_insured', $data);
     }
     
 }
