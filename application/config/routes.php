@@ -165,6 +165,7 @@ $route['add-lender-order-mail'] = 'frontend/order/dashboardMail/addLenderOnOrder
 $route['create-cpl-for-fnf-mail/:num'] = 'frontend/order/dashboardMail/createCPlForFnf';
 $route['create-cpl-mail/:num'] = 'frontend/order/dashboardMail/create_cpl';
 $route['create-cpl-for-natic-mail/:num'] = 'frontend/order/dashboardMail/createCPlForNatic';
+$route['proposed-insured/:num'] = 'frontend/order/dashboardMail/proposedInsured';
 
 
 
