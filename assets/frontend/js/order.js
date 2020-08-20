@@ -801,11 +801,8 @@ function notifyAdmin(subject)
 {
     var customer_id = $("#CustomerId").val();
     var property_full_address = $("#property-full-address").val();
-    console.log("here");
     if(customer_id)
     {
-        console.log(customer_id);
-        console.log(property_full_address);
         $.ajax({
            url: base_url+'notifyAdmin',
            type: "POST",//type of posting the data

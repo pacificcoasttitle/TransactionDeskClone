@@ -674,9 +674,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
             } 
             else if (responseStatus != 'OK') 
             {
-                displayError(responseStatus);
-                // console.log(retry);
-                /*if(!retry){
+                if(!retry){
                     $("#search-btn").parents("form").find(".search-loader").removeClass("hidden");
                     data(dataObj.Address,dataObj.LastLine,neighbourhood,true);
                 }else {
@@ -700,7 +698,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
                        createService4(fipCode,address,city,unit_no,apn,random_number);
                         createService3(apn,state,county,random_number);
                     }
-                }*/                
+                }                
             } 
             else 
             {
