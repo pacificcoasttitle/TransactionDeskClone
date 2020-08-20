@@ -729,9 +729,20 @@ class Dashboard extends MX_Controller {
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-               // $nestedData[] = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+               
+                if (!empty($order['proposed_insured_document_name'])) 
+                {
+                	$file_id = $order['file_id'];
+					$documentName = $order['proposed_insured_document_name'];
+					
 
-                $action = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+                	$action = '<a href="./uploads/proposed-insured/'.$documentName.'" download><button class="btn btn-grad-2a button-color" type="button">Download</button></a>';
+                }
+                else
+                {
+                	$action = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+                }
+                
 
                 $action .= '<a href="javascript:void(0);" onclick="editInformation('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
 
@@ -912,16 +923,35 @@ class Dashboard extends MX_Controller {
 			$html=$this->load->view('order/proposed_insured_pdf',$data, true);
 	        $this->load->library('m_pdf');
 	        $this->m_pdf->pdf->WriteHTML($html);
+	        $this->load->model('order/document');
+	        $proposedDocumentCount = $this->document->countProposedInsuredDocument($orderDetails['order_id']);
+			$document_name = "proposed_".$proposedDocumentCount."_".$fileId.".pdf";
 
 	        if (!is_dir('uploads/proposed-insured')) {
 			    mkdir('./uploads/proposed-insured', 0777, TRUE);
 			}
 
-			$pdfFilePath = './uploads/proposed-insured/ProposedInsured_'.time().'.pdf';
+			$pdfFilePath = './uploads/proposed-insured/'.$document_name;
 	        $this->m_pdf->pdf->Output($pdfFilePath,'F');
 	        $contents = file_get_contents($pdfFilePath);
 			$binaryData   = base64_encode($contents);		
-			unlink($pdfFilePath);
+			// unlink($pdfFilePath);
+			$this->home_model->update(array('proposed_insured_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+
+			$fileSize = filesize('./uploads/proposed-insured/'.$document_name);
+			$documentData = array(
+				'document_name' => $document_name,
+				'original_document_name' => $document_name,
+				'document_type_id' => 1031,
+				'document_size' => $fileSize,
+				'user_id' => $userdata['id'],
+				'order_id' => $orderDetails['order_id'],
+				'description' => 'Proposed Insured Document',
+				'is_sync' => 0,
+				'is_prelim_document' => 0,
+				'is_proposed_insured_doc' => 1
+			);
+			$documentId = $this->document->insert($documentData);
 
 			$res = array('status'=>'success','data'=>$binaryData);
 			echo json_encode($res); exit;
