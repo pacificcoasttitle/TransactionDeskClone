@@ -805,7 +805,7 @@ function notifyAdmin(subject)
     if(customer_id)
     {
         console.log(customer_id);
-        console.log(property);
+        console.log(property_full_address);
         $.ajax({
            url: base_url+'notifyAdmin',
            type: "POST",//type of posting the data
