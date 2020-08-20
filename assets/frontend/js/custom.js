@@ -674,6 +674,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
             } 
             else if (responseStatus != 'OK') 
             {
+                console.log(retry);
                 if(!retry){
                     $("#search-btn").parents("form").find(".search-loader").removeClass("hidden");
                     data(dataObj.Address,dataObj.LastLine,neighbourhood,true);
