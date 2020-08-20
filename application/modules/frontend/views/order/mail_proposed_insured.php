@@ -489,6 +489,7 @@
 						if(res.status == 'success')
 						{							
 							$('#edit-data-result').html('<div class="alert alert-success">Data updated successfully</div>');
+							generateProposedInsured(fileId);
 						}
 						else if(res.status == 'error')
 						{
@@ -585,6 +586,7 @@ function generateProposedInsured(fileId)
                 }
             }
         });
+        location.reload(true);
 	}
 	else
 	{
