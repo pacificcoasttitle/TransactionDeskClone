@@ -6,13 +6,13 @@ class Resware
 {
     public static $CI;
     
-	public function __construct($params = array())
-	{
-		$this->CI =& get_instance();                        
-		$this->CI->load->database();
+    public function __construct($params = array())
+    {
+        $this->CI =& get_instance();                        
+        $this->CI->load->database();
         $this->CI->load->library('email');
         $this->CI->load->library('session');
-		self::$CI = $this->CI;
+        self::$CI = $this->CI;
     }
 
     public function make_request($http_method, $endpoint, $body_params='', $data = array())
@@ -21,7 +21,7 @@ class Resware
         if (isset($data['admin_api']) && $data['admin_api'] == 1) {
             $login = getenv('RESWARE_ADMIN_USERNAME');
             $password = getenv('RESWARE_ADMIN_PASSWORD');
-        } else if (isset($userdata['is_master']) && !empty($userdata['is_master'])) {
+        } else if ((isset($userdata['is_master']) && !empty($userdata['is_master'])) || isset($userdata['from_mail']) && !empty($userdata['from_mail'])) {
             $login = isset($data['email']) && !empty($data['email']) ? $data['email'] : '' ;
             $password = isset($data['password']) && !empty($data['password']) ? $data['password'] : '' ;
         } else {
