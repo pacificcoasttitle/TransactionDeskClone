@@ -93,7 +93,7 @@
                 background-color: #032f44 !important;
             }
             .button {
-                background-color: #04415D;
+                background-color: #d35411;
                 border: 0;
                 height: 42px;
                 line-height: 1;
@@ -1070,8 +1070,9 @@
                          
                     </p> -->
                     <?php if(isset($OpenEmail) && !empty($OpenEmail) && $OpenEmail == 'djorns@capstoneescrow.com') {?>
-                      <a style="margin: 10px 0px;" href="<?php echo base_url().'generate-cpl/'. $orderId; ?>" class="button btn-primary" role="button">Generate CPL</a>
-                      <a style="margin: 10px 0px;" href="<?php echo base_url().'generate-fees/'. $orderId; ?>" class="button btn-primary" role="button">Generate Fees</a>
+                      <a style="margin: 40px 5px;" href="<?php echo base_url().'generate-cpl/'. $orderId; ?>" class="button btn-primary" role="button">Generate CPL</a>
+                      <a style="margin: 40px 5px;" href="<?php echo base_url().'proposed-insured/'. $orderId; ?>" class="button btn-primary" role="button">Generate Proposed Insured</a>
+                      <a style="margin: 40px 5px;" href="<?php echo base_url().'generate-fees/'. $orderId; ?>" class="button btn-primary" role="button">Generate Fees</a>
                     <!-- <a href="javascript:void(0);" class="button btn-primary" role="button">Generate Proposed Insured</a> -->
                     <?php } ?>
                       <p></p>
