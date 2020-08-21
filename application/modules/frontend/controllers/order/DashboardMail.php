@@ -418,8 +418,8 @@ class DashboardMail extends MX_Controller {
                 "errors" =>  $errors,
                 "success" => $success
             );
-            $this->session->set_userdata($data);
-            redirect(base_url().'cpl-dashboard');
+			$this->session->set_userdata($data);
+			redirect(base_url().'generate-cpl/'.$fileId);
         } else {
             $errors[] = $getCPLFormNameResponse['error'];
             $data = array(
@@ -637,8 +637,8 @@ class DashboardMail extends MX_Controller {
                         "errors" =>  $errors,
                         "success" => $success
                     );
-                    $this->session->set_userdata($data);
-                    redirect(base_url().'cpl-dashboard');
+					$this->session->set_userdata($data);
+					redirect(base_url().'generate-cpl/'.$fileId);
                 }
                 $order_details = array(
                     'westcor_order_id'  => $res['tvid'],
