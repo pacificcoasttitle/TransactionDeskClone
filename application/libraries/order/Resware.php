@@ -21,7 +21,7 @@ class Resware
         if (isset($data['admin_api']) && $data['admin_api'] == 1) {
             $login = getenv('RESWARE_ADMIN_USERNAME');
             $password = getenv('RESWARE_ADMIN_PASSWORD');
-        } else if ((isset($userdata['is_master']) && !empty($userdata['is_master'])) || isset($userdata['from_mail']) && !empty($userdata['from_mail'])) {
+        } else if ((isset($userdata['is_master']) && !empty($userdata['is_master'])) || isset($data['from_mail']) && !empty($data['from_mail'])) {
             $login = isset($data['email']) && !empty($data['email']) ? $data['email'] : '' ;
             $password = isset($data['password']) && !empty($data['password']) ? $data['password'] : '' ;
         } else {

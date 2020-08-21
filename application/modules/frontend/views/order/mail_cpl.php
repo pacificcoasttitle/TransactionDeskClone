@@ -269,7 +269,7 @@
     $("#LenderCompany").autocomplete({
         source: function(request, response) {
             $.ajax({
-                url: base_url+'home/getDetailsByName',
+                url: base_url+'getDetailsByName',
                 data: {
                     term : request.term,//the value of the input is here
                     is_escrow : 0                    
@@ -388,7 +388,7 @@
 			$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 			$('#page-preloader').css('display', 'block');
 			$.ajax({
-				url: base_url + "get-order-details-cpl",
+				url: base_url + "get-order-details-cpl-mail",
 				type: "post",
 				data: {
 					fileId: fileId
