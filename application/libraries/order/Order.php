@@ -213,7 +213,7 @@ class Order
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->CI->db->where('file_id', $fileId);
          
-        if ($userdata['is_master'] == 0) {
+        if (isset($userdata) && $userdata['is_master'] == 0) {
             $this->CI->db->where('order_details.customer_id', $userdata['id']);
         }
         $query = $this->CI->db->get();

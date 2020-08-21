@@ -14,7 +14,8 @@ class DashboardMail extends MX_Controller {
         $this->load->library('order/order');
         $this->load->model('order/apiLogs');
         $this->load->model('order/home_model');
-        $this->load->model('order/fees_model');
+		$this->load->model('order/fees_model');
+		$this->load->library('order/resware');
     }
 
     public function generateCplFromMail()
@@ -216,8 +217,6 @@ class DashboardMail extends MX_Controller {
     public function addLenderOnOrder()
     {
         $this->load->model('order/home_model');
-        $this->load->library('order/resware');
-        $userdata = $this->session->userdata('user');
         $file_id = $this->input->post('file_id');
         $LenderId = $this->input->post('LenderId');
         $loan_amount = $this->input->post('loan_amount');
@@ -264,7 +263,6 @@ class DashboardMail extends MX_Controller {
 		$partnerUserData = array(
 			'admin_api' => 1
 		);
-
 		if ($orderUser['is_escrow'] == 1) {
 			if(empty($orderDetails['escrow_lender_id'])) {
 				$partners[] = $secondaryPartners;
@@ -361,7 +359,6 @@ class DashboardMail extends MX_Controller {
         $this->load->model('order/document');
         $errors = array();
         $success = array();
-        $userdata = $this->session->userdata('user');
         $fileId = $this->uri->segment(2);    
         $orderDetails = $this->order->get_order_details($fileId);
         $vendorTokenData = $this->fnf->get_vendor_token();
@@ -441,7 +438,6 @@ class DashboardMail extends MX_Controller {
         $this->load->library('order/westcor');
         $this->load->model('order/home_model');
         $this->load->model('order/document');
-        $userdata = $this->session->userdata('user');
         $fileId = $this->uri->segment(2);    
         $errors = array();
         $success = array();
@@ -631,9 +627,9 @@ class DashboardMail extends MX_Controller {
             $endPointCreateOrder = 'VendorApi/Order/Update/'.getenv('WESTCORE_INTEGRATION_PARTNER');
             $cplPostData = json_encode($cplPostData);
             $res = array();
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', getenv('WESTCORE_URL').$endPointCreateOrder, $cplPostData, array(), $orderDetails['order_id'], 0);
+            $logid = $this->apiLogs->syncLogs(0, 'westcor', 'create_cpl_order', getenv('WESTCORE_URL').$endPointCreateOrder, $cplPostData, array(), $orderDetails['order_id'], 0);
             $result = $this->westcor->make_request('POST', $endPointCreateOrder, $cplPostData, 0, $resToken['token']);
-            $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_cpl_order', getenv('WESTCORE_URL').$endPointCreateOrder, $cplPostData, $result, $orderDetails['order_id'], $logid);
+            $this->apiLogs->syncLogs(0, 'westcor', 'create_cpl_order', getenv('WESTCORE_URL').$endPointCreateOrder, $cplPostData, $result, $orderDetails['order_id'], $logid);
             $res = json_decode($result, true);
             if(is_array($res)) {
                 if ($res['Message']) {
@@ -695,18 +691,18 @@ class DashboardMail extends MX_Controller {
         if(!empty($orderDetails['westcor_order_id'])) {
             $res = array();
             $endPointGetOrdeData = 'VendorApi/Order/'.$orderDetails['westcor_order_id'].'/'.getenv('WESTCORE_INTEGRATION_PARTNER');
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_order_data', getenv('WESTCORE_URL').$endPointGetOrdeData, array(), array(), $orderDetails['order_id'], 0);
+            $logid = $this->apiLogs->syncLogs(0, 'westcor', 'get_order_data', getenv('WESTCORE_URL').$endPointGetOrdeData, array(), array(), $orderDetails['order_id'], 0);
             $resultForGetOrderData = $this->westcor->make_request('GET', $endPointGetOrdeData, array(), 0, $resToken['token']);
-            $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_order_data', getenv('WESTCORE_URL').$endPointGetOrdeData, array(), $resultForGetOrderData, $orderDetails['order_id'], $logid);    
+            $this->apiLogs->syncLogs(0, 'westcor', 'get_order_data', getenv('WESTCORE_URL').$endPointGetOrdeData, array(), $resultForGetOrderData, $orderDetails['order_id'], $logid);    
             $res = json_decode($resultForGetOrderData, true);
             $res['cpl'] = array();
             
 
             $resCPL = array();
             $endPointForCPL = 'VendorApi/ClosingLetters/PrepareAddCPL/'.$orderDetails['westcor_order_id'].'/'.getenv('WESTCORE_INTEGRATION_PARTNER');
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_cpl_data', getenv('WESTCORE_URL').$endPointForCPL, array(), array(), $orderDetails['order_id'], 0);
+            $logid = $this->apiLogs->syncLogs(0, 'westcor', 'get_cpl_data', getenv('WESTCORE_URL').$endPointForCPL, array(), array(), $orderDetails['order_id'], 0);
             $cplData = $this->westcor->make_request('GET', $endPointForCPL, array(), 0, $resToken['token']);
-            $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_cpl_data', getenv('WESTCORE_URL').$endPointForCPL, array(), $cplData, $orderDetails['order_id'], $logid); 
+            $this->apiLogs->syncLogs(0, 'westcor', 'get_cpl_data', getenv('WESTCORE_URL').$endPointForCPL, array(), $cplData, $orderDetails['order_id'], $logid); 
             $resCPL = json_decode($cplData, true);
             
             $resCPL['CPL']['LetterName'] = $resCPL['CPL']['Forms'][1]['FormName'];
@@ -774,9 +770,9 @@ class DashboardMail extends MX_Controller {
             $generateCplPostData = json_encode($res);
             $endPointCreateCPL = 'VendorApi/Order/Update/'.getenv('WESTCORE_INTEGRATION_PARTNER');
             $resultResCPL = array();
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'generate_cpl', getenv('WESTCORE_URL').$endPointCreateCPL, $generateCplPostData, array(), $orderDetails['order_id'], 0);
+            $logid = $this->apiLogs->syncLogs(0, 'westcor', 'generate_cpl', getenv('WESTCORE_URL').$endPointCreateCPL, $generateCplPostData, array(), $orderDetails['order_id'], 0);
             $resultCPL = $this->westcor->make_request('POST', $endPointCreateCPL, $generateCplPostData, 0, $resToken['token']);
-            $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'generate_cpl', getenv('WESTCORE_URL').$endPointCreateCPL, $generateCplPostData, $resultCPL, $orderDetails['order_id'], $logid);
+            $this->apiLogs->syncLogs(0, 'westcor', 'generate_cpl', getenv('WESTCORE_URL').$endPointCreateCPL, $generateCplPostData, $resultCPL, $orderDetails['order_id'], $logid);
             $resultResCPL = json_decode($resultCPL, true);
 
             if (is_array($resultResCPL)) {
@@ -839,7 +835,6 @@ class DashboardMail extends MX_Controller {
         $this->load->model('order/document');
         $errors = array();
         $success = array();
-        $userdata = $this->session->userdata('user');
         $fileId = $this->uri->segment(2);    
         $orderDetails = $this->order->get_order_details($fileId);
         $responseArr = $this->natic->getDocumentContentForCpl($fileId);
@@ -869,14 +864,13 @@ class DashboardMail extends MX_Controller {
 		$this->load->model('order/document');
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
-		$userdata = $this->session->userdata('user');
 		$fileSize = filesize('./uploads/documents/'.$document_name);
 		$documentData = array(
 			'document_name' => $document_name,
 			'original_document_name' => $document_name,
 			'document_type_id' => 1051,
 			'document_size' => $fileSize,
-			'user_id' => $userdata['id'],
+			'user_id' => 0,
 			'order_id' => $orderDetails['order_id'],
 			'description' => 'CPL Document',
 			'is_sync' => 1,
@@ -896,17 +890,15 @@ class DashboardMail extends MX_Controller {
 		);
 		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
-		if ($userdata['is_master'] == 1) {
-			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-			$user_data['email'] = $orderUser['email_address'];
-			$user_data['password'] = $orderUser['random_password'];
-		} else {
-			$user_data = array();
-		}
 		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+		$user_data['email'] = $orderUser['email_address'];
+		$user_data['password'] = $orderUser['random_password'];
+		$user_data['from_mail'] = 1;
+		
+		$logid = $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 
@@ -957,6 +949,189 @@ class DashboardMail extends MX_Controller {
 		$data['action'] .= '<a href="javascript:void(0);" onclick="editInformation('.$orderDetails['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
         $this->load->view('layout/head_dashboard',$data);
         $this->load->view('order/mail_proposed_insured', $data);
+	}
+	
+	public function getOrderDetailsCpl()
+	{
+		$this->load->library('order/fnf');
+		$this->load->model('order/home_model');
+		$this->load->library('order/resware');
+		$fileId = $this->input->post('fileId');
+		$orderDetails = $this->order->get_order_details($fileId);
+		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			
+		if ($orderUser['is_escrow'] == 1) {
+			if ($orderDetails['is_escrow'] == 1) {
+				$orderDetails['lender_first_name'] =  '';
+				$orderDetails['lender_last_name'] ='';
+				$orderDetails['lender_email'] = '';
+				$orderDetails['lender_telephone_no'] = '';
+				$orderDetails['lender_company_name'] = '';
+				$orderDetails['lender_address'] = '';
+				$orderDetails['lender_city'] = '';
+				$orderDetails['lender_zipcode'] = '';
+				$orderDetails['lender_id'] = '';
+			} else {			
+				$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
+				$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
+				$orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
+				$orderDetails['lender_telephone_no'] = $orderDetails['lender_telephone_no'] ? $orderDetails['lender_telephone_no'] : '';
+				$orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
+				$orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
+				$orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
+				$orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+				$orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
+			}
+		} else {
+			if (!empty($orderDetails['cpl_lender_id'])) {
+				$lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+				$orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+				$orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+				$orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+				$orderDetails['lender_telephone_no'] = $lenderDetails['telephone_no'] ? $lenderDetails['telephone_no'] : '';
+				$orderDetails['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+				$orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+				$orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+				$orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+			} else {
+				$orderDetails['lender_first_name'] =  '';
+				$orderDetails['lender_last_name'] ='';
+				$orderDetails['lender_email'] = '';
+				$orderDetails['lender_telephone_no'] = '';
+				$orderDetails['lender_company_name'] = '';
+				$orderDetails['lender_address'] = '';
+				$orderDetails['lender_city'] = '';
+				$orderDetails['lender_zipcode'] = '';
+				$orderDetails['lender_id'] = '';
+			}
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+		}
+
+		if(empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = '';
+		} else if(empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = $orderDetails['lender_last_name'];
+		} else if(!empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = $orderDetails['lender_first_name'];
+		} else if(!empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
+		}
+
+		if ($orderDetails['sales_amount'] > 0) {
+			if (!empty($orderDetails['borrower'])) {
+				$primary_owner = explode(' ', $orderDetails['borrower']);
+				$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
+				$orderDetails['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
+			} else {
+				$orderDetails['primary_owner_first_name'] = '';
+				$orderDetails['primary_owner_last_name'] = '';
+			}
+	
+			if (!empty($orderDetails['secondary_borrower'])) {
+				$secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
+				$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
+				$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+			} else {
+				$orderDetails['secondary_owner_first_name'] = '';
+				$orderDetails['secondary_owner_last_name'] = '';
+			}
+		} else {
+			if (!empty($orderDetails['primary_owner'])) {
+				$primary_owner = explode(' ', $orderDetails['primary_owner']);
+				$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
+				$orderDetails['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
+			} else {
+				$orderDetails['primary_owner_first_name'] = '';
+				$orderDetails['primary_owner_last_name'] = '';
+			}
+	
+			if (!empty($orderDetails['secondary_owner'])) {
+				$secondary_owner = explode(' ', $orderDetails['secondary_owner']);
+				$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
+				$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+			} else {
+				$orderDetails['secondary_owner_first_name'] = '';
+				$orderDetails['secondary_owner_last_name'] = '';
+			}
+		}
+		
+		$endPoint = 'files/'. $fileId .'/partners';
+		$logid = $this->apiLogs->syncLogs(0, 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+		
+		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+		$user_data['email'] = $orderUser['email_address'];
+		$user_data['password'] = $orderUser['random_password'];
+		$user_data['from_mail'] = 1;
+		$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+		$this->apiLogs->syncLogs(0, 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+		$resPartners = json_decode($resultPartners, true);
+		if(!empty($resPartners)) {
+			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+ 			if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+				$orderDetails['cpl_api'] = 'natic';
+			} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
+				$orderDetails['cpl_api'] = 'westcor';
+			} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+				$orderDetails['cpl_api'] = 'fnf';
+				$agentsData = $this->fnf->getAgents();
+				if ($agentsData === false) {
+					$orderDetails['email'] = $orderUser['email_address'];
+					$agentsData = $this->fnf->getAgentsFromApi($orderDetails);
+				}
+				$orderDetails['agents_data'] = $agentsData;
+			} else {
+				$orderDetails['cpl_api'] = 'natic';
+			}
+		}
+		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
+		$orderDetails['loan_number'] = $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '';
+		$response = array('status'=>'success', 'orderDetails' => $orderDetails);
+		echo json_encode($response); exit;
+	}
+
+	function getDetailsByName()
+    {
+    	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
+    	// $isEscrow = isset($_POST['is_escrow']) && !empty($_POST['is_escrow']) ? $_POST['is_escrow'] : 0;
+
+		$is_master_search = isset($_POST['is_master_search']) && !empty($_POST['is_master_search']) ? $_POST['is_master_search'] : 0;
+
+    	$condition = array(
+            'company_name' => $searchTerm
+        );
+
+    	if(isset($_POST['is_escrow']))
+    	{
+    		$isEscrow = $_POST['is_escrow'];
+    		$condition['is_escrow'] = $isEscrow;
+    	}
+
+    	$userDetails = $this->home_model->get_customers($condition, $is_master_search);
+    	$userInfo = array();
+    	if(isset($userDetails) && !empty($userDetails))
+    	{
+    		foreach ($userDetails as $key => $value) 
+    		{
+    			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
+            
+	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
+
+	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
+	            $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
+	            $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
+	            $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
+	            $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
+				$data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
+				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
+				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
+				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
+	            // array_push($userInfo, $data); 
+	            $userInfo[] =$data;
+    		}
+    	}
+    	echo json_encode($userInfo);
     }
     
 }
