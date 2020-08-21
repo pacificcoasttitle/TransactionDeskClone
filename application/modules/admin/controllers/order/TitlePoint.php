@@ -336,13 +336,17 @@ class TitlePoint extends MX_Controller {
 
                     $deed_file_path = FCPATH.'uploads/grant-deed/'.$value['file_number'].'.pdf';
 
-                    if (!file_exists($deed_file_path)) 
+                    if (file_exists($deed_file_path)) 
                     {
-                        $nestedData[] = 'Failed';
+                        $nestedData[] = 'Success';
+                    }
+                    elseif (strtolower($value['grant_deed_message']) != 'success') 
+                    {
+                        $nestedData[] = $value['grant_deed_message'];
                     }
                     else
                     {
-                        $nestedData[] = $value['grant_deed_message'];
+                        $nestedData[] = 'Failed';
                     }
                     
                     
