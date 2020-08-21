@@ -1081,7 +1081,7 @@ class DashboardMail extends MX_Controller {
 				}
 				$orderDetails['agents_data'] = $agentsData;
 			} else {
-				$orderDetails['cpl_api'] = 'natic';
+				$orderDetails['cpl_api'] = 'westcor';
 			}
 		}
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
