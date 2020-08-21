@@ -983,8 +983,7 @@ class Dashboard extends MX_Controller {
 							<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
 				} else {
 					$file_id = $order['file_id'];
-					$lender_id_flag = !empty($order['escrow_lender_id']) ? 1 : 0;
-					$nestedData[] = "<div style='display:flex;'><form onclick='return lender_pop_up($lender_id_flag, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form>
+					$nestedData[] = "<div style='display:flex;'><form onclick='return lender_pop_up(0, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form>
 					<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
 				}
 				$data[] = $nestedData; 
