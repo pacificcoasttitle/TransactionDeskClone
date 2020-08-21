@@ -334,7 +334,17 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $order_details['full_address'];
                     $nestedData[] = $value['grant_deed_type'];
 
-                    $nestedData[] = $value['grant_deed_message'];
+                    $deed_file_path = FCPATH.'uploads/grant-deed/'.$value['file_number'].'.pdf';
+
+                    if (!file_exists($deed_file_path)) 
+                    {
+                        $nestedData[] = 'Failed';
+                    }
+                    else
+                    {
+                        $nestedData[] = $value['grant_deed_message'];
+                    }
+                    
                     
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
                     $data[] = $nestedData;
