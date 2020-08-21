@@ -583,10 +583,11 @@ function generateProposedInsured(fileId)
                         element.click();
                         document.body.removeChild(element);
                     }
+
+                    location.reload(true);
                 }
             }
         });
-        location.reload(true);
 	}
 	else
 	{
