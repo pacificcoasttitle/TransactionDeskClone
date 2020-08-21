@@ -171,6 +171,7 @@ $route['getDetailsByName'] = 'frontend/order/dashboardMail/getDetailsByName';
 
 
 
+
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
 $route['order/admin/home/do_login'] = 'admin/order/home/do_login';
