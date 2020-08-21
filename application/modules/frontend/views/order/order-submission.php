@@ -352,4 +352,4 @@
 <?php
     $this->load->view('layout/footer');
 ?>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js?random=<?php echo uniqid(); ?>"></script>
