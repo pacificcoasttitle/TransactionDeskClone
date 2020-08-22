@@ -26,7 +26,7 @@
                                 <span class="orderinfo1" id="orderNumber"><?php echo $tp_data['file_number']; ?></span>
                             </li><br>
                             <input type="hidden" name="id" id="CustomerId" value="<?php echo $customer_id;?>">
-                            <input type="hidden" name="property_full_address" id="property_full_address" value="<?php echo $property;?>">
+                            <input type="hidden" name="property-full-address" id="property-full-address" value="<?php echo $property;?>">
                     <?php
                         }
                     ?>
