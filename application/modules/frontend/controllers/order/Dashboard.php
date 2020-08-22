@@ -1073,10 +1073,9 @@ class Dashboard extends MX_Controller {
 		$p_report_date = date("m/d/Y",strtotime($orderDetails['preliminary_report_date']));
 		$data['preliminary_report_date'] = isset($p_report_date) && !empty($p_report_date) ? $p_report_date : '';
 
-		
+		$data['is_escrow'] = $customer_data['is_escrow'];
 		if($customer_data['is_escrow'] == 1 && !empty($orderDetails['escrow_lender_id']))
-		{
-			$data['is_escrow'] = $customer_data['is_escrow'];
+		{			
 			$data['escrow_lender_id'] = $orderDetails['escrow_lender_id'];
 			$data['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
 			$data['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
@@ -1090,7 +1089,6 @@ class Dashboard extends MX_Controller {
 		}
 		else
 		{
-			$data['is_escrow'] = 0;
 			$data['escrow_lender_id'] = '';
 			$data['lender_first_name'] =  '';
 			$data['lender_last_name'] ='';
