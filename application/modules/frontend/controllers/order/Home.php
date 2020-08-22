@@ -1046,8 +1046,7 @@ class Home extends MX_Controller {
 				$from_name = 'Pacific Coast Title Company';
 				$from_mail = env('FROM_EMAIL');
 				$subject = 'Notification for '.$subject;
-			//	$to = env('ADMIN_EMAIL');
-				$to = 'crestdev@protonmail.com';
+				$to = env('ADMIN_EMAIL');
 				
 				$this->load->helper('sendemail');
 				

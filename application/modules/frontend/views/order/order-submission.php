@@ -180,7 +180,6 @@
                                     $fips = isset($tp_data['fips']) && !empty($tp_data['fips']) ? $tp_data['fips'] : '';
                                 ?>
                                 <?php
-                                $lv_file_url='';
                                     if(isset($lv_file_url) && !empty($lv_file_url))
                                     {
                                 ?>
@@ -208,7 +207,6 @@
                             <div class="col-md-3">
                                 <div id="instrumentInfoFile">
                                     <?php
-                                        $deed_file_url = '';
                                         if(isset($deed_file_url) && !empty($deed_file_url))
                                         {
                                     ?>
@@ -262,7 +260,6 @@
                             <div class="col-md-3">
                                 <div id="taxDocumentInfo">
                                     <?php
-                                    $tax_file_url = '';
                                         if(isset($tax_file_url) && !empty($tax_file_url))
                                         {
                                     ?>
