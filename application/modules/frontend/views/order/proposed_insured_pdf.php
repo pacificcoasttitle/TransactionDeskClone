@@ -11,7 +11,7 @@
 	@page toc { sheet-size: A4; }
 	body{
 		font-family:Roboto, 'Segoe UI', Tahoma, sans-serif; 
-		font-size:16px; 
+		font-size:12px; 
 		color:#000000; 
 		max-width:100%;
 		-webkit-print-color-adjust:exact;
@@ -130,9 +130,9 @@
 				<p style="text-align: justify;">UPON THE CLOSE OF ESCROW AND CONFIRMATION OF RECORDING PACIFIC COAST TITLE WILL BE IN A POSITION TO ISSUE A TITLE POLICY IN FAVOR OF:</p>
 			</div>
 			<div>
-				<p>Borrower: <?php echo isset($borrowers) && !empty($borrowers) ? $borrowers : '-'; ?></p>
-				<p>Secondary Borrower: <?php echo isset($secondary_borrower) && !empty($secondary_borrower) ? $secondary_borrower : '-'; ?></p>
-				<p>Lender: <?php echo isset($lender) && !empty($lender) ? $lender : '-'; ?></p>
+				<p>Borrower: <?php echo isset($primary_owner) && !empty($primary_owner) ? $primary_owner : '-'; ?></p>
+				<p>Secondary Borrower: <?php echo isset($secondary_owner) && !empty($secondary_owner) ? $secondary_owner : '-'; ?></p>
+				<p>Lender: <?php echo isset($lender['lender_name']) && !empty($lender['lender_name']) ? $lender['lender_name'] : '-'; ?></p>
 				<p>Loan #: <?php echo isset($loan_number) && !empty($loan_number) ? $loan_number : '-'; ?></p>
 				<p>Loan Amount: <?php echo isset($loan_amount) && !empty($loan_amount) ? '$'.$loan_amount : ''; ?></p>
 			</div>
