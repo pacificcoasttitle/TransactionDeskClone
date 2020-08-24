@@ -68,35 +68,7 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $count;
                     $nestedData[] = $value['file_number'];
                     $nestedData[] = $order_details['full_address'];
-                    /*if(strtolower($value['cs4_message']) == 'success')
-                    {
-                        if(strtolower($value['lv_file_status']) == 'success')
-                        {
-                            $nestedData[] = $value['lv_file_status'];
-                        }
-                        else
-                        {
-                            $nestedData[] = $value['lv_file_message']; 
-                        }
-                    }
-                    else
-                    {
-                        $lv_file_path = FCPATH.'uploads/legal-vesting/'.$value['file_number'].'.pdf';
-
-                        if (file_exists($lv_file_path)) 
-                        {
-                            $nestedData[] = 'success';
-                        }
-                        else if(strtolower($value['lv_file_status']) != 'success')
-                        {
-                            $nestedData[] = $value['lv_file_status'];
-                        }
-                        else
-                        {
-                            $nestedData[] = $value['cs4_message'];
-                        }
-                        
-                    }*/
+                    
                     $lv_file_path = FCPATH.'uploads/legal-vesting/'.$value['file_number'].'.pdf';
 
                     if (file_exists($lv_file_path)) 
@@ -106,6 +78,10 @@ class TitlePoint extends MX_Controller {
                     else if((strtolower($value['lv_file_status']) != 'success') && !empty($value['lv_file_status']))
                     {
                         $nestedData[] = $value['lv_file_status'];
+                    }
+                    else if(empty($value['lv_file_status']) && (strtolower($value['cs4_message']) == 'success'))
+                    {
+                        $nestedData[] = 'Failed';
                     }
                     else
                     {
@@ -259,6 +235,10 @@ class TitlePoint extends MX_Controller {
                     else if((strtolower($value['tax_file_status']) != 'success') && !empty($value['tax_file_status']))
                     {
                         $nestedData[] = $value['tax_file_status'];
+                    }
+                    else if(empty($value['tax_file_status']) && (strtolower($value['cs3_message']) == 'success'))
+                    {
+                        $nestedData[] = 'Failed';
                     }
                     else
                     {

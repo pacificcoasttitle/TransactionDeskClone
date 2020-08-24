@@ -100,80 +100,109 @@ class TitlePoint extends MX_Controller {
 
 		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', $request_type, $request, $requestParams, $result, $random_number, $logid);
 
-		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
-		
-		if($methodId == 4)
+		if(isset($result) && empty($result))
 		{
-			if($responseStatus == 'Success')
+			$tpData = 	array(
+				'cs4_message' => 'Failed',
+			);
+
+			if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
 			{
-				$requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
-				$tpData = 	array(
-								'cs4_request_id' => $requestId,
-							);
-
-				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
-				{
-					$session_id = 'tp_api_id_'.$random_number;
-					$condition = array(
-						'session_id' => $session_id
-					);				
-					$this->titlePointData->update($tpData,$condition);
-				}
-				else
-				{
-					$tpData['session_id'] = 'tp_api_id_'.$random_number;
-					
-
-					$tpId = $this->titlePointData->insert($tpData);
-
-					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
-
-				}
+				$session_id = 'tp_api_id_'.$random_number;
+				$condition = array(
+					'session_id' => $session_id
+				);				
+				$this->titlePointData->update($tpData,$condition);
 			}
 			else
 			{
-				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-				$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				$tpData['session_id'] = 'tp_api_id_'.$random_number;
+				
+
+				$tpId = $this->titlePointData->insert($tpData);
+
+				$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+			}
+		}
+		else
+		{
+			$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+		
+			if($methodId == 4)
+			{
+				if($responseStatus == 'Success')
+				{
+					$requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+					$tpData = 	array(
+									'cs4_request_id' => $requestId,
+								);
+
+					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+					{
+						$session_id = 'tp_api_id_'.$random_number;
+						$condition = array(
+							'session_id' => $session_id
+						);				
+						$this->titlePointData->update($tpData,$condition);
+					}
+					else
+					{
+						$tpData['session_id'] = 'tp_api_id_'.$random_number;
+						
+
+						$tpId = $this->titlePointData->insert($tpData);
+
+						$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+					}
+				}
+				else
+				{
+					$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+					$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				}
+				
+			}
+			if($methodId == 3)
+			{
+				if($responseStatus == 'Success')
+				{
+					$requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+
+					$tpData = 	array(
+									'cs3_request_id' => $requestId,
+								);
+
+					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+					{
+						$session_id = 'tp_api_id_'.$random_number;
+						$condition = array(
+							'session_id' => $session_id
+						);				
+						$this->titlePointData->update($tpData,$condition);
+					}
+					else
+					{
+						$tpData['session_id'] = 'tp_api_id_'.$random_number;
+						
+
+						$tpId = $this->titlePointData->insert($tpData);
+
+						$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+					}
+				}
+				else
+				{
+					$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+					$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				}
 			}
 			
+			echo trim($file);
 		}
-		if($methodId == 3)
-		{
-			if($responseStatus == 'Success')
-			{
-				$requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
-
-				$tpData = 	array(
-								'cs3_request_id' => $requestId,
-							);
-
-				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
-				{
-					$session_id = 'tp_api_id_'.$random_number;
-					$condition = array(
-						'session_id' => $session_id
-					);				
-					$this->titlePointData->update($tpData,$condition);
-				}
-				else
-				{
-					$tpData['session_id'] = 'tp_api_id_'.$random_number;
-					
-
-					$tpId = $this->titlePointData->insert($tpData);
-
-					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
-
-				}
-			}
-			else
-			{
-				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-				$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
-			}
-		}
-		
-		echo trim($file); 
+		 
 	}
 
 
@@ -216,111 +245,139 @@ class TitlePoint extends MX_Controller {
 		$xmlData = simplexml_load_string($file);
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
-		
+
 		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_request_summary_'.$methodId, $request, $requestParams, $result, $random_number, $logid);
 
-		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
-		$session_data = array();
-
-
-		if($methodId == 4)
+		if(isset($result) && empty($result))
 		{
-			if($responseStatus == 'Success')
+			$tpData = 	array(
+				'cs4_message' => 'Failed',
+			);
+
+			if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
 			{
-				$status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
-				
-				if($status == 'Complete')
-				{
-					$resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID'] : ''; 
-					$serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
-					
-					$tpData = 	array(
-						'cs4_result_id' => $resultId,
-						'cs4_service_id' => $serviceId,
-					);
-				}
-				else
-				{
-					$tpData = 	array(
-						'cs4_message' => $status,
-					);
-				}
-
-				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
-				{
-					$session_id = 'tp_api_id_'.$random_number;
-					$condition = array(
-						'session_id' => $session_id
-					);				
-					$this->titlePointData->update($tpData,$condition);
-				}
-				else
-				{
-					$tpData['session_id'] = 'tp_api_id_'.$random_number;
-					
-
-					$tpId = $this->titlePointData->insert($tpData);
-
-					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
-
-				}
+				$session_id = 'tp_api_id_'.$random_number;
+				$condition = array(
+					'session_id' => $session_id
+				);				
+				$this->titlePointData->update($tpData,$condition);
 			}
 			else
 			{
-				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-				$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				$tpData['session_id'] = 'tp_api_id_'.$random_number;
+				
+
+				$tpId = $this->titlePointData->insert($tpData);
+
+				$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
 			}
 		}
-		if($methodId == 3)
+		else
 		{
-			if($responseStatus == 'Success')
-			{
-				$status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
+			$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+			$session_data = array();
 
-				if($status == 'Complete')
+
+			if($methodId == 4)
+			{
+				if($responseStatus == 'Success')
 				{
-					$resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : '';
-					$serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
-					$tpData = 	array(
-						'cs3_result_id' => $resultId,
-						'cs3_service_id' => $serviceId,
-					);
-				}
-				else
-				{
-					$tpData = 	array(
-						'cs3_message' => $status,
-					);
-				}
-				
-				
-				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
-				{
-					$session_id = 'tp_api_id_'.$random_number;
-					$condition = array(
-						'session_id' => $session_id
-					);				
-					$this->titlePointData->update($tpData,$condition);
-				}
-				else
-				{
-					$tpData['session_id'] = 'tp_api_id_'.$random_number;
+					$status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
 					
+					if($status == 'Complete')
+					{
+						$resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID'] : ''; 
+						$serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
+						
+						$tpData = 	array(
+							'cs4_result_id' => $resultId,
+							'cs4_service_id' => $serviceId,
+						);
+					}
+					else
+					{
+						$tpData = 	array(
+							'cs4_message' => $status,
+						);
+					}
 
-					$tpId = $this->titlePointData->insert($tpData);
+					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+					{
+						$session_id = 'tp_api_id_'.$random_number;
+						$condition = array(
+							'session_id' => $session_id
+						);				
+						$this->titlePointData->update($tpData,$condition);
+					}
+					else
+					{
+						$tpData['session_id'] = 'tp_api_id_'.$random_number;
+						
 
-					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+						$tpId = $this->titlePointData->insert($tpData);
 
+						$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+					}
+				}
+				else
+				{
+					$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+					$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
 				}
 			}
-			else
+			if($methodId == 3)
 			{
-				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-				$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				if($responseStatus == 'Success')
+				{
+					$status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
+
+					if($status == 'Complete')
+					{
+						$resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : '';
+						$serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
+						$tpData = 	array(
+							'cs3_result_id' => $resultId,
+							'cs3_service_id' => $serviceId,
+						);
+					}
+					else
+					{
+						$tpData = 	array(
+							'cs3_message' => $status,
+						);
+					}
+					
+					
+					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+					{
+						$session_id = 'tp_api_id_'.$random_number;
+						$condition = array(
+							'session_id' => $session_id
+						);				
+						$this->titlePointData->update($tpData,$condition);
+					}
+					else
+					{
+						$tpData['session_id'] = 'tp_api_id_'.$random_number;
+						
+
+						$tpId = $this->titlePointData->insert($tpData);
+
+						$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+					}
+				}
+				else
+				{
+					$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+					$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				}
 			}
+			
+			echo trim($file);
 		}
-		
-		echo trim($file);
 		
 	}
 
@@ -371,143 +428,173 @@ class TitlePoint extends MX_Controller {
 		$result = json_decode($response,TRUE);
 
 		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_result_by_id_'.$methodId, $request, $requestParams, $result, $random_number, $logid);
-		$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
-		$session_data = array();
+
+		if(isset($result) && empty($result))
+		{
+			$tpData = 	array(
+				'cs4_message' => 'Failed',
+			);
+
+			if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+			{
+				$session_id = 'tp_api_id_'.$random_number;
+				$condition = array(
+					'session_id' => $session_id
+				);				
+				$this->titlePointData->update($tpData,$condition);
+			}
+			else
+			{
+				$tpData['session_id'] = 'tp_api_id_'.$random_number;
+				
+
+				$tpId = $this->titlePointData->insert($tpData);
+
+				$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+			}
+		}
+		else
+		{
+			$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+			$session_data = array();
+			
+			if($methodId == 4)
+			{
+				if($responseStatus == 'Success')
+				{
+					$briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : '';
+					
+		            $vesting = isset($result['Result']['Vesting']) && !empty($result['Result']['Vesting']) ? $result['Result']['Vesting'] : '';
+
+		            $fips = isset($result['Result']['Fips']) && !empty($result['Result']['Fips']) ? $result['Result']['Fips'] : '';
+		            
+		            $legal_vesting_info = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'] : array();
+		            
+		            if (count($legal_vesting_info) == count($legal_vesting_info, COUNT_RECURSIVE))
+		            {
+		            	$docType = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType'] : '';
+		            	$docType = strtolower($docType);
+
+		            	if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed')
+		            	{
+		            		$instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber'] : '';
+		            		$recordedDate = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate'] : '';
+		            	}
+		            	
+		            }
+		            else
+		            {
+		            	foreach ($legal_vesting_info as $key => $value) 
+		            	{
+		            		$docType = isset($value['DocType']) && !empty($value['DocType']) ? $value['DocType'] : '';
+		            		$docType = strtolower($docType);
+		            		
+		            		if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed')
+		            		{
+		            			$instrumentNumber = isset($value['InstrumentNumber']) && !empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
+		            			$recordedDate = isset($value['RecordedDate']) && !empty($value['RecordedDate']) ? $value['RecordedDate'] : '';
+		            			break;
+		            		}
+		            	}	            	
+		            }
+		            $status = isset($result['Result']['Status']) && !empty($result['Result']['Status']) ? $result['Result']['Status'] : '';
+
+		            $tpData = 	array(
+						'legal_description' => $briefLegal,
+						'vesting_information' => $vesting,
+						'cs4_instrument_no' => $instrumentNumber,
+						'cs4_recorded_date' => $recordedDate,
+						'grant_deed_type' => $docType,
+						'fips' => $fips,
+						// 'cs4_result_id_status' => $status,
+					);
+
+			       	if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+					{
+						$session_id = 'tp_api_id_'.$random_number;
+						$condition = array(
+							'session_id' => $session_id
+						);				
+						$this->titlePointData->update($tpData,$condition);
+					}
+					else
+					{
+						$tpData['session_id'] = 'tp_api_id_'.$random_number;
+						
+
+						$tpId = $this->titlePointData->insert($tpData);
+
+						$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+					}
+					$this->addLogs($methodId,$responseStatus,$status,$error,$random_number);
+				}
+				else
+				{
+					$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+					$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				}
+			}
+			if($methodId == 3)
+			{
+				if($responseStatus == 'Success')
+				{
+					$firstInstallment = $secondInstallment = array();
+					if(isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]))
+					{
+						$firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];					
+					}
+
+					if(isset($result['Result']['TaxReport']['Installments']['Item'][1]) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]))
+					{
+						$secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];			
+					}
+					
+					$status = isset($result['Result']['TaxReport']['Status']) && !empty($result['Result']['TaxReport']['Status']) ? $result['Result']['TaxReport']['Status'] : '';
+					if($status == 'Success')
+					{
+						$message = 'Success';
+					}
+					else
+					{
+						$message = isset($result['Result']['TaxReport']['WarningMessage']) && !empty($result['Result']['TaxReport']['WarningMessage']) ? $result['Result']['TaxReport']['WarningMessage'] : '';
+					}
+					
+					$tpData = 	array(
+						'first_installment' => json_encode($firstInstallment),
+						'second_installment' => json_encode($secondInstallment),
+					);
+
+					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+					{
+						$session_id = 'tp_api_id_'.$random_number;
+						$condition = array(
+							'session_id' => $session_id
+						);				
+						$this->titlePointData->update($tpData,$condition);
+					}
+					else
+					{
+						$tpData['session_id'] = 'tp_api_id_'.$random_number;
+						
+
+						$tpId = $this->titlePointData->insert($tpData);
+
+						$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+					}
+					$this->addLogs($methodId,$responseStatus,$message,$error,$random_number);
+				}
+				else
+				{
+					$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+					$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				}
+			}
+			echo trim($file);
+		}
 		
-		if($methodId == 4)
-		{
-			if($responseStatus == 'Success')
-			{
-				$briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : '';
-				
-	            $vesting = isset($result['Result']['Vesting']) && !empty($result['Result']['Vesting']) ? $result['Result']['Vesting'] : '';
-
-	            $fips = isset($result['Result']['Fips']) && !empty($result['Result']['Fips']) ? $result['Result']['Fips'] : '';
-	            
-	            $legal_vesting_info = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'] : array();
-	            
-	            if (count($legal_vesting_info) == count($legal_vesting_info, COUNT_RECURSIVE))
-	            {
-	            	$docType = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType'] : '';
-	            	$docType = strtolower($docType);
-
-	            	if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed')
-	            	{
-	            		$instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber'] : '';
-	            		$recordedDate = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate'] : '';
-	            	}
-	            	
-	            }
-	            else
-	            {
-	            	foreach ($legal_vesting_info as $key => $value) 
-	            	{
-	            		$docType = isset($value['DocType']) && !empty($value['DocType']) ? $value['DocType'] : '';
-	            		$docType = strtolower($docType);
-	            		
-	            		if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed')
-	            		{
-	            			$instrumentNumber = isset($value['InstrumentNumber']) && !empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
-	            			$recordedDate = isset($value['RecordedDate']) && !empty($value['RecordedDate']) ? $value['RecordedDate'] : '';
-	            			break;
-	            		}
-	            	}	            	
-	            }
-	            $status = isset($result['Result']['Status']) && !empty($result['Result']['Status']) ? $result['Result']['Status'] : '';
-
-	            $tpData = 	array(
-					'legal_description' => $briefLegal,
-					'vesting_information' => $vesting,
-					'cs4_instrument_no' => $instrumentNumber,
-					'cs4_recorded_date' => $recordedDate,
-					'grant_deed_type' => $docType,
-					'fips' => $fips,
-					// 'cs4_result_id_status' => $status,
-				);
-
-		       	if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
-				{
-					$session_id = 'tp_api_id_'.$random_number;
-					$condition = array(
-						'session_id' => $session_id
-					);				
-					$this->titlePointData->update($tpData,$condition);
-				}
-				else
-				{
-					$tpData['session_id'] = 'tp_api_id_'.$random_number;
-					
-
-					$tpId = $this->titlePointData->insert($tpData);
-
-					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
-
-				}
-				$this->addLogs($methodId,$responseStatus,$status,$error,$random_number);
-			}
-			else
-			{
-				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-				$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
-			}
-		}
-		if($methodId == 3)
-		{
-			if($responseStatus == 'Success')
-			{
-				$firstInstallment = $secondInstallment = array();
-				if(isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]))
-				{
-					$firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];					
-				}
-
-				if(isset($result['Result']['TaxReport']['Installments']['Item'][1]) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]))
-				{
-					$secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];			
-				}
-				
-				$status = isset($result['Result']['TaxReport']['Status']) && !empty($result['Result']['TaxReport']['Status']) ? $result['Result']['TaxReport']['Status'] : '';
-				if($status == 'Success')
-				{
-					$message = 'Success';
-				}
-				else
-				{
-					$message = isset($result['Result']['TaxReport']['WarningMessage']) && !empty($result['Result']['TaxReport']['WarningMessage']) ? $result['Result']['TaxReport']['WarningMessage'] : '';
-				}
-				
-				$tpData = 	array(
-					'first_installment' => json_encode($firstInstallment),
-					'second_installment' => json_encode($secondInstallment),
-				);
-
-				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
-				{
-					$session_id = 'tp_api_id_'.$random_number;
-					$condition = array(
-						'session_id' => $session_id
-					);				
-					$this->titlePointData->update($tpData,$condition);
-				}
-				else
-				{
-					$tpData['session_id'] = 'tp_api_id_'.$random_number;
-					
-
-					$tpId = $this->titlePointData->insert($tpData);
-
-					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
-
-				}
-				$this->addLogs($methodId,$responseStatus,$message,$error,$random_number);
-			}
-			else
-			{
-				$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-				$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
-			}
-		}
-		echo trim($file);
 	}
 
 	function imageCreateRequest()
