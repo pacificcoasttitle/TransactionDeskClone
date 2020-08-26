@@ -27,6 +27,33 @@
                     </div>
                 </div>
 
+                <?php 
+                    if(isset($fee_types) && !empty($fee_types))
+                    {
+                ?>
+                        <div class="form-group row">
+                            <label for="fee_type" class="col-sm-2 col-form-label">Fee Type<span class="required"> *</span></label>
+                            <div class="col-sm-10">
+                                <select name="fee_type" id="fee_type" class="form-control">
+                                    <option value="">Select</option>
+                                    <?php
+                                        foreach ($fee_types as $key => $value) 
+                                        {
+                                    ?> 
+                                            <option value="<?php echo $value['id']; ?>" <?php if($value['id'] == $fees_info['fee_type_id']) { echo "selected"; } ?>><?php echo $value['name']; ?></option>
+                                    <?php
+                                        }
+                                    ?>
+                                 </select>                      
+                              <?php if(!empty($fee_type_id_error_msg)){ ?>                     
+                                <span class="error"><?php echo $fee_type_id_error_msg; ?></span>
+                              <?php } ?>
+                            </div>
+                        </div>
+                <?php
+                    }
+                ?>
+
                 <div class="form-group row">
                     <label for="fee_name" class="col-sm-2 col-form-label">Fee Name<span class="required"> *</span></label>
                     <div class="col-sm-10">

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Fees extends MX_Controller {
+class FeesTypes extends MX_Controller {
 
 	public function __construct()
     {
@@ -10,7 +10,6 @@ class Fees extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
-        $this->load->model('order/fees_model');
         $this->load->model('order/feesTypes_model');
     }
 
@@ -18,9 +17,9 @@ class Fees extends MX_Controller {
 	{
         $this->is_admin();
 		$data = array();
-        $data['title'] = 'PCT Order: Fees';
+        $data['title'] = 'PCT Order: Fees Types';
         $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/fees', $data);
+        $this->load->view('order/home/fees_types', $data);
         $this->load->view('order/layout/footer', $data);
 	}
 
@@ -34,86 +33,69 @@ class Fees extends MX_Controller {
         }
     }
 
-    public function add_fee()
+    public function add_fee_type()
     {
         $this->is_admin();
         $data = array();
 
-        $data['title'] = 'PCT Order: Add Fee';
+        $data['title'] = 'PCT Order: Add Fee Type';
 
         $feesData = array();
 
         // If import request is submitted
         if($this->input->post())
         {
-            $this->form_validation->set_rules('fee_name', 'Fee name', 'required',array('required'=> 'Enter fee name'));
-            $this->form_validation->set_rules('fee_value', 'Fee value', 'required',array('required'=> 'Enter Fee value'));
-            $this->form_validation->set_rules('txn_type', 'Transaction Type', 'required',array('required'=> 'Select transaction type'));
-            $this->form_validation->set_rules('fee_type', 'Fee Type', 'required',array('required'=> 'Select fee type'));
+            $this->form_validation->set_rules('fee_type', 'Fee Type', 'required',array('required'=> 'Please enter fee type'));
 
             if($this->form_validation->run() == true)
             {
                 $id = $this->input->post('fee_id');
                 // Prepare data for DB insertion
                 $feesData = array(
-                    'transaction_type' => $_POST['txn_type'],
-                    'fee_type_id' => $_POST['fee_type'],
-                    'name' =>  $_POST['fee_name'],
-                    'value' => $_POST['fee_value'],
-                    'status' => 1,
+                    'name' =>  $_POST['fee_type'],
+                    'status' => 1
                 );
 
                 if($id)
                 {
                     $condition = array('id' => $id);
 
-                    $update = $this->fees_model->update($feesData, $condition);
+                    $update = $this->feesTypes_model->update($feesData, $condition);
 
                     if($update)
                     {
-                        $successMsg = 'Fees updated successfully.';
+                        $successMsg = 'Fee Type updated successfully.';
                         $this->session->set_userdata('success_msg', $successMsg);
                     }
                 }
                 else
                 {                  
                     // Insert member data
-                    $insert = $this->fees_model->insert($feesData);
+                    $insert = $this->feesTypes_model->insert($feesData);
                     
                     if($insert){
-                        $data['success_msg'] = 'Fees added successfully.';
+                        $data['success_msg'] = 'Fees type added successfully.';
                     }
                     else
                     {
-                        $data['error_msg'] = 'Fees not added.';
+                        $data['error_msg'] = 'Fee type not added.';
                     } 
                 }
                 
             }
             else
             {
-                $data['txn_type_error_msg'] = form_error('txn_type');
-                $data['fee_type_id_error_msg'] = form_error('fee_type');
-                $data['name_error_msg'] = form_error('fee_name');
-                $data['value_error_msg'] = form_error('fee_value');
+                $data['name_error_msg'] = form_error('fee_type');
             }                                       
         }
-        $con = array(
-            'where' => array(
-                'status' => 1
-            )
-        );
-        $fee_types = $this->feesTypes_model->get_rows($con);
-        $data['fee_types'] = $fee_types;
-
         $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/add_fee', $data);
+        $this->load->view('order/home/add_fee_type', $data);
         $this->load->view('order/layout/footer', $data);
         
        // redirect('index.php?admin/fees');
     }
 
-    public function get_fees()
+    public function get_fees_types()
     {
     	$params = array();
 
@@ -130,14 +112,14 @@ class Fees extends MX_Controller {
 
             $pageno = ($params['start'] / $params['length'])+1;
 
-            $fees_list = $this->fees_model->getFees($params);
+            $fees_list = $this->feesTypes_model->getFeesTypes($params);
 
             $json_data['draw'] = intval( $params['draw'] );
         }
         else
         {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $fees_list = $this->fees_model->getFees($params);          
+            $fees_list = $this->feesTypes_model->getFeesTypes($params);          
         }
         $data = array();
 
@@ -149,15 +131,13 @@ class Fees extends MX_Controller {
                 $nestedData=array();
                 
                 $nestedData[] = $count;
-                $nestedData[] = $value['transaction_type'];
                 $nestedData[] = $value['name'];
-                $nestedData[] = $value['value'];
                 // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
-                $editUrl = base_url().'order/admin/edit-fee/'.$value['id'];
+                $editUrl = base_url().'order/admin/edit-fee-type/'.$value['id'];
                 
 
                 $action = '<a href="'.$editUrl.'" class="btn btn-action"><span class="fa fa-pencil" aria-hidden="true"></span></a>';
-                $action .= '<a href="javascript:void(0);" onclick="deleteFees('.$value['id'].');" class="btn btn-action"><span class="fa fa-trash" aria-hidden="true"></span></a>';
+                $action .= '<a href="javascript:void(0);" onclick="deleteFeesType('.$value['id'].');" class="btn btn-action"><span class="fa fa-trash" aria-hidden="true"></span></a>';
                 $nestedData[] = $action;
                 $data[] = $nestedData;
                 $count++;
@@ -170,7 +150,7 @@ class Fees extends MX_Controller {
         echo json_encode($json_data);
     }
 
-    public function delete_fees()
+    public function delete_fee_type()
     {
     	$id = $this->input->post('id');
         $data = array();
@@ -180,11 +160,11 @@ class Fees extends MX_Controller {
 
             $condition = array('id' => $id);
 
-            $update = $this->fees_model->update($feesData, $condition);
+            $update = $this->feesTypes_model->update($feesData, $condition);
 
             if($update)
             {
-                $successMsg = 'Fees deleted successfully.';
+                $successMsg = 'Fee type deleted successfully.';
                 $data = array('status'=>'success', 'message'=>$successMsg);
             }
         }
@@ -197,11 +177,11 @@ class Fees extends MX_Controller {
         echo json_encode($data); exit;
     }
 
-    public function edit_fee()
+    public function edit_fee_type()
     {
         $data = array();
         
-        $data['title'] = 'PCT Order: Edit Fee';
+        $data['title'] = 'PCT Order: Edit Fee Type';
 
         $id = $this->uri->segment('4');
 
@@ -210,59 +190,43 @@ class Fees extends MX_Controller {
             if($this->input->post())
             {
                 // Validations
-                $this->form_validation->set_rules('fee_name', 'Fee name', 'required',array('required'=> 'Enter fee name'));
-                $this->form_validation->set_rules('fee_value', 'Fee value', 'required',array('required'=> 'Enter Fee value'));
-                $this->form_validation->set_rules('fee_value', 'Fee value', 'required',array('required'=> 'Enter Fee value'));
-                $this->form_validation->set_rules('txn_type', 'Transaction Type', 'required',array('required'=> 'Select transaction type'));
+                $this->form_validation->set_rules('fee_type', 'Fee Type', 'required',array('required'=> 'Please enter fee type'));
 
                 if($this->form_validation->run() == true)
                 {
                     $feesData = array(
-                        'transaction_type' => $this->input->post('txn_type'),
-                        'name' =>  $this->input->post('fee_name'),
-                        'fee_type_id' => $this->input->post('fee_type'),
-                        'value' => $this->input->post('fee_value'),
-                        'status' => 1,
+                        'name' =>  $_POST['fee_type'],
+                        'status' => 1
                     );
 
                     $condition = array('id' => $id);
 
-                    $update = $this->fees_model->update($feesData,$condition);
+                    $update = $this->feesTypes_model->update($feesData,$condition);
                         
                     if($update){
-                        $data['success_msg'] = 'Fees updated successfully.';
+                        $data['success_msg'] = 'Fees type updated successfully.';
                     }
                     else
                     {
-                        $data['error_msg'] = 'Error occurred while updating fees.';
+                        $data['error_msg'] = 'Error occurred while updating fees type.';
                     }
                 }
                 else
-                {
-                    $data['section_error_msg'] = form_error('section');
-                    $data['txn_type_error_msg'] = form_error('txn_type');
-                    $data['name_error_msg'] = form_error('fee_name');
-                    $data['value_error_msg'] = form_error('fee_value');
-                    $data['fee_type_id_error_msg'] = form_error('fee_type');
+                {                    
+                    $data['name_error_msg'] = form_error('fee_type');
                 }
             }
             $con = array('id' => $id);
-            $fees_info = $this->fees_model->get_rows($con);
+            $fees_info = $this->feesTypes_model->get_rows($con);
         }
         else
         {
             redirect(base_url().'fees');
         }
+
         $data['fees_info'] = $fees_info;
-        $con = array(
-            'where' => array(
-                'status' => 1
-            )
-        );
-        $fee_types = $this->feesTypes_model->get_rows($con);
-        $data['fee_types'] = $fee_types;
         $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/edit_fee', $data);
+        $this->load->view('order/home/edit_fee_type', $data);
 		$this->load->view('order/layout/footer', $data);
     }
 }
