@@ -38,7 +38,7 @@
                 <tr>
                   <td><b>Property Location</b></td>
                   <td>
-                    <?php echo isset($full_address) && !empty($full_address) ?$full_address : '-'; ?> 
+                    <?php echo isset($full_address) && !empty($full_address) ? ucwords($full_address) : '-'; ?> 
                   </td>                  
                   <?php
                     if(isset($loan_amount) && !empty($loan_amount))
