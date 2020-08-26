@@ -220,9 +220,9 @@ $route['order/admin/add-fee'] = 'admin/order/fees/add_fee';
 $route['order/admin/edit-fee/:num'] = 'admin/order/fees/edit_fee';
 $route['order/admin/import-underwriters'] = 'admin/order/home/import_underwriters';
 $route['order/admin/update-underwriter'] = 'admin/order/home/updateUnderwriter';
-$route['order/admin/fees-types'] = 'admin/order/feestypes/index';
-$route['order/admin/add-fee-type'] = 'admin/order/feestypes/add_fee_type';
-$route['order/admin/edit-fee-type/:num'] = 'admin/order/feestypes/edit_fee_type';
+$route['order/admin/fees-types'] = 'admin/order/FeesTypes/index';
+$route['order/admin/add-fee-type'] = 'admin/order/FeesTypes/add_fee_type';
+$route['order/admin/edit-fee-type/:num'] = 'admin/order/FeesTypes/edit_fee_type';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
