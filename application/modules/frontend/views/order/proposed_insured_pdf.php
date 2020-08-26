@@ -75,7 +75,7 @@
 				<p>Glendale, CA 91202</p>
 				<p>(818)662-6700</p>
 			</div>
-			<h5 class="text-center">Issuing Agent for Commonwealth Land Title Insurance Company</h5>			
+			<h5 class="text-center"> <?php echo isset($underwriter) && !empty($underwriter) ? 'Issuing Agent for '.$underwriter : ''; ?></h5>			
 		</div>
 		<hr>
 		<div class="title-officer-info">

@@ -901,7 +901,7 @@ class DashboardMail extends MX_Controller {
 		$res = json_decode($result);
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 
-		$from_name = 'Pacific Coast Title Company';
+		/*$from_name = 'Pacific Coast Title Company';
 		$from_mail = env('FROM_EMAIL');
 		$order_message_body = 'Please check attachment for CPL document.';
 		$message = $order_message_body; 
@@ -921,7 +921,7 @@ class DashboardMail extends MX_Controller {
 		$bcc = array();
 		$file = array(base_url().'uploads/documents/'.$document_name);
 		$this->load->helper('sendemail');
-		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);
+		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
 	}
 
 	public function proposedInsured()

@@ -1930,6 +1930,25 @@ class Dashboard extends MX_Controller {
 
 				$pdfData['preliminary_report_date'] = isset($orderDetails['preliminary_report_date']) && !empty($orderDetails['preliminary_report_date']) ? date("m/d/Y h:i:s A", strtotime($orderDetails['preliminary_report_date'])) : '';
 
+				$pdfData['underwriter'] = '';
+				$endPoint = 'files/'. $fileId .'/partners';
+				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+
+				if ($userdata['is_master'] == 1) {
+					$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+					$user_data['email'] = $orderUser['email_address'];
+					$user_data['password'] = $orderUser['random_password'];
+				} else {
+					$user_data = array();
+				}
+				$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+				$resPartners = json_decode($resultPartners, true);
+				if(!empty($resPartners)) {
+					$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+					$pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
+				}
+
 				$html=$this->load->view('order/proposed_insured_pdf',$pdfData, true);
 		        $this->load->library('m_pdf');
 		        $this->m_pdf->pdf->WriteHTML($html);
@@ -3094,6 +3113,25 @@ class Dashboard extends MX_Controller {
 
 				$pdfData['preliminary_report_date'] = isset($orderDetails['preliminary_report_date']) && !empty($orderDetails['preliminary_report_date']) ? date("m/d/Y h:i:s A", strtotime($orderDetails['preliminary_report_date'])) : '';
 
+				$pdfData['underwriter'] = '';
+				$endPoint = 'files/'. $fileId .'/partners';
+				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+
+				if ($userdata['is_master'] == 1) {
+					$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+					$user_data['email'] = $orderUser['email_address'];
+					$user_data['password'] = $orderUser['random_password'];
+				} else {
+					$user_data = array();
+				}
+				$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+				$resPartners = json_decode($resultPartners, true);
+				if(!empty($resPartners)) {
+					$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+					$pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
+				}
+
 				$html=$this->load->view('order/proposed_insured_pdf',$pdfData, true);
 		        $this->load->library('m_pdf');
 		        $this->m_pdf->pdf->WriteHTML($html);
@@ -3442,7 +3480,7 @@ class Dashboard extends MX_Controller {
 		$res = json_decode($result);
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 
-		$from_name = 'Pacific Coast Title Company';
+		/*$from_name = 'Pacific Coast Title Company';
 		$from_mail = env('FROM_EMAIL');
 		$order_message_body = 'Please check attachment for CPL document.';
 		$message = $order_message_body; 
@@ -3462,6 +3500,6 @@ class Dashboard extends MX_Controller {
 		$bcc = array();
 		$file = array(base_url().'uploads/documents/'.$document_name);
 		$this->load->helper('sendemail');
-		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);
+		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
 	}
 }
