@@ -3,6 +3,7 @@ var agent_list ='';
 var credentials_customer_list = '';
 var incorrect_customer_list = '';
 var fees_list = '';
+var fees_type_list = '';
 $(document).ready(function () {
 
     // Add active class to menu
@@ -2033,11 +2034,13 @@ $(document).ready(function () {
        jQuery('#frm-add-fee,#frm-edit-fee').validate({ 
             rules: {
                 txn_type:"required",
+                fee_type:"required",
                 fee_name:"required",
                 fee_value:"required"
             },
             messages: {
                 txn_type:"Please select Transaction Type",
+                fee_type:"Please select fee Type",
                 fee_name:"Please enter fee name",
                 fee_value: "Please enter fee value"
             },
@@ -2047,6 +2050,71 @@ $(document).ready(function () {
         }); 
     }
     /* Add fee validation */
+
+    /* Fees type listing */
+    if ($('#tbl-fees-types').length) 
+    {
+        fees_type_list = $('#tbl-fees-types').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                // searchPlaceholder: "Name",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/feesTypes/get_fees_types", // json datasource
+                type: "post", // method  , by default get
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-fees-types tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-fees-types_processing").css("display", "none");
+
+                }
+            },
+                        
+        });
+    }
+    /* Fees type listing */
+
+    /* Add fee type validation */
+    if(jQuery('#frm-add-fee-type').length || jQuery('#frm-edit-fee-type').length)
+    {
+       jQuery('#frm-add-fee-type,#frm-edit-fee-type').validate({ 
+            rules: {
+                fee_type:"required"
+            },
+            messages: {
+                fee_type:"Please enter fee type"
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        }); 
+    }
+    /* Add fee type validation */
 });
 
 
@@ -2590,4 +2658,55 @@ function updateUnderwriter(partner_id, underwriter)
             }, 4000);
         }
     });
+}
+
+function deleteFeesType(id)
+{
+    if (id=='') {
+        alert('Fee type ID is required.');
+        return false;
+    }
+    var ready = confirm("Are you sure want to delete?");
+    if (ready) 
+    {
+        $.ajax({
+          url: base_url+"admin/order/feesTypes/delete_fee_type",
+          type    : "POST",
+          data    : {id:id},
+          success: function(data){
+
+                var result = jQuery.parseJSON(data);
+                
+                if (result.status == 'success') {
+                    $('#fees_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#fees_success_msg").offset().top
+                    }, 1000);
+
+                    fees_type_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#fees_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#fees_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#fees_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#fees_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+          error   : function( xhr, err )
+          {
+            alert('Connection Problem !!');
+            return false;
+          }
+        });
+    }
+    else
+    {
+        return false;
+    }
 }
