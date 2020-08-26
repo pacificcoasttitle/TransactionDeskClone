@@ -1947,7 +1947,11 @@ class Dashboard extends MX_Controller {
 				$resPartners = json_decode($resultPartners, true);
 				if(!empty($resPartners)) {
 					$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-					$pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
+					if($resPartners['Partners'][$key]['PartnerName'] == 'Outside Title Order') {
+						$pdfData['underwriter'] = 'Westcor Land Title Insurance Company';
+					} else {
+						$pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
+					}
 				}
 
 				$html=$this->load->view('order/proposed_insured_pdf',$pdfData, true);
@@ -3131,7 +3135,11 @@ class Dashboard extends MX_Controller {
 				$resPartners = json_decode($resultPartners, true);
 				if(!empty($resPartners)) {
 					$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-					$pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
+					if($resPartners['Partners'][$key]['PartnerName'] == 'Outside Title Order') {
+						$pdfData['underwriter'] = 'Westcor Land Title Insurance Company';
+					} else {
+						$pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
+					}
 				}
 
 				$html=$this->load->view('order/proposed_insured_pdf',$pdfData, true);
