@@ -781,17 +781,17 @@ function parse187()
         full_address.push(unit_no);
     }
 
-    var address = $(reportXML).find("PropertyProfile").find("SiteAddress").text();
+    var address = toTitleCase($(reportXML).find("PropertyProfile").find("SiteAddress").text());
     if(address)
     {
-        full_address.push(toTitleCase(address));
+        full_address.push(address);
     }
     
-    var city = $(reportXML).find("PropertyProfile").find("SiteCity").text();
+    var city = toTitleCase($(reportXML).find("PropertyProfile").find("SiteCity").text());
     
     if(city)
     {
-        full_address.push(toTitleCase(city));
+        full_address.push(city);
     }
     var property_full_add = full_address.join(', ');
     var state = $(reportXML).find("PropertyProfile").find("SiteState").text();
@@ -809,14 +809,14 @@ function parse187()
     }
 
     var apn = $(reportXML).find("PropertyProfile").find("APN").text();
-    var county = $(reportXML).find("SubjectValueInfo").find("CountyName").text();
+    var county = toTitleCase($(reportXML).find("SubjectValueInfo").find("CountyName").text());
     /*if(county)
     {
         getProductTypes(county,state);
     }*/
-    var legalDescription = $(reportXML).find("PropertyProfile").find("LegalBriefDescription").text();
+    var legalDescription = toTitleCase($(reportXML).find("PropertyProfile").find("LegalBriefDescription").text());
     legalDescription = legalDescription.replace(/\s\s+/g, ' ');
-    var usecode = $(reportXML).find("PropertyProfile").find("UseCode").text();
+    var usecode = toTitleCase($(reportXML).find("PropertyProfile").find("UseCode").text());
     $('#property-type').val(usecode);
     $('#property-zip').val(zip);
     $('#property-state').val(state);
@@ -870,7 +870,7 @@ function multipleResults(response)
     $('.search-result table > tbody').html('');
     $(response).find('Locations').children('Location').each(function(i) {
 
-        var address = toTitleCase($(this).find('Address').text());       
+        var address = $(this).find('Address').text();       
         apn = $(this).find('APN').text();
         apnInfo[apn] = {}
         var city = $(this).find('City').text();

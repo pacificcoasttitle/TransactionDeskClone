@@ -84,9 +84,9 @@ class Home extends MX_Controller {
 	        	$StreetAddress      = $this->input->post('StreetAddress');
 	        	$City      = $this->input->post('City');
 	        	$Zipcode      = $this->input->post('Zipcode');
-	        	$PropertyAddress      = strtolower($this->input->post('Property'));
+	        	$PropertyAddress      = $this->input->post('Property');
 
-	        	$SplitPropertyAddress = explode(' ', strtolower($PropertyAddress));
+	        	$SplitPropertyAddress = explode(' ',$PropertyAddress);
 
 				$StreetNumber = isset($SplitPropertyAddress[0]) && !empty($SplitPropertyAddress[0]) ? $SplitPropertyAddress[0] : '';
 
@@ -95,15 +95,15 @@ class Home extends MX_Controller {
 				$StreetName = isset($PrimaryStreetName) && !empty($PrimaryStreetName) ? implode(" ", $PrimaryStreetName) : '';
 
 	        	$PropertyState      = $this->input->post('property-state');
-	        	$PropertyCity      = strtolower($this->input->post('property-city'));
+	        	$PropertyCity      = $this->input->post('property-city');
 	        	$PropertyFips      = $this->input->post('property-fips');
 	        	$PropertyZip      = $this->input->post('property-zip');
-	        	$PropertyType      = strtolower($this->input->post('property-type'));
-	        	$FullProperty      = strtolower($this->input->post('FullProperty'));
+	        	$PropertyType      = $this->input->post('property-type');
+	        	$FullProperty      = $this->input->post('FullProperty');
 
 	        	$apn      = $this->input->post('apn');
-	        	$County      = strtolower($this->input->post('County'));
-	        	$LegalDescription      = strtolower($this->input->post('LegalDescription'));
+	        	$County      = $this->input->post('County');
+	        	$LegalDescription      = $this->input->post('LegalDescription');
 	        	$PrimaryOwner      = $this->input->post('PrimaryOwner');
 
 	        	$SplitName = explode(' ', $PrimaryOwner);
@@ -256,7 +256,7 @@ class Home extends MX_Controller {
 				/* Start place order at resware */
 				$place_order = array();
 
-				$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>strtolower($PropertyAddress), 'City'=> strtolower($PropertyCity), 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
+				$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>$PropertyAddress, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
 
 				if(strpos($ProductTypeTxt, 'Loan') !== false)
 				{
@@ -287,11 +287,11 @@ class Home extends MX_Controller {
 					$loan['LoanNumber'] = $LoanNumber;
 				}
 				$place_order['Loans'][] = $loan;
-				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> strtolower($PropertyCity), 'State'=> $PropertyState, 'County'=> strtolower($County), 'Zip'=>$PropertyZip);
+				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
 
 				$place_order['Note']['APN'] = $apn;
 				$place_order['Note']['parcel_id'] = $apn;
-				$place_order['Note']['legal_description'] = strtolower($LegalDescription);
+				$place_order['Note']['legal_description'] = $LegalDescription;
 
 				if (!empty($TitleOfficer)) {
 					$place_order['Note']['title_Officer'] = $titleOfficerName;
@@ -508,15 +508,15 @@ class Home extends MX_Controller {
 								'buyer_agent_id' => $BuyerAgentId,
 								'listing_agent_id' => $ListingAgentId,
 								'escrow_lender_id' => $EscrowLenderId,
-								'address' => strtolower($PropertyAddress),
-								'city' => strtolower($PropertyCity),
+								'address' => $PropertyAddress,
+								'city' => $PropertyCity,
 								'state' => $PropertyState,
 								'zip' => $PropertyZip,
 								'property_type' => $PropertyType,
-								'full_address' => strtolower($FullProperty),
+								'full_address' => $FullProperty,
 								'apn' => $apn,
-								'county' => strtolower($County),
-								'legal_description' => strtolower($LegalDescription),
+								'county' => $County,
+								'legal_description' => $LegalDescription,
 								'primary_owner' => $PrimaryOwner,
 								'secondary_owner' => $SecondaryOwner,
 								// 'additional_details'=> $sendermessage,
@@ -623,11 +623,11 @@ class Home extends MX_Controller {
 								'StreetAddress'=> $StreetAddress,
 								'City'=> $City,
 								'Zipcode'=> $Zipcode,
-								'PropertyAddress'=> strtolower($PropertyAddress),
-								'FullProperty'=> strtolower($FullProperty),
+								'PropertyAddress'=> $PropertyAddress,
+								'FullProperty'=> $FullProperty,
 								'APN'=> $apn,
-								'County'=> strtolower($County),
-								'LegalDescription'=> strtolower($LegalDescription),
+								'County'=> $County,
+								'LegalDescription'=> $LegalDescription,
 								'PrimaryOwner'=> $PrimaryOwner,
 								'SecondaryOwner'=> $SecondaryOwner,
 								'SalesRep'=> $salesRepName,
