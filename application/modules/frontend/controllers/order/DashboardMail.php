@@ -145,7 +145,7 @@ class DashboardMail extends MX_Controller {
             $response = json_decode($result,TRUE);
             $closing_fee_estimate_id = isset($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) && !empty($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) ? $response['ClosingFeeEstimate']['ClosingFeeEstimateID'] : '';
 
-            if(isset($response['ClosingFeeEstimate']['HUDFees']) && !empty(isset($response['ClosingFeeEstimate']['HUDFees'])))
+            /*if(isset($response['ClosingFeeEstimate']['HUDFees']) && !empty(isset($response['ClosingFeeEstimate']['HUDFees'])))
             {
                 
                 foreach ($response['ClosingFeeEstimate']['HUDFees'] as $key => $value) 
@@ -160,7 +160,7 @@ class DashboardMail extends MX_Controller {
                 {
                     $fees['GFE'][$k] = array('amount' => $v['Amount'], 'description' => $v['Description']);
                 }
-            }
+            }*/
 
             if(isset($response['ClosingFeeEstimate']['Premiums']) && !empty(isset($response['ClosingFeeEstimate']['Premiums'])))
             {
