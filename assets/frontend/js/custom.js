@@ -784,14 +784,14 @@ function parse187()
     var address = $(reportXML).find("PropertyProfile").find("SiteAddress").text();
     if(address)
     {
-        full_address.push(address);
+        full_address.push(toTitleCase(address));
     }
     
     var city = $(reportXML).find("PropertyProfile").find("SiteCity").text();
     
     if(city)
     {
-        full_address.push(city);
+        full_address.push(toTitleCase(city));
     }
     var property_full_add = full_address.join(', ');
     var state = $(reportXML).find("PropertyProfile").find("SiteState").text();

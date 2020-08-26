@@ -447,28 +447,28 @@ class Dashboard extends MX_Controller {
             $response = json_decode($result,TRUE);
             $closing_fee_estimate_id = isset($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) && !empty($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) ? $response['ClosingFeeEstimate']['ClosingFeeEstimateID'] : '';
 
-            if(isset($response['ClosingFeeEstimate']['HUDFees']) && !empty(isset($response['ClosingFeeEstimate']['HUDFees'])))
+            /*if(isset($response['ClosingFeeEstimate']['HUDFees']) && !empty(isset($response['ClosingFeeEstimate']['HUDFees'])))
             {
                 
                 foreach ($response['ClosingFeeEstimate']['HUDFees'] as $key => $value) 
                 {
                     $fees['HUDFees'][$key] = array('amount' => $value['Amount'], 'description' => $value['Description']);
                 }
-            }
+            }*/
 
-            if(isset($response['ClosingFeeEstimate']['GFE']) && !empty(isset($response['ClosingFeeEstimate']['GFE'])))
+            /*if(isset($response['ClosingFeeEstimate']['GFE']) && !empty(isset($response['ClosingFeeEstimate']['GFE'])))
             {
                 foreach ($response['ClosingFeeEstimate']['GFE'] as $k => $v) 
                 {
                     $fees['GFE'][$k] = array('amount' => $v['Amount'], 'description' => $v['Description']);
                 }
-            }
+            }*/
 
             if(isset($response['ClosingFeeEstimate']['Premiums']) && !empty(isset($response['ClosingFeeEstimate']['Premiums'])))
             {
                 foreach ($response['ClosingFeeEstimate']['Premiums'] as $k => $v) 
                 {
-                    $fees['Premiums'][] = array('amount' => $v, 'description' => $k);
+                    $fees['Title Fee'][] = array('amount' => $v, 'description' => $k);
                 }
             }
         }
