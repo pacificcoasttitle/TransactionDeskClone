@@ -870,7 +870,7 @@ function multipleResults(response)
     $('.search-result table > tbody').html('');
     $(response).find('Locations').children('Location').each(function(i) {
 
-        var address = $(this).find('Address').text();       
+        var address = toTitleCase($(this).find('Address').text());       
         apn = $(this).find('APN').text();
         apnInfo[apn] = {}
         var city = $(this).find('City').text();
