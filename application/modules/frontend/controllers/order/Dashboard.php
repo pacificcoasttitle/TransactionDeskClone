@@ -1754,6 +1754,7 @@ class Dashboard extends MX_Controller {
 	{
 		$userdata = $this->session->userdata('user');
 		$orderId = $this->input->post('orderId');
+		$this->load->library('order/resware');
 		if($orderId)
 		{
 			// echo "<pre>"; print_r($_POST); exit;
@@ -2859,6 +2860,7 @@ class Dashboard extends MX_Controller {
 	
 	public function update_order_details()
 	{
+		$this->load->library('order/resware');
 		/*$orderId = isset($_POST['orderId']) && !empty($_POST['orderId']) ? $_POST['orderId'] : '';
 		
 		if($orderId)
