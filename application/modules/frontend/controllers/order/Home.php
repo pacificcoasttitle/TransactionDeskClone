@@ -531,6 +531,7 @@ class Home extends MX_Controller {
 								'title_officer' => $TitleOfficer,
 								'sales_amount' => $SalesAmount,
 								'loan_amount' => $LoanAmount,
+								'loan_number' => $LoanNumber,
 								'transaction_type' => $TransactionTypeID,
 								'purchase_type' => $ProductTypeID,
 								'is_ccr' => $CCR,
