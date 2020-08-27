@@ -109,12 +109,6 @@ class DashboardMail extends MX_Controller {
         if(isset($loanAmount) && !empty($loanAmount))
         {
             $request['Loans'][]['LoanAmount'] = $loanAmount;
-            $condition = array(
-                'where' => array(
-                    'transaction_type' => 'loan',
-                    'status' => 1
-                )
-            );
         }
 
         $salesAmount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
@@ -125,11 +119,19 @@ class DashboardMail extends MX_Controller {
             $condition = array(
                 'where' => array(
                     'transaction_type' => 'sale',
-                    'status' => 1
+                    'pct_order_fees.status' => 1
                 )
             );
         }
-
+        else
+        {
+            $condition = array(
+                'where' => array(
+                    'transaction_type' => 'loan',
+                    'pct_order_fees.status' => 1
+                )
+            );
+        }
         $fees_data = json_encode($request);
         $this->load->library('order/resware');
 
@@ -167,7 +169,7 @@ class DashboardMail extends MX_Controller {
             {
                 foreach ($response['ClosingFeeEstimate']['Premiums'] as $k => $v) 
                 {
-                    $fees['Premiums'][] = array('amount' => $v, 'description' => $k);
+                    $fees['Title Fee'][] = array('amount' => $v, 'description' => $k);
                 }
             }
         }
@@ -176,7 +178,9 @@ class DashboardMail extends MX_Controller {
         {
             foreach ($feesInfo as $k => $v) 
             {
-                $fees['AdditionalFees'][] = array('amount' => $v['value'], 'description' => $v['name']);
+                // $fees['AdditionalFees'][] = array('amount' => $v['value'], 'description' => $v['name']);
+
+                $fees[$v['fee_type']][] = array('amount' => $v['value'], 'description' => $v['name']);
             }
         }
         $data['fees'] = $fees;
