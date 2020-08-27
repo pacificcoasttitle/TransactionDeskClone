@@ -613,8 +613,7 @@
 							{
 								var binaryData = res.data;
 								downloadFile(binaryData);
-							}							
-							/*generateProposedInsured(res.fileId);*/
+							}
 							location.reload(true);
 						}
 						else if(res.status == 'error')
@@ -631,7 +630,6 @@
 	    /* Lender autocomplete */
 	    
 	    $("#LenderCompany").autocomplete({
-	        // source: "php/usersearch.php",
 	        source: function(request, response) {
 	            $.ajax({
 	                url: base_url+'home/getDetailsByName',
@@ -665,16 +663,11 @@
 	        change: function( event, ui ) {
 	            if (ui.item == null)
 	            {
-	               /* $("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
-	                $("#LenderTelephone").val('').parent().removeClass('state-success').addClass('state-error');
-	                $("#LenderCompany").val('').parent().removeClass('state-success').addClass('state-error');
-	                $("#LenderId").val('');*/
 	            }
 	        }
 	    });
 
 	    $("#edit_LenderCompany").autocomplete({
-	        // source: "php/usersearch.php",
 	        source: function(request, response) {
 	            $.ajax({
 	                url: base_url+'home/getDetailsByName',
@@ -708,10 +701,6 @@
 	        change: function( event, ui ) {
 	            if (ui.item == null)
 	            {
-	               /* $("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
-	                $("#LenderTelephone").val('').parent().removeClass('state-success').addClass('state-error');
-	                $("#LenderCompany").val('').parent().removeClass('state-success').addClass('state-error');
-	                $("#LenderId").val('');*/
 	            }
 	        }
 	    });
@@ -814,7 +803,7 @@
 								var binaryData = res.data;
 								downloadFile(binaryData);
 							}							
-							/*generateProposedInsured(res.fileId);*/
+							
 							location.reload(true);	
 						}
 						else if(res.status == 'error')
@@ -846,72 +835,6 @@ function generateProposedInsured(fileId)
             },
             success: function(response) {
             	var res = JSON.parse(response);
-            	console.log(res);
-            	/*if(res.status == 'dataRequired')
-                {
-                	console.log(res);
-                	$('#orderId').val(res.data.orderId);
-                	$('#transaction_id').val(res.data.transaction_id);
-                	$('#property_id').val(res.data.property_id);
-                	$('#fileId').val(res.data.fileId);
-                	if(res.data.is_title_officer == 1)
-                	{
-                		$('#title-officer-section').css('display','none');
-                	}
-                	if(res.data.is_loan_number == 1)
-                	{
-                		$('#loan-number-section').css('display','none');
-                	}
-                	if(res.data.is_borrower == 1)
-                	{
-                		$('#borrower-section').css('display','none');
-                	}
-                	if(res.data.is_secondary_borrower == 1)
-                	{
-                		$('#secondary-borrower-section').css('display','none');
-                	}
-                	if(res.data.is_lender == 1)
-                	{
-                		$('#lender-section').css('display','none');
-                	}
-                	if(res.data.is_supplemental_report_date == 1)
-                	{
-                		$('#s-date-section').css('display','none');
-                	}
-                	if(res.data.is_preliminary_report_date == 1)
-                	{
-                		$('#p-date-section').css('display','none');
-                	}
-                    $('#lender_information').modal('show');
-                }
-                else
-                {
-                	if (navigator.msSaveBlob)
-                    {                       
-                        var csvData = base64toBlob(res.data,'application/octet-stream');
-                        var csvURL = navigator.msSaveBlob(csvData, 'ProposedInsured.pdf');
-                        var element = document.createElement('a');
-                        element.setAttribute('href', csvURL);
-                        element.setAttribute('download', 'ProposedInsured.pdf');
-                        element.style.display = 'none';
-                        document.body.appendChild(element);
-                        document.body.removeChild(element);
-                    }
-                    else
-                    {
-
-                        var csvURL = 'data:application/octet-stream;base64,'+res.data;
-                        var element = document.createElement('a');
-                        element.setAttribute('href', csvURL);
-                        element.setAttribute('download', 'ProposedInsured.pdf');
-                        element.style.display = 'none';
-                        document.body.appendChild(element);
-                        element.click();
-                        document.body.removeChild(element);
-                    }
-
-                    location.reload(true);
-                }*/
                 if(res.status == 'success') 
                 {
                 	if(res.orderDetails['is_escrow'] == 1 && (res.orderDetails['escrow_lender_id'] == null || res.orderDetails['escrow_lender_id'] == undefined || res.orderDetails['escrow_lender_id'].length == 0))
@@ -1047,27 +970,9 @@ function editInformation(fileId)
             	$('#page-preloader').css('display', 'none');
             	
             	var res = JSON.parse(response);
-            	console.log(res);
+            	
             	if(res.status == 'success')
                 {
-                	/*var loan_amount = res.loan_amount;
-                	var borrower = res.borrower;
-                	var secondary_borrower = res.secondary_borrower;
-                	var lenderName = res.lender;
-                	var property_id = res.property_id;
-                	var transaction_id = res.transaction_id;
-                	var fileId = res.fileId;
-                	var orderId = res.orderId;
-                	var escrow_lender_id = res.escrow_lender_id;
-                	$('#loan_amount').val(loan_amount);
-                	$('#primary_borrower').val(borrower);
-                	$('#edit_secondary_borrower').val(secondary_borrower);
-                	$('#edit_lender').val(lenderName);
-                	$('#edit_property_id').val(property_id);
-                	$('#edit_transaction_id').val(transaction_id);
-                	$('#edit_fileId').val(fileId);
-                	$('#edit_orderId').val(orderId);
-                	$('#edit_LenderId').val(escrow_lender_id);*/
                 	if(res.status == 'success') 
 	                {
 	                	if(res.orderDetails['is_escrow'] == 1)

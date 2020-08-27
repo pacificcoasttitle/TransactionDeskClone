@@ -156,6 +156,7 @@ class Order
             order_details.fnf_agent_id,
             order_details.fnf_document_id,
             order_details.cpl_document_name,
+            order_details.proposed_insured_document_name,
             property_details.id as property_id, 
             property_details.address, 
             property_details.full_address, 
