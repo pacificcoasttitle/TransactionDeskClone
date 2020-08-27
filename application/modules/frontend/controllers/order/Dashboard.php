@@ -442,23 +442,8 @@ class Dashboard extends MX_Controller {
 
 
         $endPoint = 'estimates/closingfees';
-        $user_data = array();
-        
-        if(isset($userdata['is_master']) && !empty($userdata['is_master']))
-        {
-        	$customerId = isset($orderDetails['customer_id']) && !empty($orderDetails['customer_id']) ? $orderDetails['customer_id'] : '';
-
-	        $condition = array(
-	            'id' => $customerId
-	        );
-	        $customerDetails = $this->home_model->get_customers($condition);
-
-        	$email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
-        	$password = isset($customerDetails['random_password']) && !empty($customerDetails['random_password']) ? $customerDetails['random_password'] : '';
-        	$user_data = array('email'=>$email_address,'password'=>$password);
-        }
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, array(), $orderId, 0);
-        $result = $this->resware->make_request('POST', $endPoint, $fees_data,$user_data);
+        $result = $this->resware->make_request('POST', $endPoint, $fees_data);
 
         $fees = array();
         if(isset($result) && !empty($result))
