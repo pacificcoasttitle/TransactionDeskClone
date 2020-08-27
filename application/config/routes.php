@@ -169,6 +169,9 @@ $route['create-cpl-for-natic-mail/:num'] = 'frontend/order/dashboardMail/createC
 $route['proposed-insured/:num'] = 'frontend/order/dashboardMail/proposedInsured';
 $route['getDetailsByName'] = 'frontend/order/dashboardMail/getDetailsByName';
 
+$route['generate-mail-proposed-insured'] = 'frontend/order/dashboardMail/generate_mail_proposed_insured';
+$route['add-mail-order-details'] = 'frontend/order/dashboardMail/add_mail_order_details';
+
 
 
 

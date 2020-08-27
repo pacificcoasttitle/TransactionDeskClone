@@ -16,6 +16,7 @@ class DashboardMail extends MX_Controller {
         $this->load->model('order/home_model');
 		$this->load->model('order/fees_model');
 		$this->load->library('order/resware');
+        $this->load->model('order/titleOfficer');
     }
 
     public function generateCplFromMail()
@@ -944,8 +945,32 @@ class DashboardMail extends MX_Controller {
 		$orderDetails = $this->order->get_order_details($fileId);
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
-		$data['action'] = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$orderDetails['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
-		$data['action'] .= '<a href="javascript:void(0);" onclick="editInformation('.$orderDetails['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
+		
+
+        if (!empty($orderDetails['proposed_insured_document_name'])) 
+        {
+            $file_id = $orderDetails['file_id'];
+            $documentName = $orderDetails['proposed_insured_document_name'];
+            
+
+            $action = '<a href="'.base_url().'/uploads/proposed-insured/'.$documentName.'" download><button class="btn btn-grad-2a button-color" type="button">Download</button></a>';
+        }
+        else
+        {
+            $action = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$orderDetails['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+        }
+
+		$action .= '<a href="javascript:void(0);" onclick="editInformation('.$orderDetails['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
+
+        $data['action'] = $action;
+        $condition = array(
+            'where' => array(
+                'status' => 1
+            )
+        );
+        
+        $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
+
         $this->load->view('layout/head_dashboard',$data);
         $this->load->view('order/mail_proposed_insured', $data);
 	}
@@ -1131,6 +1156,411 @@ class DashboardMail extends MX_Controller {
     		}
     	}
     	echo json_encode($userInfo);
+    }
+
+    public function generate_mail_proposed_insured()
+    {
+        $fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
+        $data['fileId'] = $fileId;
+
+        $orderDetails = $this->order->get_order_details($fileId);
+        $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+        $data['orderId'] = $orderId;
+        $transaction_id = isset($orderDetails['transaction_id']) && !empty($orderDetails['transaction_id']) ? $orderDetails['transaction_id'] : '';
+        $data['transaction_id'] = $transaction_id;
+        $property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] : '';
+        $data['property_id'] = $property_id;
+        $customer_id = isset($orderDetails['customer_id']) && !empty($orderDetails['customer_id']) ? $orderDetails['customer_id'] : '';
+
+        $this->load->model('order/home_model');
+        $customer_data =  $this->home_model->get_user(array('id' => $customer_id));
+
+        $data['company'] = isset($customer_data['company_name']) && !empty($customer_data['company_name']) ? $customer_data['company_name'] : '';
+    
+        $address = array();
+        $street_address = isset($customer_data['street_address']) && !empty($customer_data['street_address']) ? $customer_data['street_address'] : '';
+        if($street_address)
+        {
+            $address[] = $street_address;
+        }
+        $city = isset($customer_data['city']) && !empty($customer_data['city']) ? $customer_data['city'] : '';
+        if($city)
+        {
+            $address[] = $city;
+        }
+
+        $zip_code = isset($customer_data['zip_code']) && !empty($customer_data['zip_code']) ? $customer_data['zip_code'] : '';
+        if($zip_code)
+        {
+            $address[] = $zip_code;
+        }
+        $data['address'] = implode(', ', $address);
+        $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+        $data['property_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        $data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+        $data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+        $data['loan_number'] = isset($orderDetails['loan_number']) && !empty($orderDetails['loan_number']) ? $orderDetails['loan_number'] : '';
+        $data['title_officer']= isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer']) ? $orderDetails['title_officer'] : '';
+
+        if ($orderDetails['sales_amount'] > 0) 
+        {
+            if (!empty($orderDetails['borrower'])) {
+                $primary_owner = explode(' ', $orderDetails['borrower']);
+                $data['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
+                $data['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
+            } else {
+                $data['primary_owner_first_name'] = '';
+                $data['primary_owner_last_name'] = '';
+            }
+    
+            if (!empty($orderDetails['secondary_borrower'])) {
+                $secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
+                $data['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
+                $data['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+            } else {
+                $data['secondary_owner_first_name'] = '';
+                $data['secondary_owner_last_name'] = '';
+            }
+        } 
+        else 
+        {
+            if (!empty($orderDetails['primary_owner'])) {
+                $primary_owner = explode(' ', $orderDetails['primary_owner']);
+                $data['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
+                $data['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
+            } else {
+                $data['primary_owner_first_name'] = '';
+                $data['primary_owner_last_name'] = '';
+            }
+    
+            if (!empty($orderDetails['secondary_owner'])) {
+                $secondary_owner = explode(' ', $orderDetails['secondary_owner']);
+                $data['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
+                $data['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+            } else {
+                $data['secondary_owner_first_name'] = '';
+                $data['secondary_owner_last_name'] = '';
+            }
+        }
+        $s_report_date = date("m/d/Y",strtotime($orderDetails['supplemental_report_date']));
+
+        $data['supplemental_report_date']= isset($s_report_date) && !empty($s_report_date) ? $s_report_date : '';
+
+        $p_report_date = date("m/d/Y",strtotime($orderDetails['preliminary_report_date']));
+        $data['preliminary_report_date'] = isset($p_report_date) && !empty($p_report_date) ? $p_report_date : '';
+
+        $data['is_escrow'] = $customer_data['is_escrow'];
+        if($customer_data['is_escrow'] == 1 && !empty($orderDetails['escrow_lender_id']))
+        {           
+            $data['escrow_lender_id'] = $orderDetails['escrow_lender_id'];
+            $data['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
+            $data['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
+            $data['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
+            $data['lender_telephone_no'] = $orderDetails['lender_telephone_no'] ? $orderDetails['lender_telephone_no'] : '';
+            $data['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
+            $data['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
+            $data['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
+            $data['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+            $data['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
+        }
+        else
+        {
+            $data['escrow_lender_id'] = '';
+            $data['lender_first_name'] =  '';
+            $data['lender_last_name'] ='';
+            $data['lender_email'] = '';
+            $data['lender_telephone_no'] = '';
+            $data['lender_company_name'] = '';
+            $data['lender_address'] = '';
+            $data['lender_city'] = '';
+            $data['lender_zipcode'] = '';
+            $data['lender_id'] = '';
+        }
+
+        if(empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+            $data['lender_name'] = '';
+        } else if(empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+            $data['lender_name'] = $orderDetails['lender_last_name'];
+        } else if(!empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+            $data['lender_name'] = $orderDetails['lender_first_name'];
+        } else if(!empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+            $data['lender_name'] = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
+        }
+        
+        $response = array('status'=>'success', 'orderDetails' => $data);
+        echo json_encode($response); exit;
+    }
+
+    public function add_mail_order_details()
+    {
+        $orderId = $this->input->post('orderId');
+        $this->load->library('order/resware');
+
+        if($orderId)
+        {
+            $this->load->model('order/home_model');
+
+            $TitleOfficer = $this->input->post('TitleOfficer');
+            $loan_amount = $this->input->post('loan_amount');
+            $loan_number = $this->input->post('loan_number');
+            $primary_first_name = $this->input->post('primary_first_name');
+            $primary_last_name = $this->input->post('primary_last_name');
+            $primary_owner = $primary_first_name." ".$primary_last_name;
+            $secondary_first_name = $this->input->post('secondary_first_name');
+            $secondary_last_name = $this->input->post('secondary_last_name');
+            $secondaryOwner = $secondary_first_name." ".$secondary_last_name;
+            $name = explode(" ",$this->input->post('LenderName'));
+
+            $LenderId = $this->input->post('LenderId');
+            $transaction_id = $this->input->post('transaction_id');
+            $property_id = $this->input->post('property_id');
+            $fileId = $this->input->post('fileId');
+            $s_report_date = $this->input->post('s_report_date');
+            $p_report_date = $this->input->post('p_report_date');
+            $s_report_date = date("Y-m-d",strtotime($s_report_date));
+            $p_report_date = date("Y-m-d",strtotime($p_report_date));
+            
+            $orderDetails = $this->order->get_order_details($fileId);
+
+            if(isset($LenderId) && !empty($LenderId))
+            {
+                $lender_details = array(
+                    'first_name'    => $name[0],
+                    'last_name'  => !empty($name[1]) ? $name[1] : '',
+                    'telephone_no'  => !empty($this->input->post('LenderTelephone')) ? $this->input->post('LenderTelephone') : "",
+                    'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
+                    'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
+                    'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
+                    'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
+                    'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : ""
+                );
+                $condition = array(
+                    'id' => $LenderId
+                );
+                $this->home_model->update($lender_details, $condition, 'customer_basic_details');
+
+                if(empty($lender_details['first_name']) && empty($lender_details['lender_last_name'])) {
+                    $lender_details['lender_name'] = '';
+                } else if(empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
+                    $lender_details['lender_name'] = $lender_details['last_name'];
+                } else if(!empty($lender_details['first_name']) && empty($lender_details['last_name'])) {
+                    $lender_details['lender_name'] = $lender_details['first_name'];
+                } else if(!empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
+                    $lender_details['lender_name'] = $lender_details['first_name']." ".$lender_details['last_name'];
+                }
+                $lender_address = array();
+                $street_address = $this->input->post('LenderAddress');
+                if($street_address)
+                {
+                    $lender_address[] = $street_address;
+                }
+                $city = $this->input->post('LenderCity');
+                if($city)
+                {
+                    $lender_address[] = $city;
+                }
+
+                $lendeUser =  $this->home_model->get_user(array('id' => $LenderId));
+
+                $state = isset($lendeUser['state']) && !empty($lendeUser['state']) ? $lendeUser['state'] : '';
+
+                if($state)
+                {
+                    $lender_address[] = $state;
+                }
+
+                $zip_code = $this->input->post('LenderZipcode');
+                if($zip_code)
+                {
+                    $lender_address[] = $zip_code;
+                }
+
+                $pdfData['lender'] = array(
+                    'lender_name'=> $lender_details['lender_name'],
+                    'address'=> implode(', ', $lender_address),
+                    'company_name'=> $lender_details['company_name']
+                );
+            }
+            
+
+            $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+            
+            if ($orderDetails['sales_amount'] > 0) 
+            {
+                $propertyDetails = array('escrow_lender_id' => $LenderId);
+                
+                $property_update_flag = $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
+
+                $transaction_update_flag = $this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner,'title_officer'=>$TitleOfficer,'preliminary_report_date'=>$p_report_date,'supplemental_report_date'=>$s_report_date), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+            } 
+            else 
+            {
+                
+                $propertyDetails = array('escrow_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
+                
+                $property_update_flag = $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
+
+                $transaction_update_flag = $this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number,'title_officer'=>$TitleOfficer,'preliminary_report_date'=>$p_report_date,'supplemental_report_date'=>$s_report_date), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+            }
+
+            if($property_update_flag || $transaction_update_flag)
+            {
+                $orderDetails = $this->order->get_order_details($fileId);
+                
+                $pdfData['company'] = isset($orderUser['company_name']) && !empty($orderUser['company_name']) ? $orderUser['company_name'] : '';
+    
+                $address = array();
+                $street_address = isset($orderUser['street_address']) && !empty($orderUser['street_address']) ? $orderUser['street_address'] : '';
+                if($street_address)
+                {
+                    $address[] = $street_address;
+                }
+                $city = isset($orderUser['city']) && !empty($orderUser['city']) ? $orderUser['city'] : '';
+                if($city)
+                {
+                    $address[] = $city;
+                }
+
+                $zip_code = isset($orderUser['zip_code']) && !empty($orderUser['zip_code']) ? $orderUser['zip_code'] : '';
+                if($zip_code)
+                {
+                    $address[] = $zip_code;
+                }
+                $pdfData['address'] = implode(', ', $address);
+                $pdfData['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+                $pdfData['property_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+                $pdfData['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+                $pdfData['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+                $pdfData['loan_number'] = isset($orderDetails['loan_number']) && !empty($orderDetails['loan_number']) ? $orderDetails['loan_number'] : '';
+                
+                if(isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer']))
+                {
+                    if(preg_match('/\\d/', $orderDetails['title_officer']) > 0)
+                    {
+                        $condition = array(
+                            'id' => $orderDetails['title_officer'],
+                            'status' => 1
+                        );
+                        $titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition); 
+                    }
+                    else
+                    {
+                        $condition = array(
+                            'where' => array(
+                                'name' => $orderDetails['title_officer'],
+                                'status' => 1
+                            )
+                        );
+                        $officerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
+                        $titleOfficerDetails = isset($officerDetails[0]) && !empty($officerDetails[0]) ? $officerDetails[0] : array();
+                    }
+                
+                    $pdfData['title_officer'] = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';;
+                    $pdfData['title_officer_email'] = isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address']) ? $titleOfficerDetails['email_address'] : '';
+                    $pdfData['title_officer_phone'] = isset($titleOfficerDetails['phone']) && !empty($titleOfficerDetails['phone']) ? $titleOfficerDetails['phone'] : '';
+                }
+
+                if ($orderDetails['sales_amount'] > 0) 
+                {
+                    if (!empty($orderDetails['borrower'])) {
+                        $pdfData['primary_owner'] = $orderDetails['borrower'];
+                        
+                    } else {
+                        $pdfData['primary_owner'] =  '';
+                    }
+            
+                    if (!empty($orderDetails['secondary_borrower'])) 
+                    {
+                        $pdfData['secondary_owner'] = $orderDetails['secondary_borrower'];
+                    } else {
+                        $pdfData['secondary_owner'] = '';
+                    }   
+                } 
+                else 
+                {
+                    if (!empty($orderDetails['primary_owner'])) {
+                        $pdfData['primary_owner'] = $orderDetails['primary_owner'];
+                        
+                    } else {
+                        $pdfData['primary_owner'] = '';
+                    }
+                    
+                    if (!empty($orderDetails['secondary_owner'])) 
+                    {
+                        $pdfData['secondary_owner'] = $orderDetails['secondary_owner'];
+                    } else {
+                        $pdfData['secondary_owner'] = '';
+                    }
+                }
+
+                $pdfData['supplemental_report_date']= isset($orderDetails['supplemental_report_date']) && !empty($orderDetails['supplemental_report_date']) ? date("m/d/Y h:i:s A", strtotime($orderDetails['supplemental_report_date'])) : '';
+
+                $pdfData['preliminary_report_date'] = isset($orderDetails['preliminary_report_date']) && !empty($orderDetails['preliminary_report_date']) ? date("m/d/Y h:i:s A", strtotime($orderDetails['preliminary_report_date'])) : '';
+
+                $pdfData['underwriter'] = '';
+                $endPoint = 'files/'. $fileId .'/partners';
+                $logid = $this->apiLogs->syncLogs($orderUser['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+
+                if ($orderUser['is_master'] == 1) {
+                    // $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+                    $user_data['email'] = $orderUser['email_address'];
+                    $user_data['password'] = $orderUser['random_password'];
+                } else {
+                    $user_data = array();
+                }
+                $resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+                $this->apiLogs->syncLogs($orderUser['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+                $resPartners = json_decode($resultPartners, true);
+                if(!empty($resPartners)) {
+                    $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                    $pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
+                }
+
+                $html=$this->load->view('order/proposed_insured_pdf',$pdfData, true);
+                $this->load->library('m_pdf');
+                $this->m_pdf->pdf->WriteHTML($html);
+                $this->load->model('order/document');
+                $proposedDocumentCount = $this->document->countProposedInsuredDocument($orderDetails['order_id']);
+                $document_name = "proposed_".$proposedDocumentCount."_".$fileId.".pdf";
+
+                if (!is_dir('uploads/proposed-insured')) {
+                    mkdir('./uploads/proposed-insured', 0777, TRUE);
+                }
+
+                $pdfFilePath = './uploads/proposed-insured/'.$document_name;
+                $this->m_pdf->pdf->Output($pdfFilePath,'F');
+                $contents = file_get_contents($pdfFilePath);
+                $binaryData   = base64_encode($contents);       
+                // unlink($pdfFilePath);
+                $this->home_model->update(array('proposed_insured_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+
+                $fileSize = filesize('./uploads/proposed-insured/'.$document_name);
+                $documentData = array(
+                    'document_name' => $document_name,
+                    'original_document_name' => $document_name,
+                    'document_type_id' => 1031,
+                    'document_size' => $fileSize,
+                    'user_id' => $orderUser['id'],
+                    'order_id' => $orderDetails['order_id'],
+                    'description' => 'Proposed Insured Document',
+                    'is_sync' => 0,
+                    'is_prelim_document' => 0,
+                    'is_proposed_insured_doc' => 1
+                );
+                $documentId = $this->document->insert($documentData);
+
+                $data = array('status'=>'success','data'=>$binaryData);
+            }
+            else
+            {
+                $data = array('status'=>'error');
+            }
+        }
+        else
+        {
+            $data = array('status'=>'error');
+        }
+        echo json_encode($data); exit;
     }
     
 }
