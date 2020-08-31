@@ -82,7 +82,10 @@ class TitlePoint_model extends CI_Model
             if (!empty($lvLog) && $lvLog == 'success') {
                 $this->db->where('lv_file_status', $lvLog);
             } else if (!empty($lvLog) && $lvLog == 'error') {
-                $this->db->where('lv_file_status !=', 'success');
+                $this->db->group_start()
+                    ->where('lv_file_status !=', 'success')
+                    ->or_where('lv_file_status is null')
+                    ->group_end();
             }
             
             $this->db->where('file_id IS NOT NULL');
@@ -99,7 +102,10 @@ class TitlePoint_model extends CI_Model
             if (!empty($lvLog) && $lvLog == 'success') {
                 $this->db->where('lv_file_status', $lvLog);
             } else if (!empty($lvLog) && $lvLog == 'error') {
-                $this->db->where('lv_file_status !=', 'success');
+                $this->db->group_start()
+                    ->where('lv_file_status !=', 'success')
+                    ->or_where('lv_file_status is null')
+                    ->group_end();
             }
 
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
@@ -263,7 +269,10 @@ class TitlePoint_model extends CI_Model
             if (!empty($taxLog) && $taxLog == 'success') {
                 $this->db->where('tax_file_status', $taxLog);
             } else if (!empty($taxLog) && $taxLog == 'error') {
-                $this->db->where('tax_file_status !=', 'success');
+                $this->db->group_start()
+                    ->where('tax_file_status !=', 'success')
+                    ->or_where('tax_file_status is null')
+                    ->group_end();
             }
 
             $this->db->where('file_id IS NOT NULL');
@@ -286,7 +295,10 @@ class TitlePoint_model extends CI_Model
             if (!empty($taxLog) && $taxLog == 'success') {
                 $this->db->where('tax_file_status', $taxLog);
             } else if (!empty($taxLog) && $taxLog == 'error') {
-                $this->db->where('tax_file_status !=', 'success');
+                $this->db->group_start()
+                    ->where('tax_file_status !=', 'success')
+                    ->or_where('tax_file_status is null')
+                    ->group_end();
             }
 
             $this->db->order_by('file_number', 'desc');
@@ -368,9 +380,12 @@ class TitlePoint_model extends CI_Model
                 $this->db->like('file_number', $keyword);
             }
             if (!empty($grantLog) && $grantLog == 'success') {
-                $this->db->where('grant_deed_status', $grantLog);
+                $this->db->where('grant_deed_status', 'ok');
             } else if (!empty($grantLog) && $grantLog == 'error') {
-                $this->db->where('grant_deed_status !=', 'success');
+                $this->db->group_start()
+                    ->where('grant_deed_status !=', 'ok')
+                    ->or_where('grant_deed_status is null')
+                    ->group_end();  
             }
 
             $this->db->where('file_id IS NOT NULL');
@@ -385,9 +400,12 @@ class TitlePoint_model extends CI_Model
             }
 
             if (!empty($grantLog) && $grantLog == 'success') {
-                $this->db->where('grant_deed_status', $grantLog);
+                $this->db->where('grant_deed_status', 'ok');
             } else if (!empty($grantLog) && $grantLog == 'error') {
-                $this->db->where('grant_deed_status !=', 'success');
+                $this->db->group_start()
+                    ->where('grant_deed_status !=', 'ok')
+                    ->or_where('grant_deed_status is null')
+                    ->group_end();
             }
             if(isset($keyword) && !empty($keyword))
             {
