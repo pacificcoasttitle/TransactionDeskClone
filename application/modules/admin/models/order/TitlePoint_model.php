@@ -55,24 +55,13 @@ class TitlePoint_model extends CI_Model
     public function getLvLogs($params)
     {
         $this->db->where('file_id IS NOT NULL');
-       // $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
-        
-        /*if(array_key_exists("status", $params)){
-            foreach($params['status'] as $key => $val){
-                $this->db->where($key."!=", $val);
-            }
-        }*/
         $this->db->from($this->table);
         $total_records =  $this->db->count_all_results();
-
-
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        
-        
         $logs_lists =array();
-        if((isset($params['searchvalue']) && !empty($params['searchvalue'])) || (isset($params['dateRange']) && !empty($params['dateRange'])) || (isset($params['lvLog']) && !empty($params['lvLog'])))
-        {
+
+        if((isset($params['searchvalue']) && !empty($params['searchvalue'])) || (isset($params['dateRange']) && !empty($params['dateRange'])) || (isset($params['lvLog']) && !empty($params['lvLog']))) {
             $keyword = $params['searchvalue'];
             $dateRange = trim($params['dateRange']);
             $lvLog = $params['lvLog'];
@@ -91,9 +80,9 @@ class TitlePoint_model extends CI_Model
                 $this->db->like('file_number', $keyword);
             }
             if (!empty($lvLog) && $lvLog == 'success') {
-                $this->db->where(LOWER('cs4_message'), $lvLog);
+                $this->db->where('lv_file_status', $lvLog);
             } else if (!empty($lvLog) && $lvLog == 'success') {
-                $this->db->where(LOWER('cs4_message !='), 'success');
+                $this->db->where('lv_file_status !=', 'success');
             }
             
             $this->db->where('file_id IS NOT NULL');
@@ -108,9 +97,9 @@ class TitlePoint_model extends CI_Model
                 $this->db->where('created_at <=', $ymdEndDate);
             }
             if (!empty($lvLog) && $lvLog == 'success') {
-                $this->db->where(LOWER('cs4_message'), $lvLog);
+                $this->db->where('lv_file_status', $lvLog);
             } else if (!empty($lvLog) && $lvLog == 'success') {
-                $this->db->where(LOWER('cs4_message !='), 'success');
+                $this->db->where('lv_file_status !=', 'success');
             }
 
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
@@ -272,9 +261,9 @@ class TitlePoint_model extends CI_Model
                 $this->db->like('file_number', $keyword);
             }
             if (!empty($taxLog) && $taxLog == 'success') {
-                $this->db->where(LOWER('cs3_message'), $taxLog);
+                $this->db->where('tax_file_status', $taxLog);
             } else if (!empty($taxLog) && $taxLog == 'success') {
-                $this->db->where(LOWER('cs3_message !='), 'success');
+                $this->db->where('tax_file_status !=', 'success');
             }
 
             $this->db->where('file_id IS NOT NULL');
@@ -295,9 +284,9 @@ class TitlePoint_model extends CI_Model
             }
             
             if (!empty($taxLog) && $taxLog == 'success') {
-                $this->db->where(LOWER('cs3_message'), $taxLog);
+                $this->db->where('tax_file_status', $taxLog);
             } else if (!empty($taxLog) && $taxLog == 'success') {
-                $this->db->where(LOWER('cs3_message !='), 'success');
+                $this->db->where('tax_file_status !=', 'success');
             }
 
             $this->db->order_by('file_number', 'desc');
@@ -379,9 +368,9 @@ class TitlePoint_model extends CI_Model
                 $this->db->like('file_number', $keyword);
             }
             if (!empty($grantLog) && $grantLog == 'success') {
-                $this->db->where(LOWER('grant_deed_message'), $grantLog);
+                $this->db->where('grant_deed_status', $grantLog);
             } else if (!empty($grantLog) && $grantLog == 'success') {
-                $this->db->where(LOWER('grant_deed_message !='), 'success');
+                $this->db->where('grant_deed_status !=', 'success');
             }
 
             $this->db->where('file_id IS NOT NULL');
@@ -396,9 +385,9 @@ class TitlePoint_model extends CI_Model
             }
 
             if (!empty($grantLog) && $grantLog == 'success') {
-                $this->db->where(LOWER('grant_deed_message'), $grantLog);
+                $this->db->where('grant_deed_status', $grantLog);
             } else if (!empty($grantLog) && $grantLog == 'success') {
-                $this->db->where(LOWER('grant_deed_message !='), 'success');
+                $this->db->where('grant_deed_status !=', 'success');
             }
             if(isset($keyword) && !empty($keyword))
             {
