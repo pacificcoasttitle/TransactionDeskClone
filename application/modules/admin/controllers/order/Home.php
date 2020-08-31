@@ -27,8 +27,72 @@ class Home extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('order/home_model'); 
+        $this->load->model('order/order_model'); 
     }
     
+    public function index()
+    {
+        $this->is_admin();
+        $data = array();
+        // $data['title'] = 'PCT Order: Dashboard';
+        $orderData = $this->order_model->get_order_count();
+        $titlePointData = $this->order_model->get_title_point_count();
+        
+        $loanCount = $salesCount = $totalCount = 0;
+        if(isset($orderData) && !empty($orderData))
+        {
+            foreach ($orderData as $key => $value) 
+            {
+                if($value['type'] == 'Loan')
+                {
+                    $loanCount = $value['total'];
+                    $totalCount += $loanCount;
+                }
+                if($value['type'] == 'Sale')
+                {
+                    $salesCount = $value['total'];
+                    $totalCount += $salesCount;
+                }
+            }
+        }
+        $lvCount = $grantDeedCount = $taxCount = $totalFailCount = 0;
+        if(isset($titlePointData) && !empty($titlePointData))
+        {
+            foreach ($titlePointData as $key => $value) 
+            {
+                if($value['type'] == 'lv_fail_count')
+                {
+                    $lvCount = $value['total'];
+                    $totalFailCount += $lvCount;
+                }
+                if($value['type'] == 'grant_deed_fail_count')
+                {
+                    $grantDeedCount = $value['total'];
+                    $totalFailCount += $grantDeedCount;
+                }
+                if($value['type'] == 'tax_fail_count')
+                {
+                    $taxCount = $value['total'];
+                    $totalFailCount += $taxCount;
+                }
+            }
+        }
+        $data = array(
+            'title' => 'PCT Order: Dashboard',
+            'loanCount' => $loanCount,
+            'salesCount' => $salesCount,
+            'totalCount' => $totalCount,
+            'lvCount' => $lvCount,
+            'grantDeedCount' => $grantDeedCount,
+            'taxCount' => $taxCount,
+            'totalFailCount' => $totalFailCount
+        );
+        
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/index', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
 	public function login()
 	{
         $data = array();
@@ -94,7 +158,7 @@ class Home extends MX_Controller {
     {
         $this->is_admin();
     	$data = array();
-        $data['title'] = 'PCT Order: Dashboard';
+        $data['title'] = 'PCT Order: Escrow';
 		$this->load->view('order/layout/header', $data);
         $this->load->view('order/home/dashboard', $data);
         $this->load->view('order/layout/footer', $data);
