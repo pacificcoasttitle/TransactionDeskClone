@@ -470,7 +470,9 @@ class TitlePoint extends MX_Controller {
 		            $fips = isset($result['Result']['Fips']) && !empty($result['Result']['Fips']) ? $result['Result']['Fips'] : '';
 		            
 		            $legal_vesting_info = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'] : array();
-		            
+		            echo "<pre>"; print_r($legal_vesting_info);
+		            echo "<pre>"; print_r(count($legal_vesting_info));
+		            echo "<pre>"; print_r(count($legal_vesting_info, COUNT_RECURSIVE)); exit;
 		            if (count($legal_vesting_info) == count($legal_vesting_info, COUNT_RECURSIVE))
 		            {
 		            	$docType = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType'] : '';
