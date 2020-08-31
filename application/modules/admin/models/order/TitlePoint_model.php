@@ -71,28 +71,46 @@ class TitlePoint_model extends CI_Model
         
         
         $logs_lists =array();
-        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
+        if((isset($params['searchvalue']) && !empty($params['searchvalue'])) || (isset($params['dateRange']) && !empty($params['dateRange'])) || (isset($params['lvLog']) && !empty($params['lvLog'])))
         {
             $keyword = $params['searchvalue'];
-
-            if(isset($keyword) && !empty($keyword))
-            {
+            $dateRange = trim($params['dateRange']);
+            $lvLog = $params['lvLog'];
+            $ymdStartDate = '';
+            $ymdEndDate = '';
+            if (!empty($dateRange)) {
+                $dateRangeArr = explode(' - ', $dateRange);
+                $startDate = $dateRangeArr[0];
+                $endDate = $dateRangeArr[1];
+                $ymdStartDate = date("Y-m-d 00:00:00", strtotime($startDate));
+                $ymdEndDate = date("Y-m-d 23:59:59", strtotime($endDate));
+                $this->db->where('created_at >=', $ymdStartDate);
+                $this->db->where('created_at <=', $ymdEndDate);
+            }
+            if(isset($keyword) && !empty($keyword)) {
                 $this->db->like('file_number', $keyword);
             }
-            /*if(array_key_exists("status", $params)){
-                foreach($params['status'] as $key => $val){
-                    $this->db->where($key."!=", $val);
-                }
-            }*/
+            if (!empty($lvLog) && $lvLog == 'success') {
+                $this->db->where(LOWER('cs4_message'), $lvLog);
+            } else if (!empty($lvLog) && $lvLog == 'success') {
+                $this->db->where(LOWER('cs4_message !='), 'success');
+            }
+            
             $this->db->where('file_id IS NOT NULL');
-            // $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');    
             $this->db->from($this->table);
             $filter_total_records =  $this->db->count_all_results();
 
-
-            if(isset($keyword) && !empty($keyword))
-            {
+            if(isset($keyword) && !empty($keyword)) {
                 $this->db->like('file_number', $keyword);
+            }
+            if(isset($dateRange) && !empty($dateRange)) {
+                $this->db->where('created_at >=', $ymdStartDate);
+                $this->db->where('created_at <=', $ymdEndDate);
+            }
+            if (!empty($lvLog) && $lvLog == 'success') {
+                $this->db->where(LOWER('cs4_message'), $lvLog);
+            } else if (!empty($lvLog) && $lvLog == 'success') {
+                $this->db->where(LOWER('cs4_message !='), 'success');
             }
 
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
@@ -220,6 +238,7 @@ class TitlePoint_model extends CI_Model
 
     public function getTaxLogs($params)
     {
+        //print_r($params);exit;
         $this->db->where('file_id IS NOT NULL');
        // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
         
@@ -232,42 +251,67 @@ class TitlePoint_model extends CI_Model
         
         
         $logs_lists =array();
-        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
+        if((isset($params['searchvalue']) && !empty($params['searchvalue'])) || (isset($params['dateRange']) && !empty($params['dateRange'])) || (isset($params['taxLog']) && !empty($params['taxLog'])))
         {
+           
             $keyword = $params['searchvalue'];
-
-            if(isset($keyword) && !empty($keyword))
-            {
+            $dateRange = trim($params['dateRange']);
+            $taxLog = $params['taxLog'];
+            $ymdStartDate = '';
+            $ymdEndDate = '';
+            if (!empty($dateRange)) {
+                $dateRangeArr = explode(' - ', $dateRange);
+                $startDate = $dateRangeArr[0];
+                $endDate = $dateRangeArr[1];
+                $ymdStartDate = date("Y-m-d 00:00:00", strtotime($startDate));
+                $ymdEndDate = date("Y-m-d 23:59:59", strtotime($endDate));
+                $this->db->where('created_at >=', $ymdStartDate);
+                $this->db->where('created_at <=', $ymdEndDate);
+            }
+            if(isset($keyword) && !empty($keyword)) {
                 $this->db->like('file_number', $keyword);
+            }
+            if (!empty($taxLog) && $taxLog == 'success') {
+                $this->db->where(LOWER('cs3_message'), $taxLog);
+            } else if (!empty($taxLog) && $taxLog == 'success') {
+                $this->db->where(LOWER('cs3_message !='), 'success');
             }
 
             $this->db->where('file_id IS NOT NULL');
-            // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
-
             $this->db->from($this->table);
             $filter_total_records =  $this->db->count_all_results();
-
-
-            if(isset($keyword) && !empty($keyword))
-            {
-                $this->db->like('file_number', $keyword);
-            }
-
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
             {
                 $this->db->limit($limit, $offset);
             }
+
+            if (!empty($dateRange)) {
+                $this->db->where('created_at >=', $ymdStartDate);
+                $this->db->where('created_at <=', $ymdEndDate);
+            }
+
+            if(isset($keyword) && !empty($keyword)) {
+                $this->db->like('file_number', $keyword);
+            }
+            
+            if (!empty($taxLog) && $taxLog == 'success') {
+                $this->db->where(LOWER('cs3_message'), $taxLog);
+            } else if (!empty($taxLog) && $taxLog == 'success') {
+                $this->db->where(LOWER('cs3_message !='), 'success');
+            }
+
             $this->db->order_by('file_number', 'desc');
             
             $this->db->where('file_id IS NOT NULL');
-            // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+            
 
             $query = $this->db->get($this->table);
-
+           
             if ($query->num_rows() > 0) 
             {
                 $logs_lists = $query->result_array();
             }
+            
         }
         else
         {
@@ -315,13 +359,29 @@ class TitlePoint_model extends CI_Model
         
         
         $logs_lists =array();
-        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
+        if((isset($params['searchvalue']) && !empty($params['searchvalue'])) || (isset($params['dateRange']) && !empty($params['dateRange'])) || (isset($params['grantLog']) && !empty($params['grantLog'])))
         {
             $keyword = $params['searchvalue'];
-
-            if(isset($keyword) && !empty($keyword))
-            {
+            $dateRange = trim($params['dateRange']);
+            $grantLog = $params['grantLog'];
+            $ymdStartDate = '';
+            $ymdEndDate = '';
+            if (!empty($dateRange)) {
+                $dateRangeArr = explode(' - ', $dateRange);
+                $startDate = $dateRangeArr[0];
+                $endDate = $dateRangeArr[1];
+                $ymdStartDate = date("Y-m-d 00:00:00", strtotime($startDate));
+                $ymdEndDate = date("Y-m-d 23:59:59", strtotime($endDate));
+                $this->db->where('created_at >=', $ymdStartDate);
+                $this->db->where('created_at <=', $ymdEndDate);
+            }
+            if(isset($keyword) && !empty($keyword)) {
                 $this->db->like('file_number', $keyword);
+            }
+            if (!empty($grantLog) && $grantLog == 'success') {
+                $this->db->where(LOWER('grant_deed_message'), $grantLog);
+            } else if (!empty($grantLog) && $grantLog == 'success') {
+                $this->db->where(LOWER('grant_deed_message !='), 'success');
             }
 
             $this->db->where('file_id IS NOT NULL');
@@ -330,7 +390,16 @@ class TitlePoint_model extends CI_Model
             $this->db->from($this->table);
             $filter_total_records =  $this->db->count_all_results();
 
+            if (!empty($dateRange)) {
+                $this->db->where('created_at >=', $ymdStartDate);
+                $this->db->where('created_at <=', $ymdEndDate);
+            }
 
+            if (!empty($grantLog) && $grantLog == 'success') {
+                $this->db->where(LOWER('grant_deed_message'), $grantLog);
+            } else if (!empty($grantLog) && $grantLog == 'success') {
+                $this->db->where(LOWER('grant_deed_message !='), 'success');
+            }
             if(isset($keyword) && !empty($keyword))
             {
                 $this->db->like('file_number', $keyword);

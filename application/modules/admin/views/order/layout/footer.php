@@ -22,6 +22,8 @@
   <!-- <script src="<?php // echo base_url(); ?>assets/backend/vendor/jquery/jquery.min.js"></script> -->
   <!-- <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script> -->
   <script src="<?php echo base_url(); ?>assets/backend/js/jquery.validate.min.js"></script>
+  <script src="<?php echo base_url(); ?>assets/backend/js/moment.js"></script>
+  <script src="<?php echo base_url(); ?>assets/backend/js/daterangepicker.js"></script>
   <script src="<?php echo base_url(); ?>assets/backend/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->

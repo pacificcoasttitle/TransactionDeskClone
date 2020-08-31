@@ -1,7 +1,19 @@
 <style>
-.dataTables_length {
-    width: 250px !important;
-    float: left;
+
+.date-range-control {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 0.2rem;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    width: 230px;
+    display: inline-block;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: left;
 }
 </style>
 <div class="container-fluid">
@@ -38,3 +50,4 @@
         </div>
     </div>
 </div><!-- /.container-fluid -->
+

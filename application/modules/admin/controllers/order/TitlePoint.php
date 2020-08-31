@@ -36,6 +36,8 @@ class TitlePoint extends MX_Controller {
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['lvLog'] = isset($_POST['lvLog']) && !empty($_POST['lvLog']) ? $_POST['lvLog'] : '';
             // $params['status']['cs4_result_id_status'] = 'Success';
 
             $pageno = ($params['start'] / $params['length'])+1;
@@ -49,6 +51,8 @@ class TitlePoint extends MX_Controller {
         else
         {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['lvLog'] = isset($_POST['lvLog']) && !empty($_POST['lvLog']) ? $_POST['lvLog'] : '';
             $logs_list = $this->titlePoint_model->getLvLogs($params);          
         }
         $data = array();
@@ -161,7 +165,8 @@ class TitlePoint extends MX_Controller {
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
-            // $params['status']['cs4_result_id_status'] = 'Success';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['taxLog'] = isset($_POST['taxLog']) && !empty($_POST['taxLog']) ? $_POST['taxLog'] : '';
 
             $pageno = ($params['start'] / $params['length'])+1;
 
@@ -174,6 +179,8 @@ class TitlePoint extends MX_Controller {
         else
         {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['taxLog'] = isset($_POST['taxLog']) && !empty($_POST['taxLog']) ? $_POST['taxLog'] : '';
             $logs_list = $this->titlePoint_model->getTaxLogs($params);          
         }
         $data = array(); 
@@ -280,7 +287,8 @@ class TitlePoint extends MX_Controller {
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
-
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['grantLog'] = isset($_POST['grantLog']) && !empty($_POST['grantLog']) ? $_POST['grantLog'] : '';
             $pageno = ($params['start'] / $params['length'])+1;
 
             $logs_list = $this->titlePoint_model->getGrantDeedLogs($params);
@@ -292,6 +300,8 @@ class TitlePoint extends MX_Controller {
         else
         {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['grantLog'] = isset($_POST['grantLog']) && !empty($_POST['grantLog']) ? $_POST['grantLog'] : '';
             $logs_list = $this->titlePoint_model->getGrantDeedLogs($params);          
         }
         $data = array(); 
