@@ -36,7 +36,7 @@
 
   <!-- Custom scripts for all pages-->
   <script src="<?php echo base_url(); ?>assets/backend/js/sb-admin.min.js"></script>
-  <script src="<?php echo base_url(); ?>assets/backend/js/custom.js"></script>
+  <script src="<?php echo base_url(); ?>assets/backend/js/custom.js?random=<?php echo uniqid(); ?>"></script>
 </body>
 
 </html>
