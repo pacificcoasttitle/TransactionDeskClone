@@ -846,7 +846,29 @@ $(document).ready(function () {
                 },
                 "emptyTable": "Record(s) not found.",
             },
+            "dom": '<"row"<"col-sm-12"<"text-left"f>>><"row"<"col-sm-12"rt>><"row"<"col-sm-12"l><"col-sm-5"i><"col-sm-7"p>><"clear">',
             initComplete: function() {
+                    var input = $('.dataTables_filter input').unbind(),
+                    self = this.api(),
+                    $lvLogDropDown = $('<span style="margin-left:20px;">Message: </span><select style="width:auto;" id="lvLog" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="success">Success</option><option value="error">Error</option></select>'),
+                    $lvLogDateRange = $('<span style="margin-left:20px;" class="date-range-span">Created Date: </span><div id="lvDateRangeControl" class="date-range-control"><i class="fa fa-calendar"></i>&nbsp;<span></span> <i class="fa fa-caret-down float-right"></i><input type="hidden" id="lvDateRange" /></div>'),
+                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    .text('Search')
+                    .click(function () {
+                        self.search(input.val(), $('#customerDateRange').val()).draw();
+                    }),
+                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    .text('Clear')
+                    .click(function () {
+                        input.val('');
+                        $("#lvLog").val('');
+                        $('#lvDateRangeControl span').html('');
+                        $('#lvDateRange').val('');
+                        $searchButton.click();
+                    })
+                    
+                    $('.dataTables_filter').append($lvLogDropDown, $lvLogDateRange, $searchButton, $clearButton);
+                    
             },
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
@@ -858,6 +880,10 @@ $(document).ready(function () {
             "ajax": {                
                 url: base_url+"admin/order/titlePoint/get_logs", // json datasource
                 type: "post", // method  , by default get
+                "data": function (d) {
+                    d.dateRange = $('#lvDateRange').val();
+                    d.lvLog = $('#lvLog').val();
+                }, 
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -874,6 +900,47 @@ $(document).ready(function () {
             },
                         
         });
+
+        setTimeout(function () {
+            var start = moment().startOf('month')
+            var end = moment();
+
+            function cb(start, end) {
+                $('#lvDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                $('#lvDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+            }
+
+            var dateRange = $('#lvDateRangeControl').daterangepicker({
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear'
+                },
+                opens: 'right',
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            dateRange.on('apply.daterangepicker', function (ev, picker) {
+                $('#lvDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                $('#lvDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+            });
+
+            dateRange.on('cancel.daterangepicker', function (ev, picker) {
+                $('#lvDateRangeControl span').html('');
+                $('#lvDateRange').val('');
+            });
+
+            //cb(start, end);
+
+        }, 1000);
     }
 
     if($('#refresh-data').length)
@@ -1490,7 +1557,29 @@ $(document).ready(function () {
                 },
                 "emptyTable": "Record(s) not found.",
             },
+            "dom": '<"row"<"col-sm-12"<"text-left"f>>><"row"<"col-sm-12"rt>><"row"<"col-sm-12"l><"col-sm-5"i><"col-sm-7"p>><"clear">',
             initComplete: function() {
+                    var input = $('.dataTables_filter input').unbind(),
+                    self = this.api(),
+                    $taxLogDropDown = $('<span style="margin-left:20px;">Message: </span><select style="width:auto;" id="taxLog" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="success">Success</option><option value="error">Error</option></select>'),
+                    $taxLogDateRange = $('<span style="margin-left:20px;" class="date-range-span">Created Date: </span><div id="taxDateRangeControl" class="date-range-control"><i class="fa fa-calendar"></i>&nbsp;<span></span> <i class="fa fa-caret-down float-right"></i><input type="hidden" id="taxDateRange" /></div>'),
+                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    .text('Search')
+                    .click(function () {
+                        self.search(input.val(), $('#customerDateRange').val()).draw();
+                    }),
+                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    .text('Clear')
+                    .click(function () {
+                        input.val('');
+                        $("#taxLog").val('');
+                        $('#taxDateRangeControl span').html('');
+                        $('#taxDateRange').val('');
+                        $searchButton.click();
+                    })
+                    
+                    $('.dataTables_filter').append($taxLogDropDown, $taxLogDateRange, $searchButton, $clearButton);
+                    
             },
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
@@ -1501,7 +1590,11 @@ $(document).ready(function () {
             "serverSide": true,
             "ajax": {                
                 url: base_url+"admin/order/titlePoint/get_tax_logs", // json datasource
-                type: "post", // method  , by default get
+                type: "post",
+                "data": function (d) {
+                    d.dateRange = $('#taxDateRange').val();
+                    d.taxLog = $('#taxLog').val();
+                }, 
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -1518,6 +1611,47 @@ $(document).ready(function () {
             },
                         
         });
+
+        setTimeout(function () {
+            var start = moment().startOf('month')
+            var end = moment();
+
+            function cb(start, end) {
+                $('#taxDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                $('#taxDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+            }
+
+            var dateRange = $('#taxDateRangeControl').daterangepicker({
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear'
+                },
+                opens: 'right',
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            dateRange.on('apply.daterangepicker', function (ev, picker) {
+                $('#taxDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                $('#taxDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+            });
+
+            dateRange.on('cancel.daterangepicker', function (ev, picker) {
+                $('#taxDateRangeControl span').html('');
+                $('#taxDateRange').val('');
+            });
+
+            //cb(start, end);
+
+        }, 1000);
     }
     /* Tax logs */
 
@@ -1628,7 +1762,29 @@ $(document).ready(function () {
                 },
                 "emptyTable": "Record(s) not found.",
             },
+            "dom": '<"row"<"col-sm-12"<"text-left"f>>><"row"<"col-sm-12"rt>><"row"<"col-sm-12"l><"col-sm-5"i><"col-sm-7"p>><"clear">',
             initComplete: function() {
+                    var input = $('.dataTables_filter input').unbind(),
+                    self = this.api(),
+                    $grantLogDropDown = $('<span style="margin-left:20px;">Message: </span><select style="width:auto;" id="grantLog" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="success">Success</option><option value="error">Error</option></select>'),
+                    $grantLogDateRange = $('<span style="margin-left:20px;" class="date-range-span">Created Date: </span><div id="grantDateRangeControl" class="date-range-control"><i class="fa fa-calendar"></i>&nbsp;<span></span> <i class="fa fa-caret-down float-right"></i><input type="hidden" id="grantDateRange" /></div>'),
+                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    .text('Search')
+                    .click(function () {
+                        self.search(input.val(), $('#customerDateRange').val()).draw();
+                    }),
+                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    .text('Clear')
+                    .click(function () {
+                        input.val('');
+                        $("#grantLog").val('');
+                        $('#grantDateRangeControl span').html('');
+                        $('#grantDateRange').val('');
+                        $searchButton.click();
+                    })
+                    
+                    $('.dataTables_filter').append($grantLogDropDown, $grantLogDateRange, $searchButton, $clearButton);
+                    
             },
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
@@ -1640,6 +1796,10 @@ $(document).ready(function () {
             "ajax": {                
                 url: base_url+"admin/order/titlePoint/get_grant_deed_logs", // json datasource
                 type: "post", // method  , by default get
+                "data": function (d) {
+                    d.dateRange = $('#grantDateRange').val();
+                    d.grantLog = $('#grantLog').val();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -1656,6 +1816,47 @@ $(document).ready(function () {
             },
                         
         });
+
+        setTimeout(function () {
+            var start = moment().startOf('month')
+            var end = moment();
+
+            function cb(start, end) {
+                $('#grantDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                $('#grantDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+            }
+
+            var dateRange = $('#grantDateRangeControl').daterangepicker({
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear'
+                },
+                opens: 'right',
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            dateRange.on('apply.daterangepicker', function (ev, picker) {
+                $('#grantDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                $('#grantDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+            });
+
+            dateRange.on('cancel.daterangepicker', function (ev, picker) {
+                $('#grantDateRangeControl span').html('');
+                $('#grantDateRange').val('');
+            });
+
+            //cb(start, end);
+
+        }, 1000);
     }
     /* Grant deed logs */
 

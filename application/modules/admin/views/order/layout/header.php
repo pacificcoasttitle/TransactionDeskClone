@@ -21,6 +21,7 @@
   <!-- Custom styles for this template-->
   <link href="<?php echo base_url(); ?>assets/backend/css/sb-admin.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>assets/backend/css/custom.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>assets/backend/css/daterangepicker.css" rel="stylesheet">
   <script>
         var base_url = "<?php echo base_url(); ?>";
   </script>
