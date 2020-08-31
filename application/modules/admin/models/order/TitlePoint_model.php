@@ -81,7 +81,7 @@ class TitlePoint_model extends CI_Model
             }
             if (!empty($lvLog) && $lvLog == 'success') {
                 $this->db->where('lv_file_status', $lvLog);
-            } else if (!empty($lvLog) && $lvLog == 'success') {
+            } else if (!empty($lvLog) && $lvLog == 'error') {
                 $this->db->where('lv_file_status !=', 'success');
             }
             
@@ -98,7 +98,7 @@ class TitlePoint_model extends CI_Model
             }
             if (!empty($lvLog) && $lvLog == 'success') {
                 $this->db->where('lv_file_status', $lvLog);
-            } else if (!empty($lvLog) && $lvLog == 'success') {
+            } else if (!empty($lvLog) && $lvLog == 'error') {
                 $this->db->where('lv_file_status !=', 'success');
             }
 
@@ -262,7 +262,7 @@ class TitlePoint_model extends CI_Model
             }
             if (!empty($taxLog) && $taxLog == 'success') {
                 $this->db->where('tax_file_status', $taxLog);
-            } else if (!empty($taxLog) && $taxLog == 'success') {
+            } else if (!empty($taxLog) && $taxLog == 'error') {
                 $this->db->where('tax_file_status !=', 'success');
             }
 
@@ -285,7 +285,7 @@ class TitlePoint_model extends CI_Model
             
             if (!empty($taxLog) && $taxLog == 'success') {
                 $this->db->where('tax_file_status', $taxLog);
-            } else if (!empty($taxLog) && $taxLog == 'success') {
+            } else if (!empty($taxLog) && $taxLog == 'error') {
                 $this->db->where('tax_file_status !=', 'success');
             }
 
@@ -369,7 +369,7 @@ class TitlePoint_model extends CI_Model
             }
             if (!empty($grantLog) && $grantLog == 'success') {
                 $this->db->where('grant_deed_status', $grantLog);
-            } else if (!empty($grantLog) && $grantLog == 'success') {
+            } else if (!empty($grantLog) && $grantLog == 'error') {
                 $this->db->where('grant_deed_status !=', 'success');
             }
 
@@ -386,7 +386,7 @@ class TitlePoint_model extends CI_Model
 
             if (!empty($grantLog) && $grantLog == 'success') {
                 $this->db->where('grant_deed_status', $grantLog);
-            } else if (!empty($grantLog) && $grantLog == 'success') {
+            } else if (!empty($grantLog) && $grantLog == 'error') {
                 $this->db->where('grant_deed_status !=', 'success');
             }
             if(isset($keyword) && !empty($keyword))
