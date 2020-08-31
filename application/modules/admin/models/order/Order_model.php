@@ -253,4 +253,74 @@ class Order_model extends CI_Model
         
         return $query->row_array();
     }
+
+    public function get_order_count()
+    {
+        $this->db->select('COUNT(*) AS total,
+            (
+                CASE
+                  WHEN pct_order_product_types.product_type LIKE "%Loan:%"
+                  THEN "Loan"
+                  WHEN pct_order_product_types.product_type LIKE "%Sale:%" 
+                  THEN "Sale" 
+                END
+            ) AS type')
+        ->from('order_details')
+        ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+        ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
+        ->where('is_imported=0')
+        ->group_by('(
+                        CASE
+                          WHEN pct_order_product_types.product_type LIKE "%Loan:%"
+                          THEN "Loan"
+                          WHEN pct_order_product_types.product_type LIKE "%Sale:%" 
+                          THEN "Sale" 
+                        END
+                    )');
+
+        $query = $this->db->get();
+        $orders_data = array();
+        if ($query->num_rows() > 0)  
+        {
+            $orders_data = $query->result_array();         
+        }
+
+        return $orders_data;
+    }
+
+    public function get_title_point_count()
+    {
+        $this->db->select("COUNT(*) AS total,
+            (
+                CASE
+                  WHEN lv_file_message IS NULL OR lv_file_message = ' '
+                  THEN 'lv_fail_count' 
+                  WHEN tax_file_message IS NULL OR tax_file_message = ' '
+                  THEN 'tax_fail_count' 
+                  WHEN grant_deed_status = 'Failed'
+                  THEN 'grant_deed_fail_count'
+                END
+            ) AS type")
+        ->from('pct_order_title_point_data')
+        ->group_by("(
+                        CASE
+                          WHEN lv_file_message IS NULL OR lv_file_message = ' '
+                          THEN 'lv_fail_count' 
+                          WHEN tax_file_message IS NULL OR tax_file_message = ' '
+                          THEN 'tax_fail_count' 
+                          WHEN grant_deed_status = 'Failed'
+                          THEN 'grant_deed_fail_count'
+                        END
+                    )"
+                );
+
+        $query = $this->db->get();
+        $title_point_data = array();
+        if ($query->num_rows() > 0)  
+        {
+            $title_point_data = $query->result_array();         
+        }
+
+        return $title_point_data;
+    }
 }

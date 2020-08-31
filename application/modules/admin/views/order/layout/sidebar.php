@@ -1,4 +1,11 @@
 <ul class="sidebar navbar-nav">
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/dashboard' || $this->uri->segment(3) == 'order-details') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/dashboard'; ?>">
+			<i class="fas fa fa-dashboard"></i>
+			<span>Dashboard</span>
+		</a>
+	</li>
+
 	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/orders' || $this->uri->segment(3) == 'order-details') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'order/admin/orders'; ?>">
 			<i class="fas fa-fw fa-list"></i>
@@ -12,7 +19,7 @@
 			<span>Users</span>
         </a>
 		<div class="dropdown-menu" aria-labelledby="usersDropdown" id="users">
-			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/dashboard' || $this->uri->uri_string() == 'order/admin/import') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/dashboard'; ?>">Escrow</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/escrow' || $this->uri->uri_string() == 'order/admin/import') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/escrow'; ?>">Escrow</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/agents' || $this->uri->uri_string() == 'order/admin/import-agents' || $this->uri->segment(3) == 'edit-agent') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/agents'; ?>">Agents</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/lenders' || $this->uri->uri_string() == 'order/admin/import-lenders' || $this->uri->segment(3) == 'edit-lender') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lenders'; ?>">Lenders</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/sales-rep'; ?>">Sales Rep.</a>

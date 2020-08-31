@@ -178,7 +178,8 @@ $route['add-mail-order-details'] = 'frontend/order/dashboardMail/add_mail_order_
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
 $route['order/admin/home/do_login'] = 'admin/order/home/do_login';
-$route['order/admin/dashboard'] = 'admin/order/home/dashboard';
+$route['order/admin/dashboard'] = 'admin/order/home/index';
+$route['order/admin/escrow'] = 'admin/order/home/dashboard';
 $route['order/admin/import'] = 'admin/order/home/import';
 $route['order/admin/import-lenders'] = 'admin/order/home/import_lenders';
 $route['order/admin/lenders'] = 'admin/order/home/lenders';
