@@ -169,6 +169,10 @@ class DashboardMail extends MX_Controller {
             {
                 foreach ($response['ClosingFeeEstimate']['Premiums'] as $k => $v) 
                 {
+                    if($k == 'FullLendersPremium')
+                    {
+                        $k = 'Stand Alone Title Policy';
+                    }
                     $fees['Title Fee'][] = array('amount' => $v, 'description' => $k);
                 }
             }
