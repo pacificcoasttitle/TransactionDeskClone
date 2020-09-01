@@ -1117,6 +1117,7 @@ $(document).ready(function () {
                 data   : function( d ) {
                   d.sales_rep= $('#FilterOrderListing').val();
                   d.created_by= $('#FilterCreatedBy').val();
+                  d.product_type= product_type;
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -1154,6 +1155,24 @@ $(document).ready(function () {
             
             $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"'+options+'"</select></label></div>'); 
         }
+
+        if(product_type)
+        {
+           // $("div.FilterOrderListing").append('<input type="hidden" name="product_type" id="product_type" value="'+product_type+'">');
+            /*var l_selected = s_selected = '';
+            if(product_type == 'loan')
+            {
+                l_selected = 'selected';
+            }
+            else if(product_type == 'sale')
+            {
+                s_selected = 'selected';
+            }*/
+
+            /*$("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Product Type: <select name="FilterProductType" id="FilterProductType" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"><option value=""> All </option><option value="loan" '+l_selected+'> Loan </option><option value="sale" '+s_selected+'> Sales </option></select></label></div>');*/
+
+            order_list.ajax.reload();  
+        }
        
     }
     $("#FilterOrderListing").on("change", function(){
@@ -1162,7 +1181,11 @@ $(document).ready(function () {
 
     $("#FilterCreatedBy").on("change", function(){
         order_list.ajax.reload();
-    }); 
+    });
+
+    /*$("#FilterProductType").on("change", function(){
+        order_list.ajax.reload();
+    });*/
 
     if ($('#tbl-cpl-documents-listing').length) 
     {

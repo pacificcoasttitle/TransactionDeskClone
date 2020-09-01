@@ -11,9 +11,17 @@ class Order_model extends CI_Model
     public function get_orders($params)
     {
         $sales_rep = isset($params['sales_rep']) && !empty($params['sales_rep']) ? $params['sales_rep'] : '';
+
+        $product_type = isset($params['product_type']) && !empty($params['product_type']) ? $params['product_type'] : '';
+
         if(isset($sales_rep) && !empty($sales_rep))
         {
             $this->db->where('transaction_details.sales_representative', $sales_rep);
+        }
+
+        if(isset($product_type) && !empty($product_type))
+        {
+            $this->db->like('pct_order_product_types.product_type', $product_type);
         }
 
         $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
@@ -44,7 +52,10 @@ class Order_model extends CI_Model
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
 
             }
-
+            if(isset($product_type) && !empty($product_type))
+            {
+                $this->db->like('pct_order_product_types.product_type', $product_type);
+            }
             $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
             if(isset($created_by) && !empty($created_by))
             {
@@ -86,6 +97,10 @@ class Order_model extends CI_Model
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
 
+            if(isset($product_type) && !empty($product_type))
+            {
+                $this->db->like('pct_order_product_types.product_type', $product_type);
+            }
             $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
             if(isset($created_by) && !empty($created_by))
             {
@@ -109,7 +124,10 @@ class Order_model extends CI_Model
             {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
-
+            if(isset($product_type) && !empty($product_type))
+            {
+                $this->db->like('pct_order_product_types.product_type', $product_type);
+            }
             $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
             if(isset($created_by) && !empty($created_by))
             {
