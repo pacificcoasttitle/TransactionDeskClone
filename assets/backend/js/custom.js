@@ -1158,19 +1158,6 @@ $(document).ready(function () {
 
         if(product_type)
         {
-           // $("div.FilterOrderListing").append('<input type="hidden" name="product_type" id="product_type" value="'+product_type+'">');
-            /*var l_selected = s_selected = '';
-            if(product_type == 'loan')
-            {
-                l_selected = 'selected';
-            }
-            else if(product_type == 'sale')
-            {
-                s_selected = 'selected';
-            }*/
-
-            /*$("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Product Type: <select name="FilterProductType" id="FilterProductType" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"><option value=""> All </option><option value="loan" '+l_selected+'> Loan </option><option value="sale" '+s_selected+'> Sales </option></select></label></div>');*/
-
             order_list.ajax.reload();  
         }
        
@@ -1182,10 +1169,6 @@ $(document).ready(function () {
     $("#FilterCreatedBy").on("change", function(){
         order_list.ajax.reload();
     });
-
-    /*$("#FilterProductType").on("change", function(){
-        order_list.ajax.reload();
-    });*/
 
     if ($('#tbl-cpl-documents-listing').length) 
     {

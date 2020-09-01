@@ -128,9 +128,3 @@
     <!-- /.container-fluid -->
 </div>
 <!-- /.content-wrapper -->
-
-<!-- <script type="text/javascript">
-    $(document).ready(function() {
-        alert();
-    });
-</script> -->
