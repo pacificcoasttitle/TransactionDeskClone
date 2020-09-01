@@ -37,7 +37,7 @@ class Home extends MX_Controller {
         // $data['title'] = 'PCT Order: Dashboard';
         $orderData = $this->order_model->get_order_count();
         $titlePointData = $this->order_model->get_title_point_count();
-        echo "<pre>"; print_r($titlePointData); exit;
+        
         $loanCount = $salesCount = $totalCount = 0;
         if(isset($orderData) && !empty($orderData))
         {
