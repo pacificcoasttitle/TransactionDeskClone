@@ -828,11 +828,20 @@ class TitlePoint extends MX_Controller {
 				}
 				$pdfFilePath = './uploads/grant-deed/'.$fileNumber.'.pdf';
 				file_put_contents($pdfFilePath, $bin);
+
+				$tpData = array(
+	                'grant_deed_status' => $docStatus,
+	                'grant_deed_message' => 'success'
+	            );
 			}
-			$tpData = array(
-                'grant_deed_status' => $docStatus,
-                'grant_deed_message' => 'Success'
-            );
+			else
+			{
+				$tpData = array(
+                    'grant_deed_status' => 'failed',
+                    'grant_deed_message' => 'failed'
+                );
+			}
+			
 		}
 		else
 		{
