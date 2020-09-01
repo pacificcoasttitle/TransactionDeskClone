@@ -307,38 +307,42 @@ class Order_model extends CI_Model
     }
 
     public function get_title_point_count()
-    {
-        $this->db->select("COUNT(*) AS total,
-            (
-                CASE
-                  WHEN lv_file_message IS NULL OR lv_file_message = ' '
-                  THEN 'lv_fail_count' 
-                  WHEN tax_file_message IS NULL OR tax_file_message = ' '
-                  THEN 'tax_fail_count' 
-                  WHEN grant_deed_status = 'Failed'
-                  THEN 'grant_deed_fail_count'
-                END
-            ) AS type")
-        ->from('pct_order_title_point_data')
-        ->group_by("(
-                        CASE
-                          WHEN lv_file_message IS NULL OR lv_file_message = ' '
-                          THEN 'lv_fail_count' 
-                          WHEN tax_file_message IS NULL OR tax_file_message = ' '
-                          THEN 'tax_fail_count' 
-                          WHEN grant_deed_status = 'Failed'
-                          THEN 'grant_deed_fail_count'
-                        END
-                    )"
-                );
+    { 
+        $this->db->group_start()
+            ->where('lv_file_status !=', 'success')
+            ->or_where('lv_file_status is null')
+        ->group_end();
 
-        $query = $this->db->get();
-        $title_point_data = array();
-        if ($query->num_rows() > 0)  
-        {
-            $title_point_data = $query->result_array();         
-        }
+        $this->db->where('file_id IS NOT NULL');
+        $this->db->from('pct_order_title_point_data');
 
-        return $title_point_data;
+        $lv_total_records =  $this->db->count_all_results();
+
+        $this->db->group_start()
+            ->where('grant_deed_status !=', 'ok')
+            ->or_where('grant_deed_status is null')
+        ->group_end();
+
+        $this->db->where('file_id IS NOT NULL');
+        $this->db->from('pct_order_title_point_data');
+
+        $grant_deed_total_records =  $this->db->count_all_results();
+
+
+        $this->db->group_start()
+            ->where('tax_file_status !=', 'success')
+            ->or_where('tax_file_status is null')
+        ->group_end();
+
+        $this->db->where('file_id IS NOT NULL');
+        $this->db->from('pct_order_title_point_data');
+
+        $tax_total_records =  $this->db->count_all_results();
+
+        return array(
+            'lv_total_records' => $lv_total_records,
+            'grant_deed_total_records' => $grant_deed_total_records,
+            'tax_total_records' => $tax_total_records
+        ); 
     }
 }
