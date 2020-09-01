@@ -25,8 +25,10 @@ class Order extends MX_Controller {
                 'status' => 1,
             )
         );
+        $product_type = $this->uri->segment(4);
         $master_users = $this->home_model->get_rows($con);
         $data['master_users'] = $master_users;
+        $data['product_type'] = $product_type;
     	$this->load->view('order/layout/header', $data);
         $this->load->view('order/order/orders', $data);
         $this->load->view('order/layout/footer', $data);
@@ -42,6 +44,7 @@ class Order extends MX_Controller {
         $params['searchValue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value']: '';
         $params['sales_rep'] = $this->input->post('sales_rep');
         $params['created_by'] = $this->input->post('created_by');
+        $params['product_type'] = $this->input->post('product_type');
        
         $pageno = ($params['start'] / $params['length'])+1; 
         $ordersList = $this->order_model->get_orders($params);   

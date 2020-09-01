@@ -1,5 +1,7 @@
 <?php 
     $salesRep = isset($salesRep['data']) && !empty($salesRep['data']) ? $salesRep['data'] : array();
+
+    $product_type = isset($product_type) && !empty($product_type) ? $product_type : '';
     
     $sales_rep = json_encode($salesRep);
     
@@ -9,6 +11,7 @@
 <script type="text/javascript">
     var sales_rep = '<?php echo $sales_rep; ?>';
     var master_users = '<?php echo $master_users; ?>';
+    var product_type = '<?php echo $product_type; ?>';
 </script>
 <style>
 .dataTables_length {

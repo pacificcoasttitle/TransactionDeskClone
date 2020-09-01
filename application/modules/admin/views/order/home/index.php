@@ -27,7 +27,7 @@
                         </div>
                         <div class="mr-5"><?php echo $loanCount.' Refinance Orders'; ?></div>
                     </div>
-                    <a class="card-footer text-white clearfix small z-1" href="<?php echo base_url().'order/admin/orders' ?>">
+                    <a class="card-footer text-white clearfix small z-1" href="<?php echo base_url().'order/admin/orders/loan' ?>">
                         <span class="float-left">View Details</span>
                         <span class="float-right">
                         <i class="fas fa-angle-right"></i>
@@ -43,7 +43,7 @@
                         </div>
                         <div class="mr-5"><?php echo $salesCount.' Sales Orders'; ?></div>
                     </div>
-                    <a class="card-footer text-white clearfix small z-1" href="<?php echo base_url().'order/admin/orders' ?>">
+                    <a class="card-footer text-white clearfix small z-1" href="<?php echo base_url().'order/admin/orders/sale' ?>">
                         <span class="float-left">View Details</span>
                         <span class="float-right">
                         <i class="fas fa-angle-right"></i>
@@ -128,3 +128,9 @@
     <!-- /.container-fluid -->
 </div>
 <!-- /.content-wrapper -->
+
+<!-- <script type="text/javascript">
+    $(document).ready(function() {
+        alert();
+    });
+</script> -->
