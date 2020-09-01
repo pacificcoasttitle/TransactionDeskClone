@@ -263,16 +263,25 @@ class Titlepoint
                 }
                 $pdfFilePath = './uploads/grant-deed/'.$fileNumber.'.pdf';
                 file_put_contents($pdfFilePath, $bin);
+
+                $tpData = array(
+                    'grant_deed_status' => $docStatus,
+                    'grant_deed_message' => 'success'
+                );
             }
-            $tpData = array(
-                'grant_deed_status' => $docStatus,
-                'grant_deed_message' => 'Success'
-            );
+            else
+            {
+                $tpData = array(
+                    'grant_deed_status' => 'failed',
+                    'grant_deed_message' => 'failed'
+                );
+            }
+            
         }
         else
         {
             $tpData = array(
-                'grant_deed_status' => 'Failed',
+                'grant_deed_status' => 'failed',
                 'grant_deed_message' => $docStatus
             ); 
         }
