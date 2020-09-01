@@ -1070,7 +1070,7 @@
                          
                     </p> -->
                     <?php if(isset($OpenEmail) && !empty($OpenEmail) && $OpenEmail == 'djorns@capstoneescrow.com') {?>
-                      <span style="margin: 40px 5px;background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;color: #fff;"><a style="background-color: #d35411;border: 0;font-size: 15px;text-align: center;vertical-align: top;display: inline-block;text-decoration: none;color: #fff;" href="<?php echo base_url().'generate-cpl/'. $orderId; ?>" class="" role="button">Generate CPL</a></span>
+                      <a style="background-color: #d35411;border: 0;font-size: 15px;text-align: center;vertical-align: top;display: inline-block;text-decoration: none;color: #fff;" href="<?php echo base_url().'generate-cpl/'. $orderId; ?>" class="" role="button">Generate CPL</a>
                       <a style="margin: 40px 5px;background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;display: inline-block;text-decoration: none;color: #fff;" href="<?php echo base_url().'proposed-insured/'. $orderId; ?>" class="" role="button">Generate Proposed Insured</a>
                       <a style="margin: 40px 5px;background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;display: inline-block;text-decoration: none;color: #fff;" href="<?php echo base_url().'generate-fees/'. $orderId; ?>" class="" role="button">Generate Fees</a>
                     <!-- <a href="javascript:void(0);" class="button btn-primary" role="button">Generate Proposed Insured</a> -->
