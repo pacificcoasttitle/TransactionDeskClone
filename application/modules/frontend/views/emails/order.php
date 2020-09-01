@@ -409,7 +409,7 @@
                         <span style="text-decoration: underline; font-size: 18px;"><strong><span style="color: #424651; font-family: Helvetica; text-decoration: underline;">Get Your Fees Now</span></strong></span>
                       </p>
                       <p style="text-align:center;margin: 40px 0px;">
-                        <a style="background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;display: inline-block;text-decoration: none;color: #fff;" href="<?php // echo base_url().'generate-fees/'. $orderId; ?>" class="" role="button">Generate Fees</a>
+                        <a style="background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;display: inline-block;text-decoration: none;color: #fff;" href="<?php echo base_url().'generate-fees/'. $orderId; ?>" class="" role="button">Generate Fees</a>
                       </p>
                       <p style="text-align:center;">
                         <span style="text-decoration: underline; font-size: 18px;"><strong><span style="color: #424651; font-family: Helvetica; text-decoration: underline;">Your Order Details Are Below:</span></strong></span>
