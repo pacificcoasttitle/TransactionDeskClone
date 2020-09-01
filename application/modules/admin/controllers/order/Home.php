@@ -55,28 +55,18 @@ class Home extends MX_Controller {
                 }
             }
         }
-        $lvCount = $grantDeedCount = $taxCount = $totalFailCount = 0;
-        if(isset($titlePointData) && !empty($titlePointData))
-        {
-            foreach ($titlePointData as $key => $value) 
-            {
-                if($value['type'] == 'lv_fail_count')
-                {
-                    $lvCount = $value['total'];
-                    $totalFailCount += $lvCount;
-                }
-                if($value['type'] == 'grant_deed_fail_count')
-                {
-                    $grantDeedCount = $value['total'];
-                    $totalFailCount += $grantDeedCount;
-                }
-                if($value['type'] == 'tax_fail_count')
-                {
-                    $taxCount = $value['total'];
-                    $totalFailCount += $taxCount;
-                }
-            }
-        }
+        $totalFailCount = 0;
+
+        $lvCount = isset($titlePointData['lv_total_records']) && !empty($titlePointData['lv_total_records']) ? $titlePointData['lv_total_records'] : 0;
+        $totalFailCount += $lvCount;
+
+        $grantDeedCount = isset($titlePointData['grant_deed_total_records']) && !empty($titlePointData['grant_deed_total_records']) ? $titlePointData['grant_deed_total_records'] : 0;    
+        $totalFailCount += $grantDeedCount;
+
+        $taxCount = isset($titlePointData['tax_total_records']) && !empty($titlePointData['tax_total_records']) ? $titlePointData['tax_total_records'] : 0;
+
+        $totalFailCount += $taxCount;
+        
         $data = array(
             'title' => 'PCT Order: Dashboard',
             'loanCount' => $loanCount,
