@@ -60,7 +60,7 @@
 							</div>
 						</div>
 						<div class="typography-sectionc">
-							<div class="col-md-9">
+							<div class="col-md-12">
 							<?php if (isset($user_email) && !empty($user_email) && trim($user_email) == 'teamrestine@eatonescrow.com') { ?>
 									<a href="<?php echo base_url().'prelim-files'; ?>">
 										<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
