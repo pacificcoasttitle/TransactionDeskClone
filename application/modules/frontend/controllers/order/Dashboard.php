@@ -445,6 +445,10 @@ class Dashboard extends MX_Controller {
         $endPoint = 'estimates/closingfees';
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, array(), $orderId, 0);
         $result = $this->resware->make_request('POST', $endPoint, $fees_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, $result, $orderId, $logid);
+
+        $product_type = isset($orderDetails['product_type']) && !empty($orderDetails['product_type']) ? $orderDetails['product_type'] : '';
+        $data['productType'] = $product_type;
 
         $fees = array();
         if(isset($result) && !empty($result))
@@ -452,27 +456,14 @@ class Dashboard extends MX_Controller {
             $response = json_decode($result,TRUE);
             $closing_fee_estimate_id = isset($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) && !empty($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) ? $response['ClosingFeeEstimate']['ClosingFeeEstimateID'] : '';
 
-            /*if(isset($response['ClosingFeeEstimate']['HUDFees']) && !empty(isset($response['ClosingFeeEstimate']['HUDFees'])))
-            {
-                
-                foreach ($response['ClosingFeeEstimate']['HUDFees'] as $key => $value) 
-                {
-                    $fees['HUDFees'][$key] = array('amount' => $value['Amount'], 'description' => $value['Description']);
-                }
-            }*/
-
-            /*if(isset($response['ClosingFeeEstimate']['GFE']) && !empty(isset($response['ClosingFeeEstimate']['GFE'])))
-            {
-                foreach ($response['ClosingFeeEstimate']['GFE'] as $k => $v) 
-                {
-                    $fees['GFE'][$k] = array('amount' => $v['Amount'], 'description' => $v['Description']);
-                }
-            }*/
-
             if(isset($response['ClosingFeeEstimate']['Premiums']) && !empty(isset($response['ClosingFeeEstimate']['Premiums'])))
             {
                 foreach ($response['ClosingFeeEstimate']['Premiums'] as $k => $v) 
                 {
+                	if($k == 'FullLendersPremium')
+                    {
+                        $k = 'Stand Alone Title Policy';
+                    }
                     $fees['Title Fee'][] = array('amount' => $v, 'description' => $k);
                 }
             }
@@ -483,8 +474,21 @@ class Dashboard extends MX_Controller {
         {
             foreach ($feesInfo as $k => $v) 
             {
-                // $fees['AdditionalFees'][] = array('amount' => $v['value'], 'description' => $v['name']);
                 $fees[$v['fee_type']][] = array('amount' => $v['value'], 'description' => $v['name']);
+            }
+        }
+
+        if(strpos($product_type, 'Loan:') !== false)
+        {
+            if(isset($fees['Title Fee']) && !empty($fees['Title Fee']))
+            {
+                foreach ($fees['Title Fee'] as $key => $value)
+                {
+                    if($value['description'] == 'Stand Alone Title Policy')
+                    {
+                        unset($fees['Title Fee'][$key]);
+                    }
+                }
             }
         }
 
@@ -493,19 +497,8 @@ class Dashboard extends MX_Controller {
         $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
         $data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
         $data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
-        /*if(isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']))
-        {
-        	$productType = 'Residential: Sales: Purchase';
-        }
-        if(isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']))
-        {
-        	$productType = 'Residential: Loan: Refinance';
-        }*/
-
-        $data['productType'] = isset($orderDetails['product_type']) && !empty($orderDetails['product_type']) ? $orderDetails['product_type'] : '';
-        $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
         
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, $result, $orderId, $logid);
+        $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
 
         $this->load->model('order/fee');
         $feesData = array(

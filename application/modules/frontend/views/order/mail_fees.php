@@ -48,10 +48,18 @@
                   <?php
                     if(isset($loan_amount) && !empty($loan_amount))
                     {
+                        $loan_amount = str_replace(",", "", $loan_amount);
                   ?>
                       <td><b>Loan Amount </b></td>
-                      <td>$ <?php echo number_format($loan_amount); ?></td>
+                      <td>$<?php echo number_format($loan_amount); ?></td>
                   <?php
+                    }
+                    else
+                    {
+                ?>
+                        <td></td>
+                        <td></td>
+                <?php
                     }
                   ?>
                 </tr>
@@ -59,9 +67,12 @@
                   <?php 
                     if(isset($sales_amount) && !empty($sales_amount))
                     {
+                        $sales_amount = str_replace(",", "", $sales_amount);
                   ?>
                       <td><b>Sales Amount </b></td>
-                      <td>$ <?php echo number_format($sales_amount); ?> </td>
+                      <td>$<?php echo number_format($sales_amount); ?> </td>
+                      <td></td>
+                      <td></td>
                   <?php
                     }
                   ?>
@@ -91,11 +102,13 @@
                                         {
                                             foreach ($value as $k => $v) 
                                             {
+                                                $description = $v['description']; 
+                                                $amount = str_replace(",", "", $v['amount']);
                                     ?>
                                                 <tr>
-                                                  <td><?php echo $v['description']; ?></td>
+                                                  <td><?php echo $description; ?></td>
                                                   <td class="aright">
-                                                    $ <?php echo number_format($v['amount'], 2); ?>
+                                                    $<?php echo number_format($amount, 2); ?>
                                                   </td>
                                                 </tr>
                                     <?php
