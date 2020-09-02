@@ -13,9 +13,9 @@
                 -ms-text-size-adjust: none;
             }
 
-            /*#outlook a {
+            #outlook a {
                 padding: 0;
-            }*/
+            }
 
             html {
                 width: 100%;
@@ -48,9 +48,9 @@
                 -ms-text-size-adjust: none;
             }
 
-            /*#outlook a {
+            #outlook a {
                 padding: 0;
-            }*/
+            }
 
             html {
                 width: 100%;
@@ -408,9 +408,9 @@
                       <p style="text-align:center;">
                         <span style="text-decoration: underline; font-size: 18px;"><strong><span style="color: #424651; font-family: Helvetica; text-decoration: underline;">Get Your Fees Now</span></strong></span>
                       </p>
-                      <table width="100%" align="center" cellpadding="20" style="padding: 9px 18px;text-align: center;">
+                      <table width="100%" align="center" cellpadding="20" style="text-align: center;">
                           <tr>
-                              <td><a style="background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;display: inline-block;text-decoration: none;color: #fff;" href="<?php // echo base_url().'generate-fees/'. $orderId; ?>" class="" role="button">Generate Fees</a></td>
+                              <td style="padding: 9px 18px;text-align: center;"><a style="background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;display: inline-block;text-decoration: none;color: #fff;" href="<?php echo base_url().'generate-fees/'. $orderId; ?>" class="" role="button">Generate Fees</a></td>
                           </tr>
                       </table>
                       <!-- <p style="text-align:center;margin: 40px 0px;">
