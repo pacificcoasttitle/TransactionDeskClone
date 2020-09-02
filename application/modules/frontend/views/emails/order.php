@@ -305,18 +305,18 @@
         </style>
     </head>
     <body style="-webkit-text-size-adjust: none; margin: 0; padding: 0; font-family: 'Open Sans', Arial, sans-serif; background-color: #c0c0c0; color: #505050;">
-    <table width="100%" align="center" border="0" style="background-color:#c0c0c0;">
+    <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" style="background-color:#c0c0c0;">
     <tr>
     <td align="center">
-    <table class="main-table" width="100%" align="center" border="0" style="max-width:800px;min-width:700px;">
+    <table class="main-table" width="100%" align="center" cellpadding="0" cellspacing="0" border="0" style="max-width:800px;min-width:700px;">
     <tr>
       <td class="layouts-here">
         
         <!-- Pre-header 1 -->
-        <table width="100%" align="center" border="0">
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td align="center" class="color-bg" style="background-color:#c0c0c0;">
-              <table class="container" width="610" align="center" border="0" style="width:610px;">
+              <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
                 <tr>
                   <td class="spacer" height="14" style="line-height:14px;">
                      
@@ -338,7 +338,7 @@
         </table>
         <!-- End Pre-header 1 -->
         <!-- Layout 35 (Full width image) -->
-        <table width="100%" align="center" border="0">
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td class="full-image" style="border-collapse:collapse;font-size:0;">
               <img width="800" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/c405dde6-8511-490a-87a6-c66628e59843.jpg" alt="" style="border: none; display: block;">
@@ -347,7 +347,7 @@
         </table>
         <!-- End Layout 35 (Full width image) -->
         <!-- Layout 35 (Full width image) -->
-        <table width="100%" align="center" border="0">
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td class="full-image" style="border-collapse:collapse;font-size:0;">
               <img width="800" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/c48f0928-5f4e-4ad8-8358-3f5430ba705d.jpg" alt="" style="border: none; display: block;">
@@ -356,10 +356,10 @@
         </table>
         <!-- End Layout 35 (Full width image) -->
         <!-- Layout 7 (Text block with title) -->
-        <table width="100%" align="center" border="0">
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td align="center" style="background-color:#ffffff;">
-              <table class="container" width="610" align="center" border="0" style="width:610px;">
+              <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
                 <tr>
                   <td class="sp" height="74" style="font-size:1px;line-height:74px;">
                      
@@ -1104,7 +1104,7 @@
     </table>
     <!-- End Layout 7 (Text block with title) -->
     <!-- Layout 35 (Full width image) -->
-    <table width="100%" align="center" border="0">
+    <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td class="full-image" style="border-collapse:collapse;font-size:0;">
           <img width="800" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg" alt="" style="border: none; display: block;">
@@ -1113,10 +1113,10 @@
     </table>
     <!-- End Layout 35 (Full width image) -->
     <!-- Layout 60 (Footer type 1) -->
-    <table class="footer" width="100%" align="center" border="0">
+    <table class="footer" width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td class="color-bg" align="center" style="background-color:#002742;">
-          <table class="container" width="610" align="center"border="0" style="width:610px;">
+          <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
             <tr>
               <td class="sp" height="30" style="font-size:1px;line-height:30px;">
                  
@@ -1124,12 +1124,12 @@
             </tr>
             <tr>
               <td align="center">
-                <table class="m-w100" align="center" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;">
+                <table class="m-w100" align="center" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;">
                   <tr>
                     <td align="center">
                       
                       <!-- social icons -->
-                      <table align="center" border="0">
+                      <table align="center" cellpadding="0" cellspacing="0" border="0">
                         <tr>
                           <td style="text-align:center;padding:0 5px;"></td>
                           <td style="text-align:center;padding:0 5px;">
@@ -1163,10 +1163,10 @@
     <td>
 
     <!-- Footer -->
-    <table class="footer" width="100%" align="center" border="0">
+    <table class="footer" width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td class="color-bg" align="center" style="background-color:#c0c0c0;">
-          <table class="container" align="center" width="610" border="0" style="width:610px;">
+          <table class="container" align="center" width="610" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
             <!-- Spacer -->
             <tr>
               <td class="sp" height="30" style="font-size:1px;line-height:30px;">
@@ -1178,7 +1178,7 @@
               <td align="left">
                 
                 <!-- Copyright -->
-                <table class="m-w100" align="left" width="285" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:285px;">
+                <table class="m-w100" align="left" width="285" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:285px;">
                   <tr>
                     <td class="text" style="color:#ffffff;font-family:'Open Sans', Arial, sans-serif;font-size:14px;line-height:24px;">
                       ©2020 Pacific Coast Title Company
@@ -1186,7 +1186,7 @@
                   </tr>
                 </table>
                 <!-- Unsubscribe -->
-                <table class="m-w100" align="right" width="285" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:285px;">
+                <table class="m-w100" align="right" width="285" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:285px;">
                   <tr>
                     <td class="text" style="color:#ffffff;font-family:'Open Sans', Arial, sans-serif;font-size:14px;line-height:24px;text-align:right;">
                       <a href="<?php // echo base_url(); ?>" style="text-decoration:none;color:#ffffff;">www.pct.com</a>
