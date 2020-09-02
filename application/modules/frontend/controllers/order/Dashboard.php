@@ -29,6 +29,7 @@ class Dashboard extends MX_Controller {
 		$is_master = isset($userdata['is_master']) && !empty($userdata['is_master']) ? $userdata['is_master'] : '';
 		$data['name'] = $name;
 		$data['is_master'] = $is_master;
+		$data['user_email'] = $userdata['email'];
 		$data['is_special_lender'] = $userdata['is_special_lender'] == 1 ? 1 : 0;
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
