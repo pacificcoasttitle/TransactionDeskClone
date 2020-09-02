@@ -50,10 +50,12 @@
 
 								?>
 								
-								<!-- <a href="<?php // echo base_url().'prelim-files'; ?>">
-									<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
-								</a>
-                  				<a href="<?php // echo base_url().'attach-files'; ?>">
+								<?php if (isset($email) && empty($email) && $email == 'teamrestine@eatonescrow.com') { ?>
+									<a href="<?php echo base_url().'prelim-files'; ?>">
+										<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
+									</a>
+								<?php } ?>
+                  				<!--<a href="<?php // echo base_url().'attach-files'; ?>">
                   					<button class="btn1 btn-type-1d btn-lg" type="button">Upload Doc</button>
                   				</a> -->
 								
