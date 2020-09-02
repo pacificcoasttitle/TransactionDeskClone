@@ -13,9 +13,9 @@
                 -ms-text-size-adjust: none;
             }
 
-            #outlook a {
+            /*#outlook a {
                 padding: 0;
-            }
+            }*/
 
             html {
                 width: 100%;
@@ -48,9 +48,9 @@
                 -ms-text-size-adjust: none;
             }
 
-            #outlook a {
+            /*#outlook a {
                 padding: 0;
-            }
+            }*/
 
             html {
                 width: 100%;
