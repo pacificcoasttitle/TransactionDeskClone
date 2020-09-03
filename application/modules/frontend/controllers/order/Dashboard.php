@@ -842,11 +842,17 @@ class Dashboard extends MX_Controller {
 				$data['secondary_owner_last_name'] = '';
 			}
 		}
-		$s_report_date = date("m/d/Y",strtotime($orderDetails['supplemental_report_date']));
+		if(!empty($orderDetails['supplemental_report_date']) && $orderDetails['supplemental_report_date'] != '0000-00-00')
+        {
+            $s_report_date = date("m/d/Y",strtotime($orderDetails['supplemental_report_date']));
+        }
 
 		$data['supplemental_report_date']= isset($s_report_date) && !empty($s_report_date) ? $s_report_date : '';
 
-		$p_report_date = date("m/d/Y",strtotime($orderDetails['preliminary_report_date']));
+		if(!empty($orderDetails['preliminary_report_date']) && $orderDetails['preliminary_report_date'] != '0000-00-00')
+        {
+            $p_report_date = date("m/d/Y",strtotime($orderDetails['preliminary_report_date']));
+        }
 		$data['preliminary_report_date'] = isset($p_report_date) && !empty($p_report_date) ? $p_report_date : '';
 
 		$data['is_escrow'] = $customer_data['is_escrow'];
