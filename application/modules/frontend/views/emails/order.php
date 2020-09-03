@@ -350,7 +350,7 @@
         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td class="full-image" style="border-collapse:collapse;font-size:0;">
-              <img width="800" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/c48f0928-5f4e-4ad8-8358-3f5430ba705d.jpg" alt="" style="border: none; display: block;">
+              <img width="800" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/ea34db70-85fd-442d-8305-d93773dde1ff.jpg" alt="" style="border: none; display: block;">
             </td>
           </tr>
         </table>
@@ -392,7 +392,7 @@
                         Below you can find the details of your order:</span></span>
                       </p>
                       <p class="xomb-md" style="margin-bottom:.25in;line-height:18pt;text-align:center;" align="center">
-                        <span style="font-size: 12.0pt; font-family: Helvetica; color: #424651;"><span style="font-size: 18px;">Thank you for the title order. Attached you will be find copies of the following documents:</span></span>
+                        <span style="font-size: 12.0pt; font-family: Helvetica; color: #424651;"><span style="font-size: 18px;">Thank you for the title order. Attached you will find copies of the following documents:</span></span>
                       </p>
                       <ul style="list-style-type:circle;text-align:center;">
                         <li class="xomb-md" style="margin-bottom:.25in;line-height:18pt;text-align:left;">
@@ -408,14 +408,24 @@
                       <p style="text-align:center;">
                         <span style="text-decoration: underline; font-size: 18px;"><strong><span style="color: #424651; font-family: Helvetica; text-decoration: underline;">Get Your Fees Now</span></strong></span>
                       </p>
-                      <table width="100%" align="center" cellpadding="20" style="text-align: center;">
-                          <tr>
-                              <td style="padding: 9px 18px;text-align: center;"><a style="background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;display: inline-block;text-decoration: none;color: #fff;" href="<?php echo base_url().'generate-fees/'. $orderId; ?>" class="" role="button">Generate Fees</a></td>
-                          </tr>
-                      </table>
-                      <!-- <p style="text-align:center;margin: 40px 0px;">
-                        <a style="background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;display: inline-block;text-decoration: none;color: #fff;" href="<?php // echo base_url().'generate-fees/'. $orderId; ?>" class="" role="button">Generate Fees</a>
-                      </p> -->
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
+                            <tbody class="mcnButtonBlockOuter">
+                                <tr>
+                                    <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
+                                        <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 3px;background-color: #D35400;">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Helvetica; font-size: 18px; padding: 18px;">
+                                                        <a class="mcnButton " title="Generate Fees" href="<?php // echo base_url().'generate-fees/'. $orderId; ?>" target="_blank" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Generate Fees</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      
                       <p style="text-align:center;">
                         <span style="text-decoration: underline; font-size: 18px;"><strong><span style="color: #424651; font-family: Helvetica; text-decoration: underline;">Your Order Details Are Below:</span></strong></span>
                       </p>
