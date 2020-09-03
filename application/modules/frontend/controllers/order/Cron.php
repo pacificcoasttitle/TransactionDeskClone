@@ -900,20 +900,26 @@ class Cron extends MX_Controller {
             )
         );
         $customers = $this->home_model->get_customers($condition);
-        $this->db->simple_query('SET SESSION group_concat_max_len=150000');
         $this->db->select('*');
         $this->db->from('order_details');   
+        $this->db->where('is_imported', 0);
         $query = $this->db->get();
         $orderDetails = $query->result_array();
 
         if (!empty($orderDetails)) {
-            $remoteFileNumberData = json_encode(array('RemoteFileNumber' => $orderNumber));
-            $remoteFileEndPoint = 'files/'.$file_id.'/partners/'.$orderUser['partner_id'];
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API').$remoteFileEndPoint, $remoteFileNumberData, array(), 0, 0);
-            $resultRemotePartner = $this->resware->make_request('PUT', $remoteFileEndPoint, $remoteFileNumberData, $partnerUserData);
-            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API').$remoteFileEndPoint, $remoteFileNumberData, $resultRemotePartner, 0, $logid);
+            foreach($orderDetails as $orderDetail) {
+                $key = array_search($orderDetail['customer_id'], array_column($customers, 'id'));
+                $userdata['email'] = 'admin@pct24.com';
+                $remoteFileNumberData = json_encode(array('RemoteFileNumber' => $orderDetail['file_number']));
+                $remoteFileEndPoint = 'files/'.$orderDetail['file_id'].'/partners/'.$customers[$key]['partner_id'];
+                $logid = $this->apiLogs->syncLogs($orderDetail['customer_id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API').$remoteFileEndPoint, $remoteFileNumberData, array(), 0, 0);
+                $resultRemotePartner = $this->make_request('PUT', $remoteFileEndPoint, $remoteFileNumberData, $userdata);
+                $this->apiLogs->syncLogs($orderDetail['customer_id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API').$remoteFileEndPoint, $remoteFileNumberData, $resultRemotePartner, 0, $logid);
+                
+            }
+            echo "Updated remote file number for all orders";exit;
         } else {
-            echo "No orders found to update remote file number";
+            echo "No orders found to update remote file number";exit;
         }
     }
 }
