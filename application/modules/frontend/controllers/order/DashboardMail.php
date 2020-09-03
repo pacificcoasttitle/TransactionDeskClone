@@ -930,7 +930,7 @@ class DashboardMail extends MX_Controller {
         $fileId = $this->uri->segment(2);    
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$data['mail_dashboard'] = 1;
-		$orderDetails = $this->order->get_order_details($fileId);
+		$orderDetails = $this->order->get_order_details($fileId,1);
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
 		
@@ -1151,7 +1151,7 @@ class DashboardMail extends MX_Controller {
         $fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
         $data['fileId'] = $fileId;
 
-        $orderDetails = $this->order->get_order_details($fileId);
+        $orderDetails = $this->order->get_order_details($fileId,1);
         $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
         $data['orderId'] = $orderId;
         $transaction_id = isset($orderDetails['transaction_id']) && !empty($orderDetails['transaction_id']) ? $orderDetails['transaction_id'] : '';
@@ -1230,11 +1230,19 @@ class DashboardMail extends MX_Controller {
                 $data['secondary_owner_last_name'] = '';
             }
         }
-        $s_report_date = date("m/d/Y",strtotime($orderDetails['supplemental_report_date']));
 
+        if(!empty($orderDetails['supplemental_report_date']) && $orderDetails['supplemental_report_date'] != '0000-00-00')
+        {
+            $s_report_date = date("m/d/Y",strtotime($orderDetails['supplemental_report_date']));
+        }
+        
         $data['supplemental_report_date']= isset($s_report_date) && !empty($s_report_date) ? $s_report_date : '';
 
-        $p_report_date = date("m/d/Y",strtotime($orderDetails['preliminary_report_date']));
+        if(!empty($orderDetails['preliminary_report_date']) && $orderDetails['preliminary_report_date'] != '0000-00-00')
+        {
+            $p_report_date = date("m/d/Y",strtotime($orderDetails['preliminary_report_date']));
+        }
+        
         $data['preliminary_report_date'] = isset($p_report_date) && !empty($p_report_date) ? $p_report_date : '';
 
         $data['is_escrow'] = $customer_data['is_escrow'];
@@ -1308,7 +1316,7 @@ class DashboardMail extends MX_Controller {
             $s_report_date = date("Y-m-d",strtotime($s_report_date));
             $p_report_date = date("Y-m-d",strtotime($p_report_date));
             
-            $orderDetails = $this->order->get_order_details($fileId);
+            $orderDetails = $this->order->get_order_details($fileId,1);
 
             if(isset($LenderId) && !empty($LenderId))
             {
@@ -1393,7 +1401,7 @@ class DashboardMail extends MX_Controller {
 
             if($property_update_flag || $transaction_update_flag)
             {
-                $orderDetails = $this->order->get_order_details($fileId);
+                $orderDetails = $this->order->get_order_details($fileId,1);
                 
                 $pdfData['company'] = isset($orderUser['company_name']) && !empty($orderUser['company_name']) ? $orderUser['company_name'] : '';
     
