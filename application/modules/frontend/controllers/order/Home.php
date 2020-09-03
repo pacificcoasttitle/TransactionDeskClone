@@ -438,6 +438,13 @@ class Home extends MX_Controller {
 							$resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
 							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
 
+							$remoteFileNumberData = json_encode(array('RemoteFileNumber' => $orderNumber));
+							$remoteFileEndPoint = 'files/'.$file_id.'/partners/'.$orderUser['partner_id'];
+							
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API').$remoteFileEndPoint, $remoteFileNumberData, array(), 0, 0);
+							$resultRemotePartner = $this->resware->make_request('PUT', $remoteFileEndPoint, $remoteFileNumberData, $partnerUserData);
+							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API').$remoteFileEndPoint, $remoteFileNumberData, $resultRemotePartner, 0, $logid);
+
 							/* Add partner api logs */
 							$partnerApiData = array(
 								'request_url' => env('RESWARE_ORDER_API').$endPoint,

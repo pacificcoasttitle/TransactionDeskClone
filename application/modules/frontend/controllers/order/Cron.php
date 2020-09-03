@@ -890,4 +890,30 @@ class Cron extends MX_Controller {
             echo json_encode($data);exit;
         }
     }
+
+    public function updateRemoteFileNumberForAllOrders()
+    {
+        $condition = array(
+            'where' => array(
+                'status' => 1,
+                'is_master' => 0,
+            )
+        );
+        $customers = $this->home_model->get_customers($condition);
+        $this->db->simple_query('SET SESSION group_concat_max_len=150000');
+        $this->db->select('*');
+        $this->db->from('order_details');   
+        $query = $this->db->get();
+        $orderDetails = $query->result_array();
+
+        if (!empty($orderDetails)) {
+            $remoteFileNumberData = json_encode(array('RemoteFileNumber' => $orderNumber));
+            $remoteFileEndPoint = 'files/'.$file_id.'/partners/'.$orderUser['partner_id'];
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API').$remoteFileEndPoint, $remoteFileNumberData, array(), 0, 0);
+            $resultRemotePartner = $this->resware->make_request('PUT', $remoteFileEndPoint, $remoteFileNumberData, $partnerUserData);
+            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API').$remoteFileEndPoint, $remoteFileNumberData, $resultRemotePartner, 0, $logid);
+        } else {
+            echo "No orders found to update remote file number";
+        }
+    }
 }
