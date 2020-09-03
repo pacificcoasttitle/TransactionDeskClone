@@ -136,7 +136,7 @@ class Order
         return $rs = $query->result_array();
     }
 
-    public function get_order_details($fileId)
+    public function get_order_details($fileId,$from_mail=0)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number, 
@@ -214,7 +214,7 @@ class Order
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->CI->db->where('file_id', $fileId);
          
-        if (isset($userdata) && $userdata['is_master'] == 0) {
+        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0) {
             $this->CI->db->where('order_details.customer_id', $userdata['id']);
         }
         $query = $this->CI->db->get();

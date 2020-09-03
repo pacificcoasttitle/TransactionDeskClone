@@ -62,7 +62,7 @@ class DashboardMail extends MX_Controller {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
 
-        $orderDetails = $this->order->get_order_details($fileId);
+        $orderDetails = $this->order->get_order_details($fileId,1);
         
         $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
 
