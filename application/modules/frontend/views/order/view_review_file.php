@@ -60,7 +60,11 @@ button:focus {outline:0;}
 							<h2 class="ui-title-block ui-title-block_light">Preliminary Report Review</h2>
 							<div class="ui-decor-1a bg-accent"></div>
 							<h3 class="ui-title-block_light">File Number <?php echo $orderDetails['file_number'];?></h3>
-							<h3 class="ui-title-block_light"><?php echo $orderDetails['full_address'];?></h3>
+							<h3 class="ui-title-block_light"></h3>
+							<div style="width: 100%;">
+                                <h3 class="ui-title-block_light" style="display: inline-block;"><?php echo $orderDetails['full_address'];?></h3>
+								<span class="bg-border" style="float: right;cursor:pointer;" onClick="window.location.reload();">Refresh</span>
+							</div>
 							<input type="hidden" id="fileId" name="fileId" value="<?php echo $orderDetails['file_id'];?>">
 							<input type="hidden" id="orderId" name="orderId" value="<?php echo $orderDetails['order_id'];?>">
 						</div>

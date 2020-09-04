@@ -302,7 +302,7 @@ class ReviewPrelim extends MX_Controller {
 								$doc_link = explode('=', $linkHref);
 								$document_id = isset($doc_link[1]) && !empty($doc_link[1]) ? $doc_link[1] : '';
 
-								$documentDetail = $this->order->get_document_detail($document_id);
+								$documentDetail = $this->order->get_document_detail($document_id, $order_id);
 
 								if(empty($documentDetail))
 								{
