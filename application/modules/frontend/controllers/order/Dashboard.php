@@ -1939,7 +1939,7 @@ class Dashboard extends MX_Controller {
 								$pages = array(4, 5, 6, 7, 8, 9);
 								$linkedDocCount = 0;
 								foreach ($pages as $page) {
-									/*$html = $pdf->html($page);
+									$html = $pdf->html($page);
 									$total_pages = $pdf->getPages();
 									$htmlDom = new DOMDocument;
 									@$htmlDom->loadHTML($html);
@@ -1999,7 +1999,7 @@ class Dashboard extends MX_Controller {
 										} else{
 											continue;
 										}
-									}*/
+									}
 								}
 							}	
 						} else {
@@ -2094,7 +2094,7 @@ class Dashboard extends MX_Controller {
 								$pages = array(4, 5, 6, 7, 8, 9);
 								$linkedDocCount = 0;
 								foreach ($pages as $page) {
-									/*$html = $pdf->html($page);
+									$html = $pdf->html($page);
 									$total_pages = $pdf->getPages();
 									$htmlDom = new DOMDocument();
 									@$htmlDom->loadHTML($html);
@@ -2159,7 +2159,7 @@ class Dashboard extends MX_Controller {
 												continue;
 											}
 										}
-									}*/
+									}
 									
 								}
 							}
