@@ -18,7 +18,7 @@
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Order Number</span><br>
 					<?php echo isset($prelim_details['file_number']) && !empty($prelim_details['file_number']) ? $prelim_details['file_number'] : '-'; ?></p>
 				
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Date Generated</span><br> <?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Commitment Date</span><br> <?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
 				</p><br>
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Type</span><br> <?php echo isset($prelim_details['property_type']) && !empty($prelim_details['property_type']) ? $prelim_details['property_type'] : '-'; ?></p>
 			</div>
@@ -45,6 +45,7 @@
 					<div class="entry-content">
 						<?php
 							$tax = json_decode($prelim_details['tax'],TRUE);
+
 							if(isset($tax) && !empty($tax))
 							{
 
