@@ -2218,10 +2218,18 @@ class Dashboard extends MX_Controller {
 				foreach ($data['Liens'] as $key => $lien) 
 				{
 					$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
-					$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
-					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
+					
 					if(strpos($language, 'Tax Identification No') !== false)
 					{
+						$keys = array_keys($data['Liens']);
+						$prev_val = (array_search($key,$keys,true) - 1);
+						if(isset($data['Liens'][$prev_val]['Language']) && !empty($data['Liens'][$prev_val]['Language']))
+						{
+							$tax[] = $data['Liens'][$prev_val]['Language'];							
+							$l_key = array_search($data['Liens'][$prev_val]['Language'] ,$liens);
+							unset($liens[$l_key]);
+						}
+						
 						if(strpos($language, '_PARCELID1_') !== false) {
 								foreach($linkedDocuments as $linkedDocument) {
 									$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
