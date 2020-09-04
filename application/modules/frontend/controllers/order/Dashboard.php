@@ -1933,12 +1933,12 @@ class Dashboard extends MX_Controller {
 							if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
 								$documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
 								if (!is_dir('uploads/documents')) {
-									mkdir('./uploads/documents', 0777, TRUE);
+									mkdir(FCPATH.'/uploads/documents', 0777, TRUE);
 								}
-								file_put_contents('./uploads/documents/'.$document_name, $documentContent);
+								file_put_contents(FCPATH.'/uploads/documents/'.$document_name, $documentContent);
 								$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 
-								$source_pdf = './uploads/documents/'.$document_name;
+								$source_pdf = FCPATH.'/uploads/documents/'.$document_name;
 								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', getenv('PDFTOHTML_PATH'));
 								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', getenv('PDFTOINFO_PATH'));
 								$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
@@ -1966,11 +1966,14 @@ class Dashboard extends MX_Controller {
 										if(strpos($linkHref, 'clients.pacificcoasttitle.com') !== false){
 											$linkText = str_replace(' ', '-', $linkText); 
 											$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
+											if($linkText == '.pdf'){
+												continue;
+											}
 											$document_name = date('YmdHis')."_".$linkText;
 											$documentId = explode('=', $linkHref);
 											if (!in_array($documentId[1], $apiDocumentIds))  {
-												file_put_contents('./uploads/documents/'.$document_name, file_get_contents($linkHref));
-												$fileSize = filesize('./uploads/documents/'.$document_name);
+												file_put_contents(FCPATH.'/uploads/documents/'.$document_name, file_get_contents($linkHref));
+												$fileSize = filesize(FCPATH.'/uploads/documents/'.$document_name);
 												$documentData = array(
 													'document_name' => $document_name,
 													'original_document_name' => $linkText,
@@ -1985,7 +1988,7 @@ class Dashboard extends MX_Controller {
 													'is_prelim_document' => 0,
 													'is_linked_doc' => 1
 												);
-												$documentId = $this->document->insert($documentData);
+												$document_id = $this->document->insert($documentData);
 												$linked_doc[$linkedDocCount]['original_document_name'] = $linkText;
 												$linked_doc[$linkedDocCount]['document_name'] = $document_name;
 												$linked_doc[$linkedDocCount]['api_document_id'] = $documentId[1];
@@ -2087,12 +2090,12 @@ class Dashboard extends MX_Controller {
 							if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
 								$documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
 								if (!is_dir('uploads/documents')) {
-									mkdir('./uploads/documents', 0777, TRUE);
+									mkdir(FCPATH.'/uploads/documents', 0777, TRUE);
 								}
-								file_put_contents('./uploads/documents/'.$document_name, $documentContent);
+								file_put_contents(FCPATH.'/uploads/documents/'.$document_name, $documentContent);
 								$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 
-								$source_pdf = './uploads/documents/'.$document_name;
+								$source_pdf = FCPATH.'/uploads/documents/'.$document_name;
 								chmod($source_pdf, 0755);
 								\Gufy\PdfToHtml\Config::set('pdftohtml.bin', getenv('PDFTOHTML_PATH'));
 								\Gufy\PdfToHtml\Config::set('pdfinfo.bin', getenv('PDFTOINFO_PATH'));
@@ -2125,11 +2128,14 @@ class Dashboard extends MX_Controller {
 											if(strpos($linkHref, 'clients.pacificcoasttitle.com') !== false){
 												$linkText = str_replace(' ', '-', $linkText); 
 												$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
+												if($linkText == '.pdf'){
+													continue;
+												}
 												$document_name = date('YmdHis')."_".$linkText;
 												$documentId = explode('=', $linkHref);
 												if (!in_array($documentId[1], $apiDocumentIds))  {
-													file_put_contents('./uploads/documents/'.$document_name, file_get_contents($linkHref));
-													$fileSize = filesize('./uploads/documents/'.$document_name);
+													file_put_contents(FCPATH.'/uploads/documents/'.$document_name, file_get_contents($linkHref));
+													$fileSize = filesize(FCPATH.'/uploads/documents/'.$document_name);
 													$documentData = array(
 														'document_name' => $document_name,
 														'original_document_name' => $linkText,
@@ -2144,7 +2150,7 @@ class Dashboard extends MX_Controller {
 														'is_prelim_document' => 0,
 														'is_linked_doc' => 1
 													);
-													$documentId = $this->document->insert($documentData);
+													$document_id = $this->document->insert($documentData);
 													$linked_doc[$linkedDocCount]['original_document_name'] = $linkText;
 													$linked_doc[$linkedDocCount]['document_name'] = $document_name;
 													$linked_doc[$linkedDocCount]['api_document_id'] = $documentId[1];
@@ -2182,6 +2188,7 @@ class Dashboard extends MX_Controller {
 				}	
 			}
 		}
+		
 		$data['linked_doc'] = $linked_doc;
 		$data['prelimDocument'] = $prelimDocument;
 		$data['orderDetails'] = $orderDetails;
@@ -2465,7 +2472,7 @@ class Dashboard extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$resware_document_id = $this->input->post('resware_document_id');
 		$order_id = $this->input->post('order_id');
-		$documentDetail = $this->order->get_document_detail($resware_document_id);
+		$documentDetail = $this->order->get_document_detail($resware_document_id, $order_id);
 		$is_sync = $this->input->post('is_sync');
 		if ($userdata['is_master'] == 1) {
 			$orderDetails = $this->order->get_rows(array('id' => $order_id));
