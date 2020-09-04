@@ -1990,15 +1990,7 @@ class Dashboard extends MX_Controller {
 												$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
 												$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
 												$apiDocumentIds[] = $documentId[1];
-											} else {
-												$key = array_search($documentId[1], array_column($documents, 'api_document_id'));
-												$linked_doc[$linkedDocCount]['original_document_name'] = $documents[$key]['original_document_name'];
-												$linked_doc[$linkedDocCount]['document_name'] = $documents[$key]['document_name'];
-												$linked_doc[$linkedDocCount]['api_document_id'] = $documents[$key]['api_document_id'];
-												$linked_doc[$linkedDocCount]['is_sync'] = $documents[$key]['is_sync'];
-												$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
-												$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
-											}
+											} 
 											$linkedDocCount++;
 										} else{
 											continue;
@@ -2153,15 +2145,7 @@ class Dashboard extends MX_Controller {
 													$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
 													$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
 													$apiDocumentIds[] = $documentId[1];
-												} else {
-													$key = array_search($documentId[1], array_column($documents, 'api_document_id'));
-													$linked_doc[$linkedDocCount]['original_document_name'] = $documents[$key]['original_document_name'];
-													$linked_doc[$linkedDocCount]['document_name'] = $documents[$key]['document_name'];
-													$linked_doc[$linkedDocCount]['api_document_id'] = $documents[$key]['api_document_id'];
-													$linked_doc[$linkedDocCount]['is_sync'] = $documents[$key]['is_sync'];
-													$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
-													$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
-												}
+												} 
 												$linkedDocCount++;
 											} else{
 												continue;
