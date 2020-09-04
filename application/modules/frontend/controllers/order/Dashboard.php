@@ -1989,6 +1989,7 @@ class Dashboard extends MX_Controller {
 												$linked_doc[$linkedDocCount]['is_sync'] = 1;
 												$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
 												$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+												$apiDocumentIds[] = $documentId[1];
 											} else {
 												$key = array_search($documentId[1], array_column($documents, 'api_document_id'));
 												$linked_doc[$linkedDocCount]['original_document_name'] = $documents[$key]['original_document_name'];
@@ -2151,6 +2152,7 @@ class Dashboard extends MX_Controller {
 													$linked_doc[$linkedDocCount]['is_sync'] = 1;
 													$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
 													$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
+													$apiDocumentIds[] = $documentId[1];
 												} else {
 													$key = array_search($documentId[1], array_column($documents, 'api_document_id'));
 													$linked_doc[$linkedDocCount]['original_document_name'] = $documents[$key]['original_document_name'];
