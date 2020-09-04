@@ -737,7 +737,7 @@ class Dashboard extends MX_Controller {
 					$documentName = $order['proposed_insured_document_name'];
 					
 
-                	$action = '<a href="./uploads/proposed-insured/'.$documentName.'" download><button class="btn btn-grad-2a button-color" type="button">Download</button></a>';
+                	$action = '<a href="./uploads/proposed-insured/'.$documentName.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
                 }
                 else
                 {

@@ -941,7 +941,7 @@ class DashboardMail extends MX_Controller {
             $documentName = $orderDetails['proposed_insured_document_name'];
             
 
-            $action = '<a href="'.base_url().'/uploads/proposed-insured/'.$documentName.'" download><button class="btn btn-grad-2a button-color" type="button">Download</button></a>';
+            $action = '<a href="'.base_url().'/uploads/proposed-insured/'.$documentName.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
         }
         else
         {
