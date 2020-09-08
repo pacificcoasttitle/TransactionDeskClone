@@ -2218,7 +2218,9 @@ class Dashboard extends MX_Controller {
 				foreach ($data['Liens'] as $key => $lien) 
 				{
 					$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
-					
+					// echo "<pre>123:"; print_r($language);
+					/*$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);*/
 					if(strpos($language, 'Tax Identification No') !== false)
 					{
 						$keys = array_keys($data['Liens']);
@@ -2245,11 +2247,32 @@ class Dashboard extends MX_Controller {
 								
 								$language = str_replace("_PARCELID1_", " <strong><u>".$parcelID."</u></strong>" , $language);
 							}
+							$pos = strpos($language, 'Tax Identification No');
+							$sub_str = substr($language,0,$pos);							
+							$language = substr($language,$pos);
+							$language = str_replace(': ', ':', $language);
+							
+							preg_match_all('/[a-zA-Z0-9. ]+:(\S+)/', $language, $matches);
+
+							$language = $sub_str;
+							
+							if(isset($matches[0]) && !empty($matches[0]))
+							{
+								foreach ($matches[0] as $key => $value) 
+								{
+									$a = explode(":", $value);
+									
+									$str= '<strong>'.$a[0].': </strong>'.$a[1];
+									$language .= $str."\n";
+								}
+							}
+
 
 							$tax[] = $language;
 					}
 					else
 					{
+						
 						$amount = isset($lien['Amount']) && !empty($lien['Amount']) ? $lien['Amount'] : '';
 						$date = isset($lien['Date']) && !empty($lien['Date']) ? $lien['Date'] : '';
 						$grantor = isset($lien['Grantor']) && !empty($lien['Grantor']) ? $lien['Grantor'] : '';
@@ -2259,6 +2282,34 @@ class Dashboard extends MX_Controller {
 						$instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
 						if(!empty($language))
 						{
+
+							if(strpos($language, 'Amount:') !== false)
+							{
+								$pos = strpos($language, 'Amount:');
+								$sub_str = substr($language,0,$pos);
+														
+								$language = substr($language,$pos);
+
+								$language = str_replace(': ', ':', $language);
+								$language = str_replace(': ', ':', $language);
+								$language = str_replace('$ ', '$', $language);
+								// echo "<pre>"; print_r($language); exit;
+								preg_match_all('/[a-zA-Z0-9 ]+:(\S+)/', $language, $matches);
+
+								$language = $sub_str."\n";
+								
+								if(isset($matches[0]) && !empty($matches[0]))
+								{
+									foreach ($matches[0] as $key => $value) 
+									{
+										$a = explode(":", $value);
+										
+										$str= '<strong>'.$a[0].': </strong>'.$a[1];
+										$language .= $str."\n";
+									}
+								}
+							}
+
 							if(strpos($language, '_AMOUNT_') !== false) {
 								$language = str_replace("_AMOUNT_", " ".$amount , $language);
 							}
@@ -2306,13 +2357,17 @@ class Dashboard extends MX_Controller {
 								
 								$language = str_replace("_PARCELID1_", " <strong><u>".$parcelID."</u></strong>" , $language);
 							}
+
+							
+
 							/*$language = str_replace("\u000b", "", $language);
 							$language = str_replace("\r", "", $language);*/
+							
 							$liens[] = $language;
 						}
 					}
 					   				
-				}
+				} 
 			}
 
 			$easements = array();
