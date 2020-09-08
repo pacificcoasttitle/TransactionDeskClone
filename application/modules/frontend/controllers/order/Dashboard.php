@@ -2266,8 +2266,6 @@ class Dashboard extends MX_Controller {
 									$language .= $str."\n";
 								}
 							}
-
-
 							$tax[] = $language;
 					}
 					else
@@ -2285,31 +2283,74 @@ class Dashboard extends MX_Controller {
 
 							if(strpos($language, 'Amount:') !== false)
 							{
+
 								$pos = strpos($language, 'Amount:');
-								$sub_str = substr($language,0,$pos);
+								$sub_str_main = substr($language,0,$pos);
 														
 								$language = substr($language,$pos);
-
-								$language = str_replace(': ', ':', $language);
-								$language = str_replace(': ', ':', $language);
-								$language = str_replace('$ ', '$', $language);
-								// echo "<pre>"; print_r($language); exit;
-								preg_match_all('/[a-zA-Z0-9 ]+:(\S+)/', $language, $matches);
-
-								$language = $sub_str."\n";
-								
-								if(isset($matches[0]) && !empty($matches[0]))
+								$exploded_str = $this->multiexplode(array("_ "),$language);
+								$formatted_data = array();
+								if(isset($exploded_str) && !empty($exploded_str))
 								{
-									foreach ($matches[0] as $key => $value) 
+									foreach ($exploded_str as $key => $value) 
 									{
-										$a = explode(":", $value);
+										$str_count = substr_count($value, ':');
+
+										if($str_count == 2)
+										{
+											if(strpos($value, 'Lender:') !== false)
+											{
+
+												$pos = strpos($value, 'Lender:');
+												$sub_str = substr($value,0,$pos);
+												$formatted_data[] = $sub_str;
+												$truncate_str = substr($value,$pos);
+												$formatted_data[] = $truncate_str."_";
+											}
+											if(strpos($value, 'Recording Date:') !== false)
+											{
+
+												$pos = strpos($value, 'Recording Date:');
+												$sub_str = substr($value,0,$pos);
+												$formatted_data[] = $sub_str;
+												$truncate_str = substr($value,$pos);
+												$formatted_data[] = $truncate_str."_";
+											}
+											if(strpos($value, '<a id=') !== false)
+											{
+
+												$pos = strpos($value, '<a id=');
+												$sub_str = substr($value,0,$pos);
+												
+												
+												$truncate_str = substr($value,$pos);
+												
+												$formatted_data[] = $sub_str.$truncate_str;
+											}
+										}
+										else
+										{
+											$formatted_data[] = $value."_"; 
+										}
+									} 
+								}
+								
+								
+
+								$language = $sub_str_main."\n";
+								
+								if(isset($formatted_data) && !empty($formatted_data))
+								{
+									foreach ($formatted_data as $k => $v) 
+									{
+										$str = explode(": ", $v);
 										
-										$str= '<strong>'.$a[0].': </strong>'.$a[1];
-										$language .= $str."\n";
+										$format_str= '<strong>'.$str[0].': </strong>'.$str[1];
+										$language .= $format_str."\n";
 									}
 								}
 							}
-
+ 
 							if(strpos($language, '_AMOUNT_') !== false) {
 								$language = str_replace("_AMOUNT_", " ".$amount , $language);
 							}
@@ -2505,6 +2546,15 @@ class Dashboard extends MX_Controller {
         echo json_encode($results, true);
 	}
 	
+	function multiexplode ($delimiters,$string) 
+	{
+
+	    $ready = str_replace($delimiters, $delimiters[0], $string);
+	    $launch = explode($delimiters[0], $ready);
+	    return  $launch;
+	}
+
+
 	public function prelim() 
 	{
         $fileId = $this->input->post('fileId');
