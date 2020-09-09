@@ -2214,22 +2214,23 @@ class Dashboard extends MX_Controller {
 			$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
 			$liens = $tax = array();
 			$linkedDocuments = $this->order->get_linked_documents($orderDetails['order_id']);
+
 			if(isset($data['Liens']) && !empty($data['Liens']))
 			{
 				foreach ($data['Liens'] as $key => $lien) 
 				{
 					$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
-					
+					 
 					if(strpos($language, 'Tax Identification No') !== false)
 					{
-						$keys = array_keys($data['Liens']);
+						/*$keys = array_keys($data['Liens']);
 						$prev_val = (array_search($key,$keys,true) - 1);
 						if(isset($data['Liens'][$prev_val]['Language']) && !empty($data['Liens'][$prev_val]['Language']))
 						{
 							$tax[] = $data['Liens'][$prev_val]['Language'];							
 							$l_key = array_search($data['Liens'][$prev_val]['Language'] ,$liens);
 							unset($liens[$l_key]);
-						}
+						}*/
 						
 						if(strpos($language, '_PARCELID1_') !== false) {
 								foreach($linkedDocuments as $linkedDocument) {
@@ -2249,7 +2250,7 @@ class Dashboard extends MX_Controller {
 							$pos = strpos($language, 'Tax Identification No');
 							$sub_str = substr($language,0,$pos);							
 							$language = substr($language,$pos);
-							//$language = str_replace(': ', ':', $language);
+							// $language = str_replace(': ', ':', $language);
 							
 							preg_match_all('/[a-zA-Z0-9. ]+: (\S+)/', $language, $matches);
 
@@ -2267,7 +2268,7 @@ class Dashboard extends MX_Controller {
 									}
 									$language .= $str."\n";
 								}
-							}
+							} 
 							$tax[] = $language;
 					}
 					else
@@ -2399,7 +2400,8 @@ class Dashboard extends MX_Controller {
 								$language = str_replace("_PARCELID1_", " <strong><u>".$parcelID."</u></strong>" , $language);
 							}
 							 
-							if(strpos(strtolower($language), 'any liens or other assessments') !== false || strpos(strtolower($language), 'the lien of supplemental') !== false)
+							if(strpos(strtolower($language), 'any liens or other assessments') !== false || strpos(strtolower($language), 'the lien of supplemental') !== false || strpos(strtolower($language), 'property taxes') !== false  )
+
 							{
 								$tax[] = $language;
 							}
@@ -2411,7 +2413,7 @@ class Dashboard extends MX_Controller {
 						}
 					}
 					   				
-				} 
+				}
 			}
 
 			$easements = array();
