@@ -34,7 +34,7 @@ class DashboardMail extends MX_Controller {
         $fileId = $this->uri->segment(2);    
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
-        $orderDetails = $this->order->get_order_details($fileId);
+        $orderDetails = $this->order->get_order_details($fileId, 1);
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
         $file_id = $orderDetails['file_id'];
@@ -217,7 +217,7 @@ class DashboardMail extends MX_Controller {
         $secondaryOwner = $first_name." ".$last_name;
         $name = explode(" ",$this->input->post('LenderName'));  
         $editFlag = $this->input->post('editFlag');
-        $orderDetails = $this->order->get_order_details($file_id);
+        $orderDetails = $this->order->get_order_details($file_id, 1);
         $cplApi = $this->input->post('cpl_api');
 
         $lender_details = array(
@@ -228,7 +228,8 @@ class DashboardMail extends MX_Controller {
             'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
             'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
             'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
-            'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : ""
+            'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
+            'assignment_clause'  => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : ""
         );
         $condition = array(
             'id' => $LenderId
@@ -348,7 +349,7 @@ class DashboardMail extends MX_Controller {
         $errors = array();
         $success = array();
         $fileId = $this->uri->segment(2);    
-        $orderDetails = $this->order->get_order_details($fileId);
+        $orderDetails = $this->order->get_order_details($fileId, 1);
         $vendorTokenData = $this->fnf->get_vendor_token();
 
         if ($vendorTokenData === false) {
@@ -429,7 +430,7 @@ class DashboardMail extends MX_Controller {
         $fileId = $this->uri->segment(2);    
         $errors = array();
         $success = array();
-        $orderDetails = $this->order->get_order_details($fileId);
+        $orderDetails = $this->order->get_order_details($fileId, 1);
         $res = array();
 
         $resToken = $this->order->get_token();
@@ -824,7 +825,7 @@ class DashboardMail extends MX_Controller {
         $errors = array();
         $success = array();
         $fileId = $this->uri->segment(2);    
-        $orderDetails = $this->order->get_order_details($fileId);
+        $orderDetails = $this->order->get_order_details($fileId, 1);
         $responseArr = $this->natic->getDocumentContentForCpl($fileId);
         if ($responseArr['success']) {
             $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
@@ -969,7 +970,7 @@ class DashboardMail extends MX_Controller {
 		$this->load->model('order/home_model');
 		$this->load->library('order/resware');
 		$fileId = $this->input->post('fileId');
-		$orderDetails = $this->order->get_order_details($fileId);
+		$orderDetails = $this->order->get_order_details($fileId, 1);
 		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 			
 		if ($orderUser['is_escrow'] == 1) {
@@ -982,7 +983,8 @@ class DashboardMail extends MX_Controller {
 				$orderDetails['lender_address'] = '';
 				$orderDetails['lender_city'] = '';
 				$orderDetails['lender_zipcode'] = '';
-				$orderDetails['lender_id'] = '';
+                $orderDetails['lender_id'] = '';
+                $orderDetails['lender_assignment_clause'] = '';
 			} else {			
 				$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
 				$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
@@ -991,7 +993,8 @@ class DashboardMail extends MX_Controller {
 				$orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
 				$orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
 				$orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
-				$orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+                $orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+                $orderDetails['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
 				$orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
 			}
 		} else {
@@ -1004,7 +1007,8 @@ class DashboardMail extends MX_Controller {
 				$orderDetails['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
 				$orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
 				$orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
-				$orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+                $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+                $orderDetails['lender_assignment_clause'] = $orderDetails['assignment_clause'] ? $orderDetails['assignment_clause'] : '';
 				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {
 				$orderDetails['lender_first_name'] =  '';
@@ -1015,7 +1019,8 @@ class DashboardMail extends MX_Controller {
 				$orderDetails['lender_address'] = '';
 				$orderDetails['lender_city'] = '';
 				$orderDetails['lender_zipcode'] = '';
-				$orderDetails['lender_id'] = '';
+                $orderDetails['lender_id'] = '';
+                $orderDetails['lender_assignment_clause'] = '';
 			}
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 		}
