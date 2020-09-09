@@ -254,7 +254,7 @@ class Order
         }
     }
 
-    public function get_order_documents($fileId)
+    public function get_order_documents($fileId,$from_mail=0)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number, 
@@ -269,7 +269,7 @@ class Order
             ->from('order_details')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->CI->db->where('order_details.file_id', $fileId);
-        if ($userdata['is_master'] == 0) {
+        if ($userdata['is_master'] == 0 && $from_mail == 0) {
             $this->CI->db->where('order_details.customer_id', $userdata['id']);
         }
         $query = $this->CI->db->get();

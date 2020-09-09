@@ -1,437 +1,811 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="x-apple-disable-message-reformatting">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Prelim Overview</title>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+    <head>
+        <!-- NAME: 1 COLUMN -->
+        <!--[if gte mso 15]>
+        <xml>
+            <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+        <![endif]-->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>*|MC:SUBJECT|*</title>
+        
     <style type="text/css">
-      a { text-decoration: none; outline: none; }
-      @media (max-width: 649px) {
-        .o_col-full { max-width: 100% !important; }
-        .o_col-half { max-width: 50% !important; }
-        .o_hide-lg { display: inline-block !important; font-size: inherit !important; max-height: none !important; line-height: inherit !important; overflow: visible !important; width: auto !important; visibility: visible !important; }
-        .o_hide-xs, .o_hide-xs.o_col_i { display: none !important; font-size: 0 !important; max-height: 0 !important; width: 0 !important; line-height: 0 !important; overflow: hidden !important; visibility: hidden !important; height: 0 !important; }
-        .o_xs-center { text-align: center !important; }
-        .o_xs-left { text-align: left !important; }
-        .o_xs-right { text-align: left !important; }
-        table.o_xs-left { margin-left: 0 !important; margin-right: auto !important; float: none !important; }
-        table.o_xs-right { margin-left: auto !important; margin-right: 0 !important; float: none !important; }
-        table.o_xs-center { margin-left: auto !important; margin-right: auto !important; float: none !important; }
-        h1.o_heading { font-size: 32px !important; line-height: 41px !important; }
-        h2.o_heading { font-size: 26px !important; line-height: 37px !important; }
-        h3.o_heading { font-size: 20px !important; line-height: 30px !important; }
-        .o_xs-py-md { padding-top: 24px !important; padding-bottom: 24px !important; }
-        .o_xs-pt-xs { padding-top: 8px !important; }
-        .o_xs-pb-xs { padding-bottom: 8px !important; }
-      }
-      @media screen {
-        @font-face {
-          font-family: 'Roboto';
-          font-style: normal;
-          font-weight: 400;
-          src: local("Roboto"), local("Roboto-Regular"), url(https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu7GxKOzY.woff2) format("woff2");
-          unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF; }
-        @font-face {
-          font-family: 'Roboto';
-          font-style: normal;
-          font-weight: 400;
-          src: local("Roboto"), local("Roboto-Regular"), url(https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxK.woff2) format("woff2");
-          unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-        @font-face {
-          font-family: 'Roboto';
-          font-style: normal;
-          font-weight: 700;
-          src: local("Roboto Bold"), local("Roboto-Bold"), url(https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmWUlfChc4EsA.woff2) format("woff2");
-          unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF; }
-        @font-face {
-          font-family: 'Roboto';
-          font-style: normal;
-          font-weight: 700;
-          src: local("Roboto Bold"), local("Roboto-Bold"), url(https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmWUlfBBc4.woff2) format("woff2");
-          unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-        .o_sans, .o_heading { font-family: "Roboto", sans-serif !important; }
-        .o_heading, strong, b { font-weight: 700 !important; }
-        a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; }
-      }
-    </style>
-    <!--[if mso]>
-    <style>
-      table { border-collapse: collapse; }
-      .o_col { float: left; }
-    </style>
-    <xml>
-      <o:OfficeDocumentSettings>
-        <o:PixelsPerInch>96</o:PixelsPerInch>
-      </o:OfficeDocumentSettings>
-    </xml>
-    <![endif]-->
-  </head>
-  <body class="o_body o_bg-light" style="width: 100%;margin: 0px;padding: 0px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;background-color: #e6e7e8;">
-    <!-- preview-text -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_hide" align="center" style="display: none;font-size: 0;max-height: 0;width: 0;line-height: 0;overflow: hidden;mso-hide: all;visibility: hidden;">Email Summary (Hidden)</td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- header -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs o_pt-lg o_xs-pt-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;padding-top: 32px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_bg-dark o_px o_py-md o_br-t o_sans o_text" align="center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;background-color: #03374f;border-radius: 4px 4px 0px 0px;padding-left: 16px;padding-right: 16px;padding-top: 24px;padding-bottom: 24px;">
-                    <p style="margin-top: 0px;margin-bottom: 0px;"><a class="o_text-white" href="<?php echo base_url().'order'; ?>" style="text-decoration: none;outline: none;color: #ffffff;"><img src="<?php echo base_url(); ?>assets/frontend/images/e843a625-32d7-44e8-a0d4-7f13748fc720.gif" width="215" height="36" alt="SimpleApp" style="max-width: 215px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a></p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- hero-primary-icon-lines -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_bg-primary o_px-md o_py-xl o_xs-py-md o_sans o_text-md o_text-white" align="center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 19px;line-height: 28px;background-image: url('https://mcusercontent.com/3f123598483b787fa180fff0f/images/f387ceae-84b0-477c-89c0-64d49cd2582c.jpg');color: #ffffff;padding-left: 24px;padding-right: 24px;padding-top: 64px;padding-bottom: 64px;">
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                      <tbody>
-                        <tr>
-                          <td class="o_bb-white" height="40" width="32" style="border-bottom: 1px solid #ffffff;">&nbsp; </td>
-                          <td rowspan="2" class="o_sans o_text o_text-white o_px o_py" align="center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;color: #ffffff;padding-left: 16px;padding-right: 16px;padding-top: 16px;padding-bottom: 16px;">
-                            <img src="<?php echo base_url(); ?>assets/frontend/images/0833af6a-7017-47ae-ae74-54e96e04049d.gif" width="48" height="48" alt="" style="max-width: 48px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;">
-                          </td>
-                          <td class="o_bb-white" height="40" width="32" style="border-bottom: 1px solid #ffffff;">&nbsp; </td>
-                        </tr>
-                        <tr>
-                          <td height="40">&nbsp; </td>
-                          <td height="40">&nbsp; </td>
-                        </tr>
-                        <tr>
-                          <td style="font-size: 8px; line-height: 8px; height: 8px;">&nbsp; </td>
-                          <td style="font-size: 8px; line-height: 8px; height: 8px;">&nbsp; </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <h2 class="o_heading o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;font-size: 30px;line-height: 39px;">Your Prelim Overview</h2>
-                    <p style="margin-top: 0px;margin-bottom: 0px;">We want to save you time by pointing out the most pressing<br> items on your preliminary title report.</p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- spacer -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_bg-white" style="font-size: 24px;line-height: 24px;height: 24px;background-color: #ffffff;">&nbsp; </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- order-summary -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_bg-white o_sans o_text-xs o_text-light o_px-md o_pt-xs" align="center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 25px;line-height: 45px;background-color: #ffffff;color: #82899a;padding-left: 24px;padding-right: 24px;padding-top: 8px;">
-                    <p style="margin-top: 0px;margin-bottom: 0px;">Prelim Hot Items</p>
-                    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                      <tbody>
-                        <tr>
-                          <td class="o_re o_bb-light" style="font-size: 8px;line-height: 8px;height: 8px;vertical-align: top;border-bottom: 1px solid #d3dce0;">&nbsp; </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- product-review -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_re o_bg-white o_px o_pt" align="center" style="font-size: 0;vertical-align: top;background-color: #ffffff;padding-left: 16px;padding-right: 16px;padding-top: 16px;">
-                    <!--[if mso]><table cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td width="100" align="center" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    
-                    <!--[if mso]></td><td width="300" align="left" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_col o_col-3 o_col-full" style="display: inline-block;vertical-align: top;width: 100%; /* max-width: 300px; */">
-                      <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
-                      <div class="o_px-xs o_sans o_text-xs o_text-light o_left o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;color: #82899a;text-align: left;padding-left: 8px;padding-right: 8px;">
-                        <h4 class="o_heading o_text-dark o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;color: #d35411;font-size: 18px;line-height: 23px;">Taxes</h4>
-                        <?php
-                        if(isset($tax) && !empty($tax))
-                        {
-                            $tax = json_decode($tax,TRUE);
+        p{
+            margin:10px 0;
+            padding:0;
+        }
+        table{
+            border-collapse:collapse;
+        }
+        h1,h2,h3,h4,h5,h6{
+            display:block;
+            margin:0;
+            padding:0;
+        }
+        img,a img{
+            border:0;
+            height:auto;
+            outline:none;
+            text-decoration:none;
+        }
+        body,#bodyTable,#bodyCell{
+            height:100%;
+            margin:0;
+            padding:0;
+            width:100%;
+        }
+        .mcnPreviewText{
+            display:none !important;
+        }
+        #outlook a{
+            padding:0;
+        }
+        img{
+            -ms-interpolation-mode:bicubic;
+        }
+        table{
+            mso-table-lspace:0pt;
+            mso-table-rspace:0pt;
+        }
+        .ReadMsgBody{
+            width:100%;
+        }
+        .ExternalClass{
+            width:100%;
+        }
+        p,a,li,td,blockquote{
+            mso-line-height-rule:exactly;
+        }
+        a[href^=tel],a[href^=sms]{
+            color:inherit;
+            cursor:default;
+            text-decoration:none;
+        }
+        p,a,li,td,body,table,blockquote{
+            -ms-text-size-adjust:100%;
+            -webkit-text-size-adjust:100%;
+        }
+        .ExternalClass,.ExternalClass p,.ExternalClass td,.ExternalClass div,.ExternalClass span,.ExternalClass font{
+            line-height:100%;
+        }
+        a[x-apple-data-detectors]{
+            color:inherit !important;
+            text-decoration:none !important;
+            font-size:inherit !important;
+            font-family:inherit !important;
+            font-weight:inherit !important;
+            line-height:inherit !important;
+        }
+        #bodyCell{
+            padding:10px;
+        }
+        .templateContainer{
+            max-width:600px !important;
+        }
+        a.mcnButton{
+            display:block;
+        }
+        .mcnImage,.mcnRetinaImage{
+            vertical-align:bottom;
+        }
+        .mcnTextContent{
+            word-break:break-word;
+        }
+        .mcnTextContent img{
+            height:auto !important;
+        }
+        .mcnDividerBlock{
+            table-layout:fixed !important;
+        }
+    /*
+    @tab Page
+    @section Background Style
+    @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
+    */
+        body,#bodyTable{
+            /*@editable*/background-color:#FAFAFA;
+        }
+    /*
+    @tab Page
+    @section Background Style
+    @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
+    */
+        #bodyCell{
+            /*@editable*/border-top:0;
+        }
+    /*
+    @tab Page
+    @section Email Border
+    @tip Set the border for your email.
+    */
+        .templateContainer{
+            /*@editable*/border:0;
+        }
+    /*
+    @tab Page
+    @section Heading 1
+    @tip Set the styling for all first-level headings in your emails. These should be the largest of your headings.
+    @style heading 1
+    */
+        h1{
+            /*@editable*/color:#202020;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:26px;
+            /*@editable*/font-style:normal;
+            /*@editable*/font-weight:bold;
+            /*@editable*/line-height:125%;
+            /*@editable*/letter-spacing:normal;
+            /*@editable*/text-align:left;
+        }
+    /*
+    @tab Page
+    @section Heading 2
+    @tip Set the styling for all second-level headings in your emails.
+    @style heading 2
+    */
+        h2{
+            /*@editable*/color:#202020;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:22px;
+            /*@editable*/font-style:normal;
+            /*@editable*/font-weight:bold;
+            /*@editable*/line-height:125%;
+            /*@editable*/letter-spacing:normal;
+            /*@editable*/text-align:left;
+        }
+    /*
+    @tab Page
+    @section Heading 3
+    @tip Set the styling for all third-level headings in your emails.
+    @style heading 3
+    */
+        h3{
+            /*@editable*/color:#202020;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:20px;
+            /*@editable*/font-style:normal;
+            /*@editable*/font-weight:bold;
+            /*@editable*/line-height:125%;
+            /*@editable*/letter-spacing:normal;
+            /*@editable*/text-align:left;
+        }
+    /*
+    @tab Page
+    @section Heading 4
+    @tip Set the styling for all fourth-level headings in your emails. These should be the smallest of your headings.
+    @style heading 4
+    */
+        h4{
+            /*@editable*/color:#202020;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:18px;
+            /*@editable*/font-style:normal;
+            /*@editable*/font-weight:bold;
+            /*@editable*/line-height:125%;
+            /*@editable*/letter-spacing:normal;
+            /*@editable*/text-align:left;
+        }
+    /*
+    @tab Preheader
+    @section Preheader Style
+    @tip Set the background color and borders for your email's preheader area.
+    */
+        #templatePreheader{
+            /*@editable*/background-color:#FAFAFA;
+            /*@editable*/background-image:none;
+            /*@editable*/background-repeat:no-repeat;
+            /*@editable*/background-position:center;
+            /*@editable*/background-size:cover;
+            /*@editable*/border-top:0;
+            /*@editable*/border-bottom:0;
+            /*@editable*/padding-top:9px;
+            /*@editable*/padding-bottom:9px;
+        }
+    /*
+    @tab Preheader
+    @section Preheader Text
+    @tip Set the styling for your email's preheader text. Choose a size and color that is easy to read.
+    */
+        #templatePreheader .mcnTextContent,#templatePreheader .mcnTextContent p{
+            /*@editable*/color:#656565;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:12px;
+            /*@editable*/line-height:150%;
+            /*@editable*/text-align:left;
+        }
+    /*
+    @tab Preheader
+    @section Preheader Link
+    @tip Set the styling for your email's preheader links. Choose a color that helps them stand out from your text.
+    */
+        #templatePreheader .mcnTextContent a,#templatePreheader .mcnTextContent p a{
+            /*@editable*/color:#656565;
+            /*@editable*/font-weight:normal;
+            /*@editable*/text-decoration:underline;
+        }
+    /*
+    @tab Header
+    @section Header Style
+    @tip Set the background color and borders for your email's header area.
+    */
+        #templateHeader{
+            /*@editable*/background-color:#FFFFFF;
+            /*@editable*/background-image:none;
+            /*@editable*/background-repeat:no-repeat;
+            /*@editable*/background-position:center;
+            /*@editable*/background-size:cover;
+            /*@editable*/border-top:0;
+            /*@editable*/border-bottom:0;
+            /*@editable*/padding-top:9px;
+            /*@editable*/padding-bottom:0;
+        }
+    /*
+    @tab Header
+    @section Header Text
+    @tip Set the styling for your email's header text. Choose a size and color that is easy to read.
+    */
+        #templateHeader .mcnTextContent,#templateHeader .mcnTextContent p{
+            /*@editable*/color:#202020;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:16px;
+            /*@editable*/line-height:150%;
+            /*@editable*/text-align:left;
+        }
+    /*
+    @tab Header
+    @section Header Link
+    @tip Set the styling for your email's header links. Choose a color that helps them stand out from your text.
+    */
+        #templateHeader .mcnTextContent a,#templateHeader .mcnTextContent p a{
+            /*@editable*/color:#007C89;
+            /*@editable*/font-weight:normal;
+            /*@editable*/text-decoration:underline;
+        }
+    /*
+    @tab Body
+    @section Body Style
+    @tip Set the background color and borders for your email's body area.
+    */
+        #templateBody{
+            /*@editable*/background-color:#FFFFFF;
+            /*@editable*/background-image:none;
+            /*@editable*/background-repeat:no-repeat;
+            /*@editable*/background-position:center;
+            /*@editable*/background-size:cover;
+            /*@editable*/border-top:0;
+            /*@editable*/border-bottom:2px solid #EAEAEA;
+            /*@editable*/padding-top:0;
+            /*@editable*/padding-bottom:9px;
+        }
+    /*
+    @tab Body
+    @section Body Text
+    @tip Set the styling for your email's body text. Choose a size and color that is easy to read.
+    */
+        #templateBody .mcnTextContent,#templateBody .mcnTextContent p{
+            /*@editable*/color:#202020;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:16px;
+            /*@editable*/line-height:150%;
+            /*@editable*/text-align:left;
+        }
+    /*
+    @tab Body
+    @section Body Link
+    @tip Set the styling for your email's body links. Choose a color that helps them stand out from your text.
+    */
+        #templateBody .mcnTextContent a,#templateBody .mcnTextContent p a{
+            /*@editable*/color:#007C89;
+            /*@editable*/font-weight:normal;
+            /*@editable*/text-decoration:underline;
+        }
+    /*
+    @tab Footer
+    @section Footer Style
+    @tip Set the background color and borders for your email's footer area.
+    */
+        #templateFooter{
+            /*@editable*/background-color:#FAFAFA;
+            /*@editable*/background-image:none;
+            /*@editable*/background-repeat:no-repeat;
+            /*@editable*/background-position:center;
+            /*@editable*/background-size:cover;
+            /*@editable*/border-top:0;
+            /*@editable*/border-bottom:0;
+            /*@editable*/padding-top:9px;
+            /*@editable*/padding-bottom:9px;
+        }
+    /*
+    @tab Footer
+    @section Footer Text
+    @tip Set the styling for your email's footer text. Choose a size and color that is easy to read.
+    */
+        #templateFooter .mcnTextContent,#templateFooter .mcnTextContent p{
+            /*@editable*/color:#656565;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:12px;
+            /*@editable*/line-height:150%;
+            /*@editable*/text-align:center;
+        }
+    /*
+    @tab Footer
+    @section Footer Link
+    @tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
+    */
+        #templateFooter .mcnTextContent a,#templateFooter .mcnTextContent p a{
+            /*@editable*/color:#656565;
+            /*@editable*/font-weight:normal;
+            /*@editable*/text-decoration:underline;
+        }
+    @media only screen and (min-width:768px){
+        .templateContainer{
+            width:600px !important;
+        }
 
-                            if(isset($tax) && !empty($tax))
-                            {
-                        ?>
-                                <!-- <ol> -->
-                            <?php
-                                foreach ($tax as $key => $tax_val) 
-                                {
-                            ?>
-                                    <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo nl2br(trim($tax_val)); ?>
-                                    </p>
-                        <?php
-                                }
-                        ?>
-                                <!-- </ol> -->
-                        <?php
-                            }
-                            else 
-                            {
-                        ?>
-                                <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo "No data found"; ?></p>
-                        <?php
-                            }
-                        }
-                        ?>
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="200" align="right" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <!-- <div class="o_col o_col-2 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
-                      <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
-                      <div class="o_px-xs o_right o_xs-center" style="text-align: right;padding-left: 8px;padding-right: 8px;">
-                        <table class="o_right o_xs-center" cellspacing="0" cellpadding="0" border="0" role="presentation" style="text-align: right;margin-left: auto;margin-right: 0;">
-                          <tbody>
+}   @media only screen and (max-width: 480px){
+        body,table,td,p,a,li,blockquote{
+            -webkit-text-size-adjust:none !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        body{
+            width:100% !important;
+            min-width:100% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnRetinaImage{
+            max-width:100% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnImage{
+            width:100% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnCartContainer,.mcnCaptionTopContent,.mcnRecContentContainer,.mcnCaptionBottomContent,.mcnTextContentContainer,.mcnBoxedTextContentContainer,.mcnImageGroupContentContainer,.mcnCaptionLeftTextContentContainer,.mcnCaptionRightTextContentContainer,.mcnCaptionLeftImageContentContainer,.mcnCaptionRightImageContentContainer,.mcnImageCardLeftTextContentContainer,.mcnImageCardRightTextContentContainer,.mcnImageCardLeftImageContentContainer,.mcnImageCardRightImageContentContainer{
+            max-width:100% !important;
+            width:100% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnBoxedTextContentContainer{
+            min-width:100% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnImageGroupContent{
+            padding:9px !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnCaptionLeftContentOuter .mcnTextContent,.mcnCaptionRightContentOuter .mcnTextContent{
+            padding-top:9px !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnImageCardTopImageContent,.mcnCaptionBottomContent:last-child .mcnCaptionBottomImageContent,.mcnCaptionBlockInner .mcnCaptionTopContent:last-child .mcnTextContent{
+            padding-top:18px !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnImageCardBottomImageContent{
+            padding-bottom:9px !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnImageGroupBlockInner{
+            padding-top:0 !important;
+            padding-bottom:0 !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnImageGroupBlockOuter{
+            padding-top:9px !important;
+            padding-bottom:9px !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnTextContent,.mcnBoxedTextContentColumn{
+            padding-right:18px !important;
+            padding-left:18px !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcnImageCardLeftImageContent,.mcnImageCardRightImageContent{
+            padding-right:18px !important;
+            padding-bottom:0 !important;
+            padding-left:18px !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+        .mcpreview-image-uploader{
+            display:none !important;
+            width:100% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+    /*
+    @tab Mobile Styles
+    @section Heading 1
+    @tip Make the first-level headings larger in size for better readability on small screens.
+    */
+        h1{
+            /*@editable*/font-size:22px !important;
+            /*@editable*/line-height:125% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+    /*
+    @tab Mobile Styles
+    @section Heading 2
+    @tip Make the second-level headings larger in size for better readability on small screens.
+    */
+        h2{
+            /*@editable*/font-size:20px !important;
+            /*@editable*/line-height:125% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+    /*
+    @tab Mobile Styles
+    @section Heading 3
+    @tip Make the third-level headings larger in size for better readability on small screens.
+    */
+        h3{
+            /*@editable*/font-size:18px !important;
+            /*@editable*/line-height:125% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+    /*
+    @tab Mobile Styles
+    @section Heading 4
+    @tip Make the fourth-level headings larger in size for better readability on small screens.
+    */
+        h4{
+            /*@editable*/font-size:16px !important;
+            /*@editable*/line-height:150% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+    /*
+    @tab Mobile Styles
+    @section Boxed Text
+    @tip Make the boxed text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+    */
+        .mcnBoxedTextContentContainer .mcnTextContent,.mcnBoxedTextContentContainer .mcnTextContent p{
+            /*@editable*/font-size:14px !important;
+            /*@editable*/line-height:150% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+    /*
+    @tab Mobile Styles
+    @section Preheader Visibility
+    @tip Set the visibility of the email's preheader on small screens. You can hide it to save space.
+    */
+        #templatePreheader{
+            /*@editable*/display:block !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+    /*
+    @tab Mobile Styles
+    @section Preheader Text
+    @tip Make the preheader text larger in size for better readability on small screens.
+    */
+        #templatePreheader .mcnTextContent,#templatePreheader .mcnTextContent p{
+            /*@editable*/font-size:14px !important;
+            /*@editable*/line-height:150% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+    /*
+    @tab Mobile Styles
+    @section Header Text
+    @tip Make the header text larger in size for better readability on small screens.
+    */
+        #templateHeader .mcnTextContent,#templateHeader .mcnTextContent p{
+            /*@editable*/font-size:16px !important;
+            /*@editable*/line-height:150% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+    /*
+    @tab Mobile Styles
+    @section Body Text
+    @tip Make the body text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+    */
+        #templateBody .mcnTextContent,#templateBody .mcnTextContent p{
+            /*@editable*/font-size:16px !important;
+            /*@editable*/line-height:150% !important;
+        }
+
+}   @media only screen and (max-width: 480px){
+    /*
+    @tab Mobile Styles
+    @section Footer Text
+    @tip Make the footer content text larger in size for better readability on small screens.
+    */
+        #templateFooter .mcnTextContent,#templateFooter .mcnTextContent p{
+            /*@editable*/font-size:14px !important;
+            /*@editable*/line-height:150% !important;
+        }
+
+}</style></head>
+    <body>
+        <!--*|IF:MC_PREVIEW_TEXT|*-->
+        <!--[if !gte mso 9]><!----><span class="mcnPreviewText" style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">*|MC_PREVIEW_TEXT|*</span><!--<![endif]-->
+        <!--*|END:IF|*-->
+        <center>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
+                <tr>
+                    <td align="center" valign="top" id="bodyCell">
+                        <!-- BEGIN TEMPLATE // -->
+                        <!--[if (gte mso 9)|(IE)]>
+                        <table align="center" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;">
+                        <tr>
+                        <td align="center" valign="top" width="600" style="width:600px;">
+                        <![endif]-->
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
                             <tr>
-                              <td class="o_btn-xs o_bg-dark o_br o_heading o_text-xs" align="center" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;mso-padding-alt: 7px 16px;background-color: #d35411;border-radius: 4px;">
-                                <a class="o_text-white" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #ffffff;display: block;padding: 7px 16px;mso-text-raise: 3px;">View Document</a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div> -->
-                    <!--[if mso]></td></tr><tr><td colspan="3" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_px-xs" style="padding-left: 8px;padding-right: 8px;">
-                      <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                        <tbody>
-                          <tr>
-                            <td class="o_re o_bb-light" style="font-size: 16px;line-height: 16px;height: 16px;vertical-align: top;border-bottom: 1px solid #d3dce0;">&nbsp; </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <!--[if mso]></td></tr></table><![endif]-->
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- product-review -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
+                                <td valign="top" id="templatePreheader"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+    <tbody class="mcnTextBlockOuter">
         <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
+            <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
                 <tr>
-                  <td class="o_re o_bg-white o_px o_pt" align="center" style="font-size: 0;vertical-align: top;background-color: #ffffff;padding-left: 16px;padding-right: 16px;padding-top: 16px;">
-                    
-                    <div class="o_col o_col-3 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;/* max-width: 300px; */">
-                      <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
-                      <div class="o_px-xs o_sans o_text-xs o_text-light o_left o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;color: #82899a;text-align: left;padding-left: 8px;padding-right: 8px;">
-                        <h4 class="o_heading o_text-dark o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;color: #d35411;font-size: 18px;line-height: 23px;">Liens</h4>
-                        <?php
-                        if(isset($liens) && !empty($liens))
-                        {
-                            $lien = json_decode($liens,TRUE);
-
-                            if(isset($lien) && !empty($lien))
-                            {
-                        ?>
-                                <!-- <ol> -->
-                        <?php
-                                foreach ($lien as $key => $lien_val)
-                                {
-                            ?>
-                                    <p style=""><?php echo nl2br(($lien_val)); ?>
-                                    </p>
-                        <?php
-                                }
-                        ?>
-                                <!-- </ol> -->
-                        <?php
-                            }
-                            else 
-                            {
-                        ?>
-                                <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo "No data found"; ?></p>
-                        <?php
-                            }
-                        }
-                        ?>
-
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="200" align="right" valign="top" style="padding: 0px 8px;"><![endif]-->
-                    <!-- <div class="o_col o_col-2 o_col-full" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
-                      <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
-                      <div class="o_px-xs o_right o_xs-center" style="text-align: right;padding-left: 8px;padding-right: 8px;">
-                        <table class="o_right o_xs-center" cellspacing="0" cellpadding="0" border="0" role="presentation" style="text-align: right;margin-left: auto;margin-right: 0;">
-                          <tbody>
-                            <tr>
-                              <td class="o_btn-xs o_bg-dark o_br o_heading o_text-xs" align="center" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;mso-padding-alt: 7px 16px;background-color: #d35411;border-radius: 4px;">
-                                <a class="o_text-white" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #ffffff;display: block;padding: 7px 16px;mso-text-raise: 3px;">View Document</a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div> -->
-                    <!--[if mso]></td></tr><tr><td colspan="3" style="padding: 0px 8px;"><![endif]-->
-                    <div class="o_px-xs" style="padding-left: 8px;padding-right: 8px;">
-                      <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                        <tbody>
-                          <tr>
-                            <td class="o_re o_bb-light" style="font-size: 16px;line-height: 16px;height: 16px;vertical-align: top;border-bottom: 1px solid #d3dce0;">&nbsp; </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <!--[if mso]></td></tr></table><![endif]-->
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- spacer -->
-    <!-- content -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_bg-white o_px-md o_py o_sans o_text o_text-secondary" align="center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;background-color: #ffffff;color: #424651;padding-left: 24px;padding-right: 24px;padding-top: 16px;padding-bottom: 16px;">
-                    <p style="margin-top: 0px;margin-bottom: 0px;">If you have any questions regarding your Preliminary Overview<br> contact us @ (866) 724-1050.</p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <!-- spacer -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_bg-white" style="font-size: 24px;line-height: 24px;height: 24px;background-color: #ffffff;">&nbsp; </td>
-                </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- footer-white-2cols -->
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-      <tbody>
-        <tr>
-          <td class="o_bg-light o_px-xs o_pb-lg o_xs-pb-xs" align="center" style="background-color: #e6e7e8;padding-left: 8px;padding-right: 8px;padding-bottom: 32px;">
-            <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
-            <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
-              <tbody>
-                <tr>
-                  <td class="o_re o_bg-white o_px o_pb-lg o_bt-light o_br-b" align="center" style="font-size: 0;vertical-align: top;background-color: #ffffff;border-top: 1px solid #d3dce0;border-radius: 0px 0px 4px 4px;padding-left: 16px;padding-right: 16px;padding-bottom: 32px;">
-                    <!--[if mso]><table cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td width="200" align="left" valign="top" style="padding:0px 8px;"><![endif]-->
-                    <div class="o_col o_col-4" style="display: inline-block;vertical-align: top;width: 100%;max-width: 400px;">
-                      <div style="font-size: 32px; line-height: 32px; height: 32px;">&nbsp; </div>
-                      <div class="o_px-xs o_sans o_text-xs o_text-light o_left o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;color: #82899a;text-align: left;padding-left: 8px;padding-right: 8px;">
-                        <p class="o_mb-xs" style="margin-top: 0px;margin-bottom: 8px;">©2020 Pacific Coast Title Company. All rights reserved.</p>
+                <![endif]-->
+                
+                <!--[if mso]>
+                <td valign="top" width="600" style="width:600px;">
+                <![endif]-->
+                <!-- <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                    <tbody><tr>
                         
-                        <p style="margin-top: 0px;margin-bottom: 0px;">
-                          <a class="o_text-light o_underline" href="<?php echo base_url().'order'; ?>" style="text-decoration: underline;outline: none;color: #82899a;">Login to Dashboard</a> <span class="o_hide-xs">&nbsp; • &nbsp;</span><br class="o_hide-lg" style="display: none;font-size: 0;max-height: 0;width: 0;line-height: 0;overflow: hidden;mso-hide: all;visibility: hidden;">
-                          <a class="o_text-light o_underline" href="<?php echo base_url().'order'; ?>" style="text-decoration: underline;outline: none;color: #82899a;">Open Order</a> <span class="o_hide-xs">&nbsp; • &nbsp;</span><br class="o_hide-lg" style="display: none;font-size: 0;max-height: 0;width: 0;line-height: 0;overflow: hidden;mso-hide: all;visibility: hidden;">
-                          <a class="o_text-light o_underline" href="javascript:void(0);" style="text-decoration: underline;outline: none;color: #82899a;">Unsubscribe</a>
-                        </p>
-                      </div>
-                    </div>
-                    <!--[if mso]></td><td width="400" align="right" valign="top" style="padding:0px 8px;"><![endif]-->
-                    <div class="o_col o_col-2" style="display: inline-block;vertical-align: top;width: 100%;max-width: 200px;">
-                      <div style="font-size: 32px; line-height: 32px; height: 32px;">&nbsp; </div>
-                      <div class="o_px-xs o_sans o_text-xs o_text-light o_right o_xs-center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;color: #82899a;text-align: right;padding-left: 8px;padding-right: 8px;">
-                        <p style="margin-top: 0px;margin-bottom: 0px;">
-                          <a class="o_text-light" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #82899a;"><img src="<?php echo base_url(); ?>assets/frontend/images/58afb9e3-cbed-4cd9-903d-afbcf0442a66.jpg" width="36" height="36" alt="fb" style="max-width: 36px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a><span> &nbsp;</span>
-                          <a class="o_text-light" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #82899a;"><img src="<?php echo base_url(); ?>assets/frontend/images/d5e83376-1482-49aa-8cdc-52471da1e2e7.jpg" width="36" height="36" alt="tw" style="max-width: 36px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a><span> &nbsp;</span>
-                          <a class="o_text-light" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #82899a;"><img src="<?php echo base_url(); ?>assets/frontend/images/5fc51b96-2d06-4c2a-8dea-91a02df5de5b.jpg" width="36" height="36" alt="ig" style="max-width: 36px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a><span> &nbsp;</span>
-                          <a class="o_text-light" href="javascript:void(0);" style="text-decoration: none;outline: none;color: #82899a;"><img src="<?php echo base_url(); ?>assets/frontend/images/f3ec608a-6607-4e90-826c-ea7878c9747b.jpg" width="36" height="36" alt="sc" style="max-width: 36px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a>
-                        </p>
-                      </div>
-                    </div>
-                    <!--[if mso]></td></tr></table><![endif]-->
-                  </td>
+                        <td valign="top" class="mcnTextContent" style="padding: 0px 18px 9px; text-align: center;">
+                        
+                            <a href="*|ARCHIVE|*" target="_blank">View this email in your browser</a>
+                        </td>
+                    </tr>
+                </tbody></table> -->
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+                
+                <!--[if mso]>
                 </tr>
-              </tbody>
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-            <div class="o_hide-xs" style="font-size: 64px; line-height: 64px; height: 64px;">&nbsp; </div>
-          </td>
+                </table>
+                <![endif]-->
+            </td>
         </tr>
-      </tbody>
-    </table>
-  </body>
+    </tbody>
+</table></td>
+                            </tr>
+                            <tr>
+                                <td valign="top" id="templateHeader"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnImageBlock" style="min-width:100%;">
+    <tbody class="mcnImageBlockOuter">
+            <tr>
+                <td valign="top" style="padding:0px" class="mcnImageBlockInner">
+                    <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
+                        <tbody><tr>
+                            <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
+                                
+                                    
+                                        <img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/c405dde6-8511-490a-87a6-c66628e59843.jpg'; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+                                    
+                                
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </td>
+            </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnImageBlock" style="min-width:100%;">
+    <tbody class="mcnImageBlockOuter">
+            <tr>
+                <td valign="top" style="padding:0px" class="mcnImageBlockInner">
+                    <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
+                        <tbody><tr>
+                            <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
+                                
+                                    
+                                        <img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/4f8ef06a-b09c-4278-8174-73e17d42903c.jpg'; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+                                    
+                                
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </td>
+            </tr>
+    </tbody>
+</table></td>
+                            </tr>
+                            <tr>
+                                <td valign="top" id="templateBody"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+    <tbody class="mcnTextBlockOuter">
+        <tr>
+            <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                <tr>
+                <![endif]-->
+                
+                <!--[if mso]>
+                <td valign="top" width="600" style="width:600px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                    <tbody><tr>
+                        
+                        <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
+                        
+                            <h1 style="text-align: center;"><br>
+<span style="color:#000000"><strong>Prelim Hot Items</strong></span><br>
+<span style="color:#d35411"><strong><span style="font-size:19px">Urgent Items that need your attention</span></strong></span><br>
+<span style="color:#000000"><strong><span style="font-size:19px">Order Number: <?php echo $file_number; ?></span></strong></span></h1>
+
+<h1 style="text-align: left;"><span style="color:#ff0000"><span style="font-size:18px"><strong>Property Taxes</strong></span></span></h1>
+
+<p style="text-align: left;"><span style="font-size:14px"><strong>Note: Property taxes for the fiscal year shown below are PAID. For proration purposes the amounts were:<br>
+<br>
+Tax Identification No.:<a href="javascript:void(0);">224-110-046-000</a><br>
+Fiscal Year: 2019-2020<br>
+1st Installment: $2,803.25<br>
+2nd Installment: $2,803.25<br>
+Exemption: $0.00<br>
+Land: $65,000.00<br>
+Improvements: $294,500.00<br>
+Personal Property: $0.00<br>
+Code Area:</strong> 005-145<br>
+<br>
+Property taxes, which are a lien not yet due and payable, including any assessments collected with taxes to be levied for the fiscal year 2020-2021.<br>
+Any liens or other assessments, bonds, or special district liens including without limitation, Community Facility Districts, that arise by reason of any local, City, Municipal or County Project or Special District.<br>
+<br>
+The herein described Land is within the boundaries of the Mello-Roos Community Facilities District(s). The annual assessments, if any, are collected with the county property taxes. Failure to pay said taxes prior to the delinquency date may result in the above assessment being removed from the county tax roll and subjected to Accelerated Judicial Bond Foreclosure. Inquiry should be made with said District for possible stripped assessments and prior delinquencies.<br>
+<br>
+The lien of supplemental or escaped assessments of property taxes, if any, pursuant to the provisions of Chapter 3.5 or Part 2, Chapter 3, Articles 3 and 4 respectively (commencing with Section 75) of the Revenue and Taxation Code of the State of California as a result of the transfer of title to the vestee named in Schedule A; or as a result of changes in ownership or new construction occurring prior to date of policy.</span><br>
+&nbsp;</p>
+
+<h1 style="text-align: left;"><span style="color:#ff0000"><span style="font-size:18px"><strong>Liens</strong></span></span></h1>
+<br>
+<br>
+&nbsp;<br>
+<span style="font-size:14px">A deed of trust to secure an indebtedness in the amount shown below, and any other obligations secured thereby:<br>
+<br>
+<strong>Amount: $ 354050<br>
+Dated: 2020-01-25 T00:00:00<br>
+Trustor: Citlalli Sarahi Pina Barragan, single woman<br>
+Trustee: Placer Title Company<br>
+Beneficiary: MORTGAGE ELECTRONIC REGISTRATION SYSTEMS, INC. (MERS) SOLELY AS NOMINEE FOR LENDER<br>
+Lender: Panorama Mortgage Group, LLC dba Alterra Home Loans<br>
+Loan No.: 20010336659<br>
+Recording Date: 2020-01-29T00:00:00<br>
+Recording No.:<a href="https://u16232016.ct.sendgrid.net/ls/click?upn=J1eQivWFV4x-2Bc07GHHQ-2BsGCi-2FQlwfShACggc-2BstQUYIczxO4K9D1smFlzUJB08QkclhvHF2Z9QMvSnxNvIAUW5OoFwK-2F42AiLt9ecvwA9ceEFbK2fXirt-2FwzjbEUfdVS6Sc5_2dHcsMxbhKVaXRd3QwDSwAu3xTAA7EuNM1mU74VHLeDK6n7Uk8xeNdXvg38k2C-2FWsF3yiPOFAwWNiS0OBOnQFrMbacyMx0TMHihSzKx-2BSKPXAAXNXbq7Hv3g0o3mSbnzM3nsCDzxt7yD7h1xdEKso-2FbOb-2F7gAfcj9mV23dLkXrwfDG0MpN9AXVjwkFQ8WJm94AqAqgv6LnIEYqaA6zAA9C8WOX2H4ENFLHrgBDwtUDE-3D"> 2020003370</a>, Official Records</strong></span><br>
+<br>
+<span style="font-size:14px">&nbsp;<br>
+In order to complete this report, the Company requires a Statement of Information to be completed by the following party(s), Party(s): All Parties The Company reserves the right to add additional items or make further requirements after review of the requested Statement of Information. NOTE:<br>
+<br>
+The Statement of Information is necessary to complete the search and examination of title under this order. Any title search includes matters that are indexed by name only, and having a completed Statement of Information assists the Company in the elimination of certain matters which appear to involve the parties but in fact affect another party with the same or similar name. Be assured that the Statement of Information is essential and will be kept strictly confidential to this file. </span>
+
+<p style="text-align: left;"><br>
+&nbsp;</p>
+
+                        </td>
+                    </tr>
+                </tbody></table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+                
+                <!--[if mso]>
+                </tr>
+                </table>
+                <![endif]-->
+            </td>
+        </tr>
+    </tbody>
+</table></td>
+                            </tr>
+                            <tr>
+                                <td valign="top" id="templateFooter"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnImageBlock" style="min-width:100%;">
+    <tbody class="mcnImageBlockOuter">
+            <tr>
+                <td valign="top" style="padding:0px" class="mcnImageBlockInner">
+                    <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
+                        <tbody><tr>
+                            <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
+                                
+                                    
+                                        <img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+                                    
+                                
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </td>
+            </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+    <tbody class="mcnTextBlockOuter">
+        <tr>
+            <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                <!--[if mso]>
+                <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+                <tr>
+                <![endif]-->
+                
+                <!--[if mso]>
+                <td valign="top" width="600" style="width:600px;">
+                <![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                    <tbody><tr>
+                        
+                        <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
+                        
+                            <em>Copyright © <?php echo date("Y"); ?> Pacific Coast Title Company, All rights reserved.</em>
+                            <br>
+<!-- *|IFNOT:ARCHIVE_PAGE|* *|LIST:DESCRIPTION|*<br>
+<br>
+<strong>Our mailing address is:</strong><br>
+*|HTML:LIST_ADDRESS_HTML|* *|END:IF|*<br>
+<br>
+Want to change how you receive these emails?<br>
+You can <a href="*|UPDATE_PROFILE|*">update your preferences</a> or <a href="*|UNSUB|*">unsubscribe from this list</a>.<br>
+<br>
+*|IF:REWARDS|* *|HTML:REWARDS|* *|END:IF|* -->
+                        </td>
+                    </tr>
+                </tbody></table>
+                <!--[if mso]>
+                </td>
+                <![endif]-->
+                
+                <!--[if mso]>
+                </tr>
+                </table>
+                <![endif]-->
+            </td>
+        </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width:100%;">
+    <tbody class="mcnDividerBlockOuter">
+        <tr>
+            <td class="mcnDividerBlockInner" style="min-width: 100%; padding: 10px 18px 25px;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-top: 2px solid #EEEEEE;">
+                    <tbody><tr>
+                        <td>
+                            <span></span>
+                        </td>
+                    </tr>
+                </tbody></table>
+<!--            
+                <td class="mcnDividerBlockInner" style="padding: 18px;">
+                <hr class="mcnDividerContent" style="border-bottom-color:none; border-left-color:none; border-right-color:none; border-bottom-width:0; border-left-width:0; border-right-width:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0;" />
+-->
+            </td>
+        </tr>
+    </tbody>
+</table></td>
+                            </tr>
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                        <!-- // END TEMPLATE -->
+                    </td>
+                </tr>
+            </table>
+        </center>
+    </body>
 </html>
