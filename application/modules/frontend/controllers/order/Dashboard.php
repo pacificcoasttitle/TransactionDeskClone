@@ -2251,9 +2251,9 @@ class Dashboard extends MX_Controller {
 							$pos = strpos($language, 'Tax Identification No');
 							$sub_str = substr($language,0,$pos);							
 							$language = substr($language,$pos);
-							$language = str_replace(': ', ':', $language);
+							//$language = str_replace(': ', ':', $language);
 							
-							preg_match_all('/[a-zA-Z0-9. ]+:(\S+)/', $language, $matches);
+							preg_match_all('/[a-zA-Z0-9. ]+: (\S+)/', $language, $matches);
 
 							$language = $sub_str;
 							
