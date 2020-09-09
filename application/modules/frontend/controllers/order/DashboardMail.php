@@ -1143,7 +1143,8 @@ class DashboardMail extends MX_Controller {
 				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
 				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
 				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
-				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
+                $data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
+                $data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
 	            // array_push($userInfo, $data); 
 	            $userInfo[] =$data;
     		}
