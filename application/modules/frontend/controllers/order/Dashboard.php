@@ -2235,7 +2235,7 @@ class Dashboard extends MX_Controller {
 						
 						if(strpos($language, '_PARCELID1_') !== false) {
 								foreach($linkedDocuments as $linkedDocument) {
-									$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
+									$href = 'href="http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID='.$linkedDocument['api_document_id'].'"';
 									$sync = $linkedDocument['is_sync'];
 									$api_document_id = $linkedDocument['api_document_id'];
 									$order_id = $linkedDocument['order_id'];
@@ -2245,8 +2245,8 @@ class Dashboard extends MX_Controller {
 										$language = str_replace($href, $onclick, $language);
 									}
 								}
-								
 								$language = str_replace("_PARCELID1_", " <strong><u>".$parcelID."</u></strong>" , $language);
+								$taxlink = "<a $onclick><strong><u>".$parcelID."</u></strong></a>";
 							}
 							$pos = strpos($language, 'Tax Identification No');
 							$sub_str = substr($language,0,$pos);							
@@ -2262,8 +2262,11 @@ class Dashboard extends MX_Controller {
 								foreach ($matches[0] as $key => $value) 
 								{
 									$a = explode(":", $value);
-									
-									$str= '<strong>'.$a[0].': </strong>'.$a[1];
+									if (strtolower($a[0]) == 'tax identification no.') {
+										$str= '<strong>'.$a[0].': </strong>'.$taxlink;
+									} else {
+										$str= '<strong>'.$a[0].': </strong>'.$a[1];
+									}
 									$language .= $str."\n";
 								}
 							}
@@ -2372,7 +2375,7 @@ class Dashboard extends MX_Controller {
 							}
 							if(strpos($language, '_INSTRUMENTONLY_') !== false) {
 								foreach($linkedDocuments as $linkedDocument) {
-									$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
+									$href = 'href="http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID='.$linkedDocument['api_document_id'].'"';
 									$sync = $linkedDocument['is_sync'];
 									$api_document_id = $linkedDocument['api_document_id'];
 									$order_id = $linkedDocument['order_id'];
@@ -2386,7 +2389,7 @@ class Dashboard extends MX_Controller {
 							}
 							if(strpos($language, '_PARCELID1_') !== false) {
 								foreach($linkedDocuments as $linkedDocument) {
-									$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
+									$href = 'href="http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID='.$linkedDocument['api_document_id'].'"';
 									$sync = $linkedDocument['is_sync'];
 									$api_document_id = $linkedDocument['api_document_id'];
 									$order_id = $linkedDocument['order_id'];
@@ -2465,7 +2468,7 @@ class Dashboard extends MX_Controller {
 					}
 					if(strpos($language, '_INSTRUMENTONLY_') !== false) {
 						foreach($linkedDocuments as $linkedDocument) {
-							$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
+							$href = 'href="http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID='.$linkedDocument['api_document_id'].'"';
 							$sync = $linkedDocument['is_sync'];
 							$api_document_id = $linkedDocument['api_document_id'];
 							$order_id = $linkedDocument['order_id'];
@@ -2479,7 +2482,7 @@ class Dashboard extends MX_Controller {
 					}
 					if(strpos($language, '_PARCELID1_') !== false) {
 						foreach($linkedDocuments as $linkedDocument) {
-							$href = 'href="DocumentID='.$linkedDocument['api_document_id'].'"';
+							$href = 'href="http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID='.$linkedDocument['api_document_id'].'"';
 							$sync = $linkedDocument['is_sync'];
 							$api_document_id = $linkedDocument['api_document_id'];
 							$order_id = $linkedDocument['order_id'];
