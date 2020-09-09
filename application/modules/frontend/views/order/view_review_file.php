@@ -59,7 +59,7 @@ button:focus {outline:0;}
 						<div class="typography-section__inner">
 							<h2 class="ui-title-block ui-title-block_light">Preliminary Report Review</h2>
 							<div class="ui-decor-1a bg-accent"></div>
-							<h3 class="ui-title-block_light">File Number <?php echo $orderDetails['file_number'];?></h3>
+							<h3 class="ui-title-block_light">File Number <?php echo $orderDetails['file_number']; ?></h3>
 							<h3 class="ui-title-block_light"></h3>
 							<div style="width: 100%;">
                                 <h3 class="ui-title-block_light" style="display: inline-block;"><?php echo $orderDetails['full_address'];?></h3>
@@ -99,24 +99,26 @@ button:focus {outline:0;}
 																<i style="font-size:16px;" class="fa fa-caret-down"></i>
 															</button>
 															<div class="dropdown-container">
+																<ol style="border-bottom: 2px #D35411 dotted !important;"> 
 																<?php 
 																	if(!empty($linked_doc)) {
 																		$count = count($linked_doc);
 																		$i = 1;
 																		foreach($linked_doc as $document) { 
-																				if($i == $count) {
+																				/*if($i == $count) {
 																					$style = "border-bottom: 2px #D35411 dotted !important;";
 																				} else {
 																					$style = "";
-																				}
+																				}*/
 																				
 																			?>
-																			<a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>);" class="linked_doc" href="#"><?php echo $document['original_document_name'];?></a>
+																			<li style="list-style-type: decimal;"><a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>display: list-item;" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>);" class="linked_doc" href="javascript:void(0);"><?php echo $document['original_document_name'];?></a></li>
 																		<?php  $i++; } 
 																	 } else { ?>
 																		<a class="linked_doc" href="#">No Documents Found</a>
 																	<?php } 
 																?>
+															</ol>
 															</div>
 														</li>
 														<br>

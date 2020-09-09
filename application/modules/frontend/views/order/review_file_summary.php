@@ -1,5 +1,13 @@
-<?php 
-?>
+<style type="text/css">
+	.entry-content p {
+		font-size: 14px;
+	}
+
+	.entry-content strong, 
+	.entry-content b {
+		font-weight: 700;
+	}
+</style>
 <div class="typography-section__inner">
 	<h3 class="ui-title-block_light">Prelim Info</h3>
 	<div class="ui-decor-1a bg-accent"></div>
@@ -122,51 +130,6 @@
 		<?php
 			}
 		?>
-		
-		<?php
-			if(isset($prelim_details['easement']) && !empty($prelim_details['easement']))
-			{
-		?>
-				<div class="entry-main">
-					<div class="entry-header">
-						<div class="alert alert-6">
-							<div class="alert__inner">
-								<h3 class="alert-titlesmall3">Easements</h3>
-								<!-- <div class="alert-text">If there are any urgent Items they
-									will appear below.</div> -->
-							</div>
-						</div>
-					</div>
-					<div class="entry-content">
-						<?php
-							$easements = json_decode($prelim_details['easement'],TRUE);
-							if(isset($easements) && !empty($easements))
-							{
-						?>
-								<ol>
-						<?php
-								foreach ($easements as $key => $easement) 
-								{
-						?>									
-									<li><p><?php echo nl2br($easement); ?></p></li>
-						<?php
-								}
-						?>
-								</ol>
-						<?php
-							}
-							else
-							{
-						?>
-								<p><?php echo "No data found"; ?></p>
-						<?php
-							}							
-						?>				
-					</div>
-				</div>
-		<?php
-			}
-		?>
 		<?php 
 			if(isset($prelim_details['requirements']) && !empty($prelim_details['requirements']))
 			{
@@ -211,11 +174,56 @@
 		<?php
 			}
 		?>
+		<?php
+			if(isset($prelim_details['easement']) && !empty($prelim_details['easement']))
+			{
+		?>
+				<div class="entry-main">
+					<div class="entry-header">
+						<div class="alert alert-6">
+							<div class="alert__inner">
+								<h3 class="alert-titlesmall3">Easements</h3>
+								<!-- <div class="alert-text">If there are any urgent Items they
+									will appear below.</div> -->
+							</div>
+						</div>
+					</div>
+					<div class="entry-content">
+						<?php
+							$easements = json_decode($prelim_details['easement'],TRUE);
+							if(isset($easements) && !empty($easements))
+							{
+						?>
+								<ol>
+						<?php
+								foreach ($easements as $key => $easement) 
+								{
+						?>									
+									<li><p><?php echo nl2br($easement); ?></p></li>
+						<?php
+								}
+						?>
+								</ol>
+						<?php
+							}
+							else
+							{
+						?>
+								<p><?php echo "No data found"; ?></p>
+						<?php
+							}							
+						?>				
+					</div>
+				</div>
+		<?php
+			}
+		?>
+		
 		<?php 
 			if(isset($prelim_details['restrictions']) && !empty($prelim_details['restrictions']))
 			{
 		?>
-				<div class="entry-main">
+				<div class="entry-main" style="display: none;">
 					<div class="entry-header">
 						<div class="alert alert-8">
 							<div class="alert__inner">
