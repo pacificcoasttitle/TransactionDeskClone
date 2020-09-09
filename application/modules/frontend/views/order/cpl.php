@@ -334,9 +334,9 @@
 			}
 
 			if(ui.item.assignment_clause) {
-				$("#LenderZipcode").val(ui.item.assignment_clause).attr('readonly','readonly').parent().addClass('state-success');
+				$("#assignment_clause").val(ui.item.assignment_clause).attr('readonly','readonly').parent().addClass('state-success');
 			} else {
-				$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				$("#assignment_clause").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 			}
 			$("#LenderId").val(ui.item.id);
             
@@ -349,7 +349,8 @@
 				$("#LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 				$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				$("#assignment_clause").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 				$("#LenderId").val('');
 				
             }
