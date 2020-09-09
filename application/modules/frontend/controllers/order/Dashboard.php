@@ -1417,7 +1417,8 @@ class Dashboard extends MX_Controller {
 			'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
 			'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
 			'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
-			'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : ""
+			'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
+			'assignment_clause'  => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : ""
 		);
 		$condition = array(
 			'id' => $LenderId
@@ -3127,6 +3128,7 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_city'] = '';
 				$orderDetails['lender_zipcode'] = '';
 				$orderDetails['lender_id'] = '';
+				$orderDetails['lender_assignment_clause'] = '';
 			} else {			
 				$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
 				$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
@@ -3136,6 +3138,7 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
 				$orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
 				$orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+				$orderDetails['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
 				$orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
 			}
 		} else {
@@ -3149,6 +3152,7 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
 				$orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
 				$orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+				$orderDetails['lender_assignment_clause'] = $orderDetails['assignment_clause'] ? $orderDetails['assignment_clause'] : '';
 				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {
 				$orderDetails['lender_first_name'] =  '';
@@ -3160,6 +3164,7 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_city'] = '';
 				$orderDetails['lender_zipcode'] = '';
 				$orderDetails['lender_id'] = '';
+				$orderDetails['lender_assignment_clause'] = '';
 			}
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 		}

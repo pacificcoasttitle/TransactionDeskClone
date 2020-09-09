@@ -194,6 +194,7 @@ class Order
             customer_basic_details.first_name as lender_first_name,
             customer_basic_details.last_name as lender_last_name,
             customer_basic_details.email_address as lender_email,
+            customer_basic_details.assignment_clause as lender_assignment_clause,
             customer_basic_details.is_escrow,
             customer_basic_details.telephone_no as lender_telephone_no,
             agents.name as agent_name,

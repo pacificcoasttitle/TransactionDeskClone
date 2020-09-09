@@ -89,6 +89,16 @@
 								</div>
 
 								<div class="frm-row">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="assignment_clause" id="assignment_clause" class="gui-input ui-autocomplete-input"
+												placeholder="Assignment Clause" required="required">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+
+								<div class="frm-row">
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="email" name="LenderEmailAddress" id="LenderEmailAddress"
@@ -322,6 +332,12 @@
 			} else {
 				$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 			}
+
+			if(ui.item.assignment_clause) {
+				$("#LenderZipcode").val(ui.item.assignment_clause).attr('readonly','readonly').parent().addClass('state-success');
+			} else {
+				$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+			}
 			$("#LenderId").val(ui.item.id);
             
         },
@@ -471,6 +487,7 @@
 						$("#LenderEmailAddress").val(res.orderDetails['lender_email']);
 						$("#LenderTelephone").val(res.orderDetails['lender_telephone_no']);
 						$("#LenderCompany").val(res.orderDetails['lender_company_name']);
+						$("#assignment_clause").val(res.orderDetails['lender_assignment_clause']);
 						$("#LenderAddress").val(res.orderDetails['lender_address']);
 						$("#LenderCity").val(res.orderDetails['lender_city']);
 						$("#LenderZipcode").val(res.orderDetails['lender_zipcode']);
