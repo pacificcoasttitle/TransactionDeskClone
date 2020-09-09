@@ -2219,9 +2219,7 @@ class Dashboard extends MX_Controller {
 				foreach ($data['Liens'] as $key => $lien) 
 				{
 					$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
-					// echo "<pre>123:"; print_r($language);
-					/*$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
-					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);*/
+					
 					if(strpos($language, 'Tax Identification No') !== false)
 					{
 						$keys = array_keys($data['Liens']);
@@ -2255,7 +2253,7 @@ class Dashboard extends MX_Controller {
 							
 							preg_match_all('/[a-zA-Z0-9. ]+: (\S+)/', $language, $matches);
 
-							$language = $sub_str;
+							$language = $sub_str."\n";
 							
 							if(isset($matches[0]) && !empty($matches[0]))
 							{
@@ -2273,8 +2271,7 @@ class Dashboard extends MX_Controller {
 							$tax[] = $language;
 					}
 					else
-					{
-						
+					{						
 						$amount = isset($lien['Amount']) && !empty($lien['Amount']) ? $lien['Amount'] : '';
 						$date = isset($lien['Date']) && !empty($lien['Date']) ? $lien['Date'] : '';
 						$grantor = isset($lien['Grantor']) && !empty($lien['Grantor']) ? $lien['Grantor'] : '';
@@ -2287,7 +2284,6 @@ class Dashboard extends MX_Controller {
 
 							if(strpos($language, 'Amount:') !== false)
 							{
-
 								$pos = strpos($language, 'Amount:');
 								$sub_str_main = substr($language,0,$pos);
 														
@@ -2402,13 +2398,16 @@ class Dashboard extends MX_Controller {
 								
 								$language = str_replace("_PARCELID1_", " <strong><u>".$parcelID."</u></strong>" , $language);
 							}
-
+							 
+							if(strpos(strtolower($language), 'any liens or other assessments') !== false || strpos(strtolower($language), 'the lien of supplemental') !== false)
+							{
+								$tax[] = $language;
+							}
+							else
+							{
+								$liens[] = $language;
+							}
 							
-
-							/*$language = str_replace("\u000b", "", $language);
-							$language = str_replace("\r", "", $language);*/
-							
-							$liens[] = $language;
 						}
 					}
 					   				
