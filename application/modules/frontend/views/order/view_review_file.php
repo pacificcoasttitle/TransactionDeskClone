@@ -63,7 +63,7 @@ button:focus {outline:0;}
 							<h3 class="ui-title-block_light"></h3>
 							<div style="width: 100%;">
                                 <h3 class="ui-title-block_light" style="display: inline-block;"><?php echo $orderDetails['full_address'];?></h3>
-								<span class="bg-border" style="float: right;cursor:pointer;" onClick="window.location.reload();">Refresh</span>
+								<span class="bg-border" style="float: right;cursor:pointer;background: #d35411;" onClick="window.location.reload();">Refresh</span>
 							</div>
 							<input type="hidden" id="fileId" name="fileId" value="<?php echo $orderDetails['file_id'];?>">
 							<input type="hidden" id="orderId" name="orderId" value="<?php echo $orderDetails['order_id'];?>">
