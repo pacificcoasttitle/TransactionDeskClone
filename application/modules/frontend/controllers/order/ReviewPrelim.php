@@ -822,25 +822,7 @@ class ReviewPrelim extends MX_Controller {
     	echo json_encode($result);
     }
 
-   /* public function testMail(){
-		echo 'calling herre ';		
-		$from_name = 'Open Order Desk';
-		$from_mail = env('FROM_EMAIL');
-		$message = 'This is dummy message here'; 
-		$subject = 'test email';
-		$to = 'hitesh.p@crestinfosystems.com';
-		$bcc = array('hitesh.p+1@crestinfosystems.com', 'hitesh.p+2@crestinfosystems.com');
-		
-		$this->load->helper('sendemail');
-		$result = $instance->email->send();
-        var_dump($result);
-        echo "<pre>"; print_r($bcc);
-        echo $instance->email->print_debugger();die;
-		$a = send_email($from_mail,$from_name, $to, $subject, $message, array(),'',$bcc);
-		echo "<pre>here"; print_r($a); exit;
-	}*/
-
-	function multiexplode ($delimiters,$string) 
+	function multiexplode($delimiters,$string) 
 	{
 
 	    $ready = str_replace($delimiters, $delimiters[0], $string);
