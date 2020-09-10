@@ -2422,8 +2422,8 @@ class Dashboard extends MX_Controller {
 				foreach ($data['Easements'] as $key => $easement) 
 				{
 					$language = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
-					$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
-					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
+					/*$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);*/
 					/*$language = str_replace("\u000b", "", $language);
 					$language = str_replace("\r", "", $language);*/
 					if(!empty($language))
@@ -2439,8 +2439,8 @@ class Dashboard extends MX_Controller {
 				foreach ($data['Requirements'] as $key => $requirement) 
 				{
 					$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
-					$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
-					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
+					/*$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
+					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);*/
 					$amount = isset($requirement['Amount']) && !empty($requirement['Amount']) ? $requirement['Amount'] : '';
 					$date = isset($requirement['Date']) && !empty($requirement['Date']) ? $requirement['Date'] : '';
 					$grantor = isset($requirement['Grantor']) && !empty($requirement['Grantor']) ? $requirement['Grantor'] : '';
