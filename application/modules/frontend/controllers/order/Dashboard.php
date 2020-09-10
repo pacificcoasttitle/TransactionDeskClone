@@ -2286,7 +2286,6 @@ class Dashboard extends MX_Controller {
 						$instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
 						if(!empty($language))
 						{
-
 							if(strpos($language, 'Amount:') !== false)
 							{
 								$pos = strpos($language, 'Amount:');
@@ -2355,7 +2354,37 @@ class Dashboard extends MX_Controller {
 									}
 								}
 							}
- 
+ 							if(strpos($language, 'A homestead declaration Executed by:') !== false)
+ 							{
+ 								$l_exploded = $this->multiexplode(array("_ "),$language);
+ 								$l_formatted_data = array();
+ 								if(isset($l_exploded) && !empty($l_exploded))
+								{
+									foreach ($l_exploded as $l_key => $l_value) 
+									{						
+										if(strpos($l_value, 'Official Records') !== false)
+										{
+											$l_formatted_data[] = $l_value;
+										}
+										else
+										{
+											$l_formatted_data[] = $l_value."_";
+										}
+									} 
+								}
+
+								$language = "";
+								if(isset($l_formatted_data) && !empty($l_formatted_data))
+								{
+									foreach ($l_formatted_data as $l_k => $l_v) 
+									{
+										$l_str = explode(": ", $l_v);
+										
+										$l_format_str= '<strong>'.$l_str[0].': </strong>'.$l_str[1];
+										$language .= $l_format_str."\n";
+									}
+								}
+ 							}
 							if(strpos($language, '_AMOUNT_') !== false) {
 								$language = str_replace("_AMOUNT_", " ".$amount , $language);
 							}
@@ -2426,10 +2455,64 @@ class Dashboard extends MX_Controller {
 				foreach ($data['Easements'] as $key => $easement) 
 				{
 					$language = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
-					/*$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
-					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);*/
-					/*$language = str_replace("\u000b", "", $language);
-					$language = str_replace("\r", "", $language);*/
+					$amount = isset($easement['Amount']) && !empty($easement['Amount']) ? $easement['Amount'] : '';
+					$purpose = isset($easement['Purpose']) && !empty($easement['Purpose']) ? $easement['Purpose'] : '';
+					$date = isset($easement['Date']) && !empty($easement['Date']) ? $easement['Date'] : '';
+					$grantor = isset($easement['Grantor']) && !empty($easement['Grantor']) ? $easement['Grantor'] : '';
+					$trustee = isset($easement['Trustee']) && !empty($easement['Trustee']) ? $easement['Trustee'] : '';
+					$grantee = isset($easement['Grantee']) && !empty($easement['Grantee']) ? $easement['Grantee'] : '';
+					$recordedDate = isset($easement['RecordedDate']) && !empty($easement['RecordedDate']) ? $easement['RecordedDate'] : '';
+					$instrument = isset($easement['Instrument']) && !empty($easement['Instrument']) ? $easement['Instrument'] : '';
+
+					if(strpos($language, '_PURPOSE_') !== false) {
+						$language = str_replace("_PURPOSE_", " ".$purpose , $language);
+					}
+					if(strpos($language, '_AMOUNT_') !== false) {
+						$language = str_replace("_AMOUNT_", " ".$amount , $language);
+					}
+					if(strpos($language, '_DATE_') !== false) {
+						$language = str_replace("_DATE_", " ".$date , $language);
+					}
+					if(strpos($language, '_GRANTOR_') !== false) {
+						$language = str_replace("_GRANTOR_", " ".$grantor , $language);
+					}
+					if(strpos($language, '_TRUSTEE_') !== false) {
+						$language = str_replace("_TRUSTEE_", " ".$trustee , $language);
+					}
+					if(strpos($language, '_GRANTEE_') !== false) {
+						$language = str_replace("_GRANTEE_", " ".$grantee , $language);
+					}
+					if(strpos($language, '_RECORDEDDATE_') !== false) {
+						$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
+					}
+					if(strpos($language, '_INSTRUMENTONLY_') !== false) {
+						foreach($linkedDocuments as $linkedDocument) {
+							$href = 'href="http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID='.$linkedDocument['api_document_id'].'"';
+							$sync = $linkedDocument['is_sync'];
+							$api_document_id = $linkedDocument['api_document_id'];
+							$order_id = $linkedDocument['order_id'];
+							$document_name = $linkedDocument['document_name'];
+							if(strpos($language, $href) !== false) {
+								$onclick = "href='javascript:void(0)' style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
+								$language = str_replace($href, $onclick, $language);
+							}
+						}
+						$language = str_replace("_INSTRUMENTONLY_", " <strong><u>".$instrument."</u></strong>" , $language);
+					}
+					if(strpos($language, '_PARCELID1_') !== false) {
+						foreach($linkedDocuments as $linkedDocument) {
+							$href = 'href="http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID='.$linkedDocument['api_document_id'].'"';
+							$sync = $linkedDocument['is_sync'];
+							$api_document_id = $linkedDocument['api_document_id'];
+							$order_id = $linkedDocument['order_id'];
+							$document_name = $linkedDocument['document_name'];
+							if(strpos($language, $href) !== false) {
+								$onclick = "href='javascript:void(0)' style='cusror:pointer !important;' onclick='load_doc($sync, $api_document_id, $order_id)'";
+								$language = str_replace($href, $onclick, $language);
+							}
+						}
+						$language = str_replace("_PARCELID1_", " <strong><u>".$parcelID."</u></strong>" , $language);
+					}
 					if(!empty($language))
 					{
 						$easements[] = $language;
