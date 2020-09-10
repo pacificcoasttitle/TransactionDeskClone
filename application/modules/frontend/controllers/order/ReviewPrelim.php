@@ -89,7 +89,6 @@ class ReviewPrelim extends MX_Controller {
 							{									
 									
 								$language = str_replace("_PARCELID1_", $parcelID , $language);
-								
 							}
 
 							$email_data['tax'][] = $language;
@@ -374,7 +373,7 @@ class ReviewPrelim extends MX_Controller {
 										if(strpos($linkHref, 'clients.pacificcoasttitle.com') !== false){
 											$linkText = str_replace(' ', '-', $linkText); 
 											$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
-											if($linkText == '.pdf'){
+											if($linkText == '.pdf' || strtolower($linkText) == 'no-.pdf'){
 												continue;
 											}
 											$document_name = date('YmdHis')."_".$linkText;
@@ -529,7 +528,7 @@ class ReviewPrelim extends MX_Controller {
 											if(strpos($linkHref, 'clients.pacificcoasttitle.com') !== false){
 												$linkText = str_replace(' ', '-', $linkText); 
 												$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
-												if($linkText == '.pdf'){
+												if($linkText == '.pdf' || strtolower($linkText) == 'no-.pdf'){
 													continue;
 												}
 												$document_name = date('YmdHis')."_".$linkText;

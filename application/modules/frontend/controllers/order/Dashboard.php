@@ -1967,7 +1967,7 @@ class Dashboard extends MX_Controller {
 										if(strpos($linkHref, 'clients.pacificcoasttitle.com') !== false){
 											$linkText = str_replace(' ', '-', $linkText); 
 											$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
-											if($linkText == '.pdf'){
+											if($linkText == '.pdf' || strtolower($linkText) == 'no-.pdf'){
 												continue;
 											}
 											$document_name = date('YmdHis')."_".$linkText;
@@ -2122,7 +2122,7 @@ class Dashboard extends MX_Controller {
 											if(strpos($linkHref, 'clients.pacificcoasttitle.com') !== false){
 												$linkText = str_replace(' ', '-', $linkText); 
 												$linkText = preg_replace('/[^A-Za-z0-9\-]/', '', $linkText).'.pdf';
-												if($linkText == '.pdf'){
+												if($linkText == '.pdf' || strtolower($linkText) == 'no-.pdf'){
 													continue;
 												}
 												$document_name = date('YmdHis')."_".$linkText;
