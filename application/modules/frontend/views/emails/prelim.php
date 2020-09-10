@@ -653,48 +653,70 @@
 <span style="color:#d35411"><strong><span style="font-size:19px">Urgent Items that need your attention</span></strong></span><br>
 <span style="color:#000000"><strong><span style="font-size:19px">Order Number: <?php echo $file_number; ?></span></strong></span></h1>
 
-<h1 style="text-align: left;"><span style="color:#ff0000"><span style="font-size:18px"><strong>Property Taxes</strong></span></span></h1>
+<h1 style="text-align: left;"><span style="color:#ff0000"><span style="font-size:18px"><strong>Property Taxes</strong></span></span></h1><br>
 
-<p style="text-align: left;"><span style="font-size:14px"><strong>Note: Property taxes for the fiscal year shown below are PAID. For proration purposes the amounts were:<br>
-<br>
-Tax Identification No.:<a href="javascript:void(0);">224-110-046-000</a><br>
-Fiscal Year: 2019-2020<br>
-1st Installment: $2,803.25<br>
-2nd Installment: $2,803.25<br>
-Exemption: $0.00<br>
-Land: $65,000.00<br>
-Improvements: $294,500.00<br>
-Personal Property: $0.00<br>
-Code Area:</strong> 005-145<br>
-<br>
-Property taxes, which are a lien not yet due and payable, including any assessments collected with taxes to be levied for the fiscal year 2020-2021.<br>
-Any liens or other assessments, bonds, or special district liens including without limitation, Community Facility Districts, that arise by reason of any local, City, Municipal or County Project or Special District.<br>
-<br>
-The herein described Land is within the boundaries of the Mello-Roos Community Facilities District(s). The annual assessments, if any, are collected with the county property taxes. Failure to pay said taxes prior to the delinquency date may result in the above assessment being removed from the county tax roll and subjected to Accelerated Judicial Bond Foreclosure. Inquiry should be made with said District for possible stripped assessments and prior delinquencies.<br>
-<br>
-The lien of supplemental or escaped assessments of property taxes, if any, pursuant to the provisions of Chapter 3.5 or Part 2, Chapter 3, Articles 3 and 4 respectively (commencing with Section 75) of the Revenue and Taxation Code of the State of California as a result of the transfer of title to the vestee named in Schedule A; or as a result of changes in ownership or new construction occurring prior to date of policy.</span><br>
-&nbsp;</p>
+<?php
+if(isset($tax) && !empty($tax))
+{
+    $tax = json_decode($tax,TRUE);
+
+    if(isset($tax) && !empty($tax))
+    {
+?>
+        <!-- <ol> -->
+    <?php
+        foreach ($tax as $key => $tax_val) 
+        {
+    ?>
+            <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo nl2br(trim($tax_val)); ?>
+            </p><br>
+<?php
+        }
+?>
+        <!-- </ol> -->
+<?php
+    }
+    else 
+    {
+?>
+        <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo "No data found"; ?></p>
+<?php
+    }
+}
+?>
 
 <h1 style="text-align: left;"><span style="color:#ff0000"><span style="font-size:18px"><strong>Liens</strong></span></span></h1>
 <br>
-<br>
-&nbsp;<br>
-<span style="font-size:14px">A deed of trust to secure an indebtedness in the amount shown below, and any other obligations secured thereby:<br>
-<br>
-<strong>Amount: $ 354050<br>
-Dated: 2020-01-25 T00:00:00<br>
-Trustor: Citlalli Sarahi Pina Barragan, single woman<br>
-Trustee: Placer Title Company<br>
-Beneficiary: MORTGAGE ELECTRONIC REGISTRATION SYSTEMS, INC. (MERS) SOLELY AS NOMINEE FOR LENDER<br>
-Lender: Panorama Mortgage Group, LLC dba Alterra Home Loans<br>
-Loan No.: 20010336659<br>
-Recording Date: 2020-01-29T00:00:00<br>
-Recording No.:<a href="https://u16232016.ct.sendgrid.net/ls/click?upn=J1eQivWFV4x-2Bc07GHHQ-2BsGCi-2FQlwfShACggc-2BstQUYIczxO4K9D1smFlzUJB08QkclhvHF2Z9QMvSnxNvIAUW5OoFwK-2F42AiLt9ecvwA9ceEFbK2fXirt-2FwzjbEUfdVS6Sc5_2dHcsMxbhKVaXRd3QwDSwAu3xTAA7EuNM1mU74VHLeDK6n7Uk8xeNdXvg38k2C-2FWsF3yiPOFAwWNiS0OBOnQFrMbacyMx0TMHihSzKx-2BSKPXAAXNXbq7Hv3g0o3mSbnzM3nsCDzxt7yD7h1xdEKso-2FbOb-2F7gAfcj9mV23dLkXrwfDG0MpN9AXVjwkFQ8WJm94AqAqgv6LnIEYqaA6zAA9C8WOX2H4ENFLHrgBDwtUDE-3D"> 2020003370</a>, Official Records</strong></span><br>
-<br>
-<span style="font-size:14px">&nbsp;<br>
-In order to complete this report, the Company requires a Statement of Information to be completed by the following party(s), Party(s): All Parties The Company reserves the right to add additional items or make further requirements after review of the requested Statement of Information. NOTE:<br>
-<br>
-The Statement of Information is necessary to complete the search and examination of title under this order. Any title search includes matters that are indexed by name only, and having a completed Statement of Information assists the Company in the elimination of certain matters which appear to involve the parties but in fact affect another party with the same or similar name. Be assured that the Statement of Information is essential and will be kept strictly confidential to this file. </span>
+
+<?php
+if(isset($liens) && !empty($liens))
+{
+    $lien = json_decode($liens,TRUE);
+
+    if(isset($lien) && !empty($lien))
+    {
+?>
+        <!-- <ol> -->
+<?php
+        foreach ($lien as $key => $lien_val)
+        {
+    ?>
+            <p style=""><?php echo nl2br(($lien_val)); ?>
+            </p><br>
+<?php
+        }
+?>
+        <!-- </ol> -->
+<?php
+    }
+    else 
+    {
+?>
+        <p style="margin-top: 0px;margin-bottom: 0px;"><?php echo "No data found"; ?></p>
+<?php
+    }
+}
+?>
 
 <p style="text-align: left;"><br>
 &nbsp;</p>
