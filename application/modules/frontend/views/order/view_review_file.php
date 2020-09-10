@@ -142,7 +142,7 @@ button:focus {outline:0;}
 															href="">Borrower Name</a><br><?php echo $orderDetails['primary_owner'];?></li>
 													<div class="ui-decor-3"></div>
 													<li class="widget-list__itema"><a class="widget-list__link"
-															href="">Transaction Type</a><br><?php echo ($orderDetails['primary_owner'] == '33') ? 'Refinance' : 'Purchase';?></li>
+															href="">Transaction Type</a><br><?php echo $orderDetails['product_type']; ?></li>
 													<div class="ui-decor-3"></div>
 													<li class="widget-list__itema"><a class="widget-list__link"
 															href="">Loan Amount</a><br><?php echo $orderDetails['loan_amount'];?></li>
