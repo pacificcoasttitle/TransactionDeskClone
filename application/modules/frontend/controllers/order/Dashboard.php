@@ -2464,6 +2464,66 @@ class Dashboard extends MX_Controller {
 					$recordedDate = isset($easement['RecordedDate']) && !empty($easement['RecordedDate']) ? $easement['RecordedDate'] : '';
 					$instrument = isset($easement['Instrument']) && !empty($easement['Instrument']) ? $easement['Instrument'] : '';
 
+					if(strpos($language, 'Purpose:') !== false)
+					{
+						$e_pos = strpos($language, 'Purpose:');
+						$e_sub_str_main = substr($language,0,$e_pos);
+												
+						$language = substr($language,$e_pos);
+						
+						$e_exploded_str = $this->multiexplode(array("_ "),$language);
+						$e_formatted_data = array();
+
+						if(isset($e_exploded_str) && !empty($e_exploded_str))
+						{
+							foreach ($e_exploded_str as $e_key => $e_value) 
+							{							
+								$e_formatted_data[] = $e_value."_";
+							} 
+						}
+
+						$language = $e_sub_str_main."\n";
+	
+						if(isset($e_formatted_data) && !empty($e_formatted_data))
+						{
+							foreach ($e_formatted_data as $e_k => $e_v) 
+							{
+								$e_str = explode(": ", $e_v);
+								
+								$e_format_str= '<strong>'.$e_str[0].': </strong>'.$e_str[1];
+								$language .= $e_format_str."\n";
+							}
+						}
+					}
+
+					if(strpos($language, 'Executed by:') !== false)
+					{
+						
+						$exe_exploded_str = $this->multiexplode(array("_ "),$language);
+						$exe_formatted_data = array();
+
+						if(isset($exe_exploded_str) && !empty($exe_exploded_str))
+						{
+							foreach ($exe_exploded_str as $exe_key => $exe_value) 
+							{							
+								$exe_formatted_data[] = $exe_value."_";
+							} 
+						}
+
+						$language = "";
+	
+						if(isset($exe_formatted_data) && !empty($exe_formatted_data))
+						{
+							foreach ($exe_formatted_data as $exe_k => $exe_v) 
+							{
+								$exe_str = explode(": ", $exe_v);
+								
+								$exe_format_str= '<strong>'.$exe_str[0].': </strong>'.$exe_str[1];
+								$language .= $exe_format_str."\n";
+							}
+						}
+					}
+
 					if(strpos($language, '_PURPOSE_') !== false) {
 						$language = str_replace("_PURPOSE_", " ".$purpose , $language);
 					}
