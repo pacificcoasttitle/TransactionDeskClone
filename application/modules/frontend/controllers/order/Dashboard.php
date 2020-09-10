@@ -2189,11 +2189,22 @@ class Dashboard extends MX_Controller {
         $fileId = $this->input->post('fileId');
         $orderDetails = $this->order->get_order_details($fileId);
         
+        $policy_type = '';
+        if(isset($orderDetails['product_type']) && !empty($orderDetails['product_type']))
+        {
+        	if(strpos($orderDetails['product_type'], 'Loan:') !== false)
+        	{
+        		$policy_type = 'ALTA 2012 Short Form Residential Loan Policy';
+        	}
+        	else
+        	{
+        		$policy_type = 'ALTA 2006 Extended Loan Policy CA';
+        	}
+        }
+       
         $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
         $address = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
         $property_type = isset($orderDetails['property_type']) && !empty($orderDetails['property_type']) ? $orderDetails['property_type'] : '';
-        /*$file_number = 'EELM-798-NR';*/
-        $data['file_number'] = $file_number;
 
         $condition = array(
             'where' => array(
@@ -2223,15 +2234,6 @@ class Dashboard extends MX_Controller {
 					 
 					if(strpos($language, 'Tax Identification No') !== false)
 					{
-						/*$keys = array_keys($data['Liens']);
-						$prev_val = (array_search($key,$keys,true) - 1);
-						if(isset($data['Liens'][$prev_val]['Language']) && !empty($data['Liens'][$prev_val]['Language']))
-						{
-							$tax[] = $data['Liens'][$prev_val]['Language'];							
-							$l_key = array_search($data['Liens'][$prev_val]['Language'] ,$liens);
-							unset($liens[$l_key]);
-						}*/
-						
 						if(strpos($language, '_PARCELID1_') !== false) {
 								foreach($linkedDocuments as $linkedDocument) {
 									$href = 'href="http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID='.$linkedDocument['api_document_id'].'"';
@@ -2252,7 +2254,7 @@ class Dashboard extends MX_Controller {
 							$language = substr($language,$pos);
 							// $language = str_replace(': ', ':', $language);
 							
-							preg_match_all('/[a-zA-Z0-9. ]+: (\S+)/', $language, $matches);
+							 preg_match_all('/[a-zA-Z0-9. ]+: (\S+)/', $language, $matches);
 
 							$language = $sub_str."\n";
 							
@@ -2269,6 +2271,8 @@ class Dashboard extends MX_Controller {
 									$language .= $str."\n";
 								}
 							} 
+							
+							
 							$tax[] = $language;
 					}
 					else
@@ -2439,8 +2443,6 @@ class Dashboard extends MX_Controller {
 				foreach ($data['Requirements'] as $key => $requirement) 
 				{
 					$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
-					/*$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
-					$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);*/
 					$amount = isset($requirement['Amount']) && !empty($requirement['Amount']) ? $requirement['Amount'] : '';
 					$date = isset($requirement['Date']) && !empty($requirement['Date']) ? $requirement['Date'] : '';
 					$grantor = isset($requirement['Grantor']) && !empty($requirement['Grantor']) ? $requirement['Grantor'] : '';
@@ -2449,6 +2451,44 @@ class Dashboard extends MX_Controller {
 					$recordedDate = isset($requirement['RecordedDate']) && !empty($requirement['RecordedDate']) ? $requirement['RecordedDate'] : '';
 					$instrument = isset($requirement['Instrument']) && !empty($requirement['Instrument']) ? $requirement['Instrument'] : '';
 					
+					if(strpos($language, 'Grantor:') !== false)
+					{
+						$req_pos = strpos($language, 'Grantor:');
+						$req_sub_str_main = substr($language,0,$req_pos);
+											
+						$language = substr($language,$req_pos);
+						$req_exploded_str = $this->multiexplode(array("_ "),$language);
+						
+						$req_formatted_data = array();
+						if(isset($req_exploded_str) && !empty($req_exploded_str))
+						{
+							foreach ($req_exploded_str as $r_key => $r_value) 
+							{
+								if(strpos($r_value, 'Official Records') !== false)
+								{
+									$req_formatted_data[] = $r_value;
+								}
+								else
+								{
+									$req_formatted_data[] = $r_value."_";
+								}
+								
+							} 
+						}
+						$language = $req_sub_str_main."\n";
+								
+						if(isset($req_formatted_data) && !empty($req_formatted_data))
+						{
+							foreach ($req_formatted_data as $req_k => $req_v) 
+							{
+								$req_str = explode(": ", $req_v);
+								
+								$req_format_str= '<strong>'.$req_str[0].': </strong>'.$req_str[1];
+								$language .= $req_format_str."\n";
+							}
+						}
+					}
+
 					if(strpos($language, '_AMOUNT_') !== false) {
 						$language = str_replace("_AMOUNT_", " ".$amount , $language);
 					}
@@ -2495,8 +2535,7 @@ class Dashboard extends MX_Controller {
 						}
 						$language = str_replace("_PARCELID1_", " <strong><u>".$parcelID."</u></strong>" , $language);
 					}
-					/*$language = str_replace("\u000b", "", $language);
-					$language = str_replace("\r", "", $language);*/
+					
 					if(!empty($language))
 					{
 						$requirements[] = $language;
@@ -2534,7 +2573,8 @@ class Dashboard extends MX_Controller {
 				'requirements'=> json_encode($requirements),
 				'restrictions'=> json_encode($restrictions),
 				'resware_json' => $json,
-				'parcel_id' => $parcelID
+				'parcel_id' => $parcelID,
+				'policy_type' => $policy_type
 			);
 			$prelim_details = $summaryData;
 		}
@@ -2546,7 +2586,6 @@ class Dashboard extends MX_Controller {
         }
         $data['prelim_details']['address'] = $address;
         $data['prelim_details']['property_type'] = $property_type;
-        
         $results = $this->load->view('order/review_file_summary', $data, TRUE);
         echo json_encode($results, true);
 	}

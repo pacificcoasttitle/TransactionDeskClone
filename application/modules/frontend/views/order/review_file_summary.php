@@ -18,9 +18,7 @@
 			<div class="col-md-6">
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Borrower Vesting</span><br> <?php echo isset($prelim_details['vesting']) && !empty($prelim_details['vesting']) ? $prelim_details['vesting'] : '-'; ?></p>
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Address</span><br> <?php echo isset($prelim_details['address']) && !empty($prelim_details['address']) ? $prelim_details['address'] : '-'; ?></p>
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Type of Policy</span><br> CLTA Standard Coverage
-					Policy 1990 (04-08-14)
-					ALTA Loan Policy 2006</p>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Type of Policy</span><br> <?php echo isset($prelim_details['policy_type']) && !empty($prelim_details['policy_type']) ? $prelim_details['policy_type'] : '-'; ?></p>
 			</div>
 			<div class="col-md-6">
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Order Number</span><br>
