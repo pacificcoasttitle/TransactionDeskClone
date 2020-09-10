@@ -68,27 +68,34 @@ class ReviewPrelim extends MX_Controller {
 					foreach ($data['Liens'] as $key => $lien) 
 					{
 						$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
-						/*$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
-						$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);*/
 
 						if(strpos($language, 'Tax Identification No') !== false)
 						{
-							$keys = array_keys($data['Liens']);
-							$prev_val = (array_search($key,$keys,true) - 1);
-							if(isset($data['Liens'][$prev_val]['Language']) && !empty($data['Liens'][$prev_val]['Language']))
-							{
-								$email_data['tax'][] = $data['Liens'][$prev_val]['Language'];							
-								$l_key = array_search($data['Liens'][$prev_val]['Language'] ,$liens);
-								unset($liens[$l_key]);
-
-								$email_key = array_search($data['Liens'][$prev_val]['Language'] ,$email_data['liens']);
-
-								unset($email_data['liens'][$email_key]);
-							}
 							if(strpos($language, '_PARCELID1_') !== false) 
 							{									
 									
 								$language = str_replace("_PARCELID1_", $parcelID , $language);
+							}
+							$pos = strpos($language, 'Tax Identification No');
+							$sub_str = substr($language,0,$pos);							
+							$language = substr($language,$pos);
+
+							preg_match_all('/[a-zA-Z0-9. ]+: (\S+)/', $language, $matches);
+							
+							$language = $sub_str."\n";
+							
+							if(isset($matches[0]) && !empty($matches[0]))
+							{
+								foreach ($matches[0] as $key => $value) 
+								{
+									$a = explode(":", $value);
+									if (strtolower($a[0]) == 'tax identification no.') {
+										$str= '<strong>'.$a[0].': </strong>'.$parcelID;
+									} else {
+										$str= '<strong>'.$a[0].': </strong>'.$a[1];
+									}
+									$language .= $str."\n";
+								}
 							}
 
 							$email_data['tax'][] = $language;
@@ -103,7 +110,109 @@ class ReviewPrelim extends MX_Controller {
 							$recordedDate = isset($lien['RecordedDate']) && !empty($lien['RecordedDate']) ? $lien['RecordedDate'] : '';
 							$instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
 							if(!empty($language))
-							{								
+							{	
+
+								if(strpos($language, 'Amount:') !== false)
+								{
+									$pos = strpos($language, 'Amount:');
+									$sub_str_main = substr($language,0,$pos);
+															
+									$language = substr($language,$pos);
+									$exploded_str = $this->multiexplode(array("_ "),$language);
+									$formatted_data = array();
+									if(isset($exploded_str) && !empty($exploded_str))
+									{
+										foreach ($exploded_str as $key => $value) 
+										{
+											$str_count = substr_count($value, ':');
+
+											if($str_count == 2)
+											{
+												if(strpos($value, 'Lender:') !== false)
+												{
+
+													$pos = strpos($value, 'Lender:');
+													$sub_str = substr($value,0,$pos);
+													$formatted_data[] = $sub_str;
+													$truncate_str = substr($value,$pos);
+													$formatted_data[] = $truncate_str."_";
+												}
+												if(strpos($value, 'Recording Date:') !== false)
+												{
+
+													$pos = strpos($value, 'Recording Date:');
+													$sub_str = substr($value,0,$pos);
+													$formatted_data[] = $sub_str;
+													$truncate_str = substr($value,$pos);
+													$formatted_data[] = $truncate_str."_";
+												}
+												if(strpos($value, '<a id=') !== false)
+												{
+
+													$pos = strpos($value, '<a id=');
+													$sub_str = substr($value,0,$pos);
+													
+													
+													$truncate_str = substr($value,$pos);
+													
+													$formatted_data[] = $sub_str.$truncate_str;
+												}
+											}
+											else
+											{
+												$formatted_data[] = $value."_"; 
+											}
+										} 
+									}
+									
+									
+
+									$language = $sub_str_main."\n";
+									
+									if(isset($formatted_data) && !empty($formatted_data))
+									{
+										foreach ($formatted_data as $k => $v) 
+										{
+											$str = explode(": ", $v);
+											
+											$format_str= '<strong>'.$str[0].': </strong>'.$str[1];
+											$language .= $format_str."\n";
+										}
+									}
+								}
+								if(strpos($language, 'A homestead declaration Executed by:') !== false)
+								{
+									$l_exploded = $this->multiexplode(array("_ "),$language);
+									$l_formatted_data = array();
+									if(isset($l_exploded) && !empty($l_exploded))
+									{
+										foreach ($l_exploded as $l_key => $l_value) 
+										{						
+											if(strpos($l_value, 'Official Records') !== false)
+											{
+												$l_formatted_data[] = $l_value;
+											}
+											else
+											{
+												$l_formatted_data[] = $l_value."_";
+											}
+										} 
+									}
+
+									$language = "";
+									if(isset($l_formatted_data) && !empty($l_formatted_data))
+									{
+										foreach ($l_formatted_data as $l_k => $l_v) 
+										{
+											$l_str = explode(": ", $l_v);
+											
+											$l_format_str= '<strong>'.$l_str[0].': </strong>'.$l_str[1];
+											$language .= $l_format_str."\n";
+										}
+									}
+								}
+
+
 								if(strpos($language, '_AMOUNT_') !== false) {
 									$language = str_replace("_AMOUNT_", " ".$amount , $language);
 								}
@@ -129,8 +238,19 @@ class ReviewPrelim extends MX_Controller {
 									$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
 								}
 								
+								if(strpos(strtolower($language), 'any liens or other assessments') !== false || strpos(strtolower($language), 'the lien of supplemental') !== false || strpos(strtolower($language), 'property taxes') !== false  )
+									{
+										// $tax[] = $language;
+										$email_data['tax'][] = $language;
+									}
+									else
+									{
+										// $liens[] = $language;
+										$email_data['liens'][] = $language;
+									}
+
 								$liens[] = $language;
-								$email_data['liens'][] = $language;
+								// $email_data['liens'][] = $language;
 							}
 						}
 							    				
@@ -676,8 +796,8 @@ class ReviewPrelim extends MX_Controller {
 			$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
 			$message = $prelim_message_body; 
 			$subject = 'The Prelim Hot Sheet';
-			$to = $customer_email;
-			/*$to = 'hitesh.p@crestinfosystems.com';*/
+			// $to = $customer_email;
+			$to = 'hitesh.p@crestinfosystems.com';
 			
 			$this->load->helper('sendemail');
 			
@@ -719,5 +839,13 @@ class ReviewPrelim extends MX_Controller {
 		$a = send_email($from_mail,$from_name, $to, $subject, $message, array(),'',$bcc);
 		echo "<pre>here"; print_r($a); exit;
 	}*/
+
+	function multiexplode ($delimiters,$string) 
+	{
+
+	    $ready = str_replace($delimiters, $delimiters[0], $string);
+	    $launch = explode($delimiters[0], $ready);
+	    return  $launch;
+	}
 }
 
