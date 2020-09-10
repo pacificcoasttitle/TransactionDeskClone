@@ -103,9 +103,10 @@
 							$liens = json_decode($prelim_details['lien'],TRUE);
 							if(isset($liens) && !empty($liens))
 							{
+								$tax_count = count($tax)+1;
 
 						?>
-								<ol>
+								<ol start="<?php echo $tax_count; ?>">
 						<?php
 								foreach ($liens as $key => $lien) 
 								{
