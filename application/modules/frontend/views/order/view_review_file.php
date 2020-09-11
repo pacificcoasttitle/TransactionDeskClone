@@ -134,7 +134,7 @@ button:focus {outline:0;}
 											<h3 class="ui-title-block_light">Order Details</h3>
 											<div class="ui-decor-1a bg-accent"></div>
 										</div>
-
+										
 										<section class="widget section-sidebar">
 											<div class="widget-content2">
 												<ul class="widget-list lista">
@@ -144,8 +144,29 @@ button:focus {outline:0;}
 													<li class="widget-list__itema"><a class="widget-list__link"
 															href="">Transaction Type</a><br><?php echo $orderDetails['product_type']; ?></li>
 													<div class="ui-decor-3"></div>
+													<?php
+														if(strpos($orderDetails['product_type'], 'Sale') !== false)
+														{
+															if(isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']))
+										                    {
+										                        $sales_amount = str_replace(",", "", $orderDetails['sales_amount']);
+										                    }
+													?>
+															<li class="widget-list__itema"><a class="widget-list__link"
+															href="">Sales Amount</a><br><?php echo isset($sales_amount) && !empty($sales_amount) ? "$".number_format($sales_amount) : '-' ;?></li>
+															<div class="ui-decor-3"></div>
+
+													<?php
+														}
+													?>
+													<?php
+									                    if(isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']))
+									                    {
+									                        $loan_amount = str_replace(",", "", $orderDetails['loan_amount']);
+									                    }
+									                ?>
 													<li class="widget-list__itema"><a class="widget-list__link"
-															href="">Loan Amount</a><br><?php echo $orderDetails['loan_amount'];?></li>
+															href="">Loan Amount</a><br><?php echo isset($loan_amount) && !empty($loan_amount) ? "$".number_format($loan_amount) : '-' ;?></li>
 													<div class="ui-decor-3"></div>
 													<li class="widget-list__itema"><a class="widget-list__link"
 															href="">Open Date</a><br><?php echo date("m/d/Y", strtotime($orderDetails['opened_date'])); ?></li>
