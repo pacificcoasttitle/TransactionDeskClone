@@ -2798,7 +2798,7 @@ class Dashboard extends MX_Controller {
 			$errors[] = $getCPLFormNameResponse['error'];
 			$data = array(
 				"errors" =>  $errors,
-				"success" => $success
+				"success" => $successrev
 			);
 			$this->session->set_userdata($data);
 			redirect(base_url().'cpl-dashboard');
