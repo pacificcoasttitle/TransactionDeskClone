@@ -34,7 +34,8 @@
 			<h3 class="ui-title-block_light">Prelim Hot Items</h3>
 			<div class="ui-decor-1a bg-accent"></div>
 		</div>
-		<?php 
+		<?php
+			$count = 1;
 			if(isset($prelim_details['tax']) && !empty($prelim_details['tax']))
 			{				
 		?>
@@ -56,10 +57,11 @@
 							{
 
 						?>
-								<ol>
+								<ol start="<?php echo $count; ?>">
 						<?php
 								foreach ($tax as $key => $tax_val) 
 								{
+									$count++;
 							?>
 									<li><p><?php echo nl2br($tax_val); ?>
 									</p></li>
@@ -102,10 +104,11 @@
 							if(isset($easements) && !empty($easements))
 							{
 						?>
-								<ol>
+								<ol start="<?php echo $count; ?>">
 						<?php
 								foreach ($easements as $key => $easement) 
 								{
+									$count++;
 						?>									
 									<li><p><?php echo nl2br($easement); ?></p></li>
 						<?php
@@ -148,10 +151,11 @@
 								$tax_count = count($tax)+1;
 
 						?>
-								<ol start="<?php echo $tax_count; ?>">
+								<ol start="<?php echo $count; ?>">
 						<?php
 								foreach ($liens as $key => $lien) 
 								{
+									$count++;
 							?>
 									<li><p><?php echo nl2br($lien); ?></p></li>
 							<?php
@@ -193,7 +197,7 @@
 							if(isset($requirements) && !empty($requirements))
 							{
 						?>
-								<ol>
+								<ol start="<?php echo $count; ?>">
 						<?php
 								foreach ($requirements as $key => $requirement) 
 								{
