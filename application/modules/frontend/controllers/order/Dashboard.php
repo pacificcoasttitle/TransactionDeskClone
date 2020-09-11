@@ -2505,8 +2505,27 @@ class Dashboard extends MX_Controller {
 						if(isset($exe_exploded_str) && !empty($exe_exploded_str))
 						{
 							foreach ($exe_exploded_str as $exe_key => $exe_value) 
-							{							
-								$exe_formatted_data[] = $exe_value."_";
+							{
+								if(strpos($exe_value, 'Official Records') !== false)
+								{
+									$exe_value = str_replace('Official Records', "Official Records \n", $exe_value);
+									
+									$exe_formatted_data[] = $exe_value;
+								}
+								else if(strpos($exe_value, 'Recording Date:') !== false)
+								{
+									$rec_pos = strpos($exe_value, 'Recording Date:');
+									$rec_sub_str = substr($exe_value,0,$rec_pos);
+									$exe_formatted_data[] = $rec_sub_str;
+									$rec_truncate_str = substr($exe_value,$rec_pos);
+									$exe_formatted_data[] = $rec_truncate_str."_";
+									
+								}
+								else
+								{
+									$exe_formatted_data[] = $exe_value."_";
+								}
+
 							} 
 						}
 
@@ -2517,11 +2536,22 @@ class Dashboard extends MX_Controller {
 							foreach ($exe_formatted_data as $exe_k => $exe_v) 
 							{
 								$exe_str = explode(": ", $exe_v);
-								
-								$exe_format_str= '<strong>'.$exe_str[0].': </strong>'.$exe_str[1];
+								$count = count($exe_str);
+								if($count <= 2)
+								{
+									$exe_format_str= '<strong>'.$exe_str[0].': </strong>'.$exe_str[1];
+									
+								}
+								else
+								{
+
+									$exe_format_str= '<strong>'.$exe_str[0].': </strong>'.$exe_str[1].": ".$exe_str[2];
+								} 
 								$language .= $exe_format_str."\n";
+
 							}
 						}
+						
 					}
 
 					if(strpos($language, '_PURPOSE_') !== false) {
