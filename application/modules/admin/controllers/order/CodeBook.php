@@ -35,7 +35,60 @@ class CodeBook extends MX_Controller {
 
     public function get_code_book()
     {
-    	
+    	$params = array();
+
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            
+
+            $pageno = ($params['start'] / $params['length'])+1;
+
+            $code_book_list = $this->codeBook_model->getCodeBooks($params);
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $code_book_list = $this->codeBook_model->getCodeBooks($params);          
+        }
+
+        $data = array();
+
+        if(isset($code_book_list['data']) && !empty($code_book_list['data']))
+        {
+            $count = $params['start'] + 1;
+            foreach ($code_book_list['data'] as $key => $value) 
+            {
+                $nestedData=array();
+                
+                $nestedData[] = $count;
+                $nestedData[] = $value['code'];
+                $nestedData[] = $value['type'];
+                $nestedData[] = $value['language'];
+               
+                // $editUrl = base_url().'order/admin/edit-fee-type/'.$value['id'];
+                
+
+                $action = '<a href="javascript:void(0);" class="btn btn-action"><span class="fa fa-pencil" aria-hidden="true"></span></a>';
+                $action .= '<a href="javascript:void(0);" class="btn btn-action"><span class="fa fa-trash" aria-hidden="true"></span></a>';
+                $nestedData[] = $action;
+                $data[] = $nestedData;
+                $count++;
+                
+            }
+        }
+        $json_data['recordsTotal'] = intval( $code_book_list['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $code_book_list['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
     }
 
     public function add_code_book()
