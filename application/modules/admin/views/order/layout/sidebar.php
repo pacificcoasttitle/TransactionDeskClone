@@ -86,4 +86,10 @@
 			<span>Fees Types</span>
 		</a>
 	</li>
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/code-book' || $this->uri->segment(3) == 'add-fee-type' || $this->uri->segment(3) == 'edit-fee-type') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/code-book'; ?>">
+			<i class="fa fa-code"></i>
+			<span>Code Book</span>
+		</a>
+	</li>
 </ul>

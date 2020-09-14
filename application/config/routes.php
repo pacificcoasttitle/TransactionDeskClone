@@ -227,6 +227,9 @@ $route['order/admin/update-underwriter'] = 'admin/order/home/updateUnderwriter';
 $route['order/admin/fees-types'] = 'admin/order/FeesTypes/index';
 $route['order/admin/add-fee-type'] = 'admin/order/FeesTypes/add_fee_type';
 $route['order/admin/edit-fee-type/:num'] = 'admin/order/FeesTypes/edit_fee_type';
+$route['order/admin/code-book'] = 'admin/order/CodeBook/index';
+$route['order/admin/add-code-book'] = 'admin/order/CodeBook/add_code_book';
+$route['order/admin/import-code-book'] = 'admin/order/CodeBook/import_code_book';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  

@@ -2322,6 +2322,69 @@ $(document).ready(function () {
         }); 
     }
     /* Add fee type validation */
+
+    /* Fees type listing */
+    if ($('#tbl-code-book').length) 
+    {
+        code_book_list = $('#tbl-code-book').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                // searchPlaceholder: "Name",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/codeBook/get_code_book", // json datasource
+                type: "post", // method  , by default get
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-code-book tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-code-book_processing").css("display", "none");
+
+                }
+            },
+                        
+        });
+    }
+    /* Fees type listing */
+
+    if(jQuery('#import-code-book').length)
+    {
+       jQuery('#import-code-book').validate({ 
+            rules: {
+                file:"required"
+            },
+            messages: {
+                file:"Please upload file to import"
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        }); 
+    }
 });
 
 
