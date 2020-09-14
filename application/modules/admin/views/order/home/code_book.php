@@ -2,7 +2,7 @@
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-table"></i>
-            Fees Types
+            Code Book
             <div class="float-right">
                 <a href="<?php echo base_url(); ?>order/admin/import-code-book" class="btn btn-secondary"> Import </a>
                 <a href="<?php echo base_url(); ?>order/admin/add-code-book" class="btn btn-secondary"> Add </a>
