@@ -10,7 +10,7 @@ class CodeBook extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
-        $this->load->model('order/codebook_model');
+        $this->load->model('order/codeBook_model');
     }
 
     public function index()
@@ -90,11 +90,11 @@ class CodeBook extends MX_Controller {
                             'returnType' => 'count'
                         );
 
-                        $prevCount = $this->codebook_model->get_rows($con);
+                        $prevCount = $this->codeBook_model->get_rows($con);
                         if($prevCount > 0)
                         {
                             $condition = array('code' => $value['B'],'status' => 1);
-                            $update = $this->codebook_model->update($codebookData, $condition);
+                            $update = $this->codeBook_model->update($codebookData, $condition);
                             
                             if($update){
                                 $updateCount++;
@@ -103,7 +103,7 @@ class CodeBook extends MX_Controller {
                         else
                         {
                             // Insert member data
-                            $insert = $this->codebook_model->insert($codebookData);
+                            $insert = $this->codeBook_model->insert($codebookData);
                             
                             if($insert){
                                 $insertCount++;
