@@ -99,7 +99,7 @@ class CodeBook_model extends CI_Model
 
             if(isset($keyword) && !empty($keyword))
             {
-                $this->db->like('name', $keyword);
+                $this->db->like('code', $keyword);
             }
             $this->db->where('status', 1);
                
@@ -109,7 +109,7 @@ class CodeBook_model extends CI_Model
 
             if(isset($keyword) && !empty($keyword))
             {
-                $this->db->like('name', $keyword);
+                $this->db->like('code', $keyword);
             }
 
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
