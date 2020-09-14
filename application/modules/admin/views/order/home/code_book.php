@@ -12,14 +12,14 @@
             <div id="code_book_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="code_book_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
-                <table class="table table-bordered" id="tbl-code-book" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="tbl-code-book" style="table-layout: fixed;" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Sr No</th>
-                            <th>Code</th>
-                            <th>Type</th>
-                            <th>Language</th>
-                            <th>Action</th>
+                            <th style="width: 8%;">Sr No</th>
+                            <th style="width: 10%;">Code</th>
+                            <th style="width: 12%;">Type</th>
+                            <th style="width: 60%;">Language</th>
+                            <th style="width: 10%;">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
