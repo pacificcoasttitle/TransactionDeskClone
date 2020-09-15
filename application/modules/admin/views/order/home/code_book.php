@@ -5,7 +5,7 @@
             Code Book
             <div class="float-right">
                 <a href="<?php echo base_url(); ?>order/admin/import-code-book" class="btn btn-secondary"> Import </a>
-                <a href="<?php echo base_url(); ?>order/admin/add-code-book" class="btn btn-secondary"> Add </a>
+                <a href="<?php echo base_url(); ?>order/admin/add-code-book" class="btn btn-secondary" style="display: none;"> Add </a>
             </div>
         </div>
         <div class="card-body">
@@ -18,8 +18,8 @@
                             <th style="width: 8%;">Sr No</th>
                             <th style="width: 10%;">Code</th>
                             <th style="width: 12%;">Type</th>
-                            <th style="width: 60%;">Language</th>
-                            <th style="width: 10%;">Action</th>
+                            <th style="width: 70%;">Language</th>
+                            <!-- <th style="width: 10%;">Action</th> -->
                         </tr>
                     </thead>
                     <tbody></tbody>

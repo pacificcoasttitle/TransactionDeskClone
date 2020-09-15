@@ -70,16 +70,22 @@ class CodeBook extends MX_Controller {
                 $nestedData=array();
                 
                 $nestedData[] = $count;
+
                 $nestedData[] = $value['code'];
-                $nestedData[] = $value['type'];
+
+                $type = '';
+                if (!empty($value['type'])) {
+                    $type = $value['type'];
+                }
+
+                $type_dropdown = '<select onchange="updateType('.$value['id'].', this.value);" id="type" name="type"><option value="">Select</option><option value="Easement">Easement</option><option value="Lien">Lien</option><option value="Requirement">Requirement</option><option value="Restriction">Restriction</option><option value="Tax">Tax</option></select>';
+
+                $type_dropdown = str_replace('value="' .  $type . '"','value="' .  $type . '" selected', $type_dropdown);
+
+                $nestedData[] = $type_dropdown;
                 $nestedData[] = $value['language'];
                
-                // $editUrl = base_url().'order/admin/edit-fee-type/'.$value['id'];
                 
-
-                $action = '<a href="javascript:void(0);" class="btn btn-action"><span class="fa fa-pencil" aria-hidden="true"></span></a>';
-                $action .= '<a href="javascript:void(0);" class="btn btn-action"><span class="fa fa-trash" aria-hidden="true"></span></a>';
-                $nestedData[] = $action;
                 $data[] = $nestedData;
                 $count++;
                 
@@ -93,7 +99,62 @@ class CodeBook extends MX_Controller {
 
     public function add_code_book()
     {
-        
+        $this->is_admin();
+        $data = array();
+
+        $data['title'] = 'PCT Order: Add Code Book';
+
+        $feesData = array();
+
+        // If import request is submitted
+        if($this->input->post())
+        {
+            $this->form_validation->set_rules('fee_type', 'Fee Type', 'required',array('required'=> 'Please enter fee type'));
+
+            if($this->form_validation->run() == true)
+            {
+                $id = $this->input->post('fee_id');
+                // Prepare data for DB insertion
+                $feesData = array(
+                    'name' =>  $_POST['fee_type'],
+                    'status' => 1
+                );
+
+                if($id)
+                {
+                    $condition = array('id' => $id);
+
+                    $update = $this->feesTypes_model->update($feesData, $condition);
+
+                    if($update)
+                    {
+                        $successMsg = 'Fee Type updated successfully.';
+                        $this->session->set_userdata('success_msg', $successMsg);
+                    }
+                }
+                else
+                {                  
+                    // Insert member data
+                    $insert = $this->feesTypes_model->insert($feesData);
+                    
+                    if($insert){
+                        $data['success_msg'] = 'Fees type added successfully.';
+                    }
+                    else
+                    {
+                        $data['error_msg'] = 'Fee type not added.';
+                    } 
+                }
+                
+            }
+            else
+            {
+                $data['name_error_msg'] = form_error('fee_type');
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/add_code_book', $data);
+        $this->load->view('order/layout/footer', $data);
     }
 
     public function import_code_book()
@@ -209,4 +270,14 @@ class CodeBook extends MX_Controller {
             return false;
         }
     }*/
+
+    public function updateType()
+    {
+        $id = $this->input->post('id');
+        $type = $this->input->post('type');
+        $condition = array('id' => $id);
+        $this->codeBook_model->update(array('type' => $type), $condition);
+        $data = array('status'=>'success', 'msg'=> 'Type updated successfully.');
+        echo json_encode($data);
+    }
 }
