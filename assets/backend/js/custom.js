@@ -4,6 +4,7 @@ var credentials_customer_list = '';
 var incorrect_customer_list = '';
 var fees_list = '';
 var fees_type_list = '';
+var code_book_list = '';
 $(document).ready(function () {
 
     // Add active class to menu
@@ -2385,6 +2386,25 @@ $(document).ready(function () {
             }
         }); 
     }
+
+    /* Add code book validation */
+    if(jQuery('#frm-add-code-book').length || jQuery('#frm-edit-code-book').length)
+    {
+        jQuery('#frm-add-code-book,#frm-edit-code-book').validate({ 
+            rules: {
+                code:"required",
+                type:"required",
+            },
+            messages: {
+                code:"Please enter code",
+                type:"Please select type",
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        }); 
+    }
+    /* Add code book validation */
 });
 
 
@@ -2979,4 +2999,50 @@ function deleteFeesType(id)
     {
         return false;
     }
+}
+
+function updateType(id,type)
+{
+    $('body').animate({ opacity: 0.5 }, "slow");
+    $.ajax({
+        url: base_url+"order/admin/update-type",
+        method: "POST",
+        data : {
+            id: id,
+            type: type
+        },
+        success: function(data){
+            var result = jQuery.parseJSON(data);
+            if (result.status == 'success') {
+                $('body').animate({ opacity: 1.0 }, "slow");
+                $('#code_book_success_msg').html(result.msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#code_book_success_msg").offset().top
+                }, 1000);
+                code_book_list.ajax.reload( null, false );
+                setTimeout(function () {
+                    $('#code_book_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#code_book_error_msg').html(result.message).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#code_book_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#code_book_error_msg').html('').hide();
+                }, 4000);
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#code_book_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#companies_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#code_book_error_msg').html('').hide();
+            }, 4000);
+        }
+    });
 }

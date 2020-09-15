@@ -230,6 +230,7 @@ $route['order/admin/edit-fee-type/:num'] = 'admin/order/FeesTypes/edit_fee_type'
 $route['order/admin/code-book'] = 'admin/order/CodeBook/index';
 $route['order/admin/add-code-book'] = 'admin/order/CodeBook/add_code_book';
 $route['order/admin/import-code-book'] = 'admin/order/CodeBook/import_code_book';
+$route['order/admin/update-type'] = 'admin/order/CodeBook/updateType';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
