@@ -31,6 +31,8 @@ class AddIndexingColumnInDocument extends AbstractMigration
      */
     public function change()
     {
-
+        $table = $this->table('pct_order_documents');
+        $table->addColumn('index_number', 'integer', ['after' => 'is_proposed_insured_doc', 'null' => true])
+              ->update();
     }
 }
