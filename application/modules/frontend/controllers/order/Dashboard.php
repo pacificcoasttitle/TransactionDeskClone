@@ -1249,49 +1249,7 @@ class Dashboard extends MX_Controller {
 			$resCPL['CPL']['PolicyProducingAgentCity'] = $resToken['city'];
 			$resCPL['CPL']['PolicyProducingAgentState'] = $resToken['state'];
 			$resCPL['CPL']['PolicyProducingAgentZip'] = $resToken['zip'];
-			
-						
-			// $cpl[] = array (
-			// 	'TVID' => $res['tvid'],
-			// 	'CPLID' => -1,
-			// 	'FileInformation' => null,
-			// 	'LetterName' => 'ALTA CPL Single Trans 2018 2.0',
-			// 	'IssueDate' => date('Y-m-d H:i:s'),
-			// 	'CancelDate' => null,
-			// 	'CancelReason' => null,
-			// 	'CancelUser' => null,
-			// 	'CreatedBy'=> null,
-			// 	'PolicyProducingAgentNumber' => $resToken['agent_number'],
-			// 	'PolicyProducingAgentAddressID' => $resToken['agent_number'],
-			// 	'PolicyProducingAgentName' => $resToken['agency_name'],
-			// 	'PolicyProducingAgentAddress' => $resToken['address'],
-			// 	'PolicyProducingAgentCity' => $resToken['city'],
-			// 	'PolicyProducingAgentState' => $resToken['state'],
-			// 	'PolicyProducingAgentZip' => $resToken['zip'],
-			// 	'ClosingAgentNumber'=> null,
-			// 	'ClosingAgentAddressID'=> null,
-			// 	'ClosingAgentName'=> null,
-			// 	'ClosingAgentAddress'=> null,
-			// 	'ClosingAgentCity'=> null,
-			// 	'ClosingAgentState'=> null,
-			// 	'ClosingAgentZip'=> null,
-			// 	'IsAuthorizedforDualCPLs' => false,
-			// 	'IsDualCPL' => false,
-			// 	'LenderID' => !empty($res['lenders']) ? $res['lenders'][0]['Id'] : 0,
-			// 	'CustomFields'=> null,
-			// 	'DualCombinedInfo'=> [],
-			// 	'ProtectBorrower' => false,
-			// 	'ProtectBuyer' => false,
-			// 	'ProtectLender' => true,
-			// 	'ProtectSeller' => false,
-			// 	'ProtectSeller'=> false,
-			// 	'ProtectAnyone'=> false,
-			// 	'ProtectAnyoneValue'=> null,
-			// 	'FreeInfoText'=> 'Some additional information about the closing would go here.',
-			// 	'AdditionalAgencyLocationsJSON'=> null,
-			// 	'ShowAdditionalAgencyLocations'=> false
-			// ) ;
-
+		
 			$res['cpl'][] = $resCPL['CPL'];
 			$res['lenders'] = $lenders;
 			$res['buyers'] = $buyers;
