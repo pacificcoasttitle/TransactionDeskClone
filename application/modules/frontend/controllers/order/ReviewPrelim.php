@@ -463,323 +463,272 @@ class ReviewPrelim extends MX_Controller {
 			"YearAcquired": null
 			}';
     	
-    	if($json)
-    	{
+    	if ($json) {
     		$logId = $this->apiLogs->syncLogs(0,'resware WCF', 'get_prelim','https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array('ReceiveSearchDataService'=>true), array());
-
     		$this->apiLogs->syncLogs(0, 'resware WCF', 'get_prelim', 'https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array(), $json, 0, $logId);
-    		//Name of our directory
 			$dir_name = APPPATH.'logs/prelim';
 
-			//Check if the directory with the name already exists
-			if (!is_dir($dir_name)) 
-			{
+			if (!is_dir($dir_name)) {
 				mkdir($dir_name);
 			}
 
 			$file = APPPATH.'logs/prelim/response.log';
-			if (file_exists($file)) 
-			{
-			  $fh = fopen($file, 'a');
-			} 
-			else 
-			{
-			  $fh = fopen($file, 'w');
+
+			if (file_exists($file)) {
+				$fh = fopen($file, 'a');
+			} else {
+				$fh = fopen($file, 'w');
 			}
 
 			fwrite($fh, $json."\n");
 			fclose($fh);
-
 			$data = json_decode($json,TRUE);
 
-	    	if(isset($data) && !empty($data))
-	    	{
+	    	if (isset($data) && !empty($data)) {
 	    		$file_number = isset($data['FileNumber']) && !empty($data['FileNumber']) ? $data['FileNumber'] : '';
-
 				$parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
-
 	    		$vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
 	    		$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
-	    		$liens = $email_data = array();
+				$liens = $email_data = array();
+				$documentIds = array();
+				$arr_find = array("_BOOKONLY_", "_DATE_", "_DOCUMENTNAME_", "_GRANTEE_", "_GRANTOR_", "_INSTRUMENTONLY_", "_RECORDEDDATE_", "_PURPOSE_", "_PAGEONLY_", "_LIBERONLY_", "_VOLUMEONLY_", "_AMOUNT_", "_TRUSTEE_", "_AGAINST_", "_ASSIGNOR_", "_ASSIGNEE_", "_ASSIGNEEBOOK_", "_ASSIGNEEBOOKONLY_", "_ASSIGNEEPAGE_", "_ASSIGNEEPAGEONLY_", "_ASSIGNEELIBER_", "_ASSIGNEELIBERONLY_", "_ASSIGNEEVOLUME_", "_ASSIGNEEVOLUMEONLY_", "_ASSIGNEEINSTRUMENT_", "_ASSIGNEEINSTRUMENTONLY_", "_BOOK_", "_CASENUMBER_", "_COUNTY_", "_COURTDISTRICT_ ", "_COURTTYPE_", "_ENDORSEMENTS_", "_HOLDER_", "_INFAVOROF_", "_INSTALLMENTNUMBER_", "_INSTRUMENT_ ", "_INSTALLMENTAMOUNT_", "_LIBER_", "_MATURITYDATE_", "_PAGE_", "_STATE_", "_STATEDISTRICT_", "_TAXYEARS_", "_VOLUME_", "_BUYERNAMES_", "_PARCELID1_");
 
-	    		if(isset($data['Liens']) && !empty($data['Liens']))
-				{
+	    		if (isset($data['Liens']) && !empty($data['Liens'])) {
 					$liensCount = 1;
-					foreach ($data['Liens'] as $key => $lien) 
-					{
+					$easementCheck = 0;
+
+					foreach ($data['Liens'] as $key => $lien) {
+
+						$language = '';
 						$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
+						$Book = isset($lien['Book']) && !empty($lien['Book']) ? $lien['Book'] : '';
+						$Date = isset($lien['Date']) && !empty($lien['Date']) ? $lien['Date'] : '';
+						$DocumentName = isset($lien['DocumentName']) && !empty($lien['DocumentName']) ? $lien['DocumentName'] : '';
+						$Grantee = isset($lien['Grantee']) && !empty($lien['Grantee']) ? $lien['Grantee'] : '';
+						$Instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
+						$RecordedDate = isset($lien['RecordedDate']) && !empty($lien['RecordedDate']) ? $lien['RecordedDate'] : '';
+						$Purpose = isset($lien['Purpose']) && !empty($lien['Purpose']) ? $lien['Purpose'] : '';
+						$Page = isset($lien['Page']) && !empty($lien['Page']) ? $lien['Page'] : '';
+						$Liber = isset($lien['Liber']) && !empty($lien['Liber']) ? $lien['Liber'] : '';
+						$Volume = isset($lien['Volume']) && !empty($lien['Volume']) ? $lien['Volume'] : '';
+						$Amount = isset($lien['Amount']) && !empty($lien['Amount']) ? $lien['Amount'] : '';
+						$Trustee = isset($lien['Trustee']) && !empty($lien['Trustee']) ? $lien['Trustee'] : '';
+						$Against = isset($lien['Against']) && !empty($lien['Against']) ? $lien['Against'] : '';
+						$Assignor = isset($lien['Assignor']) && !empty($lien['Assignor']) ? $lien['Assignor'] : '';
+						$Assignee = isset($lien['Assignee']) && !empty($lien['Assignee']) ? $lien['Assignee'] : '';
+						$AssigneeBook = isset($lien['AssigneeBook']) && !empty($lien['AssigneeBook']) ? $lien['AssigneeBook'] : '';
+						$AssigneePage = isset($lien['AssigneePage']) && !empty($lien['AssigneePage']) ? $lien['AssigneePage'] : '';
+						$AssigneeLiber = isset($lien['AssigneeLiber']) && !empty($lien['AssigneeLiber']) ? $lien['AssigneeLiber'] : '';
+						$AssigneeVolume = isset($lien['AssigneeVolume']) && !empty($lien['AssigneeVolume']) ? $lien['AssigneeVolume'] : '';
+						$AssigneeInstrument = isset($lien['AssigneeInstrument']) && !empty($lien['AssigneeInstrument']) ? $lien['AssigneeInstrument'] : '';
+						$CaseNumber = isset($lien['CaseNumber']) && !empty($lien['CaseNumber']) ? $lien['CaseNumber'] : '';
+						$County = isset($lien['County']) && !empty($lien['County']) ? $lien['County'] : '';
+						$CourtDistrict = isset($lien['CourtDistrict']) && !empty($lien['CourtDistrict']) ? $lien['CourtDistrict'] : '';
+						$CourtType = isset($lien['CourtType']) && !empty($lien['CourtType']) ? $lien['CourtType'] : '';
+						$Endorsements = isset($lien['Endorsements']) && !empty($lien['Endorsements']) ? $lien['Endorsements'] : '';
+						$Holder = isset($lien['Holder']) && !empty($lien['Holder']) ? $lien['Holder'] : '';
+						$InFavorOf = isset($lien['InFavorOf']) && !empty($lien['InFavorOf']) ? $lien['InFavorOf'] : '';
+						$InstallmentNumber = isset($lien['InstallmentNumber']) && !empty($lien['InstallmentNumber']) ? $lien['InstallmentNumber'] : '';
+						$InstallmentAmount = isset($lien['InstallmentAmount']) && !empty($lien['InstallmentAmount']) ? $lien['InstallmentAmount'] : '';
+						$MaturityDate = isset($lien['MaturityDate']) && !empty($lien['MaturityDate']) ? $lien['MaturityDate'] : '';
+						$State = isset($lien['State']) && !empty($lien['State']) ? $lien['State'] : '';
+						$StateDistrict = isset($lien['StateDistrict']) && !empty($lien['StateDistrict']) ? $lien['StateDistrict'] : '';
+						$TaxYears = isset($lien['TaxYears']) && !empty($lien['TaxYears']) ? $lien['TaxYears'] : '';
 
-						if(strpos($language, 'Tax Identification No') !== false)
-						{
-							if(strpos($language, '_PARCELID1_') !== false) 
-							{																		
-								preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $language, $result);
-								if (!empty($result)) {
-									$link = $result['href'][0];
-									$documentId = str_replace('http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=', '', $link);
-									$documentIds[$documentId] = $liensCount;
-								}
-								$language = str_replace("_PARCELID1_", $parcelID , $language);
-							}
-							$pos = strpos($language, 'Tax Identification No');
-							$sub_str = substr($language,0,$pos);							
-							$language = substr($language,$pos);
+						$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
+						$language = str_replace($arr_find, $arr_rep, $language); 
+						$result = array();
+						preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $language, $result);
 
-							preg_match_all('/[a-zA-Z0-9. ]+: (\S+)/', $language, $matches);
-							
-							$language = $sub_str."\n";
-							
-							if(isset($matches[0]) && !empty($matches[0]))
-							{
-								foreach ($matches[0] as $key => $value) 
-								{
-									$a = explode(":", $value);
-									if (strtolower($a[0]) == 'tax identification no.') {
-										$str= '<strong>'.$a[0].': </strong>'.$parcelID;
-									} else {
-										$str= '<strong>'.$a[0].': </strong>'.$a[1];
-									}
-									$language .= $str."\n";
-								}
-							}
+						if (!empty($result)) {
+							$link = $result['href'][0];
+							$documentId = str_replace('http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=', '', $link);
+							$documentIds[$documentId] = $liensCount;
+						}	
+						
+						if(strpos(strtolower($language), 'any liens or other assessments') !== false || strpos(strtolower($language), 'the lien of supplemental') !== false || strpos(strtolower($language), 'property taxes') !== false ) {
+							$tax[] = $language;
+						} else {
+							if($easementCheck == 0) {
+								$easements = array();
+								if (isset($data['Easements']) && !empty($data['Easements']))  {
 
-							$email_data['tax'][] = $language;
-						}
-						else
-						{
-							$amount = isset($lien['Amount']) && !empty($lien['Amount']) ? $lien['Amount'] : '';
-							$date = isset($lien['Date']) && !empty($lien['Date']) ? $lien['Date'] : '';
-							$grantor = isset($lien['Grantor']) && !empty($lien['Grantor']) ? $lien['Grantor'] : '';
-							$trustee = isset($lien['Trustee']) && !empty($lien['Trustee']) ? $lien['Trustee'] : '';
-							$grantee = isset($lien['Grantee']) && !empty($lien['Grantee']) ? $lien['Grantee'] : '';
-							$recordedDate = isset($lien['RecordedDate']) && !empty($lien['RecordedDate']) ? $lien['RecordedDate'] : '';
-							$instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
-							if(!empty($language))
-							{	
+									$liensCount++;
+									foreach ($data['Easements'] as $key => $easement) {
 
-								if(strpos($language, 'Amount:') !== false)
-								{
-									$pos = strpos($language, 'Amount:');
-									$sub_str_main = substr($language,0,$pos);
-															
-									$language = substr($language,$pos);
-									$exploded_str = $this->multiexplode(array("_ "),$language);
-									$formatted_data = array();
-									if(isset($exploded_str) && !empty($exploded_str))
-									{
-										foreach ($exploded_str as $key => $value) 
-										{
-											$str_count = substr_count($value, ':');
+										$language = '';
+										$language = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
+										$Book = isset($easement['Book']) && !empty($easement['Book']) ? $easement['Book'] : '';
+										$Date = isset($easement['Date']) && !empty($easement['Date']) ? $easement['Date'] : '';
+										$DocumentName = isset($easement['DocumentName']) && !empty($easement['DocumentName']) ? $easement['DocumentName'] : '';
+										$Grantee = isset($easement['Grantee']) && !empty($easement['Grantee']) ? $easement['Grantee'] : '';
+										$Instrument = isset($easement['Instrument']) && !empty($easement['Instrument']) ? $easement['Instrument'] : '';
+										$RecordedDate = isset($easement['RecordedDate']) && !empty($easement['RecordedDate']) ? $easement['RecordedDate'] : '';
+										$Purpose = isset($easement['Purpose']) && !empty($easement['Purpose']) ? $easement['Purpose'] : '';
+										$Page = isset($easement['Page']) && !empty($easement['Page']) ? $easement['Page'] : '';
+										$Liber = isset($easement['Liber']) && !empty($easement['Liber']) ? $easement['Liber'] : '';
+										$Volume = isset($easement['Volume']) && !empty($easement['Volume']) ? $easement['Volume'] : '';
+										$Amount = isset($easement['Amount']) && !empty($easement['Amount']) ? $easement['Amount'] : '';
+										$Trustee = isset($easement['Trustee']) && !empty($easement['Trustee']) ? $easement['Trustee'] : '';
+										$Against = isset($easement['Against']) && !empty($easement['Against']) ? $easement['Against'] : '';
+										$Assignor = isset($easement['Assignor']) && !empty($easement['Assignor']) ? $easement['Assignor'] : '';
+										$Assignee = isset($easement['Assignee']) && !empty($easement['Assignee']) ? $easement['Assignee'] : '';
+										$AssigneeBook = isset($easement['AssigneeBook']) && !empty($easement['AssigneeBook']) ? $easement['AssigneeBook'] : '';
+										$AssigneePage = isset($easement['AssigneePage']) && !empty($easement['AssigneePage']) ? $easement['AssigneePage'] : '';
+										$AssigneeLiber = isset($easement['AssigneeLiber']) && !empty($easement['AssigneeLiber']) ? $easement['AssigneeLiber'] : '';
+										$AssigneeVolume = isset($easement['AssigneeVolume']) && !empty($easement['AssigneeVolume']) ? $easement['AssigneeVolume'] : '';
+										$AssigneeInstrument = isset($easement['AssigneeInstrument']) && !empty($easement['AssigneeInstrument']) ? $easement['AssigneeInstrument'] : '';
+										$CaseNumber = isset($easement['CaseNumber']) && !empty($easement['CaseNumber']) ? $easement['CaseNumber'] : '';
+										$County = isset($easement['County']) && !empty($easement['County']) ? $easement['County'] : '';
+										$CourtDistrict = isset($easement['CourtDistrict']) && !empty($easement['CourtDistrict']) ? $easement['CourtDistrict'] : '';
+										$CourtType = isset($easement['CourtType']) && !empty($easement['CourtType']) ? $easement['CourtType'] : '';
+										$Endorsements = isset($easement['Endorsements']) && !empty($easement['Endorsements']) ? $easement['Endorsements'] : '';
+										$Holder = isset($easement['Holder']) && !empty($easement['Holder']) ? $easement['Holder'] : '';
+										$InFavorOf = isset($easement['InFavorOf']) && !empty($easement['InFavorOf']) ? $easement['InFavorOf'] : '';
+										$InstallmentNumber = isset($easement['InstallmentNumber']) && !empty($easement['InstallmentNumber']) ? $easement['InstallmentNumber'] : '';
+										$InstallmentAmount = isset($easement['InstallmentAmount']) && !empty($easement['InstallmentAmount']) ? $easement['InstallmentAmount'] : '';
+										$MaturityDate = isset($easement['MaturityDate']) && !empty($easement['MaturityDate']) ? $easement['MaturityDate'] : '';
+										$State = isset($easement['State']) && !empty($easement['State']) ? $easement['State'] : '';
+										$StateDistrict = isset($easement['StateDistrict']) && !empty($easement['StateDistrict']) ? $easement['StateDistrict'] : '';
+										$TaxYears = isset($easement['TaxYears']) && !empty($easement['TaxYears']) ? $easement['TaxYears'] : '';
 
-											if($str_count == 2)
-											{
-												if(strpos($value, 'Lender:') !== false)
-												{
+										$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
+										$language = str_replace($arr_find, $arr_rep, $language); 
+										$result = array();
+										preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $language, $result);
 
-													$pos = strpos($value, 'Lender:');
-													$sub_str = substr($value,0,$pos);
-													$formatted_data[] = $sub_str;
-													$truncate_str = substr($value,$pos);
-													$formatted_data[] = $truncate_str."_";
-												}
-												if(strpos($value, 'Recording Date:') !== false)
-												{
-
-													$pos = strpos($value, 'Recording Date:');
-													$sub_str = substr($value,0,$pos);
-													$formatted_data[] = $sub_str;
-													$truncate_str = substr($value,$pos);
-													$formatted_data[] = $truncate_str."_";
-												}
-												if(strpos($value, '<a id=') !== false)
-												{
-
-													$pos = strpos($value, '<a id=');
-													$sub_str = substr($value,0,$pos);
-													
-													
-													$truncate_str = substr($value,$pos);
-													
-													$formatted_data[] = $sub_str.$truncate_str;
-												}
-											}
-											else
-											{
-												$formatted_data[] = $value."_"; 
-											}
-										} 
-									}
-									
-									
-
-									$language = $sub_str_main."\n";
-									
-									if(isset($formatted_data) && !empty($formatted_data))
-									{
-										foreach ($formatted_data as $k => $v) 
-										{
-											$str = explode(": ", $v);
-											
-											$format_str= '<strong>'.$str[0].': </strong>'.$str[1];
-											$language .= $format_str."\n";
+										if (!empty($result)) {
+											$link = $result['href'][0];
+											$documentId = str_replace('http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=', '', $link);
+											$documentIds[$documentId] = $liensCount;
+										}	
+										if(!empty($language)) {
+											$easements[] = $language;
 										}
+										$liensCount++;
 									}
 								}
-								if(strpos($language, 'A homestead declaration Executed by:') !== false)
-								{
-									$l_exploded = $this->multiexplode(array("_ "),$language);
-									$l_formatted_data = array();
-									if(isset($l_exploded) && !empty($l_exploded))
-									{
-										foreach ($l_exploded as $l_key => $l_value) 
-										{						
-											if(strpos($l_value, 'Official Records') !== false)
-											{
-												$l_formatted_data[] = $l_value;
-											}
-											else
-											{
-												$l_formatted_data[] = $l_value."_";
-											}
-										} 
-									}
-
-									$language = "";
-									if(isset($l_formatted_data) && !empty($l_formatted_data))
-									{
-										foreach ($l_formatted_data as $l_k => $l_v) 
-										{
-											$l_str = explode(": ", $l_v);
-											
-											$l_format_str= '<strong>'.$l_str[0].': </strong>'.$l_str[1];
-											$language .= $l_format_str."\n";
-										}
-									}
-								}
-
-
-								if(strpos($language, '_AMOUNT_') !== false) {
-									$language = str_replace("_AMOUNT_", " ".$amount , $language);
-								}
-								if(strpos($language, '_DATE_') !== false) {
-									$language = str_replace("_DATE_", " ".$date , $language);
-								}
-								if(strpos($language, '_GRANTOR_') !== false) {
-									$language = str_replace("_GRANTOR_", " ".$grantor , $language);
-								}
-								if(strpos($language, '_TRUSTEE_') !== false) {
-									$language = str_replace("_TRUSTEE_", " ".$trustee , $language);
-								}
-								if(strpos($language, '_GRANTEE_') !== false) {
-									$language = str_replace("_GRANTEE_", " ".$grantee , $language);
-								}
-								if(strpos($language, '_RECORDEDDATE_') !== false) {
-									$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
-								}
-								if(strpos($language, '_INSTRUMENTONLY_') !== false) {
-									$language = str_replace("_INSTRUMENTONLY_", " ".$instrument , $language);
-								}
-								if(strpos($language, '_PARCELID1_') !== false) {
-									$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
-								}
-								
-								if(strpos(strtolower($language), 'any liens or other assessments') !== false || strpos(strtolower($language), 'the lien of supplemental') !== false || strpos(strtolower($language), 'property taxes') !== false  )
-									{
-										// $tax[] = $language;
-										$email_data['tax'][] = $language;
-									}
-									else
-									{
-										// $liens[] = $language;
-										$email_data['liens'][] = $language;
-									}
-
-								$liens[] = $language;
-								// $email_data['liens'][] = $language;
+								$easementCheck++;
 							}
+							$liens[] = $language;
 						}
-						$liensCount++;	    				
-					}
-				}
-
-				$easements = array();
-				if(isset($data['Easements']) && !empty($data['Easements']))
-				{
-					foreach ($data['Easements'] as $key => $easement) 
-					{
-						$language = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
-						$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
-						$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
-						if(!empty($language))
-						{
-							$easements[] = $language;
-						}
+						$liensCount++;	
 					}
 				}
 
 				$requirements = array();
-				if(isset($data['Requirements']) && !empty($data['Requirements']))
-				{
-					foreach ($data['Requirements'] as $key => $requirement) 
-					{
+				$requirementCount = 1;
+				if(isset($data['Requirements']) && !empty($data['Requirements'])) {
+					foreach ($data['Requirements'] as $key => $requirement) {
+						$language = '';
 						$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
-						$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
-						$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
-						$amount = isset($requirement['Amount']) && !empty($requirement['Amount']) ? $requirement['Amount'] : '';
-						$date = isset($requirement['Date']) && !empty($requirement['Date']) ? $requirement['Date'] : '';
-						$grantor = isset($requirement['Grantor']) && !empty($requirement['Grantor']) ? $requirement['Grantor'] : '';
-						$trustee = isset($requirement['Trustee']) && !empty($requirement['Trustee']) ? $requirement['Trustee'] : '';
-						$grantee = isset($requirement['Grantee']) && !empty($requirement['Grantee']) ? $requirement['Grantee'] : '';
-						$recordedDate = isset($requirement['RecordedDate']) && !empty($requirement['RecordedDate']) ? $requirement['RecordedDate'] : '';
-						$instrument = isset($requirement['Instrument']) && !empty($requirement['Instrument']) ? $requirement['Instrument'] : '';
+						$Book = isset($requirement['Book']) && !empty($requirement['Book']) ? $requirement['Book'] : '';
+						$Date = isset($requirement['Date']) && !empty($requirement['Date']) ? $requirement['Date'] : '';
+						$DocumentName = isset($requirement['DocumentName']) && !empty($requirement['DocumentName']) ? $requirement['DocumentName'] : '';
+						$Grantee = isset($requirement['Grantee']) && !empty($requirement['Grantee']) ? $requirement['Grantee'] : '';
+						$Instrument = isset($requirement['Instrument']) && !empty($requirement['Instrument']) ? $requirement['Instrument'] : '';
+						$RecordedDate = isset($requirement['RecordedDate']) && !empty($requirement['RecordedDate']) ? $requirement['RecordedDate'] : '';
+						$Purpose = isset($requirement['Purpose']) && !empty($requirement['Purpose']) ? $requirement['Purpose'] : '';
+						$Page = isset($requirement['Page']) && !empty($requirement['Page']) ? $requirement['Page'] : '';
+						$Liber = isset($requirement['Liber']) && !empty($requirement['Liber']) ? $requirement['Liber'] : '';
+						$Volume = isset($requirement['Volume']) && !empty($requirement['Volume']) ? $requirement['Volume'] : '';
+						$Amount = isset($requirement['Amount']) && !empty($requirement['Amount']) ? $requirement['Amount'] : '';
+						$Trustee = isset($requirement['Trustee']) && !empty($requirement['Trustee']) ? $requirement['Trustee'] : '';
+						$Against = isset($requirement['Against']) && !empty($requirement['Against']) ? $requirement['Against'] : '';
+						$Assignor = isset($requirement['Assignor']) && !empty($requirement['Assignor']) ? $requirement['Assignor'] : '';
+						$Assignee = isset($requirement['Assignee']) && !empty($requirement['Assignee']) ? $requirement['Assignee'] : '';
+						$AssigneeBook = isset($requirement['AssigneeBook']) && !empty($requirement['AssigneeBook']) ? $requirement['AssigneeBook'] : '';
+						$AssigneePage = isset($requirement['AssigneePage']) && !empty($requirement['AssigneePage']) ? $requirement['AssigneePage'] : '';
+						$AssigneeLiber = isset($requirement['AssigneeLiber']) && !empty($requirement['AssigneeLiber']) ? $requirement['AssigneeLiber'] : '';
+						$AssigneeVolume = isset($requirement['AssigneeVolume']) && !empty($requirement['AssigneeVolume']) ? $requirement['AssigneeVolume'] : '';
+						$AssigneeInstrument = isset($requirement['AssigneeInstrument']) && !empty($requirement['AssigneeInstrument']) ? $requirement['AssigneeInstrument'] : '';
+						$CaseNumber = isset($requirement['CaseNumber']) && !empty($requirement['CaseNumber']) ? $requirement['CaseNumber'] : '';
+						$County = isset($requirement['County']) && !empty($requirement['County']) ? $requirement['County'] : '';
+						$CourtDistrict = isset($requirement['CourtDistrict']) && !empty($requirement['CourtDistrict']) ? $requirement['CourtDistrict'] : '';
+						$CourtType = isset($requirement['CourtType']) && !empty($requirement['CourtType']) ? $requirement['CourtType'] : '';
+						$Endorsements = isset($requirement['Endorsements']) && !empty($requirement['Endorsements']) ? $requirement['Endorsements'] : '';
+						$Holder = isset($requirement['Holder']) && !empty($requirement['Holder']) ? $requirement['Holder'] : '';
+						$InFavorOf = isset($requirement['InFavorOf']) && !empty($requirement['InFavorOf']) ? $requirement['InFavorOf'] : '';
+						$InstallmentNumber = isset($requirement['InstallmentNumber']) && !empty($requirement['InstallmentNumber']) ? $requirement['InstallmentNumber'] : '';
+						$InstallmentAmount = isset($requirement['InstallmentAmount']) && !empty($requirement['InstallmentAmount']) ? $requirement['InstallmentAmount'] : '';
+						$MaturityDate = isset($requirement['MaturityDate']) && !empty($requirement['MaturityDate']) ? $requirement['MaturityDate'] : '';
+						$State = isset($requirement['State']) && !empty($requirement['State']) ? $requirement['State'] : '';
+						$StateDistrict = isset($requirement['StateDistrict']) && !empty($requirement['StateDistrict']) ? $requirement['StateDistrict'] : '';
+						$TaxYears = isset($requirement['TaxYears']) && !empty($requirement['TaxYears']) ? $requirement['TaxYears'] : '';
+
+						$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
+						$language = str_replace($arr_find, $arr_rep, $language); 
+						$result = array();
+						preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $language, $result);
+
+						if (!empty($result)) {
+							$link = $result['href'][0];
+							$documentId = str_replace('http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=', '', $link);
+							$documentIds[$documentId] = $requirementCount;
+						}	
 						
-						if(strpos($language, '_AMOUNT_') !== false) {
-							$language = str_replace("_AMOUNT_", " ".$amount , $language);
-						}
-						if(strpos($language, '_DATE_') !== false) {
-							$language = str_replace("_DATE_", " ".$date , $language);
-						}
-						if(strpos($language, '_GRANTOR_') !== false) {
-							$language = str_replace("_GRANTOR_", " ".$grantor , $language);
-						}
-						if(strpos($language, '_TRUSTEE_') !== false) {
-							$language = str_replace("_TRUSTEE_", " ".$trustee , $language);
-						}
-						if(strpos($language, '_GRANTEE_') !== false) {
-							$language = str_replace("_GRANTEE_", " ".$grantee , $language);
-						}
-						if(strpos($language, '_RECORDEDDATE_') !== false) {
-							$language = str_replace("_RECORDEDDATE_", " ".$recordedDate , $language);
-						}
-						if(strpos($language, '_INSTRUMENTONLY_') !== false) {
-							$language = str_replace("_INSTRUMENTONLY_", " ".$instrument , $language);
-						}
-						if(strpos($language, '_PARCELID1_') !== false) {
-							$language = str_replace("_PARCELID1_", " ".$parcelID , $language);
-						}
-						
-						if(!empty($language))
-						{
+						if (!empty($language)) {
 							$requirements[] = $language;
 						}
+						$requirementCount++;
 					}
 				}
 				
 				$restrictions = array();
-				
-				if(isset($data['Restrictions']) && !empty($data['Restrictions']))
-				{
-					foreach ($data['Restrictions'] as $key => $restriction) 
-					{
+				$restrictionsCount = 0;
+				if (isset($data['Restrictions']) && !empty($data['Restrictions'])) {
+					foreach ($data['Restrictions'] as $key => $restriction) {
 						$language = isset($restriction['Language']) && !empty($restriction['Language']) ? $restriction['Language'] : '';
-						$language = preg_replace('/(.*):/', '<b>$1:</b>', $language);
-						$language = preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $language);
-						if(!empty($language))
-						{
+						$Book = isset($restriction['Book']) && !empty($restriction['Book']) ? $restriction['Book'] : '';
+						$Date = isset($restriction['Date']) && !empty($restriction['Date']) ? $restriction['Date'] : '';
+						$DocumentName = isset($restriction['DocumentName']) && !empty($restriction['DocumentName']) ? $restriction['DocumentName'] : '';
+						$Grantee = isset($restriction['Grantee']) && !empty($restriction['Grantee']) ? $restriction['Grantee'] : '';
+						$Instrument = isset($restriction['Instrument']) && !empty($restriction['Instrument']) ? $restriction['Instrument'] : '';
+						$RecordedDate = isset($restriction['RecordedDate']) && !empty($restriction['RecordedDate']) ? $restriction['RecordedDate'] : '';
+						$Purpose = isset($restriction['Purpose']) && !empty($restriction['Purpose']) ? $restriction['Purpose'] : '';
+						$Page = isset($restriction['Page']) && !empty($restriction['Page']) ? $restriction['Page'] : '';
+						$Liber = isset($restriction['Liber']) && !empty($restriction['Liber']) ? $restriction['Liber'] : '';
+						$Volume = isset($restriction['Volume']) && !empty($restriction['Volume']) ? $restriction['Volume'] : '';
+						$Amount = isset($restriction['Amount']) && !empty($restriction['Amount']) ? $restriction['Amount'] : '';
+						$Trustee = isset($restriction['Trustee']) && !empty($restriction['Trustee']) ? $restriction['Trustee'] : '';
+						$Against = isset($restriction['Against']) && !empty($restriction['Against']) ? $restriction['Against'] : '';
+						$Assignor = isset($restriction['Assignor']) && !empty($restriction['Assignor']) ? $restriction['Assignor'] : '';
+						$Assignee = isset($restriction['Assignee']) && !empty($restriction['Assignee']) ? $restriction['Assignee'] : '';
+						$AssigneeBook = isset($restriction['AssigneeBook']) && !empty($restriction['AssigneeBook']) ? $restriction['AssigneeBook'] : '';
+						$AssigneePage = isset($restriction['AssigneePage']) && !empty($restriction['AssigneePage']) ? $restriction['AssigneePage'] : '';
+						$AssigneeLiber = isset($restriction['AssigneeLiber']) && !empty($restriction['AssigneeLiber']) ? $restriction['AssigneeLiber'] : '';
+						$AssigneeVolume = isset($restriction['AssigneeVolume']) && !empty($restriction['AssigneeVolume']) ? $restriction['AssigneeVolume'] : '';
+						$AssigneeInstrument = isset($restriction['AssigneeInstrument']) && !empty($restriction['AssigneeInstrument']) ? $restriction['AssigneeInstrument'] : '';
+						$CaseNumber = isset($restriction['CaseNumber']) && !empty($restriction['CaseNumber']) ? $restriction['CaseNumber'] : '';
+						$County = isset($restriction['County']) && !empty($restriction['County']) ? $restriction['County'] : '';
+						$CourtDistrict = isset($restriction['CourtDistrict']) && !empty($restriction['CourtDistrict']) ? $restriction['CourtDistrict'] : '';
+						$CourtType = isset($restriction['CourtType']) && !empty($restriction['CourtType']) ? $restriction['CourtType'] : '';
+						$Endorsements = isset($restriction['Endorsements']) && !empty($restriction['Endorsements']) ? $restriction['Endorsements'] : '';
+						$Holder = isset($restriction['Holder']) && !empty($restriction['Holder']) ? $restriction['Holder'] : '';
+						$InFavorOf = isset($restriction['InFavorOf']) && !empty($restriction['InFavorOf']) ? $restriction['InFavorOf'] : '';
+						$InstallmentNumber = isset($restriction['InstallmentNumber']) && !empty($restriction['InstallmentNumber']) ? $restriction['InstallmentNumber'] : '';
+						$InstallmentAmount = isset($restriction['InstallmentAmount']) && !empty($restriction['InstallmentAmount']) ? $restriction['InstallmentAmount'] : '';
+						$MaturityDate = isset($restriction['MaturityDate']) && !empty($restriction['MaturityDate']) ? $restriction['MaturityDate'] : '';
+						$State = isset($restriction['State']) && !empty($restriction['State']) ? $restriction['State'] : '';
+						$StateDistrict = isset($restriction['StateDistrict']) && !empty($restriction['StateDistrict']) ? $restriction['StateDistrict'] : '';
+						$TaxYears = isset($restriction['TaxYears']) && !empty($restriction['TaxYears']) ? $restriction['TaxYears'] : '';
+
+						$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
+						$language = str_replace($arr_find, $arr_rep, $language); 
+						$result = array();
+						preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $language, $result);
+
+						if (!empty($result)) {
+							$link = $result['href'][0];
+							$documentId = str_replace('http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=', '', $link);
+							$documentIds[$documentId] = $restrictionsCount;
+						}	
+
+						if(!empty($language)) {
 							$restrictions[] = $language;
 						}
+						$restrictionsCount++;
 					}
-					
 				}
 	    		
 	    		$summaryData = array(
