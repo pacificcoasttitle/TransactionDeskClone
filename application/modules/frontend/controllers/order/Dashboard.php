@@ -1113,7 +1113,7 @@ class Dashboard extends MX_Controller {
 				'assignment' => $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : 0,
 				'mortgageType' => null,
 				'amount' => 0,
-				'loan_number' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
+				'loan_number' => $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '',
 				'vendorInternalID' => $orderDetails['escrow_lender_id']
 			);
 		} 
