@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CodeBook extends MX_Controller {
 
-	public function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->load->helper(
@@ -14,16 +14,16 @@ class CodeBook extends MX_Controller {
     }
 
     public function index()
-	{
+    {
         $this->is_admin();
-		$data = array();
+        $data = array();
         $data['title'] = 'PCT Order: Code Book';
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/home/code_book', $data);
         $this->load->view('order/layout/footer', $data);
-	}
+    }
 
-	public function is_admin()
+    public function is_admin()
     {
         $userdata = $this->session->userdata('admin');
         if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
@@ -35,7 +35,7 @@ class CodeBook extends MX_Controller {
 
     public function get_code_book()
     {
-    	$params = array();
+        $params = array();
 
         if(isset($_POST['draw']) && !empty($_POST['draw']))
         {
@@ -159,7 +159,7 @@ class CodeBook extends MX_Controller {
 
     public function import_code_book()
     {
-    	$this->is_admin();  
+        $this->is_admin();  
         $data = array();
         $data['title'] = 'PCT Order: Import';
         if($this->input->post())
@@ -184,6 +184,7 @@ class CodeBook extends MX_Controller {
 
                     $flag = true;
                     $i=0;
+
                     foreach ($allDataInSheet as $value) 
                     {
                         $rowCount++;
@@ -191,14 +192,17 @@ class CodeBook extends MX_Controller {
                             $flag =false;
                             continue;
                         }
-                       
-                        $codebookData['code'] = $value['B'];
-                        $codebookData['type'] = $value['A'];
-                        $codebookData['language'] = $value['C'];
+                        $code = isset($value['B']) && !empty($value['B']) ? $value['B'] : '';
+                        $type = isset($value['A']) && !empty($value['A']) ? $value['A'] : '';
+                        $language = isset($value['C']) && !empty($value['C']) ? $value['C'] : '';
+                        
+                        $codebookData['code'] = $code;
+                        $codebookData['type'] = $type;
+                        $codebookData['language'] = $language;
                         
                         $con = array(
                             'where' => array(
-                                'code' => $value['B'],
+                                'code' => $code,
                                 'status' => 1
                             ),
                             'returnType' => 'count'
@@ -207,7 +211,8 @@ class CodeBook extends MX_Controller {
                         $prevCount = $this->codeBook_model->get_rows($con);
                         if($prevCount > 0)
                         {
-                            $condition = array('code' => $value['B'],'status' => 1);
+                            $condition = array('code' => $code,'status' => 1);
+                            unset($codebookData['language']);
                             $update = $this->codeBook_model->update($codebookData, $condition);
                             
                             if($update){
