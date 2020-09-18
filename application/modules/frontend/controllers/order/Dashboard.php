@@ -1102,7 +1102,7 @@ class Dashboard extends MX_Controller {
 			$lenders[] =  array (
 				'Id' =>  $orderDetails['westcor_lender_id'] ? $orderDetails['westcor_lender_id'] : 0,
 				'tvid' => 0,
-				'name' => $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'],
+				'name' => !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'],
 				'city' => $orderDetails['lender_city'],
 				'state' => 'CA',
 				'zip' => $orderDetails['lender_zipcode'],
