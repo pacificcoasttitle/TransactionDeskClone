@@ -63,9 +63,9 @@ class Natic
                 $orderDetails['lender_city'] = $lenderDetails['city'];
                 $orderDetails['lender_state'] = 'CA';
                 $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
+                $orderDetails['lender_company_name'] = $lenderDetails['company_name'];
                 $orderDetails['lender_first_name'] = $lenderDetails['first_name'];
                 $orderDetails['lender_last_name'] = $lenderDetails['last_name'];
-                $lenderName = !empty($lenderDetails['company_name']) ? $lenderDetails['company_name'] : $lenderDetails['first_name']." ".$orderDetails['last_name'];
             }
 		} 
 
