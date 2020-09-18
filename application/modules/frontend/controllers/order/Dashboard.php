@@ -3350,7 +3350,7 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
 				$orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
 				$orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
-				$orderDetails['lender_assignment_clause'] = $orderDetails['assignment_clause'] ? $orderDetails['assignment_clause'] : '';
+				$orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
 				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {
 				$orderDetails['lender_first_name'] =  '';
