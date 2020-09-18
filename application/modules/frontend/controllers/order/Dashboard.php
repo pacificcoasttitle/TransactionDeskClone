@@ -1249,6 +1249,7 @@ class Dashboard extends MX_Controller {
 			$resCPL['CPL']['PolicyProducingAgentCity'] = $resToken['city'];
 			$resCPL['CPL']['PolicyProducingAgentState'] = $resToken['state'];
 			$resCPL['CPL']['PolicyProducingAgentZip'] = $resToken['zip'];
+			$resCPL['CPL']['ProtectLender'] = true;
 		
 			$res['cpl'][] = $resCPL['CPL'];
 			$res['lenders'] = $lenders;
