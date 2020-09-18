@@ -116,6 +116,13 @@ class Natic
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
+                <Field>
+                    <FieldId>LenderNote</FieldId>
+                    <Name>Lender Note</Name>
+                    <Value>".$orderDetails['lender_assignment_clause']."</Value>
+                    <Type>String</Type>
+                    <Required>true</Required>
+                </Field>
                 
                 <Field>
                     <FieldId>LenderContactName</FieldId>
