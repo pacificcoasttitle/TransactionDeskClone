@@ -52,6 +52,23 @@ class Natic
         $state = $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]);
         $zipcode = $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]);
 
+        $this->CI->load->model('order/home_model');
+        $orderUser =  $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
+
+        if ($orderUser['is_escrow'] == 0) {
+            if (!empty($orderDetails['cpl_lender_id'])) {
+                $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                $orderDetails['lender_assignment_clause'] =  $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+                $orderDetails['lender_address'] = $lenderDetails['street_address'];
+                $orderDetails['lender_city'] = $lenderDetails['city'];
+                $orderDetails['lender_state'] = 'CA';
+                $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
+                $orderDetails['lender_first_name'] = $lenderDetails['first_name'];
+                $orderDetails['lender_last_name'] = $lenderDetails['last_name'];
+                $lenderName = !empty($lenderDetails['company_name']) ? $lenderDetails['company_name'] : $lenderDetails['first_name']." ".$orderDetails['last_name'];
+            }
+		} 
+
         $xmlData = "<Field>
                     <FieldId>FileNumber</FieldId>
                     <Name>Agent's File Number</Name>
