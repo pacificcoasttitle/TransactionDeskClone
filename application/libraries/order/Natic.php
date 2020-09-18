@@ -116,7 +116,6 @@ class Natic
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
-                
                 <Field>
                     <FieldId>LenderContactName</FieldId>
                     <Name>Lender Contact Name</Name>
