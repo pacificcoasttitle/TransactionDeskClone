@@ -192,12 +192,14 @@ class CodeBook extends MX_Controller {
                             $flag =false;
                             continue;
                         }
-                        $code = isset($value['B']) && !empty($value['B']) ? $value['B'] : '';
                         $type = isset($value['A']) && !empty($value['A']) ? $value['A'] : '';
+                        $code = isset($value['B']) && !empty($value['B']) ? $value['B'] : '';
                         $language = isset($value['C']) && !empty($value['C']) ? $value['C'] : '';
+                        $type_id = isset($value['D']) && !empty($value['D']) ? $value['D'] : '';
                         
                         $codebookData['code'] = $code;
                         $codebookData['type'] = $type;
+                        $codebookData['type_id'] = $type_id;
                         $codebookData['language'] = $language;
                         
                         $con = array(
@@ -212,7 +214,7 @@ class CodeBook extends MX_Controller {
                         if($prevCount > 0)
                         {
                             $condition = array('code' => $code,'status' => 1);
-                            unset($codebookData['language']);
+                            // unset($codebookData['language']);
                             $update = $this->codeBook_model->update($codebookData, $condition);
                             
                             if($update){
