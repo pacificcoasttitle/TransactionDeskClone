@@ -264,6 +264,7 @@ class Fnf
         } 
                                     
         $endPoint = 'v3/CPLManagement.svc';
+        $lenderName = !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
         $postData = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
                         <s:Body>
                             <GenerateCPLRequest xmlns="http://cpl.fnf.com/services/v3/cplmanagement/">
@@ -287,11 +288,11 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Name]</a:Name> 
-                                        <a:Value>'. !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'].'</a:Value>
+                                        <a:Value>'.$lenderName .'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Clause]</a:Name> 
-                                        <a:Value>'.$orderDetails['lender_assignment_clause']." ".$orderDetails['lender_assignment_clause'].'</a:Value>
+                                        <a:Value>'.$orderDetails['lender_assignment_clause'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
@@ -412,7 +413,7 @@ class Fnf
                                     <a:Value>'.$orderDetails['agent_telephone_no'].'</a:Value>
                                 </a:NameValue>';
         } 
-                                    
+        $lenderName = !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];                     
         $endPoint = 'v3/CPLManagement.svc';
         $postData = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
                         <s:Body>
@@ -437,11 +438,11 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Name]</a:Name> 
-                                        <a:Value>'. !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'].'</a:Value>
+                                        <a:Value>'.$lenderName.'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Clause]</a:Name> 
-                                        <a:Value>'.$orderDetails['lender_assignment_clause']." ".$orderDetails['lender_assignment_clause'].'</a:Value>
+                                        <a:Value>'.$orderDetails['lender_assignment_clause'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
