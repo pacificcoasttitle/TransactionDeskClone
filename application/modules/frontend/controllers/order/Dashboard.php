@@ -1098,25 +1098,48 @@ class Dashboard extends MX_Controller {
 			$sellers = array();
 		}
 
-		if (!empty($orderDetails['escrow_lender_id'])) {
-			$lenders[] =  array (
-				'Id' =>  $orderDetails['westcor_lender_id'] ? $orderDetails['westcor_lender_id'] : 0,
-				'tvid' => 0,
-				'name' => !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'],
-				'city' => $orderDetails['lender_city'],
-				'state' => 'CA',
-				'zip' => $orderDetails['lender_zipcode'],
-				'address' => $orderDetails['lender_address'],
-				'phone' => $orderDetails['lender_telephone_no'],
-				'email' => $orderDetails['lender_email'],
-				'countyFIPS' => null,
-				'assignment' => $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : 0,
-				'mortgageType' => null,
-				'amount' => 0,
-				'loan_number' => $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '',
-				'vendorInternalID' => $orderDetails['escrow_lender_id']
-			);
-		} 
+		if ($orderUser['is_escrow'] == 1) {
+			if (!empty($orderDetails['escrow_lender_id'])) {
+				$lenders[] =  array (
+					'Id' =>  $orderDetails['westcor_lender_id'] ? $orderDetails['westcor_lender_id'] : 0,
+					'tvid' => 0,
+					'name' => !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'],
+					'city' => $orderDetails['lender_city'],
+					'state' => 'CA',
+					'zip' => $orderDetails['lender_zipcode'],
+					'address' => $orderDetails['lender_address'],
+					'phone' => $orderDetails['lender_telephone_no'],
+					'email' => $orderDetails['lender_email'],
+					'countyFIPS' => null,
+					'assignment' => $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : 0,
+					'mortgageType' => null,
+					'amount' => 0,
+					'loan_number' => $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '',
+					'vendorInternalID' => $orderDetails['escrow_lender_id']
+				);
+			} 
+		} else {
+			$lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+			if (!empty($lenderDetails)) {
+				$lenders[] =  array (
+					'Id' =>  $orderDetails['westcor_lender_id'] ? $orderDetails['westcor_lender_id'] : 0,
+					'tvid' => 0,
+					'name' => !empty($lenderDetails['company_name']) ? $lenderDetails['company_name'] : $lenderDetails['company_name']." ".$orderDetails['lender_last_name'],
+					'city' => $lenderDetails['city'],
+					'state' => 'CA',
+					'zip' => $lenderDetails['zip_code'],
+					'address' => $lenderDetails['street_address'],
+					'phone' => $lenderDetails['telephone_no'],
+					'email' => $lenderDetails['email_address'],
+					'countyFIPS' => null,
+					'assignment' => $lenderDetails['assignment_clause'] ? $orderDetails['assignment_clause'] : 0,
+					'mortgageType' => null,
+					'amount' => 0,
+					'loan_number' => $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '',
+					'vendorInternalID' => $lenderDetails['id']
+				);
+			} 
+		}
 		
 		$cplPostData = array (
 			'tvid' =>  0,
