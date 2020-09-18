@@ -105,14 +105,8 @@ button:focus {outline:0;}
 																		$count = count($linked_doc);
 																		$i = 1;
 																		foreach($linked_doc as $document) { 
-																				/*if($i == $count) {
-																					$style = "border-bottom: 2px #D35411 dotted !important;";
-																				} else {
-																					$style = "";
-																				}*/
-																				
 																			?>
-																			<li style="width: 100%;list-style-type: decimal;"><a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>display: list-item;" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>);" class="linked_doc" href="javascript:void(0);"><?php echo $document['original_document_name'];?></a></li>
+																			<li style="width: 100%;"><a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>display: list-item;" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>);" class="linked_doc" href="javascript:void(0);"><?php echo $document['index_number'].". ".$document['original_document_name'];?></a></li>
 																		<?php  $i++; } 
 																	 } else { ?>
 																		<a class="linked_doc" href="#">No Documents Found</a>

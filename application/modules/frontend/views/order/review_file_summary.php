@@ -7,6 +7,10 @@
 	.entry-content b {
 		font-weight: 700;
 	}
+
+	br {
+		line-height: 12px;
+	}
 </style>
 <div class="typography-section__inner">
 	<h3 class="ui-title-block_light">Prelim Info</h3>
@@ -64,7 +68,7 @@
 									$count++;
 							?>
 									<li><p><?php echo nl2br($tax_val); ?>
-									</p></li>
+									</p></li></br>
 							<?php
 								}
 							?>
@@ -110,7 +114,7 @@
 								{
 									$count++;
 						?>									
-									<li><p><?php echo nl2br($easement); ?></p></li>
+									<li><p><?php echo nl2br($easement); ?></p></li></br>
 						<?php
 								}
 						?>
@@ -157,7 +161,7 @@
 								{
 									$count++;
 							?>
-									<li><p><?php echo nl2br($lien); ?></p></li>
+									<li><p><?php echo nl2br($lien); ?></p></li></br>
 							<?php
 								}
 							?>
@@ -202,7 +206,7 @@
 								foreach ($requirements as $key => $requirement) 
 								{
 							?>
-									<li><p><?php echo nl2br($requirement); ?></p></li>
+									<li><p><?php echo nl2br($requirement); ?></p></li></br>
 							<?php
 								}
 							?>
@@ -246,7 +250,7 @@
 								foreach ($easements as $key => $easement) 
 								{
 						?>									
-									<li><p><?php echo nl2br($easement); ?></p></li>
+									<li><p><?php echo nl2br($easement); ?></p></li></br>
 						<?php
 								}
 						?>
@@ -291,7 +295,7 @@
 								foreach ($restrictions as $key => $restriction) 
 								{
 						?>
-									<p><?php echo nl2br($restriction); ?></p>
+									<li><p><?php echo nl2br($restriction); ?></p></li></br>
 						<?php
 								}
 						?>

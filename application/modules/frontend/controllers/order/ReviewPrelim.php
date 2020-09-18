@@ -22,446 +22,490 @@ class ReviewPrelim extends MX_Controller {
     	ini_set('max_execution_time', 0); 
 		ini_set('memory_limit','2048M');
 		
-		//$json = file_get_contents('php://input');
+		$json = file_get_contents('php://input');
 		$json = '{
 			"AssessedImprovementValue": null,
 			"AssessedLandValue": null,
 			"ChainOfTitle": null,
-			"CommitmentEffectiveDate": "2020-08-04T07:30:40.547",
+			"CommitmentEffectiveDate": "2020-08-04T07:30:00",
 			"CommitmentInterestID": 1,
 			"Easements": [
-			{
-			"EasementBookPages": [],
-			"EasementID": 632768,
-			"EasementTypeID": 614,
-			"EasementTypeName": "A9M",
-			"Book": null,
-			"BookPages": [],
-			"Date": null,
-			"DocumentName": null,
-			"Grantee": null,
-			"Grantor": null,
-			"Instrument": null,
-			"IsAllCaps": false,
-			"Language": "Covenants, conditions, restrictions and agreements, if any, appearing in the Public Records, deleting therefrom any restrictions indicating any preference, limitation or discrimination based on race, color religion, sex, handicap, familial status or national origin. Easements or servitudes appearing in the Public Records. Leases, grants, exceptions or reservations of minerals or mineral rights appearing in the Public Records.",
-			"Liber": null,
-			"Page": null,
-			"Purpose": null,
-			"RecordedDate": null,
-			"Volume": null
-			}
+			  {
+				"EasementBookPages": [],
+				"EasementID": 634179,
+				"EasementTypeID": 614,
+				"EasementTypeName": "A9M",
+				"Book": null,
+				"BookPages": [],
+				"Date": null,
+				"DocumentName": null,
+				"Grantee": null,
+				"Grantor": null,
+				"Instrument": null,
+				"IsAllCaps": false,
+				"Language": "Covenants, conditions, restrictions and agreements, if any, appearing in the Public Records, deleting therefrom any restrictions indicating any preference, limitation or discrimination based on race, color religion, sex, handicap, familial status or national origin. Easements or servitudes appearing in the Public Records. Leases, grants, exceptions or reservations of minerals or mineral rights appearing in the Public Records.",
+				"Liber": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": null,
+				"Volume": null
+			  }
 			],
-			"FileNumber": "10182462",
+			"FileNumber": "10182314",
 			"Leasehold": null,
-			"Legal": "Lot 219 of Tract No. 43536, in the City of Palmdale, in the County of Los Angeles, State of California, as per Map recorded in Book 1090, Page(s) 5 to 15 inclusive of Maps, in the Office of the County Recorder of said County.\n\nExcept therefrom all geothermal resources, minerals, ores, precious and useful metals, substances and hydrocarbons of every kind of character, including petroleum, oil, gas, asphaltum and tar, that may now or hereafter be found, located, contained, developed or taken on, in, under or from said land, or any part thereof, without, however, any right of surface entry or any right of entry to the subsurface thereof to a depth of 500 feet beneath the surface of said property for the development, removal or other exploitation of said resources and substances.",
+			"Legal": "That portion of the southeast quarter of the south west quarter of the east half of Lot 1 in the northeast quarter of Section 4, Township 5 North, Range 12 West, San Bernardino Meridian, in the County of Los Angeles, State of California, according to the official plat of said land filed in the district land office described as follows:\n\nBeginning at a point on the north line of said southeast quarter of the southwest quarter of the east half of Lot 1 said point being south 89 degrees 38 minutes 28 seconds east 52.00 feet from the northwest corner thereof, thence south 31 degrees 07 minutes 38 seconds east 141.38 feet, thence south 35 degrees 05 minutes 31 seconds east 256.48 feet to a point in the south line of said southeast quarter of the southwest quarter of the east half of Lot 1 lying north 89 degrees 41 minutes 05 seconds east 52.00 feet to said southeast corner thereof, thence north 0 degrees 45 minutes 48 seconds east 329.44 feet to the northeast corner thereof, thence north 89 degrees 38 minutes 28 seconds west 276.93 feet to the point of beginning.",
 			"Liens": [
-			{
-			"LienBookPages": [],
-			"LienID": 2114630,
-			"LienTypeID": 1466,
-			"LienTypeName": "T1",
-			"Against": null,
-			"Amount": null,
-			"Assignee": null,
-			"AssigneeBook": null,
-			"AssigneeInstrument": null,
-			"AssigneeLiber": null,
-			"AssigneePage": null,
-			"AssigneeVolume": null,
-			"Assignor": null,
-			"Book": null,
-			"BookPages": [],
-			"CaseNumber": null,
-			"County": null,
-			"CourtDistrict": null,
-			"CourtType": null,
-			"Date": null,
-			"DocumentName": null,
-			"Endorsements": null,
-			"Flagged": true,
-			"Grantee": null,
-			"Grantor": null,
-			"Holder": null,
-			"InFavorOf": null,
-			"InstallmentAmount": null,
-			"InstallmentNumber": null,
-			"Instrument": null,
-			"IsAllCaps": false,
-			"Language": "Property taxes, which are a lien not yet due and payable, including any assessments collected with taxes to be levied for the fiscal year 2020-2021.",
-			"Liber": null,
-			"MaturityDate": null,
-			"Page": null,
-			"Purpose": null,
-			"RecordedDate": null,
-			"State": null,
-			"StateDistrict": null,
-			"TaxYears": null,
-			"Trustee": null,
-			"Volume": null
-			},
-			{
-			"LienBookPages": [],
-			"LienID": 2114631,
-			"LienTypeID": 1813,
-			"LienTypeName": "T4",
-			"Against": null,
-			"Amount": null,
-			"Assignee": null,
-			"AssigneeBook": null,
-			"AssigneeInstrument": null,
-			"AssigneeLiber": null,
-			"AssigneePage": null,
-			"AssigneeVolume": null,
-			"Assignor": null,
-			"Book": null,
-			"BookPages": [],
-			"CaseNumber": null,
-			"County": null,
-			"CourtDistrict": null,
-			"CourtType": null,
-			"Date": null,
-			"DocumentName": null,
-			"Endorsements": null,
-			"Flagged": true,
-			"Grantee": null,
-			"Grantor": null,
-			"Holder": null,
-			"InFavorOf": null,
-			"InstallmentAmount": null,
-			"InstallmentNumber": null,
-			"Instrument": null,
-			"IsAllCaps": false,
-			"Language": "Note: Property taxes for the fiscal year shown below are PAID. For proration purposes the amounts were: Tax Identification No.: <a id=\"TAX.pdf\" href=\"http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=7249072\">_PARCELID1_</a> Fiscal Year: 2019-2020 1st Installment: $1,349.31 2nd Installment: $1,349.30 Exemption: $0.00 Land: $27,874.00 Improvements: $105,114.00 Personal Property: $0.00 Code Area: 06919",
-			"Liber": null,
-			"MaturityDate": null,
-			"Page": null,
-			"Purpose": null,
-			"RecordedDate": null,
-			"State": null,
-			"StateDistrict": null,
-			"TaxYears": null,
-			"Trustee": null,
-			"Volume": null
-			},
-			{
-			"LienBookPages": [],
-			"LienID": 2114632,
-			"LienTypeID": 1470,
-			"LienTypeName": "T103",
-			"Against": null,
-			"Amount": null,
-			"Assignee": null,
-			"AssigneeBook": null,
-			"AssigneeInstrument": null,
-			"AssigneeLiber": null,
-			"AssigneePage": null,
-			"AssigneeVolume": null,
-			"Assignor": null,
-			"Book": null,
-			"BookPages": [],
-			"CaseNumber": null,
-			"County": null,
-			"CourtDistrict": null,
-			"CourtType": null,
-			"Date": null,
-			"DocumentName": null,
-			"Endorsements": null,
-			"Flagged": true,
-			"Grantee": null,
-			"Grantor": null,
-			"Holder": null,
-			"InFavorOf": null,
-			"InstallmentAmount": null,
-			"InstallmentNumber": null,
-			"Instrument": null,
-			"IsAllCaps": false,
-			"Language": "Any liens or other assessments, bonds, or special district liens including without limitation, Community Facility Districts, that arise by reason of any local, City, Municipal or County Project or Special District.",
-			"Liber": null,
-			"MaturityDate": null,
-			"Page": null,
-			"Purpose": null,
-			"RecordedDate": null,
-			"State": null,
-			"StateDistrict": null,
-			"TaxYears": null,
-			"Trustee": null,
-			"Volume": null
-			},
-			{
-			"LienBookPages": [],
-			"LienID": 2114633,
-			"LienTypeID": 1475,
-			"LienTypeName": "T108",
-			"Against": null,
-			"Amount": null,
-			"Assignee": null,
-			"AssigneeBook": null,
-			"AssigneeInstrument": null,
-			"AssigneeLiber": null,
-			"AssigneePage": null,
-			"AssigneeVolume": null,
-			"Assignor": null,
-			"Book": null,
-			"BookPages": [],
-			"CaseNumber": null,
-			"County": null,
-			"CourtDistrict": null,
-			"CourtType": null,
-			"Date": null,
-			"DocumentName": null,
-			"Endorsements": null,
-			"Flagged": true,
-			"Grantee": null,
-			"Grantor": null,
-			"Holder": null,
-			"InFavorOf": null,
-			"InstallmentAmount": null,
-			"InstallmentNumber": null,
-			"Instrument": null,
-			"IsAllCaps": false,
-			"Language": "The lien of supplemental or escaped assessments of property taxes, if any, pursuant to the provisions of Chapter 3.5 or Part 2, Chapter 3, Articles 3 and 4 respectively (commencing with Section 75) of the Revenue and Taxation Code of the State of California as a result of the transfer of title to the vestee named in Schedule A; or as a result of changes in ownership or new construction occurring prior to date of policy.",
-			"Liber": null,
-			"MaturityDate": null,
-			"Page": null,
-			"Purpose": null,
-			"RecordedDate": null,
-			"State": null,
-			"StateDistrict": null,
-			"TaxYears": null,
-			"Trustee": null,
-			"Volume": null
-			},
-			{
-			"LienBookPages": [],
-			"LienID": 2114635,
-			"LienTypeID": 1089,
-			"LienTypeName": "D1M",
-			"Against": null,
-			"Amount": 170000.00,
-			"Assignee": null,
-			"AssigneeBook": null,
-			"AssigneeInstrument": null,
-			"AssigneeLiber": null,
-			"AssigneePage": null,
-			"AssigneeVolume": null,
-			"Assignor": null,
-			"Book": null,
-			"BookPages": [],
-			"CaseNumber": null,
-			"County": null,
-			"CourtDistrict": null,
-			"CourtType": null,
-			"Date": "2017-11-24T00:00:00",
-			"DocumentName": null,
-			"Endorsements": null,
-			"Flagged": false,
-			"Grantee": "Equity Smart Home Loans Inc.",
-			"Grantor": "Shawn R Viveros and Nanci Viveros, husband and wife as joint tenants",
-			"Holder": null,
-			"InFavorOf": null,
-			"InstallmentAmount": null,
-			"InstallmentNumber": null,
-			"Instrument": "20171365787",
-			"IsAllCaps": false,
-			"Language": "A deed of trust to secure an indebtedness in the amount shown below, and any other obligations secured thereby: Amount: $_AMOUNT Dated: DATE Trustor: GRANTOR Trustee: TRUSTEE Beneficiary: MORTGAGE ELECTRONIC REGISTRATION SYSTEMS, INC. (MERS) SOLELY AS NOMINEE FOR LENDER Lender: GRANTEE Loan No.: 1517020786 Recording Date: RECORDEDDATE_ Recording No.: <a id=\"Property_2017-1365787 TDR 11-28-2017.pdf\" href=\"http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=7249078\">_INSTRUMENTONLY_</a>, Official Records",
-			"Liber": null,
-			"MaturityDate": null,
-			"Page": null,
-			"Purpose": null,
-			"RecordedDate": "2017-11-28T00:00:00",
-			"State": null,
-			"StateDistrict": null,
-			"TaxYears": null,
-			"Trustee": "John D. Duncan, Esq.",
-			"Volume": null
-			},
-			{
-			"LienBookPages": [],
-			"LienID": 2114636,
-			"LienTypeID": 1730,
-			"LienTypeName": "R4M",
-			"Against": null,
-			"Amount": null,
-			"Assignee": null,
-			"AssigneeBook": null,
-			"AssigneeInstrument": null,
-			"AssigneeLiber": null,
-			"AssigneePage": null,
-			"AssigneeVolume": null,
-			"Assignor": null,
-			"Book": null,
-			"BookPages": [],
-			"CaseNumber": null,
-			"County": null,
-			"CourtDistrict": null,
-			"CourtType": null,
-			"Date": null,
-			"DocumentName": null,
-			"Endorsements": null,
-			"Flagged": false,
-			"Grantee": null,
-			"Grantor": null,
-			"Holder": null,
-			"InFavorOf": null,
-			"InstallmentAmount": null,
-			"InstallmentNumber": null,
-			"Instrument": null,
-			"IsAllCaps": false,
-			"Language": "In order to complete this report, the Company requires a Statement of Information to be completed by the following party(s), Party(s): All Parties The Company reserves the right to add additional items or make further requirements after review of the requested Statement of Information. NOTE: The Statement of Information is necessary to complete the search and examination of title under this order. Any title search includes matters that are indexed by name only, and having a completed Statement of Information assists the Company in the elimination of certain matters which appear to involve the parties but in fact affect another party with the same or similar name. Be assured that the Statement of Information is essential and will be kept strictly confidential to this file.",
-			"Liber": null,
-			"MaturityDate": null,
-			"Page": null,
-			"Purpose": null,
-			"RecordedDate": null,
-			"State": null,
-			"StateDistrict": null,
-			"TaxYears": null,
-			"Trustee": null,
-			"Volume": null
-			}
+			  {
+				"LienBookPages": [],
+				"LienID": 2117060,
+				"LienTypeID": 1466,
+				"LienTypeName": "T1",
+				"Against": null,
+				"Amount": null,
+				"Assignee": null,
+				"AssigneeBook": null,
+				"AssigneeInstrument": null,
+				"AssigneeLiber": null,
+				"AssigneePage": null,
+				"AssigneeVolume": null,
+				"Assignor": null,
+				"Book": null,
+				"BookPages": [],
+				"CaseNumber": null,
+				"County": null,
+				"CourtDistrict": null,
+				"CourtType": null,
+				"Date": null,
+				"DocumentName": null,
+				"Endorsements": null,
+				"Flagged": true,
+				"Grantee": null,
+				"Grantor": null,
+				"Holder": null,
+				"InFavorOf": null,
+				"InstallmentAmount": null,
+				"InstallmentNumber": null,
+				"Instrument": null,
+				"IsAllCaps": false,
+				"Language": "Property taxes, which are a lien not yet due and payable, including any assessments collected with taxes to be levied for the fiscal year 2020-2021.",
+				"Liber": null,
+				"MaturityDate": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": null,
+				"State": null,
+				"StateDistrict": null,
+				"TaxYears": null,
+				"Trustee": null,
+				"Volume": null
+			  },
+			  {
+				"LienBookPages": [],
+				"LienID": 2117064,
+				"LienTypeID": 1813,
+				"LienTypeName": "T4",
+				"Against": null,
+				"Amount": null,
+				"Assignee": null,
+				"AssigneeBook": null,
+				"AssigneeInstrument": null,
+				"AssigneeLiber": null,
+				"AssigneePage": null,
+				"AssigneeVolume": null,
+				"Assignor": null,
+				"Book": null,
+				"BookPages": [],
+				"CaseNumber": null,
+				"County": null,
+				"CourtDistrict": null,
+				"CourtType": null,
+				"Date": null,
+				"DocumentName": null,
+				"Endorsements": null,
+				"Flagged": true,
+				"Grantee": null,
+				"Grantor": null,
+				"Holder": null,
+				"InFavorOf": null,
+				"InstallmentAmount": null,
+				"InstallmentNumber": null,
+				"Instrument": null,
+				"IsAllCaps": false,
+				"Language": "Note: Property taxes for the fiscal year shown below are PAID. For proration purposes the amounts were: Tax Identification No.: <a id=\"Tax_3054-018-042.pdf\" href=\"http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=7253511\">_PARCELID1_</a> Fiscal Year: 2019-2020 1st Installment: $885.15 2nd Installment: $885.13 Exemption: $7,000.00 Land: $13,834.00 Improvements: $123,718.00 Personal Property: $0.00 Code Area: 06988",
+				"Liber": null,
+				"MaturityDate": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": null,
+				"State": null,
+				"StateDistrict": null,
+				"TaxYears": null,
+				"Trustee": null,
+				"Volume": null
+			  },
+			  {
+				"LienBookPages": [],
+				"LienID": 2117065,
+				"LienTypeID": 1486,
+				"LienTypeName": "T119",
+				"Against": null,
+				"Amount": null,
+				"Assignee": null,
+				"AssigneeBook": null,
+				"AssigneeInstrument": null,
+				"AssigneeLiber": null,
+				"AssigneePage": null,
+				"AssigneeVolume": null,
+				"Assignor": null,
+				"Book": null,
+				"BookPages": [],
+				"CaseNumber": null,
+				"County": null,
+				"CourtDistrict": null,
+				"CourtType": null,
+				"Date": null,
+				"DocumentName": null,
+				"Endorsements": null,
+				"Flagged": true,
+				"Grantee": null,
+				"Grantor": null,
+				"Holder": null,
+				"InFavorOf": null,
+				"InstallmentAmount": null,
+				"InstallmentNumber": null,
+				"Instrument": null,
+				"IsAllCaps": false,
+				"Language": "Supplemental taxes, including any personal property taxes and any assessments collected with taxes, assessed pursuant to the provisions of Chapter 3.5 (commencing with Section 75) of the Revenue and Taxation Code of the State of California, are as follows: Tax Identification No: _PARCELID1_ Fiscal Year: 2019-2020 1st Installment: $1,812.31, paid 2nd Installment: $1,812.30, open Penalty: $191.23 Delinquent: October 31, 2020 Code Area: 06988",
+				"Liber": null,
+				"MaturityDate": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": null,
+				"State": null,
+				"StateDistrict": null,
+				"TaxYears": null,
+				"Trustee": null,
+				"Volume": null
+			  },
+			  {
+				"LienBookPages": [],
+				"LienID": 2117066,
+				"LienTypeID": 1470,
+				"LienTypeName": "T103",
+				"Against": null,
+				"Amount": null,
+				"Assignee": null,
+				"AssigneeBook": null,
+				"AssigneeInstrument": null,
+				"AssigneeLiber": null,
+				"AssigneePage": null,
+				"AssigneeVolume": null,
+				"Assignor": null,
+				"Book": null,
+				"BookPages": [],
+				"CaseNumber": null,
+				"County": null,
+				"CourtDistrict": null,
+				"CourtType": null,
+				"Date": null,
+				"DocumentName": null,
+				"Endorsements": null,
+				"Flagged": true,
+				"Grantee": null,
+				"Grantor": null,
+				"Holder": null,
+				"InFavorOf": null,
+				"InstallmentAmount": null,
+				"InstallmentNumber": null,
+				"Instrument": null,
+				"IsAllCaps": false,
+				"Language": "Any liens or other assessments, bonds, or special district liens including without limitation, Community Facility Districts, that arise by reason of any local, City, Municipal or County Project or Special District.",
+				"Liber": null,
+				"MaturityDate": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": null,
+				"State": null,
+				"StateDistrict": null,
+				"TaxYears": null,
+				"Trustee": null,
+				"Volume": null
+			  },
+			  {
+				"LienBookPages": [],
+				"LienID": 2117067,
+				"LienTypeID": 1475,
+				"LienTypeName": "T108",
+				"Against": null,
+				"Amount": null,
+				"Assignee": null,
+				"AssigneeBook": null,
+				"AssigneeInstrument": null,
+				"AssigneeLiber": null,
+				"AssigneePage": null,
+				"AssigneeVolume": null,
+				"Assignor": null,
+				"Book": null,
+				"BookPages": [],
+				"CaseNumber": null,
+				"County": null,
+				"CourtDistrict": null,
+				"CourtType": null,
+				"Date": null,
+				"DocumentName": null,
+				"Endorsements": null,
+				"Flagged": true,
+				"Grantee": null,
+				"Grantor": null,
+				"Holder": null,
+				"InFavorOf": null,
+				"InstallmentAmount": null,
+				"InstallmentNumber": null,
+				"Instrument": null,
+				"IsAllCaps": false,
+				"Language": "The lien of supplemental or escaped assessments of property taxes, if any, pursuant to the provisions of Chapter 3.5 or Part 2, Chapter 3, Articles 3 and 4 respectively (commencing with Section 75) of the Revenue and Taxation Code of the State of California as a result of the transfer of title to the vestee named in Schedule A; or as a result of changes in ownership or new construction occurring prior to date of policy.",
+				"Liber": null,
+				"MaturityDate": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": null,
+				"State": null,
+				"StateDistrict": null,
+				"TaxYears": null,
+				"Trustee": null,
+				"Volume": null
+			  },
+			  {
+				"LienBookPages": [],
+				"LienID": 2117069,
+				"LienTypeID": 1068,
+				"LienTypeName": "D1",
+				"Against": null,
+				"Amount": 472000,
+				"Assignee": null,
+				"AssigneeBook": null,
+				"AssigneeInstrument": null,
+				"AssigneeLiber": null,
+				"AssigneePage": null,
+				"AssigneeVolume": null,
+				"Assignor": null,
+				"Book": null,
+				"BookPages": [],
+				"CaseNumber": null,
+				"County": null,
+				"CourtDistrict": null,
+				"CourtType": null,
+				"Date": "2019-10-04T00:00:00",
+				"DocumentName": null,
+				"Endorsements": null,
+				"Flagged": false,
+				"Grantee": "Logix Federal Credit Union",
+				"Grantor": "Shawn R. Viveros and Nanci A. Viveros, husband and wife as joint tenants",
+				"Holder": null,
+				"InFavorOf": null,
+				"InstallmentAmount": null,
+				"InstallmentNumber": null,
+				"Instrument": "20191109895",
+				"IsAllCaps": false,
+				"Language": "A deed of trust to secure an indebtedness in the amount shown below, Amount: $_AMOUNT_ Dated: _DATE_ Trustor/Grantor: _GRANTOR_ Trustee: _TRUSTEE_ Beneficiary: _GRANTEE_ Loan No.: 1456727799 Recording Date: _RECORDEDDATE_ Recording No.: <a id=\"Property_2019-1109895 TDD 10-17-2019.pdf\" href=\"http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=7253512\">_INSTRUMENTONLY_</a>, Official Records",
+				"Liber": null,
+				"MaturityDate": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": "2019-10-17T00:00:00",
+				"State": null,
+				"StateDistrict": null,
+				"TaxYears": null,
+				"Trustee": "First American Title Insurance Company, a Nebraska corporation",
+				"Volume": null
+			  },
+			  {
+				"LienBookPages": [],
+				"LienID": 2117070,
+				"LienTypeID": 1730,
+				"LienTypeName": "R4M",
+				"Against": null,
+				"Amount": null,
+				"Assignee": null,
+				"AssigneeBook": null,
+				"AssigneeInstrument": null,
+				"AssigneeLiber": null,
+				"AssigneePage": null,
+				"AssigneeVolume": null,
+				"Assignor": null,
+				"Book": null,
+				"BookPages": [],
+				"CaseNumber": null,
+				"County": null,
+				"CourtDistrict": null,
+				"CourtType": null,
+				"Date": null,
+				"DocumentName": null,
+				"Endorsements": null,
+				"Flagged": false,
+				"Grantee": null,
+				"Grantor": null,
+				"Holder": null,
+				"InFavorOf": null,
+				"InstallmentAmount": null,
+				"InstallmentNumber": null,
+				"Instrument": null,
+				"IsAllCaps": false,
+				"Language": "In order to complete this report, the Company requires a Statement of Information to be completed by the following party(s), Party(s): All Parties The Company reserves the right to add additional items or make further requirements after review of the requested Statement of Information. NOTE: The Statement of Information is necessary to complete the search and examination of title under this order. Any title search includes matters that are indexed by name only, and having a completed Statement of Information assists the Company in the elimination of certain matters which appear to involve the parties but in fact affect another party with the same or similar name. Be assured that the Statement of Information is essential and will be kept strictly confidential to this file.",
+				"Liber": null,
+				"MaturityDate": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": null,
+				"State": null,
+				"StateDistrict": null,
+				"TaxYears": null,
+				"Trustee": null,
+				"Volume": null
+			  }
 			],
-			"ParcelID": "3023-018-073",
+			"ParcelID": "3054-018-042",
 			"ProposedInsured": null,
 			"Requirements": [
-			{
-			"LienBookPages": [],
-			"RequirementID": 2114637,
-			"RequirementTypeID": 1633,
-			"RequirementTypeName": "N103",
-			"Against": null,
-			"Amount": null,
-			"Assignee": null,
-			"AssigneeBook": null,
-			"AssigneeInstrument": null,
-			"AssigneeLiber": null,
-			"AssigneePage": null,
-			"AssigneeVolume": null,
-			"Assignor": null,
-			"Book": null,
-			"BookPages": [],
-			"CaseNumber": null,
-			"County": null,
-			"CourtDistrict": null,
-			"CourtType": null,
-			"Date": null,
-			"DocumentName": null,
-			"Endorsements": null,
-			"Flagged": false,
-			"Grantee": null,
-			"Grantor": null,
-			"Holder": null,
-			"InFavorOf": null,
-			"InstallmentAmount": null,
-			"InstallmentNumber": null,
-			"Instrument": null,
-			"IsAllCaps": false,
-			"Language": "Note: None of the items shown in this report will cause the Company to decline to attach CLTA Endorsement Form 100 to an Extended Coverage Loan Policy, when issued.",
-			"Liber": null,
-			"MaturityDate": null,
-			"Page": null,
-			"Purpose": null,
-			"RecordedDate": null,
-			"State": null,
-			"StateDistrict": null,
-			"TaxYears": null,
-			"Trustee": null,
-			"Volume": null
-			},
-			{
-			"LienBookPages": [],
-			"RequirementID": 2114638,
-			"RequirementTypeID": 1635,
-			"RequirementTypeName": "N105",
-			"Against": null,
-			"Amount": null,
-			"Assignee": null,
-			"AssigneeBook": null,
-			"AssigneeInstrument": null,
-			"AssigneeLiber": null,
-			"AssigneePage": null,
-			"AssigneeVolume": null,
-			"Assignor": null,
-			"Book": null,
-			"BookPages": [],
-			"CaseNumber": null,
-			"County": null,
-			"CourtDistrict": null,
-			"CourtType": null,
-			"Date": null,
-			"DocumentName": null,
-			"Endorsements": null,
-			"Flagged": false,
-			"Grantee": null,
-			"Grantor": null,
-			"Holder": null,
-			"InFavorOf": null,
-			"InstallmentAmount": null,
-			"InstallmentNumber": null,
-			"Instrument": null,
-			"IsAllCaps": false,
-			"Language": "Note: The Company is not aware of any matters which would cause it to decline to attach CLTA Endorsement Form 116 indicating that there is located on said Land Single Family Residence, known as 5146 Karling Place, Palmdale, CA 93552 to an Extended Coverage Loan Policy.",
-			"Liber": null,
-			"MaturityDate": null,
-			"Page": null,
-			"Purpose": null,
-			"RecordedDate": null,
-			"State": null,
-			"StateDistrict": null,
-			"TaxYears": null,
-			"Trustee": null,
-			"Volume": null
-			},
-			{
-			"LienBookPages": [],
-			"RequirementID": 2114639,
-			"RequirementTypeID": 1656,
-			"RequirementTypeName": "N5",
-			"Against": null,
-			"Amount": null,
-			"Assignee": null,
-			"AssigneeBook": null,
-			"AssigneeInstrument": null,
-			"AssigneeLiber": null,
-			"AssigneePage": null,
-			"AssigneeVolume": null,
-			"Assignor": null,
-			"Book": null,
-			"BookPages": [],
-			"CaseNumber": null,
-			"County": null,
-			"CourtDistrict": null,
-			"CourtType": null,
-			"Date": null,
-			"DocumentName": null,
-			"Endorsements": null,
-			"Flagged": false,
-			"Grantee": null,
-			"Grantor": null,
-			"Holder": null,
-			"InFavorOf": null,
-			"InstallmentAmount": null,
-			"InstallmentNumber": null,
-			"Instrument": null,
-			"IsAllCaps": false,
-			"Language": "Note: There are NO conveyances affecting said Land recorded within 24 months of the date of this report.",
-			"Liber": null,
-			"MaturityDate": null,
-			"Page": null,
-			"Purpose": null,
-			"RecordedDate": null,
-			"State": null,
-			"StateDistrict": null,
-			"TaxYears": null,
-			"Trustee": null,
-			"Volume": null
-			}
+			  {
+				"LienBookPages": [],
+				"RequirementID": 2117071,
+				"RequirementTypeID": 1633,
+				"RequirementTypeName": "N103",
+				"Against": null,
+				"Amount": null,
+				"Assignee": null,
+				"AssigneeBook": null,
+				"AssigneeInstrument": null,
+				"AssigneeLiber": null,
+				"AssigneePage": null,
+				"AssigneeVolume": null,
+				"Assignor": null,
+				"Book": null,
+				"BookPages": [],
+				"CaseNumber": null,
+				"County": null,
+				"CourtDistrict": null,
+				"CourtType": null,
+				"Date": null,
+				"DocumentName": null,
+				"Endorsements": null,
+				"Flagged": false,
+				"Grantee": null,
+				"Grantor": null,
+				"Holder": null,
+				"InFavorOf": null,
+				"InstallmentAmount": null,
+				"InstallmentNumber": null,
+				"Instrument": null,
+				"IsAllCaps": false,
+				"Language": "Note: None of the items shown in this report will cause the Company to decline to attach CLTA Endorsement Form 100 to an Extended Coverage Loan Policy, when issued.",
+				"Liber": null,
+				"MaturityDate": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": null,
+				"State": null,
+				"StateDistrict": null,
+				"TaxYears": null,
+				"Trustee": null,
+				"Volume": null
+			  },
+			  {
+				"LienBookPages": [],
+				"RequirementID": 2117072,
+				"RequirementTypeID": 1635,
+				"RequirementTypeName": "N105",
+				"Against": null,
+				"Amount": null,
+				"Assignee": null,
+				"AssigneeBook": null,
+				"AssigneeInstrument": null,
+				"AssigneeLiber": null,
+				"AssigneePage": null,
+				"AssigneeVolume": null,
+				"Assignor": null,
+				"Book": null,
+				"BookPages": [],
+				"CaseNumber": null,
+				"County": null,
+				"CourtDistrict": null,
+				"CourtType": null,
+				"Date": null,
+				"DocumentName": null,
+				"Endorsements": null,
+				"Flagged": false,
+				"Grantee": null,
+				"Grantor": null,
+				"Holder": null,
+				"InFavorOf": null,
+				"InstallmentAmount": null,
+				"InstallmentNumber": null,
+				"Instrument": null,
+				"IsAllCaps": false,
+				"Language": "Note: The Company is not aware of any matters which would cause it to decline to attach CLTA Endorsement Form 116 indicating that there is located on said Land Single Family Residence, known as 321 West Barrel Springs Road, Palmdale, CA 93551 to an Extended Coverage Loan Policy.",
+				"Liber": null,
+				"MaturityDate": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": null,
+				"State": null,
+				"StateDistrict": null,
+				"TaxYears": null,
+				"Trustee": null,
+				"Volume": null
+			  },
+			  {
+				"LienBookPages": [],
+				"RequirementID": 2117076,
+				"RequirementTypeID": 1658,
+				"RequirementTypeName": "N6",
+				"Against": null,
+				"Amount": null,
+				"Assignee": null,
+				"AssigneeBook": null,
+				"AssigneeInstrument": null,
+				"AssigneeLiber": null,
+				"AssigneePage": null,
+				"AssigneeVolume": null,
+				"Assignor": null,
+				"Book": null,
+				"BookPages": [],
+				"CaseNumber": null,
+				"County": null,
+				"CourtDistrict": null,
+				"CourtType": null,
+				"Date": null,
+				"DocumentName": null,
+				"Endorsements": null,
+				"Flagged": false,
+				"Grantee": "Shawn R. Viveros and Nanci A. Viveros, husband and wife as joint tenants",
+				"Grantor": "John H. Norris. Trustee of the John H. Norris and Cecilia R. Norris Revocable Trust dated October 4, 2007",
+				"Holder": null,
+				"InFavorOf": null,
+				"InstallmentAmount": null,
+				"InstallmentNumber": null,
+				"Instrument": "20191109894",
+				"IsAllCaps": false,
+				"Language": "Note: The only conveyance(s) affecting said Land, which recorded within 24 months of the date of this report, are as follows: Grantor: _GRANTOR_ Grantee: _GRANTEE_ Recording Date: _RECORDEDDATE_ Recording No.: <a id=\"Property_2019-1109894 DEG 10-17-2019.pdf\" href=\"http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=7253509\">_INSTRUMENTONLY_</a>, Official Records",
+				"Liber": null,
+				"MaturityDate": null,
+				"Page": null,
+				"Purpose": null,
+				"RecordedDate": "2019-10-17T00:00:00",
+				"State": null,
+				"StateDistrict": null,
+				"TaxYears": null,
+				"Trustee": null,
+				"Volume": null
+			  }
 			],
 			"Restrictions": null,
 			"ServiceVersion": 2,
 			"Taxes": null,
-			"Vesting": "Shawn R. Viveros and Nanci Viveros, husband and wife as joint tenants",
+			"Vesting": "Shawn R. Viveros and Nanci A. Viveros, husband and wife as joint tenants",
 			"YearAcquired": null
-			}';
+		  }';
     	
     	if ($json) {
     		$logId = $this->apiLogs->syncLogs(0,'resware WCF', 'get_prelim','https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array('ReceiveSearchDataService'=>true), array());
@@ -483,27 +527,144 @@ class ReviewPrelim extends MX_Controller {
 			fwrite($fh, $json."\n");
 			fclose($fh);
 			$data = json_decode($json,TRUE);
-
+			$this->db->select('*');
+			$this->db->from('pct_order_code_book');
+			$query = $this->db->get();
+			$codeBooks = $query->result_array();
+			
 	    	if (isset($data) && !empty($data)) {
-	    		$file_number = isset($data['FileNumber']) && !empty($data['FileNumber']) ? $data['FileNumber'] : '';
+				$file_number = isset($data['FileNumber']) && !empty($data['FileNumber']) ? $data['FileNumber'] : '';
+				$condition = array(
+					'where' => array(
+						'file_number' => $file_number,
+					)
+				);
+	
+				$order_details = $this->order->get_rows($condition);
 				$parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
 	    		$vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
 	    		$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
-				$liens = $email_data = array();
+				$tax = $liens = $email_data = array();
 				$documentIds = array();
-				$arr_find = array("_BOOKONLY_", "_DATE_", "_DOCUMENTNAME_", "_GRANTEE_", "_GRANTOR_", "_INSTRUMENTONLY_", "_RECORDEDDATE_", "_PURPOSE_", "_PAGEONLY_", "_LIBERONLY_", "_VOLUMEONLY_", "_AMOUNT_", "_TRUSTEE_", "_AGAINST_", "_ASSIGNOR_", "_ASSIGNEE_", "_ASSIGNEEBOOK_", "_ASSIGNEEBOOKONLY_", "_ASSIGNEEPAGE_", "_ASSIGNEEPAGEONLY_", "_ASSIGNEELIBER_", "_ASSIGNEELIBERONLY_", "_ASSIGNEEVOLUME_", "_ASSIGNEEVOLUMEONLY_", "_ASSIGNEEINSTRUMENT_", "_ASSIGNEEINSTRUMENTONLY_", "_BOOK_", "_CASENUMBER_", "_COUNTY_", "_COURTDISTRICT_ ", "_COURTTYPE_", "_ENDORSEMENTS_", "_HOLDER_", "_INFAVOROF_", "_INSTALLMENTNUMBER_", "_INSTRUMENT_ ", "_INSTALLMENTAMOUNT_", "_LIBER_", "_MATURITYDATE_", "_PAGE_", "_STATE_", "_STATEDISTRICT_", "_TAXYEARS_", "_VOLUME_", "_BUYERNAMES_", "_PARCELID1_");
+				$arr_find = array("_BOOKONLY_", "_DATE_", "_DOCUMENTNAME_", "_GRANTEE_", "_GRANTOR_", "_INSTRUMENTONLY_", "_RECORDEDDATE_", "_PURPOSE_", "_PAGEONLY_", "_LIBERONLY_", "_VOLUMEONLY_", "_AMOUNT_", "_TRUSTEE_", "_AGAINST_", "_ASSIGNOR_", "_ASSIGNEE_", "_ASSIGNEEBOOK_", "_ASSIGNEEBOOKONLY_", "_ASSIGNEEPAGE_", "_ASSIGNEEPAGEONLY_", "_ASSIGNEELIBER_", "_ASSIGNEELIBERONLY_", "_ASSIGNEEVOLUME_", "_ASSIGNEEVOLUMEONLY_", "_ASSIGNEEINSTRUMENT_", "_ASSIGNEEINSTRUMENTONLY_", "_BOOK_", "_CASENUMBER_", "_COUNTY_", "_COURTDISTRICT_ ", "_COURTTYPE_", "_ENDORSEMENTS_", "_HOLDER_", "_INFAVOROF_", "_INSTALLMENTNUMBER_", "_INSTRUMENT_ ", "_INSTALLMENTAMOUNT_", "_LIBER_", "_MATURITYDATE_", "_PAGE_", "_STATE_", "_STATEDISTRICT_", "_TAXYEARS_", "_VOLUME_", "_PARCELID1_");
 
 	    		if (isset($data['Liens']) && !empty($data['Liens'])) {
 					$liensCount = 1;
 					$easementCheck = 0;
-
+					$lienFlag =  1;
 					foreach ($data['Liens'] as $key => $lien) {
 
 						$language = '';
+						$lienKey = array_search($lien['LienTypeName'], array_column($codeBooks, 'code'));
 						$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
+
+						if (isset($lienKey) && !empty($lienKey) && strpos($codeBooks[$lienKey]['language'], '___') === false) {
+							$language = $codeBooks[$lienKey]['language'];
+						} else {
+							if (strpos($language, 'Amount:') !== false) {
+								$pos = strpos($language, 'Amount:');
+								$sub_str_main = substr($language,0,$pos);
+														
+								$language = substr($language,$pos);
+								$exploded_str = $this->multiexplode(array("_ "),$language);
+								$formatted_data = array();
+								if(isset($exploded_str) && !empty($exploded_str))
+								{
+									foreach ($exploded_str as $key => $value) 
+									{
+										$str_count = substr_count($value, ':');
+
+										if($str_count == 2)
+										{
+											if(strpos($value, 'Lender:') !== false)
+											{
+
+												$pos = strpos($value, 'Lender:');
+												$sub_str = substr($value,0,$pos);
+												$formatted_data[] = $sub_str;
+												$truncate_str = substr($value,$pos);
+												$formatted_data[] = $truncate_str."_";
+											}
+											if(strpos($value, 'Recording Date:') !== false)
+											{
+
+												$pos = strpos($value, 'Recording Date:');
+												$sub_str = substr($value,0,$pos);
+												$formatted_data[] = $sub_str;
+												$truncate_str = substr($value,$pos);
+												$formatted_data[] = $truncate_str."_";
+											}
+											if(strpos($value, '<a id=') !== false)
+											{
+
+												$pos = strpos($value, '<a id=');
+												$sub_str = substr($value,0,$pos);
+												
+												
+												$truncate_str = substr($value,$pos);
+												
+												$formatted_data[] = $sub_str.$truncate_str;
+											}
+										}
+										else
+										{
+											$formatted_data[] = $value."_"; 
+										}
+									} 
+								}
+								
+								
+
+								$language = $sub_str_main."\n";
+								
+								if(isset($formatted_data) && !empty($formatted_data))
+								{
+									foreach ($formatted_data as $k => $v) 
+									{
+										$str = explode(": ", $v);
+										
+										$format_str= '<strong>'.$str[0].': </strong>'.$str[1];
+										$language .= $format_str."\n";
+									}
+								}
+							}
+							if(strpos($language, 'A homestead declaration Executed by:') !== false)
+							{
+								$l_exploded = $this->multiexplode(array("_ "),$language);
+								$l_formatted_data = array();
+								if(isset($l_exploded) && !empty($l_exploded))
+								{
+									foreach ($l_exploded as $l_key => $l_value) 
+									{						
+										if(strpos($l_value, 'Official Records') !== false)
+										{
+											$l_formatted_data[] = $l_value;
+										}
+										else
+										{
+											$l_formatted_data[] = $l_value."_";
+										}
+									} 
+								}
+
+								$language = "";
+								if(isset($l_formatted_data) && !empty($l_formatted_data))
+								{
+									foreach ($l_formatted_data as $l_k => $l_v) 
+									{
+										$l_str = explode(": ", $l_v);
+										
+										$l_format_str= '<strong>'.$l_str[0].': </strong>'.$l_str[1];
+										$language .= $l_format_str."\n";
+									}
+								}
+							}
+						}
+
 						$Book = isset($lien['Book']) && !empty($lien['Book']) ? $lien['Book'] : '';
 						$Date = isset($lien['Date']) && !empty($lien['Date']) ? $lien['Date'] : '';
 						$DocumentName = isset($lien['DocumentName']) && !empty($lien['DocumentName']) ? $lien['DocumentName'] : '';
+						$Grantor = isset($lien['Grantor']) && !empty($lien['Grantor']) ? $lien['Grantor'] : '';
 						$Grantee = isset($lien['Grantee']) && !empty($lien['Grantee']) ? $lien['Grantee'] : '';
 						$Instrument = isset($lien['Instrument']) && !empty($lien['Instrument']) ? $lien['Instrument'] : '';
 						$RecordedDate = isset($lien['RecordedDate']) && !empty($lien['RecordedDate']) ? $lien['RecordedDate'] : '';
@@ -535,32 +696,131 @@ class ReviewPrelim extends MX_Controller {
 						$StateDistrict = isset($lien['StateDistrict']) && !empty($lien['StateDistrict']) ? $lien['StateDistrict'] : '';
 						$TaxYears = isset($lien['TaxYears']) && !empty($lien['TaxYears']) ? $lien['TaxYears'] : '';
 
-						$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
-						$language = str_replace($arr_find, $arr_rep, $language); 
+						 
 						$result = array();
-						preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $language, $result);
+						$language1 = '';
+						$language1 = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
+						preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $language1, $result);
 
-						if (!empty($result)) {
+						if (!empty($result) && !empty($result['href'][0])) {
 							$link = $result['href'][0];
 							$documentId = str_replace('http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=', '', $link);
 							$documentIds[$documentId] = $liensCount;
+							$sync = 1;
+							$order_id = $order_details['id'];
+							$onclick = "href='javascript:void(0)' style='cusror:pointer !important;' onclick='load_doc($sync, $documentId, $order_id)'";
+							if(!empty($Instrument)) {
+								$Instrument = "<a $onclick>".$Instrument."</a>";
+							}
 						}	
+
+						$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
+						$language = str_replace($arr_find, $arr_rep, $language);
+
+						if(strpos($language, 'Tax Identification No') !== false) 
+						{
+							$pos = strpos($language, 'Tax Identification No');
+							$sub_str = substr($language,0,$pos);							
+							$language = substr($language,$pos);
+							preg_match_all('/[a-zA-Z0-9. ]+: (\S+)/', $language, $matches);
+							$language = $sub_str."\n";
+
+							if(isset($matches[0]) && !empty($matches[0])) {
+								foreach ($matches[0] as $key => $value)  {
+									$a = explode(":", $value);
+									if (strtolower($a[0]) == 'tax identification no.') {
+										$str= "\n<strong>".$a[0].": </strong><a $onclick>".$parcelID."</a>";
+									} else {
+										$str= '<strong>'.$a[0].': </strong>'.$a[1];
+									}
+									$language .= $str."\n";
+								}
+							}
+						}
 						
 						if(strpos(strtolower($language), 'any liens or other assessments') !== false || strpos(strtolower($language), 'the lien of supplemental') !== false || strpos(strtolower($language), 'property taxes') !== false ) {
-							$tax[] = $liensCount.". ".$language;
+							$tax[] = $language;
 						} else {
+							
 							if($easementCheck == 0) {
 								$easements = array();
 								if (isset($data['Easements']) && !empty($data['Easements']))  {
 
-									$liensCount++;
 									foreach ($data['Easements'] as $key => $easement) {
 
-										$language = '';
-										$language = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
+										$easementLanguage = '';
+										$easementKey = array_search($easement['EasementTypeName'], array_column($codeBooks, 'code'));
+										$easementLanguage = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
+						
+										if (isset($easementKey) && !empty($easementKey) && strpos($codeBooks[$easementKey]['language'], '___') === false) {
+											$easementLanguage = $codeBooks[$easementKey]['language']; 
+										} else {
+											if (strpos($language, 'Purpose:') !== false) {
+												$e_pos = strpos($language, 'Purpose:');
+												$e_sub_str_main = substr($language,0,$e_pos);						
+												$language = substr($language,$e_pos);
+												$e_exploded_str = $this->multiexplode(array("_ "),$language);
+												$e_formatted_data = array();
+
+												if (isset($e_exploded_str) && !empty($e_exploded_str)) {
+													foreach ($e_exploded_str as $e_key => $e_value)  {							
+														$e_formatted_data[] = $e_value."_";
+													} 
+												}
+
+												$language = $e_sub_str_main."\n";
+												if (isset($e_formatted_data) && !empty($e_formatted_data)) {
+													foreach ($e_formatted_data as $e_k => $e_v) {
+														$e_str = explode(": ", $e_v);
+														$e_format_str= '<strong>'.$e_str[0].': </strong>'.$e_str[1];
+														$language .= $e_format_str."\n";
+													}
+												}
+											}
+
+											if (strpos($language, 'Executed by:') !== false) {
+												$exe_exploded_str = $this->multiexplode(array("_ "),$language);
+												$exe_formatted_data = array();
+												if (isset($exe_exploded_str) && !empty($exe_exploded_str)) {
+													foreach ($exe_exploded_str as $exe_key => $exe_value) {
+														if (strpos($exe_value, 'Official Records') !== false) {
+															$exe_value = str_replace('Official Records', "Official Records \n", $exe_value);
+															
+															$exe_formatted_data[] = $exe_value;
+														} else if(strpos($exe_value, 'Recording Date:') !== false) {
+															$rec_pos = strpos($exe_value, 'Recording Date:');
+															$rec_sub_str = substr($exe_value,0,$rec_pos);
+															$exe_formatted_data[] = $rec_sub_str;
+															$rec_truncate_str = substr($exe_value,$rec_pos);
+															$exe_formatted_data[] = $rec_truncate_str."_";
+															
+														} else {
+															$exe_formatted_data[] = $exe_value."_";
+														}
+
+													} 
+												}
+
+												$language = "";
+												if (isset($exe_formatted_data) && !empty($exe_formatted_data)) {
+													foreach ($exe_formatted_data as $exe_k => $exe_v) {
+														$exe_str = explode(": ", $exe_v);
+														$count = count($exe_str);
+														if ($count <= 2) {
+															$exe_format_str= '<strong>'.$exe_str[0].': </strong>'.$exe_str[1];
+														} else {
+															$exe_format_str= '<strong>'.$exe_str[0].': </strong>'.$exe_str[1].": ".$exe_str[2];
+														} 
+														$language .= $exe_format_str."\n";
+													}
+												}	
+											}
+										}
+
 										$Book = isset($easement['Book']) && !empty($easement['Book']) ? $easement['Book'] : '';
 										$Date = isset($easement['Date']) && !empty($easement['Date']) ? $easement['Date'] : '';
 										$DocumentName = isset($easement['DocumentName']) && !empty($easement['DocumentName']) ? $easement['DocumentName'] : '';
+										$Grantor = isset($easement['Grantor']) && !empty($easement['Grantor']) ? $easement['Grantor'] : '';
 										$Grantee = isset($easement['Grantee']) && !empty($easement['Grantee']) ? $easement['Grantee'] : '';
 										$Instrument = isset($easement['Instrument']) && !empty($easement['Instrument']) ? $easement['Instrument'] : '';
 										$RecordedDate = isset($easement['RecordedDate']) && !empty($easement['RecordedDate']) ? $easement['RecordedDate'] : '';
@@ -592,25 +852,44 @@ class ReviewPrelim extends MX_Controller {
 										$StateDistrict = isset($easement['StateDistrict']) && !empty($easement['StateDistrict']) ? $easement['StateDistrict'] : '';
 										$TaxYears = isset($easement['TaxYears']) && !empty($easement['TaxYears']) ? $easement['TaxYears'] : '';
 
-										$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
-										$language = str_replace($arr_find, $arr_rep, $language); 
-										$result = array();
-										preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $language, $result);
+										
+										$easementResult = array();
+										$easementLanguage1 = '';
+										$easementLanguage1 = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
+										preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $easementLanguage1, $easementResult);
 
-										if (!empty($result)) {
-											$link = $result['href'][0];
+										if (!empty($easementResult) && !empty($easementResult['href'][0])) {
+											$link = $easementResult['href'][0];
 											$documentId = str_replace('http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=', '', $link);
 											$documentIds[$documentId] = $liensCount;
-										}	
-										if(!empty($language)) {
-											$easements[] = $liensCount.". ".$language;
+											if(!empty($Instrument)) {
+												$sync = 1;
+												$order_id = $order_details['id'];
+												$onclick = "href='javascript:void(0)' style='cusror:pointer !important;' onclick='load_doc($sync, $documentId, $order_id)'";
+												$Instrument = "<a $onclick>".$Instrument."</a>";
+											}
+										}
+						
+										$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
+										$easementLanguage = str_replace($arr_find, $arr_rep, $easementLanguage); 
+										if(!empty($easementLanguage)) {
+											$easements[] = $easementLanguage;
 										}
 										$liensCount++;
 									}
+									$easementCheck++;
 								}
-								$easementCheck++;
 							}
-							$liens[] = $liensCount.". ".$language;
+							if ($lienFlag == 1) {
+								
+								if (!empty($result) && !empty($result['href'][0])) {
+									$link = $result['href'][0];
+									$documentId = str_replace('http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=', '', $link);
+									$documentIds[$documentId] = $liensCount;
+								}
+							}
+							$lienFlag++;
+							$liens[] = $language;
 						}
 						$liensCount++;	
 					}
@@ -621,11 +900,18 @@ class ReviewPrelim extends MX_Controller {
 				if(isset($data['Requirements']) && !empty($data['Requirements'])) {
 					foreach ($data['Requirements'] as $key => $requirement) {
 						$language = '';
+						$requirementKey = array_search($requirement['RequirementTypeName'], array_column($codeBooks, 'code'));
 						$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
+
+						if (isset($requirementKey) && !empty($requirementKey) && strpos($codeBooks[$requirementKey]['language'], '___') === false) {
+							$language = $codeBooks[$requirementKey]['language'];
+						}
+
 						$Book = isset($requirement['Book']) && !empty($requirement['Book']) ? $requirement['Book'] : '';
 						$Date = isset($requirement['Date']) && !empty($requirement['Date']) ? $requirement['Date'] : '';
 						$DocumentName = isset($requirement['DocumentName']) && !empty($requirement['DocumentName']) ? $requirement['DocumentName'] : '';
 						$Grantee = isset($requirement['Grantee']) && !empty($requirement['Grantee']) ? $requirement['Grantee'] : '';
+						$Grantor = isset($requirement['Grantor']) && !empty($requirement['Grantor']) ? $requirement['Grantor'] : '';
 						$Instrument = isset($requirement['Instrument']) && !empty($requirement['Instrument']) ? $requirement['Instrument'] : '';
 						$RecordedDate = isset($requirement['RecordedDate']) && !empty($requirement['RecordedDate']) ? $requirement['RecordedDate'] : '';
 						$Purpose = isset($requirement['Purpose']) && !empty($requirement['Purpose']) ? $requirement['Purpose'] : '';
@@ -656,21 +942,32 @@ class ReviewPrelim extends MX_Controller {
 						$StateDistrict = isset($requirement['StateDistrict']) && !empty($requirement['StateDistrict']) ? $requirement['StateDistrict'] : '';
 						$TaxYears = isset($requirement['TaxYears']) && !empty($requirement['TaxYears']) ? $requirement['TaxYears'] : '';
 
-						$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
-						$language = str_replace($arr_find, $arr_rep, $language); 
+						
 						$result = array();
-						preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $language, $result);
 
-						if (!empty($result)) {
+						$requirementLanguage = '';
+						$requirementLanguage = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
+						preg_match_all('/<a[^>]+href=([\'"])(?<href>.+?)\1[^>]*>/i', $requirementLanguage, $result);
+
+						if (!empty($result) && !empty($result['href'][0])) {
 							$link = $result['href'][0];
 							$documentId = str_replace('http://clients.pacificcoasttitle.com/DownloadDocument.aspx?DocumentID=', '', $link);
-							$documentIds[$documentId] = $requirementCount;
+							$documentIds[$documentId] = $liensCount;
+							if(!empty($Instrument)) {
+								$sync = 1;
+								$order_id = $order_details['id'];
+								$onclick = "href='javascript:void(0)' style='cusror:pointer !important;' onclick='load_doc($sync, $documentId, $order_id)'";
+								$Instrument = "<a $onclick>".$Instrument."</a>";
+							}
 						}	
+						$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
+						
+						$language = str_replace($arr_find, $arr_rep, $language); 
 						
 						if (!empty($language)) {
-							$requirements[] = $requirementCount.". ".$language;
+							$requirements[] = $language;
 						}
-						$requirementCount++;
+						$liensCount++;
 					}
 				}
 				
@@ -725,7 +1022,7 @@ class ReviewPrelim extends MX_Controller {
 						}	
 
 						if(!empty($language)) {
-							$restrictions[] = $restrictions.". ".$language;
+							$restrictions[] = $language;
 						}
 						$restrictionsCount++;
 					}
@@ -734,7 +1031,8 @@ class ReviewPrelim extends MX_Controller {
 	    		$summaryData = array(
 	    			'file_number'=> $file_number,
 	    			'vesting'=> $vesting,
-	    			'generated_date'=> $generated_date,
+					'generated_date'=> $generated_date,
+					'tax'=> json_encode($tax),
 	    			'lien'=> json_encode($liens),
 	    			'easement'=> json_encode($easements),
 	    			'requirements'=> json_encode($requirements),
@@ -772,15 +1070,6 @@ class ReviewPrelim extends MX_Controller {
 	    	}
 
 	    	/* Send email to customer */
-
-
-	        $condition = array(
-	            'where' => array(
-	                'file_number' => $file_number,
-	            )
-	        );
-
-			$order_details = $this->order->get_rows($condition);
 
 			$order_id = isset($order_details['id']) && !empty($order_details['id']) ? $order_details['id'] : '';
 			$file_id = isset($order_details['file_id']) && !empty($order_details['file_id']) ? $order_details['file_id'] : '';
