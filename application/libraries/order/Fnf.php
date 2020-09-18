@@ -262,9 +262,25 @@ class Fnf
                                     <a:Value>'.$orderDetails['agent_telephone_no'].'</a:Value>
                                 </a:NameValue>';
         } 
+
+        $this->CI->load->model('order/home_model');
+        $orderUser =  $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $lenderName = !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
+
+        if ($orderUser['is_escrow'] == 0) {
+            if (!empty($orderDetails['cpl_lender_id'])) {
+                $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                $orderDetails['lender_assignment_clause'] =  $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+                $orderDetails['lender_address'] = $lenderDetails['street_address'];
+                $orderDetails['lender_city'] = $lenderDetails['city'];
+                $orderDetails['lender_state'] = 'CA';
+                $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
+                $lenderName = !empty($lenderDetails['company_name']) ? $lenderDetails['company_name'] : $lenderDetails['first_name']." ".$orderDetails['last_name'];
+            }
+		} 
                                     
         $endPoint = 'v3/CPLManagement.svc';
-        $lenderName = !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
+        
         $postData = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
                         <s:Body>
                             <GenerateCPLRequest xmlns="http://cpl.fnf.com/services/v3/cplmanagement/">
@@ -413,7 +429,21 @@ class Fnf
                                     <a:Value>'.$orderDetails['agent_telephone_no'].'</a:Value>
                                 </a:NameValue>';
         } 
-        $lenderName = !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];                     
+        $this->CI->load->model('order/home_model');
+        $orderUser =  $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $lenderName = !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
+
+        if ($orderUser['is_escrow'] == 0) {
+            if (!empty($orderDetails['cpl_lender_id'])) {
+                $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                $orderDetails['lender_assignment_clause'] =  $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+                $orderDetails['lender_address'] = $lenderDetails['street_address'];
+                $orderDetails['lender_city'] = $lenderDetails['city'];
+                $orderDetails['lender_state'] = 'CA';
+                $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
+                $lenderName = !empty($lenderDetails['company_name']) ? $lenderDetails['company_name'] : $lenderDetails['first_name']." ".$orderDetails['last_name'];
+            }
+		} 
         $endPoint = 'v3/CPLManagement.svc';
         $postData = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
                         <s:Body>
