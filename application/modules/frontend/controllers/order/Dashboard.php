@@ -1132,7 +1132,7 @@ class Dashboard extends MX_Controller {
 					'phone' => $lenderDetails['telephone_no'],
 					'email' => $lenderDetails['email_address'],
 					'countyFIPS' => null,
-					'assignment' => $lenderDetails['assignment_clause'] ? $orderDetails['assignment_clause'] : 0,
+					'assignment' => $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : 0,
 					'mortgageType' => null,
 					'amount' => 0,
 					'loan_number' => $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '',
