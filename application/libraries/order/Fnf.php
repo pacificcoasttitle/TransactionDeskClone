@@ -287,7 +287,11 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Name]</a:Name> 
-                                        <a:Value>'.$orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'].'</a:Value>
+                                        <a:Value>'. !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'].'</a:Value>
+                                    </a:NameValue>
+                                    <a:NameValue>
+                                        <a:Name>[Lender Clause]</a:Name> 
+                                        <a:Value>'.$orderDetails['lender_assignment_clause']." ".$orderDetails['lender_assignment_clause'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
@@ -433,7 +437,11 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Name]</a:Name> 
-                                        <a:Value>'.$orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'].'</a:Value>
+                                        <a:Value>'. !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'].'</a:Value>
+                                    </a:NameValue>
+                                    <a:NameValue>
+                                        <a:Name>[Lender Clause]</a:Name> 
+                                        <a:Value>'.$orderDetails['lender_assignment_clause']." ".$orderDetails['lender_assignment_clause'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
