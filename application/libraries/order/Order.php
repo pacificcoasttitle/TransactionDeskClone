@@ -262,14 +262,47 @@ class Order
                 order_details.file_id, 
                 order_details.id as order_id, 
                 pct_order_documents.document_name, 
+                pct_order_documents.document_name, 
                 pct_order_documents.original_document_name, 
                 pct_order_documents.is_sync, 
                 pct_order_documents.is_prelim_document, 
                 pct_order_documents.api_document_id, 
+                pct_order_documents.index_number, 
                 pct_order_documents.is_linked_doc')
             ->from('order_details')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->CI->db->where('order_details.file_id', $fileId);
+        if ($userdata['is_master'] == 0 && $from_mail == 0) {
+            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+        }
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
+
+    public function get_order_linked_documents($fileId, $from_mail=0)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('order_details.file_number, 
+                order_details.file_id, 
+                order_details.id as order_id, 
+                pct_order_documents.document_name, 
+                pct_order_documents.document_name, 
+                pct_order_documents.original_document_name, 
+                pct_order_documents.is_sync, 
+                pct_order_documents.is_prelim_document, 
+                pct_order_documents.api_document_id, 
+                pct_order_documents.index_number, 
+                pct_order_documents.is_linked_doc')
+            ->from('order_details')
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+
+        $this->CI->db->where('order_details.file_id', $fileId);
+        $this->CI->db->where('pct_order_documents.is_linked_doc', 1);
+        $this->CI->db->order_by('pct_order_documents.index_number', 'asc');
         if ($userdata['is_master'] == 0 && $from_mail == 0) {
             $this->CI->db->where('order_details.customer_id', $userdata['id']);
         }
@@ -304,9 +337,25 @@ class Order
             
         $this->CI->db->where('order_id', $order_id);
         $this->CI->db->where('is_linked_doc', 1);
+        $this->CI->db->order_by('index_number', 'asc');
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
+
+    public function get_prelim_document($order_id)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_documents');
+            
+        $this->CI->db->where('order_id', $order_id);
+        $this->CI->db->where('is_prelim_document', 1);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
         } else {
             return array();
         }         
