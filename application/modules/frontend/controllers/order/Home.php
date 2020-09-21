@@ -184,6 +184,30 @@ class Home extends MX_Controller {
 	        	
 				$EscrowLenderId = $escrowLenderPartnerTypeID ='';
 				$lender_details = $escrow_details = array();
+
+				if(isset($userdata['is_master']) && !empty($userdata['is_master']))
+				{
+					$orderUser =  $this->home_model->get_user(array('id' => $_POST['id']));
+					$is_escrow = $orderUser['is_escrow'];
+					$user_data['email'] = $orderUser['email_address'];
+					$user_data['password'] = $orderUser['random_password'];
+					$con = array(
+						'where' => array(
+							'partner_id' => $orderUser['partner_id'],
+						)
+					);
+					$companyData = $this->home_model->get_company_rows($con);
+				} else {
+					$orderUser =  $this->home_model->get_user(array('id' => $userdata['id']));
+					$con = array(
+						'where' => array(
+							'partner_id' => $orderUser['partner_id'],
+						)
+					);
+					$companyData = $this->home_model->get_company_rows($con);
+				}
+
+				$cplLenderId = 0;
 				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
 				{
 					$EscrowLenderId = $_POST['EscrowId'];
@@ -194,6 +218,7 @@ class Home extends MX_Controller {
 
 					$escrow_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
 					$escrowLenderPartnerTypeID = '10006';
+					$cplLenderId = $orderUser['id'];
 				}
 				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
 				{
@@ -321,27 +346,7 @@ class Home extends MX_Controller {
 				$order_data = json_encode($place_order);
 				$user_data = array();
 				
-				if(isset($userdata['is_master']) && !empty($userdata['is_master']))
-				{
-					$orderUser =  $this->home_model->get_user(array('id' => $_POST['id']));
-					$is_escrow = $orderUser['is_escrow'];
-					$user_data['email'] = $orderUser['email_address'];
-					$user_data['password'] = $orderUser['random_password'];
-					$con = array(
-						'where' => array(
-							'partner_id' => $orderUser['partner_id'],
-						)
-					);
-					$companyData = $this->home_model->get_company_rows($con);
-				} else {
-					$orderUser =  $this->home_model->get_user(array('id' => $userdata['id']));
-					$con = array(
-						'where' => array(
-							'partner_id' => $orderUser['partner_id'],
-						)
-					);
-					$companyData = $this->home_model->get_company_rows($con);
-				}
+				
 				
 				$this->load->library('order/resware');
 				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, array(), 0, 0);
@@ -515,6 +520,7 @@ class Home extends MX_Controller {
 								'buyer_agent_id' => $BuyerAgentId,
 								'listing_agent_id' => $ListingAgentId,
 								'escrow_lender_id' => $EscrowLenderId,
+								'cpl_lender_id' => $cplLenderId,
 								'address' => $PropertyAddress,
 								'city' => $PropertyCity,
 								'state' => $PropertyState,

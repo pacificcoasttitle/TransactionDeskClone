@@ -67,7 +67,13 @@ class Natic
                 $orderDetails['lender_first_name'] = $lenderDetails['first_name'];
                 $orderDetails['lender_last_name'] = $lenderDetails['last_name'];
             }
-		} 
+        } 
+        
+        if ($orderDetails['sales_amount'] > 0) {
+            $borrower = $orderDetails['borrower'];
+		} else {
+			$borrower = $orderDetails['primary_owner'];
+        }
 
         $xmlData = "<Field>
                     <FieldId>FileNumber</FieldId>
@@ -186,7 +192,7 @@ class Natic
                 <Field>
                     <FieldId>Buyer</FieldId>
                     <Name>Buyer/Borrower Name</Name>
-                    <Value>".$orderDetails['primary_owner']."</Value>
+                    <Value>".$borrower."</Value>
                     <Type>String</Type>
                     <Required>false</Required>
                 </Field>";
