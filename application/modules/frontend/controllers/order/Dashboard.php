@@ -1083,8 +1083,8 @@ class Dashboard extends MX_Controller {
 			if(!empty($secondary_owner)) {
 				$buyers[] = array (
 					'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-					'Last' => $secondary_owner[1],
-					'First' => count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
+					'Last' => count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
+					'First' => $secondary_owner[0],
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
