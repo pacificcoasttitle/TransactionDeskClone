@@ -72,6 +72,7 @@ class CodeBook extends MX_Controller {
                 $nestedData[] = $count;
 
                 $nestedData[] = $value['code'];
+                $nestedData[] = $value['type_id'];
 
                 $type = '';
                 if (!empty($value['type'])) {
