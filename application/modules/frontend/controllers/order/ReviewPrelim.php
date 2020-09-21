@@ -79,7 +79,7 @@ class ReviewPrelim extends MX_Controller {
 						foreach ($data['Liens'] as $key => $lien) {
 
 							$language = '';
-							$lienKey = array_search($lien['LienTypeName'], array_column($codeBooks, 'code'));
+							$lienKey = array_search($lien['LienTypeID'], array_column($codeBooks, 'type_id'));
 							$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
 
 							if (isset($lienKey) && !empty($lienKey) && strpos($codeBooks[$lienKey]['language'], '___') === false) {
@@ -273,7 +273,7 @@ class ReviewPrelim extends MX_Controller {
 										foreach ($data['Easements'] as $key => $easement) {
 
 											$easementLanguage = '';
-											$easementKey = array_search($easement['EasementTypeName'], array_column($codeBooks, 'code'));
+											$easementKey = array_search($easement['EasementTypeID'], array_column($codeBooks, 'type_id'));
 											$easementLanguage = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
 							
 											if (isset($easementKey) && !empty($easementKey) && strpos($codeBooks[$easementKey]['language'], '___') === false) {
@@ -424,7 +424,7 @@ class ReviewPrelim extends MX_Controller {
 					if(isset($data['Requirements']) && !empty($data['Requirements'])) {
 						foreach ($data['Requirements'] as $key => $requirement) {
 							$language = '';
-							$requirementKey = array_search($requirement['RequirementTypeName'], array_column($codeBooks, 'code'));
+							$requirementKey = array_search($requirement['RequirementTypeID'], array_column($codeBooks, 'type_id'));
 							$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
 
 							if (isset($requirementKey) && !empty($requirementKey) && strpos($codeBooks[$requirementKey]['language'], '___') === false) {
@@ -912,7 +912,7 @@ class ReviewPrelim extends MX_Controller {
 							}
 						}	
 					}
-				}
+				}exit;
 				
 				$file = array();
 				$prelimfilename = $prelimDocument['document_name'];
