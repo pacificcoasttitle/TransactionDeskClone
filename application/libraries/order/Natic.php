@@ -135,7 +135,7 @@ class Natic
                 <Field>
                     <FieldId>LenderName</FieldId>
                     <Name>Lender Name</Name>
-                    <Value>".$orderDetails['lender_first_name']." ".$orderDetails['lender_last_name']."</Value>
+                    <Value>".$orderDetails['lender_company_name']."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -150,7 +150,7 @@ class Natic
                 <Field>
                     <FieldId>LenderContactName</FieldId>
                     <Name>Lender Contact Name</Name>
-                    <Value>".$orderDetails['lender_company_name']."</Value>
+                    <Value>".$orderDetails['lender_first_name']." ".$orderDetails['lender_last_name']."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
