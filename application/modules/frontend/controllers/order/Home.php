@@ -153,6 +153,7 @@ class Home extends MX_Controller {
 	        	$sendermessage      = $this->input->post('sendermessage');
 				$BuyerAgentId      = $this->input->post('BuyerAgentId');
 				$agentDetailFlag =  $this->input->post('add-agent-details');
+				$user_data = array();
 
 	        	$buyers_agent_details = $listing_agent_details = array();
 	        	if((isset($BuyerAgentId) && !empty($BuyerAgentId)) || isset($agentDetailFlag))
@@ -344,7 +345,7 @@ class Home extends MX_Controller {
 				}				
 				
 				$order_data = json_encode($place_order);
-				$user_data = array();
+				
 				
 				
 				
