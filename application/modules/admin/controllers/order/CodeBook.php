@@ -195,6 +195,7 @@ class CodeBook extends MX_Controller {
                         $type = isset($value['A']) && !empty($value['A']) ? $value['A'] : '';
                         $code = isset($value['B']) && !empty($value['B']) ? $value['B'] : '';
                         $language = isset($value['C']) && !empty($value['C']) ? $value['C'] : '';
+                        $language = str_replace(array("_x000B_"), "", $language);
                         $type_id = isset($value['D']) && !empty($value['D']) ? $value['D'] : '';
                         
                         $codebookData['code'] = $code;
@@ -205,6 +206,7 @@ class CodeBook extends MX_Controller {
                         $con = array(
                             'where' => array(
                                 'code' => $code,
+                                'type_id' => $type_id,
                                 'status' => 1
                             ),
                             'returnType' => 'count'
@@ -213,7 +215,7 @@ class CodeBook extends MX_Controller {
                         $prevCount = $this->codeBook_model->get_rows($con);
                         if($prevCount > 0)
                         {
-                            $condition = array('code' => $code,'status' => 1);
+                            $condition = array('code' => $code,'type_id' => $type_id,'status' => 1);
                             // unset($codebookData['language']);
                             $update = $this->codeBook_model->update($codebookData, $condition);
                             
