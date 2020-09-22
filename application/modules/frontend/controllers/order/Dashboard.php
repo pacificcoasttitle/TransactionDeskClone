@@ -1486,7 +1486,6 @@ class Dashboard extends MX_Controller {
 			$this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner), array('id' => $orderDetails['transaction_id']), 'transaction_details');
 
 			if ($cplApi == 'fnf') {
-				$propertyDetails['buyer_agent_id'] = $this->input->post('agent_id');
 				$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
 			}
 			$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
@@ -1500,7 +1499,6 @@ class Dashboard extends MX_Controller {
 			$this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
 			
 			if ($cplApi == 'fnf') {
-				$propertyDetails['buyer_agent_id'] = $this->input->post('agent_id');
 				$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
 			}
 			$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
