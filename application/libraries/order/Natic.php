@@ -130,7 +130,7 @@ class Natic
                     <Name>Loan Amount</Name>
                     <Value>".$orderDetails['loan_amount']."</Value>
                     <Type>Decimal</Type>
-                    <Required>false</Required>
+                    <Required>True</Required>
                 </Field>
                 <Field>
                     <FieldId>LenderName</FieldId>
