@@ -92,7 +92,7 @@
 									<div class="section colm colm12">
 										<label class="field prepend-icon">
 											<input type="text" name="assignment_clause" id="assignment_clause" class="gui-input ui-autocomplete-input"
-												placeholder="Assignment Clause" required="required">
+												placeholder="Assignment Clause">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
