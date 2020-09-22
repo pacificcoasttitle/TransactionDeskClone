@@ -1009,7 +1009,11 @@ class Dashboard extends MX_Controller {
 				'NameType' => 2,
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
-				'Sequence' => 1
+				'Sequence' => 1,
+				'City' => null,
+				'State' => null,
+				'Zip' => null,
+				'Address' => null
 			);
 
 			if(!empty($secondary_owner)) {
@@ -1020,7 +1024,11 @@ class Dashboard extends MX_Controller {
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
-					'Sequence' => 2
+					'Sequence' => 2,
+					'City' => null,
+					'State' => null,
+					'Zip' => null,
+					'Address' => null
 				);	
 			}
 			$purchase_price = $orderDetails['sales_amount'];
@@ -1035,7 +1043,11 @@ class Dashboard extends MX_Controller {
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
-					'Sequence' => 1
+					'Sequence' => 1,
+					'City' => null,
+					'State' => null,
+					'Zip' => null,
+					'Address' => null
 				);	
 			} 
 			if (!empty($orderDetails['secondary_borrower'])) {
@@ -1047,7 +1059,11 @@ class Dashboard extends MX_Controller {
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
-					'Sequence' => 2
+					'Sequence' => 2,
+					'City' => null,
+					'State' => null,
+					'Zip' => null,
+					'Address' => null
 				);	
 			} 
 		} else {
@@ -1058,7 +1074,11 @@ class Dashboard extends MX_Controller {
 				'NameType' => 1,
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
-				'Sequence' => 1
+				'Sequence' => 1,
+				'City' => null,
+				'State' => null,
+				'Zip' => null,
+				'Address' => null
 			);
 			if(!empty($secondary_owner)) {
 				$buyers[] = array (
@@ -1068,7 +1088,11 @@ class Dashboard extends MX_Controller {
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
-					'Sequence' => 2
+					'Sequence' => 2,
+					'City' => null,
+					'State' => null,
+					'Zip' => null,
+					'Address' => null
 				);	
 			}
 			$purchase_price = $orderDetails['loan_amount'];
@@ -1109,7 +1133,7 @@ class Dashboard extends MX_Controller {
 					'phone' => $lenderDetails['telephone_no'],
 					'email' => $lenderDetails['email_address'],
 					'countyFIPS' => null,
-					'assignment' => $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : 0,
+					'assignment' => $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '',
 					'mortgageType' => null,
 					'amount' => 0,
 					'loan_number' => $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '',
