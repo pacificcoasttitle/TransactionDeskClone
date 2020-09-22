@@ -32,10 +32,10 @@ class AddAddressFieldInCommonWealth extends AbstractMigration
     public function change()
     {
         $table = $this->table('pct_order_fnf_agents');
-        $table->addColumn('address', 'string', ['after' => 'is_dba_name', 'null' => true])
+        $table->addColumn('address', 'string', ['after' => 'is_dba_name', 'null' => false])
                 ->addColumn('state', 'string', ['after' => 'location_city', 'null' => false])
                 ->addColumn('zip', 'string', ['after' => 'state', 'null' => false])
-                ->addColumn('phone_number', 'string', ['after' => 'zip', 'null' => false])
+                ->addColumn('phone_number', 'string', ['after' => 'zip', 'null' => true])
                 ->update();
     }
 }
