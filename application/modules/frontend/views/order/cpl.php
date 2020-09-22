@@ -207,11 +207,13 @@
 									</div>
 								</div>
 								<input type="hidden" id="cpl_api" name="cpl_api" value="">
-								<input type="hidden" id="agent_id" name="agent_id" value="">
+								
 								<div id="fnf" style="display:none">
-									<div class="spacer-b20">
+									<!-- <div class="spacer-b20">
 										<div class="tagline"><span>Agent Details</span></div>
 									</div>
+
+									<input type="hidden" id="agent_id" name="agent_id" value="">
 
 									<div class="frm-row spacer-b15">
 										<div class="section colm colm12">
@@ -221,7 +223,7 @@
 												<span class="field-icon"><i class="fa fa-user"></i></span>
 											</label>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="spacer-b20">
 										<div class="tagline"><span>Select Branch</span></div>
@@ -473,13 +475,13 @@
 							}
 							$('select[name="branch"]').children('option:not(:first)').remove();
 							$( 'select[name="branch"]' ).append( optionsAsString );
-							$('#agent_name').val(res.orderDetails['agent_name']);
-							$('#agent_id').val(res.orderDetails['buyer_agent_id']);
-							$("#agent_name").prop('required',true);
+							//$('#agent_name').val(res.orderDetails['agent_name']);
+							//$('#agent_id').val(res.orderDetails['buyer_agent_id']);
+							//$("#agent_name").prop('required',true);
 							$("#branch").prop('required',true);
 						} else {
 							$('#fnf').hide();
-							$("#agent_name").prop('required',false);
+							//$("#agent_name").prop('required',false);
 							$("#branch").prop('required',false);
 						}
 						

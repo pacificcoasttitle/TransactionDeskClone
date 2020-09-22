@@ -158,12 +158,20 @@ class Fnf
         }
     }
 
-    public function getAgents()
+    public function getAgents($id = 0)
     {
         $this->CI->db->select('*');
         $this->CI->db->from('pct_order_fnf_agents');
+        if (!empty($id)) {
+            $this->CI->db->where('id', $id);
+        }
         $query = $this->CI->db->get();
-        $result = $query->result_array();
+        if($id == 0) {
+            $result = $query->result_array();
+        } else {
+            $result = $query->row_array();
+        }
+        
         if (!empty($result)) { 
             return $result;
         } else {
@@ -192,6 +200,10 @@ class Fnf
                 'location_city' => $agent['locationCity'], 
                 'underwriter_code' => $agent['underwriterCode'],
                 'underwriter' => $agent['underwriter'],
+                'address' => $agent['locationAddress1'],
+                'state' => $agent['locationStateCode'], 
+                'zip' => $agent['locationZipCode'],
+                'phone_number' => $agent['locationPhoneNumber'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             );
@@ -237,6 +249,7 @@ class Fnf
         $this->CI->load->library('order/natic');
         $userdata = $this->CI->session->userdata('user'); 
         $propertyDetail = explode(",", $orderDetails['full_address']);
+        $agentsInfo = $this->getAgents($orderDetails['fnf_agent_id']);
         $propery = array (
 			'address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]),
 			'city' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
@@ -256,10 +269,10 @@ class Fnf
                                 </a:NameValue>';
         } 
         $agentPhoneField = '';
-        if (!empty($orderDetails['agent_telephone_no'])) {
+        if (!empty($$agentsInfo['phone_number'])) {
             $agentPhoneField = '<a:NameValue>
                                     <a:Name>[Agent/Company Telephone]</a:Name>
-                                    <a:Value>'.$orderDetails['agent_telephone_no'].'</a:Value>
+                                    <a:Value>'.$agentsInfo['phone_number'].'</a:Value>
                                 </a:NameValue>';
         } 
 
@@ -361,11 +374,11 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Agent/Company City]</a:Name>
-                                        <a:Value>'.$orderDetails['agent_city'].'</a:Value>
+                                        <a:Value>'.$agentsInfo['location_city'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Agent/Company Name]</a:Name>
-                                        <a:Value>'.$orderDetails['agent_name'].'</a:Value>
+                                        <a:Value>Pacific Coast Title Company</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Agent/Company State]</a:Name>
@@ -373,12 +386,12 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Agent/Company Street Address]</a:Name>
-                                        <a:Value>'.$orderDetails['agent_address'].'</a:Value>
+                                        <a:Value>'.$agentsInfo['address'].'</a:Value>
                                     </a:NameValue>
                                     '.$agentPhoneField.'
                                     <a:NameValue>
                                         <a:Name>[Agent/Company Zip Code]</a:Name>
-                                        <a:Value>'.$orderDetails['agent_zipcode'].'</a:Value>
+                                        <a:Value>'.$agentsInfo['zip'].'</a:Value>
                                     </a:NameValue>
                                 </FormFields>
                                 <OnBehalfOfUser>'.getenv('FNF_ON_BEHALF_OF_USER').'</OnBehalfOfUser>
@@ -403,6 +416,7 @@ class Fnf
         $this->CI->load->library('order/natic');
         $userdata = $this->CI->session->userdata('user'); 
         $propertyDetail = explode(",", $orderDetails['full_address']);
+        $agentsInfo = $this->getAgents($orderDetails['fnf_agent_id']);
         $propery = array (
 			'address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]),
 			'city' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
@@ -423,10 +437,10 @@ class Fnf
                                 </a:NameValue>';
         } 
         $agentPhoneField = '';
-        if (!empty($orderDetails['agent_telephone_no'])) {
+        if (!empty($agentsInfo['phone_number'])) {
             $agentPhoneField = '<a:NameValue>
                                     <a:Name>[Agent/Company Telephone]</a:Name>
-                                    <a:Value>'.$orderDetails['agent_telephone_no'].'</a:Value>
+                                    <a:Value>'.$agentsInfo['phone_number'].'</a:Value>
                                 </a:NameValue>';
         } 
         $this->CI->load->model('order/home_model');
@@ -525,11 +539,11 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Agent/Company City]</a:Name>
-                                        <a:Value>'.$orderDetails['agent_city'].'</a:Value>
+                                        <a:Value>'.$agentsInfo['location_city'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Agent/Company Name]</a:Name>
-                                        <a:Value>'.$orderDetails['agent_name'].'</a:Value>
+                                        <a:Value>Pacific Coast Title Company</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Agent/Company State]</a:Name>
@@ -537,12 +551,12 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Agent/Company Street Address]</a:Name>
-                                        <a:Value>'.$orderDetails['agent_address'].'</a:Value>
+                                        <a:Value>'.$agentsInfo['address'].'</a:Value>
                                     </a:NameValue>
                                     '.$agentPhoneField.'
                                     <a:NameValue>
                                         <a:Name>[Agent/Company Zip Code]</a:Name>
-                                        <a:Value>'.$orderDetails['agent_zipcode'].'</a:Value>
+                                        <a:Value>'.$agentsInfo['zip'].'</a:Value>
                                     </a:NameValue>
                                 </FormFields>
                                 <OnBehalfOfUser>'.getenv('FNF_ON_BEHALF_OF_USER').'</OnBehalfOfUser>
