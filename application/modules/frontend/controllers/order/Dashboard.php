@@ -1009,11 +1009,7 @@ class Dashboard extends MX_Controller {
 				'NameType' => 2,
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
-				'Sequence' => 1,
-				'City' => null,
-				'State' => null,
-				'Zip' => null,
-				'Address' => null,
+				'Sequence' => 1
 			);
 
 			if(!empty($secondary_owner)) {
@@ -1024,11 +1020,7 @@ class Dashboard extends MX_Controller {
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
-					'Sequence' => 2,
-					'City' => null,
-					'State' => null,
-					'Zip' => null,
-					'Address' => null
+					'Sequence' => 2
 				);	
 			}
 			$purchase_price = $orderDetails['sales_amount'];
@@ -1043,11 +1035,7 @@ class Dashboard extends MX_Controller {
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
-					'Sequence' => 1,
-					'City' => null,
-					'State' => null,
-					'Zip' => null,
-					'Address' => null
+					'Sequence' => 1
 				);	
 			} 
 			if (!empty($orderDetails['secondary_borrower'])) {
@@ -1059,11 +1047,7 @@ class Dashboard extends MX_Controller {
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
-					'Sequence' => 2,
-					'City' => null,
-					'State' => null,
-					'Zip' => null,
-					'Address' => null
+					'Sequence' => 2
 				);	
 			} 
 		} else {
@@ -1074,11 +1058,7 @@ class Dashboard extends MX_Controller {
 				'NameType' => 1,
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
-				'Sequence' => 1,
-				'City' => null,
-				'State' => null,
-				'Zip' => null,
-				'Address' => null
+				'Sequence' => 1
 			);
 			if(!empty($secondary_owner)) {
 				$buyers[] = array (
@@ -1088,11 +1068,7 @@ class Dashboard extends MX_Controller {
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
-					'Sequence' => 2,
-					'City' => null,
-					'State' => null,
-					'Zip' => null,
-					'Address' => null
+					'Sequence' => 2
 				);	
 			}
 			$purchase_price = $orderDetails['loan_amount'];
