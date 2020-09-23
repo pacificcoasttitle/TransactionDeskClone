@@ -234,6 +234,20 @@
 								</div>
 							</div>
 							</div>
+							<div id="vesting-section">
+							<div class="spacer-b20">
+								<div class="tagline"><span>Vesting</span></div><!-- .tagline -->
+							</div>
+							<div class="frm-row spacer-b15">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
+										<input type="text" name="vesting" id="vesting" class="gui-input"
+											placeholder="Vesting">
+										<span class="field-icon"><i class="fa fa-user"></i></span>
+									</label>
+								</div>
+							</div>
+							</div>
 							<div id="report-date-section">
 							<div class="spacer-b20">
 								<div class="tagline"><span>Report Date Section</span></div><!-- .tagline -->
@@ -432,6 +446,20 @@
 								</div>
 							</div>
 							</div>
+							<div id="vesting-section">
+							<div class="spacer-b20">
+								<div class="tagline"><span>Vesting</span></div><!-- .tagline -->
+							</div>
+							<div class="frm-row spacer-b15">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
+										<input type="text" name="vesting" id="edit_vesting" class="gui-input"
+											placeholder="Vesting">
+										<span class="field-icon"><i class="fa fa-user"></i></span>
+									</label>
+								</div>
+							</div>
+							</div>
 							<div id="report-date-section">
 							<div class="spacer-b20">
 								<div class="tagline"><span>Report Date Section</span></div><!-- .tagline -->
@@ -507,6 +535,7 @@ $(document).ready(function () {
 	                preliminary_report_date:"Please select date",
 	            },
 	            submitHandler: function(form) {
+	            	alert();
 	            	$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 					$('#page-preloader').css('display', 'block');
 	            	var LenderCompany = $('#LenderCompany').val();
@@ -523,6 +552,7 @@ $(document).ready(function () {
 	            	var primary_last_name = $('#primary_last_name').val();
 	            	var secondary_first_name = $('#first_name').val();
 	            	var secondary_last_name = $('#last_name').val();
+	            	var vesting = $('#vesting').val();
 	            	var LenderId = $('#LenderId').val();
 	            	var orderId = $('#orderId').val();
 	            	var transaction_id = $('#transaction_id').val();
@@ -530,7 +560,7 @@ $(document).ready(function () {
 	            	var fileId = $('#fileId').val();
 	            	var supplemental_report_date = $('#supplemental_report_date').val();
 	            	var preliminary_report_date = $('#preliminary_report_date').val();
-
+alert(vesting);
 	                $.ajax({
 	                url: base_url + "add-mail-order-details",
 	                type: "post",
@@ -542,6 +572,7 @@ $(document).ready(function () {
 	                    primary_last_name: primary_last_name,
 	                    secondary_first_name: secondary_first_name,
 	                    secondary_last_name: secondary_last_name,
+	                    vesting: vesting,
 	                    LenderId: LenderId,
 	                    LenderCompany:LenderCompany,
 	            		LenderEmailAddress:LenderEmailAddress,
@@ -714,6 +745,8 @@ $(document).ready(function () {
 	            	var primary_last_name = $('#edit_primary_last_name').val();
 	            	var secondary_first_name = $('#edit_first_name').val();
 	            	var secondary_last_name = $('#edit_last_name').val();
+	            	var vesting = $('#edit_vesting').val();
+
 	            	var LenderId = $('#edit_LenderId').val();
 	            	var orderId = $('#edit_orderId').val();
 	            	var transaction_id = $('#edit_transaction_id').val();
@@ -733,6 +766,7 @@ $(document).ready(function () {
 	                    primary_last_name: primary_last_name,
 	                    secondary_first_name: secondary_first_name,
 	                    secondary_last_name: secondary_last_name,
+	                    vesting: vesting,
 	                    LenderId: LenderId,
 	                    LenderCompany:LenderCompany,
 	            		LenderEmailAddress:LenderEmailAddress,
@@ -954,7 +988,7 @@ function editInformation(fileId)
 
 						$("#edit_primary_first_name").val(res.orderDetails['primary_owner_first_name']);
 						$("#edit_primary_last_name").val(res.orderDetails['primary_owner_last_name']);
-
+						$("#edit_vesting").val(res.orderDetails['vesting']);
 						
 
 						$("#edit_first_name").val(res.orderDetails['secondary_owner_first_name']);
