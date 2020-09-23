@@ -206,6 +206,21 @@
 										</label>
 									</div>
 								</div>
+
+								<div class="spacer-b20">
+									<div class="tagline"><span>Vesting Information</span></div><!-- .tagline -->
+								</div>
+
+								<div class="frm-row spacer-b15">
+									<div class="section colm colm6">
+										<label class="field prepend-icon">
+											<input type="text" name="vesting" id="vesting" class="gui-input"
+												placeholder="Vesting">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+
 								<input type="hidden" id="cpl_api" name="cpl_api" value="">
 								
 								<div id="fnf" style="display:none">
@@ -500,6 +515,7 @@
 						$("#last_name").val(res.orderDetails['secondary_owner_last_name']);
 						$("#loan_amount").val(res.orderDetails['loan_amount']);
 						$("#loan_number").val(res.orderDetails['loan_number']);
+						$("#vesting").val(res.orderDetails['vesting']);
 					}  
 					$('#page-preloader').css('display', 'none');
 					$('#lender_information').modal('show');

@@ -1002,6 +1002,7 @@ class Dashboard extends MX_Controller {
 		$primary_owner = explode(" ", $orderDetails['primary_owner']);
 		$secondary_owner = explode(" ", $orderDetails['secondary_owner']);
 		if ($orderDetails['sales_amount'] > 0)  {
+			 
 			$sellers[] = array (
 				'NameID' =>  $orderDetails['westcor_seller_id'] ? $orderDetails['westcor_seller_id'] : 0,
 				'Last' => count($primary_owner) == 3 ? $primary_owner[2] : $primary_owner[1],
@@ -1010,7 +1011,7 @@ class Dashboard extends MX_Controller {
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
 				'Sequence' => 1,
-				'City' => null,
+				'City' => $orderDetails['vesting'] ? "Vesting: ".$orderDetails['vesting'] : null,
 				'State' => null,
 				'Zip' => null,
 				'Address' => null
@@ -1044,7 +1045,7 @@ class Dashboard extends MX_Controller {
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
 					'Sequence' => 1,
-					'City' => null,
+					'City' => $orderDetails['vesting'] ? "Vesting: ".$orderDetails['vesting'] : null,
 					'State' => null,
 					'Zip' => null,
 					'Address' => null
@@ -1075,7 +1076,7 @@ class Dashboard extends MX_Controller {
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
 				'Sequence' => 1,
-				'City' => null,
+				'City' => $orderDetails['vesting'] ? "Vesting: ".$orderDetails['vesting'] : null,
 				'State' => null,
 				'Zip' => null,
 				'Address' => null
@@ -1100,11 +1101,12 @@ class Dashboard extends MX_Controller {
 		}
 
 		if ($orderUser['is_escrow'] == 1) {
+			$name = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
 			if (!empty($orderDetails['escrow_lender_id'])) {
 				$lenders[] =  array (
 					'Id' =>  $orderDetails['westcor_lender_id'] ? $orderDetails['westcor_lender_id'] : 0,
 					'tvid' => 0,
-					'name' => !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'],
+					'name' => $orderDetails['lender_company_name']."\nAttn: ".$name,
 					'city' => $orderDetails['lender_city'],
 					'state' => 'CA',
 					'zip' => $orderDetails['lender_zipcode'],
@@ -1383,6 +1385,7 @@ class Dashboard extends MX_Controller {
 		$loan_number = $this->input->post('loan_number');
 		$first_name = $this->input->post('first_name');
 		$last_name = $this->input->post('last_name');
+		$vesting = $this->input->post('vesting');
 		$primary_first_name = $this->input->post('primary_first_name');
 		$primary_last_name = $this->input->post('primary_last_name');
 		$primary_owner = $primary_first_name." ".$primary_last_name;
@@ -1483,7 +1486,7 @@ class Dashboard extends MX_Controller {
 			} else {
 				$propertyDetails = array('cpl_lender_id' => $LenderId);
 			}
-			$this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+			$this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner, 'vesting' => $vesting), array('id' => $orderDetails['transaction_id']), 'transaction_details');
 
 			if ($cplApi == 'fnf') {
 				$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
@@ -1496,7 +1499,7 @@ class Dashboard extends MX_Controller {
 			} else {
 				$propertyDetails = array('cpl_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
 			}
-			$this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+			$this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'vesting' => $vesting), array('id' => $orderDetails['transaction_id']), 'transaction_details');
 			
 			if ($cplApi == 'fnf') {
 				$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
@@ -2639,6 +2642,7 @@ class Dashboard extends MX_Controller {
 		}
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
 		$orderDetails['loan_number'] = $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '';
+		$orderDetails['vesting'] = $orderDetails['vesting'] ? $orderDetails['vesting'] : '';
 		$response = array('status'=>'success', 'orderDetails' => $orderDetails);
 		echo json_encode($response); exit;
 	}

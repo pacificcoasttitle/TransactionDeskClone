@@ -69,10 +69,23 @@ class Natic
             }
         } 
         
+        $borrower = '';
         if ($orderDetails['sales_amount'] > 0) {
             $borrower = $orderDetails['borrower'];
+            if (!empty($orderDetails['secondary_borrower'])) { 
+                $borrower = $orderDetails['borrower']." And ".$orderDetails['secondary_borrower'];
+            }
+            if (!empty($orderDetails['vesting'])) { 
+                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+            }
 		} else {
-			$borrower = $orderDetails['primary_owner'];
+            $borrower = $orderDetails['primary_owner'];
+            if (!empty($orderDetails['secondary_owner'])) { 
+                $borrower = $orderDetails['primary_owner']." And ".$orderDetails['secondary_owner'];
+            }
+            if (!empty($orderDetails['vesting'])) { 
+                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+            }
         }
 
         $xmlData = "<Field>
@@ -121,7 +134,7 @@ class Natic
                 <Field>
                     <FieldId>LoanNumber</FieldId>
                     <Name>Loan Number</Name>
-                    <Value>".$orderDetails['loan_number']."</Value>
+                    <Value>Loan No: ".$orderDetails['loan_number']."</Value>
                     <Type>String</Type>
                     <Required>false</Required>
                 </Field>
