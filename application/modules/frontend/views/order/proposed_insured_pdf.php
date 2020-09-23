@@ -132,6 +132,7 @@
 			<div>
 				<p>Borrower: <?php echo isset($primary_owner) && !empty($primary_owner) ? $primary_owner : '-'; ?></p>
 				<p>Secondary Borrower: <?php echo isset($secondary_owner) && !empty($secondary_owner) ? $secondary_owner : '-'; ?></p>
+				<p>Vesting: <?php echo isset($vesting) && !empty($vesting) ? $vesting : '-'; ?></p>
 				<p>Lender: <?php echo isset($lender['company_name']) && !empty($lender['company_name']) ? $lender['company_name'] : '-'; ?></p>
 				<p>Address: <?php echo isset($lender['address']) && !empty($lender['address']) ? $lender['address'] : '-'; ?></p>
 				<p>Loan Officer: <?php echo isset($lender['lender_name']) && !empty($lender['lender_name']) ? $lender['lender_name'] : '-'; ?></p>
