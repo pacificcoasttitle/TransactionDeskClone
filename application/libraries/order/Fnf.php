@@ -278,7 +278,8 @@ class Fnf
 
         $this->CI->load->model('order/home_model');
         $orderUser =  $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
-        $lenderName = !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
+        $lenderName = $orderDetails['lender_company_name'];
+        $lenderAttnName = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
 
         if ($orderUser['is_escrow'] == 0) {
             if (!empty($orderDetails['cpl_lender_id'])) {
@@ -288,7 +289,8 @@ class Fnf
                 $orderDetails['lender_city'] = $lenderDetails['city'];
                 $orderDetails['lender_state'] = 'CA';
                 $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
-                $lenderName = !empty($lenderDetails['company_name']) ? $lenderDetails['company_name'] : $lenderDetails['first_name']." ".$orderDetails['last_name'];
+                $lenderName = $lenderDetails['company_name'];
+                $lenderAttnName = $lenderDetails['first_name']." ".$lenderDetails['last_name'];
             }
 		} 
                                     
@@ -322,6 +324,10 @@ class Fnf
                                     <a:NameValue>
                                         <a:Name>[Lender Clause]</a:Name> 
                                         <a:Value>'.$orderDetails['lender_assignment_clause'].'</a:Value>
+                                    </a:NameValue>
+                                    <a:NameValue>
+                                        <a:Name>[Lender Attention]</a:Name> 
+                                        <a:Value>ATTN: '.$lenderAttnName.'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
@@ -445,7 +451,8 @@ class Fnf
         } 
         $this->CI->load->model('order/home_model');
         $orderUser =  $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
-        $lenderName = !empty($orderDetails['lender_company_name']) ? $orderDetails['lender_company_name'] : $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
+        $lenderName = $orderDetails['lender_company_name'];
+        $lenderAttnName = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
 
         if ($orderUser['is_escrow'] == 0) {
             if (!empty($orderDetails['cpl_lender_id'])) {
@@ -455,7 +462,8 @@ class Fnf
                 $orderDetails['lender_city'] = $lenderDetails['city'];
                 $orderDetails['lender_state'] = 'CA';
                 $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
-                $lenderName = !empty($lenderDetails['company_name']) ? $lenderDetails['company_name'] : $lenderDetails['first_name']." ".$orderDetails['last_name'];
+                $lenderName = $lenderDetails['company_name'];
+                $lenderAttnName = $lenderDetails['first_name']." ".$lenderDetails['last_name'];
             }
 		} 
         $endPoint = 'v3/CPLManagement.svc';
@@ -487,6 +495,10 @@ class Fnf
                                     <a:NameValue>
                                         <a:Name>[Lender Clause]</a:Name> 
                                         <a:Value>'.$orderDetails['lender_assignment_clause'].'</a:Value>
+                                    </a:NameValue>
+                                    <a:NameValue>
+                                        <a:Name>[Lender Attention]</a:Name> 
+                                        <a:Value>ATTN: '.$lenderAttnName.'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
