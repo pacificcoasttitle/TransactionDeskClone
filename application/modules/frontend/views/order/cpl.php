@@ -335,10 +335,10 @@
 				$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 			}
 
-			if(ui.item.assignment_clause) {
-				$("#assignment_clause").val(ui.item.assignment_clause).attr('readonly','readonly').parent().addClass('state-success');
+			if (ui.item.assignment_clause) {
+				$("#assignment_clause").val(ui.item.assignment_clause);
 			} else {
-				$("#assignment_clause").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				$("#assignment_clause").val('');
 			}
 			$("#LenderId").val(ui.item.id);
             
@@ -352,9 +352,8 @@
 				$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 				$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-				$("#assignment_clause").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				$("#assignment_clause").val('');
 				$("#LenderId").val('');
-				
             }
         }
     });
