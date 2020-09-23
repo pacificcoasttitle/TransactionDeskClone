@@ -256,11 +256,25 @@ class Fnf
 			'state' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
 			'zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
 		);
+        $borrower = '';
         if ($orderDetails['sales_amount'] > 0) {
             $borrower = $orderDetails['borrower'];
+            if (!empty($orderDetails['secondary_borrower'])) { 
+                $borrower = $orderDetails['borrower']." And ".$orderDetails['secondary_borrower'];
+            }
+            if (!empty($orderDetails['vesting'])) { 
+                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+            }
 		} else {
-			$borrower = $orderDetails['primary_owner'];
+            $borrower = $orderDetails['primary_owner'];
+            if (!empty($orderDetails['secondary_owner'])) { 
+                $borrower = $orderDetails['primary_owner']." And ".$orderDetails['secondary_owner'];
+            }
+            if (!empty($orderDetails['vesting'])) { 
+                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+            }
         }
+
         $loanNumberField = '';
         if (!empty($orderDetails['loan_number'])) {
             $loanNumberField = '<a:NameValue>
@@ -325,10 +339,7 @@ class Fnf
                                         <a:Name>[Lender Clause]</a:Name> 
                                         <a:Value>'.$orderDetails['lender_assignment_clause'].'</a:Value>
                                     </a:NameValue>
-                                    <a:NameValue>
-                                        <a:Name>[Lender Attention]</a:Name> 
-                                        <a:Value>ATTN: '.$lenderAttnName.'</a:Value>
-                                    </a:NameValue>
+                                   
                                     <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
                                         <a:Value>'.$orderDetails['lender_address'].'</a:Value>
@@ -344,6 +355,10 @@ class Fnf
                                     <a:NameValue>
                                         <a:Name>[Lender Zip Code]</a:Name>
                                         <a:Value>'.$orderDetails['lender_zipcode'].'</a:Value>
+                                    </a:NameValue>
+                                    <a:NameValue>
+                                        <a:Name>[Lender Attention]</a:Name> 
+                                        <a:Value>'.$lenderAttnName.'</a:Value>
                                     </a:NameValue>
                                     '.$loanNumberField.'
                                     <a:NameValue>
@@ -429,10 +444,23 @@ class Fnf
 			'state' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
 			'zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
 		);
+        $borrower = '';
         if ($orderDetails['sales_amount'] > 0) {
             $borrower = $orderDetails['borrower'];
+            if (!empty($orderDetails['secondary_borrower'])) { 
+                $borrower = $orderDetails['borrower']." And ".$orderDetails['secondary_borrower'];
+            }
+            if (!empty($orderDetails['vesting'])) { 
+                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+            }
 		} else {
-			$borrower = $orderDetails['primary_owner'];
+            $borrower = $orderDetails['primary_owner'];
+            if (!empty($orderDetails['secondary_owner'])) { 
+                $borrower = $orderDetails['primary_owner']." And ".$orderDetails['secondary_owner'];
+            }
+            if (!empty($orderDetails['vesting'])) { 
+                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+            }
         }
     
         $loanNumberField = '';
@@ -497,10 +525,6 @@ class Fnf
                                         <a:Value>'.$orderDetails['lender_assignment_clause'].'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
-                                        <a:Name>[Lender Attention]</a:Name> 
-                                        <a:Value>ATTN: '.$lenderAttnName.'</a:Value>
-                                    </a:NameValue>
-                                    <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
                                         <a:Value>'.$orderDetails['lender_address'].'</a:Value>
                                     </a:NameValue>
@@ -515,6 +539,10 @@ class Fnf
                                     <a:NameValue>
                                         <a:Name>[Lender Zip Code]</a:Name>
                                         <a:Value>'.$orderDetails['lender_zipcode'].'</a:Value>
+                                    </a:NameValue>
+                                    <a:NameValue>
+                                        <a:Name>[Lender Attention]</a:Name> 
+                                        <a:Value>'.$lenderAttnName.'</a:Value>
                                     </a:NameValue>
                                     '.$loanNumberField.'
                                     <a:NameValue>

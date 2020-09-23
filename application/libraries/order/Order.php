@@ -185,6 +185,7 @@ class Order
             transaction_details.preliminary_report_date,
             transaction_details.borrower, 
             transaction_details.secondary_borrower,
+            transaction_details.vesting,
             customer_basic_details.id as lender_id,
             customer_basic_details.street_address as lender_address,
             customer_basic_details.city as lender_city,
