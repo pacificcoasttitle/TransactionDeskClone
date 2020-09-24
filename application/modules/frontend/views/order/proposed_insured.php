@@ -684,15 +684,59 @@
 	        minLength: 3,
 	        select: function( event, ui ) {
 	            event.preventDefault();
-	            $("#LenderName").val(ui.item.name);
-	            $("#LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
-	            $("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
 	            $("#LenderCompany").val(ui.item.company).parent().addClass('state-success');
+
+	            if(ui.item.email_address) 
+	            {
+					$("#LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
+
+				} else {
+					$("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.telephone_no) {
+					$("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');          
+				} else {
+					$("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.name) 
+				{
+					$("#LenderName").val(ui.item.name).parent().addClass('state-success');       
+				} else {
+					$("#LenderName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+	            if(ui.item.address) {
+					$("#LenderAddress").val(ui.item.address).parent().addClass('state-success');
+				} else {
+					$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.city) {
+					$("#LenderCity").val(ui.item.city).parent().addClass('state-success');
+				} else {
+					$("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+	            	
+				if(ui.item.zip_code) {
+					$("#LenderZipcode").val(ui.item.zip_code).parent().addClass('state-success');
+				} else {
+					$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}                       
+	            
 	            $("#LenderId").val(ui.item.id);
 	        },
 	        change: function( event, ui ) {
 	            if (ui.item == null)
 	            {
+	            	$("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+	                $("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+	                $("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#LenderId").val('');
 	            }
 	        }
 	    });
@@ -722,15 +766,59 @@
 	        minLength: 3,
 	        select: function( event, ui ) {
 	            event.preventDefault();
-	            $("#edit_LenderName").val(ui.item.name);
-	            $("#edit_LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
-	            $("#edit_LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+
 	            $("#edit_LenderCompany").val(ui.item.company).parent().addClass('state-success');
+
+	            if(ui.item.email_address) 
+	            {
+					$("#edit_LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
+
+				} else {
+					$("#edit_LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.telephone_no) {
+					$("#edit_LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');          
+				} else {
+					$("#edit_LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.name) 
+				{
+					$("#edit_LenderName").val(ui.item.name).parent().addClass('state-success');       
+				} else {
+					$("#edit_LenderName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+	            if(ui.item.address) {
+					$("#edit_LenderAddress").val(ui.item.address).parent().addClass('state-success');
+				} else {
+					$("#edit_LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.city) {
+					$("#edit_LenderCity").val(ui.item.city).parent().addClass('state-success');
+				} else {
+					$("#edit_LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+	            	
+				if(ui.item.zip_code) {
+					$("#edit_LenderZipcode").val(ui.item.zip_code).parent().addClass('state-success');
+				} else {
+					$("#edit_LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				} 
 	            $("#edit_LenderId").val(ui.item.id);
 	        },
 	        change: function( event, ui ) {
 	            if (ui.item == null)
 	            {
+	            	$("#edit_LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+	                $("#edit_LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#edit_LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#edit_LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+	                $("#edit_LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#edit_LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#edit_LenderId").val('');
 	            }
 	        }
 	    });
