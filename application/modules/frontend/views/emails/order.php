@@ -422,6 +422,36 @@
                                             </tbody>
                                         </table>
                                     </td>
+                                    <?php
+                                        if(isset($OpenEmail) && !empty($OpenEmail) && $OpenEmail == 'djorns@capstoneescrow.com') 
+                                        {
+                                    ?>
+                                            <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
+                                                <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 3px;background-color: #D35400;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Helvetica; font-size: 18px; padding: 18px;">
+                                                                <a class="mcnButton " title="Generate Proposed" href="<?php echo base_url().'proposed-insured/'. $orderId; ?>" target="_blank" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Generate Proposed</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+
+                                            <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
+                                                <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 3px;background-color: #D35400;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Helvetica; font-size: 18px; padding: 18px;">
+                                                                <a class="mcnButton " title="Generate CPL" href="<?php echo base_url().'generate-cpl/'. $orderId; ?>" target="_blank" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Generate CPL</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                    <?php
+                                        }
+                                    ?>
                                 </tr>
                             </tbody>
                         </table>
@@ -1090,13 +1120,6 @@
                     <!-- <p style="text-align:center;">
                          
                     </p> -->
-                    <?php
-                    /*if(isset($OpenEmail) && !empty($OpenEmail) && $OpenEmail == 'djorns@capstoneescrow.com') {*/ ?>
-                      <!-- <a style="background-color: #d35411;border: 0;font-size: 15px;text-align: center;vertical-align: top;display: none;text-decoration: none;color: #fff;" href="<?php // echo base_url().'generate-cpl/'. $orderId; ?>" class="" role="button">Generate CPL</a> -->
-                      <!-- <a style="margin: 40px 5px;background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;display: none;text-decoration: none;color: #fff;" href="<?php // echo base_url().'proposed-insured/'. $orderId; ?>" class="" role="button">Generate Proposed Insured</a> -->
-                      <!-- <a style="margin: 40px 5px;background-color: #d35411;border: 0;font-size: 15px;padding: 9px 18px;text-align: center;vertical-align: top;display: none;text-decoration: none;color: #fff;" href="<?php // echo base_url().'generate-fees/'. $orderId; ?>" class="" role="button">Generate Fees</a> -->
-                    <!-- <a href="javascript:void(0);" class="button btn-primary" role="button">Generate Proposed Insured</a> -->
-                    <?php /*}*/ ?>
                       <p></p>
                      <p></p>
                   <p></p>

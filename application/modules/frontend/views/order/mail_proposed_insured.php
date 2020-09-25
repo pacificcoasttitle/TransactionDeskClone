@@ -535,7 +535,6 @@ $(document).ready(function () {
 	                preliminary_report_date:"Please select date",
 	            },
 	            submitHandler: function(form) {
-	            	alert();
 	            	$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 					$('#page-preloader').css('display', 'block');
 	            	var LenderCompany = $('#LenderCompany').val();
@@ -560,7 +559,6 @@ $(document).ready(function () {
 	            	var fileId = $('#fileId').val();
 	            	var supplemental_report_date = $('#supplemental_report_date').val();
 	            	var preliminary_report_date = $('#preliminary_report_date').val();
-alert(vesting);
 	                $.ajax({
 	                url: base_url + "add-mail-order-details",
 	                type: "post",
@@ -598,8 +596,7 @@ alert(vesting);
 							{
 								var binaryData = res.data;
 								downloadFile(binaryData);
-							}							
-							/*generateProposedInsured(res.fileId);*/
+							}
 							location.reload(true);
 						}
 						else if(res.status == 'error')
@@ -616,7 +613,6 @@ alert(vesting);
 	    /* Lender autocomplete */
 	    
 	    $("#LenderCompany").autocomplete({
-	        // source: "php/usersearch.php",
 	        source: function(request, response) {
 	            $.ajax({
 	                url: base_url+'getDetailsByName',
@@ -641,15 +637,58 @@ alert(vesting);
 	        minLength: 3,
 	        select: function( event, ui ) {
 	            event.preventDefault();
-	            $("#LenderName").val(ui.item.name);
-	            $("#LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
-	            $("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
 	            $("#LenderCompany").val(ui.item.company).parent().addClass('state-success');
+
+	            if(ui.item.email_address) 
+	            {
+					$("#LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
+
+				} else {
+					$("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.telephone_no) {
+					$("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');          
+				} else {
+					$("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.name) 
+				{
+					$("#LenderName").val(ui.item.name).parent().addClass('state-success');       
+				} else {
+					$("#LenderName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+	            if(ui.item.address) {
+					$("#LenderAddress").val(ui.item.address).parent().addClass('state-success');
+				} else {
+					$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.city) {
+					$("#LenderCity").val(ui.item.city).parent().addClass('state-success');
+				} else {
+					$("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+	            	
+				if(ui.item.zip_code) {
+					$("#LenderZipcode").val(ui.item.zip_code).parent().addClass('state-success');
+				} else {
+					$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
 	            $("#LenderId").val(ui.item.id);
 	        },
 	        change: function( event, ui ) {
 	            if (ui.item == null)
 	            {
+	            	$("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+	                $("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+	                $("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#LenderId").val('');
 	            }
 	        }
 	    });
@@ -679,15 +718,58 @@ alert(vesting);
 	        minLength: 3,
 	        select: function( event, ui ) {
 	            event.preventDefault();
-	            $("#edit_LenderName").val(ui.item.name);
-	            $("#edit_LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
-	            $("#edit_LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
 	            $("#edit_LenderCompany").val(ui.item.company).parent().addClass('state-success');
+
+	            if(ui.item.email_address) 
+	            {
+					$("#edit_LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
+
+				} else {
+					$("#edit_LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.telephone_no) {
+					$("#edit_LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');          
+				} else {
+					$("#edit_LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.name) 
+				{
+					$("#edit_LenderName").val(ui.item.name).parent().addClass('state-success');       
+				} else {
+					$("#edit_LenderName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+	            if(ui.item.address) {
+					$("#edit_LenderAddress").val(ui.item.address).parent().addClass('state-success');
+				} else {
+					$("#edit_LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+
+				if(ui.item.city) {
+					$("#edit_LenderCity").val(ui.item.city).parent().addClass('state-success');
+				} else {
+					$("#edit_LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
+	            	
+				if(ui.item.zip_code) {
+					$("#edit_LenderZipcode").val(ui.item.zip_code).parent().addClass('state-success');
+				} else {
+					$("#edit_LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				}
 	            $("#edit_LenderId").val(ui.item.id);
 	        },
 	        change: function( event, ui ) {
 	            if (ui.item == null)
 	            {
+	            	$("#edit_LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+	                $("#edit_LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#edit_LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#edit_LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+	                $("#edit_LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#edit_LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					$("#edit_LenderId").val('');
 	            }
 	        }
 	    });
@@ -793,7 +875,7 @@ alert(vesting);
 								var binaryData = res.data;
 								downloadFile(binaryData);
 							}							
-							/*generateProposedInsured(res.fileId);*/
+							
 							location.reload(true);	
 						}
 						else if(res.status == 'error')
@@ -824,9 +906,7 @@ function generateProposedInsured(fileId)
                 fileId: fileId,
             },
             success: function(response) {
-            	var res = JSON.parse(response);
-            	console.log(res);
-            	
+            	var res = JSON.parse(response);            	
                 if(res.status == 'success') 
                 {
                 	if(res.orderDetails['is_escrow'] == 1 && (res.orderDetails['escrow_lender_id'] == null || res.orderDetails['escrow_lender_id'] == undefined || res.orderDetails['escrow_lender_id'].length == 0))
