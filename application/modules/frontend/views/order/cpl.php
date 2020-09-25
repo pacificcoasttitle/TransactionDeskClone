@@ -212,7 +212,7 @@
 								</div>
 
 								<div class="frm-row spacer-b15">
-									<div class="section colm colm6">
+									<div class="section colm colm12">
 										<label class="field prepend-icon">
 											<input type="text" name="vesting" id="vesting" class="gui-input"
 												placeholder="Vesting">

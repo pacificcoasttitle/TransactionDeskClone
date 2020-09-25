@@ -263,7 +263,7 @@ class Fnf
                 $borrower = $orderDetails['borrower']." And ".$orderDetails['secondary_borrower'];
             }
             if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+                $borrower .= ' '.$orderDetails['vesting'];
             }
 		} else {
             $borrower = $orderDetails['primary_owner'];
@@ -271,7 +271,7 @@ class Fnf
                 $borrower = $orderDetails['primary_owner']." And ".$orderDetails['secondary_owner'];
             }
             if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+                $borrower .= ' '.$orderDetails['vesting'];
             }
         }
 
@@ -451,7 +451,7 @@ class Fnf
                 $borrower = $orderDetails['borrower']." And ".$orderDetails['secondary_borrower'];
             }
             if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+                $borrower .= ' '.$orderDetails['vesting'];
             }
 		} else {
             $borrower = $orderDetails['primary_owner'];
@@ -459,7 +459,7 @@ class Fnf
                 $borrower = $orderDetails['primary_owner']." And ".$orderDetails['secondary_owner'];
             }
             if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+                $borrower .= ' '.$orderDetails['vesting'];
             }
         }
     

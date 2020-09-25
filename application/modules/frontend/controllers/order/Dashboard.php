@@ -1011,7 +1011,7 @@ class Dashboard extends MX_Controller {
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
 				'Sequence' => 1,
-				'City' => $orderDetails['vesting'] ? "Vesting: ".$orderDetails['vesting'] : null,
+				'City' => $orderDetails['vesting'] ? $orderDetails['vesting'] : null,
 				'State' => null,
 				'Zip' => null,
 				'Address' => null
@@ -1045,7 +1045,7 @@ class Dashboard extends MX_Controller {
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
 					'Sequence' => 1,
-					'City' => $orderDetails['vesting'] ? "Vesting: ".$orderDetails['vesting'] : null,
+					'City' => $orderDetails['vesting'] ? $orderDetails['vesting'] : null,
 					'State' => null,
 					'Zip' => null,
 					'Address' => null
@@ -1076,7 +1076,7 @@ class Dashboard extends MX_Controller {
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
 				'Sequence' => 1,
-				'City' => $orderDetails['vesting'] ? "Vesting: ".$orderDetails['vesting'] : null,
+				'City' => $orderDetails['vesting'] ? $orderDetails['vesting'] : null,
 				'State' => null,
 				'Zip' => null,
 				'Address' => null
