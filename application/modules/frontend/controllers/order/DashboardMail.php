@@ -1494,9 +1494,11 @@ class DashboardMail extends MX_Controller {
                 $data['lender_city'] = '';    
                 $data['lender_zipcode'] = '';    
                 $data['lender_id'] = '';    
+                $data['escrow_lender_id'] = '';    
             } 
             else 
             {
+                $data['escrow_lender_id'] = $orderDetails['escrow_lender_id'] ? $orderDetails['escrow_lender_id'] : ''; 
                 $data['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';    
                 $data['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
                 $data['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';    
@@ -1513,8 +1515,10 @@ class DashboardMail extends MX_Controller {
     
             if (!empty($orderDetails['cpl_lender_id'])) {
     
-                $lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                $lenderDetails =  $this->home_model->get_user(array('id' => $$orderDetails['cpl_lender_id']['cpl_lender_id']));
     
+                $data['cpl_lender_id'] = $orderDetails['cpl_lender_id'];
+
                 $data['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
     
                 $data['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
@@ -1536,7 +1540,8 @@ class DashboardMail extends MX_Controller {
                 $data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
     
             } else {
-    
+                
+                $data['cpl_lender_id'] = $customer_data['id']; 
                 $data['lender_first_name'] = $customer_data['first_name'] ? $customer_data['first_name'] : '';
     
                 $data['lender_last_name'] = $customer_data['last_name'] ? $customer_data['last_name'] : '';
