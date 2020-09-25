@@ -955,7 +955,6 @@ function generateProposedInsured(fileId)
             },
             success: function(response) {
             	var res = JSON.parse(response);
-            	console.log(res);
                 if(res.status == 'success') 
                 {
                 	if(res.orderDetails['is_escrow'] == 1 && (res.orderDetails['escrow_lender_id'] == null || res.orderDetails['escrow_lender_id'] == undefined || res.orderDetails['escrow_lender_id'].length == 0))
@@ -1045,13 +1044,22 @@ function generateProposedInsured(fileId)
 
                 }
                 $('#page-preloader').css('display', 'none');
-				$('#lender_information').modal('show');
-				// $('#file_id').val(fileId);
+				
 				$('#LenderId').val(res.orderDetails.lender_id);
 				$('#orderId').val(res.orderDetails.orderId);
             	$('#transaction_id').val(res.orderDetails.transaction_id);
             	$('#property_id').val(res.orderDetails.property_id);
             	$('#fileId').val(res.orderDetails.fileId);
+
+            	var visible_ele = $('.lender_information .modal-content:visible').length;
+				if(visible_ele > 0)
+				{
+					$('#lender_information').modal('show');
+				}
+				else
+				{
+					$( "#add-order-details" ).submit();
+				}
             }
         });
 	}
@@ -1101,7 +1109,6 @@ function editInformation(fileId)
             	$('#page-preloader').css('display', 'none');
             	
             	var res = JSON.parse(response);
-            	console.log(res.orderDetails);
             	if(res.status == 'success')
                 {
                 	if(res.status == 'success') 
