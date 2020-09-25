@@ -211,6 +211,7 @@ class DashboardMail extends MX_Controller {
         $loan_number = $this->input->post('loan_number');
         $first_name = $this->input->post('first_name');
         $last_name = $this->input->post('last_name');
+        $vesting = $this->input->post('vesting');
         $primary_first_name = $this->input->post('primary_first_name');
         $primary_last_name = $this->input->post('primary_last_name');
         $primary_owner = $primary_first_name." ".$primary_last_name;
@@ -310,9 +311,8 @@ class DashboardMail extends MX_Controller {
                 $propertyDetails = array('cpl_lender_id' => $LenderId);
             }
             
-            $this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+            $this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner, 'vesting' => $vesting), array('id' => $orderDetails['transaction_id']), 'transaction_details');
             if ($cplApi == 'fnf') {
-                $propertyDetails['buyer_agent_id'] = $this->input->post('agent_id');
                 $this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
             }
             $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
@@ -322,10 +322,9 @@ class DashboardMail extends MX_Controller {
             } else {
                 $propertyDetails = array('cpl_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
             }
-            $this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+            $this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'vesting' => $vesting), array('id' => $orderDetails['transaction_id']), 'transaction_details');
             
             if ($cplApi == 'fnf') {
-                $propertyDetails['buyer_agent_id'] = $this->input->post('agent_id');
                 $this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
             }
             $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
@@ -426,7 +425,8 @@ class DashboardMail extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->library('order/westcor');
         $this->load->model('order/home_model');
-        $this->load->model('order/document');
+        $this->load->model('order/document');  
+
         $fileId = $this->uri->segment(2);    
         $errors = array();
         $success = array();
@@ -458,31 +458,32 @@ class DashboardMail extends MX_Controller {
         if ($orderDetails['sales_amount'] > 0)  {
             $sellers[] = array (
                 'NameID' =>  $orderDetails['westcor_seller_id'] ? $orderDetails['westcor_seller_id'] : 0,
-                'Last' => $primary_owner[1],
-                'First' => $primary_owner[0],
-                'NameType' => 2,
-                'JoiningPhrase' => 'single',
-                'tvid' => 0,
-                'Sequence' => 1,
-                'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
-                'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
-                'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
-                'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]),
-            );
+				'Last' => count($primary_owner) == 3 ? $primary_owner[2] : $primary_owner[1],
+				'First' => $primary_owner[0],
+				'NameType' => 2,
+				'JoiningPhrase' => 'single',
+				'tvid' => 0,
+				'Sequence' => 1,
+				'City' => $orderDetails['vesting'] ? $orderDetails['vesting'] : null,
+				'State' => null,
+				'Zip' => null,
+				'Address' => null
+            );	   
+
             if(!empty($secondary_owner)) {
                 $sellers[] = array (
-                    'NameID' => $orderDetails['westcor_secondary_seller_id'] ? $orderDetails['westcor_secondary_seller_id'] : 0,
-                    'Last' => $secondary_owner[1],
-                    'First' => $secondary_owner[0],
-                    'NameType' => 1,
-                    'JoiningPhrase' => 'single',
-                    'tvid' => 0,
-                    'Sequence' => 2,
-                    'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
-                    'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
-                    'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
-                    'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
-                );  
+					'NameID' => $orderDetails['westcor_secondary_seller_id'] ? $orderDetails['westcor_secondary_seller_id'] : 0,
+					'Last' =>  count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
+					'First' => $secondary_owner[0],
+					'NameType' => 1,
+					'JoiningPhrase' => 'single',
+					'tvid' => 0,
+					'Sequence' => 2,
+					'City' => null,
+					'State' => null,
+					'Zip' => null,
+					'Address' => null
+				);	
             }
             $purchase_price = $orderDetails['sales_amount'];
             $buyers = array();
@@ -490,87 +491,112 @@ class DashboardMail extends MX_Controller {
             if (!empty($orderDetails['borrower'])) {
                 $primary_owner = explode(' ', $orderDetails['borrower']);
                 $buyers[] = array (
-                    'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-                    'Last' => $primary_owner[1],
-                    'First' => $primary_owner[0],
-                    'NameType' => 1,
-                    'JoiningPhrase' => 'single',
-                    'tvid' => 0,
-                    'Sequence' => 1,
-                    'City' => null,
-                    'State' => null,
-                    'Zip' => null,
-                    'Address' => null
-                );  
+					'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
+					'Last' => count($primary_owner) == 3 ? $primary_owner[2] : $primary_owner[1],
+					'First' => $primary_owner[0],
+					'NameType' => 1,
+					'JoiningPhrase' => 'single',
+					'tvid' => 0,
+					'Sequence' => 1,
+					'City' => $orderDetails['vesting'] ? $orderDetails['vesting'] : null,
+					'State' => null,
+					'Zip' => null,
+					'Address' => null
+				);	 
             } 
             if (!empty($orderDetails['secondary_borrower'])) {
                 $secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
                 $buyers[] = array (
-                    'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-                    'Last' => $secondary_owner[1],
-                    'First' => $secondary_owner[0],
-                    'NameType' => 1,
-                    'JoiningPhrase' => 'single',
-                    'tvid' => 0,
-                    'Sequence' => 2,
-                    'City' => null,
-                    'State' => null,
-                    'Zip' => null,
-                    'Address' => null
-                );  
+					'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
+					'Last' => count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
+					'First' => $secondary_owner[0],
+					'NameType' => 1,
+					'JoiningPhrase' => 'single',
+					'tvid' => 0,
+					'Sequence' => 2,
+					'City' => null,
+					'State' => null,
+					'Zip' => null,
+					'Address' => null
+				);	 
             } 
         } else {
             $buyers[] = array (
-                'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
-                'Last' => $primary_owner[1],
-                'First' => $primary_owner[0],
-                'NameType' => 1,
-                'JoiningPhrase' => 'single',
-                'tvid' => 0,
-                'Sequence' => 1,
-                'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
-                'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
-                'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
-                'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
-            );
+				'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
+				'Last' => count($primary_owner) == 3 ? $primary_owner[2] : $primary_owner[1],
+				'First' => $primary_owner[0],
+				'NameType' => 1,
+				'JoiningPhrase' => 'single',
+				'tvid' => 0,
+				'Sequence' => 1,
+				'City' => $orderDetails['vesting'] ? $orderDetails['vesting'] : null,
+				'State' => null,
+				'Zip' => null,
+				'Address' => null
+			);
             if(!empty($secondary_owner)) {
                 $buyers[] = array (
-                    'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-                    'Last' => $secondary_owner[1],
-                    'First' => $secondary_owner[0],
-                    'NameType' => 1,
-                    'JoiningPhrase' => 'single',
-                    'tvid' => 0,
-                    'Sequence' => 2,
-                    'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
-                    'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
-                    'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
-                    'Address' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1])
-                );  
+					'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
+					'Last' => count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
+					'First' => $secondary_owner[0],
+					'NameType' => 1,
+					'JoiningPhrase' => 'single',
+					'tvid' => 0,
+					'Sequence' => 2,
+					'City' => null,
+					'State' => null,
+					'Zip' => null,
+					'Address' => null
+				);	 
             }
             $purchase_price = $orderDetails['loan_amount'];
             $sellers = array();
         }
 
-        if (!empty($orderDetails['escrow_lender_id'])) {
-            $lenders[] =  array (
-                'Id' =>  $orderDetails['westcor_lender_id'] ? $orderDetails['westcor_lender_id'] : 0,
-                'tvid' => 0,
-                'name' => $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'],
-                'city' => $orderDetails['lender_city'],
-                'state' => 'CA',
-                'zip' => $orderDetails['lender_zipcode'],
-                'address' => $orderDetails['lender_address'],
-                'phone' => $orderDetails['lender_telephone_no'],
-                'email' => $orderDetails['lender_email'],
-                'countyFIPS' => null,
-                'assignment' => null,
-                'mortgageType' => null,
-                'amount' => 0,
-                'loan_number' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
-                'vendorInternalID' => $orderDetails['escrow_lender_id']
-            );
-        } 
+        if ($orderUser['is_escrow'] == 1) {
+			$name = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
+			if (!empty($orderDetails['escrow_lender_id'])) {
+				$lenders[] =  array (
+					'Id' =>  $orderDetails['westcor_lender_id'] ? $orderDetails['westcor_lender_id'] : 0,
+					'tvid' => 0,
+					'name' => $orderDetails['lender_company_name'],
+					'city' => $orderDetails['lender_city'],
+					'state' => 'CA',
+					'zip' => $orderDetails['lender_zipcode'],
+					'address' => $orderDetails['lender_address'],
+					'phone' => $orderDetails['lender_telephone_no'],
+					'email' => $orderDetails['lender_email'],
+					'countyFIPS' => null,
+					'assignment' => $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause']."\nAttn: ".$name : "\nAttn: ".$name,
+					'mortgageType' => null,
+					'amount' => 0,
+					'loan_number' => $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '',
+					'vendorInternalID' => $orderDetails['escrow_lender_id']
+				);
+			} 
+		} else {
+			$lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+			$name = $lenderDetails['first_name']." ".$lenderDetails['last_name'];
+			if (!empty($lenderDetails)) {
+				$lenders[] =  array (
+					'Id' =>  $orderDetails['westcor_lender_id'] ? $orderDetails['westcor_lender_id'] : 0,
+					'tvid' => 0,
+					'name' => $lenderDetails['company_name'],
+					'city' => $lenderDetails['city'],
+					'state' => 'CA',
+					'zip' => $lenderDetails['zip_code'],
+					'address' => $lenderDetails['street_address'],
+					'phone' => $lenderDetails['telephone_no'],
+					'email' => $lenderDetails['email_address'],
+					'countyFIPS' => null,
+					'assignment' => $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause']."\nAttn: ".$name : "\nAttn: ".$name,
+					'mortgageType' => null,
+					'amount' => 0,
+					'loan_number' => $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '',
+					'vendorInternalID' => $lenderDetails['id']
+				);
+			} 
+		}
         
         $cplPostData = array (
             'tvid' =>  0,
@@ -705,47 +731,6 @@ class DashboardMail extends MX_Controller {
             $resCPL['CPL']['PolicyProducingAgentZip'] = $resToken['zip'];
             
                         
-            // $cpl[] = array (
-            //  'TVID' => $res['tvid'],
-            //  'CPLID' => -1,
-            //  'FileInformation' => null,
-            //  'LetterName' => 'ALTA CPL Single Trans 2018 2.0',
-            //  'IssueDate' => date('Y-m-d H:i:s'),
-            //  'CancelDate' => null,
-            //  'CancelReason' => null,
-            //  'CancelUser' => null,
-            //  'CreatedBy'=> null,
-            //  'PolicyProducingAgentNumber' => $resToken['agent_number'],
-            //  'PolicyProducingAgentAddressID' => $resToken['agent_number'],
-            //  'PolicyProducingAgentName' => $resToken['agency_name'],
-            //  'PolicyProducingAgentAddress' => $resToken['address'],
-            //  'PolicyProducingAgentCity' => $resToken['city'],
-            //  'PolicyProducingAgentState' => $resToken['state'],
-            //  'PolicyProducingAgentZip' => $resToken['zip'],
-            //  'ClosingAgentNumber'=> null,
-            //  'ClosingAgentAddressID'=> null,
-            //  'ClosingAgentName'=> null,
-            //  'ClosingAgentAddress'=> null,
-            //  'ClosingAgentCity'=> null,
-            //  'ClosingAgentState'=> null,
-            //  'ClosingAgentZip'=> null,
-            //  'IsAuthorizedforDualCPLs' => false,
-            //  'IsDualCPL' => false,
-            //  'LenderID' => !empty($res['lenders']) ? $res['lenders'][0]['Id'] : 0,
-            //  'CustomFields'=> null,
-            //  'DualCombinedInfo'=> [],
-            //  'ProtectBorrower' => false,
-            //  'ProtectBuyer' => false,
-            //  'ProtectLender' => true,
-            //  'ProtectSeller' => false,
-            //  'ProtectSeller'=> false,
-            //  'ProtectAnyone'=> false,
-            //  'ProtectAnyoneValue'=> null,
-            //  'FreeInfoText'=> 'Some additional information about the closing would go here.',
-            //  'AdditionalAgencyLocationsJSON'=> null,
-            //  'ShowAdditionalAgencyLocations'=> false
-            // ) ;
-
             $res['cpl'][] = $resCPL['CPL'];
             $res['lenders'] = $lenders;
             $res['buyers'] = $buyers;
@@ -969,7 +954,8 @@ class DashboardMail extends MX_Controller {
 		$this->load->library('order/fnf');
 		$this->load->model('order/home_model');
 		$this->load->library('order/resware');
-		$fileId = $this->input->post('fileId');
+		$fileId = $this->input->post('fileId');	 
+
 		$orderDetails = $this->order->get_order_details($fileId, 1);
 		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 			
@@ -1008,19 +994,19 @@ class DashboardMail extends MX_Controller {
 				$orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
 				$orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
                 $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
-                $orderDetails['lender_assignment_clause'] = $orderDetails['assignment_clause'] ? $orderDetails['assignment_clause'] : '';
+                $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
 				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {
-				$orderDetails['lender_first_name'] =  '';
-				$orderDetails['lender_last_name'] ='';
-				$orderDetails['lender_email'] = '';
-				$orderDetails['lender_telephone_no'] = '';
-				$orderDetails['lender_company_name'] = '';
-				$orderDetails['lender_address'] = '';
-				$orderDetails['lender_city'] = '';
-				$orderDetails['lender_zipcode'] = '';
-                $orderDetails['lender_id'] = '';
-                $orderDetails['lender_assignment_clause'] = '';
+				$orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
+				$orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
+				$orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
+				$orderDetails['lender_telephone_no'] = $orderUser['telephone_no'] ? $orderUser['telephone_no'] : '';
+				$orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
+				$orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
+				$orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
+				$orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
+				$orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
+				$orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
 			}
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 		}
@@ -1038,8 +1024,13 @@ class DashboardMail extends MX_Controller {
 		if ($orderDetails['sales_amount'] > 0) {
 			if (!empty($orderDetails['borrower'])) {
 				$primary_owner = explode(' ', $orderDetails['borrower']);
-				$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
-				$orderDetails['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
+				if(count($primary_owner) == 3) {
+					$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
+					$orderDetails['primary_owner_last_name'] = !empty($primary_owner[2]) ? $primary_owner[2] : '';
+				} else {
+					$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
+					$orderDetails['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
+				}
 			} else {
 				$orderDetails['primary_owner_first_name'] = '';
 				$orderDetails['primary_owner_last_name'] = '';
@@ -1047,8 +1038,13 @@ class DashboardMail extends MX_Controller {
 	
 			if (!empty($orderDetails['secondary_borrower'])) {
 				$secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
-				$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
-				$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+				if(count($secondary_owner) == 3) {
+					$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
+					$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[2]) ? $secondary_owner[2] : '';
+				} else {
+					$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
+					$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+				}
 			} else {
 				$orderDetails['secondary_owner_first_name'] = '';
 				$orderDetails['secondary_owner_last_name'] = '';
@@ -1056,8 +1052,13 @@ class DashboardMail extends MX_Controller {
 		} else {
 			if (!empty($orderDetails['primary_owner'])) {
 				$primary_owner = explode(' ', $orderDetails['primary_owner']);
-				$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
-				$orderDetails['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
+				if(count($primary_owner) == 3) {
+					$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
+					$orderDetails['primary_owner_last_name'] = !empty($primary_owner[2]) ? $primary_owner[2] : '';
+				} else {
+					$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
+					$orderDetails['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
+				}
 			} else {
 				$orderDetails['primary_owner_first_name'] = '';
 				$orderDetails['primary_owner_last_name'] = '';
@@ -1065,8 +1066,13 @@ class DashboardMail extends MX_Controller {
 	
 			if (!empty($orderDetails['secondary_owner'])) {
 				$secondary_owner = explode(' ', $orderDetails['secondary_owner']);
-				$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
-				$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+				if(count($secondary_owner) == 3) {
+					$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
+					$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[2]) ? $secondary_owner[2] : '';
+				} else {
+					$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
+					$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
+				}
 			} else {
 				$orderDetails['secondary_owner_first_name'] = '';
 				$orderDetails['secondary_owner_last_name'] = '';
@@ -1079,10 +1085,10 @@ class DashboardMail extends MX_Controller {
 		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 		$user_data['email'] = $orderUser['email_address'];
 		$user_data['password'] = $orderUser['random_password'];
-		$user_data['from_mail'] = 1;
+		$user_data['from_mail'] = 1;  		 
 		$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
 		$this->apiLogs->syncLogs(0, 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
-		$resPartners = json_decode($resultPartners, true);
+		$resPartners = json_decode($resultPartners, true);	  
 		if(!empty($resPartners)) {
 			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
  			if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
@@ -1103,7 +1109,8 @@ class DashboardMail extends MX_Controller {
 		}
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
 		$orderDetails['loan_number'] = $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '';
-		$response = array('status'=>'success', 'orderDetails' => $orderDetails);
+        $orderDetails['vesting'] = $orderDetails['vesting'] ? $orderDetails['vesting'] : '';  
+        $response = array('status'=>'success', 'orderDetails' => $orderDetails); 
 		echo json_encode($response); exit;
 	}
 

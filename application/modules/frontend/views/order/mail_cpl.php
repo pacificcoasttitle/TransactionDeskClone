@@ -97,7 +97,7 @@
 									<div class="section colm colm12">
 										<label class="field prepend-icon">
 											<input type="text" name="assignment_clause" id="assignment_clause" class="gui-input ui-autocomplete-input"
-												placeholder="Assignment Clause" required="required">
+												placeholder="Assignment Clause">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
@@ -211,12 +211,29 @@
 										</label>
 									</div>
 								</div>
+
+								<div class="spacer-b20">
+									<div class="tagline"><span>Vesting Information</span></div><!-- .tagline -->
+								</div>
+
+								<div class="frm-row spacer-b15">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="vesting" id="vesting" class="gui-input"
+												placeholder="Vesting">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
+
 								<input type="hidden" id="cpl_api" name="cpl_api" value="">
-								<input type="hidden" id="agent_id" name="agent_id" value="">
+								
 								<div id="fnf" style="display:none">
-									<div class="spacer-b20">
+									<!--<div class="spacer-b20">
 										<div class="tagline"><span>Agent Details</span></div>
 									</div>
+
+									<input type="hidden" id="agent_id" name="agent_id" value="">
 
 									<div class="frm-row spacer-b15">
 										<div class="section colm colm12">
@@ -226,7 +243,7 @@
 												<span class="field-icon"><i class="fa fa-user"></i></span>
 											</label>
 										</div>
-									</div>
+									</div> -->
 
 									<div class="spacer-b20">
 										<div class="tagline"><span>Select Branch</span></div>
@@ -339,9 +356,9 @@
 			}
 
 			if(ui.item.assignment_clause) {
-				$("#assignment_clause").val(ui.item.assignment_clause).attr('readonly','readonly').parent().addClass('state-success');
+				$("#assignment_clause").val(ui.item.assignment_clause);
 			} else {
-				$("#assignment_clause").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				$("#assignment_clause").val('');
 			}
 			$("#LenderId").val(ui.item.id);
             
@@ -355,9 +372,8 @@
 				$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 				$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-				$("#assignment_clause").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+				$("#assignment_clause").val('');
 				$("#LenderId").val('');
-				
             }
         }
     });
@@ -425,13 +441,13 @@
 							}
 							$('select[name="branch"]').children('option:not(:first)').remove();
 							$( 'select[name="branch"]' ).append( optionsAsString );
-							$('#agent_name').val(res.orderDetails['agent_name']);
-							$('#agent_id').val(res.orderDetails['buyer_agent_id']);
-							$("#agent_name").prop('required',true);
+							//$('#agent_name').val(res.orderDetails['agent_name']);
+							//$('#agent_id').val(res.orderDetails['buyer_agent_id']);
+							//$("#agent_name").prop('required',true);
 							$("#branch").prop('required',true);
 						} else {
 							$('#fnf').hide();
-							$("#agent_name").prop('required',false);
+							//$("#agent_name").prop('required',false);
 							$("#branch").prop('required',false);
 						}
 						
@@ -451,6 +467,7 @@
 						$("#last_name").val(res.orderDetails['secondary_owner_last_name']);
 						$("#loan_amount").val(res.orderDetails['loan_amount']);
 						$("#loan_number").val(res.orderDetails['loan_number']);
+						$("#vesting").val(res.orderDetails['vesting']);
 					}  
 					$('#page-preloader').css('display', 'none');
 					$('#lender_information').modal('show');

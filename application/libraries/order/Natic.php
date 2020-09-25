@@ -76,7 +76,7 @@ class Natic
                 $borrower = $orderDetails['borrower']." And ".$orderDetails['secondary_borrower'];
             }
             if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+                $borrower .= ' '.$orderDetails['vesting'];
             }
 		} else {
             $borrower = $orderDetails['primary_owner'];
@@ -84,7 +84,7 @@ class Natic
                 $borrower = $orderDetails['primary_owner']." And ".$orderDetails['secondary_owner'];
             }
             if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' And Vesting: '.$orderDetails['vesting'];
+                $borrower .= ' '.$orderDetails['vesting'];
             }
         }
 
