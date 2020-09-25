@@ -405,9 +405,9 @@
                           <span style="color: #424651; font-family: Helvetica;"><span style="font-size: 18px;">Tax Roll</span></span>
                         </li>
                       </ul>
-                      <p style="text-align:center;">
+                      <!-- <p style="text-align:center;">
                         <span style="text-decoration: underline; font-size: 18px;"><strong><span style="color: #424651; font-family: Helvetica; text-decoration: underline;">Get Your Fees Now</span></strong></span>
-                      </p>
+                      </p> -->
                       <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
                             <tbody class="mcnButtonBlockOuter">
                                 <tr>

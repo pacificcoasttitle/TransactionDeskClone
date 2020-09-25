@@ -955,6 +955,7 @@ function generateProposedInsured(fileId)
             },
             success: function(response) {
             	var res = JSON.parse(response);
+            	console.log(res);
                 if(res.status == 'success') 
                 {
                 	if(res.orderDetails['is_escrow'] == 1 && (res.orderDetails['escrow_lender_id'] == null || res.orderDetails['escrow_lender_id'] == undefined || res.orderDetails['escrow_lender_id'].length == 0))
@@ -997,6 +998,16 @@ function generateProposedInsured(fileId)
 
 					$("#first_name").val(res.orderDetails['secondary_owner_first_name']);
 					$("#last_name").val(res.orderDetails['secondary_owner_last_name']);
+
+					if(res.orderDetails['vesting'] == null || res.orderDetails['vesting'] == undefined || res.orderDetails['vesting'].length == 0 )
+					{
+						$('#vesting-section').show();
+                	}
+                	else
+                	{
+                		$('#vesting-section').hide();
+                	}
+                	$("#vesting").val(res.orderDetails['vesting']);
 
 					if((res.orderDetails['loan_amount'] == null || res.orderDetails['loan_amount'] == undefined || res.orderDetails['loan_amount'].length == 0) || (res.orderDetails['loan_number'] == null || res.orderDetails['loan_number'] == undefined || res.orderDetails['loan_number'].length == 0) )
                 	{
