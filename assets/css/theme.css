@@ -4690,8 +4690,7 @@ blockquote cite {
     height: 100px;
     padding-top: 0px;
     padding-bottom: 0px;
-    background-image: url("http://www.pct.com/assets/media/components/b-title-page/bluebar1.png");
-    opacity: 0.80;
+    background: #03374f;
 	text-align: center;
 }
 
