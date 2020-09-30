@@ -1420,6 +1420,7 @@ class Dashboard extends MX_Controller {
 		$first_name = $this->input->post('first_name');
 		$last_name = $this->input->post('last_name');
 		$vesting = $this->input->post('vesting');
+		$new_existing_lender = $this->input->post('new_existing_lender');
 		$primary_first_name = $this->input->post('primary_first_name');
 		$primary_last_name = $this->input->post('primary_last_name');
 		$primary_owner = $primary_first_name." ".$primary_last_name;
@@ -1440,11 +1441,20 @@ class Dashboard extends MX_Controller {
 			'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
 			'assignment_clause'  => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : ""
 		);
-		$condition = array(
-			'id' => $LenderId
-		);
+
 		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-		$this->home_model->update($lender_details, $condition, 'customer_basic_details');
+		if($new_existing_lender == 'add_lender') {
+			$lender_details['partner_id'] = $this->input->post('partner_id');
+			$lender_details['state'] = $this->input->post('state');
+			$lender_details['is_added_lender_by_cpl_proposed'] = 1;
+			$lender_details['is_escrow'] = 0;
+			$LenderId = $this->home_model->insert($lender_details, 'customer_basic_details');		
+		} else {
+			$condition = array(
+				'id' => $LenderId
+			);
+			$this->home_model->update($lender_details, $condition, 'customer_basic_details');
+		}
 
 		$partners = array();
 		$lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
@@ -1462,57 +1472,59 @@ class Dashboard extends MX_Controller {
 			'admin_api' => 1
 		);
 
-		if ($orderUser['is_escrow'] == 1) {
-			if(empty($orderDetails['escrow_lender_id'])) {
-				$partners[] = $secondaryPartners;
-			} else if (!empty($orderDetails['escrow_lender_id']) && $orderDetails['escrow_lender_id'] != $LenderId) {
-				$partners[] = $secondaryPartners;
-				$removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['escrow_lender_id']));
-				$removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
-				$removeSecondaryPartners = array(
-					'SecondaryEmployees'=> $removeSecondaryEmp,
-					'PartnerTypeID' => 3,
-					'PartnerID' => $removeLenderUserDetails['partner_id'],
-					'PartnerType' => array(
-						'PartnerTypeID' => 3
-					)
-				);
-				$removePartners[] = $removeSecondaryPartners;
-				$removePartnerData = json_encode(array('Partners' => $removePartners));
-				$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
-				$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
-				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+		if(!empty($lenderUserDetails['resware_user_id'])) {
+			if ($orderUser['is_escrow'] == 1) {
+				if(empty($orderDetails['escrow_lender_id'])) {
+					$partners[] = $secondaryPartners;
+				} else if (!empty($orderDetails['escrow_lender_id']) && $orderDetails['escrow_lender_id'] != $LenderId) {
+					$partners[] = $secondaryPartners;
+					$removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['escrow_lender_id']));
+					$removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
+					$removeSecondaryPartners = array(
+						'SecondaryEmployees'=> $removeSecondaryEmp,
+						'PartnerTypeID' => 3,
+						'PartnerID' => $removeLenderUserDetails['partner_id'],
+						'PartnerType' => array(
+							'PartnerTypeID' => 3
+						)
+					);
+					$removePartners[] = $removeSecondaryPartners;
+					$removePartnerData = json_encode(array('Partners' => $removePartners));
+					$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
+					$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+					$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+				}
+			} else {
+				if(empty($orderDetails['cpl_lender_id'])) {
+					$partners[] = $secondaryPartners;
+				} else if (!empty($orderDetails['cpl_lender_id']) && $orderDetails['cpl_lender_id'] != $LenderId) {
+					$partners[] = $secondaryPartners;
+					$removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+					$removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
+					$removeSecondaryPartners = array(
+						'SecondaryEmployees'=> $removeSecondaryEmp,
+						'PartnerTypeID' => 3,
+						'PartnerID' => $removeLenderUserDetails['partner_id'],
+						'PartnerType' => array(
+							'PartnerTypeID' => 3
+						)
+					);
+					$removePartners[] = $removeSecondaryPartners;
+					$removePartnerData = json_encode(array('Partners' => $removePartners));
+					$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
+					$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+					$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+				}
 			}
-		} else {
-			if(empty($orderDetails['cpl_lender_id'])) {
-				$partners[] = $secondaryPartners;
-			} else if (!empty($orderDetails['cpl_lender_id']) && $orderDetails['cpl_lender_id'] != $LenderId) {
-				$partners[] = $secondaryPartners;
-				$removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
-				$removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
-				$removeSecondaryPartners = array(
-					'SecondaryEmployees'=> $removeSecondaryEmp,
-					'PartnerTypeID' => 3,
-					'PartnerID' => $removeLenderUserDetails['partner_id'],
-					'PartnerType' => array(
-						'PartnerTypeID' => 3
-					)
-				);
-				$removePartners[] = $removeSecondaryPartners;
-				$removePartnerData = json_encode(array('Partners' => $removePartners));
-				$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
-				$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
-				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+	
+			if(!empty($partners)) {
+				$partnerData = json_encode(array('Partners' => $partners));
+				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
+				$resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
+				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
 			}
 		}
-
-		if(!empty($partners)) {
-			$partnerData = json_encode(array('Partners' => $partners));
-			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
-			$resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
-			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
-		}
-
+		
 		if ($orderDetails['sales_amount'] > 0) { 
 
 			if ($orderUser['is_escrow'] == 1) {
