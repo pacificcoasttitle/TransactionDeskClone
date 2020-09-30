@@ -173,7 +173,7 @@ html, body{
 	overflow:hidden;
 	padding:20px 25px;
 	padding-top:25px;
-	background:#f0f0f0 url(../images/foobg.png) top left repeat-x;
+	/*background:#f0f0f0 url(../images/foobg.png) top left repeat-x;*/
 }
 
 /* @crossbrowser placeholder styling :: modern browsers only IE10+
