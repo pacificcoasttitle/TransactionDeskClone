@@ -1442,8 +1442,10 @@ class Dashboard extends MX_Controller {
 			'assignment_clause'  => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : ""
 		);
 
+		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 		if($new_existing_lender == 'add_lender') {
 			$lender_details['partner_id'] = $this->input->post('partner_id');
+			$lender_details['state'] = $this->input->post('state');
 			$lender_details['is_added_lender_by_cpl_proposed'] = 1;
 			$lender_details['is_escrow'] = 0;
 			$LenderId = $this->home_model->insert($lender_details, 'customer_basic_details');		
@@ -1451,11 +1453,8 @@ class Dashboard extends MX_Controller {
 			$condition = array(
 				'id' => $LenderId
 			);
-			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 			$this->home_model->update($lender_details, $condition, 'customer_basic_details');
 		}
-
-		
 
 		$partners = array();
 		$lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));

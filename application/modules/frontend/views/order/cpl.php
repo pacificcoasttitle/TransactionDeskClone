@@ -101,6 +101,7 @@
 											<input type="hidden" name="LenderId" id="LenderId" value="">
 											<input type="hidden" name="file_id" id="file_id" value="">
 											<input type="hidden" name="partner_id" id="partner_id" value="">
+											<input type="hidden" name="state" id="state" value="">
 										</label>
 									</div>
 								</div>
@@ -437,6 +438,7 @@
 						$("#LenderZipcode").val('').parent().removeClass('state-success').addClass('state-error');
 					}
 					$("#LenderId").val('');
+					$("#state").val(ui.item.state);
 					$("#partner_id").val(ui.item.partner_id);
 				},
 				change: function( event, ui ) {
