@@ -2117,6 +2117,7 @@ class Home extends MX_Controller {
                         } else {
                             $customerData['is_password_updated'] = 1;
                             $customerData['is_added_lender_by_cpl_proposed'] = 1;
+                            $customerData['lender_cpl_proposed_status'] = 1;
                             $data['success_msg'] = 'Password updated successfully for email user: '. $userInfo['email_address'];
                         }
                         $updateCondition = array(

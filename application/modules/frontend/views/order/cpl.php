@@ -173,7 +173,7 @@
 								<div class="frm-row spacer-b15">
 									<div class="section colm colm6">
 										<label class="field">
-											<input required="required" type="text" class="gui-input" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
+											<input type="text" class="gui-input" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
 										</label>
 									</div>
 									<div class="section colm colm6">
