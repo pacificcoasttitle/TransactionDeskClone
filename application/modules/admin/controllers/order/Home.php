@@ -1997,4 +1997,168 @@ class Home extends MX_Controller {
         $data = array('status'=>'success', 'msg'=> 'Underwriter updated successfully.');
         echo json_encode($data);
     }
+
+    public function cplProposedUsers()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: CPL/Proposed Users';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/cpl_proposed_users', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_cpl_proposed_users_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $master_users_lists = $this->home_model->get_cpl_proposed_users_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $master_users_lists = $this->home_model->get_cpl_proposed_users_list($params);        
+        }
+
+        $data = array(); 
+        if (isset($master_users_lists['data']) && !empty($master_users_lists['data'])) {
+            foreach ($master_users_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
+                if($value['lender_cpl_proposed_status'] == 1) {
+                    $lenderStatus = 'Approved';
+                } else if ($value['lender_cpl_proposed_status'] == 2) {
+                    $lenderStatus = 'Rejected';
+                } else {
+                    $lenderStatus = 'Pending';
+                }
+                $nestedData[] = $lenderStatus;
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $editUrl = base_url().'order/admin/edit-cpl-proposed-user/'.$value['id'];
+                    $nestedData[] = "<a href='".$editUrl."'  class='btn btn-action'  title='Edit CPL/Proposed User'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                }
+                $data[] = $nestedData;            
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $master_users_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $master_users_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function editCplProposedUser()
+    {
+        $this->is_admin();
+        $data = array();
+        $id = $this->uri->segment(4);      
+        $data['title'] = 'PCT Order: Edit CPL/Proposed User';
+        $salesRepData = array();
+
+        if(isset($id) && !empty($id)) {
+            if ($this->input->post()) {
+                $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
+                $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+                $this->form_validation->set_rules('company', 'Company', 'required', array('required'=> 'Please Enter Company'));
+                $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));
+                $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+                $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+                $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', array('required'=> 'Please Enter Zipcode'));
+                $this->form_validation->set_rules('partner_id', 'Company', 'required', array('required'=> 'Please select company based on search'));
+                
+                if ($this->form_validation->run() == true) {
+                    $customerData = array(
+                        'partner_id' =>  $this->input->post('partner_id'),
+                        'resware_user_id' =>  0,
+                        'first_name' => $this->input->post('first_name'),
+                        'last_name' => $this->input->post('last_name'),
+                        'telephone_no' => $this->input->post('telephone_no'),
+                        'email_address' => $this->input->post('email_address'),
+                        'password' => 'Pacific1',    
+                        'company_name' => $this->input->post('company'),
+                        'street_address' => $this->input->post('address'),
+                        'city' => $this->input->post('city'),
+                        'state' => $this->input->post('state'),
+                        'zip_code' => $this->input->post('zipcode'),
+                        'is_escrow' => 0,
+                        'is_master' => 0,
+                        'is_password_updated' => 0,
+                        'is_new_user' => 0,
+                        'status'=> 1,
+                    );
+                    $response = $this->addNewUserToResware($customerData);
+    
+                    if ($response['success']) {
+                        $customerData['resware_user_id'] = $response['resware_user_id'];
+                        $customerData['random_password'] = $this->order->randomPassword();
+                        $reswareUpdatePwdData = array(
+                            'user_name' =>  $this->input->post('email_address'),
+                            'password' => 'Pacific1',
+                            'new_password' => $customerData['random_password'],
+                        );
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+                        $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                        $responsePwd = json_decode($updatePwdResult,true);
+    
+                        if (!empty($responsePwd['message'])) {
+                            $customerData['resware_error_msg'] = $responsePwd['message'];
+                            $data['error_msg'] = 'Password update failed due to: '.$responsePwd['message'];
+                        } else {
+                            $customerData['is_password_updated'] = 1;
+                            $customerData['is_added_lender_by_cpl_proposed'] = 1;
+                            $data['success_msg'] = 'Password updated successfully for email user: '. $userInfo['email_address'];
+                        }
+                        $updateCondition = array(
+                            'id' => $id,
+                        );
+                        $update = $this->home_model->update($customerData, $updateCondition);
+                    } else {
+                        $data['error_msg'] = $response['msg'];
+                    }
+                } else {
+                    $data['first_name_error_msg'] = form_error('first_name');
+                    $data['last_name_error_msg'] = form_error('last_name');
+                    $data['email_address_error_msg'] = form_error('email_address');
+                    $data['company_error_msg'] = form_error('company');
+                    $data['user_type_error_msg'] = form_error('user_type');
+                    $data['address_error_msg'] = form_error('address');
+                    $data['city_error_msg'] = form_error('city');
+                    $data['state_error_msg'] = form_error('state');
+                    $data['zipcode_error_msg'] = form_error('zipcode');
+                    if (empty(form_error('company')) && !empty(form_error('partner_id'))) {
+                        $data['company_error_msg'] = "This partner company is not available on Resware side so please remove this company and select new company based on search.";
+                    }
+                }                                       
+            }
+            $con = array('id' => $id);
+            $data['cpl_proposed_user_info'] = $this->home_model->get_rows($con);
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/edit_cpl_proposed_user', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function rejectCplProposedUser()
+    {
+        $this->is_admin();
+        $data = array();
+        $id = $this->uri->segment(4);      
+        $updateCondition = array(
+            'id' => $id,
+        );
+        $customerData['lender_cpl_proposed_status'] = 2;
+        $update = $this->home_model->update($customerData, $updateCondition);
+        redirect(base_url().'order/admin/cpl-proposed-users');
+    }
 }

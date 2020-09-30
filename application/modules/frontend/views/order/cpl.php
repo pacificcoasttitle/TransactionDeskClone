@@ -488,6 +488,7 @@
 	$(document).ready(function () {
 		$("input[name=new_existing_lender]").change(function(){
 			$("#LenderEmailAddress").val('');
+			$("#LenderName").val('');
 			$("#LenderTelephone").val('');
 			$("#LenderCompany").val('');
 			$("#LenderAddress").val('');
@@ -576,13 +577,9 @@
 							}
 							$('select[name="branch"]').children('option:not(:first)').remove();
 							$( 'select[name="branch"]' ).append( optionsAsString );
-							//$('#agent_name').val(res.orderDetails['agent_name']);
-							//$('#agent_id').val(res.orderDetails['buyer_agent_id']);
-							//$("#agent_name").prop('required',true);
 							$("#branch").prop('required',true);
 						} else {
 							$('#fnf').hide();
-							//$("#agent_name").prop('required',false);
 							$("#branch").prop('required',false);
 						}
 						
@@ -605,9 +602,7 @@
 						$("#vesting").val(res.orderDetails['vesting']);
 						if (res.orderDetails['lender_id'] != '') {
 							$("#existing_lender").prop("checked", true);
-							$('input[name=new_existing_lender]').attr("disabled",true);
 						} else {
-							$('input[name=new_existing_lender]').attr("disabled",false);
 							$("#add_lender").prop("checked", true);
 						}
 					}  

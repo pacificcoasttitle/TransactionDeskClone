@@ -28,6 +28,7 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/master-users'; ?>">Master Users</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/companies' || $this->uri->uri_string() == 'order/admin/add-company') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/companies'; ?>">Companies</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/incorrect-users') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/incorrect-users'; ?>">Incorrect Users</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/cpl-proposed-users' || $this->uri->segment(3) == 'edit-cpl-proposed-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/cpl-proposed-users'; ?>">CPL/Proposed Users</a>
         </div>
 	</li>
 	

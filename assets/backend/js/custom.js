@@ -34,7 +34,7 @@ $(document).ready(function () {
         jQuery('#logs').parent('li').removeClass('active');
     }
 
-    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length)
+    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length)
     {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
         
@@ -247,6 +247,22 @@ $(document).ready(function () {
                     var data = jsonResult.responseText;
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-companies-listing thead tr th:not('.not-take')").map(function () { return this.innerHTML; }).get() };
+                }
+                else if(this.context[0].sTableId == 'tbl-cpl-proposed-users-listing')
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"admin/order/home/get_cpl_proposed_users_list",
+                        data: {
+                            keyword: $('#tbl-cpl-proposed-users-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-cpl-proposed-users-listing thead tr th:not('.not-take')").map(function () { return this.innerHTML; }).get() };
                 }
                 else 
                 {
@@ -2405,6 +2421,76 @@ $(document).ready(function () {
         }); 
     }
     /* Add code book validation */
+
+    if ($('#tbl-cpl-proposed-users-listing').length) 
+    {
+        customer_list = $('#tbl-cpl-proposed-users-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                paginate: {
+                next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_cpl_proposed_users').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if(export_type)
+                    {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: '',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                return (column === 0  || column === 1 || column === 2 || column === 3 || column === 4) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/home/get_cpl_proposed_users_list", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-cpl-proposed-users-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-cpl-proposed-users-listing_processing").css("display", "none");
+                }
+            }            
+        });
+    }
 });
 
 
