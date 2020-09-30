@@ -2613,15 +2613,17 @@ fieldset:disabled a.btn {
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+    color: #d35411;
+    background-color: transparent;
+    border-color: #d35411;
+    font-weight: bold;
+}
 }
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #0069d9;
-  border-color: #0062cc;
+  background-color: #D35411;
+  border-color: #D35411;
 }
 
 .btn-primary:focus, .btn-primary.focus {
@@ -6985,7 +6987,15 @@ button.bg-light:focus {
 }
 
 .bg-dark {
-  background-color: #343a40 !important;
+  background-color: #223D7F !important;
+    background: url(http://www.pct.com/assets/media/content/bg/adminBG3.png) no-repeat 0 0;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.adlogo{
+	text-align: center;
+    margin-top: 149px;
 }
 
 a.bg-dark:hover, a.bg-dark:focus,

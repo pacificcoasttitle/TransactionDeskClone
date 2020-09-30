@@ -11,8 +11,9 @@ label {
 }
 </style>
 <div class="container">
+<div class="adlogo"><img class="normal-logo" src="http://pct.com/assets/media/general/logo2.png" alt="logo"></div>
     <div class="card card-login mx-auto mt-5">
-      <div class="card-header">Login</div>
+      <div class="card-header">Admin: Team Member Login</div>
       <div class="card-body">
         <div id="login-result">
             <?php if(!empty($msg)){ ?>
