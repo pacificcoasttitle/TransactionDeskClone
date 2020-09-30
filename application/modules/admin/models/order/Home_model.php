@@ -1022,4 +1022,77 @@ class Home_model extends CI_Model
         return $result;
     }
 
+    public function get_cpl_proposed_users_list($params)
+    {
+        $this->db->where('is_added_lender_by_cpl_proposed', 1);
+    	$this->db->from('customer_basic_details');
+		$total_records =  $this->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $customer_lists =array();
+        
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like("first_name", $keyword)
+                    ->or_like('last_name',$keyword)
+                    ->or_like('email_address',$keyword)
+                    ->or_like('street_address', $keyword)
+                    ->or_like('city', $keyword)
+                    ->or_like('state', $keyword)
+                    ->or_like('zip_code', $keyword)
+                    ->group_end();
+			}
+
+           
+            $this->db->where('is_added_lender_by_cpl_proposed', 1);
+	    	$this->db->from('customer_basic_details');
+			$filter_total_records =  $this->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like("first_name", $keyword)
+                    ->or_like('last_name',$keyword)
+                    ->or_like('email_address',$keyword)
+                    ->or_like('street_address', $keyword)
+                    ->or_like('city', $keyword)
+                    ->or_like('state', $keyword)
+                    ->or_like('zip_code', $keyword)
+                    ->group_end();
+			}
+			
+            $this->db->where('is_added_lender_by_cpl_proposed', 1);
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }			
+			$query = $this->db->get('customer_basic_details');
+			if ($query->num_rows() > 0) {
+	            $customer_lists = $query->result_array();
+	        }
+    	} else {    		
+            $this->db->where('is_added_lender_by_cpl_proposed', 1);
+	    	$this->db->from('customer_basic_details');
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->where('is_added_lender_by_cpl_proposed', 1);
+            
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+			$query = $this->db->get('customer_basic_details');
+			
+			if ($query->num_rows() > 0) {
+	            $customer_lists = $query->result_array();
+	        } 
+    	}
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $customer_lists
+        );
+    }
+
 }
