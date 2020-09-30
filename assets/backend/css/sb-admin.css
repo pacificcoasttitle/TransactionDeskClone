@@ -2618,7 +2618,6 @@ fieldset:disabled a.btn {
     border-color: #d35411;
     font-weight: bold;
 }
-}
 
 .btn-primary:hover {
   color: #fff;
@@ -4929,6 +4928,8 @@ input[type="button"].btn-block {
   margin-bottom: 0;
   background-color: rgba(0, 0, 0, 0.03);
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  text-align: center;
+  
 }
 
 .card-header:first-child {
@@ -10680,7 +10681,7 @@ body {
 
 .sidebar {
   width: 90px !important;
-  background-color: #212529;
+  background-color: #01374f;
   min-height: calc(100vh - 56px);
 }
 
