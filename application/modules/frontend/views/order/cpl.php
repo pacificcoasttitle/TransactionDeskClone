@@ -102,7 +102,6 @@
 											<input type="hidden" name="file_id" id="file_id" value="">
 											<input type="hidden" name="partner_id" id="partner_id" value="">
 											<input type="hidden" name="state" id="state" value="">
-											<input type="hidden" name="autoCompleteEventFlag" id="autoCompleteEventFlag" value="0">
 										</label>
 									</div>
 								</div>
