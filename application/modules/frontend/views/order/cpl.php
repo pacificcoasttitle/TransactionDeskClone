@@ -394,59 +394,59 @@
 				}
 			});
 		} else {
-			$("#LenderCompany").autocomplete({
-				source: function(request, response) {
-					$.ajax({
-						url: base_url+"admin/order/home/get_company_list",
-						data: {
-							term : request.term        
-						},
-						type: "POST",
-						dataType: "json",
-						success: function (data) {
-							if (data.length > 0) {
-								response($.map(data, function (item) {
-									return item;
-								}))
-							} else {
-								response([{ label: 'No results found.', val: -1}]);
-							}
-						}
-					});
-				},
-				delay: 0,
-				minLength: 3,
-				select: function( event, ui ) {
-					event.preventDefault();
-					$("#LenderCompany").val(ui.item.partner_name);
+			// $("#LenderCompany").autocomplete({
+			// 	source: function(request, response) {
+			// 		$.ajax({
+			// 			url: base_url+"admin/order/home/get_company_list",
+			// 			data: {
+			// 				term : request.term        
+			// 			},
+			// 			type: "POST",
+			// 			dataType: "json",
+			// 			success: function (data) {
+			// 				if (data.length > 0) {
+			// 					response($.map(data, function (item) {
+			// 						return item;
+			// 					}))
+			// 				} else {
+			// 					response([{ label: 'No results found.', val: -1}]);
+			// 				}
+			// 			}
+			// 		});
+			// 	},
+			// 	delay: 0,
+			// 	minLength: 3,
+			// 	select: function( event, ui ) {
+			// 		event.preventDefault();
+			// 		$("#LenderCompany").val(ui.item.partner_name);
 				
-					if(ui.item.address1) {
-						$("#LenderAddress").val(ui.item.address1).parent().addClass('state-success');
-					} else {
-						$("#LenderAddress").val('').parent().removeClass('state-success').addClass('state-error');
-					}
+			// 		if(ui.item.address1) {
+			// 			$("#LenderAddress").val(ui.item.address1).parent().addClass('state-success');
+			// 		} else {
+			// 			$("#LenderAddress").val('').parent().removeClass('state-success').addClass('state-error');
+			// 		}
 
-					if(ui.item.city) {
-						$("#LenderCity").val(ui.item.city).parent().addClass('state-success');
-					} else {
-						$("#LenderCity").val('').parent().removeClass('state-success').addClass('state-error');
-					}
+			// 		if(ui.item.city) {
+			// 			$("#LenderCity").val(ui.item.city).parent().addClass('state-success');
+			// 		} else {
+			// 			$("#LenderCity").val('').parent().removeClass('state-success').addClass('state-error');
+			// 		}
 						
-					if(ui.item.zip) {
-						$("#LenderZipcode").val(ui.item.zip).parent().addClass('state-success');
-					} else {
-						$("#LenderZipcode").val('').parent().removeClass('state-success').addClass('state-error');
-					}
-					$("#LenderId").val('');
-					$("#state").val(ui.item.state);
-					$("#partner_id").val(ui.item.partner_id);
-				},
-				change: function( event, ui ) {
-					if (ui.item == null) {
-						$("#LenderCompany").parent().removeClass('state-success').addClass('state-error');
-					}
-				}
-			});
+			// 		if(ui.item.zip) {
+			// 			$("#LenderZipcode").val(ui.item.zip).parent().addClass('state-success');
+			// 		} else {
+			// 			$("#LenderZipcode").val('').parent().removeClass('state-success').addClass('state-error');
+			// 		}
+			// 		$("#LenderId").val('');
+			// 		$("#state").val(ui.item.state);
+			// 		$("#partner_id").val(ui.item.partner_id);
+			// 	},
+			// 	change: function( event, ui ) {
+			// 		if (ui.item == null) {
+			// 			$("#LenderCompany").parent().removeClass('state-success').addClass('state-error');
+			// 		}
+			// 	}
+			// });
 		}
     });
 	/* Lender autocomplete */ 

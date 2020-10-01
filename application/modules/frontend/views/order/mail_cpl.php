@@ -6,6 +6,13 @@
 	.ui-autocomplete {
 		max-height: 300px !important;
 	} 
+	.radio {
+		top: 5px !important;
+		margin: 0px 10px !important;
+	}
+	.radio:before {
+		background: none !important;
+	}
 </style>
 
 <body>
@@ -83,14 +90,25 @@
 								<div class="frm-row">
 									<div class="section colm colm12">
 										<label class="field prepend-icon">
+											<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender	
+											<input class="radio" type="radio" name="new_existing_lender" id="existing_lender" value="existing_lender">Existing Lender
+										</label>
+									</div>
+								</div>
+
+								<div class="frm-row">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
 											<input type="text" name="LenderCompany" id="LenderCompany" class="gui-input ui-autocomplete-input"
-												placeholder="Lender Company Name">
+												placeholder="Lender Company Name" required="required">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 											
 											<input type="hidden" name="LenderId" id="LenderId" value="">
 											<input type="hidden" name="file_id" id="file_id" value="">
+											<input type="hidden" name="partner_id" id="partner_id" value="">
+											<input type="hidden" name="state" id="state" value="">
 										</label>
-									</div><!-- end section -->
+									</div>
 								</div>
 
 								<div class="frm-row">
@@ -107,14 +125,14 @@
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="email" name="LenderEmailAddress" id="LenderEmailAddress"
-												class="gui-input" placeholder="Lender Email address" readonly="readonly" required="required">
+												class="gui-input" placeholder="Lender Email address" required="required">
 											<span class="field-icon"><i class="fa fa-envelope"></i></span>
 										</label>
 									</div>
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="tel" name="LenderTelephone" id="LenderTelephone" class="gui-input"
-												placeholder="Lender Telephone" readonly="readonly">
+												placeholder="Lender Telephone">
 											<span class="field-icon"><i class="fa fa-phone-square"></i></span>
 										</label>
 									</div>
@@ -131,7 +149,7 @@
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="LenderAddress" id="LenderAddress" class="gui-input"
-												placeholder="Lender Address" readonly="readonly" required="required">
+												placeholder="Lender Address" required="required">
 											<span class="field-icon"><i class="fa fa-envelope"></i></span>
 										</label>
 									</div>
@@ -140,14 +158,14 @@
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="LenderCity" id="LenderCity" class="gui-input"
-												placeholder="Lender City" readonly="readonly" required="required">
+												placeholder="Lender City" required="required">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="LenderZipcode" id="LenderZipcode" class="gui-input"
-												placeholder="Lender Zipcode" readonly="readonly" required="required">
+												placeholder="Lender Zipcode" required="required">
 											<span class="field-icon"><i class="fa fa-envelope"></i></span>
 										</label>
 									</div>
@@ -160,7 +178,7 @@
 								<div class="frm-row spacer-b15">
 									<div class="section colm colm6">
 										<label class="field">
-											<input required="required" type="text" class="gui-input" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
+											<input type="text" class="gui-input" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
 										</label>
 									</div>
 									<div class="section colm colm6">
@@ -293,88 +311,147 @@
 
 <script>
 	/* Lender autocomplete */
-    $("#LenderCompany").autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: base_url+'getDetailsByName',
-                data: {
-                    term : request.term,//the value of the input is here
-                    is_escrow : 0                    
-                },
-                type: "POST",
-                dataType: "json",
-                success: function (data) {
-					if (data.length > 0) {
-						response($.map(data, function (item) {
-							return item;
-						}))
+    
+	$("#LenderCompany" ).focusin(function() {
+		if ($('input[name="new_existing_lender"]:checked').val() == 'existing_lender') {
+			$("#LenderCompany").autocomplete({
+				source: function(request, response) {
+					$.ajax({
+						url: base_url+'getDetailsByName',
+						data: {
+							term : request.term,//the value of the input is here
+							is_escrow : 0                    
+						},
+						type: "POST",
+						dataType: "json",
+						success: function (data) {
+							if (data.length > 0) {
+								response($.map(data, function (item) {
+									return item;
+								}))
+							} else {
+								response([{ label: 'No results found.', val: -1}]);
+							}
+						}
+					});
+				},
+				delay: 0,
+				minLength: 3,
+				select: function( event, ui ) {
+					event.preventDefault();
+					$("#LenderCompany").val(ui.item.company);
+					if(ui.item.email_address) {
+						$("#LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
 					} else {
-						response([{ label: 'No results found.', val: -1}]);
+						$("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
 					}
-				}
-            });
-		},
-		delay: 0,
-		minLength: 3,
-        select: function( event, ui ) {
-            event.preventDefault();
-			$("#LenderCompany").val(ui.item.company);
-			if(ui.item.email_address) {
-				$("#LenderEmailAddress").val(ui.item.email_address).attr('readonly','readonly').parent().addClass('state-success');
-			} else {
-				$("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-			}
 
-			if(ui.item.telephone_no) {
-				$("#LenderTelephone").val(ui.item.telephone_no).attr('readonly','readonly').parent().addClass('state-success');           
-			} else {
-				$("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-			}
+					if(ui.item.telephone_no) {
+						$("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+					} else {
+						$("#LenderTelephone").val('').parent().removeClass('state-success').addClass('state-error');
+					}
 
-			if(ui.item.name) {
-				$("#LenderName").val(ui.item.name).attr('readonly','readonly').parent().addClass('state-success');       
-			} else {
-				$("#LenderName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-			}
+					if(ui.item.name) {
+						$("#LenderName").val(ui.item.name).parent().addClass('state-success');       
+					} else {
+						$("#LenderName").val('').parent().removeClass('state-success').addClass('state-error');
+					}
 
-			if(ui.item.address) {
-				$("#LenderAddress").val(ui.item.address).attr('readonly','readonly').parent().addClass('state-success');
-			} else {
-				$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-			}
+					if(ui.item.address) {
+						$("#LenderAddress").val(ui.item.address).parent().addClass('state-success');
+					} else {
+						$("#LenderAddress").val('').parent().removeClass('state-success').addClass('state-error');
+					}
 
-			if(ui.item.city) {
-				$("#LenderCity").val(ui.item.city).attr('readonly','readonly').parent().addClass('state-success');
-			} else {
-				$("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-			}
-            	
-			if(ui.item.zip_code) {
-				$("#LenderZipcode").val(ui.item.zip_code).attr('readonly','readonly').parent().addClass('state-success');
-			} else {
-				$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-			}
+					if(ui.item.city) {
+						$("#LenderCity").val(ui.item.city).parent().addClass('state-success');
+					} else {
+						$("#LenderCity").val('').parent().removeClass('state-success').addClass('state-error');
+					}
+						
+					if(ui.item.zip_code) {
+						$("#LenderZipcode").val(ui.item.zip_code).parent().addClass('state-success');
+					} else {
+						$("#LenderZipcode").val('').parent().removeClass('state-success').addClass('state-error');
+					}
 
-			if(ui.item.assignment_clause) {
-				$("#assignment_clause").val(ui.item.assignment_clause);
-			} else {
-				$("#assignment_clause").val('');
-			}
-			$("#LenderId").val(ui.item.id);
-            
-        },
-        change: function( event, ui ) {
-            if (ui.item == null)
-            {
-                $("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-				$("#LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-				$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-                $("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-				$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-				$("#assignment_clause").val('');
-				$("#LenderId").val('');
-            }
+					if(ui.item.assignment_clause) {
+						$("#assignment_clause").val(ui.item.assignment_clause);
+					} else {
+						$("#assignment_clause").val('');
+					}
+					$("#LenderId").val(ui.item.id);
+					
+				},
+				change: function( event, ui ) {
+					if (ui.item == null)
+					{
+						$("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
+						$("#LenderTelephone").val('').parent().removeClass('state-success').addClass('state-error');
+						$("#LenderCompany").val('').parent().removeClass('state-success').addClass('state-error');
+						$("#LenderAddress").val('').parent().removeClass('state-success').addClass('state-error');
+						$("#LenderCity").val('').parent().removeClass('state-success').addClass('state-error');
+						$("#LenderZipcode").val('').parent().removeClass('state-success').addClass('state-error');
+						$("#assignment_clause").val('');
+						$("#LenderId").val('');
+					}
+						}
+					});
+		} else {
+			// $("#LenderCompany").autocomplete({
+			// 	source: function(request, response) {
+			// 		$.ajax({
+			// 			url: base_url+"admin/order/home/get_company_list",
+			// 			data: {
+			// 				term : request.term        
+			// 			},
+			// 			type: "POST",
+			// 			dataType: "json",
+			// 			success: function (data) {
+			// 				if (data.length > 0) {
+			// 					response($.map(data, function (item) {
+			// 						return item;
+			// 					}))
+			// 				} else {
+			// 					response([{ label: 'No results found.', val: -1}]);
+			// 				}
+			// 			}
+			// 		});
+			// 	},
+			// 	delay: 0,
+			// 	minLength: 3,
+			// 	select: function( event, ui ) {
+			// 		event.preventDefault();
+			// 		$("#LenderCompany").val(ui.item.partner_name);
+				
+			// 		if(ui.item.address1) {
+			// 			$("#LenderAddress").val(ui.item.address1).parent().addClass('state-success');
+			// 		} else {
+			// 			$("#LenderAddress").val('').parent().removeClass('state-success').addClass('state-error');
+			// 		}
+
+			// 		if(ui.item.city) {
+			// 			$("#LenderCity").val(ui.item.city).parent().addClass('state-success');
+			// 		} else {
+			// 			$("#LenderCity").val('').parent().removeClass('state-success').addClass('state-error');
+			// 		}
+						
+			// 		if(ui.item.zip) {
+			// 			$("#LenderZipcode").val(ui.item.zip).parent().addClass('state-success');
+			// 		} else {
+			// 			$("#LenderZipcode").val('').parent().removeClass('state-success').addClass('state-error');
+			// 		}
+			// 		$("#LenderId").val('');
+			// 		$("#state").val(ui.item.state);
+			// 		$("#partner_id").val(ui.item.partner_id);
+			// 	},
+			// 	change: function( event, ui ) {
+			// 		if (ui.item == null) {
+			// 			$("#LenderCompany").parent().removeClass('state-success').addClass('state-error');
+			// 		}
+			// 	}
+			// });
         }
     });
 	/* Lender autocomplete */ 
@@ -412,6 +489,20 @@
         }
     });
 	/* Agent autocomplete */ 
+
+	$(document).ready(function () {
+		$("input[name=new_existing_lender]").change(function(){
+			$("#LenderEmailAddress").val('');
+			$("#LenderName").val('');
+			$("#LenderTelephone").val('');
+			$("#LenderCompany").val('');
+			$("#LenderAddress").val('');
+			$("#LenderCity").val('');
+			$("#LenderZipcode").val('');
+			$("#assignment_clause").val('');
+			$("#LenderId").val('');
+		});
+	});
 	
     function lender_pop_up(lenderFlag, fileId) 
     {
@@ -441,13 +532,9 @@
 							}
 							$('select[name="branch"]').children('option:not(:first)').remove();
 							$( 'select[name="branch"]' ).append( optionsAsString );
-							//$('#agent_name').val(res.orderDetails['agent_name']);
-							//$('#agent_id').val(res.orderDetails['buyer_agent_id']);
-							//$("#agent_name").prop('required',true);
 							$("#branch").prop('required',true);
 						} else {
 							$('#fnf').hide();
-							//$("#agent_name").prop('required',false);
 							$("#branch").prop('required',false);
 						}
 						
@@ -468,6 +555,11 @@
 						$("#loan_amount").val(res.orderDetails['loan_amount']);
 						$("#loan_number").val(res.orderDetails['loan_number']);
 						$("#vesting").val(res.orderDetails['vesting']);
+						if (res.orderDetails['lender_id'] != '') {
+							$("#existing_lender").prop("checked", true);
+						} else {
+							$("#add_lender").prop("checked", true);
+						}
 					}  
 					$('#page-preloader').css('display', 'none');
 					$('#lender_information').modal('show');
