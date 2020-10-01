@@ -314,6 +314,9 @@
     
 	$("#LenderCompany" ).focusin(function() {
 		if ($('input[name="new_existing_lender"]:checked').val() == 'existing_lender') {
+			if($('.ui-widget.ui-autocomplete').length > 0) {
+				$('#LenderCompany').autocomplete( "enable" );
+			}
 			$("#LenderCompany").autocomplete({
 				source: function(request, response) {
 					$.ajax({
@@ -399,6 +402,9 @@
 						}
 					});
 		} else {
+			if($('.ui-widget.ui-autocomplete').length > 0) {
+				$('#LenderCompany').autocomplete( "disable" );
+			}
 			// $("#LenderCompany").autocomplete({
 			// 	source: function(request, response) {
 			// 		$.ajax({

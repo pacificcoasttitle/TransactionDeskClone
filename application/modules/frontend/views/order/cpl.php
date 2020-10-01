@@ -102,6 +102,7 @@
 											<input type="hidden" name="file_id" id="file_id" value="">
 											<input type="hidden" name="partner_id" id="partner_id" value="">
 											<input type="hidden" name="state" id="state" value="">
+											<input type="hidden" name="autoCompleteEventFlag" id="autoCompleteEventFlag" value="0">
 										</label>
 									</div>
 								</div>
@@ -309,6 +310,9 @@
     
 	$("#LenderCompany" ).focusin(function() {
 		if ($('input[name="new_existing_lender"]:checked').val() == 'existing_lender') {
+			if($('.ui-widget.ui-autocomplete').length > 0) {
+				$('#LenderCompany').autocomplete( "enable" );
+			}
 			$("#LenderCompany").autocomplete({
 				source: function(request, response) {
 					$.ajax({
@@ -394,6 +398,9 @@
 				}
 			});
 		} else {
+			if($('.ui-widget.ui-autocomplete').length > 0) {
+				$('#LenderCompany').autocomplete( "disable" );
+			}
 			// $("#LenderCompany").autocomplete({
 			// 	source: function(request, response) {
 			// 		$.ajax({
