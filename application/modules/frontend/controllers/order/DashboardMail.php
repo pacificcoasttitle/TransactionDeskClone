@@ -1394,7 +1394,7 @@ class DashboardMail extends MX_Controller {
             $secondaryOwner = $secondary_first_name." ".$secondary_last_name;
             $name = explode(" ",$this->input->post('LenderName'));
             $vesting = $this->input->post('vesting');
-
+            $new_existing_lender = $this->input->post('new_existing_lender');
             $LenderId = $this->input->post('LenderId');
             $transaction_id = $this->input->post('transaction_id');
             $property_id = $this->input->post('property_id');
@@ -1406,65 +1406,76 @@ class DashboardMail extends MX_Controller {
             
             $orderDetails = $this->order->get_order_details($fileId,1);
 
-            if(isset($LenderId) && !empty($LenderId))
+            
+            $lender_details = array(
+                'first_name'    => $name[0],
+                'last_name'  => !empty($name[1]) ? $name[1] : '',
+                'telephone_no'  => !empty($this->input->post('LenderTelephone')) ? $this->input->post('LenderTelephone') : "",
+                'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
+                'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
+                'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
+                'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
+                'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : ""
+            );
+
+            if($new_existing_lender == 'add_lender') 
             {
-                $lender_details = array(
-                    'first_name'    => $name[0],
-                    'last_name'  => !empty($name[1]) ? $name[1] : '',
-                    'telephone_no'  => !empty($this->input->post('LenderTelephone')) ? $this->input->post('LenderTelephone') : "",
-                    'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
-                    'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
-                    'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
-                    'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
-                    'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : ""
-                );
+                $lender_details['partner_id'] = $this->input->post('partner_id');
+                $lender_details['state'] = empty($this->input->post('state')) ? $this->input->post('state') : 'CA';
+                $lender_details['is_added_lender_by_cpl_proposed'] = 1;
+                $lender_details['is_escrow'] = 0;
+                $LenderId = $this->home_model->insert($lender_details, 'customer_basic_details');       
+            }
+            else
+            {
                 $condition = array(
                     'id' => $LenderId
                 );
                 $this->home_model->update($lender_details, $condition, 'customer_basic_details');
-
-                if(empty($lender_details['first_name']) && empty($lender_details['lender_last_name'])) {
-                    $lender_details['lender_name'] = '';
-                } else if(empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
-                    $lender_details['lender_name'] = $lender_details['last_name'];
-                } else if(!empty($lender_details['first_name']) && empty($lender_details['last_name'])) {
-                    $lender_details['lender_name'] = $lender_details['first_name'];
-                } else if(!empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
-                    $lender_details['lender_name'] = $lender_details['first_name']." ".$lender_details['last_name'];
-                }
-                $lender_address = array();
-                $street_address = $this->input->post('LenderAddress');
-                if($street_address)
-                {
-                    $lender_address[] = $street_address;
-                }
-                $city = $this->input->post('LenderCity');
-                if($city)
-                {
-                    $lender_address[] = $city;
-                }
-
-                $lendeUser =  $this->home_model->get_user(array('id' => $LenderId));
-
-                $state = isset($lendeUser['state']) && !empty($lendeUser['state']) ? $lendeUser['state'] : '';
-
-                if($state)
-                {
-                    $lender_address[] = $state;
-                }
-
-                $zip_code = $this->input->post('LenderZipcode');
-                if($zip_code)
-                {
-                    $lender_address[] = $zip_code;
-                }
-
-                $pdfData['lender'] = array(
-                    'lender_name'=> $lender_details['lender_name'],
-                    'address'=> implode(', ', $lender_address),
-                    'company_name'=> $lender_details['company_name']
-                );
             }
+                
+
+            if(empty($lender_details['first_name']) && empty($lender_details['lender_last_name'])) {
+                $lender_details['lender_name'] = '';
+            } else if(empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
+                $lender_details['lender_name'] = $lender_details['last_name'];
+            } else if(!empty($lender_details['first_name']) && empty($lender_details['last_name'])) {
+                $lender_details['lender_name'] = $lender_details['first_name'];
+            } else if(!empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
+                $lender_details['lender_name'] = $lender_details['first_name']." ".$lender_details['last_name'];
+            }
+            $lender_address = array();
+            $street_address = $this->input->post('LenderAddress');
+            if($street_address)
+            {
+                $lender_address[] = $street_address;
+            }
+            $city = $this->input->post('LenderCity');
+            if($city)
+            {
+                $lender_address[] = $city;
+            }
+
+            $lendeUser =  $this->home_model->get_user(array('id' => $LenderId));
+
+            $state = isset($lendeUser['state']) && !empty($lendeUser['state']) ? $lendeUser['state'] : '';
+
+            if($state)
+            {
+                $lender_address[] = $state;
+            }
+
+            $zip_code = $this->input->post('LenderZipcode');
+            if($zip_code)
+            {
+                $lender_address[] = $zip_code;
+            }
+
+            $pdfData['lender'] = array(
+                'lender_name'=> $lender_details['lender_name'],
+                'address'=> implode(', ', $lender_address),
+                'company_name'=> $lender_details['company_name']
+            );  
             
 
             $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));

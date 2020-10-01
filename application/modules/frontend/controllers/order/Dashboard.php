@@ -1609,11 +1609,11 @@ class Dashboard extends MX_Controller {
 				'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
 				'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : ""
 			);
-// echo "<pre>"; print_r($new_existing_lender); exit;
+
 			if($new_existing_lender == 'add_lender') 
 			{
 				$lender_details['partner_id'] = $this->input->post('partner_id');
-				$lender_details['state'] = $this->input->post('state');
+				$lender_details['state'] = empty($this->input->post('state')) ? $this->input->post('state') : 'CA';
 				$lender_details['is_added_lender_by_cpl_proposed'] = 1;
 				$lender_details['is_escrow'] = 0;
 				$LenderId = $this->home_model->insert($lender_details, 'customer_basic_details');		

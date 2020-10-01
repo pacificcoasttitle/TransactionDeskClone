@@ -691,6 +691,9 @@
 	    $("#LenderCompany" ).focusin(function() {
 	    	if ($('input[name="new_existing_lender"]:checked').val() == 'existing_lender') 
 	    	{
+	    		if($('.ui-widget.ui-autocomplete').length > 0) {
+					$('#LenderCompany').autocomplete( "enable" );
+				}
 	    		$("#LenderCompany").autocomplete({
 			        source: function(request, response) {
 			            $.ajax({
@@ -775,7 +778,7 @@
 	    	}
 	    	else
 	    	{
-	    		$("#LenderCompany").autocomplete({
+	    		/*$("#LenderCompany").autocomplete({
 					source: function(request, response) {
 						$.ajax({
 							url: base_url+"admin/order/home/get_company_list",
@@ -827,13 +830,19 @@
 							$("#LenderCompany").parent().removeClass('state-success').addClass('state-error');
 						}
 					}
-				});
+				});*/
+				if($('.ui-widget.ui-autocomplete').length > 0) {
+					$('#LenderCompany').autocomplete( "disable" );
+				}
 	    	}
 	    });
 	    
 		$("#edit_LenderCompany" ).focusin(function() {
 	    	if ($('input[name="edit_new_existing_lender"]:checked').val() == 'existing_lender') 
 	    	{
+	    		if($('.ui-widget.ui-autocomplete').length > 0) {
+					$('#edit_LenderCompany').autocomplete( "enable" );
+				}
 	    		$("#edit_LenderCompany").autocomplete({
 			        source: function(request, response) {
 			            $.ajax({
@@ -918,7 +927,10 @@
 	    	}
 	    	else
 	    	{
-	    		$("#edit_LenderCompany").autocomplete({
+	    		if($('.ui-widget.ui-autocomplete').length > 0) {
+					$('#edit_LenderCompany').autocomplete( "disable" );
+				}
+	    		/*$("#edit_LenderCompany").autocomplete({
 					source: function(request, response) {
 						$.ajax({
 							url: base_url+"admin/order/home/get_company_list",
@@ -970,7 +982,7 @@
 							$("#LenderCompany").parent().removeClass('state-success').addClass('state-error');
 						}
 					}
-				});
+				});*/
 	    	}
 	    });
 	    
