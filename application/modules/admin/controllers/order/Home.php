@@ -2116,7 +2116,7 @@ class Home extends MX_Controller {
                             $data['error_msg'] = 'Password update failed due to: '.$responsePwd['message'];
                         } else {
                             $customerData['is_password_updated'] = 1;
-                            $customerData['is_added_lender_by_cpl_proposed'] = 1;
+                            $customerData['is_added_lender_by_cpl_proposed'] = 0;
                             $customerData['lender_cpl_proposed_status'] = 1;
                             $data['success_msg'] = 'Password updated successfully for email user: '. $userInfo['email_address'];
                         }
@@ -2159,6 +2159,7 @@ class Home extends MX_Controller {
             'id' => $id,
         );
         $customerData['lender_cpl_proposed_status'] = 2;
+        $customerData['is_added_lender_by_cpl_proposed'] = 0;
         $update = $this->home_model->update($customerData, $updateCondition);
         redirect(base_url().'order/admin/cpl-proposed-users');
     }
