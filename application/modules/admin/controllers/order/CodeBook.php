@@ -84,7 +84,12 @@ class CodeBook extends MX_Controller {
                 $type_dropdown = str_replace('value="' .  $type . '"','value="' .  $type . '" selected', $type_dropdown);
 
                 $nestedData[] = $type_dropdown;
-                $nestedData[] = $value['language'];
+                $nestedData[] = nl2br($value['language']);
+
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $editUrl = base_url().'order/admin/edit-code-book/'.$value['id'];
+                    $nestedData[] = "<a href='".$editUrl."'  class='btn btn-action'  title='Edit Code Book'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                }
                
                 
                 $data[] = $nestedData;
@@ -289,5 +294,54 @@ class CodeBook extends MX_Controller {
         $this->codeBook_model->update(array('type' => $type), $condition);
         $data = array('status'=>'success', 'msg'=> 'Type updated successfully.');
         echo json_encode($data);
+    }
+
+    public function editCodeBook()
+    {
+        $this->is_admin();
+        $data = array();
+        $id = $this->uri->segment(4);      
+        $data['title'] = 'Edit Code Book';
+        $salesRepData = array();
+
+        if(isset($id) && !empty($id)) {
+            if ($this->input->post()) {
+                $this->form_validation->set_rules('code', 'Code', 'required', array('required'=> 'Please Enter Code'));
+                $this->form_validation->set_rules('type_id', 'Type Id', 'required', array('required'=> 'Please Enter Type id'));
+                $this->form_validation->set_rules('type', 'Type', 'required', array('required'=> 'Please Enter Type'));
+                $this->form_validation->set_rules('language', 'Language', 'required', array('required'=> 'Please Enter Language'));
+             
+                $language = str_replace('<br>', PHP_EOL, $this->input->post('language'));
+                
+                if ($this->form_validation->run() == true) {
+                    $codeBookData = array(
+                        'code' =>  $this->input->post('code'),
+                        'type_id' => $this->input->post('type_id'),
+                        'type' => $this->input->post('type'),
+                        'language' => $language,
+                        'status' => 1,
+                    );
+
+                    $condition = array('id' => $id);
+                    $update = $this->codeBook_model->update($codeBookData, $condition);
+                        
+                    if ($update) {
+                        $data['success_msg'] = 'Code Book Data updated successfully.';
+                    } else {
+                        $data['error_msg'] = 'Error occurred while updating code book data.';
+                    }
+                } else {
+                    $data['code_error_msg'] = form_error('code');
+                    $data['type_id_error_msg'] = form_error('type_id');
+                    $data['type_error_msg'] = form_error('type');
+                    $data['language_error_msg'] = form_error('language');
+                }                                       
+            }
+            $con = array('id' => $id);
+            $data['codeBookInfo'] = $this->codeBook_model->get_rows($con);
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/edit_code_book', $data);
+        $this->load->view('order/layout/footer', $data);
     }
 }
