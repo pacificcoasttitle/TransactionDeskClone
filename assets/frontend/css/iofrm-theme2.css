@@ -62,7 +62,7 @@
 
 .img-holder .bg {
     opacity: 1;
-    background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/f0fc05ce-931b-419d-b019-f67b4d9a4bc0.jpg");
+    background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/49b1226f-a105-4ff3-a1db-e5831148dd37.jpg");
 }
 
 .form-holder {
@@ -70,19 +70,19 @@
 }
 
 .form-holder .form-content ::-webkit-input-placeholder {
-    color: #DEDBDB;
+    color: #03374f;
 }
 
 .form-holder .form-content :-moz-placeholder {
-    color: #DEDBDB;
+    color: #03374f;
 }
 
 .form-holder .form-content ::-moz-placeholder {
-    color: #DEDBDB;
+    color: #03374f;
 }
 
 .form-holder .form-content :-ms-input-placeholder {
-    color: #DEDBDB;
+    color: #03374f;
 }
 
 .form-content {
@@ -133,8 +133,8 @@
 
 .form-content input, .form-content .dropdown-toggle.btn-default {
     border: 0;
-    background-color: #445867;
-    color: #DEDBDB;
+    background-color: #fff;
+    color: #03374f;
 }
 
 .form-content input:hover, .form-content input:focus, .form-content .dropdown-toggle.btn-default:hover, .form-content .dropdown-toggle.btn-default:focus {
