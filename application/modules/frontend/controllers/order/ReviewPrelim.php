@@ -80,7 +80,7 @@ class ReviewPrelim extends MX_Controller {
 
 							if (isset($lienKey) && !empty($lienKey)) {
 								$language = $codeBooks[$lienKey]['language'];
-								if(strpos($codeBooks[$lienKey]['language'], '___') !== false) {
+								if(strpos($codeBooks[$lienKey]['language'], '___') !== false) { 
 									$lienLanguage = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
 
 									if (strpos($lienLanguage, '_PARCELID1_') !== false) {
@@ -89,7 +89,6 @@ class ReviewPrelim extends MX_Controller {
 										$lienLanguage = preg_replace('/ <a.*a>/', '_INSTRUMENTONLY_', $lienLanguage);
 									}
 
-									
 									$opcodes = FineDiff::getDiffOpcodes($language, $lienLanguage, [$granularityStack = null] );
 									$replace = explode("^:^",$opcodes);
 
@@ -99,6 +98,8 @@ class ReviewPrelim extends MX_Controller {
 											$language = substr_replace($language, $value, $pos,3);
 										} 
 									}
+								} else {
+									$lienLanguage = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
 								}
 							} else {
 								$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
