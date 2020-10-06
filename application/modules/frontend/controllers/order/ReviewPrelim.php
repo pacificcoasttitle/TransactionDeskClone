@@ -61,8 +61,9 @@ class ReviewPrelim extends MX_Controller {
 				$order_details = $this->order->get_rows($condition);
 
 				if(isset($order_details) && !empty($order_details)) {
+					$file_id = isset($order_details['file_id']) && !empty($order_details['file_id']) ? $order_details['file_id'] : '';
+					$orderDetails = $this->order->get_order_details($file_id,1);
 					$parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
-					$propertyAddress = $order_details['full_address'];
 					$vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
 					$generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
 					$tax = $liens = $email_data = array();
@@ -301,7 +302,19 @@ class ReviewPrelim extends MX_Controller {
 									}
 
 									if (strpos($language, '_PROPERTYADDRESS_') !== false) {
-										$language = preg_replace('_PROPERTYADDRESS_', $propertyAddress, $language);
+										$address = $orderDetails['address'];
+										$address = str_replace('St', 'Street', $address);
+										$address = str_replace('Dr', 'Drive', $address);
+										$address = str_replace('Rd', 'Road', $address);
+										$address = str_replace('Ave', 'Avenue', $address);
+										$address = str_replace('Pl', 'Place', $address);
+										$address = str_replace('Ct', 'Court', $address);
+										$propertyAddress = $address.", ".$orderDetails['property_city'].", ".$orderDetails['property_state']." ".$orderDetails['property_zip'];
+										
+										$language = str_replace('_PROPERTYADDRESS_', $propertyAddress, $language);
+										$requirementToLanguage = str_replace('REQUIREMENT::', '', $requirementToLanguage);
+										echo $requirementToLanguage;
+										echo $language;exit;
 									}
 
 									$opcodes = FineDiff::getDiffOpcodes($language, $requirementToLanguage, [$granularityStack = null] );
@@ -516,13 +529,12 @@ class ReviewPrelim extends MX_Controller {
 					/* Send email to customer */
 
 					$order_id = isset($order_details['id']) && !empty($order_details['id']) ? $order_details['id'] : '';
-					$file_id = isset($order_details['file_id']) && !empty($order_details['file_id']) ? $order_details['file_id'] : '';
+					
 
 					$this->db->delete('pct_order_documents', array('order_id' => $order_id, 'is_prelim_document' => 1));
 					$this->db->delete('pct_order_documents', array('order_id' => $order_id, 'is_linked_doc' => 1));
 
 					/* Generate Docs */
-					$orderDetails = $this->order->get_order_details($file_id,1);
 					$documents = $this->order->get_order_documents($file_id,1);
 
 					$customer_id = isset($order_details['customer_id']) && !empty($order_details['customer_id']) ? $order_details['customer_id'] : '';
