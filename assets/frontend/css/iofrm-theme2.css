@@ -86,7 +86,9 @@
 }
 
 .form-content {
-    background-color: #23394A;
+    background-color: #03374f;
+	background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/tpbg.png);
+	background-repeat: repeat-x; 
 }
 
 .form-content .form-group {

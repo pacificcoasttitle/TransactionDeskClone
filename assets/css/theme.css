@@ -4707,8 +4707,10 @@ blockquote cite {
     height: 100px;
     padding-top: 0px;
     padding-bottom: 0px;
-    background: #03374f;
+    background-color: #03374f;
+	background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/tp.png);
 	text-align: center;
+	background-repeat: repeat-x; 
 }
 
 
