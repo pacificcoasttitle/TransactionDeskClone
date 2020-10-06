@@ -19,7 +19,8 @@
                             <th style="width: 10%;">Code</th>
                             <th style="width: 10%;">Type Id</th>
                             <th style="width: 12%;">Type</th>
-                            <th style="width: 70%;">Language</th>
+                            <th style="width: 60%;">Language</th>
+                            <th style="width: 10%;">Action</th>
                             <!-- <th style="width: 10%;">Action</th> -->
                         </tr>
                     </thead>

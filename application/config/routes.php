@@ -234,6 +234,7 @@ $route['order/admin/update-type'] = 'admin/order/CodeBook/updateType';
 $route['order/admin/cpl-proposed-users'] = 'admin/order/home/cplProposedUsers';
 $route['order/admin/edit-cpl-proposed-user/:num'] = 'admin/order/home/editCplProposedUser';
 $route['order/admin/reject-cpl-proposed-user/:num'] = 'admin/order/home/rejectCplProposedUser';
+$route['order/admin/edit-code-book/:num'] = 'admin/order/CodeBook/editCodeBook';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
