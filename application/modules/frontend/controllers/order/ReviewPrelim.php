@@ -313,8 +313,7 @@ class ReviewPrelim extends MX_Controller {
 										
 										$language = str_replace('_PROPERTYADDRESS_', $propertyAddress, $language);
 										$requirementToLanguage = str_replace('REQUIREMENT::', '', $requirementToLanguage);
-										echo $requirementToLanguage;
-										echo $language;exit;
+										
 									}
 
 									$opcodes = FineDiff::getDiffOpcodes($language, $requirementToLanguage, [$granularityStack = null] );
