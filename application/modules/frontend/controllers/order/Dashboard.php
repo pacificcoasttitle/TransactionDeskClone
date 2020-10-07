@@ -1111,7 +1111,7 @@ class Dashboard extends MX_Controller {
 			// 	);	
 			// } 
 		} else {
-
+			$buyers = array();
 			if(!empty($orderDetails['secondary_owner'])) { 
 				$buyerBorrowerName = $orderDetails['primary_owner']." and ".$orderDetails['secondary_owner'];
 			}
@@ -1267,16 +1267,12 @@ class Dashboard extends MX_Controller {
 				);
 				if(!empty($buyers)) {
 					$buyers[0]['NameID'] = !empty($res['buyers']) ? $res['buyers'][0]['NameID'] : 0;
-					if(!empty($secondary_owner)) { 
-						$buyers[1]['NameID'] = !empty($res['buyers']) ? $res['buyers'][1]['NameID'] : 0;
-					}
+					
 				}
 
 				if(!empty($sellers)) {
 					$sellers[0]['NameID'] = !empty($res['sellers']) ? $res['sellers'][0]['NameID'] : 0;
-					if(!empty($secondary_owner)) { 
-						$sellers[1]['NameID'] = !empty($res['sellers']) ? $res['sellers'][1]['NameID'] : 0;
-					}
+					
 				}
 
 				$lenders[0]['Id'] = !empty($res['lenders']) ? $res['lenders'][0]['Id']: 0;
