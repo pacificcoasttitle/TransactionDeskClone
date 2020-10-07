@@ -120,7 +120,7 @@
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="email" name="LenderEmailAddress" id="LenderEmailAddress"
-												class="gui-input" placeholder="Lender Email address" required="required">
+												class="gui-input" placeholder="Lender Email address">
 											<span class="field-icon"><i class="fa fa-envelope"></i></span>
 										</label>
 									</div>
@@ -136,7 +136,7 @@
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="LenderName" id="LenderName"
-												class="gui-input" placeholder="Lender Name"
+												class="gui-input" placeholder="Attention"
 												autocomplete="off" required="required">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
@@ -171,12 +171,12 @@
 								</div>
 
 								<div class="frm-row spacer-b15">
-									<div class="section colm colm6">
+									<!-- <div class="section colm colm6">
 										<label class="field">
 											<input type="text" class="gui-input" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
 										</label>
-									</div>
-									<div class="section colm colm6">
+									</div> -->
+									<div class="section colm colm12">
 										<label class="field">
 											<input required="required" type="text" class="gui-input" name="loan_number" id="loan_number" placeholder="Loan Number">
 										</label>
@@ -584,6 +584,19 @@
 							$('select[name="branch"]').children('option:not(:first)').remove();
 							$( 'select[name="branch"]' ).append( optionsAsString );
 							$("#branch").prop('required',true);
+						} else if (res.orderDetails['cpl_api'] == 'westcor') { 
+							$('#fnf').show();
+							var optionsAsString = "";
+							for(var i = 0; i < res.orderDetails['agents_data'].length; i++) {
+								var selected = '';
+								if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
+									selected = 'selected';
+								}
+								optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
+							}
+							$('select[name="branch"]').children('option:not(:first)').remove();
+							$( 'select[name="branch"]' ).append( optionsAsString );
+							$("#branch").prop('required',true);
 						} else {
 							$('#fnf').hide();
 							$("#branch").prop('required',false);
@@ -603,7 +616,7 @@
 						$("#primary_last_name").val(res.orderDetails['primary_owner_last_name']);
 						$("#first_name").val(res.orderDetails['secondary_owner_first_name']);
 						$("#last_name").val(res.orderDetails['secondary_owner_last_name']);
-						$("#loan_amount").val(res.orderDetails['loan_amount']);
+						//$("#loan_amount").val(res.orderDetails['loan_amount']);
 						$("#loan_number").val(res.orderDetails['loan_number']);
 						$("#vesting").val(res.orderDetails['vesting']);
 						if (res.orderDetails['lender_id'] != '') {
