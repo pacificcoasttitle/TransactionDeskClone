@@ -236,26 +236,6 @@ class Order
         }
     }
     
-    public function get_token()
-    {
-        $this->CI->db->select('*');
-        $this->CI->db->from('pct_order_westcore_token');
-        $query = $this->CI->db->get();
-        $result = $query->row_array();
-        if(!empty($result)) {
-            $date = new DateTime($result['create_token_time']);
-            $date2 = new DateTime(date('Y-m-d H:i:s'));
-            $diff = $date2->getTimestamp() - $date->getTimestamp();
-            if($diff < $result['expires_in']) {
-                return $result;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
     public function get_order_documents($fileId,$from_mail=0)
     {
         $userdata = $this->CI->session->userdata('user');

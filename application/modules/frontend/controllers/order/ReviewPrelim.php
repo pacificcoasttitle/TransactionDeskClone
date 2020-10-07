@@ -862,7 +862,7 @@ class ReviewPrelim extends MX_Controller {
 					$message = $prelim_message_body; 
 					$subject = 'The Prelim Hot Sheet';
 					$to = $customer_email;
-					$to = 'hitesh.p@crestinfosystems.com';
+					//$to = 'hitesh.p@crestinfosystems.com';
 					
 					$this->load->helper('sendemail');
 					
