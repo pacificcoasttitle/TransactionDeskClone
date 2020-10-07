@@ -1032,24 +1032,17 @@ class Dashboard extends MX_Controller {
 		$secondary_owner = explode(" ", $orderDetails['secondary_owner']);
 		if ($orderDetails['sales_amount'] > 0)  {
 
-			if(!empty($orderDetails['secondary_owner']) && !empty($orderDetails['vesting'])) { 
-				$sellerBorrowerFirstName = $orderDetails['primary_owner']." and ".$orderDetails['secondary_owner'];
-				$sellerBorrowerLastName = $orderDetails['vesting'];
-			} else if(empty($orderDetails['secondary_owner']) && !empty($orderDetails['vesting'])) { 
-				$sellerBorrowerFirstName = $orderDetails['primary_owner'];
-				$sellerBorrowerLastName = $orderDetails['vesting'];
-			} else if(!empty($orderDetails['secondary_owner']) && empty($orderDetails['vesting'])) { 
-				$sellerBorrowerFirstName = $orderDetails['primary_owner']." and";
-				$sellerBorrowerLastName = $orderDetails['secondary_owner'];
-			} else {
-				$sellerBorrowerFirstName = $primary_owner[0];
-				$key = count($primary_owner) - 1;
-				$sellerBorrowerLastName = $primary_owner[$key];
+			if(!empty($orderDetails['secondary_owner'])) { 
+				$sellerBorrowerName = $orderDetails['primary_owner']." and ".$orderDetails['secondary_owner'];
 			}
- 
+
+			if(!empty($orderDetails['vesting'])) { 
+				$sellerBorrowerName .= ', '.$orderDetails['vesting'];
+			}
+			 
 			$sellers[] = array (
 				'NameID' =>  $orderDetails['westcor_seller_id'] ? $orderDetails['westcor_seller_id'] : 0,
-				'Last' => $sellerBorrowerLastName,
+				'Last' => 'llll',
 				'First' => $sellerBorrowerName,
 				'NameType' => 2,
 				'JoiningPhrase' => 'single',
@@ -1083,19 +1076,13 @@ class Dashboard extends MX_Controller {
 			if (!empty($orderDetails['borrower'])) {
 				
 				if(!empty($orderDetails['secondary_borrower'])) { 
-					$buyerBorrowerFirstName = $orderDetails['borrower']." and";
-					$buyerBorrowerLastName = $orderDetails['secondary_borrower'];
-				} else {
-					$primary_owner = explode(' ', $orderDetails['borrower']);
-					$buyerBorrowerFirstName = $primary_owner[0];
-					$key = count($primary_owner) - 1;
-					$buyerBorrowerLastName = $primary_owner[$key];
+					$buyerBorrowerName = $orderDetails['borrower']." and ".$orderDetails['secondary_borrower'];
 				}
 	
 				$buyers[] = array (
 					'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-					'Last' => $buyerBorrowerLastName,
-					'First' => $buyerBorrowerFirstName,
+					'Last' => 'llll',
+					'First' => $buyerBorrowerName,
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
 					'tvid' => 0,
@@ -1125,25 +1112,17 @@ class Dashboard extends MX_Controller {
 			// } 
 		} else {
 
-			if(!empty($orderDetails['secondary_owner']) && !empty($orderDetails['vesting'])) { 
-				$buyerBorrowerFirstName = $orderDetails['primary_owner']." and ".$orderDetails['secondary_owner'];
-				$buyerBorrowerLastName = $orderDetails['vesting'];
-			} else if(empty($orderDetails['secondary_owner']) && !empty($orderDetails['vesting'])) { 
-				$buyerBorrowerFirstName = $orderDetails['primary_owner'];
-				$buyerBorrowerLastName = $orderDetails['vesting'];
-			} else if(!empty($orderDetails['secondary_owner']) && empty($orderDetails['vesting'])) { 
-				$buyerBorrowerFirstName = $orderDetails['primary_owner']." and";
-				$buyerBorrowerLastName = $orderDetails['secondary_owner'];
-			} else {
-				$buyerBorrowerFirstName = $primary_owner[0];
-				$key = count($primary_owner) - 1;
-				$buyerBorrowerLastName = $primary_owner[$key];
+			if(!empty($orderDetails['secondary_owner'])) { 
+				$buyerBorrowerName = $orderDetails['primary_owner']." and ".$orderDetails['secondary_owner'];
 			}
 
+			if(!empty($orderDetails['vesting'])) { 
+				$buyerBorrowerName .= ', '.$orderDetails['vesting'];
+			}
 			$buyers[] = array (
 				'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
-				'Last' => $buyerBorrowerLastName,
-				'First' => $buyerBorrowerFirstName,
+				'Last' => 'llll',
+				'First' => $buyerBorrowerName,
 				'NameType' => 1,
 				'JoiningPhrase' => 'single',
 				'tvid' => 0,
