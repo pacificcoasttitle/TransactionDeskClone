@@ -1124,7 +1124,7 @@ class Dashboard extends MX_Controller {
 			// 	);	
 			// } 
 		} else {
-			$buyers = array();
+
 			if(!empty($orderDetails['secondary_owner']) && !empty($orderDetails['vesting'])) { 
 				$buyerBorrowerFirstName = $orderDetails['primary_owner']." and ".$orderDetails['secondary_owner'];
 				$buyerBorrowerLastName = $orderDetails['vesting'];
