@@ -91,7 +91,7 @@ class ReviewPrelim extends MX_Controller {
 									}
 
 									$opcodes = FineDiff::getDiffOpcodes($language, $lienLanguage, [$granularityStack = null] );
-									$replace = explode("^:^",$opcodes);
+									$replace = explode("^^",$opcodes);
 
 									if (isset($replace) && !empty($replace)) {
 										foreach ($replace as $key => $value) {
@@ -189,7 +189,7 @@ class ReviewPrelim extends MX_Controller {
 													}
 
 													$opcodes = FineDiff::getDiffOpcodes($easementLanguage, $easementToLanguage, [$granularityStack = null] );
-													$replace = explode("^:^",$opcodes);
+													$replace = explode("^^",$opcodes);
 
 													if (isset($replace) && !empty($replace)) {
 														foreach ($replace as $key => $value) {
@@ -317,7 +317,7 @@ class ReviewPrelim extends MX_Controller {
 									}
 
 									$opcodes = FineDiff::getDiffOpcodes($language, $requirementToLanguage, [$granularityStack = null] );
-									$replace = explode("^:^",$opcodes);
+									$replace = explode("^^",$opcodes);
 
 									if (isset($replace) && !empty($replace)) {
 										foreach ($replace as $key => $value) {
@@ -411,7 +411,7 @@ class ReviewPrelim extends MX_Controller {
 									}
 
 									$opcodes = FineDiff::getDiffOpcodes($language, $restrictionToLanguage, [$granularityStack = null] );
-									$replace = explode("^:^",$opcodes);
+									$replace = explode("^^",$opcodes);
 
 									if (isset($replace) && !empty($replace)) {
 										foreach ($replace as $key => $value) {
@@ -1138,7 +1138,7 @@ class FineDiff {
 			}
 			
 			}
-		return implode('^:^', $opcodes);
+		return implode('^^', $opcodes);
 		}
 
 	public function renderDiffToHTML() {
