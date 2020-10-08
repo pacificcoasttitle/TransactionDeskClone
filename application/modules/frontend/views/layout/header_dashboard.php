@@ -14,7 +14,7 @@
                     <?php if(!isset($mail_dashboard)) {?>
                         <div class="header-navibox-2">
                             <ul class="yamm nav navbar-nav">
-                                <?php if($is_special_lender == 0) { ?>
+                                <?php if($is_special_lender == 0 && $is_sales_rep == 0) { ?>
                                     <li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>
                                     <li><a href="<?php echo base_url().'order'; ?>">Open Order</a></li>
                                     <li><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></li>
