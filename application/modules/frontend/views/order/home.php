@@ -268,10 +268,12 @@
 														{
 															foreach ($salesRep as $k => $v) 
 															{
+																$name = array($v['first_name'],$v['last_name']);
+																$full_name = implode(' ', $name);
 													?>
 																<option value="<?php
 																 echo $v['id']; ?>"><?php
-																 echo $v['name']; ?></option>
+																 echo $full_name; ?></option>
 													<?php
 															}
 														} 

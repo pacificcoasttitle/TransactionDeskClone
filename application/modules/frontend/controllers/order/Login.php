@@ -43,6 +43,7 @@ class Login extends MX_Controller {
                         "random_password" => isset($user['random_password']) && !empty($user['random_password']) ? $user['random_password'] : '',
                         "is_admin" => 0,
                         "is_master" =>  $user['is_master'],
+                        "is_sales_rep" =>  $user['is_sales_rep'],
                         "is_special_lender" =>  isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                     );
                     $this->session->set_userdata('user', $session_data);
