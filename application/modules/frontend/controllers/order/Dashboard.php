@@ -1056,7 +1056,7 @@ class Dashboard extends MX_Controller {
 			 
 			$sellers[] = array (
 				'NameID' =>  $orderDetails['westcor_seller_id'] ? $orderDetails['westcor_seller_id'] : 0,
-				'Last' => 'llll',
+				'Last' => '-',
 				'First' => $sellerBorrowerName,
 				'NameType' => 2,
 				'JoiningPhrase' => 'single',
@@ -1095,7 +1095,7 @@ class Dashboard extends MX_Controller {
 	
 				$buyers[] = array (
 					'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-					'Last' => 'llll',
+					'Last' => '-',
 					'First' => $buyerBorrowerName,
 					'NameType' => 1,
 					'JoiningPhrase' => 'single',
@@ -1135,7 +1135,7 @@ class Dashboard extends MX_Controller {
 			}
 			$buyers[] = array (
 				'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
-				'Last' => 'llll',
+				'Last' => '-',
 				'First' => $buyerBorrowerName,
 				'NameType' => 1,
 				'JoiningPhrase' => 'single',
