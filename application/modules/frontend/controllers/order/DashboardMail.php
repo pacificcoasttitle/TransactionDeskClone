@@ -600,7 +600,7 @@ class DashboardMail extends MX_Controller {
 					'phone' => $orderDetails['lender_telephone_no'],
 					'email' => $orderDetails['lender_email'],
 					'countyFIPS' => null,
-					'assignment' => $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause']."\nAttn: ".$name : "\nAttn: ".$name,
+					'assignment' => $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause']."\n".$name : "\n".$name,
 					'mortgageType' => null,
 					'amount' => 0,
 					'loan_number' => $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '',
@@ -622,7 +622,7 @@ class DashboardMail extends MX_Controller {
 					'phone' => $lenderDetails['telephone_no'],
 					'email' => $lenderDetails['email_address'],
 					'countyFIPS' => null,
-					'assignment' => $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause']."\nAttn: ".$name : "\nAttn: ".$name,
+					'assignment' => $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause']."\n".$name : "\n".$name,
 					'mortgageType' => null,
 					'amount' => 0,
 					'loan_number' => $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '',
@@ -633,7 +633,7 @@ class DashboardMail extends MX_Controller {
         
         $cplPostData = array (
             'tvid' =>  0,
-            'agentnumber' => $resToken['agent_number'],
+            'agentnumber' => $resToken['original_agent_number'],
             'agent_file_number' => $orderDetails['file_number'],
             'email_requestor' => $orderUser['email_address'],
             'purchase_price' => $purchase_price,
