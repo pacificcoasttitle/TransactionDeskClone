@@ -955,7 +955,7 @@ class Cron extends MX_Controller {
                 $login_data = array();
                 $login_data['email'] =  $value['email_address'];
                 $login_data['random_password'] = $value['random_password'];
-                $login_data['random_password'] = 'Pacific3';
+                // $login_data['random_password'] = 'Pacific3';
 
                 /* Fetch records from resware */
                 $status = array();
