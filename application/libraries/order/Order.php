@@ -39,6 +39,8 @@ class Order
     public function get_orders($params)
     {
         $userdata = $this->CI->session->userdata('user');
+        $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
+        
         if(isset($params['searchvalue']) && !empty($params['searchvalue']))
         {
             $keyword = $params['searchvalue'];
@@ -48,12 +50,28 @@ class Order
                 $this->CI->db->like('property_details.full_address', $keyword);            
                 $this->CI->db->or_like('order_details.file_number', $keyword);
             }
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name, order_details.proposed_insured_document_name')
+
+            if(isset($status) && !empty($status))
+            {
+                $this->CI->db->where('order_details.resware_status', $status);
+            }
+
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
-            if ($userdata['is_master'] == 0) {
+            /*if ($userdata['is_master'] == 0) {
+                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            }*/
+
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
                 $this->CI->db->where('order_details.customer_id', $userdata['id']);
             }
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+            }
+
             $total_records =  $this->CI->db->count_all_results();
             
             if(isset($keyword) && !empty($keyword))
@@ -61,16 +79,28 @@ class Order
                 $this->CI->db->like('property_details.full_address', $keyword);            
                 $this->CI->db->or_like('order_details.file_number', $keyword);
             }
+            if(isset($status) && !empty($status))
+            {
+                $this->CI->db->where('order_details.resware_status', $status);
+            }
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
            
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name, order_details.proposed_insured_document_name')
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name, 
+                order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id');
 
-            if ($userdata['is_master'] == 0) {
+            /*if ($userdata['is_master'] == 0) {
                 $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            }*/
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
+                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            }
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
             $this->CI->db->order_by("order_details.id", "desc");
 
@@ -86,27 +116,48 @@ class Order
         }
         else
         {
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name, order_details.proposed_insured_document_name')
+            if(isset($status) && !empty($status))
+            {
+                $this->CI->db->where('order_details.resware_status', $status);
+            }
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
 
-            if ($userdata['is_master'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
                 $this->CI->db->where('order_details.customer_id', $userdata['id']);
             }
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+            }
+            /*if ($userdata['is_master'] == 0) {
+                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            }*/
        
             $total_records =  $this->CI->db->count_all_results();
-           
+
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
-           
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name, order_details.proposed_insured_document_name')
+
+            if(isset($status) && !empty($status))
+            {
+                $this->CI->db->where('order_details.resware_status', $status);
+            }
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name,
+            order_details.created_at,order_details.resware_status,  order_details.proposed_insured_document_name')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id');
 
             
-            if ($userdata['is_master'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
                 $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            }
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
             $this->CI->db->order_by("order_details.id", "desc");
 
@@ -216,7 +267,7 @@ class Order
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->CI->db->where('file_id', $fileId);
          
-        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0) {
+        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0) {
             $this->CI->db->where('order_details.customer_id', $userdata['id']);
         }
         $query = $this->CI->db->get();

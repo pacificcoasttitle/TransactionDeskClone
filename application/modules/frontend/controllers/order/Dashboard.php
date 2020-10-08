@@ -18,6 +18,7 @@ class Dashboard extends MX_Controller {
 		$this->load->model('order/titleOfficer');
 		$this->load->model('order/home_model');
 		$this->load->model('order/fees_model');
+		$this->load->library('order/resware');
 		$this->order->is_user();
 	}
 	
@@ -27,14 +28,26 @@ class Dashboard extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
 		$is_master = isset($userdata['is_master']) && !empty($userdata['is_master']) ? $userdata['is_master'] : '';
+		$is_sales_rep = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? $userdata['is_sales_rep'] : '';
 		$data['name'] = $name;
 		$data['is_master'] = $is_master;
 		$data['user_email'] = $userdata['email'];
 		$data['is_special_lender'] = $userdata['is_special_lender'] == 1 ? 1 : 0;
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/dashboard');
+		
+		if($is_sales_rep)
+        {
+        	$data['mail_dashboard'] = 1;
+        	$this->load->view('layout/head_dashboard',$data);
+        	$this->load->view('order/sales_dashboard');
+        }
+        else
+        {
+        	$this->load->view('layout/head_dashboard',$data);
+			$this->load->view('order/dashboard');
+        }
+		
 	}
 
 
@@ -2908,4 +2921,93 @@ class Dashboard extends MX_Controller {
 		$this->load->helper('sendemail');
 		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
 	}
+
+	
+	function get_sales_orders()
+    {
+        $params = array();  $data = array();
+        $status = $this->input->post('status');
+        $params['status'] = isset($status) && !empty($status) ? $status : 'open';
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $order_lists = $this->order->get_orders($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $order_lists = $this->order->get_orders($params);
+        }
+
+        if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($order_lists['data'] as $order)  {
+
+                $nestedData = array();
+                $nestedData[] = $order['file_number'];
+               // $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
+                $nestedData[] = $order['full_address'];
+                $nestedData[] = ucfirst($order['resware_status']);
+               
+                if ($order['prelim_summary_id'] != 0) {
+					$action = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a button-color' type='button'>REVIEW FILE</button></a>";
+				} else {
+					$action = "<a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a>";
+				}
+				$action .= "<a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>VIEW Partners</button></a>";
+               $nestedData[] = $action;
+
+                $data[] = $nestedData; 
+                $i++; 
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    function get_partners()
+    {
+    	$fileId = $this->input->post('fileId');
+
+    	if($fileId)
+    	{
+    		$userdata = $this->session->userdata('user');
+
+    		$orderDetails = $this->order->get_order_details($fileId);
+
+    		$endPoint = 'files/'. $fileId .'/partners';
+
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+
+			if ($userdata['is_master'] == 1) {
+				$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+				$user_data['email'] = $orderUser['email_address'];
+				$user_data['password'] = $orderUser['random_password'];
+			} else {
+				$user_data = array();
+			}
+
+			$result = $this->resware->make_request('GET', $endPoint, '', $user_data);
+
+			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $result, $orderDetails['order_id'], $logid);
+			$partners = json_decode($result, true);
+
+			$partners = isset($partners['Partners']) && !empty($partners['Partners']) ? $partners['Partners'] : '';
+			
+			$res = array('status'=>'success','partners'=>$partners);
+    	}
+    	else
+    	{
+    		$res = array('status'=>'error','msg'=>"Please select file.");
+    	}
+    	
+    	echo json_encode($res);
+    }
 }

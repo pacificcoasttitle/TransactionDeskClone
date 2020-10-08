@@ -118,7 +118,9 @@ class Home extends MX_Controller {
 	        	$condition = array(
 	                'id' => $SalesRep	                
 	            );
-				$salesRepDetails = $this->salesRep->getSalesRepDetails($condition);
+
+				$salesRepDetails = $this->home_model->getSalesRepDetails($condition);
+				
 				if ($salesRepDetails["is_mail_notification"] == 1) {
 					$parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
 				}
@@ -773,8 +775,15 @@ class Home extends MX_Controller {
 
 			$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
 
-			$data['salesRep'] = $this->salesRep->getSalesRepDetails($condition);
-	        
+			// $data['salesRep'] = $this->salesRep->getSalesRepDetails($condition);
+			$condition = array(
+                'where' => array(
+                    'is_sales_rep' => 1,
+                    'status' => 1,
+                )
+            );
+			$data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
+
 	        if($is_master)
 	        {
 	        	$this->load->view('layout/head',$data);
