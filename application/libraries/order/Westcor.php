@@ -76,7 +76,7 @@ class Westcor
         return $allRecords;
     }
 
-    public function get_token($id)
+    public function get_token($id, $orderNumber)
     {
         $this->CI->db->select('*');
         $this->CI->db->from('pct_order_westcore_token');

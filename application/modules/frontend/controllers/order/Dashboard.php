@@ -1012,7 +1012,7 @@ class Dashboard extends MX_Controller {
 		$orderDetails = $this->order->get_order_details($fileId);
 		$res = array();
 
-		$resToken = $this->westcor->get_token($orderDetails['fnf_agent_id']);
+		$resToken = $this->westcor->get_token($orderDetails['fnf_agent_id'], $orderDetails['order_id']);
 		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 
 		$propertyDetail = explode(",", $orderDetails['full_address']);
@@ -1324,9 +1324,7 @@ class Dashboard extends MX_Controller {
 			$resCPL['CPL']['PolicyProducingAgentState'] = $resToken['state'];
 			$resCPL['CPL']['PolicyProducingAgentZip'] = $resToken['zip'];
 			$resCPL['CPL']['ProtectLender'] = true;
-			$resCPL['CPL']['ProtectLender'] = true;
-			$resCPL['CPL']['FreeInfoText'] = $orderDetails['vesting'] ? $orderDetails['vesting'] : null;
-		
+			
 			$res['cpl'][] = $resCPL['CPL'];
 			$res['lenders'] = $lenders;
 			$res['buyers'] = $buyers;
