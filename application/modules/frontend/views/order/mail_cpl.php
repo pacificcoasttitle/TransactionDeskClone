@@ -142,7 +142,7 @@
 										<label class="field prepend-icon">
 											<input type="text" name="LenderName" id="LenderName"
 												class="gui-input" placeholder="Attention"
-												autocomplete="off" required="required">
+												autocomplete="off">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
