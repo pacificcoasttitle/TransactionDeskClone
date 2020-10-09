@@ -94,6 +94,7 @@
 				        <th>PartnerTypeID</th>
 				        <th>PartnerTypeName</th>
 				        <th>PartnerName</th>
+				        <!-- <th>EmailAddress</th> -->
 				      </tr>
 				    </thead>
 				    <tbody></tbody>
@@ -196,10 +197,16 @@
 				var table_data = '';
 				if(results.status == 'success')
 				{
-					$.each(results.partners, function( key, value ) {
-						console.log(value.PartnerType.PartnerTypeName);
-		              	table_data += '<tr><td>'+value.PartnerID+'</td><td>'+value.PartnerTypeID+'</td><td>'+value.PartnerType.PartnerTypeName+'</td><td>'+value.PartnerName+'</td></tr>'
-		            });
+					if(!jQuery.isEmptyObject(results.partners))
+					{
+						$.each(results.partners, function( key, value ) {
+			              	table_data += '<tr><td>'+value.PartnerID+'</td><td>'+value.PartnerTypeID+'</td><td>'+value.PartnerType.PartnerTypeName+'</td><td>'+value.PartnerName+'</td></tr>';
+			            });
+					}
+					else
+					{
+						table_data += '<tr><td colspan="4" style="text-align: center;">No records found.</td></tr>';
+					}
 					$('#tbl-partners-data tbody').html(table_data);
 					$('#partnersModal').modal('show');
 				}
