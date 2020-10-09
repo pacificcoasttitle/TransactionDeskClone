@@ -214,20 +214,20 @@
 								<div class="tagline"><span>Primary Borrower Information</span></div><!-- .tagline -->
 							</div>
 							<div class="frm-row spacer-b15">
-								<div class="section colm colm6">
+								<div class="section colm colm12">
 									<label class="field prepend-icon">
 										<input type="text" name="primary_first_name" id="primary_first_name" class="gui-input"
-											placeholder="First Name" >
+											placeholder="Primary Borrower Name" >
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
 								</div>
-								<div class="section colm colm6">
+								<!-- <div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="primary_last_name" id="primary_last_name" class="gui-input"
 											placeholder="Last Name" >
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
-								</div>
+								</div> -->
 							</div>
 							</div>
 							<div id="secondary-borrower-section">
@@ -235,20 +235,20 @@
 								<div class="tagline"><span>Secondary Borrower Information</span></div><!-- .tagline -->
 							</div>
 							<div class="frm-row spacer-b15">
-								<div class="section colm colm6">
+								<div class="section colm colm12">
 									<label class="field prepend-icon">
 										<input type="text" name="first_name" id="first_name" class="gui-input"
-											placeholder="First Name">
+											placeholder="Secondary Borrower Name">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
 								</div>
-								<div class="section colm colm6">
+								<!-- <div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="last_name" id="last_name" class="gui-input"
 											placeholder="Last Name">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
-								</div>
+								</div> -->
 							</div>
 							</div>
 							<div id="vesting-section">
@@ -436,20 +436,20 @@
 								<div class="tagline"><span>Primary Borrower Information</span></div><!-- .tagline -->
 							</div>
 							<div class="frm-row spacer-b15">
-								<div class="section colm colm6">
+								<div class="section colm colm12">
 									<label class="field prepend-icon">
 										<input type="text" name="primary_first_name" id="edit_primary_first_name" class="gui-input"
-											placeholder="First Name" >
+											placeholder="Primary Borrower Name" >
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
 								</div>
-								<div class="section colm colm6">
+								<!-- <div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="primary_last_name" id="edit_primary_last_name" class="gui-input"
 											placeholder="Last Name" >
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
-								</div>
+								</div> -->
 							</div>
 							</div>
 							<div id="secondary-borrower-section">
@@ -457,20 +457,20 @@
 								<div class="tagline"><span>Secondary Borrower Information</span></div><!-- .tagline -->
 							</div>
 							<div class="frm-row spacer-b15">
-								<div class="section colm colm6">
+								<div class="section colm colm12">
 									<label class="field prepend-icon">
 										<input type="text" name="first_name" id="edit_first_name" class="gui-input"
-											placeholder="First Name">
+											placeholder="Secondary Borrower Name">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
 								</div>
-								<div class="section colm colm6">
+								<!-- <div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="last_name" id="edit_last_name" class="gui-input"
 											placeholder="Last Name">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
-								</div>
+								</div> -->
 							</div>
 							</div>
 							<div id="vesting-section">
@@ -549,7 +549,7 @@ $(document).ready(function () {
 	                // loan_amount:"required",
 	                loan_number:"required",
 	                primary_first_name:"required",
-	                primary_last_name:"required",
+	               // primary_last_name:"required",
 	                supplemental_report_date:"required",
 	                preliminary_report_date:"required",
 	            },
@@ -575,9 +575,9 @@ $(document).ready(function () {
 	            	var loan_amount = $('#loan_amount').val();
 	            	var loan_number = $('#loan_number').val();
 	            	var primary_first_name = $('#primary_first_name').val();
-	            	var primary_last_name = $('#primary_last_name').val();
+	            	// var primary_last_name = $('#primary_last_name').val();
 	            	var secondary_first_name = $('#first_name').val();
-	            	var secondary_last_name = $('#last_name').val();
+	            	// var secondary_last_name = $('#last_name').val();
 	            	var vesting = $('#vesting').val();
 	            	var LenderId = $('#LenderId').val();
 	            	var orderId = $('#orderId').val();
@@ -595,9 +595,9 @@ $(document).ready(function () {
 	                    loan_amount: loan_amount,
 	                    loan_number: loan_number,
 	                    primary_first_name: primary_first_name,
-	                    primary_last_name: primary_last_name,
+	                    // primary_last_name: primary_last_name,
 	                    secondary_first_name: secondary_first_name,
-	                    secondary_last_name: secondary_last_name,
+	                    // secondary_last_name: secondary_last_name,
 	                    vesting: vesting,
 	                    LenderId: LenderId,
 	                    LenderCompany:LenderCompany,
@@ -830,7 +830,7 @@ $(document).ready(function () {
 	    
 		/* Lender autocomplete */
 
-		$('#lender_information,#edit_information').on('hidden.bs.modal', function (e) {
+		/*$('#lender_information,#edit_information').on('hidden.bs.modal', function (e) {
 		  $(this)
 		    .find("input,textarea,select")
 		       .val('')
@@ -838,7 +838,7 @@ $(document).ready(function () {
 		    .find("input[type=checkbox], input[type=radio]")
 		       .prop("checked", "")
 		       .end();
-		});
+		});*/
 
 		/* Edit modal validations */
 		if(jQuery('#edit-order-details').length)
@@ -853,7 +853,7 @@ $(document).ready(function () {
 	                // loan_amount:"required",
 	                loan_number:"required",
 	                primary_first_name:"required",
-	                primary_last_name:"required",
+	                // primary_last_name:"required",
 	                supplemental_report_date:"required",
 	                preliminary_report_date:"required",
 		        },
@@ -879,9 +879,9 @@ $(document).ready(function () {
 	            	var loan_amount = $('#edit_loan_amount').val();
 	            	var loan_number = $('#edit_loan_number').val();
 	            	var primary_first_name = $('#edit_primary_first_name').val();
-	            	var primary_last_name = $('#edit_primary_last_name').val();
+	            	// var primary_last_name = $('#edit_primary_last_name').val();
 	            	var secondary_first_name = $('#edit_first_name').val();
-	            	var secondary_last_name = $('#edit_last_name').val();
+	            	// var secondary_last_name = $('#edit_last_name').val();
 	            	var vesting = $('#edit_vesting').val();
 
 	            	var LenderId = $('#edit_LenderId').val();
@@ -900,9 +900,9 @@ $(document).ready(function () {
 	                    loan_amount: loan_amount,
 	                    loan_number: loan_number,
 	                    primary_first_name: primary_first_name,
-	                    primary_last_name: primary_last_name,
+	                    // primary_last_name: primary_last_name,
 	                    secondary_first_name: secondary_first_name,
-	                    secondary_last_name: secondary_last_name,
+	                    // secondary_last_name: secondary_last_name,
 	                    vesting: vesting,
 	                    LenderId: LenderId,
 	                    LenderCompany:LenderCompany,
@@ -984,11 +984,12 @@ function generateProposedInsured(fileId)
             },
             success: function(response) {
             	var res = JSON.parse(response);
-
+            	var dataRequired = 0;
                 if(res.status == 'success') 
                 {
                 	if(res.orderDetails['is_escrow'] == 1 && (res.orderDetails['escrow_lender_id'] == null || res.orderDetails['escrow_lender_id'] == undefined || res.orderDetails['escrow_lender_id'].length == 0))
                 	{
+                		dataRequired = 1;
                 		$('#lender-details-fields').show();
                 	}
                 	else
@@ -1004,8 +1005,9 @@ function generateProposedInsured(fileId)
 					$("#LenderZipcode").val(res.orderDetails['lender_zipcode']);
 					$("#LenderId").val(res.orderDetails['lender_id']);
 
-					if((res.orderDetails['primary_owner_first_name'] == null || res.orderDetails['primary_owner_first_name'] == undefined || res.orderDetails['primary_owner_first_name'].length == 0) || (res.orderDetails['primary_owner_last_name'] == null || res.orderDetails['primary_owner_last_name'] == undefined || res.orderDetails['primary_owner_last_name'].length == 0))
+					if((res.orderDetails['primary_owner_first_name'] == null || res.orderDetails['primary_owner_first_name'] == undefined || res.orderDetails['primary_owner_first_name'].length == 0))
                 	{
+                		dataRequired = 1;
                 		$('#primary-borrower-section').show();
                 	}
                 	else
@@ -1014,10 +1016,11 @@ function generateProposedInsured(fileId)
                 	}
 
 					$("#primary_first_name").val(res.orderDetails['primary_owner_first_name']);
-					$("#primary_last_name").val(res.orderDetails['primary_owner_last_name']);
+					// $("#primary_last_name").val(res.orderDetails['primary_owner_last_name']);
 
-					if((res.orderDetails['secondary_owner_first_name'] == null || res.orderDetails['secondary_owner_first_name'] == undefined || res.orderDetails['secondary_owner_first_name'].length == 0) || (res.orderDetails['secondary_owner_last_name'] == null || res.orderDetails['secondary_owner_last_name'] == undefined || res.orderDetails['secondary_owner_last_name'].length == 0))
+					if((res.orderDetails['secondary_owner_first_name'] == null || res.orderDetails['secondary_owner_first_name'] == undefined || res.orderDetails['secondary_owner_first_name'].length == 0))
                 	{
+                		dataRequired = 1;
                 		$('#secondary-borrower-section').show();
                 	}
                 	else
@@ -1026,10 +1029,11 @@ function generateProposedInsured(fileId)
                 	}
 
 					$("#first_name").val(res.orderDetails['secondary_owner_first_name']);
-					$("#last_name").val(res.orderDetails['secondary_owner_last_name']);
+					// $("#last_name").val(res.orderDetails['secondary_owner_last_name']);
 
 					if(res.orderDetails['vesting'] == null || res.orderDetails['vesting'] == undefined || res.orderDetails['vesting'].length == 0 )
 					{
+						dataRequired = 1;
 						$('#vesting-section').show();
                 	}
                 	else
@@ -1040,6 +1044,7 @@ function generateProposedInsured(fileId)
 
 					if((res.orderDetails['loan_amount'] == null || res.orderDetails['loan_amount'] == undefined || res.orderDetails['loan_amount'].length == 0) || (res.orderDetails['loan_number'] == null || res.orderDetails['loan_number'] == undefined || res.orderDetails['loan_number'].length == 0) )
                 	{
+                		dataRequired = 1;
                 		$('#loan-details-section').show();
                 	}
                 	else
@@ -1052,6 +1057,7 @@ function generateProposedInsured(fileId)
 
 					if(res.orderDetails['title_officer'] == null || res.orderDetails['title_officer'] == undefined || res.orderDetails['title_officer'].length == 0 )
                 	{
+                		dataRequired = 1;
                 		$('#title-officer-section').show();
                 	}
                 	else
@@ -1062,6 +1068,7 @@ function generateProposedInsured(fileId)
 
 					if((res.orderDetails['preliminary_report_date'] == null || res.orderDetails['preliminary_report_date'] == undefined || res.orderDetails['preliminary_report_date'].length == 0) || (res.orderDetails['supplemental_report_date'] == null || res.orderDetails['supplemental_report_date'] == undefined || res.orderDetails['supplemental_report_date'].length == 0))
                 	{
+                		dataRequired = 1;
                 		$('#report-date-section').show();
                 	}
                 	else
@@ -1088,16 +1095,14 @@ function generateProposedInsured(fileId)
             	$('#transaction_id').val(res.orderDetails.transaction_id);
             	$('#property_id').val(res.orderDetails.property_id);
             	$('#fileId').val(res.orderDetails.fileId);
-				var visible_ele = $('.lender_information .modal-content:visible').length;
-				/*if(visible_ele > 0)
-				{
-					$('#lender_information').modal('show');
+				if(dataRequired == 0)	
+				{	
+					$( "#add-order-details" ).submit();		
+				}	
+				else	
+				{	
+					$('#lender_information').modal('show');	
 				}
-				else
-				{
-					$( "#add-order-details" ).submit();
-				}*/
-				$('#lender_information').modal('show');
             }
         });
 	}

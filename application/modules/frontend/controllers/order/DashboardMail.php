@@ -1397,12 +1397,12 @@ class DashboardMail extends MX_Controller {
             $TitleOfficer = $this->input->post('TitleOfficer');
             $loan_amount = $this->input->post('loan_amount');
             $loan_number = $this->input->post('loan_number');
-            $primary_first_name = $this->input->post('primary_first_name');
-            $primary_last_name = $this->input->post('primary_last_name');
-            $primary_owner = $primary_first_name." ".$primary_last_name;
-            $secondary_first_name = $this->input->post('secondary_first_name');
-            $secondary_last_name = $this->input->post('secondary_last_name');
-            $secondaryOwner = $secondary_first_name." ".$secondary_last_name;
+            /*$primary_first_name = $this->input->post('primary_first_name');
+            $primary_last_name = $this->input->post('primary_last_name');*/
+            $primary_owner = $this->input->post('primary_first_name');
+            /*$secondary_first_name = $this->input->post('secondary_first_name');
+            $secondary_last_name = $this->input->post('secondary_last_name');*/
+            $secondaryOwner = $this->input->post('secondary_first_name');
             $name = explode(" ",$this->input->post('LenderName'));
             $vesting = $this->input->post('vesting');
             $new_existing_lender = $this->input->post('new_existing_lender');
@@ -1647,7 +1647,9 @@ class DashboardMail extends MX_Controller {
                 // unlink($pdfFilePath);
                 $this->home_model->update(array('proposed_insured_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
 
-                $fileSize = filesize('./uploads/proposed-insured/'.$document_name);
+                $this->uploadProposedDocumentToResware($document_name, $orderDetails, $binaryData);
+
+                /*$fileSize = filesize('./uploads/proposed-insured/'.$document_name);
                 $documentData = array(
                     'document_name' => $document_name,
                     'original_document_name' => $document_name,
@@ -1660,7 +1662,7 @@ class DashboardMail extends MX_Controller {
                     'is_prelim_document' => 0,
                     'is_proposed_insured_doc' => 1
                 );
-                $documentId = $this->document->insert($documentData);
+                $documentId = $this->document->insert($documentData);*/
 
                 $data = array('status'=>'success','data'=>$binaryData);
             }
@@ -1674,6 +1676,60 @@ class DashboardMail extends MX_Controller {
             $data = array('status'=>'error');
         }
         echo json_encode($data); exit;
+    }
+
+    public function uploadProposedDocumentToResware($document_name, $orderDetails, $binaryData)
+    {
+        $this->load->model('order/document');
+        $this->load->library('order/resware');
+        $this->load->model('order/apiLogs');
+
+        $userdata = $this->session->userdata('user');
+
+        $fileSize = filesize('./uploads/proposed-insured/'.$document_name);
+
+        $documentData = array(
+            'document_name' => $document_name,
+            'original_document_name' => $document_name,
+            'document_type_id' => 1037,
+            'document_size' => $fileSize,
+            'user_id' => $userdata['id'],
+            'order_id' => $orderDetails['order_id'],
+            'description' => 'Proposed Insured Document',
+            'is_sync' => 1,
+            'is_prelim_document' => 0,
+            'is_proposed_insured_doc' => 1
+        );
+
+        $documentId = $this->document->insert($documentData);
+
+        $endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+
+        $documentApiData = array(           
+            'DocumentName' => $document_name,
+            'DocumentType' => array(
+                'DocumentTypeID' => 1037,
+            ),
+            'Description' => 'Proposed Insured Document',
+            'InternalOnly' => false,
+            'DocumentBody' => $binaryData
+        );
+        $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+        $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $user_data['email'] = $orderUser['email_address'];
+        $user_data['password'] = $orderUser['random_password'];
+        $user_data['from_mail'] = 1;
+        
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+
+        $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+
+        $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+
+        $res = json_decode($result);
+
+        $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
     
 }
