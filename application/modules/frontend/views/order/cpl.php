@@ -171,11 +171,6 @@
 								</div>
 
 								<div class="frm-row spacer-b15">
-									<!-- <div class="section colm colm6">
-										<label class="field">
-											<input type="text" class="gui-input" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
-										</label>
-									</div> -->
 									<div class="section colm colm12">
 										<label class="field">
 											<input required="required" type="text" class="gui-input" name="loan_number" id="loan_number" placeholder="Loan Number">
@@ -188,17 +183,10 @@
 								</div>
 
 								<div class="frm-row spacer-b15">
-									<div class="section colm colm6">
+									<div class="section colm colm12">
 										<label class="field prepend-icon">
-											<input type="text" name="primary_first_name" id="primary_first_name" class="gui-input"
-												placeholder="First Name"  required="required">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input type="text" name="primary_last_name" id="primary_last_name" class="gui-input"
-												placeholder="Last Name"  required="required">
+											<input type="text" name="primary_owner_name" id="primary_owner_name" class="gui-input"
+												placeholder="Primary Borrower Name"  required="required">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
@@ -209,17 +197,10 @@
 								</div>
 
 								<div class="frm-row spacer-b15">
-									<div class="section colm colm6">
+									<div class="section colm colm12">
 										<label class="field prepend-icon">
-											<input type="text" name="first_name" id="first_name" class="gui-input"
-												placeholder="First Name">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input type="text" name="last_name" id="last_name" class="gui-input"
-												placeholder="Last Name">
+											<input type="text" name="secondary_owner_name" id="secondary_owner_name" class="gui-input"
+												placeholder="Secondary Borrower Name">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
@@ -612,11 +593,8 @@
 						$("#LenderCity").val(res.orderDetails['lender_city']);
 						$("#LenderZipcode").val(res.orderDetails['lender_zipcode']);
 						$("#LenderId").val(res.orderDetails['lender_id']);
-						$("#primary_first_name").val(res.orderDetails['primary_owner_first_name']);
-						$("#primary_last_name").val(res.orderDetails['primary_owner_last_name']);
-						$("#first_name").val(res.orderDetails['secondary_owner_first_name']);
-						$("#last_name").val(res.orderDetails['secondary_owner_last_name']);
-						//$("#loan_amount").val(res.orderDetails['loan_amount']);
+						$("#primary_owner_name").val(res.orderDetails['primary_owner_name']);
+						$("#secondary_owner_name").val(res.orderDetails['secondary_owner_name']);
 						$("#loan_number").val(res.orderDetails['loan_number']);
 						$("#vesting").val(res.orderDetails['vesting']);
 						if (res.orderDetails['lender_id'] != '') {
