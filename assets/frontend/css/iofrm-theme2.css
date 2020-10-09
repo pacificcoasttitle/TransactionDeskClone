@@ -88,8 +88,13 @@
 .form-content {
     background-color: #03374f;
 	background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/tpbg.png);
-	background-repeat: repeat-x; 
+	background-repeat: repeat-x;
+-webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;	
 }
+
 
 .form-content .form-group {
     color: #fff;
