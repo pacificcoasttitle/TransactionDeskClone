@@ -1693,7 +1693,7 @@ class DashboardMail extends MX_Controller {
             'original_document_name' => $document_name,
             'document_type_id' => 1037,
             'document_size' => $fileSize,
-            'user_id' => $userdata['id'],
+            'user_id' => 0,
             'order_id' => $orderDetails['order_id'],
             'description' => 'Proposed Insured Document',
             'is_sync' => 1,
