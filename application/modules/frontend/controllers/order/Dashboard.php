@@ -1444,16 +1444,13 @@ class Dashboard extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$file_id = $this->input->post('file_id');
 		$LenderId = $this->input->post('LenderId');
-		//$loan_amount = $this->input->post('loan_amount');
 		$loan_number = $this->input->post('loan_number');
 		$first_name = $this->input->post('first_name');
 		$last_name = $this->input->post('last_name');
 		$vesting = $this->input->post('vesting');
 		$new_existing_lender = $this->input->post('new_existing_lender');
-		$primary_first_name = $this->input->post('primary_first_name');
-		$primary_last_name = $this->input->post('primary_last_name');
-		$primary_owner = $primary_first_name." ".$primary_last_name;
-		$secondaryOwner = $first_name." ".$last_name;
+		$primary_owner = $this->input->post('primary_owner_name');
+		$secondaryOwner = $this->input->post('secondary_owner_name');
 		$name = explode(" ",$this->input->post('LenderName'));	
 		$editFlag = $this->input->post('editFlag');
 		$orderDetails = $this->order->get_order_details($file_id);
@@ -2655,51 +2652,27 @@ class Dashboard extends MX_Controller {
 
 		if ($orderDetails['sales_amount'] > 0) {
 			if (!empty($orderDetails['borrower'])) {
-				$primary_owner = explode(' ', $orderDetails['borrower']);
-				$key = count($primary_owner) - 1;
-				$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
-				if ($key != 0) {
-					$orderDetails['primary_owner_last_name'] = !empty($primary_owner[$key]) ? $primary_owner[$key] : '';
-				}
+				$orderDetails['primary_owner_name'] = $orderDetails['borrower'];
 			} else {
-				$orderDetails['primary_owner_first_name'] = '';
-				$orderDetails['primary_owner_last_name'] = '';
+				$orderDetails['primary_owner_name'] = '';
 			}
 	
 			if (!empty($orderDetails['secondary_borrower'])) {
-				$secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
-				$key = count($secondary_owner) - 1;
-				$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
-				if ($key != 0) {
-					$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[$key]) ? $secondary_owner[$key] : '';
-				}
+				$orderDetails['secondary_owner_name'] = $orderDetails['secondary_borrower'];
 			} else {
-				$orderDetails['secondary_owner_first_name'] = '';
-				$orderDetails['secondary_owner_last_name'] = '';
+				$orderDetails['secondary_owner_name'] = '';
 			}
 		} else {
 			if (!empty($orderDetails['primary_owner'])) {
-				$primary_owner = explode(' ', $orderDetails['primary_owner']);
-				$key = count($primary_owner) - 1;
-				$orderDetails['primary_owner_first_name'] = !empty($primary_owner[0]) ? $primary_owner[0] : '';
-				if($key != 0) {
-					$orderDetails['primary_owner_last_name'] = !empty($primary_owner[$key]) ? $primary_owner[$key] : '';
-				}
+				$orderDetails['primary_owner_name'] = $orderDetails['primary_owner'];
 			} else {
-				$orderDetails['primary_owner_first_name'] = '';
-				$orderDetails['primary_owner_last_name'] = '';
+				$orderDetails['primary_owner_name'] = '';
 			}
 	
 			if (!empty($orderDetails['secondary_owner'])) {
-				$secondary_owner = explode(' ', $orderDetails['secondary_owner']);
-				$key = count($secondary_owner) - 1;
-				$orderDetails['secondary_owner_first_name'] = !empty($secondary_owner[0]) ? $secondary_owner[0] : '';
-				if($key != 0) {
-					$orderDetails['secondary_owner_last_name'] = !empty($secondary_owner[$key]) ? $secondary_owner[$key] : '';
-				}
+                $orderDetails['secondary_owner_name'] =  $orderDetails['secondary_owner'];
 			} else {
-				$orderDetails['secondary_owner_first_name'] = '';
-				$orderDetails['secondary_owner_last_name'] = '';
+				$orderDetails['secondary_owner_name'] = '';
 			}
 		}
 		
