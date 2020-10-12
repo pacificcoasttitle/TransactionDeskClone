@@ -184,7 +184,7 @@ class ReviewPrelim extends MX_Controller {
 
 													if (strpos($easementToLanguage, '_PARCELID1_') !== false) {
 														$easementToLanguage = preg_replace('/ <a.*a>/', '_PARCELID1_', $easementToLanguage);
-													} else if(strpos($lienLanguage, '_INSTRUMENTONLY_') !== false) {
+													} else if(strpos($easementToLanguage, '_INSTRUMENTONLY_') !== false) {
 														$easementToLanguage = preg_replace('/ <a.*a>/', '_INSTRUMENTONLY_', $easementToLanguage);
 													}
 
@@ -297,7 +297,7 @@ class ReviewPrelim extends MX_Controller {
 
 									if (strpos($requirementToLanguage, '_PARCELID1_') !== false) {
 										$requirementToLanguage = preg_replace('/ <a.*a>/', '_PARCELID1_', $requirementToLanguage);
-									} else if(strpos($lienLanguage, '_INSTRUMENTONLY_') !== false) {
+									} else if(strpos($requirementToLanguage, '_INSTRUMENTONLY_') !== false) {
 										$requirementToLanguage = preg_replace('/ <a.*a>/', '_INSTRUMENTONLY_', $requirementToLanguage);
 									}
 
