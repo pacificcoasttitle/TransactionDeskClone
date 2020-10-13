@@ -106,7 +106,6 @@
 											<input type="hidden" name="LenderId" id="LenderId" value="">
 											<input type="hidden" name="file_id" id="file_id" value="">
 											<input type="hidden" name="partner_id" id="partner_id" value="">
-											<input type="hidden" name="state" id="state" value="">
 										</label>
 									</div>
 								</div>
@@ -131,9 +130,9 @@
 									</div>
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
-											<input type="tel" name="LenderTelephone" id="LenderTelephone" class="gui-input"
-												placeholder="Lender Telephone">
-											<span class="field-icon"><i class="fa fa-phone-square"></i></span>
+											<input type="text" name="LenderState" id="LenderState" class="gui-input"
+												placeholder="Lender State">
+											<span class="field-icon"><i class="fa fa-envelope"></i></span>
 										</label>
 									</div>
 								</div>
@@ -331,10 +330,10 @@
 						$("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
 					}
 
-					if(ui.item.telephone_no) {
-						$("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+					if(ui.item.state) {
+						$("#LenderState").val(ui.item.state).parent().addClass('state-success');           
 					} else {
-						$("#LenderTelephone").val('').parent().removeClass('state-success').addClass('state-error');
+						$("#LenderState").val('').parent().removeClass('state-success').addClass('state-error');
 					}
 
 					if(ui.item.name) {
@@ -373,7 +372,7 @@
 					if (ui.item == null)
 					{
 						$("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
-						$("#LenderTelephone").val('').parent().removeClass('state-success').addClass('state-error');
+						$("#LenderState").val('').parent().removeClass('state-success').addClass('state-error');
 						$("#LenderCompany").val('').parent().removeClass('state-success').addClass('state-error');
 						$("#LenderAddress").val('').parent().removeClass('state-success').addClass('state-error');
 						$("#LenderCity").val('').parent().removeClass('state-success').addClass('state-error');
@@ -482,7 +481,7 @@
 		$("input[name=new_existing_lender]").change(function(){
 			$("#LenderEmailAddress").val('');
 			$("#LenderName").val('');
-			$("#LenderTelephone").val('');
+			$("#LenderState").val('');
 			$("#LenderCompany").val('');
 			$("#LenderAddress").val('');
 			$("#LenderCity").val('');
@@ -542,7 +541,7 @@
 						$('#cpl_api').val(res.orderDetails['cpl_api']);
 						$("#LenderName").val(res.orderDetails['lender_name']);
 						$("#LenderEmailAddress").val(res.orderDetails['lender_email']);
-						$("#LenderTelephone").val(res.orderDetails['lender_telephone_no']);
+						$("#LenderState").val(res.orderDetails['lender_state']);
 						$("#LenderCompany").val(res.orderDetails['lender_company_name']);
 						$("#assignment_clause").val(res.orderDetails['lender_assignment_clause']);
 						$("#LenderAddress").val(res.orderDetails['lender_address']);

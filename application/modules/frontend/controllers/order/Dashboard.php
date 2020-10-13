@@ -880,7 +880,7 @@ class Dashboard extends MX_Controller {
 				$data['lender_first_name'] =  '';
 				$data['lender_last_name'] ='';
 				$data['lender_email'] = '';
-				$data['lender_telephone_no'] = '';
+				$data['lender_state'] = '';
 				$data['lender_company_name'] = '';
 				$data['lender_address'] = '';
 				$data['lender_city'] = '';
@@ -892,7 +892,7 @@ class Dashboard extends MX_Controller {
 				$data['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
 				$data['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
 				$data['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
-				$data['lender_telephone_no'] = $orderDetails['lender_telephone_no'] ? $orderDetails['lender_telephone_no'] : '';
+				$data['lender_state'] = $orderDetails['lender_state'] ? $orderDetails['lender_state'] : '';
 				$data['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
 				$data['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
 				$data['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
@@ -908,7 +908,7 @@ class Dashboard extends MX_Controller {
 				$data['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
 				$data['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
 				$data['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
-				$data['lender_telephone_no'] = $lenderDetails['telephone_no'] ? $lenderDetails['telephone_no'] : '';
+				$data['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
 				$data['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
 				$data['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
 				$data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
@@ -920,7 +920,7 @@ class Dashboard extends MX_Controller {
 				$data['lender_first_name'] = $customer_data['first_name'] ? $customer_data['first_name'] : '';
 				$data['lender_last_name'] = $customer_data['last_name'] ? $customer_data['last_name'] : '';
 				$data['lender_email'] = $customer_data['email_address'] ? $customer_data['email_address'] : '';
-				$data['lender_telephone_no'] = $customer_data['telephone_no'] ? $customer_data['telephone_no'] : '';
+				$data['lender_state'] = $customer_data['state'] ? $customer_data['state'] : '';
 				$data['lender_company_name'] = $customer_data['company_name'] ? $customer_data['company_name'] : '';
 				$data['lender_address'] = $customer_data['street_address'] ? $customer_data['street_address'] : '';
 				$data['lender_city'] = $customer_data['city'] ? $customer_data['city'] : '';
@@ -1047,12 +1047,14 @@ class Dashboard extends MX_Controller {
 		$secondary_owner = explode(" ", $orderDetails['secondary_owner']);
 		if ($orderDetails['sales_amount'] > 0)  {
 
+			$sellerBorrowerName = $orderDetails['primary_owner'];
+
 			if(!empty($orderDetails['secondary_owner'])) { 
-				$sellerBorrowerName = $orderDetails['primary_owner']." and ".$orderDetails['secondary_owner'];
+				$sellerBorrowerName .= " and ".$orderDetails['secondary_owner'];
 			}
 
 			if(!empty($orderDetails['vesting'])) { 
-				$sellerBorrowerName .= ', '.$orderDetails['vesting'];
+				$sellerBorrowerName .= ' '.$orderDetails['vesting'];
 			}
 			 
 			$sellers[] = array (
@@ -1069,29 +1071,15 @@ class Dashboard extends MX_Controller {
 				'Address' => null,
 			);
 
-			// if(!empty($secondary_owner)) {
-			// 	$sellers[] = array (
-			// 		'NameID' => $orderDetails['westcor_secondary_seller_id'] ? $orderDetails['westcor_secondary_seller_id'] : 0,
-			// 		'Last' =>  count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
-			// 		'First' => $secondary_owner[0],
-			// 		'NameType' => 1,
-			// 		'JoiningPhrase' => 'single',
-			// 		'tvid' => 0,
-			// 		'Sequence' => 2,
-			// 		'City' => null,
-			// 		'State' => null,
-			// 		'Zip' => null,
-			// 		'Address' => null
-			// 	);	
-			// }
-
 			$purchase_price = $orderDetails['sales_amount'];
 			$buyers = array();
 
 			if (!empty($orderDetails['borrower'])) {
-				
+
+				$buyerBorrowerName = $orderDetails['borrower'];
+
 				if(!empty($orderDetails['secondary_borrower'])) { 
-					$buyerBorrowerName = $orderDetails['borrower']." and ".$orderDetails['secondary_borrower'];
+					$buyerBorrowerName .= " and ".$orderDetails['secondary_borrower'];
 				}
 	
 				$buyers[] = array (
@@ -1108,31 +1096,17 @@ class Dashboard extends MX_Controller {
 					'Address' => null
 				);	
 			} 
-
-			// if (!empty($orderDetails['secondary_borrower'])) {
-			// 	$secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
-			// 	$buyers[] = array (
-			// 		'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-			// 		'Last' => count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
-			// 		'First' => $secondary_owner[0],
-			// 		'NameType' => 1,
-			// 		'JoiningPhrase' => 'single',
-			// 		'tvid' => 0,
-			// 		'Sequence' => 2,
-			// 		'City' => null,
-			// 		'State' => null,
-			// 		'Zip' => null,
-			// 		'Address' => null
-			// 	);	
-			// } 
 		} else {
 			$buyers = array();
+
+			$buyerBorrowerName = $orderDetails['primary_owner'];
+
 			if(!empty($orderDetails['secondary_owner'])) { 
-				$buyerBorrowerName = $orderDetails['primary_owner']." and ".$orderDetails['secondary_owner'];
+				$buyerBorrowerName .= " and ".$orderDetails['secondary_owner'];
 			}
 
 			if(!empty($orderDetails['vesting'])) { 
-				$buyerBorrowerName .= ', '.$orderDetails['vesting'];
+				$buyerBorrowerName .= ' '.$orderDetails['vesting'];
 			}
 			$buyers[] = array (
 				'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
@@ -1147,21 +1121,7 @@ class Dashboard extends MX_Controller {
 				'Zip' => null,
 				'Address' => null
 			);
-			// if(!empty($secondary_owner)) {
-			// 	$buyers[] = array (
-			// 		'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-			// 		'Last' => count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
-			// 		'First' => $secondary_owner[0],
-			// 		'NameType' => 1,
-			// 		'JoiningPhrase' => 'single',
-			// 		'tvid' => 0,
-			// 		'Sequence' => 2,
-			// 		'City' => null,
-			// 		'State' => null,
-			// 		'Zip' => null,
-			// 		'Address' => null
-			// 	);	
-			// }
+			
 			$purchase_price = $orderDetails['loan_amount'];
 			$sellers = array();
 		}
@@ -1459,7 +1419,7 @@ class Dashboard extends MX_Controller {
 		$lender_details = array(
 			'first_name'	=> $name[0],
 			'last_name'  => !empty($name[1]) ? $name[1] : '',
-			'telephone_no'  => !empty($this->input->post('LenderTelephone')) ? $this->input->post('LenderTelephone') : "",
+			'state'  => !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "",
 			'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
 			'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
 			'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
@@ -1471,7 +1431,6 @@ class Dashboard extends MX_Controller {
 		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 		if($new_existing_lender == 'add_lender') {
 			$lender_details['partner_id'] = $this->input->post('partner_id');
-			$lender_details['state'] = !empty($this->input->post('state')) ? $this->input->post('state') : 'CA';
 			$lender_details['is_added_lender_by_cpl_proposed'] = 1;
 			$lender_details['is_escrow'] = 0;
 			$lender_details['status'] = 0;
@@ -1628,7 +1587,7 @@ class Dashboard extends MX_Controller {
 			$lender_details = array(
 				'first_name'	=> $name[0],
 				'last_name'  => !empty($name[1]) ? $name[1] : '',
-				'telephone_no'  => !empty($this->input->post('LenderTelephone')) ? $this->input->post('LenderTelephone') : "",
+				'state'  => !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "",
 				'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
 				'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
 				'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
@@ -2593,7 +2552,7 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_first_name'] =  '';
 				$orderDetails['lender_last_name'] ='';
 				$orderDetails['lender_email'] = '';
-				$orderDetails['lender_telephone_no'] = '';
+				$orderDetails['lender_state'] = '';
 				$orderDetails['lender_company_name'] = '';
 				$orderDetails['lender_address'] = '';
 				$orderDetails['lender_city'] = '';
@@ -2604,7 +2563,7 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
 				$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
 				$orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
-				$orderDetails['lender_telephone_no'] = $orderDetails['lender_telephone_no'] ? $orderDetails['lender_telephone_no'] : '';
+				$orderDetails['lender_state'] = $orderDetails['lender_state'] ? $orderDetails['lender_state'] : '';
 				$orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
 				$orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
 				$orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
@@ -2618,7 +2577,7 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
 				$orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
 				$orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
-				$orderDetails['lender_telephone_no'] = $lenderDetails['telephone_no'] ? $lenderDetails['telephone_no'] : '';
+				$orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
 				$orderDetails['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
 				$orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
 				$orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
@@ -2629,7 +2588,7 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
 				$orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
 				$orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
-				$orderDetails['lender_telephone_no'] = $orderUser['telephone_no'] ? $orderUser['telephone_no'] : '';
+				$orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
 				$orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
 				$orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
 				$orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
