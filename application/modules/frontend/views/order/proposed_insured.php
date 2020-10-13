@@ -126,9 +126,9 @@
 								</div>
 								<div class="section colm colm6">
 									<label class="field prepend-icon">
-										<input type="tel" name="LenderTelephone" id="LenderTelephone" class="gui-input"
-											placeholder="Lender Telephone" >
-										<span class="field-icon"><i class="fa fa-phone-square"></i></span>
+										<input type="text" name="LenderState" id="LenderState" class="gui-input"
+											placeholder="Lender State" >
+										<span class="field-icon"><i class="fa fa-envelope"></i></span>
 									</label>
 								</div>
 							</div>
@@ -350,9 +350,9 @@
 								</div>
 								<div class="section colm colm6">
 									<label class="field prepend-icon">
-										<input type="tel" name="LenderTelephone" id="edit_LenderTelephone" class="gui-input"
-											placeholder="Lender Telephone" >
-										<span class="field-icon"><i class="fa fa-phone-square"></i></span>
+										<input type="tel" name="LenderState" id="edit_LenderState" class="gui-input"
+											placeholder="Lender State" >
+										<span class="field-icon"><i class="fa fa-envelope"></i></span>
 									</label>
 								</div>
 							</div>
@@ -525,7 +525,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/jquery-ui.css">
-<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/ui-lightness/jquery-ui.css">
+
 
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
@@ -613,7 +613,7 @@
 					$('#page-preloader').css('display', 'block');
 	            	var LenderCompany = $('#LenderCompany').val();
 	            	var LenderEmailAddress = $('#LenderEmailAddress').val();
-	            	var LenderTelephone = $('#LenderTelephone').val();
+	            	var LenderState = $('#LenderState').val();
 	            	var LenderName = $('#LenderName').val();
 	            	var LenderAddress = $('#LenderAddress').val();
 	            	var LenderCity = $('#LenderCity').val();
@@ -650,7 +650,7 @@
 	                    LenderId: LenderId,
 	                    LenderCompany:LenderCompany,
 	            		LenderEmailAddress:LenderEmailAddress,
-	            		LenderTelephone:LenderTelephone,
+	            		LenderState:LenderState,
 	            		LenderName:LenderName,
 	            		LenderAddress:LenderAddress,
 	            		LenderCity:LenderCity,
@@ -729,10 +729,10 @@
 							$("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 						}
 
-						if(ui.item.telephone_no) {
-							$("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');          
+						if(ui.item.state) {
+							$("#LenderState").val(ui.item.state).parent().addClass('state-success');          
 						} else {
-							$("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+							$("#LenderState").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 						}
 
 						if(ui.item.name) 
@@ -766,7 +766,7 @@
 			            if (ui.item == null)
 			            {
 			            	$("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-			                $("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+			                $("#LenderState").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 							$("#LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 							$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 			                $("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
@@ -879,10 +879,10 @@
 							$("#edit_LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 						}
 
-						if(ui.item.telephone_no) {
-							$("#edit_LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');          
+						if(ui.item.state) {
+							$("#edit_LenderState").val(ui.item.state).parent().addClass('state-success');          
 						} else {
-							$("#edit_LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+							$("#edit_LenderState").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 						}
 
 						if(ui.item.name) 
@@ -915,7 +915,7 @@
 			            if (ui.item == null)
 			            {
 			            	$("#edit_LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-			                $("#edit_LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+			                $("#edit_LenderState").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 							$("#edit_LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 							$("#edit_LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 			                $("#edit_LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
@@ -1028,7 +1028,7 @@
 					$('#page-preloader').css('display', 'block');
 	            	var LenderCompany = $('#edit_LenderCompany').val();
 	            	var LenderEmailAddress = $('#edit_LenderEmailAddress').val();
-	            	var LenderTelephone = $('#edit_LenderTelephone').val();
+	            	var LenderState = $('#edit_LenderState').val();
 	            	var LenderName = $('#edit_LenderName').val();
 	            	var LenderAddress = $('#edit_LenderAddress').val();
 	            	var LenderCity = $('#edit_LenderCity').val();
@@ -1065,7 +1065,7 @@
 	                    LenderId: LenderId,
 	                    LenderCompany:LenderCompany,
 	            		LenderEmailAddress:LenderEmailAddress,
-	            		LenderTelephone:LenderTelephone,
+	            		LenderState:LenderState,
 	            		LenderName:LenderName,
 	            		LenderAddress:LenderAddress,
 	            		LenderCity:LenderCity,
@@ -1109,7 +1109,7 @@
 		$("input[name=new_existing_lender]").change(function(){
 			$("#LenderEmailAddress").val('');
 			$("#LenderName").val('');
-			$("#LenderTelephone").val('');
+			$("#LenderState").val('');
 			$("#LenderCompany").val('');
 			$("#LenderAddress").val('');
 			$("#LenderCity").val('');
@@ -1120,7 +1120,7 @@
 		$("input[name=edit_new_existing_lender]").change(function(){
 			$("#edit_LenderEmailAddress").val('');
 			$("#edit_LenderName").val('');
-			$("#edit_LenderTelephone").val('');
+			$("#edit_LenderState").val('');
 			$("#edit_LenderCompany").val('');
 			$("#edit_LenderAddress").val('');
 			$("#edit_LenderCity").val('');
@@ -1157,7 +1157,7 @@ function generateProposedInsured(fileId)
                 	}
                 	$("#LenderName").val(res.orderDetails['lender_name']);
 					$("#LenderEmailAddress").val(res.orderDetails['lender_email']);
-					$("#LenderTelephone").val(res.orderDetails['lender_telephone_no']);
+					$("#LenderState").val(res.orderDetails['lender_state']);
 					$("#LenderCompany").val(res.orderDetails['lender_company_name']);
 					$("#LenderAddress").val(res.orderDetails['lender_address']);
 					$("#LenderCity").val(res.orderDetails['lender_city']);
@@ -1328,7 +1328,7 @@ function editInformation(fileId)
 	                	}
 	                	$("#edit_LenderName").val(res.orderDetails['lender_name']);
 						$("#edit_LenderEmailAddress").val(res.orderDetails['lender_email']);
-						$("#edit_LenderTelephone").val(res.orderDetails['lender_telephone_no']);
+						$("#edit_LenderState").val(res.orderDetails['lender_state']);
 						$("#edit_LenderCompany").val(res.orderDetails['lender_company_name']);
 						$("#edit_LenderAddress").val(res.orderDetails['lender_address']);
 						$("#edit_LenderCity").val(res.orderDetails['lender_city']);

@@ -949,6 +949,7 @@ class Home extends MX_Controller {
 				$data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
 				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
 				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+				$data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
 				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
 				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
 				$data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
