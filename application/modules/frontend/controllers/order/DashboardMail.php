@@ -1102,7 +1102,10 @@ class DashboardMail extends MX_Controller {
 				}
 				$orderDetails['agents_data'] = $agentsData;
 			} else {
-				$orderDetails['cpl_api'] = 'westcor';
+                $orderDetails['cpl_api'] = 'westcor';
+				$this->load->library('order/westcor');
+				$agentsData = $this->westcor->getBranches($orderDetails['order_id']);
+				$orderDetails['agents_data'] = $agentsData;
 			}
 		}
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
