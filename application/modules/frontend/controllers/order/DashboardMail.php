@@ -464,12 +464,14 @@ class DashboardMail extends MX_Controller {
         $secondary_owner = explode(" ", $orderDetails['secondary_owner']);
         if ($orderDetails['sales_amount'] > 0)  {	
 
-            if(!empty($orderDetails['secondary_owner'])) { 
-				$sellerBorrowerName = $orderDetails['primary_owner']." and ".$orderDetails['secondary_owner'];
+            $sellerBorrowerName = $orderDetails['primary_owner'];
+
+			if(!empty($orderDetails['secondary_owner'])) { 
+				$sellerBorrowerName .= " and ".$orderDetails['secondary_owner'];
 			}
 
 			if(!empty($orderDetails['vesting'])) { 
-				$sellerBorrowerName .= ', '.$orderDetails['vesting'];
+				$sellerBorrowerName .= ' '.$orderDetails['vesting'];
 			}
 			 
 			$sellers[] = array (
@@ -486,29 +488,15 @@ class DashboardMail extends MX_Controller {
 				'Address' => null,
 			);   
 
-            // if(!empty($secondary_owner)) {
-			// 	$sellers[] = array (
-			// 		'NameID' => $orderDetails['westcor_secondary_seller_id'] ? $orderDetails['westcor_secondary_seller_id'] : 0,
-			// 		'Last' =>  count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
-			// 		'First' => $secondary_owner[0],
-			// 		'NameType' => 1,
-			// 		'JoiningPhrase' => 'single',
-			// 		'tvid' => 0,
-			// 		'Sequence' => 2,
-			// 		'City' => null,
-			// 		'State' => null,
-			// 		'Zip' => null,
-			// 		'Address' => null
-			// 	);	
-			// }
-
             $purchase_price = $orderDetails['sales_amount'];
             $buyers = array();
 
             if (!empty($orderDetails['borrower'])) {
 				
+				$buyerBorrowerName = $orderDetails['borrower'];
+
 				if(!empty($orderDetails['secondary_borrower'])) { 
-					$buyerBorrowerName = $orderDetails['borrower']." and ".$orderDetails['secondary_borrower'];
+					$buyerBorrowerName .= " and ".$orderDetails['secondary_borrower'];
 				}
 	
 				$buyers[] = array (
@@ -526,30 +514,16 @@ class DashboardMail extends MX_Controller {
 				);	
 			} 	
 
-            // if (!empty($orderDetails['secondary_borrower'])) {
-			// 	$secondary_owner = explode(' ', $orderDetails['secondary_borrower']);
-			// 	$buyers[] = array (
-			// 		'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-			// 		'Last' => count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
-			// 		'First' => $secondary_owner[0],
-			// 		'NameType' => 1,
-			// 		'JoiningPhrase' => 'single',
-			// 		'tvid' => 0,
-			// 		'Sequence' => 2,
-			// 		'City' => null,
-			// 		'State' => null,
-			// 		'Zip' => null,
-			// 		'Address' => null
-			// 	);	
-			// } 
         } else {
             $buyers = array();
+			$buyerBorrowerName = $orderDetails['primary_owner'];
+
 			if(!empty($orderDetails['secondary_owner'])) { 
-				$buyerBorrowerName = $orderDetails['primary_owner']." and ".$orderDetails['secondary_owner'];
+				$buyerBorrowerName .= " and ".$orderDetails['secondary_owner'];
 			}
 
 			if(!empty($orderDetails['vesting'])) { 
-				$buyerBorrowerName .= ', '.$orderDetails['vesting'];
+				$buyerBorrowerName .= ' '.$orderDetails['vesting'];
 			}
 			$buyers[] = array (
 				'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
@@ -564,21 +538,6 @@ class DashboardMail extends MX_Controller {
 				'Zip' => null,
 				'Address' => null
 			);
-			// if(!empty($secondary_owner)) {
-			// 	$buyers[] = array (
-			// 		'NameID' => $orderDetails['westcor_secondary_buyer_id'] ? $orderDetails['westcor_secondary_buyer_id'] : 0,
-			// 		'Last' => count($secondary_owner) == 3 ?  $secondary_owner[2] :  $secondary_owner[1],
-			// 		'First' => $secondary_owner[0],
-			// 		'NameType' => 1,
-			// 		'JoiningPhrase' => 'single',
-			// 		'tvid' => 0,
-			// 		'Sequence' => 2,
-			// 		'City' => null,
-			// 		'State' => null,
-			// 		'Zip' => null,
-			// 		'Address' => null
-			// 	);	
-			// }
 			$purchase_price = $orderDetails['loan_amount'];
 			$sellers = array();
         }	 
