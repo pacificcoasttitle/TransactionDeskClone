@@ -301,7 +301,7 @@ class Fnf
                 $orderDetails['lender_assignment_clause'] =  $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
                 $orderDetails['lender_address'] = $lenderDetails['street_address'];
                 $orderDetails['lender_city'] = $lenderDetails['city'];
-                $orderDetails['lender_state'] = 'CA';
+                $orderDetails['lender_state'] = $lenderDetails['state'];
                 $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
                 $lenderName = $lenderDetails['company_name'];
                 $lenderAttnName = $lenderDetails['first_name']." ".$lenderDetails['last_name'];
@@ -488,7 +488,7 @@ class Fnf
                 $orderDetails['lender_assignment_clause'] =  $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
                 $orderDetails['lender_address'] = $lenderDetails['street_address'];
                 $orderDetails['lender_city'] = $lenderDetails['city'];
-                $orderDetails['lender_state'] = 'CA';
+                $orderDetails['lender_state'] = $lenderDetails['state'];
                 $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
                 $lenderName = $lenderDetails['company_name'];
                 $lenderAttnName = $lenderDetails['first_name']." ".$lenderDetails['last_name'];
