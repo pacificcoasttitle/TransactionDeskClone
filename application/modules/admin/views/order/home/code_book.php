@@ -15,13 +15,13 @@
                 <table class="table table-bordered" id="tbl-code-book" style="table-layout: fixed;" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th style="width: 8%;">Sr No</th>
+                            <th style="width: 7%;">Sr No</th>
                             <th style="width: 10%;">Code</th>
                             <th style="width: 10%;">Type Id</th>
                             <th style="width: 12%;">Type</th>
-                            <th style="width: 60%;">Language</th>
+                            <th style="width: 40%;">Language</th>
+                            <th style="width: 10%;">Required Number</th>
                             <th style="width: 10%;">Action</th>
-                            <!-- <th style="width: 10%;">Action</th> -->
                         </tr>
                     </thead>
                     <tbody></tbody>
