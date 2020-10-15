@@ -85,6 +85,7 @@ class CodeBook extends MX_Controller {
 
                 $nestedData[] = $type_dropdown;
                 $nestedData[] = nl2br($value['language']);
+                $nestedData[] = $value['required_number'] == 1 ? 'Yes' : 'No';
 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-code-book/'.$value['id'];
@@ -320,6 +321,7 @@ class CodeBook extends MX_Controller {
                         'type' => $this->input->post('type'),
                         'language' => $language,
                         'status' => 1,
+                        'required_number' => $this->input->post('required_number') ? 1 : 0
                     );
 
                     $condition = array('id' => $id);

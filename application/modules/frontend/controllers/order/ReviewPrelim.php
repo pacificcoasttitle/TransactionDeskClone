@@ -76,10 +76,19 @@ class ReviewPrelim extends MX_Controller {
 						$lienFlag =  1;
 
 						foreach ($data['Liens'] as $key => $lien) {
-							$language = '';
 							$lienKey = array_search($lien['LienTypeID'], array_column($codeBooks, 'type_id'));
 
 							if (isset($lienKey) && !empty($lienKey)) {
+								
+								if ($codeBooks[$lienKey]['required_number'] == 1) {
+									$language = '';
+									$preLanguage = '';
+								} else {
+									$preLanguage = $language;
+									$language = '';
+									$liensCount--;
+								}
+
 								$language = $codeBooks[$lienKey]['language'];
 								if(strpos($codeBooks[$lienKey]['language'], '___') !== false) { 
 									$lienLanguage = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
@@ -103,6 +112,7 @@ class ReviewPrelim extends MX_Controller {
 									$lienLanguage = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
 								}
 							} else {
+								$language = '';
 								$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
 							}
 						
@@ -166,7 +176,12 @@ class ReviewPrelim extends MX_Controller {
 							$language = str_replace($arr_find, $arr_rep, $language);
 
 							if(strpos(strtolower($language), 'any liens or other assessments') !== false || strpos(strtolower($language), 'the lien of supplemental') !== false || strpos(strtolower($language), 'property taxes') !== false ) {
-								$tax[] = $language;
+								if (!empty($preLanguage)) {
+									$preLanguage .= "\n\n".$language;
+									$language = $preLanguage;
+									$preLanguage = '';
+								}
+								$tax[$liensCount] = $language;
 								$email_data['tax'][] = $language;
 							} else {
 								if($easementCheck == 0) {
@@ -174,10 +189,17 @@ class ReviewPrelim extends MX_Controller {
 									if (isset($data['Easements']) && !empty($data['Easements']))  {
 
 										foreach ($data['Easements'] as $key => $easement) {
-											$easementLanguage = '';
 											$easementKey = array_search($easement['EasementTypeID'], array_column($codeBooks, 'type_id'));
 											
 											if (isset($easementKey) && !empty($easementKey)) {
+												if ($codeBooks[$easementKey]['required_number'] == 1) {
+													$easementLanguage = '';
+													$preEasementLanguage = '';
+												} else {
+													$preEasementLanguage = $easementLanguage;
+													$easementLanguage = '';
+													$liensCount--;
+												}
 												$easementLanguage = $codeBooks[$easementKey]['language']; 
 												if(strpos($codeBooks[$easementKey]['language'], '___') !== false) {
 													$easementToLanguage = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
@@ -199,6 +221,7 @@ class ReviewPrelim extends MX_Controller {
 													}
 												}
 											} else {
+												$easementLanguage = '';
 												$easementLanguage = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
 											}
 
@@ -258,7 +281,12 @@ class ReviewPrelim extends MX_Controller {
 											$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
 											$easementLanguage = str_replace($arr_find, $arr_rep, $easementLanguage); 
 											if(!empty($easementLanguage)) {
-												$easements[] = $easementLanguage;
+												if (!empty($preEasementLanguage)) {
+													$preEasementLanguage .= "\n\n".$easementLanguage;
+													$easementLanguage = $preEasementLanguage;
+													$preEasementLanguage = '';
+												}
+												$easements[$liensCount] = $easementLanguage;
 											}
 											$liensCount++;
 										}
@@ -274,7 +302,12 @@ class ReviewPrelim extends MX_Controller {
 									}
 								}
 								$lienFlag++;
-								$liens[] = $language;
+								if (!empty($preLanguage)) {
+									$preLanguage .= "\n\n".$language;
+									$language = $preLanguage;
+									$preLanguage = '';
+								}
+								$liens[$liensCount] = $language;
 								$email_data['liens'][] = $language;
 							}
 							$liensCount++;	
@@ -286,10 +319,20 @@ class ReviewPrelim extends MX_Controller {
 					if(isset($data['Requirements']) && !empty($data['Requirements'])) {
 
 						foreach ($data['Requirements'] as $key => $requirement) {
-							$language = '';
+							
 							$requirementKey = array_search($requirement['RequirementTypeID'], array_column($codeBooks, 'type_id'));
 						
 							if (isset($requirementKey) && !empty($requirementKey)) {
+
+								if ($codeBooks[$requirementKey]['required_number'] == 1) {
+									$language = '';
+									$preLanguage = '';
+								} else {
+									$preLanguage = $language;
+									$language = '';
+									$liensCount--;
+								}
+
 								$language = $codeBooks[$requirementKey]['language'];
 
 								if(strpos($codeBooks[$requirementKey]['language'], '___') !== false) {
@@ -327,6 +370,7 @@ class ReviewPrelim extends MX_Controller {
 									}
 								}
 							} else {
+								$language = '';
 								$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
 							}
 
@@ -383,9 +427,13 @@ class ReviewPrelim extends MX_Controller {
 							$arr_rep = array($Book, $Date, $DocumentName, $Grantee, $Grantor, $Instrument, $RecordedDate, $RecordedDate, $Purpose, $Page, $Liber, $Volume, $Amount, $Trustee, $Against, $Assignor, $Assignee, $AssigneeBook, $AssigneeBook, $AssigneePage, $AssigneePage, $AssigneeLiber, $AssigneeLiber, $AssigneeVolume, $AssigneeVolume, $AssigneeInstrument, $AssigneeInstrument, $Book, $CaseNumber, $County, $CourtDistrict, $CourtType, $Endorsements, $Holder, $InFavorOf, $InstallmentNumber, $Instrument, $InstallmentAmount, $Liber, $MaturityDate, $Page, $State, $StateDistrict, $TaxYears, $Volume, $parcelID);
 							
 							$language = str_replace($arr_find, $arr_rep, $language); 
-							
+							if (!empty($preLanguage)) {
+								$preLanguage .= "\n\n".$language;
+								$language = $preLanguage;
+								$preLanguage = '';
+							}
 							if (!empty($language)) {
-								$requirements[] = $language;
+								$requirements[$liensCount] = $language;
 							}
 							$liensCount++;
 						}

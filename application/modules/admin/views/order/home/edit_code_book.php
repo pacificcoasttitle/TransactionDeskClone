@@ -68,6 +68,13 @@
                     </div>
                 </div>
 
+                <div class="form-group row">
+                    <label for="language" class="col-sm-2 col-form-label">Required Number</label>
+                    <div class="col-sm-1">
+                        <input <?php echo $codeBookInfo['required_number'] == 1 ? "checked" : "";?> type="checkbox" class="form-control" name="required_number" id="required_number" class="form-control">
+                    </div>
+                </div>
+
                 <div class="pull-right">
                     <button type="submit" class="btn btn-secondary">Save</button>
                     <a href="<?php echo base_url().'order/admin/code-book'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
