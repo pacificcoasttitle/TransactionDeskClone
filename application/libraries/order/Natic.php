@@ -61,7 +61,7 @@ class Natic
                 $orderDetails['lender_assignment_clause'] =  $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
                 $orderDetails['lender_address'] = $lenderDetails['street_address'];
                 $orderDetails['lender_city'] = $lenderDetails['city'];
-                $orderDetails['lender_state'] = 'CA';
+                $orderDetails['lender_state'] = $lenderDetails['state'];
                 $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
                 $orderDetails['lender_company_name'] = $lenderDetails['company_name'];
                 $orderDetails['lender_first_name'] = $lenderDetails['first_name'];
