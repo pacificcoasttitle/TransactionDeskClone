@@ -109,7 +109,9 @@ class ReviewPrelim extends MX_Controller {
 												$language = substr_replace($language, $value, $pos,3);
 											}
 										} 
-									} else {
+									} 
+									
+									if (trim($codeBooks[$lienKey]['language']) == '___') {
 										$language = '';
 										$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
 									}
@@ -230,7 +232,9 @@ class ReviewPrelim extends MX_Controller {
 																$easementLanguage = substr_replace($easementLanguage, $value, $pos,3);
 															}
 														} 
-													} else {
+													} 
+													
+													if(trim($codeBooks[$easementKey]['language']) == '___') {
 														$easementLanguage = '';
 														$easementLanguage = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
 													}
@@ -374,7 +378,9 @@ class ReviewPrelim extends MX_Controller {
 												$language = substr_replace($language, $value, $pos,3);
 											}
 										} 
-									} else {
+									} 
+									
+									if (trim($codeBooks[$requirementKey]['language']) == '___') {
 										$language = '';
 										$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
 									}
@@ -483,7 +489,9 @@ class ReviewPrelim extends MX_Controller {
 												$language = substr_replace($language, $value, $pos,3);
 											}
 										} 
-									} else {
+									} 
+									
+									if (trim($codeBooks[$restrictionKey]['language']) == '___') {
 										$language = '';
 										$language = isset($restriction['Language']) && !empty($restriction['Language']) ? $restriction['Language'] : '';
 									}
