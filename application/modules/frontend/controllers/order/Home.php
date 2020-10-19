@@ -917,7 +917,6 @@ class Home extends MX_Controller {
     function getDetailsByName()
     {
     	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
-    	// $isEscrow = isset($_POST['is_escrow']) && !empty($_POST['is_escrow']) ? $_POST['is_escrow'] : 0;
 
 		$is_master_search = isset($_POST['is_master_search']) && !empty($_POST['is_master_search']) ? $_POST['is_master_search'] : 0;
 
@@ -930,6 +929,17 @@ class Home extends MX_Controller {
     		$isEscrow = $_POST['is_escrow'];
     		$condition['is_escrow'] = $isEscrow;
     	}
+    	
+
+    	if(isset($_POST['is_escrow']))
+    	{
+    		$isEscrow = $_POST['is_escrow'];
+    		$condition['is_escrow'] = $isEscrow;
+    	}
+    	$condition['where']['is_sales_rep'] = 0;
+
+    	$is_from_order_form = $this->input->post('is_from_order_form');
+    	$condition['is_from_order_form'] = $is_from_order_form;
 
     	$userDetails = $this->home_model->get_customers($condition, $is_master_search);
     	$userInfo = array();
@@ -938,7 +948,7 @@ class Home extends MX_Controller {
     		foreach ($userDetails as $key => $value) 
     		{
     			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
-            
+    			
 	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
 
 	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
