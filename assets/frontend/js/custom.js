@@ -428,7 +428,8 @@ $(document).ready(function() {
                 url: base_url+'home/getDetailsByName',
                 data: {
                     term : request.term,//the value of the input is here
-                    is_escrow : 0                    
+                    is_escrow : 0,                    
+                    is_from_order_form : 1                    
                 },
                 type: "POST",
                 dataType: "json",
@@ -472,7 +473,8 @@ $(document).ready(function() {
                 url: base_url+'home/getDetailsByName',
                 data: {
                     term : request.term,//the value of the input is here
-                    is_escrow : 1                    
+                    is_escrow : 1,
+                    is_from_order_form : 1                    
                 },
                 type: "POST",
                 dataType: "json",

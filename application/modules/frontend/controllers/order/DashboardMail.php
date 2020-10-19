@@ -1084,7 +1084,7 @@ class DashboardMail extends MX_Controller {
     	$condition = array(
             'company_name' => $searchTerm
         );
-
+        $condition['where']['is_sales_rep'] = 0;
     	if(isset($_POST['is_escrow']))
     	{
     		$isEscrow = $_POST['is_escrow'];

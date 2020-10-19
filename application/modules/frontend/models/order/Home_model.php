@@ -64,7 +64,15 @@ class Home_model extends CI_Model
                     $this->db->where('is_password_updated', 1);
                 }elseif(array_key_exists("company_name", $params) && array_key_exists("is_escrow", $params))
                 {
-                    $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, city, state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                    if(isset($params['is_from_order_form']) && !empty($params['is_from_order_form']))
+                    {
+                        $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                    }
+                    else
+                    {
+                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, city, state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                    }
+                    
                     $this->db->where('is_escrow', $params['is_escrow']);
                     $this->db->group_start()
                         ->like('company_name', $params['company_name'])
