@@ -939,7 +939,7 @@ class Home extends MX_Controller {
     	$condition['where']['is_sales_rep'] = 0;
 
     	$is_from_order_form = $this->input->post('is_from_order_form');
-    	$condition['is_from_order_form'] = $is_from_order_form;
+    	$condition['is_from_order_form'] = isset($is_from_order_form) && !empty($is_from_order_form) ? $is_from_order_form : 0;
 
     	$userDetails = $this->home_model->get_customers($condition, $is_master_search);
     	$userInfo = array();
