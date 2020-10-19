@@ -18,29 +18,29 @@ class Sales_model extends CI_Model
         
     	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
     		$keyword = $params['searchvalue'];
-    		if (isset($keyword) && !empty($keyword)) {
-				$this->db->like('name', $keyword);
-                $this->db->or_like('email_address', $keyword);
-                $this->db->or_like('telephone', $keyword);
-            }
             $this->db->where('status', 1);
             $this->db->where('is_sales_rep', 1);
+    		if (isset($keyword) && !empty($keyword)) {
+				$this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
+                $this->db->or_like('email_address', $keyword);
+                $this->db->or_like('telephone_no', $keyword);
+            }            
 	    	$this->db->from('customer_basic_details');
+
 			$filter_total_records =  $this->db->count_all_results();
 
-			if (isset($keyword) && !empty($keyword)) {
-				$this->db->like('name', $keyword);
-                $this->db->or_like('email_address', $keyword);
-                $this->db->or_like('telephone', $keyword);
-			}
-
             $this->db->where('status', 1);
             $this->db->where('is_sales_rep', 1);
+			if (isset($keyword) && !empty($keyword)) {
+				$this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
+                $this->db->or_like('email_address', $keyword);
+                $this->db->or_like('telephone_no', $keyword);
+			}
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 			$query = $this->db->get('customer_basic_details');
-			
+			echo "<pre>"; print_r($this->db->last_query()); exit;
 			if ($query->num_rows() > 0) {
                 $sales_rep_lists = $query->result_array();
 	        }

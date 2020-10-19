@@ -15,11 +15,21 @@
             <form id="frm-add-sales-rep" method="POST">
         
                 <div class="form-group row">
-                    <label for="sales_rep_name" class="col-sm-2 col-form-label">Name<span class="required"> *</span></label>
+                    <label for="sales_rep_first_name" class="col-sm-2 col-form-label">First Name<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="sales_rep_name" id="sales_rep_name" class="form-control" placeholder="Sales Rep. Name">
-                        <?php if(!empty($name_error_msg)){ ?>                     
-                            <span class="error"><?php echo $name_error_msg; ?></span>
+                        <input type="text" class="form-control" name="sales_rep_first_name" id="sales_rep_first_name" class="form-control" placeholder="Enter Sales Rep. First Name" value="<?php echo isset($sales_rep_info['first_name']) && !empty($sales_rep_info['first_name']) ? $sales_rep_info['first_name'] : ''?>">
+                        <?php if(!empty($first_name_error_msg)){ ?>                     
+                            <span class="error"><?php echo $first_name_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="sales_rep_last_name" class="col-sm-2 col-form-label">Last Name<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="sales_rep_last_name" id="sales_rep_last_name" class="form-control" placeholder="Enter Sales Rep. Last Name" value="<?php echo isset($sales_rep_info['last_name']) && !empty($sales_rep_info['last_name']) ? $sales_rep_info['last_name'] : ''?>">
+                        <?php if(!empty($last_name_error_msg)){ ?>                     
+                            <span class="error"><?php echo $last_name_error_msg; ?></span>
                         <?php } ?>
                     </div>
                 </div>
