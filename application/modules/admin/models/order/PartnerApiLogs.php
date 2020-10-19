@@ -24,13 +24,13 @@ class PartnerApiLogs extends CI_Model
         }
         $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
-            pct_order_sales_rep.name as sales_rep_name,
+            CONCAT(customer_basic_details.first_name, " ", customer_basic_details.last_name) as sales_rep_name,
             transaction_details.title_officer,
             pct_order_title_officer.name as title_officer_name')
             ->from('pct_order_partner_api_logs')
             ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
+            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id')
             ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id');
         $total_records =  $this->db->count_all_results();
 
@@ -55,13 +55,13 @@ class PartnerApiLogs extends CI_Model
 
             $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
-            pct_order_sales_rep.name as sales_rep_name,
+            CONCAT(customer_basic_details.first_name, " ", customer_basic_details.last_name) as sales_rep_name,
             transaction_details.title_officer,
             pct_order_title_officer.name as title_officer_name')
             ->from('pct_order_partner_api_logs')
             ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
+            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id')
             ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id');
 
             $filter_total_records =  $this->db->count_all_results();
@@ -82,13 +82,13 @@ class PartnerApiLogs extends CI_Model
 
             $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
-            pct_order_sales_rep.name as sales_rep_name,
+            CONCAT(customer_basic_details.first_name, " ", customer_basic_details.last_name) as sales_rep_name,
             transaction_details.title_officer,
             pct_order_title_officer.name as title_officer_name')
             ->from('pct_order_partner_api_logs')
             ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
+            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id')
             ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id');
             $this->db->order_by("pct_order_partner_api_logs.created_at", "desc");
 
@@ -118,13 +118,13 @@ class PartnerApiLogs extends CI_Model
 
             $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
-            pct_order_sales_rep.name as sales_rep_name,
+            CONCAT(customer_basic_details.first_name, " ", customer_basic_details.last_name) as sales_rep_name,
             transaction_details.title_officer,
             pct_order_title_officer.name as title_officer_name')
             ->from('pct_order_partner_api_logs')
             ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
+            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id')
             ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id');
 
             $filter_total_records =  $this->db->count_all_results();
@@ -141,13 +141,13 @@ class PartnerApiLogs extends CI_Model
             
             $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
-            pct_order_sales_rep.name as sales_rep_name,
+            CONCAT(customer_basic_details.first_name, " ", customer_basic_details.last_name) as sales_rep_name,
             transaction_details.title_officer,
             pct_order_title_officer.name as title_officer_name')
             ->from('pct_order_partner_api_logs')
             ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
+            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id')
             ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id');
             $this->db->order_by("pct_order_partner_api_logs.created_at", "desc");
 
