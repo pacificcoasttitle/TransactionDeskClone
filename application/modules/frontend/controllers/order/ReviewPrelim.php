@@ -108,6 +108,11 @@ class ReviewPrelim extends MX_Controller {
 											$language = substr_replace($language, $value, $pos,3);
 										} 
 									}
+
+									if (strpos($language, '_PROPERTYADDRESS_') !== false) {
+										$language = '';
+										$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
+									}
 								} else {
 									$lienLanguage = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
 								}
@@ -218,6 +223,11 @@ class ReviewPrelim extends MX_Controller {
 															$pos = strpos($easementLanguage,'___');
 															$easementLanguage = substr_replace($easementLanguage, $value, $pos,3);
 														} 
+													}
+
+													if (strpos($language, '_PROPERTYADDRESS_') !== false) {
+														$easementLanguage = '';
+														$easementLanguage = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
 													}
 												}
 											} else {
@@ -344,21 +354,6 @@ class ReviewPrelim extends MX_Controller {
 										$requirementToLanguage = preg_replace('/ <a.*a>/', '_INSTRUMENTONLY_', $requirementToLanguage);
 									}
 
-									if (strpos($language, '_PROPERTYADDRESS_') !== false) {
-										$address = $orderDetails['address'];
-										$address = str_replace('St', 'Street', $address);
-										$address = str_replace('Dr', 'Drive', $address);
-										$address = str_replace('Rd', 'Road', $address);
-										$address = str_replace('Ave', 'Avenue', $address);
-										$address = str_replace('Pl', 'Place', $address);
-										$address = str_replace('Ct', 'Court', $address);
-										$propertyAddress = $address.", ".$orderDetails['property_city'].", ".$orderDetails['property_state']." ".$orderDetails['property_zip'];
-										
-										$language = str_replace('_PROPERTYADDRESS_', $propertyAddress, $language);
-										$requirementToLanguage = str_replace('REQUIREMENT::', '', $requirementToLanguage);
-										
-									}
-
 									$opcodes = FineDiff::getDiffOpcodes($language, $requirementToLanguage, [$granularityStack = null] );
 									$replace = explode("^^",$opcodes);
 
@@ -367,6 +362,11 @@ class ReviewPrelim extends MX_Controller {
 											$pos = strpos($language,'___');
 											$language = substr_replace($language, $value, $pos,3);
 										} 
+									}
+
+									if (strpos($language, '_PROPERTYADDRESS_') !== false) {
+										$language = '';
+										$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
 									}
 								}
 							} else {
