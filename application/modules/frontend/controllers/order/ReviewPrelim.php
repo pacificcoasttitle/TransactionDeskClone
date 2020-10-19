@@ -105,7 +105,7 @@ class ReviewPrelim extends MX_Controller {
 									if (isset($replace) && !empty($replace)) {
 										foreach ($replace as $key => $value) {
 											$pos = strpos($language,'___');
-											if($pos >= 0) {
+											if(isset($pos) && $pos > 0) {
 												$language = substr_replace($language, $value, $pos,3);
 											}
 										} 
@@ -223,7 +223,7 @@ class ReviewPrelim extends MX_Controller {
 													if (isset($replace) && !empty($replace)) {
 														foreach ($replace as $key => $value) {
 															$pos = strpos($easementLanguage,'___');
-															if($pos >= 0) {
+															if(isset($pos) && $pos > 0) {
 																$easementLanguage = substr_replace($easementLanguage, $value, $pos,3);
 															}
 														} 
@@ -364,7 +364,7 @@ class ReviewPrelim extends MX_Controller {
 									if (isset($replace) && !empty($replace)) {
 										foreach ($replace as $key => $value) {
 											$pos = strpos($language,'___');
-											if($pos >= 0) {
+											if(isset($pos) && $pos > 0) {
 												$language = substr_replace($language, $value, $pos,3);
 											}
 										} 
@@ -470,7 +470,7 @@ class ReviewPrelim extends MX_Controller {
 									if (isset($replace) && !empty($replace)) {
 										foreach ($replace as $key => $value) {
 											$pos = strpos($language,'___');
-											if($pos >= 0) {
+											if(isset($pos) && $pos > 0) {
 												$language = substr_replace($language, $value, $pos,3);
 											}
 										} 
