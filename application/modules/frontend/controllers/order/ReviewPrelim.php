@@ -109,6 +109,9 @@ class ReviewPrelim extends MX_Controller {
 												$language = substr_replace($language, $value, $pos,3);
 											}
 										} 
+									} else {
+										$language = '';
+										$language = isset($lien['Language']) && !empty($lien['Language']) ? $lien['Language'] : '';
 									}
 
 									if (strpos($language, '_PROPERTYADDRESS_') !== false) {
@@ -227,6 +230,9 @@ class ReviewPrelim extends MX_Controller {
 																$easementLanguage = substr_replace($easementLanguage, $value, $pos,3);
 															}
 														} 
+													} else {
+														$easementLanguage = '';
+														$easementLanguage = isset($easement['Language']) && !empty($easement['Language']) ? $easement['Language'] : '';
 													}
 
 													if (strpos($language, '_PROPERTYADDRESS_') !== false) {
@@ -368,6 +374,9 @@ class ReviewPrelim extends MX_Controller {
 												$language = substr_replace($language, $value, $pos,3);
 											}
 										} 
+									} else {
+										$language = '';
+										$language = isset($requirement['Language']) && !empty($requirement['Language']) ? $requirement['Language'] : '';
 									}
 
 									if (strpos($language, '_PROPERTYADDRESS_') !== false) {
@@ -474,6 +483,9 @@ class ReviewPrelim extends MX_Controller {
 												$language = substr_replace($language, $value, $pos,3);
 											}
 										} 
+									} else {
+										$language = '';
+										$language = isset($restriction['Language']) && !empty($restriction['Language']) ? $restriction['Language'] : '';
 									}
 								}
 							} else {
