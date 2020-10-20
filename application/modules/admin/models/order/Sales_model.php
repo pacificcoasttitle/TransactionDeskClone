@@ -21,9 +21,12 @@ class Sales_model extends CI_Model
             $this->db->where('status', 1);
             $this->db->where('is_sales_rep', 1);
     		if (isset($keyword) && !empty($keyword)) {
-				$this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
-                $this->db->or_like('email_address', $keyword);
-                $this->db->or_like('telephone_no', $keyword);
+
+                $this->db->group_start()
+                        ->like("CONCAT_WS(' ',first_name,last_name)",$keyword, NULL, FALSE)
+                        ->or_like('email_address', $keyword)
+                        ->or_like('telephone_no', $keyword)
+                        ->group_end();
             }            
 	    	$this->db->from('customer_basic_details');
 
@@ -32,10 +35,14 @@ class Sales_model extends CI_Model
             $this->db->where('status', 1);
             $this->db->where('is_sales_rep', 1);
 			if (isset($keyword) && !empty($keyword)) {
-				$this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
-                $this->db->or_like('email_address', $keyword);
-                $this->db->or_like('telephone_no', $keyword);
+
+                $this->db->group_start()
+                        ->like("CONCAT_WS(' ',first_name,last_name)",$keyword, NULL, FALSE)
+                        ->or_like('email_address', $keyword)
+                        ->or_like('telephone_no', $keyword)
+                        ->group_end();
 			}
+            
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
