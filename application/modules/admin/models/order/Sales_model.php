@@ -40,7 +40,7 @@ class Sales_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
 			$query = $this->db->get('customer_basic_details');
-			echo "<pre>"; print_r($this->db->last_query()); exit;
+			
 			if ($query->num_rows() > 0) {
                 $sales_rep_lists = $query->result_array();
 	        }
