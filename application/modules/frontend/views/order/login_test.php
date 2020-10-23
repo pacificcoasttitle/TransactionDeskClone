@@ -147,7 +147,7 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/main.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script>   
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js?random=<?php echo uniqid(); ?>"></script>   
     <script type="text/javascript">
         var base_url = '<?php echo base_url(); ?>';
     </script>
