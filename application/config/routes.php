@@ -86,7 +86,10 @@ $route['order'] = 'frontend/order/home/index';
 $route['dashboard'] = 'frontend/order/dashboard/index';
 $route['special-dashboard'] = 'frontend/order/dashboard/index';
 $route['order/login'] = 'frontend/order/login/index';
+$route['order/login_test'] = 'frontend/order/login/loginTest';
 $route['do_login'] = 'frontend/order/login/do_login';
+$route['do_login_test'] = 'frontend/order/login/do_login_test';
+$route['change-password/:any'] = 'frontend/order/login/change_password';
 $route['logout'] = 'frontend/order/home/logout';
 $route['home/getSearchResults'] = 'frontend/order/home/getSearchResults';
 $route['home/checkEmail'] = 'frontend/order/home/checkEmail';
@@ -237,6 +240,7 @@ $route['order/admin/cpl-proposed-users'] = 'admin/order/home/cplProposedUsers';
 $route['order/admin/edit-cpl-proposed-user/:num'] = 'admin/order/home/editCplProposedUser';
 $route['order/admin/reject-cpl-proposed-user/:num'] = 'admin/order/home/rejectCplProposedUser';
 $route['order/admin/edit-code-book/:num'] = 'admin/order/CodeBook/editCodeBook';
+$route['order/admin/send-password'] = 'admin/order/home/sendPassword';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  

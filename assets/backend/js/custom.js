@@ -264,6 +264,22 @@ $(document).ready(function () {
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-cpl-proposed-users-listing thead tr th:not('.not-take')").map(function () { return this.innerHTML; }).get() };
                 }
+                else if(this.context[0].sTableId == 'tbl-password-listing')
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"admin/order/home/get_password_list",
+                        data: {
+                            keyword: $('#tbl-password-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-password-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
                 else 
                 {
                     var jsonResult = $.ajax({
@@ -2491,6 +2507,51 @@ $(document).ready(function () {
             }            
         });
     }
+
+    if ($('#tbl-password-listing').length) {
+        password_list = $('#tbl-password-listing').DataTable({
+           "paging": true,
+           "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                
+            },
+            dom: 'Blfrtip',
+            buttons: [],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/home/get_password_list", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-password-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-password-listing_processing").css("display", "none");
+                }
+            }            
+        });
+    }
 });
 
 
@@ -3131,4 +3192,56 @@ function updateType(id,type)
             }, 4000);
         }
     });
+}
+
+function sendPasswordMail(id)
+{
+	if (id=='') {
+        alert('Title Officer ID is required.');
+        return false;
+    }
+    var ready = confirm("Are you sure want to send mail for reset password?");
+    if (ready) {
+        $.ajax({
+            url: base_url+"admin/order/home/sendPasswordMail",
+            method: "POST",
+            data : {
+                id: id
+            },
+            success: function(data) {
+            	var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#password_listing_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#password_listing_success_msg").offset().top
+                    }, 1000);
+                    password_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#password_listing_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#password_listing_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#password_listing_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#password_listing_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#password_listing_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#password_listing_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#password_listing_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
 }

@@ -2163,4 +2163,97 @@ class Home extends MX_Controller {
         $update = $this->home_model->update($customerData, $updateCondition);
         redirect(base_url().'order/admin/cpl-proposed-users');
     }
+
+    
+	public function sendPassword()
+	{
+        $this->is_admin();
+		$data = array();
+        $data['title'] = 'PCT Order: Send Password Listing';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/password_listing', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+    
+    public function get_password_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $customer_lists = $this->home_model->get_password_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $customer_lists = $this->home_model->get_password_list($params);            
+        }
+
+        $data = array(); 
+	    if (isset($customer_lists['data']) && !empty($customer_lists['data'])) {
+	    	foreach ($customer_lists['data'] as $key => $value)  {
+	    		$nestedData=array();
+	            $nestedData[] = $value['first_name'];
+	            $nestedData[] = $value['last_name'];
+	            $nestedData[] = $value['email_address'];
+	            $nestedData[] = $value['telephone_no'];
+	            $nestedData[] = $value['company_name'];
+	            $nestedData[] = $value['street_address'];
+	            $nestedData[] = $value['city'];
+	            $nestedData[] = $value['zip_code'];
+	                    
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $action = "<a href='javascript:void(0);' onclick='sendPasswordMail(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-envelope' aria-hidden='true'></span></a>";
+                    $nestedData[] = $action;
+                }
+	            $data[] = $nestedData;            
+	    	}
+	    }
+        $json_data['recordsTotal'] = intval( $customer_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $customer_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+	    echo json_encode($json_data);
+    }
+
+    public function sendPasswordMail()
+    {
+        $this->is_admin();
+        $id =  $this->input->post('id');
+        
+    	if ($id) {
+            $user = $this->home_model->get_user(array('id' => $id));
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = getenv('FROM_EMAIL');
+            $message_body = "Hi ".$user['first_name']." ".$user['last_name']."<br>";
+            $message_body .= "Please login with tempoary password and change your password. <br><br>";
+            $this->load->library('order/order');
+            $randomPassword = $this->order->randomPassword();
+
+            $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
+            $message_body .= "Use this link for login: ".getenv('APP_URL')."/order/login_test <br><br>";
+           
+            $this->home_model->update(array('password' => password_hash($randomPassword, PASSWORD_DEFAULT), 'is_tmp_password' => 1), array('id' => $user['id']));
+            $subject = 'Change Passsword';
+           // $to = $user['email_address'];
+            $to = 'hitesh.p@crestinfosystems.com';
+            $cc = array();
+            $bcc = array();
+            $file = array();
+            $this->load->helper('sendemail');
+            $mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body, $file, $cc, $bcc);
+            if($mail_result) {
+                $response = array('status' => 'success', 'message' => 'Mail sent successfully.');
+            } else {
+                $response = array('status' => 'success', 'message' => 'Mail not sent due to some error. Please try again.');
+            }
+    	} else {
+    		$msg = 'Customer ID is required.';
+			$response = array('status' => 'error', 'message' => $msg);
+    	}
+    	echo json_encode($response);
+    }
 }

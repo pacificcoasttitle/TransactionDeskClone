@@ -2552,13 +2552,50 @@ html, body{
 
 #email_address-error {
 	display: block!important;
-    margin-top: 6px;
+    margin: 6px 0 12px 0;
     padding: 0 3px;
     font-family: Arial, Helvetica, sans-serif;
     font-style: normal;
     line-height: normal;
-    color: red;
-    font-size: 0.85em;
+	color: red;
+	text-transform: capitalize;
+    font-size: 1em;
+}
+
+#pwd-error {
+	display: block!important;
+    margin: 6px 0 12px 0;
+    padding: 0 3px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    line-height: normal;
+	color: red;
+	text-transform: capitalize;
+    font-size: 1em;
+}
+
+#password-error {
+	display: block!important;
+	margin: 6px 0 12px 0;
+    padding: 0 3px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    line-height: normal;
+	color: red;
+	text-transform: capitalize;
+    font-size: 1em;
+}
+
+#confirm_password-error {
+	display: block!important;
+    margin: 6px 0 12px 0;
+    padding: 0 3px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    line-height: normal;
+	color: red;
+	text-transform: capitalize;
+    font-size: 1em;
 }
 	
 
