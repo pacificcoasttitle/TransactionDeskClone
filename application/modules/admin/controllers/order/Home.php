@@ -2239,7 +2239,7 @@ class Home extends MX_Controller {
             $this->home_model->update(array('password' => password_hash($randomPassword, PASSWORD_DEFAULT), 'is_tmp_password' => 1), array('id' => $user['id']));
             $subject = 'Change Passsword';
            // $to = $user['email_address'];
-            $to = 'hitesh.p@crestinfosystems.com';
+            $to = 'ghernandez@pct.com';
             $cc = array();
             $bcc = array();
             $file = array();
