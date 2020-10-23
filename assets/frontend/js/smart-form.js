@@ -371,19 +371,24 @@
 					------------------------------------------ */
 					rules: {
 						email_address: {
-								required: true,
-								email: true
-							},
+							required: true,
+							email: true
+						},
+						pwd: {
+							required: true
+						},
 					},
 					
 					/* @validation error messages 
 					---------------------------------------------- */
 					messages:{
-							
 						email_address: {
-								required: 'Enter your email address',
-								email: 'Enter a Valid email address'
-							},
+							required: 'Enter your email address',
+							email: 'Enter a Valid email address'
+						},
+						pwd: {
+							required: 'Enter your password'
+						},
 					},
 
 					/* @validation highlighting + error placement  
@@ -401,6 +406,7 @@
 								error.insertAfter(element.parent());
 					   }
 					   $('#email_address_php_error').hide();
+					   $('#password_php_error').hide();
 					},
 					
 					/* @ajax form submition 
@@ -421,15 +427,117 @@
 								success:function(data){
 									var res = jQuery.parseJSON(data);
 									if (res.status == 'error') {
-										$('#email_address_php_error').html(res.message);
-										$('#email_address_php_error').show();
+										if (res.email_err_msg) {
+											$('#email_address_php_error').html(res.email_err_msg);
+											$('#email_address_php_error').show();
+										} else {
+											$('#email_address_php_error').hide();
+										}
+
+										if (res.password_err_msg) {
+											$('#password_php_error').html(res.password_err_msg);
+											$('#password_php_error').show();
+										} else {
+											$('#password_php_error').hide();
+										}
 									} else {
-										window.location.replace(base_url+'dashboard');
+										window.location.replace(base_url+res.url);
 									}
 								}
 						  });
 					}
-			});	
+				});	
+
+				$( "#change-password-form" ).validate({
+				
+					/* @validation states + elements 
+					------------------------------------------- */
+					errorClass: "state-error",
+					validClass: "state-success",
+					errorElement: "em",
+					onkeyup: false,
+					onclick: false,						
+					
+					/* @validation rules 
+					------------------------------------------ */
+					rules: {
+						password: {
+							required: true
+						},
+						confirm_password: {
+							required: true,
+							equalTo : "#password"
+						},
+					},
+					
+					/* @validation error messages 
+					---------------------------------------------- */
+					messages:{
+						password: {
+							required: 'Enter your password',
+						},
+						confirm_password: {
+							required: 'Enter your confirm password',
+							equalTo: 'Confirm password should match with password'
+						},
+					},
+
+					/* @validation highlighting + error placement  
+					---------------------------------------------------- */	
+					highlight: function(element, errorClass, validClass) {
+							$(element).closest('.field').addClass(errorClass).removeClass(validClass);
+					},
+					unhighlight: function(element, errorClass, validClass) {
+							$(element).closest('.field').removeClass(errorClass).addClass(validClass);
+					},
+					errorPlacement: function(error, element) {
+					   if (element.is(":radio") || element.is(":checkbox")) {
+								element.closest('.option-group').after(error);
+					   } else {
+								error.insertAfter(element.parent());
+					   }
+					   $('#confirm_password_php_error').hide();
+					   $('#password_php_error').hide();
+					},
+					
+					/* @ajax form submition 
+					---------------------------------------------------- */
+					submitHandler:function(form) {
+						$(form).ajaxSubmit({
+								target:'#password',			   
+								beforeSubmit:function(){
+									
+								},
+								uploadProgress: function(event, position, total, percentComplete) {
+									
+									
+								},								
+								error:function(){
+									
+								},
+								success:function(data){
+									var res = jQuery.parseJSON(data);
+									if (res.status == 'error') {
+										if (res.pwd_err_msg) {
+											$('#password_php_error').html(res.pwd_err_msg);
+											$('#password_php_error').show();
+										} else {
+											$('#password_php_error').hide();
+										}
+
+										if (res.confirm_pwd_err_msg) {
+											$('#confirm_password_php_error').html(res.confirm_pwd_err_msg);
+											$('#confirm_password_php_error').show();
+										} else {
+											$('#confirm_password_php_error').hide();
+										}
+									} else {
+										window.location.replace(base_url+res.url);
+									}
+								}
+						  });
+					}
+				});	
 		
 	});				
     

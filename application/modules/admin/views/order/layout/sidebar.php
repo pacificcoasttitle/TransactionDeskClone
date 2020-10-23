@@ -39,6 +39,13 @@
 		</a>
 	</li>
 
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/send-password') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/send-password'; ?>">
+			<i class="fas fa-fw fa-envelope"></i>
+			<span>Send Password</span>
+		</a>
+	</li>
+
 	<li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id=logsDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-file"></i>
