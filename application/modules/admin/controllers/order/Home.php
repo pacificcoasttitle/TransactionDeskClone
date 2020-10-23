@@ -2228,13 +2228,13 @@ class Home extends MX_Controller {
             $user = $this->home_model->get_user(array('id' => $id));
             $from_name = 'Pacific Coast Title Company';
             $from_mail = getenv('FROM_EMAIL');
-            $message_body = "Hi ".$user['first_name']." ".$user['last_name']."<br>";
+            $message_body = "Hi ".$user['first_name']." ".$user['last_name'].", <br><br>";
             $message_body .= "Please login with tempoary password and change your password. <br><br>";
             $this->load->library('order/order');
             $randomPassword = $this->order->randomPassword();
 
             $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-            $message_body .= "Use this link for login: ".getenv('APP_URL')."/order/login_test <br><br>";
+            $message_body .= "Use this link for login: ".getenv('APP_URL')."order/login_test <br><br>";
            
             $this->home_model->update(array('password' => password_hash($randomPassword, PASSWORD_DEFAULT), 'is_tmp_password' => 1), array('id' => $user['id']));
             $subject = 'Change Passsword';
