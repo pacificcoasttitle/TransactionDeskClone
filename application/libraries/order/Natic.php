@@ -39,11 +39,14 @@ class Natic
         }
     }
 
-    public function getDocumentContentForCpl($fileId)
+    public function getDocumentContentForCpl($fileId, $orderDetails)
     {
         $this->CI->load->library('order/order');
         $userdata = $this->CI->session->userdata('user');
-        $orderDetails = $this->CI->order->get_order_details($fileId);
+        if (!isset($userdata)) {
+            $userdata = array();
+            $userdata['id'] = 0;
+        }
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $xmlData = '';
         $address = $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]);
