@@ -66,7 +66,7 @@
 													<td><?php echo $action;?></td> 
 												</tr>
 											<?php } else { ?>
-												<tr role="row" class="odd"><td colspan="4" class="text-center">No records found</td></tr>
+												<tr role="row" class="odd"><td colspan="4" class="text-center">No record found</td></tr>
 											<?php }  ?>
 										</tbody>
 									</table>
