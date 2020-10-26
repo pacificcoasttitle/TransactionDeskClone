@@ -14,7 +14,7 @@ class ApiLogs extends CI_Model
         if ($logId == 0) {
             $data = array(
                 'user_id' => $user_id,
-                'order_id' => $order_id,
+                'order_id' => $order_id ? $order_id : 0,
                 'api_type' => $api_type,
                 'request_type' => $request_type,
                 'request_data' => !empty($request_data) ? $request_data : '',
