@@ -175,8 +175,9 @@ $route['update-remote-file-numbers'] = 'frontend/order/cron/updateRemoteFileNumb
 $route['generate-mail-proposed-insured'] = 'frontend/order/dashboardMail/generate_mail_proposed_insured';
 $route['add-mail-order-details'] = 'frontend/order/dashboardMail/add_mail_order_details';
 $route['get-sales-orders'] = 'frontend/order/dashboard/get_sales_orders';
-$route['import-sales-rep-orders/:any'] = 'frontend/order/cron/import_sales_rep_orders';
+$route['import-sales-rep-orders'] = 'frontend/order/cron/import_sales_rep_orders';
 $route['get-partners'] = 'frontend/order/dashboard/get_partners';
+$route['import-all-sales-rep-orders'] = 'frontend/order/cron/import_all_sales_rep_orders';
 
 
 
