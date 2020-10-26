@@ -62,7 +62,7 @@ class Login extends MX_Controller {
                         "is_special_lender" =>  isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                     );
                     $this->session->set_userdata('user', $session_data);
-                    $response = array('status'=>'success', 'message'=> '');
+                    $response = array('status'=>'success', 'message'=> '', 'url' => 'dashboard');
 					echo json_encode($response); exit;
                 } else {
                     $response = array('status'=>'error', 'message'=> 'Please enter the correct email address.');
