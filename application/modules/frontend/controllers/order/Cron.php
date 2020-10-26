@@ -169,7 +169,9 @@ class Cron extends MX_Controller {
 
     public function make_request($http_method, $endpoint, $body_params='', $userdata)
     {
-        if($userdata['email'] == 'admin@pct24.com') {
+
+        if($userdata['email'] == 'admin@pct24.com' || (isset($userdata['admin_api']) && $userdata['admin_api'] == 1)) 
+        {
             $login = getenv('RESWARE_ADMIN_USERNAME');
             $password = getenv('RESWARE_ADMIN_PASSWORD');
         } else {
@@ -930,14 +932,9 @@ class Cron extends MX_Controller {
         }
     }
 
-    public function import_sales_rep_orders()
+    public function import_all_sales_rep_orders()
     {
-        $order_status = $this->uri->segment(2);
-        
-        ini_set('max_execution_time', 0); 
-        ini_set('memory_limit','2048M');
-        $this->load->library('order/resware');
-        $this->load->model('order/apiLogs');
+        // $order_status = $this->uri->segment(2);
 
         $condition = array(
             'where' => array(
@@ -945,20 +942,45 @@ class Cron extends MX_Controller {
                 'is_sales_rep' => 1
             )
         );
+        
         $customer_lists = $this->home_model->get_customers($condition);
 
         if(isset($customer_lists) && !empty($customer_lists))
         {
-            foreach ($customer_lists as $key => $value) 
+            foreach ($customer_lists as $key => $salesRep) 
             {
-                $login_data = array();
-                $login_data['email'] =  $value['email_address'];
-                $login_data['random_password'] = $value['random_password'];
-                // $login_data['random_password'] = 'Pacific3';
+                $this->import_sales_rep_orders($salesRep);
+            }
+        }
+        
+    }
 
-                /* Fetch records from resware */
+    public function import_sales_rep_orders($salesRep = array())
+    {
+       // $order_status = $this->uri->segment(2);
+        $order_status = array('open','closed');
+
+        ini_set('max_execution_time', 0); 
+        ini_set('memory_limit','2048M');
+
+        $this->load->library('order/resware');
+        $this->load->model('order/apiLogs');
+
+        if(empty($salesRep)) {
+            $userdata = $this->session->userdata('user');
+
+        } else {
+            $userdata = $salesRep;
+            $userdata['email'] = $userdata['email_address'];
+        }
+
+        if(isset($userdata) && !empty($userdata))
+        {
+            /* Fetch records from resware */
+            foreach ($order_status as $key => $value) 
+            {
                 $status = array();
-                if($order_status == 'closed')
+                if($value == 'closed')
                 {
                     $status['Statuses'][] = array('StatusID'=>9,'Name'=>'Closed');
                 }
@@ -967,11 +989,12 @@ class Cron extends MX_Controller {
                     $status['Statuses'][] = array('StatusID'=>2,'Name'=>'Open');
                 }                
 
-                $logid = $this->apiLogs->syncLogs($value['id'], 'resware', 'get_sales_rep_orders', env('RESWARE_ORDER_API').'files/search', array(), array(), 0, 0);
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_sales_rep_orders', env('RESWARE_ORDER_API').'files/search', json_encode($status), array(), 0, 0);
         
-                $res = $this->make_request('POST', 'files/search', json_encode($status),  $login_data);
+                $res = $this->make_request('POST', 'files/search', json_encode($status),  $userdata);
                 
-                $this->apiLogs->syncLogs($value['id'], 'resware', 'get_sales_rep_orders', env('RESWARE_ORDER_API').'files/search', array(), $res, 0, $logid);
+                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_sales_rep_orders', env('RESWARE_ORDER_API').'files/search', json_encode($status), $res, 0, $logid);
+
                 $result = json_decode($res,TRUE);            
                 
                 if(isset($result['Files']) && !empty($result['Files']))
@@ -979,7 +1002,7 @@ class Cron extends MX_Controller {
                     $this->db->simple_query('SET SESSION group_concat_max_len=150000');
                     $this->db->select('GROUP_CONCAT(file_id) as file_ids');
                     $this->db->from('order_details');   
-                    $this->db->where('transaction_details.sales_representative', $value['id']);
+                    $this->db->where('transaction_details.sales_representative', $userdata['id']);
                     $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'left');
                     $this->db->group_by('transaction_details.sales_representative'); 
                     $query = $this->db->get();
@@ -1057,7 +1080,7 @@ class Cron extends MX_Controller {
                             $transactionData = array(
                                 'customer_id' => 0,
                                 'sales_amount' =>  !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
-                                'sales_representative' =>  $value['id'],
+                                'sales_representative' =>  $userdata['id'],
                                 'loan_number' => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
                                 'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                 'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
@@ -1129,8 +1152,6 @@ class Cron extends MX_Controller {
                             $propertyData['state'] = isset($res['Properties'][0]['State']) && !empty($res['Properties'][0]['State']) ? $res['Properties'][0]['State'] : '';
                             $propertyData['county'] = isset($res['Properties'][0]['County']) && !empty($res['Properties'][0]['County']) ? $res['Properties'][0]['County'] : '';
 
-                            $userdata = $value;
-
                             $this->tpCreateService(4,$random_number,$propertyData,$userdata);                   
 
                             $this->tpCreateService(3,$random_number,$propertyData,$userdata);
@@ -1179,16 +1200,19 @@ class Cron extends MX_Controller {
                             $orderId = $this->home_model->update($orderData,$condition,'order_details');
                         }
                     }
-                    echo "All orders synced successfully for user: ".$value['email_address']."<br>";
+                   // echo "All orders with status ".$value." synced successfully for user: ".$userdata['email']."<br>";
+                    $response[$value] = array('status'=>'success','msg'=>"All orders with status ".$value." synced successfully for user: ".$userdata['email']."<br>");
                 }
                 else
                 {
-                    echo "No orders found for user: ".$value['email_address']."<br>";
+                   // echo "No orders found for user: ".$userdata['email']."<br>";
+                    $response[$value] = array('status'=>'error','msg'=> "No orders found with status ".$value." for user: ".$userdata['email']."<br>");
                 }
-                /* Fetch records from resware */
             }
-        }
-        
+
+            echo   json_encode($response);          
+            /* Fetch records from resware */            
+        }        
     }
 
     public function tpCreateService($methodId,$random_number,$propertyData=array(), $userdata = array())

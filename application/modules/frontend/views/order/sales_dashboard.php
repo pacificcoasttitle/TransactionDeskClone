@@ -171,7 +171,7 @@
 				}
 			});
 
-			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option></select></label>');
+			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option></select></label><a href="javascript:void(0);" style="margin-bottom: 5px;"><button class="btn btn-grad-2a" style="background: #d35411;height: 42px;line-height: 28px;" type="button" onClick="importSalesRepOrders();">Refresh</button></a>');
 		}
 
 		$("#orders_filter").on("change", function(){
@@ -209,6 +209,31 @@
 					}
 					$('#tbl-partners-data tbody').html(table_data);
 					$('#partnersModal').modal('show');
+				}
+				else if(results.status == 'error')
+				{
+					alert(results.msg);
+				}
+				$('#page-preloader').css('display', 'none');
+			}
+		});
+	}
+
+	function importSalesRepOrders()
+	{
+		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+
+		$.ajax({
+			url: base_url + "import-sales-rep-orders",
+			type: "post",
+			success: function (response) {
+
+				var results = JSON.parse(response);
+				
+				if(results.status == 'success')
+				{
+					order_list.ajax.reload();
 				}
 				else if(results.status == 'error')
 				{
