@@ -797,7 +797,7 @@ class DashboardMail extends MX_Controller {
         $success = array();
         $fileId = $this->uri->segment(2);    
         $orderDetails = $this->order->get_order_details($fileId, 1);
-        $responseArr = $this->natic->getDocumentContentForCpl($fileId);
+        $responseArr = $this->natic->getDocumentContentForCpl($fileId, $orderDetails);
         if ($responseArr['success']) {
             $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
             $document_name = "natic_".$cplCount."_".$fileId.".pdf";

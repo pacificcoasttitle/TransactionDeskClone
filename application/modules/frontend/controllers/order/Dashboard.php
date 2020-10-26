@@ -2689,7 +2689,7 @@ class Dashboard extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$fileId = $this->uri->segment(2);    
 		$orderDetails = $this->order->get_order_details($fileId);
-		$responseArr = $this->natic->getDocumentContentForCpl($fileId);
+		$responseArr = $this->natic->getDocumentContentForCpl($fileId, $orderDetails);
 		if ($responseArr['success']) {
 			$cplCount = $this->document->countCplDocument($orderDetails['order_id']);
 			$document_name = "natic_".$cplCount."_".$fileId.".pdf";
