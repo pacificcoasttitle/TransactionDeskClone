@@ -58,12 +58,16 @@
 											</tr>
 										</thead>
 										<tbody>
-                                            <tr role="row" class="odd">
-                                                <td>1</td>
-                                                <td><?php echo $file_number;?></td>
-                                                <td><?php echo $full_address;?></td>
-                                                <td><?php echo $action;?></td> 
-                                            </tr>
+											<?php if(!empty($file_number)) {?>
+												<tr role="row" class="odd">
+													<td>1</td>
+													<td><?php echo $file_number;?></td>
+													<td><?php echo $full_address;?></td>
+													<td><?php echo $action;?></td> 
+												</tr>
+											<?php } else { ?>
+												<tr role="row" class="odd"><td colspan="4" class="text-center">No records found</td></tr>
+											<?php }  ?>
 										</tbody>
 									</table>
 								</div>
