@@ -218,7 +218,7 @@ class Order_model extends CI_Model
             property_details.secondary_owner,
             transaction_details.id as transaction_id,
             transaction_details.sales_representative,
-            pct_order_sales_rep.name as sales_rep_name,
+            CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,
             transaction_details.title_officer,
             pct_order_title_officer.name as title_officer_name,
             transaction_details.sales_amount,
@@ -261,7 +261,7 @@ class Order_model extends CI_Model
             ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
             ->join('agents a', 'property_details.listing_agent_id = a.id', 'left')
             ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
-            ->join('pct_order_sales_rep', 'transaction_details.sales_representative = pct_order_sales_rep.id')
+            ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
             ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id')
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->db->where('file_id', $fileId);
