@@ -68,11 +68,6 @@ switch (ENVIRONMENT)
 	case 'development':
 		error_reporting(0);
 		ini_set('display_errors', 1);
-		$path = getcwd();
-		echo "<pre>getcwd:"; print_r($path);
-		echo "<pre>dir:"; print_r(dirname(__DIR__)); 
-		echo "<pre>file:"; print_r(dirname(__FILE__));
-		echo "<pre>"; print_r($_SERVER); exit;
 	break;
 
 	case 'testing':
