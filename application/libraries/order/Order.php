@@ -616,5 +616,37 @@ class Order
             return false;
         }     
     }
+
+    public function get_order_uploaded_documents($fileId)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('order_details.file_number, 
+                order_details.file_id, 
+                order_details.id as order_id, 
+                pct_order_documents.document_name, 
+                pct_order_documents.document_name, 
+                pct_order_documents.original_document_name, 
+                pct_order_documents.is_sync, 
+                pct_order_documents.is_prelim_document, 
+                pct_order_documents.api_document_id, 
+                pct_order_documents.index_number, 
+                pct_order_documents.is_linked_doc')
+            ->from('order_details')
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+
+        $this->CI->db->where('order_details.file_id', $fileId);
+        $this->CI->db->group_start()
+            ->where('pct_order_documents.is_grant_doc', 1)
+            ->or_where('pct_order_documents.is_cpl_doc', 1)
+            ->or_where('pct_order_documents.is_proposed_insured_doc', 1)
+            ->group_end();
+        
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
        
 }
