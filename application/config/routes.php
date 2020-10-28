@@ -178,6 +178,7 @@ $route['get-sales-orders'] = 'frontend/order/dashboard/get_sales_orders';
 $route['import-sales-rep-orders'] = 'frontend/order/cron/import_sales_rep_orders';
 $route['get-partners'] = 'frontend/order/dashboard/get_partners';
 $route['import-all-sales-rep-orders'] = 'frontend/order/cron/import_all_sales_rep_orders';
+$route['get-sales-rep-orders-count'] = 'frontend/order/dashboard/get_sales_rep_orders_count';
 
 
 
