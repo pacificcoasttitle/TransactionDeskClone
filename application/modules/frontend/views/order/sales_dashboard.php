@@ -269,12 +269,13 @@
 				if((results.resware_open_count > results.open_count) || (results.resware_closed_count > results.closed_count))
 				{
 					// $('#btn-refresh').css('background','#469a47f2');
-					$('#btn-refresh').css('background','rgb(0, 102, 68) ');
+					$('#btn-refresh').css('background','rgb(0, 102, 68)');
 				}
-				else if(results.status == 'error')
+				else
 				{
 					$('#btn-refresh').css('background','#d35411');
 				}
+				
 				$('#page-preloader').css('display', 'none');
 			}
 		});
