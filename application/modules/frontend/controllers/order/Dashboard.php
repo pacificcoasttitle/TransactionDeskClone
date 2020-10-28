@@ -3013,4 +3013,41 @@ class Dashboard extends MX_Controller {
 
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
+
+
+    public function get_sales_rep_orders_count()
+    {
+    	$userdata = $this->session->userdata('user');
+
+    	if(isset($userdata) && !empty($userdata))
+    	{
+    		$order_status = array('open','closed');
+    		foreach ($order_status as $key => $value) 
+            {
+                $status = array();
+                if($value == 'closed')
+                {
+                    $status['Statuses'][] = array('StatusID'=>9,'Name'=>'Closed');
+                }
+                else
+                {
+                    $status['Statuses'][] = array('StatusID'=>2,'Name'=>'Open');
+                }                
+
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_sales_rep_orders', env('RESWARE_ORDER_API').'files/search', json_encode($status), array(), 0, 0);
+        
+                $res = $this->resware->make_request('POST', 'files/search', json_encode($status),  $userdata);
+                
+                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_sales_rep_orders', env('RESWARE_ORDER_API').'files/search', json_encode($status), $res, 0, $logid);
+
+                $result = json_decode($res,TRUE);            
+                
+                $resware_count[$value] = count($result['Files']);
+                $order_lists = $this->order->get_orders(array('status'=>$value));
+                $count[$value] = isset($order_lists['recordsTotal']) && !empty($order_lists['recordsTotal']) ? $order_lists['recordsTotal'] : 0;
+            }
+            $response = array('resware_open_count'=>$resware_count['open'], 'resware_closed_count'=>$resware_count['closed'], 'open_count'=>$count['open'], 'closed_count'=>$count['closed']);
+            echo json_encode($response); exit;
+    	}
+    }
 }

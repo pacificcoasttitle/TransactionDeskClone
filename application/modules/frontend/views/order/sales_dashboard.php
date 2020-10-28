@@ -129,6 +129,7 @@
 </html>
 <script>
 	$(document).ready(function () {
+		getSalesRepOrderCount();
 		var order_list='';
 		if ($('#orders_listing').length) {
 			order_list = $('#orders_listing').DataTable({
@@ -180,7 +181,7 @@
 				}
 			});
 
-			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option></select></label><a href="javascript:void(0);" style="margin-bottom: 5px;"><button class="btn btn-grad-2a" style="background: #d35411;height: 42px;line-height: 28px;" type="button" onClick="importSalesRepOrders();">Refresh</button></a>');
+			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option></select></label><a href="javascript:void(0);" style="margin-bottom: 5px;"><button class="btn btn-grad-2a" id="btn-refresh" style="background: #d35411;height: 42px;line-height: 28px;" type="button" onClick="importSalesRepOrders();">Refresh</button></a>');
 		}
 
 		$("#orders_filter").on("change", function(){
@@ -247,6 +248,31 @@
 				else if(results.status == 'error')
 				{
 					alert(results.msg);
+				}
+				$('#page-preloader').css('display', 'none');
+			}
+		});
+	}
+
+	function getSalesRepOrderCount()
+	{
+		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+
+		$.ajax({
+			url: base_url + "get-sales-rep-orders-count",
+			type: "post",
+			success: function (response) {
+
+				var results = JSON.parse(response);
+				
+				if((results.resware_open_count > results.open_count) || (results.resware_closed_count > results.closed_count))
+				{
+					$('#btn-refresh').css('background','#469a47f2');
+				}
+				else if(results.status == 'error')
+				{
+					$('#btn-refresh').css('background','#d35411');
 				}
 				$('#page-preloader').css('display', 'none');
 			}
