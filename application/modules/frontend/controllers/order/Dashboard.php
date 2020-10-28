@@ -2038,7 +2038,13 @@ class Dashboard extends MX_Controller {
 		$data['api_document_id'] = $resware_document_id;
 		$data['order_id'] = $order_id;
 		$data['document_name'] = $documentDetail['document_name'];
-		$data['url'] = base_url().'uploads/documents/'.$documentDetail['document_name'];
+		if ($documentDetail['is_grant_doc'] == 1) {
+			$data['url'] = base_url().'uploads/grant-deed/'.$documentDetail['document_name'];
+		} else if ($documentDetail['is_proposed_insured_doc'] == 1) {
+			$data['url'] = base_url().'uploads/proposed-insured/'.$documentDetail['document_name'];
+		} else {
+			$data['url'] = base_url().'uploads/documents/'.$documentDetail['document_name'];
+		}
         $results = $this->load->view('order/review_file_load_doc', $data, TRUE);
         echo json_encode($results, true);
 	}
