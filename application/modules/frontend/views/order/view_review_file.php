@@ -118,7 +118,27 @@ button:focus {outline:0;}
 														<br>
 														<li class="review_li"><a href="javascript:void(0);" onclick="legal_vesting();">Legal Vesting</a></li><br>
 														<li class="review_li"><a href="javascript:void(0);" onclick="plat_map();">Plat Map</a></li>
-
+														<li class="review_li">
+															<button class="dropdown-btn">Uploaded Docs
+																<i style="font-size:16px;" class="fa fa-caret-down"></i>
+															</button>
+															<div class="dropdown-container">
+																<ol style="border-bottom: 2px #D35411 dotted !important;"> 
+																<?php 
+																	if(!empty($uploaded_docs)) {
+																		$count = count($uploaded_docs);
+																		$i = 1;
+																		foreach($uploaded_docs as $document) { 
+																			?>
+																			<li style="width: 100%;"><a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>display: list-item;" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>);" class="linked_doc" href="javascript:void(0);"><?php echo $i.". ".$document['original_document_name'];?></a></li>
+																		<?php  $i++; } 
+																	 } else { ?>
+																		<a class="linked_doc" href="#">No Documents Found</a>
+																	<?php } 
+																?>
+															</ol>
+															</div>
+														</li>
 													</ul>
 												</div>
 											</div>

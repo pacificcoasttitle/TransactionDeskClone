@@ -1902,6 +1902,7 @@ class Dashboard extends MX_Controller {
 
 	public function review_file()
 	{
+		$userdata = $this->session->userdata('user');
 		$prelimDocument = array();
 		$linked_doc = array();
 		$this->load->library('order/resware');
@@ -1910,9 +1911,15 @@ class Dashboard extends MX_Controller {
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';  
 		$orderDetails = $this->order->get_order_details($fileId);
 		$prelimDocument = $this->order->get_prelim_document($orderDetails['order_id']);
-		$linked_doc = $this->order->get_order_linked_documents($fileId);
-		$userdata = $this->session->userdata('user');
+		if (isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep'])) {
+			$linked_doc = $this->order->get_order_linked_documents($fileId, 1);
+		} else {
+			$linked_doc = $this->order->get_order_linked_documents($fileId);
+		}
+		$uploaded_docs = $this->order->get_order_uploaded_documents($fileId);
+		
 		$data['linked_doc'] = $linked_doc;
+		$data['uploaded_docs'] = $uploaded_docs;
 		$data['prelimDocument'] = $prelimDocument;
 		$data['orderDetails'] = $orderDetails;
 		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
