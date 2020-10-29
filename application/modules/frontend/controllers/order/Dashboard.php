@@ -1877,13 +1877,16 @@ class Dashboard extends MX_Controller {
 		if (isset($order_lists['data']) && !empty($order_lists['data'])) {
 			$i = $params['start'] + 1;
 			foreach ($order_lists['data'] as $order)  {
+
 				$nestedData = array();
 				$nestedData[] = $i;
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
 				
 				if ($order['prelim_summary_id'] != 0) {
-					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a button-color' type='button'>REVIEW FILE</button></a>";
+					
+					$class = isset($order['is_updated']) && !empty($order['is_updated']) ? 'button-color-green' : 'button-color';
+					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a ".$class."' type='button'>REVIEW FILE</button></a>";
 				} else {
 					$nestedData[] = "<a href='javascript:void(0)'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a>";
 				}
@@ -1917,7 +1920,14 @@ class Dashboard extends MX_Controller {
 			$linked_doc = $this->order->get_order_linked_documents($fileId);
 		}
 		$uploaded_docs = $this->order->get_order_uploaded_documents($fileId);
-		
+
+		if(isset($orderDetails['file_number']) && !empty($orderDetails['file_number']))
+		{
+			$condition = array('file_number' => $orderDetails['file_number']);
+			$summaryData['is_updated'] = 0;
+			$update = $this->reviewPrelimData->update($summaryData, $condition);
+		}
+
 		$data['linked_doc'] = $linked_doc;
 		$data['uploaded_docs'] = $uploaded_docs;
 		$data['prelimDocument'] = $prelimDocument;

@@ -584,6 +584,7 @@ class ReviewPrelim extends MX_Controller {
 					if($prevCount > 0)
 					{
 						$condition = array('file_number' => $file_number);
+						$summaryData['is_updated'] = 1;
 						$update = $this->reviewPrelimData->update($summaryData, $condition);
 					}
 					else

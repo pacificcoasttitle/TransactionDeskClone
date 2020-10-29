@@ -57,9 +57,10 @@ class Order
             }
 
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name')
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated')
             ->from('order_details')
-            ->join('property_details', 'order_details.property_id = property_details.id');
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
             /*if ($userdata['is_master'] == 0) {
                 $this->CI->db->where('order_details.customer_id', $userdata['id']);
             }*/
@@ -88,9 +89,10 @@ class Order
             $orders_lists = array();
            
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name, 
-                order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name')
+                order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated')
                 ->from('order_details')
-                ->join('property_details', 'order_details.property_id = property_details.id');
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             /*if ($userdata['is_master'] == 0) {
                 $this->CI->db->where('order_details.customer_id', $userdata['id']);
@@ -121,9 +123,10 @@ class Order
                 $this->CI->db->where('order_details.resware_status', $status);
             }
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name')
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated')
             ->from('order_details')
-            ->join('property_details', 'order_details.property_id = property_details.id');
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
                 $this->CI->db->where('order_details.customer_id', $userdata['id']);
@@ -147,9 +150,10 @@ class Order
                 $this->CI->db->where('order_details.resware_status', $status);
             }
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name,
-            order_details.created_at,order_details.resware_status,  order_details.proposed_insured_document_name')
+            order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated')
                 ->from('order_details')
-                ->join('property_details', 'order_details.property_id = property_details.id');
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
