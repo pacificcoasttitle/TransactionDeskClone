@@ -65,7 +65,7 @@ class Login extends MX_Controller {
                     $response = array('status'=>'success', 'message'=> '', 'url' => 'dashboard');
 					echo json_encode($response); exit;
                 } else {
-                    $response = array('status'=>'error', 'message'=> 'Please enter the correct email address.');
+                    $response = array('status'=>'error', 'email_err_msg'=> 'Please enter the correct email address.');
 					echo json_encode($response); exit;
                 }
             }
