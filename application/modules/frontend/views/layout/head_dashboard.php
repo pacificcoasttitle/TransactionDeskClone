@@ -65,4 +65,8 @@
 	.button-color {
 	  color: #888888;
 	}
+	
+	.button-color-green {
+	  background: rgb(0, 102, 68);
+	}
 </style>
