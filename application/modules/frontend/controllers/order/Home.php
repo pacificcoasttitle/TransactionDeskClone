@@ -630,6 +630,8 @@ class Home extends MX_Controller {
 								$this->titlepoint->generateGrantDeed($instrumentNumber,$recordedDate,$fips,$orderNumber,$orderId);
 							}
 							
+							$orderDetails = $this->order->get_order_details($file_id);
+
 							$data = array(
 								'orderNumber'=> $orderNumber,
 								'orderId'=> $file_id,
@@ -639,7 +641,8 @@ class Home extends MX_Controller {
 								'CompanyName'=> $CompanyName,
 								'StreetAddress'=> $StreetAddress,
 								'City'=> $City,
-								'Zipcode'=> $Zipcode,
+								'Zipcode'=> $Zipcode,	
+								'openAt'=> date("m/d/Y h:i:s A", strtotime($orderDetails['opened_date'])),
 								'PropertyAddress'=> $PropertyAddress,
 								'FullProperty'=> $FullProperty,
 								'APN'=> $apn,
@@ -688,7 +691,7 @@ class Home extends MX_Controller {
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
 							$taxfilename = $orderNumber.'.pdf';
-							$orderDetails = $this->order->get_order_details($file_id);
+							// $orderDetails = $this->order->get_order_details($file_id);
 
 							if (!empty($_FILES['upload_curative']['name'])) {
 								$this->uploadCurativeDocsToResware($orderDetails); 

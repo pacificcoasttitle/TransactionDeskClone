@@ -572,7 +572,21 @@
                         <?php
                             }
                         ?>
-                        
+                        <?php 
+                            if(isset($openAt) && !empty($openAt))
+                            {
+                        ?>
+                                <tr>
+                                  <td style="width:282.465px;text-align:left;">
+                                    <strong>Opened At:</strong>
+                                  </td>
+                                  <td style="width:283.576px;text-align:left;">
+                                     <?php echo $openAt; ?>
+                                  </td>
+                                </tr>
+                        <?php
+                            }
+                        ?>
                       </table>
                       <!-- <p style="text-align:center;">
                          
