@@ -11,6 +11,7 @@
                         <!-- Mobile Trigger End-->
                         <a class="navbar-brand scroll" href="<?php echo base_url(); ?>"><img class="normal-logo" src="<?php echo base_url(); ?>assets/media/general/logo2.png" alt="logo"><img class="scroll-logo hidden-xs" src="<?php echo base_url(); ?>assets/media/general/logo2-dark.png" alt="logo"></a>
                     </div>
+                    
                     <?php if(!isset($mail_dashboard)) {?>
                         <div class="header-navibox-2">
                             <ul class="yamm nav navbar-nav">
@@ -21,7 +22,15 @@
                                     <li><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed Insured</a></li>
                                     <!-- <li><a href="<?php // echo base_url().'prelim-files'; ?>">Review Prelims</a></li> -->
                                     <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>    
-                                <?php } else { ?>
+                                <?php } else {
+                                    if($is_sales_rep == 1)
+                                    {
+                                ?>
+                                        <li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>
+                                <?php
+                                    } 
+                                ?>
+
                                     <li><a href="<?php echo base_url().'special-dashboard/logout'; ?>">Logout</a></li>    
                                 <?php } ?>
                             </ul>
