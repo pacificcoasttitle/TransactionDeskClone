@@ -243,6 +243,7 @@
 				
 				if(results.status == 'success')
 				{
+					$('#btn-refresh').css('background','#d35411');
 					order_list.ajax.reload();
 				}
 				else if(results.status == 'error')
