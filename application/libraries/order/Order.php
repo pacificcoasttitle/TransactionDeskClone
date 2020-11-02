@@ -282,11 +282,13 @@ class Order
         $this->CI->db->where('file_id', $fileId);
          
         if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0) {
-            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            $this->CI->db->group_start()
+                ->where('order_details.customer_id', $userdata['id'])
+                ->or_where('property_details.escrow_lender_id', $userdata['id'])
+                ->group_end();
+           
         }
         $query = $this->CI->db->get();
-        echo $this->CI->db->last_query();
-        
         return $query->row_array();
     }
 
@@ -317,10 +319,14 @@ class Order
                 pct_order_documents.index_number, 
                 pct_order_documents.is_linked_doc')
             ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->CI->db->where('order_details.file_id', $fileId);
         if ($userdata['is_master'] == 0 && $from_mail == 0) {
-            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            $this->CI->db->group_start()
+                ->where('order_details.customer_id', $userdata['id'])
+                ->or_where('property_details.escrow_lender_id', $userdata['id'])
+                ->group_end();
         }
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
@@ -345,13 +351,17 @@ class Order
                 pct_order_documents.index_number, 
                 pct_order_documents.is_linked_doc')
             ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
 
         $this->CI->db->where('order_details.file_id', $fileId);
         $this->CI->db->where('pct_order_documents.is_linked_doc', 1);
         $this->CI->db->order_by('pct_order_documents.index_number', 'asc');
         if ($userdata['is_master'] == 0 && $from_mail == 0) {
-            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            $this->CI->db->group_start()
+                ->where('order_details.customer_id', $userdata['id'])
+                ->or_where('property_details.escrow_lender_id', $userdata['id'])
+                ->group_end();
         }
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
