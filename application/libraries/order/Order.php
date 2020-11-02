@@ -285,6 +285,7 @@ class Order
             $this->CI->db->where('order_details.customer_id', $userdata['id']);
         }
         $query = $this->CI->db->get();
+        echo $this->CI->db->last_query();
         
         return $query->row_array();
     }

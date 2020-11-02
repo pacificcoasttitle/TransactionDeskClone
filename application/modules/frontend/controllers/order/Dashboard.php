@@ -2537,6 +2537,7 @@ class Dashboard extends MX_Controller {
 		$fileId = $this->input->post('fileId');
 		$userdata = $this->session->userdata('user');
 		$orderDetails = $this->order->get_order_details($fileId);
+		print_r($orderDetails);
 		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 			
 		if ($orderUser['is_escrow'] == 1) {
