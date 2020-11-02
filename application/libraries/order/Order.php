@@ -23,7 +23,10 @@ class Order
             ->join('property_details', 'order_details.property_id = property_details.id');
 
         if ($userdata['is_master'] == 0) {
-            $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            $this->CI->db->group_start()
+                    ->where('order_details.customer_id', $userdata['id'])
+                    ->or_where('property_details.escrow_lender_id', $userdata['id'])
+                    ->group_end();
         }
         $this->CI->db->order_by("order_details.created_at", "desc");
         $this->CI->db->limit(10);
@@ -61,12 +64,12 @@ class Order
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
-            /*if ($userdata['is_master'] == 0) {
-                $this->CI->db->where('order_details.customer_id', $userdata['id']);
-            }*/
-
+            
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
-                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+                $this->CI->db->group_start()
+                    ->where('order_details.customer_id', $userdata['id'])
+                    ->or_where('property_details.escrow_lender_id', $userdata['id'])
+                    ->group_end();
             }
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
@@ -78,7 +81,7 @@ class Order
             if(isset($keyword) && !empty($keyword))
             {
                 $this->CI->db->like('property_details.full_address', $keyword);            
-                $this->CI->db->or_like('order_details.file_number', $keyword);
+                $this->CI->db->or_like('property_details.file_number', $keyword);
             }
             if(isset($status) && !empty($status))
             {
@@ -94,11 +97,12 @@ class Order
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
-            /*if ($userdata['is_master'] == 0) {
-                $this->CI->db->where('order_details.customer_id', $userdata['id']);
-            }*/
+            
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
-                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+                $this->CI->db->group_start()
+                    ->where('order_details.customer_id', $userdata['id'])
+                    ->or_where('property_details.escrow_lender_id', $userdata['id'])
+                    ->group_end();
             }
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
@@ -129,7 +133,10 @@ class Order
             ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
-                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+                $this->CI->db->group_start()
+                    ->where('order_details.customer_id', $userdata['id'])
+                    ->or_where('property_details.escrow_lender_id', $userdata['id'])
+                    ->group_end();
             }
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
@@ -157,7 +164,10 @@ class Order
 
             
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
-                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+                $this->CI->db->group_start()
+                    ->where('order_details.customer_id', $userdata['id'])
+                    ->or_where('property_details.escrow_lender_id', $userdata['id'])
+                    ->group_end();
             }
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
