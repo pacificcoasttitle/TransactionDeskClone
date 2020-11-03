@@ -81,7 +81,7 @@ class Order
             if(isset($keyword) && !empty($keyword))
             {
                 $this->CI->db->like('property_details.full_address', $keyword);            
-                $this->CI->db->or_like('property_details.file_number', $keyword);
+                $this->CI->db->or_like('order_details.file_number', $keyword);
             }
             if(isset($status) && !empty($status))
             {
