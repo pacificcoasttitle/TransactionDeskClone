@@ -632,6 +632,12 @@ class Home extends MX_Controller {
 							
 							$orderDetails = $this->order->get_order_details($file_id);
 
+							// Convert to PST
+							$time = new DateTime($orderDetails['opened_date'], new DateTimeZone('America/New_York'));
+							$time->setTimezone(new DateTimeZone('America/Los_Angeles'));
+
+							$opened_date = $time->format('m-d-Y h:i:s A');
+
 							$data = array(
 								'orderNumber'=> $orderNumber,
 								'orderId'=> $file_id,
@@ -642,7 +648,7 @@ class Home extends MX_Controller {
 								'StreetAddress'=> $StreetAddress,
 								'City'=> $City,
 								'Zipcode'=> $Zipcode,	
-								'openAt'=> date("m/d/Y h:i:s A", strtotime($orderDetails['opened_date'])),
+								'openAt'=> $opened_date,
 								'PropertyAddress'=> $PropertyAddress,
 								'FullProperty'=> $FullProperty,
 								'APN'=> $apn,
