@@ -822,42 +822,31 @@ class Dashboard extends MX_Controller {
 		if ($orderDetails['sales_amount'] > 0) 
 		{
 			if (!empty($orderDetails['borrower'])) {
-				// $primary_owner = explode(' ', $orderDetails['borrower']);
 
 				$data['primary_owner_first_name'] = !empty($orderDetails['borrower']) ? $orderDetails['borrower'] : '';
-				// $data['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
 			} else {
 				$data['primary_owner_first_name'] = '';
-				// $data['primary_owner_last_name'] = '';
 			}
 	
 			if (!empty($orderDetails['secondary_borrower'])) {
-				/*$secondary_owner = explode(' ', $orderDetails['secondary_borrower']);*/
 				$data['secondary_owner_first_name'] = !empty($orderDetails['secondary_borrower']) ? $orderDetails['secondary_borrower'] : '';
-				// $data['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
 			} else {
 				$data['secondary_owner_first_name'] = '';
-				// $data['secondary_owner_last_name'] = '';
 			}
 		} 
 		else 
 		{
 			if (!empty($orderDetails['primary_owner'])) {
-				// $primary_owner = explode(' ', $orderDetails['primary_owner']);
+				
 				$data['primary_owner_first_name'] = !empty($orderDetails['primary_owner']) ? $orderDetails['primary_owner'] : '';
-				// $data['primary_owner_last_name'] = !empty($primary_owner[1]) ? $primary_owner[1] : '';
 			} else {
 				$data['primary_owner_first_name'] = '';
-				// $data['primary_owner_last_name'] = '';
 			}
 	
 			if (!empty($orderDetails['secondary_owner'])) {
-				/*$secondary_owner = explode(' ', $orderDetails['secondary_owner']);*/
 				$data['secondary_owner_first_name'] = !empty($orderDetails['secondary_owner']) ? $orderDetails['secondary_owner'] : '';
-				// $data['secondary_owner_last_name'] = !empty($secondary_owner[1]) ? $secondary_owner[1] : '';
 			} else {
 				$data['secondary_owner_first_name'] = '';
-				// $data['secondary_owner_last_name'] = '';
 			}
 		}
 		if(!empty($orderDetails['supplemental_report_date']) && $orderDetails['supplemental_report_date'] != '0000-00-00')
@@ -876,19 +865,20 @@ class Dashboard extends MX_Controller {
 		$data['is_escrow'] = $customer_data['is_escrow'];
 
 		if ($customer_data['is_escrow'] == 1) {
-			if ($orderDetails['is_escrow'] == 1) {
-				$data['lender_first_name'] =  '';
-				$data['lender_last_name'] ='';
-				$data['lender_email'] = '';
-				$data['lender_state'] = '';
-				$data['lender_company_name'] = '';
-				$data['lender_address'] = '';
-				$data['lender_city'] = '';
-				$data['lender_zipcode'] = '';
-				$data['lender_id'] = '';
-				$data['escrow_lender_id'] = '';
+			if (!empty($orderDetails['cpl_lender_id'])) {
+				$lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+				$data['lender_first_name'] =  $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+				$data['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+				$data['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+				$data['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
+				$data['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+				$data['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+				$data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+				$data['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+				$data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+				// $data['escrow_lender_id'] = '';
 			} else {
-				$data['escrow_lender_id'] = $orderDetails['escrow_lender_id'] ? $orderDetails['escrow_lender_id'] : '';		
+				// $data['escrow_lender_id'] = $orderDetails['escrow_lender_id'] ? $orderDetails['escrow_lender_id'] : '';		
 				$data['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
 				$data['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
 				$data['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
@@ -916,7 +906,7 @@ class Dashboard extends MX_Controller {
 				$data['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
 				$data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {
-				$data['cpl_lender_id'] = $customer_data['id']; 
+				// $data['cpl_lender_id'] = $customer_data['id']; 
 				$data['lender_first_name'] = $customer_data['first_name'] ? $customer_data['first_name'] : '';
 				$data['lender_last_name'] = $customer_data['last_name'] ? $customer_data['last_name'] : '';
 				$data['lender_email'] = $customer_data['email_address'] ? $customer_data['email_address'] : '';
@@ -925,7 +915,7 @@ class Dashboard extends MX_Controller {
 				$data['lender_address'] = $customer_data['street_address'] ? $customer_data['street_address'] : '';
 				$data['lender_city'] = $customer_data['city'] ? $customer_data['city'] : '';
 				$data['lender_zipcode'] = $customer_data['zip_code'] ? $customer_data['zip_code'] : '';
-				$data['lender_assignment_clause'] = $customer_data['assignment_clause'] ? $customer_data['assignment_clause'] : '';
+				// $data['lender_assignment_clause'] = $customer_data['assignment_clause'] ? $customer_data['assignment_clause'] : '';
 				$data['lender_id'] = $customer_data['id'] ? $customer_data['id'] : '';
 			}
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
@@ -1531,11 +1521,7 @@ class Dashboard extends MX_Controller {
 			$TitleOfficer = $this->input->post('TitleOfficer');
 			$loan_amount = $this->input->post('loan_amount');
 			$loan_number = $this->input->post('loan_number');
-			// $primary_first_name = $this->input->post('primary_first_name');
-			// $primary_last_name = $this->input->post('primary_last_name');
 			$primary_owner = $this->input->post('primary_first_name');
-			/*$secondary_first_name = $this->input->post('secondary_first_name');
-			$secondary_last_name = $this->input->post('secondary_last_name');*/
 			$secondaryOwner = $this->input->post('secondary_first_name');
 			$name = explode(" ",$this->input->post('LenderName'));
 			$vesting = $this->input->post('vesting');
@@ -1570,6 +1556,7 @@ class Dashboard extends MX_Controller {
 				$lender_details['state'] = empty($this->input->post('state')) ? $this->input->post('state') : 'CA';
 				$lender_details['is_added_lender_by_cpl_proposed'] = 1;
 				$lender_details['is_escrow'] = 0;
+				$lender_details['status'] = 0;
 				$LenderId = $this->home_model->insert($lender_details, 'customer_basic_details');		
 			} 
 			else {
@@ -1628,11 +1615,11 @@ class Dashboard extends MX_Controller {
 			
 			if ($orderDetails['sales_amount'] > 0) 
 			{
-				if ($orderUser['is_escrow'] == 1) {
+				/*if ($orderUser['is_escrow'] == 1) {
 					$propertyDetails = array('escrow_lender_id' => $LenderId);
-				} else {
+				} else {*/
 					$propertyDetails = array('cpl_lender_id' => $LenderId);
-				}
+				/*}*/
 				/*$propertyDetails = array('escrow_lender_id' => $LenderId);*/
 				
 				$property_update_flag = $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
@@ -1641,14 +1628,12 @@ class Dashboard extends MX_Controller {
 			} 
 			else 
 			{
-				
-				/*$propertyDetails = array('escrow_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);*/
 
-				if ($orderUser['is_escrow'] == 1) {
+				/*if ($orderUser['is_escrow'] == 1) {
 					$propertyDetails = array('escrow_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
-				} else {
+				} else {*/
 					$propertyDetails = array('cpl_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
-				}
+				/*}*/
 
 				
 				$property_update_flag = $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
