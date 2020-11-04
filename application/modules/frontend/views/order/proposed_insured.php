@@ -28,7 +28,9 @@
 	.radio:before {
 		background: none !important;
 	}
-
+	td.dataTables_empty {
+		display: table-cell !important;
+	}
 </style>
 <body>
 	<?php

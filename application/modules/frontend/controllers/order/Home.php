@@ -636,7 +636,7 @@ class Home extends MX_Controller {
 							
     						$timezone  = -8;
 
-							$opened_date = gmdate("m-d-Y h:i:s A", strtotime($orderDetails['opened_date']) + 3600*($timezone+date("I")));
+							$opened_date = gmdate("m-d-Y h:i A", strtotime($orderDetails['opened_date']) + 3600*($timezone+date("I")));
 
 							$data = array(
 								'orderNumber'=> $orderNumber,
