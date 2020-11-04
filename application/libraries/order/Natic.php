@@ -208,6 +208,13 @@ class Natic
                     <Value>".$borrower."</Value>
                     <Type>String</Type>
                     <Required>false</Required>
+                </Field>
+                <Field>
+                    <FieldId>ApprovedSettlementOfficeId</FieldId>
+                    <Name>Approved Settlement Office Id</Name>
+                    <Value>".$orderDetails['fnf_agent_id']."</Value>
+                    <Type>String</Type>
+                    <Required>false</Required>
                 </Field>";
 
         $xmlData = "<?xml version='1.0' encoding='utf-8'?>
@@ -230,7 +237,7 @@ class Natic
                                     </Document>
                                 </DocumentList>
                                 <ApprovedAttorneyList />
-                                <ApprovedSettlementOfficeList />
+                                <ApprovedSettlementOffice />
                             </DocumentCollection>
                         </RequestWrapper>";
 
