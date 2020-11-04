@@ -633,10 +633,10 @@ class Home extends MX_Controller {
 							$orderDetails = $this->order->get_order_details($file_id);
 
 							// Convert to PST
-							$time = new DateTime($orderDetails['opened_date'], new DateTimeZone('America/New_York'));
-							$time->setTimezone(new DateTimeZone('America/Los_Angeles'));
+ 
+							$date = new DateTime($orderDetails['opened_date'], new DateTimeZone('America/Los_Angeles') );
 
-							$opened_date = $time->format('m-d-Y h:i:s A');
+							$opened_date = $date->format('m-d-Y h:i:s A');
 
 							$data = array(
 								'orderNumber'=> $orderNumber,
