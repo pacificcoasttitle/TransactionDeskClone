@@ -19,7 +19,7 @@ class Home extends MX_Controller {
 
     function index() 
     {
-		$userdata = $this->session->userdata('user');
+    	$userdata = $this->session->userdata('user');
 		$this->load->model('order/apiLogs');
 		$this->load->model('order/titleOfficer');
 		$this->load->model('order/salesRep');
@@ -633,10 +633,10 @@ class Home extends MX_Controller {
 							$orderDetails = $this->order->get_order_details($file_id);
 
 							// Convert to PST
- 
-							$date = new DateTime($orderDetails['opened_date'], new DateTimeZone('America/Los_Angeles') );
+							
+    						$timezone  = -8;
 
-							$opened_date = $date->format('m-d-Y h:i:s A');
+							$opened_date = gmdate("m-d-Y h:i:s A", strtotime($orderDetails['opened_date']) + 3600*($timezone+date("I")));
 
 							$data = array(
 								'orderNumber'=> $orderNumber,
