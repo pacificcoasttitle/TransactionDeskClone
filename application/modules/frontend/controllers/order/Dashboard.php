@@ -1483,18 +1483,12 @@ class Dashboard extends MX_Controller {
 		if ($orderDetails['sales_amount'] > 0) { 
 			$propertyDetails = array('cpl_lender_id' => $LenderId);
 			$this->home_model->update(array('loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner, 'vesting' => $vesting), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-
-			if ($cplApi == 'fnf' || $cplApi == 'westcor') {
-				$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
-			}
+			$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
 			$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
 		} else {
 			$propertyDetails = array('cpl_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
 			$this->home_model->update(array('loan_number' => $loan_number, 'vesting' => $vesting), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-			
-			if ($cplApi == 'fnf' || $cplApi == 'westcor') {
-				$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
-			}
+			$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
 			$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
 		}
 	
@@ -2630,6 +2624,21 @@ class Dashboard extends MX_Controller {
 			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
  			if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
 				$orderDetails['cpl_api'] = 'natic';
+				$agentsData = array(
+					array(
+						'id' => 303,
+						'location_city' => 'Orange'
+					),
+					array(
+						'id' => 1879,
+						'location_city' => 'Oxnard',
+					),
+					array(
+						'id' => 1880,
+						'location_city' => 'Glendale',
+					)
+				);
+				$orderDetails['agents_data'] = $agentsData;
 			} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
 				$orderDetails['cpl_api'] = 'westcor';
 				$this->load->library('order/westcor');

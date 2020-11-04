@@ -221,23 +221,7 @@
 
 								<input type="hidden" id="cpl_api" name="cpl_api" value="">
 								
-								<div id="fnf" style="display:none">
-									<!-- <div class="spacer-b20">
-										<div class="tagline"><span>Agent Details</span></div>
-									</div>
-
-									<input type="hidden" id="agent_id" name="agent_id" value="">
-
-									<div class="frm-row spacer-b15">
-										<div class="section colm colm12">
-											<label class="field prepend-icon">
-												<input type="text" name="agent_name" id="agent_name" class="gui-input ui-autocomplete-input"
-													placeholder="Agent Name">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-											</label>
-										</div>
-									</div> -->
-
+								<div id="fnf">
 									<div class="spacer-b20">
 										<div class="tagline"><span>Select Branch</span></div>
 									</div>
@@ -551,36 +535,22 @@
 				success: function (response) {
 					var res = jQuery.parseJSON(response);
 					if(res.status == 'success') {
-						if (res.orderDetails['cpl_api'] == 'fnf') {
-							$('#fnf').show();
-							var optionsAsString = "";
-							for(var i = 0; i < res.orderDetails['agents_data'].length; i++) {
-								var selected = '';
-								if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
-									selected = 'selected';
-								}
+						var optionsAsString = "";
+						for(var i = 0; i < res.orderDetails['agents_data'].length; i++) {
+							var selected = '';
+							if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
+								selected = 'selected';
+							}
+							if (res.orderDetails['cpl_api'] == 'westcor') {
+								optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
+							} else {
 								optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['location_city'] + "</option>";
 							}
-							$('select[name="branch"]').children('option:not(:first)').remove();
-							$( 'select[name="branch"]' ).append( optionsAsString );
-							$("#branch").prop('required',true);
-						} else if (res.orderDetails['cpl_api'] == 'westcor') { 
-							$('#fnf').show();
-							var optionsAsString = "";
-							for(var i = 0; i < res.orderDetails['agents_data'].length; i++) {
-								var selected = '';
-								if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
-									selected = 'selected';
-								}
-								optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
-							}
-							$('select[name="branch"]').children('option:not(:first)').remove();
-							$( 'select[name="branch"]' ).append( optionsAsString );
-							$("#branch").prop('required',true);
-						} else {
-							$('#fnf').hide();
-							$("#branch").prop('required',false);
+								
 						}
+						$('select[name="branch"]').children('option:not(:first)').remove();
+						$( 'select[name="branch"]' ).append( optionsAsString );
+						$("#branch").prop('required',true);
 						
 						$('#cpl_api').val(res.orderDetails['cpl_api']);
 						$("#LenderName").val(res.orderDetails['lender_name']);
