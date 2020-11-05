@@ -89,6 +89,34 @@ class Natic
             }
         }
 
+        $branchData = array(303 => 
+                        array(
+                            'address1' => '1111 East Katella Avenue',
+                            'address2' => 'Suite 120',
+                            'city' => 'Orange',
+                            'state' => 'CA',
+                            'zipcode' => '92867'
+                        ),
+                        1879 => 
+                        array(
+                            'address1' => '1000 Town Center Drive',
+                            'address2' => 'Suite 300-7',
+                            'city' => 'Oxnard',
+                            'state' => 'CA',
+                            'zipcode' => '93036'
+                        ),
+                        1880 => 
+                        array(
+                            'address1' => '200 West Glenoaks Boulevard',
+                            'address2' => 'Suite 100',
+                            'city' => 'Glendale',
+                            'state' => 'CA',
+                            'zipcode' => '91202'
+                        )
+                    );
+
+        $branchId = $orderDetails['fnf_agent_id'];
+
         $xmlData = "<Field>
                     <FieldId>FileNumber</FieldId>
                     <Name>Agent's File Number</Name>
@@ -203,19 +231,55 @@ class Natic
                     <Required>true</Required>
                 </Field>
                 <Field>
+                    <FieldId>TitleCompanyName</FieldId>
+                    <Name>Title Company Name</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>Pacific Coast Title Company</Value>
+                </Field>
+                <Field>
+                    <FieldId>TitleCompanyAddress1</FieldId>
+                    <Name>Title Company Address 1</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>".$branchData[$branchId]['address1']."</Value>
+                </Field>
+                <Field>
+                    <FieldId>TitleCompanyAddress2</FieldId>
+                    <Name>Title Company Address 2</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>".$branchData[$branchId]['address2']."</Value>
+                </Field>
+                <Field>
+                    <FieldId>TitleCompanyCity</FieldId>
+                    <Name>Title Company City</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>".$branchData[$branchId]['city']."</Value>
+                </Field>
+                <Field>
+                    <FieldId>TitleCompanyState</FieldId>
+                    <Name>Title Company State</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>".$branchData[$branchId]['state']."</Value>
+                </Field>
+                <Field>
+                    <FieldId>TitleCompanyPostalCode</FieldId>
+                    <Name>Title Company Postal Code</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>".$branchData[$branchId]['zipcode']."</Value>
+                </Field>
+                <Field>
                     <FieldId>Buyer</FieldId>
                     <Name>Buyer/Borrower Name</Name>
                     <Value>".$borrower."</Value>
                     <Type>String</Type>
                     <Required>false</Required>
                 </Field>
-                <Field>
-                    <FieldId>ApprovedSettlementOfficeId</FieldId>
-                    <Name>Approved Settlement Office Id</Name>
-                    <Value>".$orderDetails['fnf_agent_id']."</Value>
-                    <Type>String</Type>
-                    <Required>false</Required>
-                </Field>";
+                ";
 
         $xmlData = "<?xml version='1.0' encoding='utf-8'?>
                         <RequestWrapper>
