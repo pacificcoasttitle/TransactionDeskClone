@@ -1125,7 +1125,7 @@ class Dashboard extends MX_Controller {
 				'tvid' => 0,
 				'name' => $lenderDetails['company_name'],
 				'city' => $lenderDetails['city'],
-				'state' => $orderDetails['lender_state'],
+				'state' => $lenderDetails['state'],
 				'zip' => $lenderDetails['zip_code'],
 				'address' => $lenderDetails['street_address'],
 				'phone' => $lenderDetails['telephone_no'],
