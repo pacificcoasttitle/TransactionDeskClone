@@ -75,8 +75,12 @@ $(document).ready(function() {
     $('#btn-place-order').click(function(e){
 
             if($("input[name=add-agent-details]").is(":checked")) 
-            { 
-                $('#required-agent-details').show(); 
+            {
+                if(!$('#BuyerAgentEmailAddress').val() && !$('#ListingAgentEmailAddress').val())
+                {
+                    $('#required-agent-details').show();
+                }
+                 
             } 
             else 
             {
