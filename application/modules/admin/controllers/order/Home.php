@@ -2256,4 +2256,30 @@ class Home extends MX_Controller {
     	}
     	echo json_encode($response);
     }
+
+    public function reswareAdminCredential()
+    {
+        $this->is_admin();
+        $this->load->library('order/order');
+        $data = array();
+        $data['title'] = 'PCT Order: Resware Admin Credential';
+        $data['credResult'] = $this->order->get_resware_admin_credential();
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('resware_username', 'Username', 'required', array('required'=> 'Please Enter Username'));
+            $this->form_validation->set_rules('resware_password', 'Password', 'required', array('required'=> 'Please Enter Password'));
+            if ($this->form_validation->run() == true) {
+                $this->db->update('pct_resware_admin_credential', array('username' => $this->input->post('resware_username'), 'password' => $this->input->post('resware_password')));  
+                $data['success_msg'] = 'Resware Admin credentials updated successfully';  
+                $data['credResult'] = $this->order->get_resware_admin_credential();      
+            } else {
+                $data['resware_username_error_msg'] = form_error('resware_username');
+                $data['resware_password_error_msg'] = form_error('resware_password');
+            }                                       
+        }
+        
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/resware_admin_credential', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
 }

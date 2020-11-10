@@ -39,6 +39,13 @@
 		</a>
 	</li>
 
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/resware-admin-credential') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/resware-admin-credential'; ?>">
+			<i class="fas fa-fw fa-check"></i>
+			<span>Resware Admin Credential</span>
+		</a>
+	</li>
+
 	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/send-password') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'order/admin/send-password'; ?>">
 			<i class="fas fa-fw fa-envelope"></i>

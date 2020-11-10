@@ -19,8 +19,10 @@ class Resware
     {
         $userdata = $this->CI->session->userdata('user');
         if (isset($data['admin_api']) && $data['admin_api'] == 1) {
-            $login = getenv('RESWARE_ADMIN_USERNAME');
-            $password = getenv('RESWARE_ADMIN_PASSWORD');
+            $this->CI->load->library('order/order');
+            $credResult = $this->CI->order->get_resware_admin_credential();  
+            $login = $credResult['username'];
+            $password = $credResult['password'];
         } else if ((isset($userdata['is_master']) && !empty($userdata['is_master'])) || isset($data['from_mail']) && !empty($data['from_mail'])) {
             $login = isset($data['email']) && !empty($data['email']) ? $data['email'] : '' ;
             $password = isset($data['password']) && !empty($data['password']) ? $data['password'] : '' ;
