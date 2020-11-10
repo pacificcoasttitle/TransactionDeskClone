@@ -893,7 +893,7 @@
 	jQuery(document).ready(function ($) {
 
 		$('#clone-email-address').cloneya({
-			maximum: 3
+			maximum: 5
 		}).on('after_append.cloneya', function (event, toclone, newclone) {
 			var name = $(newclone).find("input[type='email']").attr('id');
 			$(newclone).find("input[type='email']").attr('name', name);

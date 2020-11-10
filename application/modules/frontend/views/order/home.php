@@ -19,7 +19,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="typography-section__inner">
-					<h2 class="ui-title-block ui-title-block_light">Open Order Form</h2>
+					<h2 class="ui-title-block ui-title-block_light"></h2>
 					<div class="ui-decor-1a bg-accent"></div>
 					<h3 class="ui-title-block_light">Helping Get Your Transaction Started.</h3>
 				</div>
@@ -868,7 +868,7 @@
 	jQuery(document).ready(function ($) {
 
 		$('#clone-email-address').cloneya({
-			maximum: 3
+			maximum: 5
 		}).on('after_append.cloneya', function (event, toclone, newclone) {
 			var name = $(newclone).find("input[type='email']").attr('id');
 			$(newclone).find("input[type='email']").attr('name', name);

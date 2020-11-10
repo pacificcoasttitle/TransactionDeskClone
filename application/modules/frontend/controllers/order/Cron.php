@@ -172,8 +172,10 @@ class Cron extends MX_Controller {
 
         if($userdata['email'] == 'admin@pct24.com' || (isset($userdata['admin_api']) && $userdata['admin_api'] == 1)) 
         {
-            $login = getenv('RESWARE_ADMIN_USERNAME');
-            $password = getenv('RESWARE_ADMIN_PASSWORD');
+            $this->load->library('order/order');
+            $credResult = $this->order->get_resware_admin_credential();  
+            $login = $credResult['username'];
+            $password = $credResult['password'];
         } else {
             $login =  $userdata['email'];
             $password = $userdata['random_password'];
@@ -1849,5 +1851,42 @@ class Cron extends MX_Controller {
         $this->db->where("DATE(created) < (curdate() - INTERVAL " .getenv('NO_OF_DAYS_TO_KEEP_API_LOGS'). " DAY)");
         $this->db->delete('pct_order_api_logs');
         $this->db->query('OPTIMIZE TABLE pct_order_api_logs');
+    }
+
+    public function exportLenderEscrowUsers()
+    {
+        $escrowFlag = $this->uri->segment(3);  
+        $this->db->select('*');
+        $this->db->from('customer_basic_details');
+        $this->db->where('is_password_updated', 1);
+        $this->db->where('status', 1);
+        if (isset($escrowFlag) && $escrowFlag == 1) {
+            $this->db->where('is_escrow', 1);    
+        } else {
+            $this->db->where('is_escrow', 0); 
+        }
+        $query = $this->db->get();
+        $result = $query->result_array();
+
+        if(!empty($result)) {
+            $delimiter = ",";
+            $filename = "users_" . date('Y-m-d') . ".csv";
+            $f = fopen('php://memory', 'w');
+            
+            $fields = array('Sr no', 'First Name', 'Last Name', 'Phone', 'Company Name', 'Email', 'Street Address', 'City', 'State', 'Zip code');
+            fputcsv($f, $fields, $delimiter);
+            
+            $i = 1;
+            foreach($result as $res) {
+                $lineData = array($i, $res['first_name'], $res['last_name'], $res['telephone_no'], $res['company_name'], $res['email_address'], $res['street_address'], $res['city'], $res['state'], $res['zip_code']);
+                fputcsv($f, $lineData, $delimiter);
+                $i++;
+            }
+            fseek($f, 0);
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            fpassthru($f);
+        }
+        exit;
     }
 }

@@ -673,5 +673,13 @@ class Order
             return array();
         }         
     }
+
+    public function get_resware_admin_credential() 
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_resware_admin_credential');
+        $query = $this->CI->db->get();
+        return $result = $query->row_array();
+    }
        
 }

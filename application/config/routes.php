@@ -179,6 +179,7 @@ $route['import-sales-rep-orders'] = 'frontend/order/cron/import_sales_rep_orders
 $route['get-partners'] = 'frontend/order/dashboard/get_partners';
 $route['import-all-sales-rep-orders'] = 'frontend/order/cron/import_all_sales_rep_orders';
 $route['get-sales-rep-orders-count'] = 'frontend/order/dashboard/get_sales_rep_orders_count';
+$route['export-escrow-lender/escrow/:num'] = 'frontend/order/cron/exportLenderEscrowUsers';
 
 
 
@@ -243,6 +244,7 @@ $route['order/admin/edit-cpl-proposed-user/:num'] = 'admin/order/home/editCplPro
 $route['order/admin/reject-cpl-proposed-user/:num'] = 'admin/order/home/rejectCplProposedUser';
 $route['order/admin/edit-code-book/:num'] = 'admin/order/CodeBook/editCodeBook';
 $route['order/admin/send-password'] = 'admin/order/home/sendPassword';
+$route['order/admin/resware-admin-credential'] = 'admin/order/home/reswareAdminCredential';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
