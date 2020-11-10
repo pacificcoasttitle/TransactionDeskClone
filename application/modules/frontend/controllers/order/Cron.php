@@ -1884,12 +1884,12 @@ class Cron extends MX_Controller {
                     $filename = "users_" . date('Y-m-d') . ".csv";
                     $f = fopen('php://memory', 'w');
                     
-                    $fields = array('Sr no', 'First Name', 'Last Name', 'Phone', 'Company Name', 'Email', 'Street Address', 'City', 'State', 'Zip code');
+                    $fields = array('Sr no', 'First Name', 'Last Name', 'Password', 'Phone', 'Company Name', 'Email', 'Street Address', 'City', 'State', 'Zip code');
                     fputcsv($f, $fields, $delimiter);
                     
                     $i = 1;
                     foreach($result as $res) {
-                        $lineData = array($i, $res['first_name'], $res['last_name'], $res['telephone_no'], $res['company_name'], $res['email_address'], $res['street_address'], $res['city'], $res['state'], $res['zip_code']);
+                        $lineData = array($i, $res['first_name'], $res['last_name'], $res['random_password'], $res['telephone_no'], $res['company_name'], $res['email_address'], $res['street_address'], $res['city'], $res['state'], $res['zip_code']);
                         fputcsv($f, $lineData, $delimiter);
                         $i++;
                     }
