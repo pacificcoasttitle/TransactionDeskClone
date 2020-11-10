@@ -1855,38 +1855,52 @@ class Cron extends MX_Controller {
 
     public function exportLenderEscrowUsers()
     {
-        $escrowFlag = $this->uri->segment(3);  
-        $this->db->select('*');
-        $this->db->from('customer_basic_details');
-        $this->db->where('is_password_updated', 1);
-        $this->db->where('status', 1);
-        if (isset($escrowFlag) && $escrowFlag == 1) {
-            $this->db->where('is_escrow', 1);    
-        } else {
-            $this->db->where('is_escrow', 0); 
-        }
-        $query = $this->db->get();
-        $result = $query->result_array();
+        define('USE_AUTHENTICATION', 1);
+        define('USERNAME', 'ghernandez@pct.com');
+        define('PASSWORD', 'hsk@12dhk');
 
-        if(!empty($result)) {
-            $delimiter = ",";
-            $filename = "users_" . date('Y-m-d') . ".csv";
-            $f = fopen('php://memory', 'w');
-            
-            $fields = array('Sr no', 'First Name', 'Last Name', 'Phone', 'Company Name', 'Email', 'Street Address', 'City', 'State', 'Zip code');
-            fputcsv($f, $fields, $delimiter);
-            
-            $i = 1;
-            foreach($result as $res) {
-                $lineData = array($i, $res['first_name'], $res['last_name'], $res['telephone_no'], $res['company_name'], $res['email_address'], $res['street_address'], $res['city'], $res['state'], $res['zip_code']);
-                fputcsv($f, $lineData, $delimiter);
-                $i++;
+        if ( USE_AUTHENTICATION == 1 ) {
+            if ( !isset($_SERVER['PHP_AUTH_USER'] ) || !isset( $_SERVER['PHP_AUTH_PW'] ) ||    
+            $_SERVER['PHP_AUTH_USER'] != USERNAME || $_SERVER['PHP_AUTH_PW'] != PASSWORD ) {
+                header( 'WWW-Authenticate: Basic realm="WINCACHE Log In!"' );
+                header( 'HTTP/1.0 401 Unauthorized' );
+                exit;
+            } else {
+                $escrowFlag = $this->uri->segment(3);  
+                $this->db->select('*');
+                $this->db->from('customer_basic_details');
+                $this->db->where('is_password_updated', 1);
+                $this->db->where('status', 1);
+                if (isset($escrowFlag) && $escrowFlag == 1) {
+                    $this->db->where('is_escrow', 1);    
+                } else {
+                    $this->db->where('is_escrow', 0); 
+                }
+                $query = $this->db->get();
+                $result = $query->result_array();
+        
+                if(!empty($result)) {
+                    $delimiter = ",";
+                    $filename = "users_" . date('Y-m-d') . ".csv";
+                    $f = fopen('php://memory', 'w');
+                    
+                    $fields = array('Sr no', 'First Name', 'Last Name', 'Phone', 'Company Name', 'Email', 'Street Address', 'City', 'State', 'Zip code');
+                    fputcsv($f, $fields, $delimiter);
+                    
+                    $i = 1;
+                    foreach($result as $res) {
+                        $lineData = array($i, $res['first_name'], $res['last_name'], $res['telephone_no'], $res['company_name'], $res['email_address'], $res['street_address'], $res['city'], $res['state'], $res['zip_code']);
+                        fputcsv($f, $lineData, $delimiter);
+                        $i++;
+                    }
+                    fseek($f, 0);
+                    header('Content-Type: text/csv');
+                    header('Content-Disposition: attachment; filename="' . $filename . '";');
+                    fpassthru($f);
+                }
+                echo "Data exported successfully";
+                exit;
             }
-            fseek($f, 0);
-            header('Content-Type: text/csv');
-            header('Content-Disposition: attachment; filename="' . $filename . '";');
-            fpassthru($f);
         }
-        exit;
     }
 }
