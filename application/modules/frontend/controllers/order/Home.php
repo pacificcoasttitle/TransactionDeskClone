@@ -409,33 +409,33 @@ class Home extends MX_Controller {
 								}
 							}
 
-							if (!empty($companyData)) {
-								if ($companyData[0]['underwriter'] == 'north_american') {
-									$partners[] = array(
-										'PartnerTypeID' => 7,
-										'PartnerID' => 39919,
-										'PartnerType' => array(
-											'PartnerTypeID' => 7
-										)
-									);
-								} else if ($companyData[0]['underwriter'] == 'commonwealth') {
-									$partners[] = array(
-										'PartnerTypeID' => 7,
-										'PartnerID' => 6,
-										'PartnerType' => array(
-											'PartnerTypeID' => 7
-										)
-									);
-								} else {
-									$partners[] = array(
-										'PartnerTypeID' => 7,
-										'PartnerID' => 201324,
-										'PartnerType' => array(
-											'PartnerTypeID' => 7
-										)
-									);
-								}
-							}
+							// if (!empty($companyData)) {
+							// 	if ($companyData[0]['underwriter'] == 'north_american') {
+							// 		$partners[] = array(
+							// 			'PartnerTypeID' => 7,
+							// 			'PartnerID' => 39919,
+							// 			'PartnerType' => array(
+							// 				'PartnerTypeID' => 7
+							// 			)
+							// 		);
+							// 	} else if ($companyData[0]['underwriter'] == 'commonwealth') {
+							// 		$partners[] = array(
+							// 			'PartnerTypeID' => 7,
+							// 			'PartnerID' => 6,
+							// 			'PartnerType' => array(
+							// 				'PartnerTypeID' => 7
+							// 			)
+							// 		);
+							// 	} else {
+							// 		$partners[] = array(
+							// 			'PartnerTypeID' => 7,
+							// 			'PartnerID' => 201324,
+							// 			'PartnerType' => array(
+							// 				'PartnerTypeID' => 7
+							// 			)
+							// 		);
+							// 	}
+							// }
 
 							$partnerData = json_encode(array('Partners' => $partners));
 							$endPoint = 'files/'.$file_id.'/partners';
@@ -1390,6 +1390,5 @@ class Home extends MX_Controller {
 		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-	}
-	
+	}	
 }
