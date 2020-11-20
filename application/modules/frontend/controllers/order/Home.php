@@ -773,8 +773,7 @@ class Home extends MX_Controller {
 							$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
 							$message_body = $borrower_message_body; 
 							$subject = 'Statement Of Information: PCT';
-							// $to = $escrow_email;
-							$to = 'crestdev@protonmail.com';
+							$to = $escrow_email;
 							
 
 							$mailParams= array(
@@ -787,7 +786,7 @@ class Home extends MX_Controller {
 
 							$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
 
-							$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body,$file,$cc,array());
+							$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
 
 							$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
 
