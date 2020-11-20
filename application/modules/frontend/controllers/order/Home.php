@@ -773,7 +773,8 @@ class Home extends MX_Controller {
 							$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
 							$message_body = $borrower_message_body; 
 							$subject = 'Statement Of Information: PCT';
-							$to = $escrow_email;
+							// $to = $escrow_email;
+							$to = 'crestdev@protonmail.com';
 							
 
 							$mailParams= array(
