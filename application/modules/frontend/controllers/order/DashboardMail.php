@@ -1750,6 +1750,128 @@ class DashboardMail extends MX_Controller {
 
         echo json_encode($result); exit;
     }
+
+	public function borrowerInformation12()
+    {
+        $data['errors'] = array();
+        $data['success'] = array();
+        $data['mail_dashboard'] = 1;
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $this->load->view('layout/head_dashboard', $data);
+        $this->load->view('order/borrower', $data);
+    }
+
+    public function borrowerInfoSubmit()
+    {
+        $borrowerInfoData = array(
+            'first_name' => $this->input->post('firstname'),
+            'middle_name' => $this->input->post('middlename'),
+            'last_name' => $this->input->post('lastname'),
+            'mobile' => $this->input->post('mobile'),
+            'telephone' => $this->input->post('telephone'),
+            'date_of_birth' => $this->input->post('date_of_birth'),
+            'birthplace' => $this->input->post('birthplace'),
+            'ssn' => $this->input->post('ssn'),
+            'dln' => $this->input->post('dln'),
+            'status' => $this->input->post('status'),
+            'spouse_first_name' => $this->input->post('spouse_firstname'),
+            'spouse_middle_name' => $this->input->post('spouse_middlename'),
+            'spouse_last_name' => $this->input->post('spouse_lastname'),
+            'spouse_mobile' => $this->input->post('spouse_mobile'),
+            'spouse_telephone' => $this->input->post('spouse_telephone'),
+            'spouse_date_of_birth' => $this->input->post('spouse_date_of_birth'),
+            'spouse_birthplace' => $this->input->post('spouse_birthplace'),
+            'spouse_ssn' => $this->input->post('spouse_ssn'),
+            'spouse_dln' => $this->input->post('spouse_dln'),
+            'partner_first_name' => $this->input->post('partner_firstname'),
+            'partner_middle_name' => $this->input->post('partner_middlename'),
+            'partner_last_name' => $this->input->post('partner_lastname'),
+            'partner_mobile' => $this->input->post('partner_mobile'),
+            'partner_telephone' => $this->input->post('partner_telephone'),
+            'partner_date_of_birth' => $this->input->post('partner_date_of_birth'),
+            'partner_birthplace' => $this->input->post('partner_birthplace'),
+            'partner_ssn' => $this->input->post('partner_ssn'),
+            'partner_dln' => $this->input->post('partner_dln'),
+            'order_id' => $this->input->post('order_id'),
+            'partnership_status' => $this->input->post('partnership_status'),
+            'prior_spouse_name' => $this->input->post('partnership_status') == 'both' ? $this->input->post('prior_spouse_name_both') : $this->input->post('prior_spouse_name'),
+            'prior_spouse_reason' => $this->input->post('partnership_status') == 'both' ? $this->input->post('prior_spouse_reason_both') : $this->input->post('prior_spouse_reason'),
+            'prior_spouse_end' => $this->input->post('partnership_status') == 'both' ? $this->input->post('prior_spouse_end_both') : $this->input->post('prior_spouse_end'),
+            'current_spouse_prior_spouse_name' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_name_both') : $this->input->post('current_spouse_prior_spouse_name'),
+            'current_spouse_prior_spouse_reason' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_reason_both') : $this->input->post('current_spouse_prior_spouse_reason'),
+            'current_spouse_prior_spouse_end' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_end_both') : $this->input->post('current_spouse_prior_spouse_end'),
+            'order_id' => $this->input->post('order_id'),
+            'created_at' => date('Y-m-d H:i:s')
+        );
+        $borrowerId = $this->home_model->insert($borrowerInfoData,'pct_order_borrower_info');
+
+        $residence_addresses = $this->input->post('residence_addresses');
+        $residence_from_dates = $this->input->post('residence_from_dates');
+        $residence_to_dates = $this->input->post('residence_to_dates');
+        $i = 0;
+
+        foreach($residence_addresses as $residence_address) {
+            $borrowerResidenceData = array(
+                'address' => $residence_address,
+                'from_date' => $residence_from_dates[$i],
+                'to_date' => $residence_to_dates[$i],
+                'order_id' => $this->input->post('order_id'),
+                'created_at' => date('Y-m-d H:i:s'),
+            );
+            $this->home_model->insert($borrowerResidenceData, 'pct_order_borrower_residence_info');
+            $i++;
+        }
+
+        $business_names = $this->input->post('business_names');
+        $employment_addresses = $this->input->post('employment_addresses');
+        $employment_from_dates = $this->input->post('employment_from_dates');
+        $employment_to_dates = $this->input->post('employment_to_dates');
+        $j = 0;
+
+        foreach($business_names as $business_name) {
+            $borrowerEmploymentData = array(
+                'business_name' => $business_name,
+                'address' => $employment_addresses[$j],
+                'from_date' => $employment_from_dates[$j],
+                'to_date' => $employment_to_dates[$j],
+                'order_id' => $this->input->post('order_id'),
+                'is_partner_info' => 0,
+                'created_at' => date('Y-m-d H:i:s'),
+            );
+            $this->home_model->insert($borrowerEmploymentData, 'pct_order_borrower_employment_info');
+            $i++;
+        }
+
+        $partner_business_names = $this->input->post('partner_business_names');
+        $partner_addresses = $this->input->post('partner_addresses');
+        $partner_from_dates = $this->input->post('partner_from_dates');
+        $partner_to_dates = $this->input->post('partner_to_dates');
+        $k = 0;
+
+        if(!empty($partner_business_names)) {
+            foreach($partner_business_names as $partner_business_name) {
+                $borrowerEmploymentPartnerData = array(
+                    'business_name' => $partner_business_name,
+                    'address' => $partner_addresses[$k],
+                    'from_date' => $partner_from_dates[$k],
+                    'to_date' => $partner_to_dates[$k],
+                    'order_id' => $this->input->post('order_id'),
+                    'is_partner_info' => 1,
+                    'created_at' => date('Y-m-d H:i:s'),
+                );
+                $this->home_model->insert($borrowerEmploymentPartnerData, 'pct_order_borrower_employment_info');
+                $i++;
+            }
+        }
+        
+    }
     
     public function code_verification()
     {

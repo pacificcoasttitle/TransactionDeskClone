@@ -185,7 +185,6 @@ $route['generate-verification-code'] = 'frontend/order/dashboardMail/generate_ve
 $route['code-verification'] = 'frontend/order/dashboardMail/code_verification';
 
 
-
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
 $route['order/admin/home/do_login'] = 'admin/order/home/do_login';
