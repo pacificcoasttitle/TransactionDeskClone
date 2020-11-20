@@ -16,7 +16,9 @@ class DashboardMail extends MX_Controller {
         $this->load->model('order/home_model');
 		$this->load->model('order/fees_model');
 		$this->load->library('order/resware');
+        $this->load->library('order/twilio');
         $this->load->model('order/titleOfficer');
+        $this->load->model('order/twilioMessage');
     }
 
     public function generateCplFromMail()
@@ -1650,5 +1652,127 @@ class DashboardMail extends MX_Controller {
 
         $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
+
+    public function borrowerInformation()
+    {
+        $random_number = $this->uri->segment(2);
+
+        $condition = array(
+            'where' => array(
+                'random_number' => $random_number,
+            )
+        );
+
+        $order = $this->order->get_order($condition);
+        
+        $orderNumber = isset($order[0]['file_number']) && !empty($order[0]['file_number']) ? $order[0]['file_number'] : '';
+
+        $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
+
+        $orderDetails = $this->order->get_order_details($fileId, 1);
+
+        $propertyAddress = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+
+        $data['orderNumber'] = $orderNumber;
+        $data['propertyAddress'] = $propertyAddress;
+        $data['randomNumber'] = $random_number;
+        $data['fileId'] = $fileId;
+
+        $this->load->view('order/borrower_login', $data);
+    }
+
+    public function generate_verification_code()
+    {
+        $phoneNumber = $this->input->post('phone_number');
+
+        if(isset($phoneNumber) && !empty($phoneNumber))
+        {
+            $randomNumber = $this->input->post('random_number');
+            $code = $this->order->randomPassword();
+            $sid = env('TWILIO_SID');
+            $token = env('TWILIO_TOKEN');
+            $from = env('TWILIO_FROM');
+
+            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>$to, 'from'=>$from), array(), 0, 0);
+
+            try {
+                $result = $this->twilio->message($phoneNumber, $code,'',array('from'=>$from));
+                $response = $result->toArray();
+                $response['msg_status'] = 'success';
+                $response['code'] = $code;
+
+            }
+            catch (Exception $e) {
+                $response['sid'] = '';
+                $response['to'] = $phoneNumber;
+                $response['msg_status'] = 'error';
+                $response['errorCode'] = $e->getCode();
+                $response['errorMessage'] = $e->getMessage();
+                $response = (object)$response;
+            } catch (\Twilio\Exceptions\RestException $e) {
+                $response['sid'] = '';
+                $response['to'] = $phoneNumber;
+                $response['msg_status'] = 'error';
+                $response['errorCode'] = $e->getCode();
+                $response['errorMessage'] = $e->getMessage();
+                $response = (object)$response;
+            }
+
+            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>$to, 'from'=>$from), $response, 0, $logid);
+
+            if($response['msg_status'] == 'success')
+            {
+                $this->home_model->update(array('verification_code' => $code,'is_code_verified' => 0), array('random_number' => $randomNumber), 'order_details');
+            }
+
+            $data = array(
+                'message' => $response['body'],
+                'sent_from' => $response['from'],
+                'sent_to' => $response['to'],
+                'status' => $response['status'],
+                'message_sid' => $response['sid'],
+                'error_code' => $response['errorCode'],
+                'error_message' => $response['errorMessage'],
+            );
+
+            $this->twilioMessage->insert($data);
+        }
+        else
+        {
+            $response = array('msg_status'=>'error', 'error_message'=> 'Please enter phone number.');               
+        }
+
+        echo json_encode($response); exit;
+    }
     
+    public function code_verification()
+    {
+        $code = $this->input->post('code');
+
+        if(isset($code) && !empty($code))
+        {
+            $fileId = $this->input->post('fileId');
+
+            $orderDetails = $this->order->get_order_details($fileId, 1);
+
+            $verification_code = isset($orderDetails['verification_code']) && !empty($orderDetails['verification_code']) ? $orderDetails['verification_code'] : '';
+
+            if($verification_code == $code)
+            {
+                $this->home_model->update(array('is_code_verified' => 1), array('id' => $orderDetails['order_id']), 'order_details');
+                $response = array('status'=>'success');
+            }
+            else
+            {
+                $response = array('status'=>'error', 'message'=> 'Please enter valid verification code.');
+            }
+            
+        }
+        else
+        {
+            $response = array('status'=>'error', 'message'=> 'Please enter verification code.');
+        }
+
+        echo json_encode($response); exit;
+    }
 }
