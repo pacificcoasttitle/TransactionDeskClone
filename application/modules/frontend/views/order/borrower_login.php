@@ -265,22 +265,15 @@
                     },
                     success: function(result)
                     {
-                        console.log(result);
-                        var res = jQuery.parseJSON(result);
-                        
+                        var res = jQuery.parseJSON(result);  
                         
                         if(res.status == 'success')
                         {
-                           /* $('#btn-get-code').val('Resend Code');
-                            $('#get_code_label').hide();
-                            $('#btn-verify-code').show();
-                            $('#verification_code_label').show();
-                            $('#verification_code_label').css('display','block');*/
 
                         }
                         else if(res.status == 'error')
                         {
-                            alert(res.error_message);
+                            alert(res.message);
                         }
                         
                     },
