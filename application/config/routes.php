@@ -180,6 +180,9 @@ $route['get-partners'] = 'frontend/order/dashboard/get_partners';
 $route['import-all-sales-rep-orders'] = 'frontend/order/cron/import_all_sales_rep_orders';
 $route['get-sales-rep-orders-count'] = 'frontend/order/dashboard/get_sales_rep_orders_count';
 $route['export-escrow-lender/escrow/:num'] = 'frontend/order/cron/exportLenderEscrowUsers';
+$route['borrower-information/:any'] = 'frontend/order/dashboardMail/borrowerInformation';
+$route['generate-verification-code'] = 'frontend/order/dashboardMail/generate_verification_code';
+$route['code-verification'] = 'frontend/order/dashboardMail/code_verification';
 
 
 

@@ -25,7 +25,7 @@ class Home extends MX_Controller {
 		$this->load->model('order/salesRep');
 		$this->load->model('order/partnerApiLogs');
 		$this->load->library('order/titlepoint');
-					
+
     	if(isset($_POST) && !empty($_POST))
     	{
     		$random_number = $this->input->post('random_number');
@@ -209,6 +209,7 @@ class Home extends MX_Controller {
 					);
 					$companyData = $this->home_model->get_company_rows($con);
 				}
+
 
 				$cplLenderId = 0;
 				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
@@ -563,6 +564,11 @@ class Home extends MX_Controller {
 
 							$transactionId = $this->home_model->insert($transactionData,'transaction_details');
 
+							$randomString = $this->order->randomPassword();
+							
+							$randomString = md5($orderUser['id'] . $orderUser['email_address'] .$randomString);
+			
+
 							$orderData = array(
 								'customer_id' => $customer_id,
 								'file_id' => $file_id,
@@ -571,6 +577,7 @@ class Home extends MX_Controller {
 								'transaction_id' => $transactionId,
 								'partner_api_log_id' => $partnerApiId,
 								'created_by' => $userdata['id'],
+								'random_number' => $randomString,
 								'status'=> 1
 							);
 
@@ -637,6 +644,8 @@ class Home extends MX_Controller {
     						$timezone  = -8;
 
 							$opened_date = gmdate("m-d-Y h:i A", strtotime($orderDetails['opened_date']) + 3600*($timezone+date("I")));
+
+							// Convert to PST
 
 							$data = array(
 								'orderNumber'=> $orderNumber,
@@ -738,9 +747,54 @@ class Home extends MX_Controller {
 
 							$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
 
+							/* Escrow officer email */
+						
+							if (isset($orderUser) && !empty($orderUser))
+							{
+								$is_escrow_user = $orderUser['is_escrow'];
+
+								if(isset($is_escrow_user) && !empty($is_escrow_user))
+								{
+									$escrow_email = $orderUser['email_address'];
+								}
+								else
+								{
+									$escrow_email = $escrow_lender_user_details['email_address'];
+								}
+							}
+
+							/*$from_name = 'Pacific Coast Title Company';
+							$from_mail = env('FROM_EMAIL');*/
+							$email_data = array(
+								'orderNumber'=> $orderNumber,
+								'randomString'=> $randomString,
+								'currYear'=> CURRENT_YEAR
+							);
+							$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
+							$message_body = $borrower_message_body; 
+							$subject = 'Statement Of Information: PCT';
+							$to = $escrow_email;
+							
+
+							$mailParams= array(
+								'from_mail'=>$from_mail, 
+								'from_name'=>$from_name, 
+								'to'=>$to,
+								'subject'=>$subject,
+								'message'=>json_encode($email_data)
+							);
+
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
+
+							$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body,$file,$cc,array());
+
+							$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
+
+							/* Escrow officer email */
+
 							
 						}
-													
+											
 						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','file_id'=>$file_id);
 						echo json_encode($response); exit;
 					} 

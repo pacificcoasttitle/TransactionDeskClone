@@ -466,6 +466,25 @@
     box-shadow: 0 5px 6px rgba(0, 0, 0, 0.16);
 }
 
+.img-holder .bg.borrower-login {
+    opacity: 1;
+    background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/41bf830a-5566-4daa-9452-74f017a1c589.jpg");
+}
+
+.form-content .form-items.borrower-login-from-items {
+    max-width: 490px;
+    text-align: left;
+}
+
+.form-content .borrower-login-from-items h2 {  
+    color: #fff;    
+    text-align: left;   
+    font-size: 32px;    
+    margin-bottom: 10px;    
+    font-family: 'Manrope', sans-serif; 
+    font-weight: 800;   
+}
+
 /* -----------------------------------
     2 - Responsive Styles
 ------------------------------------*/

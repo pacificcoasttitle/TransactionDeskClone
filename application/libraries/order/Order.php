@@ -222,6 +222,7 @@ class Order
             order_details.fnf_document_id,
             order_details.cpl_document_name,
             order_details.proposed_insured_document_name,
+            order_details.verification_code,
             property_details.id as property_id, 
             property_details.address, 
             property_details.full_address, 
@@ -681,5 +682,40 @@ class Order
         $query = $this->CI->db->get();
         return $result = $query->row_array();
     }
-       
+    
+
+    public function get_order($params)
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('order_details');
+        
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->CI->db->where($key, $val);
+            }
+        }
+        
+        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+            $result = $this->CI->db->count_all_results();
+        }else{
+            if(array_key_exists("id", $params)){
+                $this->CI->db->where('id', $params['id']);
+                $query = $this->CI->db->get();
+                $result = $query->row_array();
+            }else{
+                $this->CI->db->order_by('id', 'asc');
+                if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                    $this->CI->db->limit($params['limit'],$params['start']);
+                }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                    $this->CI->db->limit($params['limit']);
+                }
+                
+                $query = $this->CI->db->get();
+                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+            }
+        }
+        
+        // Return fetched data
+        return $result;
+    }   
 }
