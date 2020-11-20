@@ -6,7 +6,7 @@
     <div class="smart-wrap">
         <div class="smart-forms smart-container wrap-0">
             <div class="form-body smart-steps steps-theme-primary">
-                <form method="post" action="" id="borrower-form">
+                <form method="post" action="<?php echo base_url();?>borrower-info-submit" enctype="multipart/form-data" id="borrower-form">
                     <h2>1. Personal Info</h2>
                     <fieldset>  
                         <div class="spacer-b40">
@@ -457,376 +457,286 @@
                     </fieldset>
                             
                     <h2>4. Partnerships</h2>
-                        <fieldset>
-                            <div class="spacer-b40">
-                                <p class="medium fine-grey">
-                                Please use the information below to enter your marriage history. If you have a domestic partner please choose from the options below.</p>
-                            </div>
-                            
-                            <div class="section">
-                                <div class="option-group field">
-                                    <label class="option">
-                                        <input type="radio" name="partnership_status" class="smartfm-ctrl" value="me"  data-show-id="me">
-                                        <span class="radio"></span> Me Only
-                                    </label>
-                                    <label class="option">
-                                        <input type="radio" name="partnership_status" class="smartfm-ctrl" value="spouseonly"  data-show-id="spouseonly">
-                                        <span class="radio"></span> Spouse Only
-                                    </label>
-                                    <label class="option">
-                                        <input type="radio" name="partnership_status" class="smartfm-ctrl" value="both"  data-show-id="both">
-                                        <span class="radio"></span> Both
-                                    </label>
-                                    <label class="option">
-                                        <input type="radio" name="partnership_status" class="smartfm-ctrl" value="notmarried"  data-show-id="notmarried">
-                                        <span class="radio"></span> Not Married          
-                                    </label>         
-                                </div>
-                            </div>
-                            
-                            <div class="spacer-b30 spacer-t30">
-                                <div class=""><span></span></div>
-                            </div>
-                                
-                            <div id="me" class="hiddenbox section smartform-reset">
-                                <div class="frm-row">
-                                    <div class="section colm colm6">
-                                        <label for="prior_spouse_name" class="field-label">Prior Spouse Name </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="prior_spouse_name" id="prior_spouse_name" class="gui-input" placeholder="">
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                        </label>
-                                    </div>
-                                    
-                                    <div class="section colm colm4">
-                                        <label for="prior_spouse_reason" class="field-label">Reason For End </label>
-                                        <label class="field select">
-                                            <select id="prior_spouse_reason" name="prior_spouse_reason">
-                                                <option value="">Reason</option>
-                                                <option value="Death">Death</option>
-                                                <option value="Divorce">Divorce</option>
-                                            </select>
-                                            <i class="arrow double"></i>
-                                        </label>
-                                    </div>
-                                    
-                                    <div class="spacer-b10 colm colm2">
-                                        <label for="prior_spouse_end" class="field-label">End: </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="prior_spouse_end" id="prior_spouse_end" class="gui-input" placeholder="MM/YYYY" >
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                        </label>                
-                                    </div> 	
-                                </div>
-                            </div>
-                            
-                            <div id="spouseonly" class="hiddenbox section smartform-reset">
-                                <div class="frm-row">
-                                    <div class="section colm colm6">
-                                        <label for="current_spouse_prior_spouse_name" class="field-label">Current Spouse's Prior Spouse Name </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="current_spouse_prior_spouse_name" id="current_spouse_prior_spouse_name" class="gui-input" placeholder="">
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                        </label>
-                                    </div>
-                                
-                                    <div class="section colm colm4">
-                                        <label for="current_spouse_prior_spouse_reason" class="field-label">Reason For End </label>
-                                        <label class="field select">
-                                            <select id="current_spouse_prior_spouse_reason" name="current_spouse_prior_spouse_reason">
-                                                <option value="">Reason</option>
-                                                <option value="Death">Death</option>
-                                                <option value="Divorce">Divorce</option> 
-                                            </select>
-                                            <i class="arrow double"></i>
-                                        </label>
-                                    </div>
-                                
-                                    <div class="spacer-b10 colm colm2">
-                                        <label for="current_spouse_prior_spouse_end" class="field-label">End: </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="current_spouse_prior_spouse_end" id="current_spouse_prior_spouse_end" class="gui-input" placeholder="MM/YYYY" >
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                        </label>                
-                                    </div> 	
-                                </div>
-                            </div> 
-
-                            <div id="both" class="hiddenbox section smartform-reset">
-                                <div class="frm-row">
-                                    <div class="section colm colm6">
-                                        <label for="prior_spouse_name_both" class="field-label">Prior Spouse Name </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="prior_spouse_name_both" id="prior_spouse_name_both" class="gui-input" placeholder="">
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                        </label>
-                                    </div>
-                                    
-                                    <div class="section colm colm4">
-                                        <label for="prior_spouse_reason_both" class="field-label">Reason For End </label>
-                                        <label class="field select">
-                                            <select id="prior_spouse_reason_both" name="prior_spouse_reason_both">
-                                                <option value="">Reason</option>
-                                                <option value="Death">Death</option>
-                                                <option value="Divorce">Divorce</option>
-                                            </select>
-                                            <i class="arrow double"></i>
-                                        </label>
-                                    </div>
-                                    
-                                    <div class="spacer-b10 colm colm2">
-                                        <label for="prior_spouse_end_both" class="field-label">End: </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="prior_spouse_end_both" id="prior_spouse_end_both" class="gui-input" placeholder="MM/YYYY" >
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                        </label>                
-                                    </div> 	
-                                </div>
-                                
-                                <div class="frm-row">
-                                    <div class="section colm colm6">
-                                        <label for="current_spouse_prior_spouse_name_both" class="field-label">Current Spouse's Prior Spouse Name </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="current_spouse_prior_spouse_name_both" id="current_spouse_prior_spouse_name_both" class="gui-input" placeholder="">
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                        </label>
-                                    </div>
-                                
-                                    <div class="section colm colm4">
-                                        <label for="current_spouse_prior_spouse_reason_both" class="field-label">Reason For End </label>
-                                        <label class="field select">
-                                            <select id="current_spouse_prior_spouse_reason_both" name="current_spouse_prior_spouse_reason_both">
-                                                <option value="">Reason</option>
-                                                <option value="Death">Death</option>
-                                                <option value="Divorce">Divorce</option> 
-                                            </select>
-                                            <i class="arrow double"></i>
-                                        </label>
-                                    </div>
-                                
-                                    <div class="spacer-b10 colm colm2">
-                                        <label for="current_spouse_prior_spouse_end_both" class="field-label">End: </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="current_spouse_prior_spouse_end_both" id="current_spouse_prior_spouse_end_both" class="gui-input" placeholder="MM/YYYY" >
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>
-                                        </label>                
-                                    </div> 	
-                                </div>
-                            </div>
-                                
-                            <div id="notmarried" class="hiddenbox section smartform-reset">
+                    <fieldset>
+                        <div class="spacer-b40">
+                            <p class="medium fine-grey">
+                            Please use the information below to enter your marriage history. If you have a domestic partner please choose from the options below.</p>
+                        </div>
                         
+                        <div class="section">
+                            <div class="option-group field">
+                                <label class="option">
+                                    <input type="radio" name="partnership_status" class="smartfm-ctrl" value="me"  data-show-id="me">
+                                    <span class="radio"></span> Me Only
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="partnership_status" class="smartfm-ctrl" value="spouseonly"  data-show-id="spouseonly">
+                                    <span class="radio"></span> Spouse Only
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="partnership_status" class="smartfm-ctrl" value="both"  data-show-id="both">
+                                    <span class="radio"></span> Both
+                                </label>
+                                <label class="option">
+                                    <input type="radio" name="partnership_status" class="smartfm-ctrl" value="notmarried"  data-show-id="notmarried">
+                                    <span class="radio"></span> Not Married          
+                                </label>         
                             </div>
-
-                            <div class="spacer-b40 spacer-t40">
-                                <div class=""><span></span></div>
-                            </div>
-                        </fieldset>                            
+                        </div>
+                        
+                        <div class="spacer-b30 spacer-t30">
+                            <div class=""><span></span></div>
+                        </div>
                             
-                        <h2>5. Complete</h2>
-                        <fieldset>
-                            <div class="spacer-b40">
-                                <p class="medium fine-grey">Please complete the information below prior to hitting submit.</p>
-                            </div> 
-                                                    
-                            <div class="spacer-b30 spacer-t30">
-                                <div class="tagline"><span>About the Property</span></div>
-                            </div>
-
+                        <div id="me" class="hiddenbox section smartform-reset">
                             <div class="frm-row">
-                                <div class="section colm colm12">
-                                    <label for="street_address" class="field-label">Street Address </label>
+                                <div class="section colm colm6">
+                                    <label for="prior_spouse_name" class="field-label">Prior Spouse Name </label>
                                     <label class="field prepend-icon">
-                                        <input type="text" name="street_address" id="street_address" class="gui-input" placeholder="Street Address">
+                                        <input type="text" name="prior_spouse_name" id="prior_spouse_name" class="gui-input" placeholder="">
                                         <span class="field-icon"><i class="fa fa-user"></i></span>  
                                     </label>
                                 </div>
-                                    
-                                <div class="section colm colm12">
-                                    <label for="buyer_intends_to_reside" class="field-label">Buyer Intends to reside on the property for this transaction? </label>
+                                
+                                <div class="section colm colm4">
+                                    <label for="prior_spouse_reason" class="field-label">Reason For End </label>
                                     <label class="field select">
-                                        <select id="buyer_intends_to_reside" name="buyer_intends_to_reside">
-                                            <option value="">Select</option>
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
+                                        <select id="prior_spouse_reason" name="prior_spouse_reason">
+                                            <option value="">Reason</option>
+                                            <option value="Death">Death</option>
+                                            <option value="Divorce">Divorce</option>
                                         </select>
                                         <i class="arrow double"></i>
                                     </label>
                                 </div>
+                                
+                                <div class="spacer-b10 colm colm2">
+                                    <label for="prior_spouse_end" class="field-label">End: </label>
+                                    <label class="field prepend-icon">
+                                        <input type="text" name="prior_spouse_end" id="prior_spouse_end" class="gui-input" placeholder="MM/YYYY" >
+                                        <span class="field-icon"><i class="fa fa-user"></i></span>
+                                    </label>                
+                                </div> 	
                             </div>
-                                    
+                        </div>
+                        
+                        <div id="spouseonly" class="hiddenbox section smartform-reset">
                             <div class="frm-row">
                                 <div class="section colm colm6">
-                                    <label for="land_is_unimproved" class="field-label">The land is unimproved </label>
-                                    <label class="field select">
-                                        <select id="land_is_unimproved" name="land_is_unimproved">
-                                            <option value="">Select</option>
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
-                                        </select>
-                                        <i class="arrow double"></i>
+                                    <label for="current_spouse_prior_spouse_name" class="field-label">Current Spouse's Prior Spouse Name </label>
+                                    <label class="field prepend-icon">
+                                        <input type="text" name="current_spouse_prior_spouse_name" id="current_spouse_prior_spouse_name" class="gui-input" placeholder="">
+                                        <span class="field-icon"><i class="fa fa-user"></i></span>  
                                     </label>
                                 </div>
-
-                                <div class="section colm colm6">
-                                    <label for="type_of_property" class="field-label">Type of property on land </label>
-                                    <label class="field select">
-                                        <select id="type_of_property" name="type_of_property">
-                                            <option value="">Select</option>
-                                            <option value="single_family_1_4">Single Family 1-4</option>
-                                            <option value="condo_unit">Condo Unit</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                        <i class="arrow double"></i>
-                                    </label>
-                                </div>
-                            </div>
-                                    
-                            <div class="frm-row">
-                                <div class="section colm colm12">
-                                    <label for="isbn" class="field-label">Buyer Intends to reside on the property for this transaction? </label>
-                                    <label for="states" class="field select">
-                                        <select id="states" name="states">
-                                            <option value="">Select</option>
-                                            <option value="Death">Yes</option>
-                                            <option value="Divorce">No</option>
-                                            
-                                        </select>
-                                        <i class="arrow double"></i>
-                                    </label>
-                                </div><!-- end section -->
-                                        <div class="section colm colm12">
-                                        <label for="isbn" class="field-label">Buyer Intends to reside on the property for this transaction? </label>
-                                        <label for="states" class="field select">
-                                        <select id="states" name="states">
-                                            <option value="">Select</option>
-                                            <option value="Death">Yes</option>
-                                            <option value="Divorce">No</option>
-                                            
-                                        </select>
-                                        <i class="arrow double"></i>
-                                        </label>
-                                        </div><!-- end section -->
-                                        
-                                                    
-
-                                    </div><!-- end .frm-row section -->
-                                    
-                                    <div class="frm-row">
-                                    
-                                        
-                                        <div class="section colm colm12">
-                                            <label for="isbn" class="field-label">Buyer Intends to reside on the property for this transaction? </label>
-                                            <div class="option-group field">
-                                                <label class="option">
-                                                    <input type="radio" name="status" class="smartfm-ctrl" value=""  data-show-id="yes">
-                                                    <span class="radio"></span> Yes
-                                                </label>
-                                                <label class="option">
-                                                    <input type="radio" name="status" class="smartfm-ctrl" value=""  data-show-id="no">
-                                                    <span class="radio"></span> No
-                                                </label>
-                                                    
-                                            </div>
-                                            
-                                            </div><!-- end section -->
-                                        
-                                        <div class="section colm colm12">
-                                    
-                                            <div id="yes" class="hiddenbox section smartform-reset">
-                                            <div class="frm-row">
-                                            <div class="section colm colm4">
-                                            <label for="isbn" class="field-label">Lender Name </label>
-                                                <label class="field prepend-icon">
-                                                    <input type="text" name="LenderName" id="LenderName" class="gui-input" placeholder="">
-                                                    <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                                </label>
-                                            </div><!-- end section -->
-                                            <div class="section colm colm4">
-                                            <label for="isbn" class="field-label">Loan Amount </label>
-                                                <label class="field prepend-icon">
-                                                    <input type="text" name="LoanAmount" id="LoanAmount" class="gui-input" placeholder="">
-                                                    <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                                </label>
-                                            </div><!-- end section -->
-                                            <div class="section colm colm4">
-                                            <label for="isbn" class="field-label">Loan Date </label>
-                                                <label class="field prepend-icon">
-                                                    <input type="text" name="LoanDate" id="LoanDate" class="gui-input" placeholder="">
-                                                    <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                                </label>
-                                            </div><!-- end section -->
-
-                                            </div><!-- end .frm-row section -->
-                                            </div><!-- .hiddenbox -->
-                                        </div><!-- end section -->
-                                    
-                                            <div id="no" class="hiddenbox section smartform-reset">
-                                            
-                                            </div><!-- .hiddenbox -->
-                                
-                                    </div><!-- end .frm-row section -->
-                                    
-                                        <div class="spacer-b40">
-                                    <div class="tagline"><span>Disclosure</span></div><!-- .tagline -->
-                                        </div>
-                                        
-                                        <div class="frm-row">
-                                        <div class="section colm colm12">
-                                    
-                                            <div class="option-group field">
-                                                <label class="option">
-                                                    <input type="checkbox" name="generalTerms" value="General Terms">
-                                                    <span class="checkbox"></span> 
-                                                    The undersigned declare, under penalty of perjury, that the foregoing is true and correct.                
-                                                </label>
-                                            </div>
-                                            <div class="spacer-b20">
-                                            
-                                            </div>
-                                
-
-                                        </div><!-- end section -->
-                                        </div><!-- end .frm-row section -->
-                                        
-                                        <div class="frm-row">
-                                        <div class="section colm colm6">
-                                        <label for="isbn" class="field-label">Please TYPE your name in the box below </label>
-                                                <label class="field prepend-icon">
-                                                    <input type="text" name="signature" id="signature" class="gui-input" placeholder="">
-                                                    <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                                </label>
-                                        </div><!-- end section -->
-                                        <div class="section colm colm6">
-                                        <label for="isbn" class="field-label">Please TYPE your spouse's name in the box below. (if applicable) </label>
-                                                <label class="field prepend-icon">
-                                                    <input type="text" name="signatures" id="signatures" class="gui-input" placeholder="">
-                                                    <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                                </label>
-                                        </div><!-- end section -->
-                                        
-                                                    
-
-                                    </div><!-- end .frm-row section -->
-                                    
-
-                                    
                             
+                                <div class="section colm colm4">
+                                    <label for="current_spouse_prior_spouse_reason" class="field-label">Reason For End </label>
+                                    <label class="field select">
+                                        <select id="current_spouse_prior_spouse_reason" name="current_spouse_prior_spouse_reason">
+                                            <option value="">Reason</option>
+                                            <option value="Death">Death</option>
+                                            <option value="Divorce">Divorce</option> 
+                                        </select>
+                                        <i class="arrow double"></i>
+                                    </label>
+                                </div>
+                            
+                                <div class="spacer-b10 colm colm2">
+                                    <label for="current_spouse_prior_spouse_end" class="field-label">End: </label>
+                                    <label class="field prepend-icon">
+                                        <input type="text" name="current_spouse_prior_spouse_end" id="current_spouse_prior_spouse_end" class="gui-input" placeholder="MM/YYYY" >
+                                        <span class="field-icon"><i class="fa fa-user"></i></span>
+                                    </label>                
+                                </div> 	
+                            </div>
+                        </div> 
+
+                        <div id="both" class="hiddenbox section smartform-reset">
+                            <div class="frm-row">
+                                <div class="section colm colm6">
+                                    <label for="prior_spouse_name_both" class="field-label">Prior Spouse Name </label>
+                                    <label class="field prepend-icon">
+                                        <input type="text" name="prior_spouse_name_both" id="prior_spouse_name_both" class="gui-input" placeholder="">
+                                        <span class="field-icon"><i class="fa fa-user"></i></span>  
+                                    </label>
+                                </div>
                                 
+                                <div class="section colm colm4">
+                                    <label for="prior_spouse_reason_both" class="field-label">Reason For End </label>
+                                    <label class="field select">
+                                        <select id="prior_spouse_reason_both" name="prior_spouse_reason_both">
+                                            <option value="">Reason</option>
+                                            <option value="Death">Death</option>
+                                            <option value="Divorce">Divorce</option>
+                                        </select>
+                                        <i class="arrow double"></i>
+                                    </label>
+                                </div>
                                 
+                                <div class="spacer-b10 colm colm2">
+                                    <label for="prior_spouse_end_both" class="field-label">End: </label>
+                                    <label class="field prepend-icon">
+                                        <input type="text" name="prior_spouse_end_both" id="prior_spouse_end_both" class="gui-input" placeholder="MM/YYYY" >
+                                        <span class="field-icon"><i class="fa fa-user"></i></span>
+                                    </label>                
+                                </div> 	
+                            </div>
+                            
+                            <div class="frm-row">
+                                <div class="section colm colm6">
+                                    <label for="current_spouse_prior_spouse_name_both" class="field-label">Current Spouse's Prior Spouse Name </label>
+                                    <label class="field prepend-icon">
+                                        <input type="text" name="current_spouse_prior_spouse_name_both" id="current_spouse_prior_spouse_name_both" class="gui-input" placeholder="">
+                                        <span class="field-icon"><i class="fa fa-user"></i></span>  
+                                    </label>
+                                </div>
+                            
+                                <div class="section colm colm4">
+                                    <label for="current_spouse_prior_spouse_reason_both" class="field-label">Reason For End </label>
+                                    <label class="field select">
+                                        <select id="current_spouse_prior_spouse_reason_both" name="current_spouse_prior_spouse_reason_both">
+                                            <option value="">Reason</option>
+                                            <option value="Death">Death</option>
+                                            <option value="Divorce">Divorce</option> 
+                                        </select>
+                                        <i class="arrow double"></i>
+                                    </label>
+                                </div>
+                            
+                                <div class="spacer-b10 colm colm2">
+                                    <label for="current_spouse_prior_spouse_end_both" class="field-label">End: </label>
+                                    <label class="field prepend-icon">
+                                        <input type="text" name="current_spouse_prior_spouse_end_both" id="current_spouse_prior_spouse_end_both" class="gui-input" placeholder="MM/YYYY" >
+                                        <span class="field-icon"><i class="fa fa-user"></i></span>
+                                    </label>                
+                                </div> 	
+                            </div>
+                        </div>
+                            
+                        <div id="notmarried" class="hiddenbox section smartform-reset">
+                    
+                        </div>
+
+                        <div class="spacer-b40 spacer-t40">
+                            <div class=""><span></span></div>
+                        </div>
+
+                        <input type="hidden" id="order_id" name="order_id" value="156">
+                    </fieldset>                            
+                            
+                    <h2>5. Complete</h2>
+                    <fieldset>
+                        <div class="spacer-b40">
+                            <p class="medium fine-grey">Please complete the information below prior to hitting submit.</p>
+                        </div> 
+                                                
+                        <div class="spacer-b30 spacer-t30">
+                            <div class="tagline"><span>About the Property</span></div>
+                        </div>
+
+                        <div class="frm-row">
+                            <div class="section colm colm12">
+                                <label for="street_address" class="field-label">Street Address </label>
+                                <label class="field prepend-icon">
+                                    <input type="text" name="street_address" id="street_address" class="gui-input" placeholder="Street Address">
+                                    <span class="field-icon"><i class="fa fa-user"></i></span>  
+                                </label>
+                            </div>
+                        </div>
                                 
-                                
+                        <div class="frm-row">
+                            <div class="section colm colm6">
+                                <label for="land_is_unimproved" class="field-label">The land is unimproved </label>
+                                <label class="field select">
+                                    <select id="land_is_unimproved" name="land_is_unimproved">
+                                        <option value="">Select</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <i class="arrow double"></i>
+                                </label>
+                            </div>
+
+                            <div class="section colm colm6">
+                                <label for="type_of_property" class="field-label">Type of property on land </label>
+                                <label class="field select">
+                                    <select id="type_of_property" name="type_of_property">
+                                        <option value="">Select</option>
+                                        <option value="single_family_1_4">Single Family 1-4</option>
+                                        <option value="condo_unit">Condo Unit</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <i class="arrow double"></i>
+                                </label>
+                            </div>
+                        </div>
                                     
-                                <div class="result"></div>
+                        <div class="frm-row">     
+                            <div class="section colm colm12">
+                                <label for="buyer_intends" class="field-label">Buyer Intends to reside on the property for this transaction? </label>
+                                <div class="option-group field">
+                                    <label class="option">
+                                        <input type="radio" name="buyer_intends" class="smartfm-ctrl" value=""  data-show-id="yes">
+                                        <span class="radio"></span> Yes
+                                    </label>
+                                    <label class="option">
+                                        <input type="radio" name="buyer_intends" class="smartfm-ctrl" value=""  data-show-id="no">
+                                        <span class="radio"></span> No
+                                    </label> 
+                                </div>         
+                            </div>
+                        </div>
                                 
-                            </fieldset>
+                        <div class="spacer-b40">
+                            <div class="tagline"><span>Disclosure</span></div>
+                        </div>   
+
+                        <div class="frm-row">
+                            <div class="section colm colm12">
+                                <div class="option-group field">
+                                    <label class="option">
+                                        <input type="checkbox" id="general_terms" name="general_terms" value="General Terms">
+                                        <span class="checkbox"></span> 
+                                        The undersigned declare, under penalty of perjury, that the foregoing is true and correct.                
+                                    </label>
+                                </div>
+
+                                <div class="spacer-b20">
+                                
+                                </div>
+                            </div>
+                        </div>
+                                    
+                        <div class="frm-row">
+                            <div class="section colm colm6">
+                                <label for="signature" class="field-label">Please Type your name in the box below </label>
+                                <label class="field prepend-icon">
+                                    <input type="text" name="signature" id="signature" class="gui-input" placeholder="">
+                                    <span class="field-icon"><i class="fa fa-user"></i></span>   
+
+                                </label>
+                            </div>
+
+                            <div class="section colm colm6">
+                                <label for="spouse_signature" class="field-label">Please TYPE your spouse's name in the box below. (if applicable) </label>
+                                <label class="field prepend-icon">
+                                    <input type="text" name="spouse_signature" id="spouse_signature" class="gui-input" placeholder="">
+                                    <span class="field-icon"><i class="fa fa-user"></i></span>  
+                                </label>
+                            </div>
+                        </div>     
+                        <div class="result"></div>
+                        <button id="submit" type="submit" class="ibtn">Submit</button>
+                    </fieldset>
+                    
                 </form>                                                                                   
             </div>
         </div>
     </div>
-	<?php
-        $this->load->view('layout/footer');
-    ?>
+        <?php
+            $this->load->view('layout/footer');
+        ?>
 </body>
 
 </html>
@@ -862,7 +772,6 @@
             bodyTag: "fieldset",
             transitionEffect: "slideLeft",
             labels: {
-                finish: "Submit Form",
                 next: "Continue",
                 previous: "Go Back",
                 loading: "Loading..." 
@@ -920,6 +829,24 @@
                 status:{
                     required: true
                 },	
+                street_address:{
+                    required: true
+                },
+                land_is_unimproved:{
+                    required: true
+                },
+                type_of_property:{
+                    required: true
+                },
+                buyer_intends:{
+                    required: true
+                },
+                general_terms:{
+                    required: true
+                },
+                signature:{
+                    required: true
+                },
                 spouse_firstname:{
                     required: {
                         depends: function(element) {
@@ -1275,6 +1202,24 @@
                 current_spouse_prior_spouse_end_both: {
                     required: "Please enter current prior spouse end date"
                 },
+                street_address: {
+                    required: "Please enter street address"
+                },
+                type_of_property: {
+                    required: "Please select one option"
+                },
+                land_is_unimproved: {
+                    required: "Please select one option"
+                },
+                buyer_intends: {
+                    required: "Please select one option"
+                },
+                general_terms: {
+                    required: "Please check the checkbox"
+                },
+                signature: {
+                    required: "Please enter the name"
+                },
                 "residence_addresses[]": "Please enter address",
                 "residence_from_dates[]": "Please enter from date",
                 "residence_to_dates[]": "Please enter to date",
@@ -1330,6 +1275,8 @@
         $("#partner_from_date").mask('99/9999', {placeholder:'_'});
         $("#partner_to_date").mask('99/9999', {placeholder:'_'});
         $("#prior_spouse_end").mask('99/9999', {placeholder:'_'});
+        $("#prior_spouse_end_both").mask('99/9999', {placeholder:'_'});
+        $("#current_spouse_prior_spouse_end_both").mask('99/9999', {placeholder:'_'});
         $("#current_spouse_prior_spouse_end").mask('99/9999', {placeholder:'_'});
     
         $("#borrower-form a").click(function() {
@@ -1345,11 +1292,18 @@
             $("#employment_from_date2").mask('99/9999', {placeholder:'_'});
             $("#employment_from_date3").mask('99/9999', {placeholder:'_'});
             $("#employment_from_date4").mask('99/9999', {placeholder:'_'});
+            $("#employment_to_date1").mask('99/9999', {placeholder:'_'});
+            $("#employment_to_date2").mask('99/9999', {placeholder:'_'});
+            $("#employment_to_date3").mask('99/9999', {placeholder:'_'});
+            $("#employment_to_date4").mask('99/9999', {placeholder:'_'});
+            $("#partner_from_date1").mask('99/9999', {placeholder:'_'});
+            $("#partner_from_date2").mask('99/9999', {placeholder:'_'});
+            $("#partner_from_date3").mask('99/9999', {placeholder:'_'});
+            $("#partner_from_date4").mask('99/9999', {placeholder:'_'});
             $("#partner_to_date1").mask('99/9999', {placeholder:'_'});
             $("#partner_to_date2").mask('99/9999', {placeholder:'_'});
             $("#partner_to_date3").mask('99/9999', {placeholder:'_'});
             $("#partner_to_date4").mask('99/9999', {placeholder:'_'});
-
         });
         
         

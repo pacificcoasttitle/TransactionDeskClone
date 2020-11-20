@@ -1807,7 +1807,13 @@ class DashboardMail extends MX_Controller {
             'current_spouse_prior_spouse_name' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_name_both') : $this->input->post('current_spouse_prior_spouse_name'),
             'current_spouse_prior_spouse_reason' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_reason_both') : $this->input->post('current_spouse_prior_spouse_reason'),
             'current_spouse_prior_spouse_end' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_end_both') : $this->input->post('current_spouse_prior_spouse_end'),
-            'order_id' => $this->input->post('order_id'),
+            'street_address' => $this->input->post('street_address'),
+            'buyer_intends_to_reside' => $this->input->post('buyer_intends'),
+            'land_is_unimproved' => $this->input->post('land_is_unimproved'),
+            'type_of_property' => $this->input->post('type_of_property'),
+            'general_terms' => $this->input->post('general_terms'),
+            'signature' => $this->input->post('signature'),
+            'spouse_signature' => $this->input->post('spouse_signature'),
             'created_at' => date('Y-m-d H:i:s')
         );
         $borrowerId = $this->home_model->insert($borrowerInfoData,'pct_order_borrower_info');
@@ -1867,7 +1873,7 @@ class DashboardMail extends MX_Controller {
                     'created_at' => date('Y-m-d H:i:s'),
                 );
                 $this->home_model->insert($borrowerEmploymentPartnerData, 'pct_order_borrower_employment_info');
-                $i++;
+                $k++;
             }
         }
         

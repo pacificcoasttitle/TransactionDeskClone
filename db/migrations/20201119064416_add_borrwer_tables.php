@@ -72,6 +72,9 @@ class AddBorrwerTables extends AbstractMigration
                 ->addColumn('buyer_intends_to_reside', 'string', ['limit' => 255, 'null' => true])
                 ->addColumn('land_is_unimproved', 'string', ['limit' => 255, 'null' => true])
                 ->addColumn('type_of_property', 'string', ['limit' => 255, 'null' => true])
+                ->addColumn('general_terms', 'boolean', ['default' => 0])
+                ->addColumn('signature', 'string', ['limit' => 255, 'null' => true])
+                ->addColumn('spouse_signature', 'string', ['limit' => 255, 'null' => true])
                 ->addColumn('created_at', 'datetime')
                 ->addColumn('updated_at', 'datetime', ['null' => true])
                 ->create();
