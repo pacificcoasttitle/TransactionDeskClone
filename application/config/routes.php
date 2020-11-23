@@ -183,8 +183,8 @@ $route['export-escrow-lender/escrow/:num'] = 'frontend/order/cron/exportLenderEs
 $route['borrower-information/:any'] = 'frontend/order/dashboardMail/borrowerInformation';
 $route['generate-verification-code'] = 'frontend/order/dashboardMail/generate_verification_code';
 $route['code-verification'] = 'frontend/order/dashboardMail/code_verification';
-
-
+$route['borrower-details'] = 'frontend/order/dashboardMail/borrowerDetails';
+$route['borrower-info-submit'] = 'frontend/order/dashboardMail/borrowerInfoSubmit';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
