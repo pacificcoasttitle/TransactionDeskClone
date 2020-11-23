@@ -1320,7 +1320,8 @@
         $('#clone-group-fields').cloneya({
             maximum: 5
         }).on('after_append.cloneya', function (event, toclone, newclone) {
-            var emss = $(newclone).find("em").remove();
+            $(newclone).find("em").remove();
+            $(newclone).find("input").attr('aria-describedby', '');
             $("#employment_from_date1").mask('99/9999', {placeholder:'_'});
             $("#employment_from_date2").mask('99/9999', {placeholder:'_'});
             $("#employment_from_date3").mask('99/9999', {placeholder:'_'});
@@ -1334,7 +1335,8 @@
         $('#clone-group-fields2').cloneya({
             maximum: 5
         }).on('after_append.cloneya', function (event, toclone, newclone) {
-            var emss = $(newclone).find("em").remove();
+            $(newclone).find("em").remove();
+            $(newclone).find("input").attr('aria-describedby', '');
             $("#residence_from_date1").mask('99/9999', {placeholder:'_'});
             $("#residence_from_date2").mask('99/9999', {placeholder:'_'});
             $("#residence_from_date3").mask('99/9999', {placeholder:'_'});
@@ -1348,7 +1350,8 @@
         $('#clone-group-fields3').cloneya({
             maximum: 5
         }).on('after_append.cloneya', function (event, toclone, newclone) {
-            var emss = $(newclone).find("em").remove();
+            $(newclone).find("em").remove();
+            $(newclone).find("input").attr('aria-describedby', '');
             $("#partner_from_date1").mask('99/9999', {placeholder:'_'});
             $("#partner_from_date2").mask('99/9999', {placeholder:'_'});
             $("#partner_from_date3").mask('99/9999', {placeholder:'_'});

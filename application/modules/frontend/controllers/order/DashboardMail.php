@@ -1796,6 +1796,7 @@ class DashboardMail extends MX_Controller {
             )
         );
         $order = $this->order->get_order($condition);
+        $this->db->delete('pct_order_borrower_info', array('order_id' => $this->input->post('order_id')));
         $borrowerInfoData = array(
             'first_name' => $this->input->post('firstname'),
             'middle_name' => $this->input->post('middlename'),
@@ -1848,6 +1849,7 @@ class DashboardMail extends MX_Controller {
         $residence_from_dates = $this->input->post('residence_from_dates');
         $residence_to_dates = $this->input->post('residence_to_dates');
         $i = 0;
+        $this->db->delete('pct_order_borrower_residence_info', array('order_id' => $this->input->post('order_id')));
 
         foreach($residence_addresses as $residence_address) {
             $borrowerResidenceData = array(
@@ -1866,6 +1868,7 @@ class DashboardMail extends MX_Controller {
         $employment_from_dates = $this->input->post('employment_from_dates');
         $employment_to_dates = $this->input->post('employment_to_dates');
         $j = 0;
+        $this->db->delete('pct_order_borrower_employment_info', array('order_id' => $this->input->post('order_id')));
 
         foreach($business_names as $business_name) {
             $borrowerEmploymentData = array(
@@ -1878,7 +1881,7 @@ class DashboardMail extends MX_Controller {
                 'created_at' => date('Y-m-d H:i:s'),
             );
             $this->home_model->insert($borrowerEmploymentData, 'pct_order_borrower_employment_info');
-            $i++;
+            $j++;
         }
 
         $partner_business_names = $this->input->post('partner_business_names');
