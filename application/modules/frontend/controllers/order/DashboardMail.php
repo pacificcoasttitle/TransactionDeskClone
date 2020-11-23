@@ -1795,7 +1795,6 @@ class DashboardMail extends MX_Controller {
             )
         );
         $order = $this->order->get_order($condition);
-
         $borrowerInfoData = array(
             'first_name' => $this->input->post('firstname'),
             'middle_name' => $this->input->post('middlename'),
@@ -1837,7 +1836,7 @@ class DashboardMail extends MX_Controller {
             'buyer_intends_to_reside' => $this->input->post('buyer_intends'),
             'land_is_unimproved' => $this->input->post('land_is_unimproved'),
             'type_of_property' => $this->input->post('type_of_property'),
-            'general_terms' => $this->input->post('general_terms'),
+            'general_terms' => 1,
             'signature' => $this->input->post('signature'),
             'spouse_signature' => $this->input->post('spouse_signature'),
             'created_at' => date('Y-m-d H:i:s')
@@ -1902,14 +1901,14 @@ class DashboardMail extends MX_Controller {
                 $k++;
             }
         }
-
+        $this->home_model->update(array('borrower_info_submitted' => 1), array('random_number' => $order[0]['random_number']), 'order_details');
         $success[] = "Borrwer information added successfully";
         $data = array(
             "errors" =>  $errors,
             "success" => $success
         );
         $this->session->set_userdata($data);
-        redirect(base_url().'/borrower-information/'.$order['random_number']);
+        redirect(base_url().'/borrower-information/'.$order[0]['random_number']);
     }
     
     public function code_verification()
