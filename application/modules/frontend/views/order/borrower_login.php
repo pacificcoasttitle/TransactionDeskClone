@@ -100,6 +100,7 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/main.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-input-mask-phone-number.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script>   
     <!-- <script type="text/javascript">
         var base_url = 'http://dev.pacificcoasttitle.com/';
@@ -107,6 +108,8 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $('#phone_number').usPhoneFormat();
 
             $( "#borrower-login-form" ).validate({
                 
