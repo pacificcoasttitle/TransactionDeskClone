@@ -1708,45 +1708,52 @@ class DashboardMail extends MX_Controller {
                 $response['msg_status'] = 'error';
                 $response['errorCode'] = $e->getCode();
                 $response['errorMessage'] = $e->getMessage();
-                $response = (object)$response;
+                // $response = (object)$response;
             } catch (\Twilio\Exceptions\RestException $e) {
                 $response['sid'] = '';
                 $response['to'] = $phoneNumber;
                 $response['msg_status'] = 'error';
                 $response['errorCode'] = $e->getCode();
                 $response['errorMessage'] = $e->getMessage();
-                $response = (object)$response;
+                // $response = (object)$response;
             }
 
             $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>$to, 'from'=>$from), $response, 0, $logid);
 
             if($response['msg_status'] == 'success')
             {
-                $this->home_model->update(array('verification_code' => $code,'is_code_verified' => 0), array('random_number' => $randomNumber), 'order_details');
+                $this->home_model->update(array('verification_code' => $code,'is_code_verified' => 0,'code_created_at'=> date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
+
+                $data = array(
+                    'message' => $response['body'],
+                    'sent_from' => $response['from'],
+                    'sent_to' => $response['to'],
+                    'status' => $response['status'],
+                    'message_sid' => $response['sid'],
+                    'error_code' => $response['errorCode'],
+                    'error_message' => $response['errorMessage'],
+                );
+
+                $this->twilioMessage->insert($data);
+                $result = $response;
             }
-
-            $data = array(
-                'message' => $response['body'],
-                'sent_from' => $response['from'],
-                'sent_to' => $response['to'],
-                'status' => $response['status'],
-                'message_sid' => $response['sid'],
-                'error_code' => $response['errorCode'],
-                'error_message' => $response['errorMessage'],
-            );
-
-            $this->twilioMessage->insert($data);
+            else
+            {
+                $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
+            }
+            
         }
         else
         {
-            $response = array('msg_status'=>'error', 'error_message'=> 'Please enter phone number.');               
+            $result = array('msg_status'=>'error', 'error_message'=> 'Please enter phone number.');               
         }
 
-        echo json_encode($response); exit;
+        echo json_encode($result); exit;
     }
     
     public function code_verification()
     {
+
         $code = $this->input->post('code');
 
         if(isset($code) && !empty($code))
@@ -1757,10 +1764,25 @@ class DashboardMail extends MX_Controller {
 
             $verification_code = isset($orderDetails['verification_code']) && !empty($orderDetails['verification_code']) ? $orderDetails['verification_code'] : '';
 
+            $code_created_at = isset($orderDetails['code_created_at']) && !empty($orderDetails['code_created_at']) ? $orderDetails['code_created_at'] : '';
+
             if($verification_code == $code)
             {
-                $this->home_model->update(array('is_code_verified' => 1), array('id' => $orderDetails['order_id']), 'order_details');
-                $response = array('status'=>'success');
+                $expire_date = date('Y-m-d H:i',strtotime('+1 minutes',strtotime($code_created_at)));
+
+                $now = date("Y-m-d H:i:s"); //current time
+
+
+                if ($now > $expire_date) 
+                { //if current time is greater then created time
+                    $response = array('status'=>'error', 'message'=> 'Your verification code has been expired.');
+                }
+                else
+                {
+                    $this->home_model->update(array('is_code_verified' => 1), array('id' => $orderDetails['order_id']), 'order_details');
+                    $response = array('status'=>'success');
+                }
+                
             }
             else
             {

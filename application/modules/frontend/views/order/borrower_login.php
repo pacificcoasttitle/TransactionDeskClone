@@ -27,6 +27,11 @@
             color: red;
             font-size: 0.85em;
         }
+        .state-error,
+        .required,
+        .error {
+            color: #ff0000;
+        }
     </style>
 </head>
 <body>
@@ -66,9 +71,9 @@
                             </label>
 
                             <label class="field" style="display:none;" id="verification_code_label">
-                                <input class="form-control gui-input" type="text" name="verification_code" id="verification_code">
+                                <input class="form-control gui-input" type="text" name="verification_code" id="verification_code" placeholder="Verification Code">
                             </label>
-                            
+                            <span id="code_error_msg" class="error" style="display: none;"></span>
                             <div class="form-button">
                                 <!-- <button id="btn-verify-code" type="submit" class="ibtn" style="display:none;" name="verify_code">Verify Code</button>
 
@@ -109,7 +114,7 @@
                 ------------------------------------------- */
                 errorClass: "state-error",
                 validClass: "state-success",
-                errorElement: "em",
+                errorElement: "span",
                 onkeyup: false,
                 onclick: false,
                 ignore: ":hidden",                     
@@ -222,8 +227,7 @@
                         },
                         success: function(result)
                         {
-                            var res = jQuery.parseJSON(result);                 
-                            
+                            var res = jQuery.parseJSON(result); 
                             if(res.msg_status == 'success')
                             {
                                 $('#btn-get-code').val('Resend Code');
@@ -239,7 +243,8 @@
                                 $('#get_code_label').show();
                                 $('#btn-verify-code').hide();
                                 $('#verification_code_label').hide();
-                                alert(res.error_message);
+                                $('#code_error_msg').html(res.error_message);
+                                $('#code_error_msg').show().delay(5000).fadeOut();
                             }
                             
                         },
@@ -273,7 +278,8 @@
                         }
                         else if(res.status == 'error')
                         {
-                            alert(res.message);
+                            $('#code_error_msg').html(res.message);
+                            $('#code_error_msg').show().delay(5000).fadeOut();
                         }
                         
                     },

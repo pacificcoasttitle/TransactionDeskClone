@@ -223,6 +223,7 @@ class Order
             order_details.cpl_document_name,
             order_details.proposed_insured_document_name,
             order_details.verification_code,
+            order_details.code_created_at,
             property_details.id as property_id, 
             property_details.address, 
             property_details.full_address, 
