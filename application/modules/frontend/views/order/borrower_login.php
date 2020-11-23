@@ -227,8 +227,7 @@
                         },
                         success: function(result)
                         {
-                            var res = jQuery.parseJSON(result);                 
-                            
+                            var res = jQuery.parseJSON(result); 
                             if(res.msg_status == 'success')
                             {
                                 $('#btn-get-code').val('Resend Code');

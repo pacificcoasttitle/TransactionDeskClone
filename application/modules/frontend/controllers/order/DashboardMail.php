@@ -1708,14 +1708,14 @@ class DashboardMail extends MX_Controller {
                 $response['msg_status'] = 'error';
                 $response['errorCode'] = $e->getCode();
                 $response['errorMessage'] = $e->getMessage();
-                $response = (object)$response;
+                // $response = (object)$response;
             } catch (\Twilio\Exceptions\RestException $e) {
                 $response['sid'] = '';
                 $response['to'] = $phoneNumber;
                 $response['msg_status'] = 'error';
                 $response['errorCode'] = $e->getCode();
                 $response['errorMessage'] = $e->getMessage();
-                $response = (object)$response;
+                // $response = (object)$response;
             }
 
             $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>$to, 'from'=>$from), $response, 0, $logid);
@@ -1723,26 +1723,32 @@ class DashboardMail extends MX_Controller {
             if($response['msg_status'] == 'success')
             {
                 $this->home_model->update(array('verification_code' => $code,'is_code_verified' => 0,'code_created_at'=> date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
+
+                $data = array(
+                    'message' => $response['body'],
+                    'sent_from' => $response['from'],
+                    'sent_to' => $response['to'],
+                    'status' => $response['status'],
+                    'message_sid' => $response['sid'],
+                    'error_code' => $response['errorCode'],
+                    'error_message' => $response['errorMessage'],
+                );
+
+                $this->twilioMessage->insert($data);
+                $result = $response;
             }
-
-            $data = array(
-                'message' => $response['body'],
-                'sent_from' => $response['from'],
-                'sent_to' => $response['to'],
-                'status' => $response['status'],
-                'message_sid' => $response['sid'],
-                'error_code' => $response['errorCode'],
-                'error_message' => $response['errorMessage'],
-            );
-
-            $this->twilioMessage->insert($data);
+            else
+            {
+                $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
+            }
+            
         }
         else
         {
-            $response = array('msg_status'=>'error', 'error_message'=> 'Please enter phone number.');               
+            $result = array('msg_status'=>'error', 'error_message'=> 'Please enter phone number.');               
         }
 
-        echo json_encode($response); exit;
+        echo json_encode($result); exit;
     }
     
     public function code_verification()
