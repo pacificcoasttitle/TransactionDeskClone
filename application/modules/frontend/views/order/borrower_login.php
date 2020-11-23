@@ -270,11 +270,11 @@
                     },
                     success: function(result)
                     {
-                        var res = jQuery.parseJSON(result);  
-                        
+                        var res = jQuery.parseJSON(result);
                         if(res.status == 'success')
                         {
-
+                            var random_number = $("#random_number").val();
+                            window.location.replace(base_url+'borrower-information/'+random_number);
                         }
                         else if(res.status == 'error')
                         {

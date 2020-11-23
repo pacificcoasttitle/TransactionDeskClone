@@ -1656,29 +1656,63 @@ class DashboardMail extends MX_Controller {
     public function borrowerInformation()
     {
         $random_number = $this->uri->segment(2);
-
         $condition = array(
             'where' => array(
                 'random_number' => $random_number,
             )
         );
-
         $order = $this->order->get_order($condition);
-        
-        $orderNumber = isset($order[0]['file_number']) && !empty($order[0]['file_number']) ? $order[0]['file_number'] : '';
 
-        $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
+        if(!empty($order)) {
+            $orderNumber = isset($order[0]['file_number']) && !empty($order[0]['file_number']) ? $order[0]['file_number'] : '';
+            $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
+            $borrower_info_submitted = $order[0]['borrower_info_submitted'];
+            $is_code_verified = $order[0]['is_code_verified'];
+            $orderDetails = $this->order->get_order_details($fileId, 1);
 
-        $orderDetails = $this->order->get_order_details($fileId, 1);
-
-        $propertyAddress = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
-
-        $data['orderNumber'] = $orderNumber;
-        $data['propertyAddress'] = $propertyAddress;
-        $data['randomNumber'] = $random_number;
-        $data['fileId'] = $fileId;
-
-        $this->load->view('order/borrower_login', $data);
+            if ($is_code_verified == 1 && $borrower_info_submitted == 1) {
+                $data['is_borrower_info_submitted'] = 1;
+                $data['mail_dashboard'] = 1;
+                $data['order_id'] = $order[0]['id'];
+                $data['errors'] = array();
+                $data['success'] = array();
+                if ($this->session->userdata('errors')) {
+                    $data['errors'] = $this->session->userdata('errors');
+                    $this->session->unset_userdata('errors');
+                }
+                if ($this->session->userdata('success')) {
+                    $data['success'] = $this->session->userdata('success');
+                    $this->session->unset_userdata('success');
+                }
+                $this->load->view('layout/head_dashboard', $data);
+                $this->load->view('order/borrower', $data);
+            } else if ($is_code_verified == 1 && $borrower_info_submitted == 0) {
+                $data['is_borrower_info_submitted'] = 0;
+                $data['mail_dashboard'] = 1;
+                $data['order_id'] = $order[0]['id'];
+                $data['errors'] = array();
+                $data['success'] = array();
+                if ($this->session->userdata('errors')) {
+                    $data['errors'] = $this->session->userdata('errors');
+                    $this->session->unset_userdata('errors');
+                }
+                if ($this->session->userdata('success')) {
+                    $data['success'] = $this->session->userdata('success');
+                    $this->session->unset_userdata('success');
+                }
+                $this->load->view('layout/head_dashboard', $data);
+                $this->load->view('order/borrower', $data); 
+            } else {
+                $propertyAddress = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+                $data['orderNumber'] = $orderNumber;
+                $data['propertyAddress'] = $propertyAddress;
+                $data['randomNumber'] = $random_number;
+                $data['fileId'] = $fileId;
+                $this->load->view('order/borrower_login', $data);
+            }
+        } else {
+            redirect(base_url().'order');
+        }
     }
 
     public function generate_verification_code()
@@ -1751,25 +1785,17 @@ class DashboardMail extends MX_Controller {
         echo json_encode($result); exit;
     }
 
-	public function borrowerInformation12()
-    {
-        $data['errors'] = array();
-        $data['success'] = array();
-        $data['mail_dashboard'] = 1;
-        if ($this->session->userdata('errors')) {
-            $data['errors'] = $this->session->userdata('errors');
-            $this->session->unset_userdata('errors');
-        }
-        if ($this->session->userdata('success')) {
-            $data['success'] = $this->session->userdata('success');
-            $this->session->unset_userdata('success');
-        }
-        $this->load->view('layout/head_dashboard', $data);
-        $this->load->view('order/borrower', $data);
-    }
-
     public function borrowerInfoSubmit()
     {
+        $errors = array();
+        $success = array();
+        $condition = array(
+            'where' => array(
+                'id' =>  $this->input->post('order_id'),
+            )
+        );
+        $order = $this->order->get_order($condition);
+
         $borrowerInfoData = array(
             'first_name' => $this->input->post('firstname'),
             'middle_name' => $this->input->post('middlename'),
@@ -1876,7 +1902,14 @@ class DashboardMail extends MX_Controller {
                 $k++;
             }
         }
-        
+
+        $success[] = "Borrwer information added successfully";
+        $data = array(
+            "errors" =>  $errors,
+            "success" => $success
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url().'/borrower-information/'.$order['random_number']);
     }
     
     public function code_verification()
