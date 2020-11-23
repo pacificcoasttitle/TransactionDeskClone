@@ -1769,7 +1769,8 @@ class DashboardMail extends MX_Controller {
                 );
 
                 $this->twilioMessage->insert($data);
-                $result = $response;
+                // $result = $response;
+                $result = array('msg_status'=>'success', 'message'=> 'Code generated successfully.');
             }
             else
             {
@@ -1929,7 +1930,7 @@ class DashboardMail extends MX_Controller {
 
             if($verification_code == $code)
             {
-                $expire_date = date('Y-m-d H:i',strtotime('+1 minutes',strtotime($code_created_at)));
+                $expire_date = date('Y-m-d H:i',strtotime('+3 minutes',strtotime($code_created_at)));
 
                 $now = date("Y-m-d H:i:s"); //current time
 
