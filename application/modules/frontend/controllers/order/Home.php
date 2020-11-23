@@ -768,7 +768,6 @@ class Home extends MX_Controller {
 
 							if($escrow_email == 'info@flaremedia.io')
 							{
-								$escrow_email = 'hitesh.p@crestinfosystems.com';
 								$email_data = array(
 									'orderNumber'=> $orderNumber,
 									'randomString'=> $randomString,
