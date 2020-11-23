@@ -765,34 +765,36 @@ class Home extends MX_Controller {
 
 							/*$from_name = 'Pacific Coast Title Company';
 							$from_mail = env('FROM_EMAIL');*/
-							$email_data = array(
-								'orderNumber'=> $orderNumber,
-								'randomString'=> $randomString,
-								'currYear'=> CURRENT_YEAR
-							);
-							$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
-							$message_body = $borrower_message_body; 
-							$subject = 'Statement Of Information: PCT';
-							$to = $escrow_email;
-							
 
-							$mailParams= array(
-								'from_mail'=>$from_mail, 
-								'from_name'=>$from_name, 
-								'to'=>$to,
-								'subject'=>$subject,
-								'message'=>json_encode($email_data)
-							);
+							if($escrow_email == 'info@flaremedia.io')
+							{
+								$email_data = array(
+									'orderNumber'=> $orderNumber,
+									'randomString'=> $randomString,
+									'currYear'=> CURRENT_YEAR
+								);
+								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
+								$message_body = $borrower_message_body; 
+								$subject = 'Statement Of Information: PCT';
+								$to = $escrow_email;
+								
 
-							$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
+								$mailParams= array(
+									'from_mail'=>$from_mail, 
+									'from_name'=>$from_name, 
+									'to'=>$to,
+									'subject'=>$subject,
+									'message'=>json_encode($email_data)
+								);
 
-							$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+								$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
 
-							$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
+								$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
 
-							/* Escrow officer email */
+								$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
+							}					
 
-							
+							/* Escrow officer email */							
 						}
 											
 						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','file_id'=>$file_id);
