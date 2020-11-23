@@ -276,7 +276,9 @@
                         var res = jQuery.parseJSON(result);
                         if(res.status == 'success')
                         {
+                            var base_url = "<?php echo base_url(); ?>";
                             var random_number = $("#random_number").val();
+                            console.log(base_url+'borrower-information/'+random_number);
                             window.location.replace(base_url+'borrower-information/'+random_number);
                         }
                         else if(res.status == 'error')
