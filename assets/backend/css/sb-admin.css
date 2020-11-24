@@ -2155,7 +2155,7 @@ textarea.form-control {
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .form-text {
@@ -2613,8 +2613,8 @@ fieldset:disabled a.btn {
 }
 
 .btn-primary {
-    color: #d35411;
-    background-color: transparent;
+    color: #fff;
+    background-color: #d35411;
     border-color: #d35411;
     font-weight: bold;
 }
@@ -2623,6 +2623,7 @@ fieldset:disabled a.btn {
   color: #fff;
   background-color: #D35411;
   border-color: #D35411;
+  opacity: 0.8;
 }
 
 .btn-primary:focus, .btn-primary.focus {
@@ -4924,11 +4925,14 @@ input[type="button"].btn-block {
 }
 
 .card-header {
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 0;
-  background-color: rgba(0, 0, 0, 0.03);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-  text-align: center;
+    padding: 25px;
+    margin-bottom: 0;
+    /* background-color: rgba(0, 0, 0, 0.03); */
+    /* border-bottom: 1px solid rgba(0, 0, 0, 0.125); */
+    text-align: center;
+    color: white;
+    font-weight: 300;
+    font-size: 22px;
   
 }
 
@@ -6989,7 +6993,7 @@ button.bg-light:focus {
 
 .bg-dark {
   background-color: #223D7F !important;
-    background: url(http://www.pct.com/assets/media/content/bg/adminBG3.png) no-repeat 0 0;
+    background: url(http://www.pct.com/assets/media/content/bg/adminBG3.jpg) no-repeat 0 0;
     background-size: cover;
     background-attachment: fixed;
 }
@@ -10826,7 +10830,9 @@ body {
 }
 
 .card-login {
-  max-width: 25rem;
+    max-width: 22rem;
+    max-height: 27rem;
+    background: rgba(255,255,255,.45);
 }
 
 .card-register {
