@@ -1722,7 +1722,8 @@ class DashboardMail extends MX_Controller {
         if(isset($phoneNumber) && !empty($phoneNumber))
         {
             $randomNumber = $this->input->post('random_number');
-            $code = $this->order->randomPassword();
+            // $code = $this->order->randomPassword();
+            $code = rand(10000000,99999999);
             $sid = env('TWILIO_SID');
             $token = env('TWILIO_TOKEN');
             $from = env('TWILIO_FROM');
@@ -1917,7 +1918,6 @@ class DashboardMail extends MX_Controller {
     
     public function code_verification()
     {
-
         $code = $this->input->post('code');
 
         if(isset($code) && !empty($code))
@@ -1945,8 +1945,7 @@ class DashboardMail extends MX_Controller {
                 {
                     $this->home_model->update(array('is_code_verified' => 1), array('id' => $orderDetails['order_id']), 'order_details');
                     $response = array('status'=>'success');
-                }
-                
+                }                
             }
             else
             {
