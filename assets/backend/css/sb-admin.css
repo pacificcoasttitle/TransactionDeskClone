@@ -4900,7 +4900,9 @@ input[type="button"].btn-block {
   -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
-  padding: 1.25rem;
+  padding: 40px 25px 25px 25px;
+  color: #a8a8a8;
+  font-size: 20px;
 }
 
 .card-title {
@@ -4948,6 +4950,7 @@ input[type="button"].btn-block {
   padding: 0.75rem 1.25rem;
   background-color: rgba(0, 0, 0, 0.03);
   border-top: 1px solid rgba(0, 0, 0, 0.125);
+  color:#a8a8a8;
 }
 
 .card-footer:last-child {
