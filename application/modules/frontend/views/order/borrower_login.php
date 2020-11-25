@@ -55,7 +55,7 @@
                                 </div>
                             </a>
                         </div>
-						<h2>Statement of Information</h21>
+						<h2>Generic Landing Page for CPL</h21>
                         <h3>Let us know who you are...</h3>
 						<p></p>
 						<p>Title Order#:<?php echo $orderNumber; ?></p>
@@ -278,7 +278,6 @@
                         {
                             var base_url = "<?php echo base_url(); ?>";
                             var random_number = $("#random_number").val();
-                            console.log(base_url+'borrower-information/'+random_number);
                             window.location.replace(base_url+'borrower-information/'+random_number);
                         }
                         else if(res.status == 'error')

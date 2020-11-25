@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta content="We specialize in Residential, Commercial Title & Escrow Services" name="description">
+    <meta content="" name="keywords">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="telephone=no" name="format-detection">
+    <meta name="HandheldFriendly" content="true">
+    <title>Authentication | Pacific Coast Title Company</title>
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/fontawesome-all.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/iofrm-style.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/iofrm-theme2.css">
+    <link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script>
+    <style>
+        #email_address_php_error {
+            display: none;
+            margin-top: 6px;
+            padding: 0 3px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-style: normal;
+            line-height: normal;
+            color: red;
+            font-size: 0.85em;
+        }
+        .state-error,
+        .required,
+        .error {
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-body">
+        <div class="row">
+            <div class="img-holder">
+                <div class="bg borrower-login"></div>
+                <div class="info-holder"></div>
+            </div>
+            <div class="form-holder">
+                <div class="form-content">
+                    <div class="form-items borrower-login-from-items">
+					    <div class="website-logo-inside">
+                            <a href="index.html">
+                                <div class="l">
+                                    <img class="logo-size" src="<?php echo base_url(); ?>assets/media/general/logo2.png" alt="">
+                                </div>
+                            </a>
+                        </div>
+						<h2>Generic Landing Page for CPL</h2>
+						<p></p>
+                        <p>Enter order number below. You will redirect to order detail page to generate CPL.</p>
+                        <div class="page-links">
+                            <a href="" class="active">Order Log In From</a>
+                        </div>
+                        <form method="POST" action="" id="order-number-login-form" enctype="multipart/form-data">
+                            <label class="field" style="display:block;">
+                                <input class="form-control gui-input" type="text" name="order_number" id="order_number" placeholder="Enter Order Number">
+                            </label>
+                            <span id="order_number_php_error" class="error" style="display: none;"></span>
+                            <div class="form-button">
+                                <button id="submit" type="submit" class="ibtn">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.form.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/popper.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/main.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-input-mask-phone-number.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script>   
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $( "#order-number-login-form" ).validate({
+                /* @validation states + elements 
+                ------------------------------------------- */
+                errorClass: "state-error",
+                validClass: "state-success",
+                errorElement: "span",
+                onkeyup: false,
+                onclick: false,
+                ignore: ":hidden",                     
+                /* @validation rules 
+                ------------------------------------------ */
+                rules: {
+                    order_number: {
+                        required: true
+                    }
+                },
+                /* @validation error messages 
+                ---------------------------------------------- */
+                messages:{
+                    order_number: {
+                        required: 'Please enter the order number'
+                    },
+                   
+                },
+                /* @validation highlighting + error placement  
+                ---------------------------------------------------- */ 
+                highlight: function(element, errorClass, validClass) {
+                    $(element).closest('.field').addClass(errorClass).removeClass(validClass);
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).closest('.field').removeClass(errorClass).addClass(validClass);
+                },
+                errorPlacement: function(error, element) {
+                    if (element.is(":radio") || element.is(":checkbox")) {
+                        element.closest('.option-group').after(error);
+                    } else {
+                        error.insertAfter(element.parent());
+                    }
+                   $('#order_number_php_error').hide();
+                },
+                /* @ajax form submition 
+                ---------------------------------------------------- */
+                submitHandler:function(form) {
+                    $.ajax({
+                        url: '<?php echo base_url(); ?>order-number-cpl',
+                        type: "POST",
+                        data: {
+                            order_number: $("#order_number").val(),
+                        },
+                        success: function(result) {
+                            var res = jQuery.parseJSON(result);
+                            if (res.status == 'success') {
+                                var base_url = "<?php echo base_url(); ?>";
+                                window.location.replace(base_url+'generate-cpl/'+res.random_number);
+                            } else if(res.status == 'error') {
+                                $('#order_number_php_error').html(res.order_number_php_error);
+                                $('#order_number_php_error').show();
+                            }
+                        },
+                        error:function(){
+                            alert('Something went wrong');
+                        },
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

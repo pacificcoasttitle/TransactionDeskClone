@@ -162,14 +162,14 @@ $route['home/checkDuplicateOrder'] = 'frontend/order/home/checkDuplicateOrder';
 $route['special-lender-dashboard'] = 'frontend/order/SpecialDashboard/index';
 $route['get-special-lenders-orders'] = 'frontend/order/SpecialDashboard/get_special_lenders_orders';
 $route['special-dashboard/logout'] = 'frontend/order/SpecialDashboard/logout';
-$route['generate-cpl/:num'] = 'frontend/order/dashboardMail/generateCplFromMail';
-$route['generate-fees/:num'] = 'frontend/order/dashboardMail/generateFeesFromMail';
+$route['generate-cpl/:any'] = 'frontend/order/dashboardMail/generateCplFromMail';
+$route['generate-fees/:any'] = 'frontend/order/dashboardMail/generateFeesFromMail';
 $route['add-lender-order-mail'] = 'frontend/order/dashboardMail/addLenderOnOrder';
 $route['get-order-details-cpl-mail'] = 'frontend/order/dashboardMail/getOrderDetailsCpl';
 $route['create-cpl-for-fnf-mail/:num'] = 'frontend/order/dashboardMail/createCPlForFnf';
 $route['create-cpl-mail/:num'] = 'frontend/order/dashboardMail/create_cpl';
 $route['create-cpl-for-natic-mail/:num'] = 'frontend/order/dashboardMail/createCPlForNatic';
-$route['proposed-insured/:num'] = 'frontend/order/dashboardMail/proposedInsured';
+$route['proposed-insured/:any'] = 'frontend/order/dashboardMail/proposedInsured';
 $route['getDetailsByName'] = 'frontend/order/dashboardMail/getDetailsByName';
 $route['update-remote-file-numbers'] = 'frontend/order/cron/updateRemoteFileNumberForAllOrders';
 $route['generate-mail-proposed-insured'] = 'frontend/order/dashboardMail/generate_mail_proposed_insured';
@@ -185,6 +185,7 @@ $route['generate-verification-code'] = 'frontend/order/dashboardMail/generate_ve
 $route['code-verification'] = 'frontend/order/dashboardMail/code_verification';
 $route['borrower-details'] = 'frontend/order/dashboardMail/borrowerDetails';
 $route['borrower-info-submit'] = 'frontend/order/dashboardMail/borrowerInfoSubmit';
+$route['order-number-cpl'] = 'frontend/order/dashboardMail/orderNumberCpl';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
