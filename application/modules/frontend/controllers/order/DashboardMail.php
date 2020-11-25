@@ -409,7 +409,7 @@ class DashboardMail extends MX_Controller {
                 "success" => $success
             );
             $this->session->set_userdata($data);
-            redirect(base_url().'generate-cpl/'.$fileId);
+            redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
         }
 
         $getCPLFormNameResponse = $this->fnf->getCPLForm($orderDetails, $vendorTokenData, $userTokenData);
@@ -436,7 +436,7 @@ class DashboardMail extends MX_Controller {
                 "success" => $success
             );
 			$this->session->set_userdata($data);
-			redirect(base_url().'generate-cpl/'.$fileId);
+			redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
         } else {
             $errors[] = $getCPLFormNameResponse['error'];
             $data = array(
@@ -444,7 +444,7 @@ class DashboardMail extends MX_Controller {
                 "success" => $success
             );
             $this->session->set_userdata($data);
-            redirect(base_url().'generate-cpl/'.$fileId);
+            redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
         }   
     }
     
@@ -660,7 +660,7 @@ class DashboardMail extends MX_Controller {
                         "success" => $success
                     );
 					$this->session->set_userdata($data);
-					redirect(base_url().'generate-cpl/'.$fileId);
+					redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
                 }
                 $order_details = array(
                     'westcor_order_id'  => $res['tvid'],
@@ -701,7 +701,7 @@ class DashboardMail extends MX_Controller {
                     "success" => $success
                 );
                 $this->session->set_userdata($data);
-                redirect(base_url().'generate-cpl/'.$fileId);
+                redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
             }
         }
         
@@ -760,7 +760,7 @@ class DashboardMail extends MX_Controller {
                         "success" => $success
                     );
                     $this->session->set_userdata($data);
-                    redirect(base_url().'generate-cpl/'.$fileId);
+                    redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
                 }
 
                 $cplCount = count($resultResCPL['cpl']) - 1;
@@ -801,7 +801,7 @@ class DashboardMail extends MX_Controller {
                 "success" => $success
             );
             $this->session->set_userdata($data);
-            redirect(base_url().'generate-cpl/'.$fileId);
+            redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
         }
     }
     
@@ -833,7 +833,7 @@ class DashboardMail extends MX_Controller {
             "success" => $success
         );
         $this->session->set_userdata($data);
-        redirect(base_url().'generate-cpl/'.$fileId);
+        redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
     }
     
     public function uploadCPLDocumentToResware($document_name, $orderDetails, $binaryData)
