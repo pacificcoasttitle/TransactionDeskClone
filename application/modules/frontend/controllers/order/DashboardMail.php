@@ -33,7 +33,14 @@ class DashboardMail extends MX_Controller {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
         }
-        $fileId = $this->uri->segment(2);    
+        $random_number = $this->uri->segment(2); 
+        $condition = array(
+            'where' => array(
+                'random_number' => $random_number,
+            )
+        );
+        $order = $this->order->get_order($condition);
+        $fileId = $order[0]['file_id'];  
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $orderDetails = $this->order->get_order_details($fileId, 1);
@@ -60,7 +67,15 @@ class DashboardMail extends MX_Controller {
 
     public function generateFeesFromMail()
     {
-        $fileId = $this->uri->segment(2);    
+        $random_number = $this->uri->segment(2); 
+        $condition = array(
+            'where' => array(
+                'random_number' => $random_number,
+            )
+        );
+        $order = $this->order->get_order($condition);
+        $fileId = $order[0]['file_id'];
+
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
 
@@ -900,8 +915,15 @@ class DashboardMail extends MX_Controller {
 		if ($this->session->userdata('success')) {
 			$data['success'] = $this->session->userdata('success');
 			$this->session->unset_userdata('success');
-		}
-        $fileId = $this->uri->segment(2);    
+        }
+        $random_number = $this->uri->segment(2); 
+        $condition = array(
+            'where' => array(
+                'random_number' => $random_number,
+            )
+        );
+        $order = $this->order->get_order($condition);
+        $fileId = $order[0]['file_id']; 
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$data['mail_dashboard'] = 1;
 		$orderDetails = $this->order->get_order_details($fileId,1);
@@ -1959,5 +1981,39 @@ class DashboardMail extends MX_Controller {
         }
 
         echo json_encode($response); exit;
+    }
+
+    public function orderNumberCpl()
+    {
+        if ($this->input->post()) { 
+            $this->form_validation->set_rules('order_number', 'Order Number', 'trim|required', array('required'=> 'Please enter Order Number'));
+            if ($this->form_validation->run($this) == FALSE) {
+                $response = array('status'=>'error', 'order_number_php_error'=> form_error('order_number'));
+                echo json_encode($response); exit;
+            } else {
+                $order_number = $this->input->post('order_number');
+                $condition = array(
+                    'where' => array(
+                        'file_number' => $order_number,
+                    )
+                );
+                $order = $this->order->get_order($condition);
+                if (!empty($order)) {
+                    if (empty($order[0]['random_number'])) {
+                        $randomString = $this->order->randomPassword();
+                        $randomString = md5($order[0]['id'].$randomString);
+                        $this->home_model->update(array('random_number' => $randomString), array('id' => $order[0]['id']), 'order_details');
+                        $order[0]['random_number'] = $randomString;
+                    }
+                    $response = array('status'=> 'success', 'random_number'=> $order[0]['random_number']);
+                    echo json_encode($response); exit;
+                } else {
+                    $response = array('status'=>'error', 'order_number_php_error'=> 'Please enter correct order number');
+                    echo json_encode($response); exit;
+                }
+            }
+        } else {
+            $this->load->view('order/order_number_cpl');
+        }
     }
 }
