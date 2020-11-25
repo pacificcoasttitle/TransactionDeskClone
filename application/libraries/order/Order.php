@@ -208,6 +208,7 @@ class Order
             order_details.customer_id,
             order_details.id as order_id,
             order_details.file_id, 
+            order_details.random_number, 
             order_details.westcor_order_id,
             order_details.westcor_cpl_id, 
             order_details.westcor_buyer_id,
