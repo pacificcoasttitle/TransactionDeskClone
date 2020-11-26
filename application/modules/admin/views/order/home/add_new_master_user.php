@@ -102,7 +102,18 @@
                         <?php } ?>
                     </div>
                 </div>
-               
+
+                <div class="form-group row">
+                    <label for="zipcode" class="col-sm-2 col-form-label">Select Company</label>
+                    <div class="col-sm-10">
+                        <select class="selectpicker" multiple data-live-search="true">
+                            <option>Mustard</option>
+                            <option>Ketchup</option>
+                            <option>Relish</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="pull-right">
                     <button type="submit" class="btn btn-secondary">Add</button>
                     <a href="<?php echo base_url().'order/admin/add-new-master-user'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
@@ -111,4 +122,10 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
 

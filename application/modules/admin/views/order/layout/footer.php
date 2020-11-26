@@ -37,6 +37,7 @@
   <!-- Custom scripts for all pages-->
   <script src="<?php echo base_url(); ?>assets/backend/js/sb-admin.min.js"></script>
   <script src="<?php echo base_url(); ?>assets/backend/js/custom.js?random=<?php echo uniqid(); ?>"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 </body>
 
 </html>
