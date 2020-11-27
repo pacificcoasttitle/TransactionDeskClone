@@ -34,6 +34,8 @@ $(document).ready(function () {
         jQuery('#logs').parent('li').removeClass('active');
     }
 
+    $('select').selectpicker();
+
     if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length)
     {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
