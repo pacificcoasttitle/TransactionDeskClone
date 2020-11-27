@@ -59,6 +59,7 @@ class Login extends MX_Controller {
                         "is_admin" => 0,
                         "is_master" =>  $user['is_master'],
                         "is_sales_rep" =>  $user['is_sales_rep'],
+                        "partner_companies" =>  $user['partner_companies'],
                         "is_special_lender" =>  isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                     );
                     $this->session->set_userdata('user', $session_data);

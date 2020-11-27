@@ -43,7 +43,8 @@ class Order
     {
         $userdata = $this->CI->session->userdata('user');
         $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
-        
+        $result = $this->getUserFromPartners();
+
         if(isset($params['searchvalue']) && !empty($params['searchvalue']))
         {
             $keyword = $params['searchvalue'];
@@ -74,6 +75,15 @@ class Order
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+            }
+
+            if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
+                if(!empty($result)) {
+                    $this->CI->db->group_start()
+                        ->where_in('order_details.customer_id', explode(',', $result['ids']))
+                        ->or_where_in('property_details.escrow_lender_id', explode(',', $result['ids']))
+                        ->group_end();
+                }
             }
 
             $total_records =  $this->CI->db->count_all_results();
@@ -108,6 +118,16 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
+
+            if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
+                if(!empty($result)) {
+                    $this->CI->db->group_start()
+                        ->where_in('order_details.customer_id', explode(',', $result['ids']))
+                        ->or_where_in('property_details.escrow_lender_id', explode(',', $result['ids']))
+                        ->group_end();
+                }
+            }
+
             $this->CI->db->order_by("order_details.id", "desc");
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -142,6 +162,16 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
+
+            if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
+                if(!empty($result)) {
+                    $this->CI->db->group_start()
+                        ->where_in('order_details.customer_id', explode(',', $result['ids']))
+                        ->or_where_in('property_details.escrow_lender_id', explode(',', $result['ids']))
+                        ->group_end();
+                }
+            }
+
             /*if ($userdata['is_master'] == 0) {
                 $this->CI->db->where('order_details.customer_id', $userdata['id']);
             }*/
@@ -173,6 +203,16 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
+
+            if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
+                if(!empty($result)) {
+                    $this->CI->db->group_start()
+                        ->where_in('order_details.customer_id', explode(',', $result['ids']))
+                        ->or_where_in('property_details.escrow_lender_id', explode(',', $result['ids']))
+                        ->group_end();
+                }
+            }
+
             $this->CI->db->order_by("order_details.id", "desc");
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -180,7 +220,7 @@ class Order
             }
 
             $query = $this->CI->db->get();
-
+    
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             } 
@@ -199,6 +239,17 @@ class Order
         $this->CI->db->from('pct_order_documents_types');
         $query = $this->CI->db->get();
         return $rs = $query->result_array();
+    }
+
+    public function getUserFromPartners() 
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('GROUP_CONCAT(id) as ids');
+        $this->CI->db->from('customer_basic_details');
+        $this->CI->db->where_in('partner_id', explode(',', $userdata['partner_companies']));
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        return $result;
     }
 
     public function get_order_details($fileId,$from_mail=0)

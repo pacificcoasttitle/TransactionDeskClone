@@ -1170,7 +1170,8 @@ class Home extends MX_Controller {
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $nestedData[] = "<a href='javascript:void(0);' onclick='deleteMasterUser(".$value['id'].")' class='btn btn-action'  title='Delete Master User'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $editUrl = base_url().'order/admin/edit-master-user/'.$value['id'];
+                    $nestedData[] = "<a href='".$editUrl."'  class='btn btn-action'  title='Edit Master User'><span class='fa fa-edit' aria-hidden='true'></span></a><a href='javascript:void(0);' onclick='deleteMasterUser(".$value['id'].")' class='btn btn-action'  title='Delete Master User'><span class='fa fa-trash' aria-hidden='true'></span></a>";
                 }
                 $data[] = $nestedData;            
             }
@@ -1188,7 +1189,12 @@ class Home extends MX_Controller {
         $data = array();
         $data['title'] = 'PCT Order: Add New Master User';
         $salesRepData = array();
-
+        $this->db->select('*')
+            ->from('pct_order_partner_company_info');
+        
+        $query = $this->db->get();
+        $data['companys'] = $query->result_array();
+        
         if ($this->input->post()) {
             $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
             $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
@@ -1211,6 +1217,7 @@ class Home extends MX_Controller {
                     'city' => $this->input->post('city'),
                     'state' => $this->input->post('state'),
                     'zip_code' => $this->input->post('zipcode'),
+                    'partner_companies' => implode(",",$this->input->post('partner_companies')),
                     'is_escrow' => 0,
                     'is_master' => 1,
                     'is_password_updated' => 1,
@@ -1220,6 +1227,7 @@ class Home extends MX_Controller {
                 $insert = $this->home_model->insert($customerData);
                 if ($insert) {
                     $data['success_msg'] = 'Master User added successfully.';
+                    $this->form_validation->reset_validation();
                 } else {
                     $data['error_msg'] = 'User not added.';
                 } 
@@ -1236,6 +1244,78 @@ class Home extends MX_Controller {
         }
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/home/add_new_master_user', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function editMasterUser()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Edit Master User';
+        $id = $this->uri->segment(4);     
+        $this->db->select('*')
+            ->from('pct_order_partner_company_info');
+        
+        $query = $this->db->get();
+        $data['companys'] = $query->result_array();
+        
+        if(isset($id) && !empty($id)) {
+            if ($this->input->post()) {
+                $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
+                $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+                $this->form_validation->set_rules('company', 'Company', 'required', array('required'=> 'Please Enter Company'));
+                $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));
+                $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+                $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+                $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', array('required'=> 'Please Enter Zipcode'));
+                
+                if ($this->form_validation->run() == true) {
+                    $customerData = array(
+                        'first_name' => $this->input->post('first_name'),
+                        'last_name' => $this->input->post('last_name'),
+                        'telephone_no' => $this->input->post('telephone_no'),
+                        'email_address' => $this->input->post('email_address'),
+                        'password' => 'Pacific1',    
+                        'company_name' => $this->input->post('company'),
+                        'street_address' => $this->input->post('address'),
+                        'city' => $this->input->post('city'),
+                        'state' => $this->input->post('state'),
+                        'zip_code' => $this->input->post('zipcode'),
+                        'partner_companies' => implode(",",$this->input->post('partner_companies')),
+                        'is_escrow' => 0,
+                        'is_master' => 1,
+                        'is_password_updated' => 1,
+                        'is_new_user' => 0,
+                        'status'=> 1,
+                    );
+
+                    $updateCondition = array(
+                        'id' => $id,
+                    );
+                    $update = $this->home_model->update($customerData, $updateCondition);
+                    if ($update) {
+                        $data['success_msg'] = 'Master User updated successfully.';
+                        $this->form_validation->reset_validation();
+                    } else {
+                        $data['error_msg'] = 'Master User not updated.';
+                    } 
+                } else {
+                    $data['first_name_error_msg'] = form_error('first_name');
+                    $data['last_name_error_msg'] = form_error('last_name');
+                    $data['email_address_error_msg'] = form_error('email_address');
+                    $data['company_error_msg'] = form_error('company');
+                    $data['address_error_msg'] = form_error('address');
+                    $data['city_error_msg'] = form_error('city');
+                    $data['state_error_msg'] = form_error('state');
+                    $data['zipcode_error_msg'] = form_error('zipcode');
+                }                                       
+            } 
+            $con = array('id' => $id);
+            $data['master_user_info'] = $this->home_model->get_rows($con);
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/edit_master_user', $data);
         $this->load->view('order/layout/footer', $data);
     }
 

@@ -1058,12 +1058,18 @@ class DashboardMail extends MX_Controller {
 		}
 		
 		$endPoint = 'files/'. $fileId .'/partners';
-		$logid = $this->apiLogs->syncLogs(0, 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
-		
-		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-		$user_data['email'] = $orderUser['email_address'];
-		$user_data['password'] = $orderUser['random_password'];
-		$user_data['from_mail'] = 1;  		 
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+        
+		if ($orderDetails['customer_id'] == 0) {
+            $data['admin_api'] = 1;
+            $user_data['from_mail'] = 1; 
+        } else {
+            $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+            $user_data['email'] = $orderUser['email_address'];
+            $user_data['password'] = $orderUser['random_password'];
+            $user_data['from_mail'] = 1; 
+        }
+		 		 
 		$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
 		$this->apiLogs->syncLogs(0, 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
 		$resPartners = json_decode($resultPartners, true);	  

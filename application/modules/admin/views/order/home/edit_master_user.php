@@ -17,13 +17,13 @@
     <?php } ?>
 
     <div class="card mx-auto mt-5">
-      <div class="card-header">Add New User</div>
+      <div class="card-header">Edit Master User</div>
         <div class="card-body">        
             <form id="add-new-master-user" method="POST">
                 <div class="form-group row">
                     <label for="first_name" class="col-sm-2 col-form-label">First Name<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php echo set_value('first_name')?>" class="form-control" placeholder="First Name">
+                        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php echo set_value('first_name') ? set_value('first_name') : $master_user_info['first_name'];?>" class="form-control" placeholder="First Name">
                         <?php if(!empty($first_name_error_msg)){ ?>                     
                             <span class="error"><?php echo $first_name_error_msg; ?></span>
                         <?php } ?>
@@ -33,7 +33,7 @@
                 <div class="form-group row">
                     <label for="last_name" class="col-sm-2 col-form-label">Last Name<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="last_name" id="last_name" value="<?php echo set_value('last_name')?>" class="form-control" placeholder="Last Name">
+                        <input type="text" class="form-control" name="last_name" id="last_name" value="<?php echo set_value('last_name') ? set_value('last_name') : $master_user_info['last_name'];?>" class="form-control" placeholder="Last Name">
                         <?php if(!empty($last_name_error_msg)){ ?>                     
                             <span class="error"><?php echo $last_name_error_msg; ?></span>
                         <?php } ?>
@@ -43,7 +43,7 @@
                 <div class="form-group row">
                     <label for="email_address" class="col-sm-2 col-form-label">Email Address<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="email" value="<?php echo set_value('email_address')?>" class="form-control" name="email_address" id="email_address" class="form-control" placeholder="Email Address">
+                        <input type="email" value="<?php echo set_value('email_address') ? set_value('email_address') : $master_user_info['email_address'];?>" class="form-control" name="email_address" id="email_address" class="form-control" placeholder="Email Address">
                         <?php if(!empty($email_address_error_msg)){ ?>                     
                             <span class="error"><?php echo $email_address_error_msg; ?></span>
                         <?php } ?>
@@ -53,14 +53,14 @@
                 <div class="form-group row">
                     <label for="telephone_no" class="col-sm-2 col-form-label">Telephone</label>
                     <div class="col-sm-10">
-                        <input type="text" value="<?php echo set_value('telephone_no')?>" class="form-control" name="telephone_no" id="telephone_no" class="form-control" placeholder="Telephone">
+                        <input type="text" value="<?php echo set_value('telephone_no') ? set_value('telephone_no') : $master_user_info['telephone_no']; ?>" class="form-control" name="telephone_no" id="telephone_no" class="form-control" placeholder="Telephone">
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label for="company" class="col-sm-2 col-form-label">Company<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="company" id="company" value="<?php echo set_value('company')?>" class="form-control" placeholder="Company">
+                        <input type="text" class="form-control" name="company" id="company" value="<?php echo set_value('company') ? set_value('company') : $master_user_info['company_name'];?>" class="form-control" placeholder="Company">
                         <?php if(!empty($company_error_msg)){ ?>                     
                             <span class="error"><?php echo $company_error_msg; ?></span>
                         <?php } ?>
@@ -70,7 +70,7 @@
                 <div class="form-group row">
                     <label for="address" class="col-sm-2 col-form-label">Address<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="address" id="address" value="<?php echo set_value('address')?>" class="form-control" placeholder="Address">
+                        <input type="text" class="form-control" name="address" id="address" value="<?php echo set_value('address') ? set_value('address') : $master_user_info['street_address'];?>" class="form-control" placeholder="Address">
                         <?php if(!empty($address_error_msg)){ ?>                     
                             <span class="error"><?php echo $address_error_msg; ?></span>
                         <?php } ?>
@@ -80,7 +80,7 @@
                 <div class="form-group row">
                     <label for="city" class="col-sm-2 col-form-label">City<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="city" id="city" value="<?php echo set_value('city')?>" class="form-control" placeholder="City">
+                        <input type="text" class="form-control" name="city" id="city" value="<?php echo set_value('city') ? set_value('city') : $master_user_info['city'];?>" class="form-control" placeholder="City">
                         <?php if(!empty($city_error_msg)){ ?>                     
                             <span class="error"><?php echo $city_error_msg; ?></span>
                         <?php } ?>
@@ -90,7 +90,7 @@
                 <div class="form-group row">
                     <label for="state" class="col-sm-2 col-form-label">State<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="state" id="state" value="<?php echo set_value('state')?>" class="form-control" placeholder="State">
+                        <input type="text" class="form-control" name="state" id="state" value="<?php echo set_value('state') ? set_value('state') : $master_user_info['state'];?>" class="form-control" placeholder="State">
                         <?php if(!empty($state_error_msg)){ ?>                     
                             <span class="error"><?php echo $state_error_msg; ?></span>
                         <?php } ?>
@@ -100,7 +100,7 @@
                 <div class="form-group row">
                     <label for="zipcode" class="col-sm-2 col-form-label">Zipcode<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo set_value('zipcode')?>" class="form-control" placeholder="Zipcode">
+                        <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo set_value('zipcode') ? set_value('zipcode') : $master_user_info['zip_code']?>" class="form-control" placeholder="Zipcode">
                         <?php if(!empty($zipcode_error_msg)){ ?>                     
                             <span class="error"><?php echo $zipcode_error_msg; ?></span>
                         <?php } ?>
@@ -115,7 +115,12 @@
                                 <?php $selected = '';
                                     if(set_value('partner_companies') && in_array($company['partner_id'], set_value('partner_companies')))  {
                                         $selected = 'selected';
-                                    } 
+                                    } else {
+                                        $partnerCompanies = explode(',', $master_user_info['partner_companies']);
+                                        if(in_array($company['partner_id'], $partnerCompanies))  {
+                                            $selected = 'selected';
+                                        }
+                                    }
                                 ?> 
                                 <option <?php echo $selected;?> value="<?php echo $company['partner_id'];?>"><?php echo $company['partner_name'];?></option>
                             <?php }?>
@@ -124,7 +129,7 @@
                 </div>
 
                 <div class="pull-right">
-                    <button type="submit" class="btn btn-secondary">Add</button>
+                    <button type="submit" class="btn btn-secondary">Edit</button>
                     <a href="<?php echo base_url().'order/admin/master-users'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
                 </div>      
             </form>
