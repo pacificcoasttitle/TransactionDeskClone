@@ -2611,7 +2611,7 @@ class Dashboard extends MX_Controller {
 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
 		if ($userdata['is_master'] == 1) {
 			if ($orderDetails['customer_id'] == 0) {
-				$data['admin_api'] = 1; 
+				$user_data['admin_api'] = 1; 
 			} else {
 				$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 				$user_data['email'] = $orderUser['email_address'];
