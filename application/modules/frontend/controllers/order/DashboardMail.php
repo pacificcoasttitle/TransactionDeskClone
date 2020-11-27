@@ -1061,7 +1061,7 @@ class DashboardMail extends MX_Controller {
         $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
         
 		if ($orderDetails['customer_id'] == 0) {
-            $data['admin_api'] = 1;
+            $user_data['admin_api'] = 1;
             $user_data['from_mail'] = 1; 
         } else {
             $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
