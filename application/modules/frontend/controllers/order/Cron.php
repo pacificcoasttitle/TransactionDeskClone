@@ -39,132 +39,236 @@ class Cron extends MX_Controller {
         $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
 
-        if(empty($user)) {
-            $userdata = $this->session->userdata('user');
-        } else {
-            $userdata = $user;
+        if($this->input->post('is_admin') == 1)
+        {
+            $id = $this->input->post('id');
+            $userdata = $this->home_model->get_user(array('id' => $id));
             $userdata['email'] = $userdata['email_address'];
         }
-        
+        else
+        {
+           if(empty($user)) {
+                $userdata = $this->session->userdata('user');
+            } else {
+                $userdata = $user;
+                $userdata['email'] = $userdata['email_address'];
+            } 
+        }
+
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', array(), array(), 0, 0);
         $res = $this->make_request('POST', 'files/search', '',  $userdata);
         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', array(), $res, 0, $logid);
-        $result = json_decode($res);
+        $result = json_decode($res,TRUE);
 
-        $this->db->simple_query('SET SESSION group_concat_max_len=150000');
-        $this->db->select('GROUP_CONCAT(file_id) as file_ids');
-        $this->db->from('order_details');   
-        $this->db->where('customer_id', $userdata['id']);
-        $this->db->group_by('customer_id'); 
-        $query = $this->db->get();
-        $filesResult = $query->row_array();
+        if(isset($result['Files']) && !empty($result['Files']))
+        {
+            $this->db->simple_query('SET SESSION group_concat_max_len=150000');
+            $this->db->select('GROUP_CONCAT(file_id) as file_ids');
+            $this->db->from('order_details');   
+            $this->db->where('customer_id', $userdata['id']);
+            $this->db->group_by('customer_id'); 
+            $query = $this->db->get();
+            $filesResult = $query->row_array();
 
-        if (!empty($filesResult)) {
-            $file_ids = explode(',', $filesResult['file_ids']);
-        } else {
-            $syncFlag = 0;
-        }
-   
-        foreach($result->Files as $res) {
-            if (!empty($file_ids)) {
-                if (in_array((int)$res->FileID, $file_ids)) {
-                    $syncFlag = 1;  
-                } else {
-                    $syncFlag = 0;  
-                }
-            } 
-            if ($syncFlag == 0) {
-                $FullProperty = $res->Properties[0]->StreetNumber." ".$res->Properties[0]->StreetDirection." ".$res->Properties[0]->StreetName." ".$res->Properties[0]->StreetSuffix.", ".$res->Properties[0]->City.", ".$res->Properties[0]->State.", ".$res->Properties[0]->Zip;
-                $address = $res->Properties[0]->StreetNumber." ".$res->Properties[0]->StreetDirection." ".$res->Properties[0]->StreetName." ".$res->Properties[0]->StreetSuffix;
-                $primary_owner = ($res->Buyers[0]->Primary && $res->Buyers[0]->Primary->First) ? $res->Buyers[0]->Primary->First : '';
-                $primary_owner .= ($res->Buyers[0]->Primary && $res->Buyers[0]->Primary->Last) ? " ".$res->Buyers[0]->Primary->Last : '';
-                $secondary_owner = ($res->Buyers[0]->Secondary && $res->Buyers[0]->Secondary->First) ? $res->Buyers[0]->Secondary->First : '';
-                $secondary_owner .= ($res->Buyers[0]->Secondary && $res->Buyers[0]->Secondary->Last) ? " ".$res->Buyers[0]->Secondary->Last : '';
-
-
-                /* get blackkight data */
-                $locale = $res->Properties[0]->City;
-                
-                if (($locale)) 
+            if (!empty($filesResult)) {
+                $file_ids = explode(',', $filesResult['file_ids']);
+            } else {
+                $syncFlag = 0;
+            }
+       
+            foreach ($result['Files'] as $res) 
+            {
+                if (!empty($file_ids)) 
                 {
-                    if(!empty($res->Properties[0]->State))
-                    {
-                        $locale .= ', '.$res->Properties[0]->State;
-                    } 
-                    else 
-                    {
-                        $locale .= ', CA';
+                    if (in_array((int)$res['FileID'], $file_ids)) {
+                        $syncFlag = 1;  
+                    } else {
+                        $syncFlag = 0;  
                     }
                 }
-                
-                $property_details = $this->getSearchResult($address, $locale);
-                $property_type = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
-                $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
-                $apn = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
-                /* get blackkight data */
 
-                $propertyData = array(
-                    'customer_id' => $userdata['id'],
-                    'buyer_agent_id' => 0,
-                    'listing_agent_id' => 0,
-                    'escrow_lender_id' => 0,
-                    'parcel_id' => $res->Properties[0]->ParcelID,
-                    'address' => $address,
-                    'city' => $res->Properties[0]->City,
-                    'state' => $res->Properties[0]->State,
-                    'zip' => $res->Properties[0]->Zip,
-                    'property_type' => $property_type,
-                    'full_address' => $FullProperty,
-                    'apn' => $apn,
-                    'county' => $res->Properties[0]->County,
-                    'legal_description' => $LegalDescription,
-                    'primary_owner' => $primary_owner,
-                    'secondary_owner' => $SecondaryOwner,
-                    // 'additional_details'=> '',
-                    'is_imported'=> 1,
-                    'status'=> 1
-                );
+                if ($syncFlag == 0) 
+                {
+                    $FullProperty = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
+                    $address = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'];
+                    
+                    
 
-                $propertyId = $this->home_model->insert($propertyData,'property_details');
+                    /* get blackkight data */
+                    $locale = $res['Properties'][0]['City'];
+                    
+                    if (($locale)) 
+                    {
+                        if(!empty($res['Properties'][0]['State']))
+                        {
+                            $locale .= ', '.$res['Properties'][0]['State'];
+                        } 
+                        else 
+                        {
+                            $locale .= ', CA';
+                        }
+                    }
+                    
+                   $property_details = $this->getSearchResult($address, $locale);
+                    
+                    $property_type = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                    $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                    $apn = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
+                    /* get blackkight data */
+                    
 
-                $transactionData = array(
-                    'customer_id' => $userdata['id'],
-                    'sales_amount' =>  !empty($res->SalesPrice) ? $res->SalesPrice : 0,
-                    'loan_number' => !empty($res->Loans[0]->LoanNumber) ? $res->Loans[0]->LoanNumber : 0,
-                    'loan_amount' => !empty($res->Loans[0]->LoanAmount) ? $res->Loans[0]->LoanAmount : 0,
-                    'transaction_type' => $res->TransactionProductType->TransactionTypeID,
-                    'purchase_type' => $res->TransactionProductType->ProductTypeID,
-                    'status'=> 1
-                );
-                $transactionId = $this->home_model->insert($transactionData,'transaction_details');
+                    $propertyData = array(
+                        'customer_id' => $userdata['id'],
+                        'buyer_agent_id' => 0,
+                        'listing_agent_id' => 0,
+                        'escrow_lender_id' => 0,
+                        'parcel_id' => $res['Properties'][0]['ParcelID'],
+                        'address' => $address,
+                        'city' => $res['Properties'][0]['City'],
+                        'state' => $res['Properties'][0]['State'],
+                        'zip' => $res['Properties'][0]['Zip'],
+                        'property_type' => $property_type,
+                        'full_address' => $FullProperty,
+                        'apn' => $apn,
+                        'county' => $res['Properties'][0]['County'],
+                        'legal_description' => $LegalDescription,
+                        /*'primary_owner' => $primary_owner,
+                        'secondary_owner' => $SecondaryOwner,*/
+                        // 'additional_details'=> '',
+                        // 'is_imported'=> 1,
+                        'status'=> 1
+                    );
 
-                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res->Dates->OpenedDate)))/1000);
+                    $transactionData = array(
+                        'customer_id' => $userdata['id'],
+                        'sales_amount' =>  !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                        // 'sales_representative' =>  $userdata['id'],
+                        'loan_number' => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                        'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                        'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
+                        'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
+                        'status'=> 1
+                    );
 
-                $created_date = date('Y-m-d H:i:s', $time);
+                    $primary_owner = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
 
-                $orderData = array(
-                    'customer_id' => $userdata['id'],
-                    'file_id' => $res->FileID,
-                    'file_number' => $res->FileNumber,
-                    'property_id' => $propertyId,
-                    'transaction_id' => $transactionId,
-                    'created_at' => $created_date,
-                    'status'=> 1
-                );
+                    $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
+                    $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
 
-                $orderId = $this->home_model->insert($orderData,'order_details');
+                    $secondary_owner = ($res['Buyers'][0]['Secondary']['First'] && $res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
+                    $secondary_owner = ($res['Buyers'][0]['Secondary']['Middle'] && $res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
+                    $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " ".$res['Buyers'][0]['Secondary']['Last'] : '';
 
-                /* TitlePoint API */
-                $fips = isset($property_details['fips']) && !empty($property_details['fips']) ? $property_details['fips'] : '';
-                $tp_details = $this->getTPData($address,$res->Properties[0]->City, $fips);
-                $tp_details['file_id'] = $res->FileID; 
-                $tp_details['file_number'] = $res->FileNumber;
-                $tpId = $this->titlePointData->insert($tp_details);
-                /* TitlePoint API */
+                    $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
+                    if(strpos($ProductTypeTxt, 'Loan') !== false)
+                    {
+                        $propertyData['primary_owner'] = $primary_owner;
+                        $propertyData['secondary_owner'] = $secondary_owner;
+                    }
+                    elseif(strpos($ProductTypeTxt, 'Sale') !== false)
+                    {
+                        $transactionData['borrower'] = $primary_owner;
+                        $transactionData['secondary_borrower'] = $secondary_owner;
 
+                        $propertyData['primary_owner'] = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                        $propertyData['secondary_owner'] = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                    }
+                    
+
+                    $propertyId = $this->home_model->insert($propertyData,'property_details');
+
+                    
+                    $transactionId = $this->home_model->insert($transactionData,'transaction_details');
+
+                    $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['OpenedDate'])))/1000);
+
+                    $created_date = date('Y-m-d H:i:s', $time);
+
+                    $orderData = array(
+                        'customer_id' => $userdata['id'],
+                        'file_id' => $res['FileID'],
+                        'file_number' => $res['FileNumber'],
+                        'property_id' => $propertyId,
+                        'transaction_id' => $transactionId,
+                        'created_at' => $created_date,
+                        'status'=> 1,
+                        'is_imported'=> 1,
+                        'is_sales_rep_order'=> 0,
+                        'resware_status'=> strtolower($res['Status']['Name']),
+                    );
+
+                    $orderId = $this->home_model->insert($orderData,'order_details');
+
+                    /* TP call */
+                    $random_number = time() + (floor(rand() * (10000 - 1 + 1)) + 1);
+                    
+                    $propertyData['fipsCode'] = isset($property_details['fips']) && !empty($property_details['fips']) ? $property_details['fips'] : '';
+
+                    $propertyData['address'] = $address;
+                    
+                    $propertyData['city'] = isset($res['Properties'][0]['City']) && !empty($res['Properties'][0]['City']) ? $res['Properties'][0]['City'] : '';
+
+                    $propertyData['unit_no'] = isset($property_details['unit_no']) && !empty($property_details['unit_no']) ? $property_details['unit_no'] : '';
+                    $propertyData['apn'] = $apn;
+
+                    $propertyData['state'] = isset($res['Properties'][0]['State']) && !empty($res['Properties'][0]['State']) ? $res['Properties'][0]['State'] : '';
+                    $propertyData['county'] = isset($res['Properties'][0]['County']) && !empty($res['Properties'][0]['County']) ? $res['Properties'][0]['County'] : '';
+
+                    $this->tpCreateService(4,$random_number,$propertyData,$userdata);                   
+
+                    $this->tpCreateService(3,$random_number,$propertyData,$userdata);
+
+                    $session_id = 'tp_api_id_'.$random_number;
+
+                    $tp_condition = array(
+                        'session_id' => $session_id
+                    );
+
+                    $tpData = array(
+                        'file_id' => $res['FileID'],
+                        'file_number' => $res['FileNumber'],
+                    );
+                    
+                    $this->titlePointData->update($tpData,$tp_condition);
+
+                    
+                    $titlePointDetails = $this->titlePointData->gettitlePointDetails($tp_condition);
+
+                    $serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
+                    $this->titlepoint->generateImg($serviceId,$res['FileNumber'],$orderId);
+                    $instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && !empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
+
+                    $recordedDate = isset($titlePointDetails['cs4_recorded_date']) && !empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
+                    $fips = isset($titlePointDetails['fips']) && !empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
+                        
+                    $this->titlepoint->generateGrantDeed($instrumentNumber,$recordedDate,$fips,$res['FileNumber'],$orderId);
+
+                    $tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
+
+                    $this->titlepoint->generateTaxDoc($tax_serviceId,$res['FileNumber'],$orderId);
+
+                    /* TP call */
+                }
+                else if($syncFlag == 1)
+                {
+                    $orderData = array(         
+                        'resware_status'=> strtolower($res['Status']['Name'])
+                    );
+                    $condition = array(
+                        'file_id' => $res['FileID'],
+                        'file_number' => $res['FileNumber'],
+                    );
+
+                    $orderId = $this->home_model->update($orderData,$condition,'order_details');
+                }
             }
+            $response = array('status'=>'success','msg'=>"All orders synced successfully for user: ".$userdata['email']);
         }
-        echo "All orders synced successfully";
+        else
+        {
+            $response = array('status'=>'error','msg'=> "No orders found for user: ".$userdata['email']);
+        }
+        echo json_encode($response);
     }
 
     public function make_request($http_method, $endpoint, $body_params='', $userdata)
@@ -1053,7 +1157,7 @@ class Cron extends MX_Controller {
                             
                             $property_type = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
                             $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
-                            $apn = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '2233-009-019';
+                            $apn = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
                             /* get blackkight data */
                             
 
@@ -1142,7 +1246,7 @@ class Cron extends MX_Controller {
                             /* TP call */
                             $random_number = time() + (floor(rand() * (10000 - 1 + 1)) + 1);
                             
-                            $propertyData['fipsCode'] = isset($property_details['fips']) && !empty($property_details['fips']) ? $property_details['fips'] : '06037';
+                            $propertyData['fipsCode'] = isset($property_details['fips']) && !empty($property_details['fips']) ? $property_details['fips'] : '';
 
                             $propertyData['address'] = $address;
                             

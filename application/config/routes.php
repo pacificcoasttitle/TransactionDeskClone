@@ -250,6 +250,7 @@ $route['order/admin/edit-code-book/:num'] = 'admin/order/CodeBook/editCodeBook';
 $route['order/admin/send-password'] = 'admin/order/home/sendPassword';
 $route['order/admin/resware-admin-credential'] = 'admin/order/home/reswareAdminCredential';
 $route['order/admin/edit-master-user/:num'] = 'admin/order/home/editMasterUser';
+$route['order/admin/import-orders'] = 'admin/order/home/importOrders';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
