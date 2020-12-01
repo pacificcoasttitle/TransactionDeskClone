@@ -3349,6 +3349,7 @@ function importOrders(id)
                 
                 if(results.status == 'success')
                 {
+                    $('body').animate({ opacity: 1.0 }, "slow");
                     $('#customer_success_msg').html(results.msg).show();
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#customer_success_msg").offset().top
@@ -3359,6 +3360,7 @@ function importOrders(id)
                 }
                 else if(results.status == 'error')
                 {
+                    $('body').animate({ opacity: 1.0 }, "slow");
                     $('#customer_success_msg').html(results.msg).show();
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#customer_success_msg").offset().top
@@ -3370,6 +3372,7 @@ function importOrders(id)
                 
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('body').animate({ opacity: 1.0 }, "slow");
                 $('#customer_error_msg').html('Something went wrong. Please try it again.').show();
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $("#customer_error_msg").offset().top
@@ -3381,7 +3384,7 @@ function importOrders(id)
             }
         });
 
-        $('body').animate({ opacity: 1.0 }, "slow");
+        
     }
     
 }
