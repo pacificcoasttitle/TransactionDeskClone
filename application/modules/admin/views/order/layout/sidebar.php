@@ -108,4 +108,10 @@
 			<span>Code Book</span>
 		</a>
 	</li>
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/import-orders') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/import-orders'; ?>">
+			<i class="fas fa-fw fa-list"></i>
+			<span>Import Orders</span>
+		</a>
+	</li>
 </ul>
