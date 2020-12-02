@@ -770,5 +770,48 @@ class Order
         
         // Return fetched data
         return $result;
+    }
+
+
+    public function get_borrower_info($orderId)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_borrower_info');
+            
+        $this->CI->db->where('order_id', $orderId);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_borrower_residence_info($orderId)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_borrower_residence_info');
+            
+        $this->CI->db->where('order_id', $orderId);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function get_borrower_employment_info($orderId)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_borrower_employment_info');
+            
+        $this->CI->db->where('order_id', $orderId);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
     }   
 }

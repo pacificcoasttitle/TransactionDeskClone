@@ -1825,6 +1825,8 @@ class DashboardMail extends MX_Controller {
             )
         );
         $order = $this->order->get_order($condition);
+        $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
+        $orderDetails = $this->order->get_order_details($fileId, 1);
         $this->db->delete('pct_order_borrower_info', array('order_id' => $this->input->post('order_id')));
         $borrowerInfoData = array(
             'first_name' => $this->input->post('firstname'),
@@ -1935,6 +1937,55 @@ class DashboardMail extends MX_Controller {
             }
         }
         $this->home_model->update(array('borrower_info_submitted' => 1), array('random_number' => $order[0]['random_number']), 'order_details');
+
+        /* Generate PDF */
+        
+        $borrower_info = $this->order->get_borrower_info($this->input->post('order_id'));
+
+        $borrower_residence_info = $this->order->get_borrower_residence_info($this->input->post('order_id'));
+
+        $borrower_employment_info = $this->order->get_borrower_employment_info($this->input->post('order_id'));
+
+        $borrower_data['borrower_info'] = isset($borrower_info) && !empty($borrower_info) ? $borrower_info : array();
+
+        $borrower_data['borrower_residence_info'] = isset($borrower_residence_info) && !empty($borrower_residence_info) ? $borrower_residence_info : array();
+
+        $borrower_data['borrower_employment_info'] = isset($borrower_employment_info) && !empty($borrower_employment_info) ? $borrower_employment_info : array();
+
+        
+        $this->load->library('m_pdf');
+
+        $html=$this->load->view('order/borrower_pdf',$borrower_data, true);
+
+        $stylesheet = file_get_contents('assets/frontend/css/bootstrap.min.css');
+
+        $customCss = '@media print { @page { size: auto; } }';
+
+        $combinedCss = $stylesheet . $customCss;
+
+
+        $this->m_pdf->pdf->WriteHTML($combinedCss, 1); // CSS Script goes here.
+        $this->m_pdf->pdf->WriteHTML($html,2);
+        // $document_name = "borrower_".$proposedDocumentCount."_".$fileId.".pdf";
+        $document_name = "borrower_".$fileId.".pdf";
+        $this->load->model('order/document');
+        $borrowerDocumentCount = $this->document->countBorrowerDocument($orderDetails['order_id']);
+        $document_name = "borrower_".$borrowerDocumentCount."_".$fileId.".pdf";
+        if (!is_dir('uploads/borrower-information')) {
+            mkdir('./uploads/borrower-information', 0777, TRUE);
+        }
+
+        $pdfFilePath = './uploads/borrower-information/'.$document_name;
+        $this->m_pdf->pdf->Output($pdfFilePath,'F');
+
+        $contents = file_get_contents($pdfFilePath);
+        $binaryData   = base64_encode($contents);
+
+        $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+
+        $this->uploadBorrowerDocumentToResware($document_name, $orderDetails, $binaryData);
+        /* Generate PDF */
+
         $success[] = "Borrwer information added successfully";
         $data = array(
             "errors" =>  $errors,
@@ -1989,6 +2040,7 @@ class DashboardMail extends MX_Controller {
         echo json_encode($response); exit;
     }
 
+
     public function orderNumberCpl()
     {
         if ($this->input->post()) { 
@@ -2021,5 +2073,49 @@ class DashboardMail extends MX_Controller {
         } else {
             $this->load->view('order/order_number_cpl');
         }
+    }
+    public function uploadBorrowerDocumentToResware($document_name, $orderDetails, $binaryData)
+    {
+        $this->load->model('order/document');
+        $this->load->library('order/resware');
+        $this->load->model('order/apiLogs');
+        $fileSize = filesize('./uploads/borrower-information/'.$document_name);
+        $documentData = array(
+            'document_name' => $document_name,
+            'original_document_name' => $document_name,
+            'document_type_id' => 1037,
+            'document_size' => $fileSize,
+            'user_id' => 0,
+            'order_id' => $orderDetails['order_id'],
+            'description' => 'Statement Of Information Document',
+            'is_sync' => 1,
+            'is_prelim_document' => 0,
+            'is_cpl_doc' => 0,
+            'is_borrower_doc' => 1,
+        );
+        $documentId = $this->document->insert($documentData);
+        $endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+        $documentApiData = array(           
+            'DocumentName' => $document_name,
+            'DocumentType' => array(
+                'DocumentTypeID' => 1037,
+            ),
+            'Description' => 'Statement Of Information Document',
+            'InternalOnly' => false,
+            'DocumentBody' => $binaryData
+        );
+        $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+        
+        $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $user_data['email'] = $orderUser['email_address'];
+        $user_data['password'] = $orderUser['random_password'];
+        $user_data['from_mail'] = 1;
+        
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+        $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+        $res = json_decode($result);
+        $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
 }
