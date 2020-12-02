@@ -21,7 +21,8 @@ class Cron extends MX_Controller {
             'where' => array(
                 'status' => 1,
                 'is_master' => 0,
-                'is_password_updated' => 1
+                'is_password_updated' => 1,
+                'is_sales_rep' => 0,
             )
         );
         $customers = $this->home_model->get_customers($condition);
