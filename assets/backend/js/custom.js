@@ -3346,7 +3346,7 @@ function importOrders(id)
             success: function (response) {
 
                 var results = JSON.parse(response);
-                
+                console.log(results);
                 if(results.status == 'success')
                 {
                     $('body').animate({ opacity: 1.0 }, "slow");
@@ -3361,12 +3361,12 @@ function importOrders(id)
                 else if(results.status == 'error')
                 {
                     $('body').animate({ opacity: 1.0 }, "slow");
-                    $('#customer_success_msg').html(results.msg).show();
+                    $('#customer_error_msg').html(results.msg).show();
                     $([document.documentElement, document.body]).animate({
-                        scrollTop: $("#customer_success_msg").offset().top
+                        scrollTop: $("#customer_error_msg").offset().top
                     }, 1000);
                     setTimeout(function () {
-                        $('#customer_success_msg').html('').hide();
+                        $('#customer_error_msg').html('').hide();
                     }, 4000);
                 }
                 
