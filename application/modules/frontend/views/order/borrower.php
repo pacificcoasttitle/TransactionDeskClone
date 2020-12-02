@@ -823,7 +823,7 @@
             errorElement: "em",
             onkeyup: false,
             onclick: false,
-            rules: {
+            /*rules: {
                 firstname: {
                     required: true
                 },
@@ -1256,7 +1256,7 @@
                 "partner_addresses[]": "Please enter address",	
                 "partner_from_dates[]": "Please enter from date",
                 "partner_to_dates[]": "Please enter to date",			
-            },
+            },*/
             highlight: function(element, errorClass, validClass) {
                 $(element).closest('.field').addClass(errorClass).removeClass(validClass);
             },
