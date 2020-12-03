@@ -19,6 +19,8 @@ class DashboardMail extends MX_Controller {
         $this->load->library('order/twilio');
         $this->load->model('order/titleOfficer');
         $this->load->model('order/twilioMessage');
+        $this->load->model('order/titlePointData');
+        $this->load->library('order/titlepoint');
     }
 
     public function generateCplFromMail()
@@ -2066,7 +2068,146 @@ class DashboardMail extends MX_Controller {
                     $response = array('status'=> 'success', 'random_number'=> $order[0]['random_number']);
                     echo json_encode($response); exit;
                 } else {
-                    $response = array('status'=>'error', 'order_number_php_error'=> 'Please enter correct order number');
+                    $data = json_encode(array('FileNumber' => $order_number));
+                    $userData = array(
+                        'admin_api' => 1
+                    );	
+                    $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, array(), 0, 0);
+                    $res = $this->resware->make_request('POST', 'files/search', $data, $userData);
+                    $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, $res, 0, $logid);
+                    $result = json_decode($res,TRUE);
+    
+                    if (isset($result['Files']) && !empty($result['Files'])) {
+
+                        foreach ($result['Files'] as $res) {
+                            $FullProperty = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
+                            $address = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'];
+                            $locale = $res['Properties'][0]['City'];
+                            
+                            if (($locale)) {
+                                if (!empty($res['Properties'][0]['State'])) {
+                                    $locale .= ', '.$res['Properties'][0]['State'];
+                                } else {
+                                    $locale .= ', CA';
+                                }
+                            }
+                            $property_details = $this->getSearchResult($address, $locale);
+                            
+                            $property_type = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                            $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                            $apn = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
+                            
+                            $propertyData = array(
+                                'customer_id' => 0,
+                                'buyer_agent_id' => 0,
+                                'listing_agent_id' => 0,
+                                'escrow_lender_id' => 0,
+                                'parcel_id' => $res['Properties'][0]['ParcelID'],
+                                'address' => $address,
+                                'city' => $res['Properties'][0]['City'],
+                                'state' => $res['Properties'][0]['State'],
+                                'zip' => $res['Properties'][0]['Zip'],
+                                'property_type' => $property_type,
+                                'full_address' => $FullProperty,
+                                'apn' => $apn,
+                                'county' => $res['Properties'][0]['County'],
+                                'legal_description' => $LegalDescription,
+                                'status'=> 1
+                            );
+
+                            $transactionData = array(
+                                'customer_id' => 0,
+                                'sales_amount' =>  !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                                'loan_number' => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                                'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                                'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
+                                'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
+                                'status'=> 1
+                            );
+
+                            $primary_owner = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
+                            $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
+                            $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
+                            $secondary_owner = ($res['Buyers'][0]['Secondary']['First'] && $res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
+                            $secondary_owner = ($res['Buyers'][0]['Secondary']['Middle'] && $res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
+                            $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " ".$res['Buyers'][0]['Secondary']['Last'] : '';
+                            $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
+
+                            if (strpos($ProductTypeTxt, 'Loan') !== false) {
+                                $propertyData['primary_owner'] = $primary_owner;
+                                $propertyData['secondary_owner'] = $secondary_owner;
+                            } elseif(strpos($ProductTypeTxt, 'Sale') !== false) {
+                                $transactionData['borrower'] = $primary_owner;
+                                $transactionData['secondary_borrower'] = $secondary_owner;
+                                $propertyData['primary_owner'] = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                                $propertyData['secondary_owner'] = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                            }
+                            
+                            $propertyId = $this->home_model->insert($propertyData,'property_details');
+                            $transactionId = $this->home_model->insert($transactionData,'transaction_details');
+                            $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['OpenedDate'])))/1000);
+                            $created_date = date('Y-m-d H:i:s', $time);
+                            $randomString = $this->order->randomPassword();
+							
+							$randomString = md5($randomString);
+
+                            $orderData = array(
+                                'customer_id' => 0,
+                                'file_id' => $res['FileID'],
+                                'file_number' => $res['FileNumber'],
+                                'property_id' => $propertyId,
+                                'transaction_id' => $transactionId,
+                                'created_at' => $created_date,
+                                'status'=> 1,
+                                'is_imported'=> 1,
+                                'is_sales_rep_order'=> 0,
+                                'random_number' => $randomString,
+                                'resware_status'=> strtolower($res['Status']['Name']),
+                            );
+
+                            $orderId = $this->home_model->insert($orderData,'order_details');
+                            $random_number = time() + (floor(rand() * (10000 - 1 + 1)) + 1);
+                            $propertyData['fipsCode'] = isset($property_details['fips']) && !empty($property_details['fips']) ? $property_details['fips'] : '';
+                            $propertyData['address'] = $address;
+                            $propertyData['city'] = isset($res['Properties'][0]['City']) && !empty($res['Properties'][0]['City']) ? $res['Properties'][0]['City'] : '';
+                            $propertyData['unit_no'] = isset($property_details['unit_no']) && !empty($property_details['unit_no']) ? $property_details['unit_no'] : '';
+                            $propertyData['apn'] = $apn;
+                            $propertyData['state'] = isset($res['Properties'][0]['State']) && !empty($res['Properties'][0]['State']) ? $res['Properties'][0]['State'] : '';
+                            $propertyData['county'] = isset($res['Properties'][0]['County']) && !empty($res['Properties'][0]['County']) ? $res['Properties'][0]['County'] : '';
+                            $this->tpCreateService(4,$random_number,$propertyData,$userdata);                   
+                            $this->tpCreateService(3,$random_number,$propertyData,$userdata);
+
+                            $session_id = 'tp_api_id_'.$random_number;
+
+                            $tp_condition = array(
+                                'session_id' => $session_id
+                            );
+
+                            $tpData = array(
+                                'file_id' => $res['FileID'],
+                                'file_number' => $res['FileNumber'],
+                            );
+                            
+                            $this->titlePointData->update($tpData,$tp_condition);
+
+                            $titlePointDetails = $this->titlePointData->gettitlePointDetails($tp_condition);
+
+                            $serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
+                            $this->titlepoint->generateImg($serviceId,$res['FileNumber'],$orderId);
+                            $instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && !empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
+
+                            $recordedDate = isset($titlePointDetails['cs4_recorded_date']) && !empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
+                            $fips = isset($titlePointDetails['fips']) && !empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
+                                
+                            $this->titlepoint->generateGrantDeed($instrumentNumber,$recordedDate,$fips,$res['FileNumber'],$orderId);
+
+                            $tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
+
+                            $this->titlepoint->generateTaxDoc($tax_serviceId,$res['FileNumber'],$orderId);
+                        }
+                    } else {
+                        $response = array('status'=>'error', 'order_number_php_error'=> 'Please enter correct order number');
+                    }
                     echo json_encode($response); exit;
                 }
             }
@@ -2074,6 +2215,7 @@ class DashboardMail extends MX_Controller {
             $this->load->view('order/order_number_cpl');
         }
     }
+
     public function uploadBorrowerDocumentToResware($document_name, $orderDetails, $binaryData)
     {
         $this->load->model('order/document');
@@ -2117,5 +2259,697 @@ class DashboardMail extends MX_Controller {
         $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
         $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+    }
+
+    public function getSearchResult($address, $locale)
+    {
+        $data=new stdClass();
+        $data->Address= $address;
+        $data->LastLine= (string) $locale;
+        $data->ClientReference= '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
+        $data->OwnerName= '';
+        $data->key= env('BLACK_KNIGHT_KEY');
+        $data->ReportType= '187';
+
+        $request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
+
+        $requestUrl = $request.http_build_query($data);
+
+        $getsortedresults = isset($_GET['getsortedresults'])?$_GET['getsortedresults']:'false';
+        
+        $opts = array(
+            'http'=>array(
+                'header' => "User-Agent:MyAgent/1.0\r\n"
+            ),
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            )
+        );
+        $context = stream_context_create($opts);
+        $file = file_get_contents($requestUrl,false,$context);
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+        $result = json_decode($response,TRUE);
+        $property_info = array();
+        if(isset($result['Status']) && !empty($result['Status']) && $result['Status'] == 'OK')
+        {
+            $reportUrl = (isset($result['ReportURL']) && !empty($result['ReportURL'])) ? $result['ReportURL'] : '';
+
+            if($reportUrl)
+            {
+                $rdata=new stdClass();
+                $rdata->key= env('BLACK_KNIGHT_KEY');
+                $requestUrl = $reportUrl.http_build_query($rdata);
+                $reportFile = file_get_contents($requestUrl,false,$context);
+                $reportData = simplexml_load_string($reportFile);
+                $response = json_encode($reportData);
+                $details = json_decode($response,TRUE);
+
+                $property_info['property_type'] = isset($details['PropertyProfile']['PropertyCharacteristics']['UseCode']) && !empty($details['PropertyProfile']['PropertyCharacteristics']['UseCode']) ? $details['PropertyProfile']['PropertyCharacteristics']['UseCode'] : '';
+                $property_info['legaldescription'] = isset($details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription']) && !empty($details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription']) ? $details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription'] : '';
+                $property_info['apn'] = isset($details['PropertyProfile']['APN']) && !empty($details['PropertyProfile']['APN']) ? $details['PropertyProfile']['APN'] : '';
+
+                $property_info['unit_no'] = isset($details['PropertyProfile']['SiteUnit']) && !empty($details['PropertyProfile']['SiteUnit']) ? $details['PropertyProfile']['SiteUnit'] : '';
+                
+                $property_info['fips'] = isset($details['SubjectValueInfo']['FIPS']) && !empty($details['SubjectValueInfo']['FIPS']) ? $details['SubjectValueInfo']['FIPS'] : '';
+
+                $primaryOwner = isset($details['PropertyProfile']['PrimaryOwnerName']) && !empty($details['PropertyProfile']['PrimaryOwnerName']) ? $details['PropertyProfile']['PrimaryOwnerName'] : '';
+                $secondaryOwner = isset($details['PropertyProfile']['SecondaryOwnerName']) && !empty($details['PropertyProfile']['SecondaryOwnerName']) ? $details['PropertyProfile']['SecondaryOwnerName'] : '';
+                $property_info['primary_owner'] = $primaryOwner;
+                $property_info['secondary_owner'] = $secondaryOwner;
+            }
+        }
+
+        return $property_info;
+    }
+
+    public function tpCreateService($methodId,$random_number,$propertyData=array(), $userdata = array())
+    {
+        /* Insert into table */        
+        if($random_number)
+        {
+            $session_id = 'tp_api_id_'.$random_number;
+        
+            $con =  array(
+                        'where' => array(
+                            'session_id' => $session_id
+                        ),
+                        'returnType' => 'count'
+                    );
+
+            $prevCount = $this->titlePointData->gettitlePointDetails($con);
+            if($prevCount < 0)
+            {
+                $tpData = array(
+                        'session_id' => $session_id,
+                    );
+                $tpId = $this->titlePointData->insert($tpData);
+            }
+            
+        }        
+        /* Insert into table */
+
+        $requestParams = array(
+            'userID' => env('TP_USERNAME'),
+            'password' => env('TP_PASSWORD'),
+            'orderNo' =>  '',
+            'customerRef'=>  '',
+            'company'=>  '',
+            'department'=>  '',
+            'titleOfficer'=>  '',
+            'orderComment'=>  '',
+            'starterRemarks'=>  '',
+        );
+
+        if($methodId == 4)
+        {
+            $fipsCode = isset($propertyData['fipsCode']) && !empty($propertyData['fipsCode']) ? $propertyData['fipsCode'] : '';
+            $address = isset($propertyData['address']) && !empty($propertyData['address']) ? $propertyData['address'] : '';
+            $city = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] : '';
+            $unit_no = isset($propertyData['unit_no']) && !empty($propertyData['unit_no']) ? $propertyData['unit_no'] : '';
+            $apn = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] : '';
+            if($unit_no)
+            {
+                $unitinfo =  'UnitNumber '.$unit_no.', '; 
+            }
+
+            $requestParams['serviceType'] = env('SERVICE_TYPE');
+
+            $requestParams['parameters'] = 'Address1='.$address.';City='.$city.';Pin='.$apn.';LvLookup=Address;LvLookupValue='.$address.', '.$unitinfo.$city.';LvReportFormat=LV;IncludeTaxAssessor=true';
+            $requestParams['fipsCode'] = $fipsCode;
+            $requestUrl= env('TP_CREATE_SERVICE_ENDPOINT');
+            $request_type= 'sales_create_service_4';
+        }
+        else if($methodId == 3)
+        {
+            $apn = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] : '';
+            $apn = str_replace('0000', '0-000', $apn);
+
+            $state = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] : '';
+
+            $county = isset($propertyData['county']) && !empty($propertyData['county']) ? $propertyData['county'] : '';
+
+            $requestParams['serviceType'] = env('TAX_SEARCH_SERVICE_TYPE');
+
+            $requestParams['parameters'] = 'Tax.APN='.$apn.';General.AutoSearchTaxes=true;General.AutoSearchProperty=false';
+            $requestParams['state'] = $state;
+            $requestParams['county'] = $county;
+            $requestUrl= env('TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT');
+            $request_type= 'sales_create_service_3';
+        }
+        $request = $requestUrl.http_build_query($requestParams);
+
+        $logid = $this->apiLogs->syncLogs(0, 'titlepoint', $request_type, $request, $requestParams, array(), $random_number, 0);
+
+        $opts = array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+
+        $context = stream_context_create($opts);
+        $file = file_get_contents($request,false,$context);
+
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+        $result = json_decode($response,TRUE);
+
+        $this->apiLogs->syncLogs(0, 'titlepoint', $request_type, $request, $requestParams, $result, $random_number, $logid);
+        $session_id = 'tp_api_id_'.$random_number;
+        $con =  array(
+                    'where' => array(
+                        'session_id' => $session_id
+                    ),
+                    'returnType' => 'count'
+                );
+        $prevCount = $this->titlePointData->gettitlePointDetails($con);
+
+        if(isset($result) && empty($result))
+        {
+            $tpData =   array(
+                'cs4_message' => 'Failed',
+            );
+            
+            
+            if($prevCount > 0) 
+            {
+                $session_id = 'tp_api_id_'.$random_number;
+                $condition = array(
+                    'session_id' => $session_id
+                );              
+                $this->titlePointData->update($tpData,$condition);
+            }
+            else
+            {
+                $tpData['session_id'] = 'tp_api_id_'.$random_number;
+                
+
+                $tpId = $this->titlePointData->insert($tpData);
+            }
+        }
+        else
+        {
+            
+            $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+        
+            if($methodId == 4)
+            {
+                if($responseStatus == 'Success')
+                {
+                    $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+                    $tpData =   array(
+                                    'cs4_request_id' => $requestId,
+                                );
+
+                    if ($prevCount > 0) 
+                    {
+                        $condition = array(
+                            'session_id' => $session_id
+                        );              
+                        $this->titlePointData->update($tpData,$condition);
+                    }
+                    else
+                    {
+                        $tpData['session_id'] = 'tp_api_id_'.$random_number;
+                        
+
+                        $tpId = $this->titlePointData->insert($tpData);
+                    }
+
+                    /* Get Request Summary */
+                    $response = $this->tpGetRequestSummaries(4,$requestId, $random_number);
+                    /* Get Request Summary */
+                }
+                else
+                {
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                }
+                
+            }
+            if($methodId == 3)
+            {
+                if($responseStatus == 'Success')
+                {
+                    $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+
+                    $tpData =   array(
+                                    'cs3_request_id' => $requestId,
+                                );
+
+                    if($prevCount > 0) 
+                    {
+                        $condition = array(
+                            'session_id' => $session_id
+                        );              
+                        $this->titlePointData->update($tpData,$condition);
+                    }
+                    else
+                    {
+                        $tpData['session_id'] = 'tp_api_id_'.$random_number;
+                        
+
+                        $tpId = $this->titlePointData->insert($tpData);
+                    }
+
+                    /* Get Request Summary */
+                    $response = $this->tpGetRequestSummaries(3,$requestId, $random_number);
+                    /* Get Request Summary */
+                }
+                else
+                {
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                }
+            }
+        }
+    }
+
+    public function addLogs($methodId,$returnStatus,$status='',$error,$random_number)
+    {
+        if($returnStatus == 'Failed')
+        {
+            if($methodId == 4)
+            {
+                $tpData =   array(
+                                'cs4_message' => $error,
+                            );
+            }
+            elseif($methodId == 3)
+            {
+                $tpData =   array(
+                                'cs3_message' => $error,
+                            );
+            }
+            
+        }
+        else
+        {
+            if($methodId == 4)
+            {
+                $tpData =   array(
+                                'cs4_message' => $status,
+                            );
+            }
+            elseif($methodId == 3)
+            {
+                $tpData =   array(
+                                'cs3_message' => $status,
+                            );
+            }
+        }
+
+        $session_id = 'tp_api_id_'.$random_number;
+        $con =  array(
+                    'where' => array(
+                        'session_id' => $session_id
+                    ),
+                    'returnType' => 'count'
+                );
+        $prevCount = $this->titlePointData->gettitlePointDetails($con);
+
+        if ($prevCount > 0) 
+        {
+            $condition = array(
+                'session_id' => $session_id
+            );              
+            $this->titlePointData->update($tpData,$condition);
+        }
+        else
+        {
+            $tpData['session_id'] = 'tp_api_id_'.$random_number;            
+
+            $tpId = $this->titlePointData->insert($tpData);
+        }
+        
+    }
+
+    public function tpGetRequestSummaries($methodId, $requestId, $random_number)
+    {
+        $requestParams = array(
+                            'userID' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),
+                            'company'=>  '',
+                            'department'=>  '',
+                            'titleOfficer'=>  '',
+                            'requestId'=>  $requestId,
+                            'maxWaitSeconds'=>  20
+                        );
+
+        $request = env('TP_REQUEST_SUMMARY_ENDPOINT').http_build_query($requestParams);
+
+        $logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'get_request_summary_'.$methodId, $request, $requestParams, array(), $random_number, 0);
+
+        $opts = array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+        $context = stream_context_create($opts);
+        $file = file_get_contents($request,false,$context);
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+        $result = json_decode($response,TRUE);
+
+        $this->apiLogs->syncLogs(0, 'titlepoint', 'sales_get_request_summary_'.$methodId, $request, $requestParams, $result, $random_number, $logid);
+
+        $session_id = 'tp_api_id_'.$random_number;
+
+        $con =  array(
+                    'where' => array(
+                        'session_id' => $session_id
+                    ),
+                    'returnType' => 'count'
+                );
+        $prevCount = $this->titlePointData->gettitlePointDetails($con);
+
+        if(isset($result) && empty($result))
+        {
+            $tpData =   array(
+                'cs4_message' => 'Failed',
+            );
+
+            if($prevCount > 0) 
+            {
+                $condition = array(
+                    'session_id' => $session_id
+                );              
+                $this->titlePointData->update($tpData,$condition);
+            }
+            else
+            {
+                $tpData['session_id'] = 'tp_api_id_'.$random_number;                
+
+                $tpId = $this->titlePointData->insert($tpData);
+            }
+        }
+        else
+        {
+            $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+
+            $session_data = array();
+
+            if($methodId == 4)
+            {
+                if($responseStatus == 'Success')
+                {
+                    $status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
+                    
+                    if($status == 'Complete')
+                    {
+                        $resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID'] : ''; 
+                        $serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
+                        
+                        $tpData =   array(
+                            'cs4_result_id' => $resultId,
+                            'cs4_service_id' => $serviceId,
+                        );
+                    }
+                    else
+                    {
+                        $tpData =   array(
+                            'cs4_message' => $status,
+                        );
+                    }
+
+                    if($prevCount > 0) 
+                    {
+                        $condition = array(
+                            'session_id' => $session_id
+                        );              
+                        $this->titlePointData->update($tpData,$condition);
+                    }
+                    else
+                    {
+                        $tpData['session_id'] = 'tp_api_id_'.$random_number;
+                        
+
+                        $tpId = $this->titlePointData->insert($tpData);
+                    }
+
+                    if($status == 'Complete')
+                    {
+                        $this->tpGetResultById(4,$resultId,$random_number);
+                    }
+
+                }
+                else
+                {
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                }
+            }
+            if($methodId == 3)
+            {
+                if($responseStatus == 'Success')
+                {
+                    $status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
+
+                    if($status == 'Complete')
+                    {
+                        $resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : '';
+                        $serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
+                        $tpData =   array(
+                            'cs3_result_id' => $resultId,
+                            'cs3_service_id' => $serviceId,
+                        );
+                    }
+                    else
+                    {
+                        $tpData =   array(
+                            'cs3_message' => $status,
+                        );
+                    }
+                    
+                    
+                    if($prevCount > 0) 
+                    {
+                        $condition = array(
+                            'session_id' => $session_id
+                        );              
+                        $this->titlePointData->update($tpData,$condition);
+                    }
+                    else
+                    {
+                        $tpData['session_id'] = 'tp_api_id_'.$random_number;                  
+
+                        $tpId = $this->titlePointData->insert($tpData);
+                    }
+                    if($status == 'Complete')
+                    {
+                        $this->tpGetResultById(3,$resultId,$random_number);
+                    }
+                }
+                else
+                {
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                }
+            }
+        }
+    }
+
+    public function tpGetResultById($methodId,$resultId, $random_number)
+    {
+        $requestParams = array(
+                            'userID' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),
+                            'company'=>  '',
+                            'department'=>  '',
+                            'titleOfficer'=>  '',
+                            'resultID'=>  $resultId
+                        );
+
+        $resultUrl = env('TP_GET_RESULT_BY_ID');
+
+        if($methodId == 3)
+        {
+            $requestParams['requestingTPXML'] = 'true';
+            $resultUrl = env('TP_GET_RESULT_BY_ID_3');
+        }
+
+        $request = $resultUrl.http_build_query($requestParams);
+
+        $logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'sales_get_result_by_id_'.$methodId, $request, $requestParams, array(), $random_number, 0);
+
+        $opts = array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+        $context = stream_context_create($opts);
+        $file = file_get_contents($request,false,$context);
+
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+        $result = json_decode($response,TRUE);
+
+        $this->apiLogs->syncLogs(0, 'titlepoint', 'sales_get_result_by_id_'.$methodId, $request, $requestParams, $result, $random_number, $logid);
+
+        $session_id = 'tp_api_id_'.$random_number;
+        
+        $con =  array(
+                    'where' => array(
+                        'session_id' => $session_id
+                    ),
+                    'returnType' => 'count'
+                );
+        $prevCount = $this->titlePointData->gettitlePointDetails($con);
+
+        if(isset($result) && empty($result))
+        {
+            $tpData =   array(
+                'cs4_message' => 'Failed',
+            );
+
+            if($prevCount > 0) 
+            {
+                $condition = array(
+                    'session_id' => $session_id
+                );              
+                $this->titlePointData->update($tpData,$condition);
+            }
+            else
+            {
+                $tpData['session_id'] = 'tp_api_id_'.$random_number;                
+
+                $tpId = $this->titlePointData->insert($tpData);
+            }
+        }
+        else
+        {
+            $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+            $session_data = array();
+            
+            if($methodId == 4)
+            {
+                if($responseStatus == 'Success')
+                {
+                    $briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : '';
+                    
+                    $vesting = isset($result['Result']['Vesting']) && !empty($result['Result']['Vesting']) ? $result['Result']['Vesting'] : '';
+
+                    $fips = isset($result['Result']['Fips']) && !empty($result['Result']['Fips']) ? $result['Result']['Fips'] : '';
+                    
+                    $legal_vesting_info = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'] : array();
+                    
+                    if (count($legal_vesting_info) == count($legal_vesting_info, COUNT_RECURSIVE))
+                    {
+                        $docType = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType'] : '';
+                        $docType = strtolower($docType);
+
+                        if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed' || $docType == 'intra-family transfer or dissolution')
+                        {
+                            $instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber'] : '';
+                            $recordedDate = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate'] : '';
+                        }
+                        
+                    }
+                    else
+                    {
+                        foreach ($legal_vesting_info as $key => $value) 
+                        {
+                            $docType = isset($value['DocType']) && !empty($value['DocType']) ? $value['DocType'] : '';
+                            $docType = strtolower($docType);
+                            
+                            if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed' || $docType == 'intra-family transfer or dissolution')
+                            {
+                                $instrumentNumber = isset($value['InstrumentNumber']) && !empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
+                                $recordedDate = isset($value['RecordedDate']) && !empty($value['RecordedDate']) ? $value['RecordedDate'] : '';
+                                break;
+                            }
+                        }                   
+                    }
+                    $status = isset($result['Result']['Status']) && !empty($result['Result']['Status']) ? $result['Result']['Status'] : '';
+
+                    $tpData =   array(
+                        'legal_description' => $briefLegal,
+                        'vesting_information' => $vesting,
+                        'cs4_instrument_no' => $instrumentNumber,
+                        'cs4_recorded_date' => $recordedDate,
+                        'grant_deed_type' => $docType,
+                        'fips' => $fips,
+                        // 'cs4_result_id_status' => $status,
+                    );
+
+                    if($prevCount > 0) 
+                    {
+                        $condition = array(
+                            'session_id' => $session_id
+                        );              
+                        $this->titlePointData->update($tpData,$condition);
+                    }
+                    else
+                    {
+                        $tpData['session_id'] = 'tp_api_id_'.$random_number;
+                        
+
+                        $tpId = $this->titlePointData->insert($tpData);
+
+                    }
+                    $this->addLogs($methodId,$responseStatus,$status,$error,$random_number);
+                }
+                else
+                {
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                }
+            }
+            if($methodId == 3)
+            {
+                if($responseStatus == 'Success')
+                {
+                    $firstInstallment = $secondInstallment = array();
+                    if(isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]))
+                    {
+                        $firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];                  
+                    }
+
+                    if(isset($result['Result']['TaxReport']['Installments']['Item'][1]) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]))
+                    {
+                        $secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];         
+                    }
+                    
+                    $status = isset($result['Result']['TaxReport']['Status']) && !empty($result['Result']['TaxReport']['Status']) ? $result['Result']['TaxReport']['Status'] : '';
+                    if($status == 'Success')
+                    {
+                        $message = 'Success';
+                    }
+                    else
+                    {
+                        $message = isset($result['Result']['TaxReport']['WarningMessage']) && !empty($result['Result']['TaxReport']['WarningMessage']) ? $result['Result']['TaxReport']['WarningMessage'] : '';
+                    }
+                    
+                    $tpData =   array(
+                        'first_installment' => json_encode($firstInstallment),
+                        'second_installment' => json_encode($secondInstallment),
+                    );
+
+                    if($prevCount > 0) 
+                    {
+                        $condition = array(
+                            'session_id' => $session_id
+                        );              
+                        $this->titlePointData->update($tpData,$condition);
+                    }
+                    else
+                    {
+                        $tpData['session_id'] = 'tp_api_id_'.$random_number;                 
+
+                        $tpId = $this->titlePointData->insert($tpData);
+                    }
+                    $this->addLogs($methodId,$responseStatus,$message,$error,$random_number);
+                }
+                else
+                {
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                }
+            }
+        }
     }
 }
