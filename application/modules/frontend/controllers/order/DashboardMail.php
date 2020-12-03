@@ -36,12 +36,7 @@ class DashboardMail extends MX_Controller {
             $this->session->unset_userdata('success');
         }
         $random_number = $this->uri->segment(2); 
-        $condition = array(
-            'where' => array(
-                'random_number' => $random_number,
-            )
-        );
-        $order = $this->order->get_order($condition);
+        $order = $this->getOrderInfo($random_number);
         $fileId = $order[0]['file_id'];  
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
@@ -70,12 +65,7 @@ class DashboardMail extends MX_Controller {
     public function generateFeesFromMail()
     {
         $random_number = $this->uri->segment(2); 
-        $condition = array(
-            'where' => array(
-                'random_number' => $random_number,
-            )
-        );
-        $order = $this->order->get_order($condition);
+        $order = $this->getOrderInfo($random_number);
         $fileId = $order[0]['file_id'];
 
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
@@ -919,12 +909,7 @@ class DashboardMail extends MX_Controller {
 			$this->session->unset_userdata('success');
         }
         $random_number = $this->uri->segment(2); 
-        $condition = array(
-            'where' => array(
-                'random_number' => $random_number,
-            )
-        );
-        $order = $this->order->get_order($condition);
+        $order = $this->getOrderInfo($random_number);
         $fileId = $order[0]['file_id']; 
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$data['mail_dashboard'] = 1;
@@ -2953,5 +2938,21 @@ class DashboardMail extends MX_Controller {
                 }
             }
         }
+    }
+
+    public function getOrderInfo($FileIdOrRandomNum)
+    {
+        $this->db->select('*')
+            ->from('order_details');
+        $this->db->group_start()
+            ->where("file_id", $FileIdOrRandomNum)
+            ->or_where('random_number',$FileIdOrRandomNum)
+            ->group_end();    
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
     }
 }
