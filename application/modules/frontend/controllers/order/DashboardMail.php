@@ -2204,6 +2204,8 @@ class DashboardMail extends MX_Controller {
                             $tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
 
                             $this->titlepoint->generateTaxDoc($tax_serviceId,$res['FileNumber'],$orderId);
+                            $response = array('status'=> 'success', 'random_number'=> $randomString);
+                            echo json_encode($response); exit;
                         }
                     } else {
                         $response = array('status'=>'error', 'order_number_php_error'=> 'Please enter correct order number');
