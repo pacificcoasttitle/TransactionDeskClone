@@ -10,12 +10,14 @@
     <meta content="telephone=no" name="format-detection">
     <meta name="HandheldFriendly" content="true">
     <title>Authentication | Pacific Coast Title Company</title>
+    <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/theme.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/fontawesome-all.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/iofrm-style.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/iofrm-theme2.css">
     <link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script>
+    
     <style>
         #email_address_php_error {
             display: none;
@@ -32,10 +34,14 @@
         .error {
             color: #ff0000;
         }
+        #page-preloader {
+            background: none !important;
+        }
     </style>
 </head>
 <body>
-    <div class="form-body">
+    <div id="page-preloader"><span class="spinner border-t_second_b border-t_prim_a"></span></div>  
+    <div class="form-body" id="generic_cpl">
         <div class="row">
             <div class="img-holder">
                 <div class="bg borrower-login"></div>
@@ -84,6 +90,11 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            var $preloader = $('#page-preloader'),
+            $spinner   = $preloader.find('.spinner-loader');
+            $spinner.fadeOut();
+            $preloader.delay(50).fadeOut('slow');
+
             $( "#order-number-login-form" ).validate({
                 /* @validation states + elements 
                 ------------------------------------------- */
@@ -127,6 +138,8 @@
                 /* @ajax form submition 
                 ---------------------------------------------------- */
                 submitHandler:function(form) {
+                    $('#page-preloader').css('display', 'block');
+                    $('#generic_cpl').css('opacity', '0.5');
                     $.ajax({
                         url: '<?php echo base_url(); ?>order-number-cpl',
                         type: "POST",
@@ -139,6 +152,8 @@
                                 var base_url = "<?php echo base_url(); ?>";
                                 window.location.replace(base_url+'generate-cpl/'+res.random_number);
                             } else if(res.status == 'error') {
+                                $('#page-preloader').css('display', 'none');
+                                $('#generic_cpl').css('opacity', '1');
                                 $('#order_number_php_error').html(res.order_number_php_error);
                                 $('#order_number_php_error').show();
                             }
