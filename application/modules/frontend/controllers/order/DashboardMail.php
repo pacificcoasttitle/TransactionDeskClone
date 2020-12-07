@@ -600,7 +600,7 @@ class DashboardMail extends MX_Controller {
             'tvid' =>  0,
             'agentnumber' => $resToken['original_agent_number'],
             'agent_file_number' => $orderDetails['file_number'],
-            'email_requestor' => $orderUser['email_address'],
+            'email_requestor' => isset($orderUser['email_address']) ? $orderUser['email_address'] : 'cpl@pct.com',
             'purchase_price' => $purchase_price,
             'property' =>  $propery,
             'buyers' => $buyers,

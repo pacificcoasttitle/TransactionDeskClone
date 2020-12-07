@@ -1991,7 +1991,7 @@ class Cron extends MX_Controller {
         $this->db->query('OPTIMIZE TABLE pct_order_api_logs');
     }
 
-    public function exportLenderEscrowUsers()
+    public function exportUsers()
     {
         define('USE_AUTHENTICATION', 1);
         define('USERNAME', 'ghernandez@pct.com');
@@ -2004,22 +2004,36 @@ class Cron extends MX_Controller {
                 header( 'HTTP/1.0 401 Unauthorized' );
                 exit;
             } else {
-                $escrowFlag = $this->uri->segment(3);  
+                $user = $this->uri->segment(2);  
                 $this->db->select('*');
-                $this->db->from('customer_basic_details');
-                $this->db->where('is_password_updated', 1);
-                $this->db->where('status', 1);
-                if (isset($escrowFlag) && $escrowFlag == 1) {
+            
+                if (isset($user) && $user == 'escrows') {
+                    $this->db->from('customer_basic_details');
+                    $this->db->where('is_password_updated', 1);
+                    $this->db->where('status', 1);
                     $this->db->where('is_escrow', 1);    
-                } else {
+                } else if (isset($user) && $user == 'lenders') { 
+                    $this->db->from('customer_basic_details');
+                    $this->db->where('is_password_updated', 1);
+                    $this->db->where('status', 1);
                     $this->db->where('is_escrow', 0); 
+                } else if (isset($user) && $user == 'realtors') {
+                    $this->db->from('agents');
                 }
                 $query = $this->db->get();
                 $result = $query->result_array();
         
                 if(!empty($result)) {
                     $delimiter = ",";
-                    $filename = "users_" . date('Y-m-d') . ".csv";
+
+                    if (isset($user) && $user == 'escrows') {
+                        $filename = "escrows_" . date('Y-m-d') . ".csv";  
+                    } else if (isset($user) && $user == 'lenders') { 
+                        $filename = "lenders_" . date('Y-m-d') . ".csv";
+                    } else if (isset($user) && $user == 'realtors') {
+                        $filename = "realtors_" . date('Y-m-d') . ".csv";
+                    }
+                   
                     $f = fopen('php://memory', 'w');
                     
                     $fields = array('Sr no', 'First Name', 'Last Name', 'Password', 'Phone', 'Company Name', 'Email', 'Street Address', 'City', 'State', 'Zip code');
@@ -2036,7 +2050,6 @@ class Cron extends MX_Controller {
                     header('Content-Disposition: attachment; filename="' . $filename . '";');
                     fpassthru($f);
                 }
-                echo "Data exported successfully";
                 exit;
             }
         }
