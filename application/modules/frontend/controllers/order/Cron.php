@@ -2019,6 +2019,7 @@ class Cron extends MX_Controller {
                     $this->db->where('is_escrow', 0); 
                 } else if (isset($user) && $user == 'realtors') {
                     $this->db->from('agents');
+                    $this->db->where('status', 1);
                 }
                 $query = $this->db->get();
                 $result = $query->result_array();
@@ -2035,15 +2036,27 @@ class Cron extends MX_Controller {
                     }
                    
                     $f = fopen('php://memory', 'w');
-                    
-                    $fields = array('Sr no', 'First Name', 'Last Name', 'Password', 'Phone', 'Company Name', 'Email', 'Street Address', 'City', 'State', 'Zip code');
-                    fputcsv($f, $fields, $delimiter);
-                    
-                    $i = 1;
-                    foreach($result as $res) {
-                        $lineData = array($i, $res['first_name'], $res['last_name'], $res['random_password'], $res['telephone_no'], $res['company_name'], $res['email_address'], $res['street_address'], $res['city'], $res['state'], $res['zip_code']);
-                        fputcsv($f, $lineData, $delimiter);
-                        $i++;
+
+                    if(isset($user) && $user == 'realtors') {
+                        $fields = array('Sr no', 'Name', 'Email', 'Company', 'Street Address', 'City', 'Zip code', 'List Unit', 'List Volume', 'Selected Revenue', 'Telephone No');
+                        fputcsv($f, $fields, $delimiter);
+                        
+                        $i = 1;
+                        foreach($result as $res) {
+                            $lineData = array($i, $res['name'], $res['email_address'], $res['company'], $res['address'], $res['city'], $res['zipcode'], $res['list_unit'], $res['list_volume'], $res['selected_revenue'], $res['telephone_no']);
+                            fputcsv($f, $lineData, $delimiter);
+                            $i++;
+                        }
+                    } else {
+                        $fields = array('Sr no', 'First Name', 'Last Name', 'Password', 'Phone', 'Company Name', 'Email', 'Street Address', 'City', 'State', 'Zip code');
+                        fputcsv($f, $fields, $delimiter);
+                        
+                        $i = 1;
+                        foreach($result as $res) {
+                            $lineData = array($i, $res['first_name'], $res['last_name'], $res['random_password'], $res['telephone_no'], $res['company_name'], $res['email_address'], $res['street_address'], $res['city'], $res['state'], $res['zip_code']);
+                            fputcsv($f, $lineData, $delimiter);
+                            $i++;
+                        }
                     }
                     fseek($f, 0);
                     header('Content-Type: text/csv');
