@@ -2613,9 +2613,10 @@ class Dashboard extends MX_Controller {
 			if ($orderDetails['customer_id'] == 0) {
 				$user_data['admin_api'] = 1; 
 			} else {
-				$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-				$user_data['email'] = $orderUser['email_address'];
-				$user_data['password'] = $orderUser['random_password'];
+				// $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+				// $user_data['email'] = $orderUser['email_address'];
+				// $user_data['password'] = $orderUser['random_password'];
+				$user_data['admin_api'] = 1; 
 			}
 		} else {
 			$user_data = array();
