@@ -171,14 +171,14 @@ class Cron extends MX_Controller {
                                 'status'=> 1
                             );
 
-                            $primary_owner = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
+                            $primary_owner = isset($res['Buyers'][0]['Primary']['First']) && !empty($res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
 
-                            $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
-                            $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
+                            $primary_owner .= isset($res['Buyers'][0]['Primary']['Middle']) && !empty($res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
+                            $primary_owner .= isset($res['Buyers'][0]['Primary']['Last']) && !empty($res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
 
-                            $secondary_owner = ($res['Buyers'][0]['Secondary']['First'] && $res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
-                            $secondary_owner = ($res['Buyers'][0]['Secondary']['Middle'] && $res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
-                            $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " ".$res['Buyers'][0]['Secondary']['Last'] : '';
+                            $secondary_owner = isset($res['Buyers'][0]['Secondary']['First']) && !empty($res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
+                            $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Middle']) && !empty($res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
+                            $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Last']) && !empty($res['Buyers'][0]['Secondary']['Last']) ? " ".$res['Buyers'][0]['Secondary']['Last'] : '';
 
                             $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
                             if(strpos($ProductTypeTxt, 'Loan') !== false)
@@ -1228,14 +1228,14 @@ class Cron extends MX_Controller {
                                 'status'=> 1
                             );
 
-                            $primary_owner = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
+                            $primary_owner = isset($res['Buyers'][0]['Primary']['First']) && !empty($res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
 
-                            $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
-                            $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
+                            $primary_owner .= isset($res['Buyers'][0]['Primary']['Middle']) && !empty($res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
+                            $primary_owner .= isset($res['Buyers'][0]['Primary']['Last']) && !empty($res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
 
-                            $secondary_owner = ($res['Buyers'][0]['Secondary']['First'] && $res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
-                            $secondary_owner = ($res['Buyers'][0]['Secondary']['Middle'] && $res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
-                            $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " ".$res['Buyers'][0]['Secondary']['Last'] : '';
+                            $secondary_owner = isset($res['Buyers'][0]['Secondary']['First']) && !empty($res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
+                            $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Middle'] )&& !empty($res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
+                            $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Last']) && !empty($res['Buyers'][0]['Secondary']['Last']) ? " ".$res['Buyers'][0]['Secondary']['Last'] : '';
 
                             $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
                             if(strpos($ProductTypeTxt, 'Loan') !== false)
