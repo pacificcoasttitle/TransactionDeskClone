@@ -64,12 +64,12 @@ class DashboardMail extends MX_Controller {
 
     public function generateFeesFromMail()
     {
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+
         $random_number = $this->uri->segment(2); 
         $order = $this->getOrderInfo($random_number);
         $fileId = $order[0]['file_id'];
-
-        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $data['mail_dashboard'] = 1;
 
         $orderDetails = $this->order->get_order_details($fileId,1);
         
@@ -2021,7 +2021,7 @@ class DashboardMail extends MX_Controller {
     }
 
 
-    public function orderNumberCpl()
+    public function genericLandingPage()
     {
         if ($this->input->post()) { 
             $this->form_validation->set_rules('order_number', 'Order Number', 'trim|required', array('required'=> 'Please enter Order Number'));
