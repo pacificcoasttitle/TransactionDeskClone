@@ -51,6 +51,18 @@
             background: none !important;
             left: unset !important;
         }
+
+        .radio:before {
+            content:'';
+            display:block;
+            width:60%;
+            height:60%;
+            margin: 20% auto;    
+            border-radius:50%;    
+        }
+        .radio:checked:before {
+            background:#d35411;
+        }
     </style>
 </head>
 <body>
