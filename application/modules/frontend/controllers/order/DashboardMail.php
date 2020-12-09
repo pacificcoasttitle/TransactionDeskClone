@@ -910,22 +910,22 @@ class DashboardMail extends MX_Controller {
 		$this->load->model('order/home_model');
 		$this->load->library('order/resware');
 		$fileId = $this->input->post('fileId');	 
-
 		$orderDetails = $this->order->get_order_details($fileId, 1);
 		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 			
 		if ($orderUser['is_escrow'] == 1) {
-			if ($orderDetails['is_escrow'] == 1) {
-				$orderDetails['lender_first_name'] =  '';
-				$orderDetails['lender_last_name'] ='';
-				$orderDetails['lender_email'] = '';
-				$orderDetails['lender_state'] = '';
-				$orderDetails['lender_company_name'] = '';
-				$orderDetails['lender_address'] = '';
-				$orderDetails['lender_city'] = '';
-				$orderDetails['lender_zipcode'] = '';
-                $orderDetails['lender_id'] = '';
-                $orderDetails['lender_assignment_clause'] = '';
+			if (!empty($orderDetails['cpl_lender_id'])) {
+				$lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+				$orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+				$orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+				$orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+				$orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
+				$orderDetails['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+				$orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+				$orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+				$orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+				$orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {			
 				$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
 				$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
@@ -934,8 +934,8 @@ class DashboardMail extends MX_Controller {
 				$orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
 				$orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
 				$orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
-                $orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
-                $orderDetails['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
+				$orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+				$orderDetails['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
 				$orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
 			}
 		} else {
