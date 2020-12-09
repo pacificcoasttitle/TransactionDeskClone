@@ -70,24 +70,7 @@ class Natic
             $orderDetails['lender_last_name'] = $lenderDetails['last_name'];
         }
         
-        $borrower = '';
-        if ($orderDetails['sales_amount'] > 0) {
-            $borrower = $orderDetails['borrower'];
-            if (!empty($orderDetails['secondary_borrower'])) { 
-                $borrower = $orderDetails['borrower']." And ".$orderDetails['secondary_borrower'];
-            }
-            if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' '.$orderDetails['vesting'];
-            }
-		} else {
-            $borrower = $orderDetails['primary_owner'];
-            if (!empty($orderDetails['secondary_owner'])) { 
-                $borrower = $orderDetails['primary_owner']." And ".$orderDetails['secondary_owner'];
-            }
-            if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' '.$orderDetails['vesting'];
-            }
-        }
+        $borrower = $orderDetails['borrowers_vesting'];
 
         $branchData = array(303 => 
                         array(

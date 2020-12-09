@@ -1036,17 +1036,7 @@ class Dashboard extends MX_Controller {
 		$primary_owner = explode(" ", $orderDetails['primary_owner']);
 		$secondary_owner = explode(" ", $orderDetails['secondary_owner']);
 		if ($orderDetails['sales_amount'] > 0)  {
-
-			$sellerBorrowerName = $orderDetails['primary_owner'];
-
-			if(!empty($orderDetails['secondary_owner'])) { 
-				$sellerBorrowerName .= " and ".$orderDetails['secondary_owner'];
-			}
-
-			if(!empty($orderDetails['vesting'])) { 
-				$sellerBorrowerName .= ' '.$orderDetails['vesting'];
-			}
-			 
+			$sellerBorrowerName = $orderDetails['borrowers_vesting']; 
 			$sellers[] = array (
 				'NameID' =>  $orderDetails['westcor_seller_id'] ? $orderDetails['westcor_seller_id'] : 0,
 				'Last' => '-',
@@ -1088,16 +1078,7 @@ class Dashboard extends MX_Controller {
 			} 
 		} else {
 			$buyers = array();
-
-			$buyerBorrowerName = $orderDetails['primary_owner'];
-
-			if(!empty($orderDetails['secondary_owner'])) { 
-				$buyerBorrowerName .= " and ".$orderDetails['secondary_owner'];
-			}
-
-			if(!empty($orderDetails['vesting'])) { 
-				$buyerBorrowerName .= ' '.$orderDetails['vesting'];
-			}
+			$buyerBorrowerName = $orderDetails['borrowers_vesting']; 
 			$buyers[] = array (
 				'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
 				'Last' => '-',
@@ -1111,7 +1092,6 @@ class Dashboard extends MX_Controller {
 				'Zip' => null,
 				'Address' => null
 			);
-			
 			$purchase_price = $orderDetails['loan_amount'];
 			$sellers = array();
 		}
@@ -1144,7 +1124,7 @@ class Dashboard extends MX_Controller {
 			'tvid' =>  0,
 			'agentnumber' => $resToken['original_agent_number'],
 			'agent_file_number' => $orderDetails['file_number'],
-			'email_requestor' => $orderUser['email_address'],
+			'email_requestor' => isset($orderUser['email_address']) ? $orderUser['email_address'] : 'cpl@pct.com',
 			'purchase_price' => $purchase_price,
 			'property' =>  $propery,
 			'buyers' => $buyers,
@@ -1378,8 +1358,7 @@ class Dashboard extends MX_Controller {
 		$last_name = $this->input->post('last_name');
 		$vesting = $this->input->post('vesting');
 		$new_existing_lender = $this->input->post('new_existing_lender');
-		$primary_owner = $this->input->post('primary_owner_name');
-		$secondaryOwner = $this->input->post('secondary_owner_name');
+		$borrowers_vesting = $this->input->post('borrowers_vesting');
 		$name = explode(" ",$this->input->post('LenderName'));	
 		$editFlag = $this->input->post('editFlag');
 		$orderDetails = $this->order->get_order_details($file_id);
@@ -1389,7 +1368,6 @@ class Dashboard extends MX_Controller {
 			'first_name'	=> $name[0],
 			'last_name'  => !empty($name[1]) ? $name[1] : '',
 			'state'  => !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "",
-			'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
 			'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
 			'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
 			'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
@@ -1480,18 +1458,12 @@ class Dashboard extends MX_Controller {
 		// 	}
 		// }
 		
-		if ($orderDetails['sales_amount'] > 0) { 
-			$propertyDetails = array('cpl_lender_id' => $LenderId);
-			$this->home_model->update(array('loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner, 'vesting' => $vesting), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-			$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
-			$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
-		} else {
-			$propertyDetails = array('cpl_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
-			$this->home_model->update(array('loan_number' => $loan_number, 'vesting' => $vesting), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-			$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
-			$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
-		}
-	
+		
+		$propertyDetails = array('cpl_lender_id' => $LenderId, 'borrowers_vesting' => trim($borrowers_vesting));
+		$this->home_model->update(array('loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+		$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
+		$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
+		
 		$this->home_model->update(array('is_regenerate_cpl' => $editFlag), array('id' => $orderDetails['order_id']), 'order_details');
 		if ($cplApi == 'fnf') {
 			redirect(base_url()."create-cpl-for-fnf/".$file_id);
@@ -2663,10 +2635,25 @@ class Dashboard extends MX_Controller {
 				$agentsData = $this->westcor->getBranches($orderDetails['order_id']);
 				$orderDetails['agents_data'] = $agentsData;
 			}
+		} 
+		if(!empty($orderDetails['borrowers_vesting'])) {
+			$orderDetails['borrowers_vesting'] = $orderDetails['borrowers_vesting'];
+		} else {
+			if (!empty($orderDetails['primary_owner_name'])) {
+				$orderDetails['borrowers_vesting'] = $orderDetails['primary_owner_name'];
+			} 
+	
+			if (!empty($orderDetails['secondary_owner_name'])) {
+                $orderDetails['borrowers_vesting'] .=  " ".$orderDetails['secondary_owner_name'];
+			} 
+
+			if (!empty($orderDetails['vesting'])) {
+                $orderDetails['borrowers_vesting'] .=  " ".$orderDetails['vesting'];
+			} 
 		}
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
 		$orderDetails['loan_number'] = $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '';
-		$orderDetails['vesting'] = $orderDetails['vesting'] ? $orderDetails['vesting'] : '';
+		$orderDetails['property_address'] = $orderDetails['full_address'] ? $orderDetails['full_address'] : '';
 		$response = array('status'=>'success', 'orderDetails' => $orderDetails);
 		echo json_encode($response); exit;
 	}

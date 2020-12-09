@@ -116,23 +116,7 @@
 								</div>
 
 								<div class="frm-row">
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input type="email" name="LenderEmailAddress" id="LenderEmailAddress"
-												class="gui-input" placeholder="Lender Email address">
-											<span class="field-icon"><i class="fa fa-envelope"></i></span>
-										</label>
-									</div>
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input type="text" name="LenderState" id="LenderState" class="gui-input"
-												placeholder="Lender State">
-											<span class="field-icon"><i class="fa fa-envelope"></i></span>
-										</label>
-									</div>
-								</div>
-								<div class="frm-row">
-									<div class="section colm colm6">
+									<div class="section colm colm12">
 										<label class="field prepend-icon">
 											<input type="text" name="LenderName" id="LenderName"
 												class="gui-input" placeholder="Attention"
@@ -140,6 +124,9 @@
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
+								</div>
+
+								<div class="frm-row">
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="LenderAddress" id="LenderAddress" class="gui-input"
@@ -147,8 +134,7 @@
 											<span class="field-icon"><i class="fa fa-envelope"></i></span>
 										</label>
 									</div>
-								</div>
-								<div class="frm-row spacer-b15">
+
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="LenderCity" id="LenderCity" class="gui-input"
@@ -156,11 +142,34 @@
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
+								</div>
+
+								<div class="frm-row">
+									<div class="section colm colm6">
+										<label class="field prepend-icon">
+											<input type="text" name="LenderState" id="LenderState" class="gui-input"
+												placeholder="Lender State">
+											<span class="field-icon"><i class="fa fa-envelope"></i></span>
+										</label>
+									</div>
+
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="LenderZipcode" id="LenderZipcode" class="gui-input"
 												placeholder="Lender Zipcode" required="required">
 											<span class="field-icon"><i class="fa fa-envelope"></i></span>
+										</label>
+									</div>
+								</div>
+
+								<div class="spacer-b20">
+									<div class="tagline"><span>Property Address</span></div><!-- .tagline -->
+								</div>
+
+								<div class="frm-row spacer-b15">
+									<div class="section colm colm12">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="property_address" id="property_address" placeholder="Loan Number">
 										</label>
 									</div>
 								</div>
@@ -178,49 +187,20 @@
 								</div>
 
 								<div class="spacer-b20">
-									<div class="tagline"><span>Primary Borrower Information</span></div><!-- .tagline -->
+									<div class="tagline"><span>Borrowers & Vesting</span></div><!-- .tagline -->
 								</div>
 
 								<div class="frm-row spacer-b15">
 									<div class="section colm colm12">
 										<label class="field prepend-icon">
-											<input type="text" name="primary_owner_name" id="primary_owner_name" class="gui-input"
+											<input type="text" name="borrowers_vesting" id="borrowers_vesting" class="gui-input"
 												placeholder="Primary Borrower Name"  required="required">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
 										</label>
 									</div>
 								</div>
 
-								<div class="spacer-b20">
-									<div class="tagline"><span>Secondary Borrower Information</span></div><!-- .tagline -->
-								</div>
-
-								<div class="frm-row spacer-b15">
-									<div class="section colm colm12">
-										<label class="field prepend-icon">
-											<input type="text" name="secondary_owner_name" id="secondary_owner_name" class="gui-input"
-												placeholder="Secondary Borrower Name">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-								</div>
-
-								<div class="spacer-b20">
-									<div class="tagline"><span>Vesting Information</span></div><!-- .tagline -->
-								</div>
-
-								<div class="frm-row spacer-b15">
-									<div class="section colm colm12">
-										<label class="field prepend-icon">
-											<input type="text" name="vesting" id="vesting" class="gui-input"
-												placeholder="Vesting">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-								</div>
-
 								<input type="hidden" id="cpl_api" name="cpl_api" value="">
-								
 								<div id="fnf">
 									<div class="spacer-b20">
 										<div class="tagline"><span>Select Branch</span></div>
@@ -302,12 +282,7 @@
 				select: function( event, ui ) {
 					event.preventDefault();
 					$("#LenderCompany").val(ui.item.company);
-					if(ui.item.email_address) {
-						$("#LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
-					} else {
-						$("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
-					}
-
+					
 					if(ui.item.state) {
 						$("#LenderState").val(ui.item.state).parent().addClass('state-success');           
 					} else {
@@ -349,7 +324,6 @@
 				change: function( event, ui ) {
 					if (ui.item == null)
 					{
-						$("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
 						$("#LenderState").val('').parent().removeClass('state-success').addClass('state-error');
 						$("#LenderCompany").val('').parent().removeClass('state-success').addClass('state-error');
 						$("#LenderAddress").val('').parent().removeClass('state-success').addClass('state-error');
@@ -457,7 +431,6 @@
 	
 	$(document).ready(function () {
 		$("input[name=new_existing_lender]").change(function(){
-			$("#LenderEmailAddress").val('');
 			$("#LenderName").val('');
 			$("#LenderState").val('');
 			$("#LenderCompany").val('');
@@ -554,7 +527,6 @@
 						
 						$('#cpl_api').val(res.orderDetails['cpl_api']);
 						$("#LenderName").val(res.orderDetails['lender_name']);
-						$("#LenderEmailAddress").val(res.orderDetails['lender_email']);
 						$("#LenderState").val(res.orderDetails['lender_state']);
 						$("#LenderCompany").val(res.orderDetails['lender_company_name']);
 						$("#assignment_clause").val(res.orderDetails['lender_assignment_clause']);
@@ -562,10 +534,9 @@
 						$("#LenderCity").val(res.orderDetails['lender_city']);
 						$("#LenderZipcode").val(res.orderDetails['lender_zipcode']);
 						$("#LenderId").val(res.orderDetails['lender_id']);
-						$("#primary_owner_name").val(res.orderDetails['primary_owner_name']);
-						$("#secondary_owner_name").val(res.orderDetails['secondary_owner_name']);
+						$("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
 						$("#loan_number").val(res.orderDetails['loan_number']);
-						$("#vesting").val(res.orderDetails['vesting']);
+						$("#property_address").val(res.orderDetails['property_address']);
 						if (res.orderDetails['lender_id'] != '') {
 							$("#existing_lender").prop("checked", true);
 						} else {
