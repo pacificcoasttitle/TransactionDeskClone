@@ -37,6 +37,20 @@
         #page-preloader {
             background: none !important;
         }
+
+        .radio {
+            border-radius: 20px !important;
+            position: relative !important;
+            background: white !important;
+            display: inline-block !important;
+            border: 3px solid #B5C1C7 !important;
+            height: 21px !important;
+            width: 21px !important;
+            top: 5px !important;
+            margin: 0px 10px !important;
+            background: none !important;
+            left: unset !important;
+        }
     </style>
 </head>
 <body>
@@ -57,9 +71,9 @@
                                 </div>
                             </a>
                         </div>
-						<h2>Generic Landing Page for CPL</h2>
+						<h2>Generic Landing Page<!--  for CPL --></h2>
 						<p></p>
-                        <p>Enter order number below. You will redirect to order detail page to generate CPL.</p>
+                        <p>Enter order number below. You will redirect to order detail page <!-- to generate CPL -->.</p>
                         <div class="page-links">
                             <a href="" class="active">Order Log In From</a>
                         </div>
@@ -68,6 +82,16 @@
                                 <input class="form-control gui-input" type="text" name="order_number" id="order_number" placeholder="Enter Order Number">
                             </label>
                             <span id="order_number_php_error" class="error" style="display: none;"></span>
+                            
+                            <div class="frm-row">
+                                    <div class="section colm colm12">
+                                        <label class="field prepend-icon">
+                                            <input class="radio" type="radio" name="actions" id="get_fees" value="get_fees" checked="checked">Get Fees  
+                                            <input class="radio" type="radio" name="actions" id="get_cpl" value="get_cpl">Get CPL
+                                            <input class="radio" type="radio" name="actions" id="get_proposed" value="get_proposed">Get Proposed
+                                        </label>
+                                    </div>
+                                </div>
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Submit</button>
                             </div>
@@ -109,6 +133,9 @@
                 rules: {
                     order_number: {
                         required: true
+                    },
+                    actions: {
+                        required: true
                     }
                 },
                 /* @validation error messages 
@@ -116,6 +143,9 @@
                 messages:{
                     order_number: {
                         required: 'Please enter the order number'
+                    },
+                    actions: {
+                        required: 'Please select an action'
                     },
                    
                 },
@@ -141,16 +171,25 @@
                     $('#page-preloader').css('display', 'block');
                     $('#generic_cpl').css('opacity', '0.5');
                     $.ajax({
-                        url: '<?php echo base_url(); ?>order-number-cpl',
+                        url: '<?php echo base_url(); ?>generic-landing-page',
                         type: "POST",
                         data: {
-                            order_number: $("#order_number").val(),
+                            order_number: $("#order_number").val()
                         },
                         success: function(result) {
                             var res = jQuery.parseJSON(result);
+                            var action= $('input[name="actions"]:checked').val();
                             if (res.status == 'success') {
                                 var base_url = "<?php echo base_url(); ?>";
-                                window.location.replace(base_url+'generate-cpl/'+res.random_number);
+                                if(action == 'get_fees')
+                                {
+                                    window.location.replace(base_url+'generate-fees/'+res.random_number);
+                                }
+                                else
+                                {
+                                    window.location.replace(base_url+'generate-cpl/'+res.random_number);
+                                }
+                                
                             } else if(res.status == 'error') {
                                 $('#page-preloader').css('display', 'none');
                                 $('#generic_cpl').css('opacity', '1');
