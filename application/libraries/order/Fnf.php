@@ -274,25 +274,8 @@ class Fnf
 			'state' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
 			'zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
 		);
-        $borrower = '';
-        if ($orderDetails['sales_amount'] > 0) {
-            $borrower = $orderDetails['borrower'];
-            if (!empty($orderDetails['secondary_borrower'])) { 
-                $borrower = $orderDetails['borrower']." And ".$orderDetails['secondary_borrower'];
-            }
-            if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' '.$orderDetails['vesting'];
-            }
-		} else {
-            $borrower = $orderDetails['primary_owner'];
-            if (!empty($orderDetails['secondary_owner'])) { 
-                $borrower = $orderDetails['primary_owner']." And ".$orderDetails['secondary_owner'];
-            }
-            if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' '.$orderDetails['vesting'];
-            }
-        }
-
+        $borrower = $orderDetails['borrowers_vesting'];
+        
         $loanNumberField = '';
         if (!empty($orderDetails['loan_number'])) {
             $loanNumberField = '<a:NameValue>
@@ -464,24 +447,8 @@ class Fnf
 			'state' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
 			'zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
 		);
-        $borrower = '';
-        if ($orderDetails['sales_amount'] > 0) {
-            $borrower = $orderDetails['borrower'];
-            if (!empty($orderDetails['secondary_borrower'])) { 
-                $borrower = $orderDetails['borrower']." And ".$orderDetails['secondary_borrower'];
-            }
-            if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' '.$orderDetails['vesting'];
-            }
-		} else {
-            $borrower = $orderDetails['primary_owner'];
-            if (!empty($orderDetails['secondary_owner'])) { 
-                $borrower = $orderDetails['primary_owner']." And ".$orderDetails['secondary_owner'];
-            }
-            if (!empty($orderDetails['vesting'])) { 
-                $borrower .= ' '.$orderDetails['vesting'];
-            }
-        }
+        $borrower = $orderDetails['borrowers_vesting'];
+        
     
         $loanNumberField = '';
         if (!empty($orderDetails['loan_number'])) {

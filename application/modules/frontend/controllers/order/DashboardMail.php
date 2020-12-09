@@ -222,8 +222,7 @@ class DashboardMail extends MX_Controller {
         $last_name = $this->input->post('last_name');
         $vesting = $this->input->post('vesting');	
         $new_existing_lender = $this->input->post('new_existing_lender');
-        $primary_owner = $this->input->post('primary_owner_name');
-		$secondaryOwner = $this->input->post('secondary_owner_name');
+        $borrowers_vesting = $this->input->post('borrowers_vesting');
         $name = explode(" ",$this->input->post('LenderName'));  
         $editFlag = $this->input->post('editFlag');
         $orderDetails = $this->order->get_order_details($file_id, 1);
@@ -233,7 +232,6 @@ class DashboardMail extends MX_Controller {
             'first_name'    => $name[0],
             'last_name'  => !empty($name[1]) ? $name[1] : '',
             'state'  => !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "",
-            'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
             'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
             'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
             'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
@@ -271,85 +269,64 @@ class DashboardMail extends MX_Controller {
             'admin_api' => 1
         );	  
             
-        if(!empty($lenderUserDetails['resware_user_id'])) {
-            if ($orderUser['is_escrow'] == 1) {
-                if(empty($orderDetails['escrow_lender_id'])) {
-                    $partners[] = $secondaryPartners;
-                } else if (!empty($orderDetails['escrow_lender_id']) && $orderDetails['escrow_lender_id'] != $LenderId) {
-                    $partners[] = $secondaryPartners;
-                    $removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['escrow_lender_id']));
-                    $removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
-                    $removeSecondaryPartners = array(
-                        'SecondaryEmployees'=> $removeSecondaryEmp,
-                        'PartnerTypeID' => 3,
-                        'PartnerID' => $removeLenderUserDetails['partner_id'],
-                        'PartnerType' => array(
-                            'PartnerTypeID' => 3
-                        )
-                    );
-                    $removePartners[] = $removeSecondaryPartners;
-                    $removePartnerData = json_encode(array('Partners' => $removePartners));
-                    $removeLogid = $this->apiLogs->syncLogs(0, 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
-                    $resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
-                    $this->apiLogs->syncLogs(0, 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
-                }
-            } else {
-                if(empty($orderDetails['cpl_lender_id'])) {
-                    $partners[] = $secondaryPartners;
-                } else if (!empty($orderDetails['cpl_lender_id']) && $orderDetails['cpl_lender_id'] != $LenderId) {
-                    $partners[] = $secondaryPartners;
-                    $removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
-                    $removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
-                    $removeSecondaryPartners = array(
-                        'SecondaryEmployees'=> $removeSecondaryEmp,
-                        'PartnerTypeID' => 3,
-                        'PartnerID' => $removeLenderUserDetails['partner_id'],
-                        'PartnerType' => array(
-                            'PartnerTypeID' => 3
-                        )
-                    );
-                    $removePartners[] = $removeSecondaryPartners;
-                    $removePartnerData = json_encode(array('Partners' => $removePartners));
-                    $removeLogid = $this->apiLogs->syncLogs(0, 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
-                    $resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
-                    $this->apiLogs->syncLogs(0, 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
-                }
-            }
+        // if(!empty($lenderUserDetails['resware_user_id'])) {
+        //     if ($orderUser['is_escrow'] == 1) {
+        //         if(empty($orderDetails['escrow_lender_id'])) {
+        //             $partners[] = $secondaryPartners;
+        //         } else if (!empty($orderDetails['escrow_lender_id']) && $orderDetails['escrow_lender_id'] != $LenderId) {
+        //             $partners[] = $secondaryPartners;
+        //             $removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['escrow_lender_id']));
+        //             $removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
+        //             $removeSecondaryPartners = array(
+        //                 'SecondaryEmployees'=> $removeSecondaryEmp,
+        //                 'PartnerTypeID' => 3,
+        //                 'PartnerID' => $removeLenderUserDetails['partner_id'],
+        //                 'PartnerType' => array(
+        //                     'PartnerTypeID' => 3
+        //                 )
+        //             );
+        //             $removePartners[] = $removeSecondaryPartners;
+        //             $removePartnerData = json_encode(array('Partners' => $removePartners));
+        //             $removeLogid = $this->apiLogs->syncLogs(0, 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
+        //             $resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+        //             $this->apiLogs->syncLogs(0, 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+        //         }
+        //     } else {
+        //         if(empty($orderDetails['cpl_lender_id'])) {
+        //             $partners[] = $secondaryPartners;
+        //         } else if (!empty($orderDetails['cpl_lender_id']) && $orderDetails['cpl_lender_id'] != $LenderId) {
+        //             $partners[] = $secondaryPartners;
+        //             $removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+        //             $removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
+        //             $removeSecondaryPartners = array(
+        //                 'SecondaryEmployees'=> $removeSecondaryEmp,
+        //                 'PartnerTypeID' => 3,
+        //                 'PartnerID' => $removeLenderUserDetails['partner_id'],
+        //                 'PartnerType' => array(
+        //                     'PartnerTypeID' => 3
+        //                 )
+        //             );
+        //             $removePartners[] = $removeSecondaryPartners;
+        //             $removePartnerData = json_encode(array('Partners' => $removePartners));
+        //             $removeLogid = $this->apiLogs->syncLogs(0, 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
+        //             $resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+        //             $this->apiLogs->syncLogs(0, 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+        //         }
+        //     }
 
-            if(!empty($partners)) {
-                $partnerData = json_encode(array('Partners' => $partners));
-                $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
-                $resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
-                $this->apiLogs->syncLogs(0, 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
-            }	  
-        }
+        //     if(!empty($partners)) {
+        //         $partnerData = json_encode(array('Partners' => $partners));
+        //         $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
+        //         $resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
+        //         $this->apiLogs->syncLogs(0, 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
+        //     }	  
+        // }
 
-        if ($orderDetails['sales_amount'] > 0) { 
-            if ($orderUser['is_escrow'] == 1) {
-                $propertyDetails = array('escrow_lender_id' => $LenderId);
-            } else {
-                $propertyDetails = array('cpl_lender_id' => $LenderId);
-            }
-            
-            $this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'borrower' => $primary_owner, 'secondary_borrower' => $secondaryOwner, 'vesting' => $vesting), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-            if ($cplApi == 'fnf' || $cplApi == 'westcor') {
-                $this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
-            }
-            $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
-        } else {
-            if ($orderUser['is_escrow'] == 1) {
-                $propertyDetails = array('escrow_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
-            } else {
-                $propertyDetails = array('cpl_lender_id' => $LenderId, 'primary_owner' => $primary_owner, 'secondary_owner' => $secondaryOwner);
-            }
-            $this->home_model->update(array('loan_number' => $loan_number, 'vesting' => $vesting), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-            
-            if ($cplApi == 'fnf' || $cplApi == 'westcor') {
-                $this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
-            }
-            $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
-        }
-
+        $propertyDetails = array('cpl_lender_id' => $LenderId, 'borrowers_vesting' => trim($borrowers_vesting));
+        $this->home_model->update(array('loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+        $this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
+        $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
+       
         $this->home_model->update(array('is_regenerate_cpl' => $editFlag), array('id' => $orderDetails['order_id']), 'order_details');
         if ($cplApi == 'fnf') {
             redirect(base_url()."create-cpl-for-fnf-mail/".$file_id);
@@ -472,17 +449,7 @@ class DashboardMail extends MX_Controller {
         $primary_owner = explode(" ", $orderDetails['primary_owner']);
         $secondary_owner = explode(" ", $orderDetails['secondary_owner']);
         if ($orderDetails['sales_amount'] > 0)  {	
-
-            $sellerBorrowerName = $orderDetails['primary_owner'];
-
-			if(!empty($orderDetails['secondary_owner'])) { 
-				$sellerBorrowerName .= " and ".$orderDetails['secondary_owner'];
-			}
-
-			if(!empty($orderDetails['vesting'])) { 
-				$sellerBorrowerName .= ' '.$orderDetails['vesting'];
-			}
-			 
+            $sellerBorrowerName = $orderDetails['borrowers_vesting']; 		 
 			$sellers[] = array (
 				'NameID' =>  $orderDetails['westcor_seller_id'] ? $orderDetails['westcor_seller_id'] : 0,
 				'Last' => '-',
@@ -522,18 +489,9 @@ class DashboardMail extends MX_Controller {
 					'Address' => null
 				);	
 			} 	
-
         } else {
             $buyers = array();
-			$buyerBorrowerName = $orderDetails['primary_owner'];
-
-			if(!empty($orderDetails['secondary_owner'])) { 
-				$buyerBorrowerName .= " and ".$orderDetails['secondary_owner'];
-			}
-
-			if(!empty($orderDetails['vesting'])) { 
-				$buyerBorrowerName .= ' '.$orderDetails['vesting'];
-			}
+			$buyerBorrowerName = $orderDetails['borrowers_vesting']; 
 			$buyers[] = array (
 				'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
 				'Last' => '-',
@@ -1056,7 +1014,22 @@ class DashboardMail extends MX_Controller {
 		if(!empty($resPartners)) {
 			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
  			if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
-				$orderDetails['cpl_api'] = 'natic';
+                $orderDetails['cpl_api'] = 'natic';
+                $agentsData = array(
+					array(
+						'id' => 303,
+						'location_city' => 'Orange'
+					),
+					array(
+						'id' => 1879,
+						'location_city' => 'Oxnard',
+					),
+					array(
+						'id' => 1880,
+						'location_city' => 'Glendale',
+					)
+				);
+                $orderDetails['agents_data'] = $agentsData;
 			} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
                 $orderDetails['cpl_api'] = 'westcor';
 				$this->load->library('order/westcor');
@@ -1076,10 +1049,25 @@ class DashboardMail extends MX_Controller {
 				$agentsData = $this->westcor->getBranches($orderDetails['order_id']);
 				$orderDetails['agents_data'] = $agentsData;
 			}
+        }
+        if(!empty($orderDetails['borrowers_vesting'])) {
+			$orderDetails['borrowers_vesting'] = $orderDetails['borrowers_vesting'];
+		} else {
+			if (!empty($orderDetails['primary_owner_name'])) {
+				$orderDetails['borrowers_vesting'] = $orderDetails['primary_owner_name'];
+			} 
+	
+			if (!empty($orderDetails['secondary_owner_name'])) {
+                $orderDetails['borrowers_vesting'] .=  " ".$orderDetails['secondary_owner_name'];
+			} 
+
+			if (!empty($orderDetails['vesting'])) {
+                $orderDetails['borrowers_vesting'] .=  " ".$orderDetails['vesting'];
+			} 
 		}
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
-		$orderDetails['loan_number'] = $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '';
-        $orderDetails['vesting'] = $orderDetails['vesting'] ? $orderDetails['vesting'] : '';  
+        $orderDetails['loan_number'] = $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '';
+        $orderDetails['property_address'] = $orderDetails['full_address'] ? $orderDetails['full_address'] : '';
         $response = array('status'=>'success', 'orderDetails' => $orderDetails); 
 		echo json_encode($response); exit;
 	}
