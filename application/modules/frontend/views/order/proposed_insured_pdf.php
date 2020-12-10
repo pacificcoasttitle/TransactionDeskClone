@@ -90,8 +90,16 @@
 			<div style="clear: both;"></div>
 			<div class= "customer-info">
 				<div class="company-details">
-					<p class="heading-info"><span class="heading">To:</span> <?php echo isset($company) && !empty($company) ? $company : ''; ?></p>
-					<p><?php echo isset($address) && !empty($address) ? $address : ''; ?></p>
+					<?php
+						if(isset($company) && !empty($company))
+						{
+					?>
+							<p class="heading-info"><span class="heading">To:</span> <?php echo isset($company) && !empty($company) ? $company : ''; ?></p>
+							<p><?php echo isset($address) && !empty($address) ? $address : ''; ?></p>
+					<?php
+						}
+					?>
+					
 				</div>
 				<div class="order-number">
 					<p class="heading-info"><span class="heading">Order No.:</span> <?php echo isset($order_number) && !empty($order_number) ? $order_number : ''; ?></p>
@@ -130,8 +138,8 @@
 				<p style="text-align: justify;">UPON THE CLOSE OF ESCROW AND CONFIRMATION OF RECORDING PACIFIC COAST TITLE WILL BE IN A POSITION TO ISSUE A TITLE POLICY IN FAVOR OF:</p>
 			</div>
 			<div>
-				<p>Borrower: <?php echo isset($primary_owner) && !empty($primary_owner) ? $primary_owner : '-'; ?></p>
-				<p>Secondary Borrower: <?php echo isset($secondary_owner) && !empty($secondary_owner) ? $secondary_owner : '-'; ?></p>
+				<!-- <p>Borrower: <?php // echo isset($primary_owner) && !empty($primary_owner) ? $primary_owner : '-'; ?></p>
+				<p>Secondary Borrower: <?php // echo isset($secondary_owner) && !empty($secondary_owner) ? $secondary_owner : '-'; ?></p> -->
 				<?php
 					if(isset($vesting) && !empty($vesting))
 					{

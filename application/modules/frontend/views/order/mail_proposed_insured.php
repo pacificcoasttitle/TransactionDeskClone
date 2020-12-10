@@ -116,7 +116,19 @@
 									</label>
 								</div><!-- end section -->
 							</div>
+
 							<div class="frm-row">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
+										<input type="text" name="LenderName" id="LenderName" class="gui-input ui-autocomplete-input" placeholder="Loan Officer Name">
+										<span class="field-icon"><i class="fa fa-user"></i></span>
+										
+										
+									</label>
+								</div><!-- end section -->
+							</div>
+
+							<!-- <div class="frm-row">
 								<div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="email" name="LenderEmailAddress" id="LenderEmailAddress"
@@ -131,16 +143,16 @@
 										<span class="field-icon"><i class="fa fa-envelope"></i></span>
 									</label>
 								</div>
-							</div>
+							</div> -->
 							<div class="frm-row">
-								<div class="section colm colm6">
+								<!-- <div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="LenderName" id="LenderName"
 											class="gui-input" placeholder="Lender Name"
 											autocomplete="off">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
-								</div>
+								</div> -->
 								<div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="LenderAddress" id="LenderAddress" class="gui-input"
@@ -148,13 +160,27 @@
 										<span class="field-icon"><i class="fa fa-envelope"></i></span>
 									</label>
 								</div>
-							</div>
-							<div class="frm-row spacer-b15">
 								<div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="LenderCity" id="LenderCity" class="gui-input"
 											placeholder="Lender City" >
 										<span class="field-icon"><i class="fa fa-user"></i></span>
+									</label>
+								</div>
+							</div>
+							<div class="frm-row spacer-b15">
+								<!-- <div class="section colm colm6">
+									<label class="field prepend-icon">
+										<input type="text" name="LenderCity" id="LenderCity" class="gui-input"
+											placeholder="Lender City" >
+										<span class="field-icon"><i class="fa fa-user"></i></span>
+									</label>
+								</div> -->
+								<div class="section colm colm6">
+									<label class="field prepend-icon">
+										<input type="text" name="LenderState" id="LenderState" class="gui-input"
+											placeholder="Lender State" >
+										<span class="field-icon"><i class="fa fa-envelope"></i></span>
 									</label>
 								</div>
 								<div class="section colm colm6">
@@ -165,6 +191,37 @@
 									</label>
 								</div>
 							</div>
+							</div>
+							<div id="property-details-section">
+								<div class="spacer-b20">
+									<div class="tagline"><span>Property Details</span></div><!-- .tagline -->
+								</div>
+
+								<div class="frm-row">
+									<div class="section colm colm6">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="property_address" id="property_address" placeholder="Street Address">
+										</label>
+									</div>
+									<div class="section colm colm6">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="property_city" id="property_city" placeholder="City">
+										</label>
+									</div>
+								</div>
+
+								<div class="frm-row">
+									<div class="section colm colm6">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="property_state" id="property_state" placeholder="State">
+										</label>
+									</div>
+									<div class="section colm colm6">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="property_zipcode" id="property_zipcode" placeholder="Zipcode">
+										</label>
+									</div>
+								</div>
 							</div>
 							<div id="title-officer-section">
 							<div class="spacer-b20">
@@ -209,9 +266,9 @@
 									</div>
 								</div>
 							</div>
-							<div id="primary-borrower-section">
+							<!-- <div id="primary-borrower-section">
 							<div class="spacer-b20">
-								<div class="tagline"><span>Primary Borrower Information</span></div><!-- .tagline -->
+								<div class="tagline"><span>Primary Borrower Information</span></div>
 							</div>
 							<div class="frm-row spacer-b15">
 								<div class="section colm colm12">
@@ -221,18 +278,18 @@
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
 								</div>
-								<!-- <div class="section colm colm6">
+								<div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="primary_last_name" id="primary_last_name" class="gui-input"
 											placeholder="Last Name" >
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
-								</div> -->
+								</div>
 							</div>
-							</div>
-							<div id="secondary-borrower-section">
+							</div> -->
+							<!-- <div id="secondary-borrower-section">
 							<div class="spacer-b20">
-								<div class="tagline"><span>Secondary Borrower Information</span></div><!-- .tagline -->
+								<div class="tagline"><span>Secondary Borrower Information</span></div>
 							</div>
 							<div class="frm-row spacer-b15">
 								<div class="section colm colm12">
@@ -242,18 +299,18 @@
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
 								</div>
-								<!-- <div class="section colm colm6">
+								<div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="last_name" id="last_name" class="gui-input"
 											placeholder="Last Name">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
-								</div> -->
+								</div>
 							</div>
-							</div>
-							<div id="vesting-section">
+							</div> -->
+							<!-- <div id="vesting-section">
 							<div class="spacer-b20">
-								<div class="tagline"><span>Vesting</span></div><!-- .tagline -->
+								<div class="tagline"><span>Vesting</span></div>
 							</div>
 							<div class="frm-row spacer-b15">
 								<div class="section colm colm12">
@@ -264,7 +321,20 @@
 									</label>
 								</div>
 							</div>
-							</div>
+							</div> -->
+							<div class="spacer-b20">
+									<div class="tagline"><span>Borrowers & Vesting</span></div>
+								</div>
+
+								<div class="frm-row spacer-b15">
+									<div class="section colm colm12">
+										<label class="field prepend-icon">
+											<input type="text" name="borrowers_vesting" id="borrowers_vesting" class="gui-input"
+												placeholder="Borrowers & Vesting"  required="required">
+											<span class="field-icon"><i class="fa fa-user"></i></span>
+										</label>
+									</div>
+								</div>
 							<div id="report-date-section">
 							<div class="spacer-b20">
 								<div class="tagline"><span>Report Date Section</span></div><!-- .tagline -->
@@ -339,30 +409,37 @@
 								</div><!-- end section -->
 							</div>
 							<div class="frm-row">
-								<div class="section colm colm6">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
+										<input type="text" name="LenderName" id="edit_LenderName"
+											class="gui-input" placeholder="Loan Officer Name" autocomplete="off">
+										<span class="field-icon"><i class="fa fa-user"></i></span>
+									</label>
+								</div>
+								<!-- <div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="email" name="LenderEmailAddress" id="edit_LenderEmailAddress"
 											class="gui-input" placeholder="Lender Email address" >
 										<span class="field-icon"><i class="fa fa-envelope"></i></span>
 									</label>
-								</div>
-								<div class="section colm colm6">
+								</div> -->
+								<!-- <div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="tel" name="LenderState" id="edit_LenderState" class="gui-input"
 											placeholder="Lender State" >
 										<span class="field-icon"><i class="fa fa-envelope"></i></span>
 									</label>
-								</div>
+								</div> -->
 							</div>
 							<div class="frm-row">
-								<div class="section colm colm6">
+								<!-- <div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="LenderName" id="edit_LenderName"
 											class="gui-input" placeholder="Lender Name"
 											autocomplete="off">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
-								</div>
+								</div> -->
 								<div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="LenderAddress" id="edit_LenderAddress" class="gui-input"
@@ -370,13 +447,20 @@
 										<span class="field-icon"><i class="fa fa-envelope"></i></span>
 									</label>
 								</div>
-							</div>
-							<div class="frm-row spacer-b15">
 								<div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="LenderCity" id="edit_LenderCity" class="gui-input"
 											placeholder="Lender City" >
 										<span class="field-icon"><i class="fa fa-user"></i></span>
+									</label>
+								</div>
+							</div>
+							<div class="frm-row spacer-b15">
+								<div class="section colm colm6">
+									<label class="field prepend-icon">
+										<input type="tel" name="LenderState" id="edit_LenderState" class="gui-input"
+											placeholder="Lender State" >
+										<span class="field-icon"><i class="fa fa-envelope"></i></span>
 									</label>
 								</div>
 								<div class="section colm colm6">
@@ -387,6 +471,37 @@
 									</label>
 								</div>
 							</div>
+							</div>
+							<div id="property-details-section">
+								<div class="spacer-b20">
+									<div class="tagline"><span>Property Details</span></div><!-- .tagline -->
+								</div>
+
+								<div class="frm-row">
+									<div class="section colm colm6">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="property_address" id="edit_property_address" placeholder="Street Address">
+										</label>
+									</div>
+									<div class="section colm colm6">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="property_city" id="edit_property_city" placeholder="City">
+										</label>
+									</div>
+								</div>
+
+								<div class="frm-row">
+									<div class="section colm colm6">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="property_state" id="edit_property_state" placeholder="State">
+										</label>
+									</div>
+									<div class="section colm colm6">
+										<label class="field">
+											<input required="required" type="text" class="gui-input" name="property_zipcode" id="edit_property_zipcode" placeholder="Zipcode">
+										</label>
+									</div>
+								</div>
 							</div>
 							<div id="title-officer-section">
 							<div class="spacer-b20">
@@ -431,9 +546,9 @@
 									</div>
 								</div>
 							</div>
-							<div id="primary-borrower-section">
+							<!-- <div id="primary-borrower-section">
 							<div class="spacer-b20">
-								<div class="tagline"><span>Primary Borrower Information</span></div><!-- .tagline -->
+								<div class="tagline"><span>Primary Borrower Information</span></div>
 							</div>
 							<div class="frm-row spacer-b15">
 								<div class="section colm colm12">
@@ -443,18 +558,18 @@
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
 								</div>
-								<!-- <div class="section colm colm6">
+								<div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="primary_last_name" id="edit_primary_last_name" class="gui-input"
 											placeholder="Last Name" >
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
-								</div> -->
+								</div>
 							</div>
-							</div>
-							<div id="secondary-borrower-section">
+							</div> -->
+							<!-- <div id="secondary-borrower-section">
 							<div class="spacer-b20">
-								<div class="tagline"><span>Secondary Borrower Information</span></div><!-- .tagline -->
+								<div class="tagline"><span>Secondary Borrower Information</span></div>
 							</div>
 							<div class="frm-row spacer-b15">
 								<div class="section colm colm12">
@@ -464,18 +579,18 @@
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
 								</div>
-								<!-- <div class="section colm colm6">
+								<div class="section colm colm6">
 									<label class="field prepend-icon">
 										<input type="text" name="last_name" id="edit_last_name" class="gui-input"
 											placeholder="Last Name">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
-								</div> -->
+								</div>
 							</div>
-							</div>
-							<div id="vesting-section">
+							</div> -->
+							<!-- <div id="vesting-section">
 							<div class="spacer-b20">
-								<div class="tagline"><span>Vesting</span></div><!-- .tagline -->
+								<div class="tagline"><span>Vesting</span></div>
 							</div>
 							<div class="frm-row spacer-b15">
 								<div class="section colm colm12">
@@ -486,6 +601,18 @@
 									</label>
 								</div>
 							</div>
+							</div> -->
+							<div class="spacer-b20">
+								<div class="tagline"><span>Borrowers & Vesting</span></div>
+							</div>
+							<div class="frm-row spacer-b15">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
+										<input type="text" name="borrowers_vesting" id="edit_borrowers_vesting" class="gui-input"
+											placeholder="Borrowers & Vesting"  required="required">
+										<span class="field-icon"><i class="fa fa-user"></i></span>
+									</label>
+								</div>
 							</div>
 							<div id="report-date-section">
 							<div class="spacer-b20">
@@ -533,9 +660,7 @@ $(document).ready(function () {
 		$('#supplemental_report_date').datepicker();
 		$('#preliminary_report_date').datepicker();
 		$('#edit_supplemental_report_date').datepicker();
-		$('#edit_preliminary_report_date').datepicker();
-
-		
+		$('#edit_preliminary_report_date').datepicker();	
 
 		if(jQuery('#add-order-details').length)
 	    {
@@ -574,15 +699,20 @@ $(document).ready(function () {
 	            	var TitleOfficer = $('#TitleOfficer').val();
 	            	var loan_amount = $('#loan_amount').val();
 	            	var loan_number = $('#loan_number').val();
-	            	var primary_first_name = $('#primary_first_name').val();
+	            	// var primary_first_name = $('#primary_first_name').val();
 	            	// var primary_last_name = $('#primary_last_name').val();
-	            	var secondary_first_name = $('#first_name').val();
+	            	// var secondary_first_name = $('#first_name').val();
 	            	// var secondary_last_name = $('#last_name').val();
-	            	var vesting = $('#vesting').val();
+	            	var borrowers_vesting = $('#borrowers_vesting').val();
+	            	// var vesting = $('#vesting').val();
 	            	var LenderId = $('#LenderId').val();
 	            	var orderId = $('#orderId').val();
 	            	var transaction_id = $('#transaction_id').val();
 	            	var property_id = $('#property_id').val();
+	            	var property_address = $('#property_address').val();
+	            	var property_city = $('#property_city').val();
+	            	var property_state = $('#property_state').val();
+	            	var property_zipcode = $('#property_zipcode').val();
 	            	var fileId = $('#fileId').val();
 	            	var supplemental_report_date = $('#supplemental_report_date').val();
 	            	var preliminary_report_date = $('#preliminary_report_date').val();
@@ -594,11 +724,16 @@ $(document).ready(function () {
 	                    TitleOfficer: TitleOfficer,
 	                    loan_amount: loan_amount,
 	                    loan_number: loan_number,
-	                    primary_first_name: primary_first_name,
+	                    borrowers_vesting: borrowers_vesting,
+	                    property_address: property_address,
+	                    property_city: property_city,
+	                    property_state: property_state,
+	                    property_zipcode: property_zipcode,
+	                    // primary_first_name: primary_first_name,
 	                    // primary_last_name: primary_last_name,
-	                    secondary_first_name: secondary_first_name,
+	                    // secondary_first_name: secondary_first_name,
 	                    // secondary_last_name: secondary_last_name,
-	                    vesting: vesting,
+	                    // vesting: vesting,
 	                    LenderId: LenderId,
 	                    LenderCompany:LenderCompany,
 	            		LenderEmailAddress:LenderEmailAddress,
@@ -878,16 +1013,21 @@ $(document).ready(function () {
 	            	var TitleOfficer = $('#edit_TitleOfficer').val();
 	            	var loan_amount = $('#edit_loan_amount').val();
 	            	var loan_number = $('#edit_loan_number').val();
-	            	var primary_first_name = $('#edit_primary_first_name').val();
+	            	// var primary_first_name = $('#edit_primary_first_name').val();
 	            	// var primary_last_name = $('#edit_primary_last_name').val();
-	            	var secondary_first_name = $('#edit_first_name').val();
+	            	// var secondary_first_name = $('#edit_first_name').val();
 	            	// var secondary_last_name = $('#edit_last_name').val();
-	            	var vesting = $('#edit_vesting').val();
+	            	// var vesting = $('#edit_vesting').val();
 
 	            	var LenderId = $('#edit_LenderId').val();
 	            	var orderId = $('#edit_orderId').val();
 	            	var transaction_id = $('#edit_transaction_id').val();
 	            	var property_id = $('#edit_property_id').val();
+	            	var borrowers_vesting = $('#edit_borrowers_vesting').val();
+					var property_address = $('#edit_property_address').val();
+	            	var property_city = $('#edit_property_city').val();
+	            	var property_state = $('#edit_property_state').val();
+	            	var property_zipcode = $('#edit_property_zipcode').val();
 	            	var fileId = $('#edit_fileId').val();
 	            	var supplemental_report_date = $('#edit_supplemental_report_date').val();
 	            	var preliminary_report_date = $('#edit_preliminary_report_date').val();
@@ -899,11 +1039,11 @@ $(document).ready(function () {
 		                TitleOfficer: TitleOfficer,
 	                    loan_amount: loan_amount,
 	                    loan_number: loan_number,
-	                    primary_first_name: primary_first_name,
+	                    // primary_first_name: primary_first_name,
 	                    // primary_last_name: primary_last_name,
-	                    secondary_first_name: secondary_first_name,
+	                    // secondary_first_name: secondary_first_name,
 	                    // secondary_last_name: secondary_last_name,
-	                    vesting: vesting,
+	                    // vesting: vesting,
 	                    LenderId: LenderId,
 	                    LenderCompany:LenderCompany,
 	            		LenderEmailAddress:LenderEmailAddress,
@@ -915,6 +1055,11 @@ $(document).ready(function () {
 	                    orderId: orderId,
 	                    transaction_id: transaction_id,
 	                    property_id: property_id,
+	                    borrowers_vesting: borrowers_vesting,
+	                    property_address: property_address,
+	                    property_city: property_city,
+	                    property_state: property_state,
+	                    property_zipcode: property_zipcode,
 	                    fileId: fileId,
 	                    s_report_date: supplemental_report_date,
 	                    p_report_date: preliminary_report_date,
@@ -984,10 +1129,11 @@ function generateProposedInsured(fileId)
             },
             success: function(response) {
             	var res = JSON.parse(response);
+            	console.log(res);
             	var dataRequired = 0;
                 if(res.status == 'success') 
                 {
-                	if(res.orderDetails['is_escrow'] == 1 && (res.orderDetails['escrow_lender_id'] == null || res.orderDetails['escrow_lender_id'] == undefined || res.orderDetails['escrow_lender_id'].length == 0))
+                	/*if(res.orderDetails['is_escrow'] == 1 && (res.orderDetails['escrow_lender_id'] == null || res.orderDetails['escrow_lender_id'] == undefined || res.orderDetails['escrow_lender_id'].length == 0))
                 	{
                 		dataRequired = 1;
                 		$('#lender-details-fields').show();
@@ -995,7 +1141,7 @@ function generateProposedInsured(fileId)
                 	else
                 	{
                 		$('#lender-details-fields').hide();
-                	}
+                	}*/
                 	$("#LenderName").val(res.orderDetails['lender_name']);
 					$("#LenderEmailAddress").val(res.orderDetails['lender_email']);
 					$("#LenderState").val(res.orderDetails['lender_state']);
@@ -1004,8 +1150,11 @@ function generateProposedInsured(fileId)
 					$("#LenderCity").val(res.orderDetails['lender_city']);
 					$("#LenderZipcode").val(res.orderDetails['lender_zipcode']);
 					$("#LenderId").val(res.orderDetails['lender_id']);
-
-					if((res.orderDetails['primary_owner_first_name'] == null || res.orderDetails['primary_owner_first_name'] == undefined || res.orderDetails['primary_owner_first_name'].length == 0))
+					$("#property_address").val(res.orderDetails['street_address']);
+					$("#property_city").val(res.orderDetails['property_city']);
+					$("#property_state").val(res.orderDetails['property_state']);
+					$("#property_zipcode").val(res.orderDetails['property_zip']);
+					/*if((res.orderDetails['primary_owner_first_name'] == null || res.orderDetails['primary_owner_first_name'] == undefined || res.orderDetails['primary_owner_first_name'].length == 0))
                 	{
                 		dataRequired = 1;
                 		$('#primary-borrower-section').show();
@@ -1013,12 +1162,12 @@ function generateProposedInsured(fileId)
                 	else
                 	{
                 		$('#primary-borrower-section').hide();
-                	}
+                	}*/
 
-					$("#primary_first_name").val(res.orderDetails['primary_owner_first_name']);
+					// $("#primary_first_name").val(res.orderDetails['primary_owner_first_name']);
 					// $("#primary_last_name").val(res.orderDetails['primary_owner_last_name']);
 
-					if((res.orderDetails['secondary_owner_first_name'] == null || res.orderDetails['secondary_owner_first_name'] == undefined || res.orderDetails['secondary_owner_first_name'].length == 0))
+					/*if((res.orderDetails['secondary_owner_first_name'] == null || res.orderDetails['secondary_owner_first_name'] == undefined || res.orderDetails['secondary_owner_first_name'].length == 0))
                 	{
                 		dataRequired = 1;
                 		$('#secondary-borrower-section').show();
@@ -1026,12 +1175,12 @@ function generateProposedInsured(fileId)
                 	else
                 	{
                 		$('#secondary-borrower-section').hide();
-                	}
+                	}*/
 
-					$("#first_name").val(res.orderDetails['secondary_owner_first_name']);
+					// $("#first_name").val(res.orderDetails['secondary_owner_first_name']);
 					// $("#last_name").val(res.orderDetails['secondary_owner_last_name']);
 
-					if(res.orderDetails['vesting'] == null || res.orderDetails['vesting'] == undefined || res.orderDetails['vesting'].length == 0 )
+					/*if(res.orderDetails['vesting'] == null || res.orderDetails['vesting'] == undefined || res.orderDetails['vesting'].length == 0 )
 					{
 						dataRequired = 1;
 						$('#vesting-section').show();
@@ -1039,10 +1188,10 @@ function generateProposedInsured(fileId)
                 	else
                 	{
                 		$('#vesting-section').hide();
-                	}
-                	$("#vesting").val(res.orderDetails['vesting']);
+                	}*/
+                	// $("#vesting").val(res.orderDetails['vesting']);
 
-					if((res.orderDetails['loan_amount'] == null || res.orderDetails['loan_amount'] == undefined || res.orderDetails['loan_amount'].length == 0) || (res.orderDetails['loan_number'] == null || res.orderDetails['loan_number'] == undefined || res.orderDetails['loan_number'].length == 0) )
+					/*if((res.orderDetails['loan_amount'] == null || res.orderDetails['loan_amount'] == undefined || res.orderDetails['loan_amount'].length == 0) || (res.orderDetails['loan_number'] == null || res.orderDetails['loan_number'] == undefined || res.orderDetails['loan_number'].length == 0) )
                 	{
                 		dataRequired = 1;
                 		$('#loan-details-section').show();
@@ -1051,11 +1200,11 @@ function generateProposedInsured(fileId)
                 	{
                 		$('#loan-details-section').hide();
                 	}
-
+*/
 					$("#loan_amount").val(res.orderDetails['loan_amount']);
 					$("#loan_number").val(res.orderDetails['loan_number']);
 
-					if(res.orderDetails['title_officer'] == null || res.orderDetails['title_officer'] == undefined || res.orderDetails['title_officer'].length == 0 )
+					/*if(res.orderDetails['title_officer'] == null || res.orderDetails['title_officer'] == undefined || res.orderDetails['title_officer'].length == 0 )
                 	{
                 		dataRequired = 1;
                 		$('#title-officer-section').show();
@@ -1064,9 +1213,9 @@ function generateProposedInsured(fileId)
                 	{
                 		$('#title-officer-section').hide();
                 	}
-					$("#TitleOfficer").val(res.orderDetails['title_officer']);
+*/					$("#TitleOfficer").val(res.orderDetails['title_officer']);
 
-					if((res.orderDetails['preliminary_report_date'] == null || res.orderDetails['preliminary_report_date'] == undefined || res.orderDetails['preliminary_report_date'].length == 0) || (res.orderDetails['supplemental_report_date'] == null || res.orderDetails['supplemental_report_date'] == undefined || res.orderDetails['supplemental_report_date'].length == 0))
+					/*if((res.orderDetails['preliminary_report_date'] == null || res.orderDetails['preliminary_report_date'] == undefined || res.orderDetails['preliminary_report_date'].length == 0) || (res.orderDetails['supplemental_report_date'] == null || res.orderDetails['supplemental_report_date'] == undefined || res.orderDetails['supplemental_report_date'].length == 0))
                 	{
                 		dataRequired = 1;
                 		$('#report-date-section').show();
@@ -1074,8 +1223,8 @@ function generateProposedInsured(fileId)
                 	else
                 	{
                 		$('#report-date-section').hide();
-                	}
-
+                	}*/
+                	$("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
                 	$('#supplemental_report_date').val(res.orderDetails['supplemental_report_date']);
                 	$('#preliminary_report_date').val(res.orderDetails['preliminary_report_date']);
 
@@ -1095,14 +1244,14 @@ function generateProposedInsured(fileId)
             	$('#transaction_id').val(res.orderDetails.transaction_id);
             	$('#property_id').val(res.orderDetails.property_id);
             	$('#fileId').val(res.orderDetails.fileId);
-				if(dataRequired == 0)	
+				/*if(dataRequired == 0)	
 				{	
 					$( "#add-order-details" ).submit();		
 				}	
 				else	
-				{	
+				{*/	
 					$('#lender_information').modal('show');	
-				}
+				/*}*/
             }
         });
 	}
@@ -1157,16 +1306,16 @@ function editInformation(fileId)
                 {
                 	if(res.status == 'success') 
 	                {
-	                	if(res.orderDetails['is_escrow'] == 1)
+	                	/*if(res.orderDetails['is_escrow'] == 1)
 	                	{
 	                		$('#edit-order-details #lender-details-fields').show();
 	                	}
 	                	else
 	                	{
 	                		$('#edit-order-details #lender-details-fields').hide();
-	                	}
+	                	}*/
 	                	$("#edit_LenderName").val(res.orderDetails['lender_name']);
-						$("#edit_LenderEmailAddress").val(res.orderDetails['lender_email']);
+						// $("#edit_LenderEmailAddress").val(res.orderDetails['lender_email']);
 						$("#edit_LenderState").val(res.orderDetails['lender_state']);
 						$("#edit_LenderCompany").val(res.orderDetails['lender_company_name']);
 						$("#edit_LenderAddress").val(res.orderDetails['lender_address']);
@@ -1175,16 +1324,19 @@ function editInformation(fileId)
 						$("#edit_LenderId").val(res.orderDetails['lender_id']);
 
 						
-
-						$("#edit_primary_first_name").val(res.orderDetails['primary_owner_first_name']);
+						$("#edit_property_address").val(res.orderDetails['street_address']);
+						$("#edit_property_city").val(res.orderDetails['property_city']);
+						$("#edit_property_state").val(res.orderDetails['property_state']);
+						$("#edit_property_zipcode").val(res.orderDetails['property_zip']);
+						/*$("#edit_primary_first_name").val(res.orderDetails['primary_owner_first_name']);
 						$("#edit_primary_last_name").val(res.orderDetails['primary_owner_last_name']);
 						$("#edit_vesting").val(res.orderDetails['vesting']);
 						
 
 						$("#edit_first_name").val(res.orderDetails['secondary_owner_first_name']);
-						$("#edit_last_name").val(res.orderDetails['secondary_owner_last_name']);
+						$("#edit_last_name").val(res.orderDetails['secondary_owner_last_name']);*/
 
-						
+						$("#edit_borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
 						$("#edit_loan_amount").val(res.orderDetails['loan_amount']);
 						$("#edit_loan_number").val(res.orderDetails['loan_number']);
 
