@@ -110,7 +110,7 @@ class Natic
                 <Field>
                     <FieldId>PropertyAddress1</FieldId>
                     <Name>Property Address 1</Name>
-                    <Value>".$address."</Value>
+                    <Value>".htmlspecialchars($address, ENT_XML1)."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -139,7 +139,7 @@ class Natic
                 <Field>
                     <FieldId>PropertyDescription</FieldId>
                     <Name>Brief Legal Description</Name>
-                    <Value>".$orderDetails['legal_description']."</Value>
+                    <Value>".htmlspecialchars($orderDetails['legal_description'], ENT_XML1)."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -167,7 +167,7 @@ class Natic
                 <Field>
                     <FieldId>LenderNote</FieldId>
                     <Name>Lender Note</Name>
-                    <Value>".$orderDetails['lender_assignment_clause']."</Value>
+                    <Value>".htmlspecialchars($orderDetails['lender_assignment_clause'], ENT_XML1)."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -181,7 +181,7 @@ class Natic
                 <Field>
                     <FieldId>LenderAddress1</FieldId>
                     <Name>Lender Address 1</Name>
-                    <Value>".$orderDetails['lender_address']."</Value>
+                    <Value>".htmlspecialchars($orderDetails['lender_address'], ENT_XML1)."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -225,7 +225,7 @@ class Natic
                     <Name>Title Company Address 1</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".$branchData[$branchId]['address1']."</Value>
+                    <Value>".htmlspecialchars($branchData[$branchId]['address1'], ENT_XML1)."</Value>
                 </Field>
                 <Field>
                     <FieldId>TitleCompanyAddress2</FieldId>
@@ -258,7 +258,7 @@ class Natic
                 <Field>
                     <FieldId>Buyer</FieldId>
                     <Name>Buyer/Borrower Name</Name>
-                    <Value>".$borrower."</Value>
+                    <Value>".htmlspecialchars($borrower, ENT_XML1)."</Value>
                     <Type>String</Type>
                     <Required>false</Required>
                 </Field>
@@ -289,6 +289,7 @@ class Natic
                         </RequestWrapper>";
 
         $endPoint = 'GetDocuments';
+        
         $this->CI->load->model('order/apiLogs');
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', getenv('NATIC_URL').$endPoint, $xmlData, array(), $orderDetails['order_id'], 0);                
         $resultDocument = $this->make_request($xmlData, $endPoint);
