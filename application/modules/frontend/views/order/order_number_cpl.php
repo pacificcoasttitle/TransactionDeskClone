@@ -193,13 +193,17 @@
                             var action= $('input[name="actions"]:checked').val();
                             if (res.status == 'success') {
                                 var base_url = "<?php echo base_url(); ?>";
-                                if(action == 'get_fees')
+                                if(action == 'get_cpl')
                                 {
-                                    window.location.replace(base_url+'generate-fees/'+res.random_number);
+                                    window.location.replace(base_url+'generate-cpl/'+res.random_number);
+                                }
+                                else if(action == 'get_proposed')
+                                {
+                                    window.location.replace(base_url+'proposed-insured/'+res.random_number);
                                 }
                                 else
                                 {
-                                    window.location.replace(base_url+'generate-cpl/'+res.random_number);
+                                    window.location.replace(base_url+'generate-fees/'+res.random_number);
                                 }
                                 
                             } else if(res.status == 'error') {
