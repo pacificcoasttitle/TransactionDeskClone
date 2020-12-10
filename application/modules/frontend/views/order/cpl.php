@@ -187,7 +187,7 @@
 									<div class="section colm colm6">
 										<label class="field prepend-icon">
 											<input type="text" name="property_state" id="property_state" class="gui-input"
-												placeholder="Property State">
+												placeholder="Property State" required="required">
 											<span class="field-icon"><i class="fa fa-envelope"></i></span>
 										</label>
 									</div>

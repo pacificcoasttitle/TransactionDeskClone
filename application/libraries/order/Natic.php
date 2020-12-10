@@ -49,11 +49,10 @@ class Natic
         }
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $xmlData = '';
-        $address = $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]);
-        $city = $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]);
-        $city = $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]);
-        $state = $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]);
-        $zipcode = $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]);
+        $address = $orderDetails['cpl_proposed_property_address'];
+        $city = $orderDetails['cpl_proposed_property_city'];
+        $state = $orderDetails['cpl_proposed_property_state'];
+        $zipcode = $orderDetails['cpl_proposed_property_zip'];
 
         $this->CI->load->model('order/home_model');
         $orderUser =  $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
@@ -160,7 +159,7 @@ class Natic
                 <Field>
                     <FieldId>LenderName</FieldId>
                     <Name>Lender Name</Name>
-                    <Value>".$orderDetails['lender_company_name']."</Value>
+                    <Value>".htmlspecialchars($orderDetails['lender_company_name'], ENT_XML1)."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>

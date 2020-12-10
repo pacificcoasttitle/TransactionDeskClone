@@ -1026,10 +1026,10 @@ class Dashboard extends MX_Controller {
 			'tvid' =>  0,
 			'CountyName' => $orderDetails['county'].' County',
 			'ShortLegal' => $orderDetails['legal_description'] ? $orderDetails['legal_description'] : null,
-			'StreetAddress' => $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]),
-			'City' => $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]),
-			'State' => $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]),
-			'Zip' => $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]),
+			'StreetAddress' => $orderDetails['cpl_proposed_property_address'],
+            'City' => $orderDetails['cpl_proposed_property_city'],
+            'State' => $orderDetails['cpl_proposed_property_state'],
+            'Zip' => $orderDetails['cpl_proposed_property_zip'],
 			'PropertyType' => 'R'
 		);
 
@@ -1459,7 +1459,14 @@ class Dashboard extends MX_Controller {
 		// }
 		
 		
-		$propertyDetails = array('cpl_lender_id' => $LenderId, 'borrowers_vesting' => trim($borrowers_vesting));
+		$propertyDetails = array(
+			'cpl_lender_id' => $LenderId, 
+			'borrowers_vesting' => trim($borrowers_vesting),
+			'cpl_proposed_property_address' => $this->input->post('property_address'),
+			'cpl_proposed_property_city' => $this->input->post('property_city'),
+			'cpl_proposed_property_state' => $this->input->post('property_state'),
+			'cpl_proposed_property_zip' => $this->input->post('property_zipcode'),
+		);
 		$this->home_model->update(array('loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
 		$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
 		$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
@@ -2651,9 +2658,19 @@ class Dashboard extends MX_Controller {
                 $orderDetails['borrowers_vesting'] .=  " ".$orderDetails['vesting'];
 			} 
 		}
+		if(!empty($orderDetails['cpl_proposed_property_address'])) {
+			$orderDetails['property_address'] = $orderDetails['cpl_proposed_property_address'];
+			$orderDetails['property_city'] = $orderDetails['cpl_proposed_property_city'];
+			$orderDetails['property_state'] = $orderDetails['cpl_proposed_property_state'];
+			$orderDetails['property_zipcode'] = $orderDetails['cpl_proposed_property_zip'];
+		} else {
+			$orderDetails['property_address'] = $orderDetails['address'];
+			$orderDetails['property_city'] = $orderDetails['property_city'];
+			$orderDetails['property_state'] = $orderDetails['property_state'];
+			$orderDetails['property_zipcode'] = $orderDetails['property_zip'];
+		}
 		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
 		$orderDetails['loan_number'] = $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '';
-		$orderDetails['property_address'] = $orderDetails['full_address'] ? $orderDetails['full_address'] : '';
 		$response = array('status'=>'success', 'orderDetails' => $orderDetails);
 		echo json_encode($response); exit;
 	}
