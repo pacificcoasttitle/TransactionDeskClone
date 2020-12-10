@@ -328,11 +328,11 @@ class Fnf
                                 <FormFields xmlns:a="http://schemas.datacontract.org/2004/07/FNF.CPL.ServiceModel.Data.V3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                                     <a:NameValue>
                                         <a:Name>[Buyer/Borrower Name]</a:Name>
-                                        <a:Value>'.$borrower.'</a:Value>
+                                        <a:Value>'.htmlspecialchars($borrower, ENT_XML1).'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Name]</a:Name> 
-                                        <a:Value>'.$lenderName .'</a:Value>
+                                        <a:Value>'.htmlspecialchars($lenderName, ENT_XML1).'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Clause]</a:Name> 
@@ -357,7 +357,7 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Attention]</a:Name> 
-                                        <a:Value>'.$lenderAttnName.'</a:Value>
+                                        <a:Value>'.htmlspecialchars($lenderAttnName, ENT_XML1).'</a:Value>
                                     </a:NameValue>
                                     '.$loanNumberField.'
                                     <a:NameValue>
@@ -501,7 +501,7 @@ class Fnf
                                 <FormFields xmlns:a="http://schemas.datacontract.org/2004/07/FNF.CPL.ServiceModel.Data.V3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                                     <a:NameValue>
                                         <a:Name>[Buyer/Borrower Name]</a:Name>
-                                        <a:Value>'.$borrower.'</a:Value>
+                                        <a:Value>'.htmlspecialchars($borrower, ENT_XML1).'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Name]</a:Name> 
@@ -509,7 +509,7 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Clause]</a:Name> 
-                                        <a:Value>'.$orderDetails['lender_assignment_clause'].'</a:Value>
+                                        <a:Value>'.htmlspecialchars($orderDetails['lender_assignment_clause'], ENT_XML1).'</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
@@ -529,7 +529,7 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Attention]</a:Name> 
-                                        <a:Value>'.$lenderAttnName.'</a:Value>
+                                        <a:Value>'.htmlspecialchars($lenderAttnName, ENT_XML1).'</a:Value>
                                     </a:NameValue>
                                     '.$loanNumberField.'
                                     <a:NameValue>

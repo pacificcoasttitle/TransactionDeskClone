@@ -148,7 +148,7 @@
 										<label class="field prepend-icon">
 											<input type="text" name="LenderCity" id="LenderCity" class="gui-input"
 												placeholder="Lender City" required="required">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
+											<span class="field-icon"><i class="fa fa-envelope"></i></span>
 										</label>
 									</div>
 								</div>
@@ -178,7 +178,7 @@
 								<div class="frm-row spacer-b15">
 									<div class="section colm colm12">
 										<label class="field">
-											<input required="required" type="text" class="gui-input" name="property_address" id="property_address" placeholder="Loan Number">
+											<input required="required" type="text" class="gui-input" name="property_address" id="property_address" placeholder="Property Address">
 										</label>
 									</div>
 								</div>
