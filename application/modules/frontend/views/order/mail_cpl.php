@@ -148,7 +148,7 @@
 										<label class="field prepend-icon">
 											<input type="text" name="LenderCity" id="LenderCity" class="gui-input"
 												placeholder="Lender City" required="required">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
+											<span class="field-icon"><i class="fa fa-envelope"></i></span>
 										</label>
 									</div>
 								</div>
@@ -172,13 +172,40 @@
 								</div>
 
 								<div class="spacer-b20">
-									<div class="tagline"><span>Property Address</span></div><!-- .tagline -->
+									<div class="tagline"><span>Property Address</span></div>
 								</div>
 
-								<div class="frm-row spacer-b15">
-									<div class="section colm colm12">
-										<label class="field">
-											<input required="required" type="text" class="gui-input" name="property_address" id="property_address" placeholder="Loan Number">
+								<div class="frm-row">
+									<div class="section colm colm6">
+										<label class="field prepend-icon">
+											<input required="required" type="text" class="gui-input" name="property_address" id="property_address" placeholder="Property Address">
+											<span class="field-icon"><i class="fa fa-envelope"></i></span>
+										</label>
+									</div>
+
+									<div class="section colm colm6">
+										<label class="field prepend-icon">
+											<input type="text" name="property_city" id="property_city" class="gui-input"
+												placeholder="Property City" required="required">
+											<span class="field-icon"><i class="fa fa-envelope"></i></span>
+										</label>
+									</div>
+								</div>
+
+								<div class="frm-row">
+									<div class="section colm colm6">
+										<label class="field prepend-icon">
+											<input type="text" name="property_state" id="property_state" class="gui-input"
+												placeholder="Property State">
+											<span class="field-icon"><i class="fa fa-envelope"></i></span>
+										</label>
+									</div>
+
+									<div class="section colm colm6">
+										<label class="field prepend-icon">
+											<input type="text" name="property_zipcode" id="property_zipcode" class="gui-input"
+												placeholder="Property Zipcode" required="required">
+											<span class="field-icon"><i class="fa fa-envelope"></i></span>
 										</label>
 									</div>
 								</div>
@@ -496,6 +523,9 @@
 						$("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
 						$("#loan_number").val(res.orderDetails['loan_number']);
 						$("#property_address").val(res.orderDetails['property_address']);
+						$("#property_city").val(res.orderDetails['property_city']);
+						$("#property_state").val(res.orderDetails['property_state']);
+						$("#property_zipcode").val(res.orderDetails['property_zipcode']);
 						if (res.orderDetails['lender_id'] != '') {
 							$("#existing_lender").prop("checked", true);
 						} else {
