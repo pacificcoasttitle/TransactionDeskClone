@@ -516,7 +516,7 @@ class DashboardMail extends MX_Controller {
 			$sellers = array();
         }	 
 
-        if (isset($orderUser['is_escrow']) && $orderUser['is_escrow'] == 1) {
+        if (!empty($orderUser) && isset($orderUser['is_escrow']) && $orderUser['is_escrow'] == 1) {
 			$name = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
 			if (!empty($orderDetails['escrow_lender_id'])) {
 				$lenders[] =  array (
