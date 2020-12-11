@@ -1305,6 +1305,7 @@ class Dashboard extends MX_Controller {
 			$resCPL['CPL']['ProtectLender'] = true;
 			
 			$res['cpl'][] = $resCPL['CPL'];
+			$res['property'] = $propery;
 			$res['lenders'] = $lenders;
 			$res['buyers'] = $buyers;
 			$res['sellers'] = $sellers;
