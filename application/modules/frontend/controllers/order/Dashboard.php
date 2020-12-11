@@ -1353,17 +1353,14 @@ class Dashboard extends MX_Controller {
 						mkdir('./uploads/documents', 0777, TRUE);
 					}
 					file_put_contents('./uploads/documents/'.$document_name, base64_decode($resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']));
-					$this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+					$this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');					
+					$this->uploadCPLDocumentToResware($document_name, $orderDetails, $resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']);
+					$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
 				}
-				
-				 
 				$condition = array(
 					'id' => $orderDetails['order_id']
 				);
-	
 				$this->home_model->update($order_details, $condition, 'order_details');
-				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']);
-				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
 			} else {
 				$errors[] = $resultCPL;
 			}
