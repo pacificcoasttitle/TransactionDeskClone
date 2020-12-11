@@ -42,6 +42,7 @@ class Order
     public function get_orders($params)
     {
         $userdata = $this->CI->session->userdata('user');
+        echo "<pre>"; print_r($userdata);
         $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
         $result = $this->getUserFromPartners();
 
@@ -220,7 +221,7 @@ class Order
             }
 
             $query = $this->CI->db->get();
-    
+    echo "<pre>"; print_r($this->CI->db->last_query()); exit;
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             } 
