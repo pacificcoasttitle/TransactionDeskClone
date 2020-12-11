@@ -1198,7 +1198,7 @@ class Home extends MX_Controller {
         if ($this->input->post()) {
             $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
             $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
-            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email|is_unique[customer_basic_details.email_address]', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email','is_unique' => 'The %s is already taken'));
             $this->form_validation->set_rules('company', 'Company', 'required', array('required'=> 'Please Enter Company'));
             $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));
             $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
