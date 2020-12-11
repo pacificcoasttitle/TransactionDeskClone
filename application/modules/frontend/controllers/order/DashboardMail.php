@@ -516,7 +516,7 @@ class DashboardMail extends MX_Controller {
 			$sellers = array();
         }	 
 
-        if ($orderUser['is_escrow'] == 1) {
+        if (isset($orderUser['is_escrow']) && $orderUser['is_escrow'] == 1) {
 			$name = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
 			if (!empty($orderDetails['escrow_lender_id'])) {
 				$lenders[] =  array (
@@ -565,7 +565,7 @@ class DashboardMail extends MX_Controller {
             'tvid' =>  0,
             'agentnumber' => $resToken['original_agent_number'],
             'agent_file_number' => $orderDetails['file_number'],
-            'email_requestor' => isset($orderUser['email_address']) ? $orderUser['email_address'] : 'cpl@pct.com',
+            'email_requestor' => isset($orderUser['email_address']) && !empty($orderUser['email_address']) ? $orderUser['email_address'] : 'cpl@pct.com',
             'purchase_price' => $purchase_price,
             'property' =>  $propery,
             'buyers' => $buyers,
