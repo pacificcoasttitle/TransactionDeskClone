@@ -1253,6 +1253,7 @@ class Dashboard extends MX_Controller {
 			$res['lenders'] = $lenders;
 			$res['buyers'] = $buyers;
 			$res['sellers'] = $sellers;
+			$res['actions']['update_property'] = true;
 			$res['actions']['update_cpls'] = true;
 			$res['actions']['update_buyers'] = true;
 			$res['actions']['update_sellers'] = true;
