@@ -292,4 +292,21 @@ class Home_model extends CI_Model
         // Return fetched data
         return $result;
     }
+
+    public function get_user_by_name($params = array())
+    {
+        $table = $this->table;
+        $this->db->select('*');
+        $this->db->from($table);
+
+        $this->db->where('company_name', $params['company_name']);
+        $this->db->like('first_name', $params['first_name']);
+        $this->db->like('last_name', $params['last_name']);
+        $this->db->where('is_password_updated', 1);
+
+        $query = $this->db->get();
+        $result = ($query->num_rows() > 0)?$query->row_array():FALSE;
+        // Return fetched data
+        return $result;
+    }
 }
