@@ -2129,7 +2129,27 @@ class DashboardMail extends MX_Controller {
     
                     if (isset($result['Files']) && !empty($result['Files'])) {
 
-                        foreach ($result['Files'] as $res) {
+                        foreach ($result['Files'] as $res) 
+                        {
+                            /* partners details */
+                            $partner_fname = $res['Partners'][0]['PrimaryEmployee']['FirstName'];
+                            $partner_lname = $res['Partners'][0]['PrimaryEmployee']['LastName'];
+                            $partner_name = $res['Partners'][0]['PartnerName'];
+
+                            $condition = array(
+                                'first_name' => $partner_fname,
+                                'last_name' => $partner_lname,
+                                'company_name' => $partner_name,
+                                'is_pass' => $partner_name,
+                            );
+                            $user_details =  $this->home_model->get_user_by_name($condition);
+
+                            $customerId = 0;
+                            if(isset($user_details) && !empty($user_details))
+                            {
+                                $customerId = $user_details['id'];
+                            }
+                            /* partners details */
                             $FullProperty = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
                             $address = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'];
                             $locale = $res['Properties'][0]['City'];
@@ -2148,7 +2168,7 @@ class DashboardMail extends MX_Controller {
                             $apn = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
                             
                             $propertyData = array(
-                                'customer_id' => 0,
+                                'customer_id' => $customerId,
                                 'buyer_agent_id' => 0,
                                 'listing_agent_id' => 0,
                                 'escrow_lender_id' => 0,
@@ -2166,7 +2186,7 @@ class DashboardMail extends MX_Controller {
                             );
 
                             $transactionData = array(
-                                'customer_id' => 0,
+                                'customer_id' => $customerId,
                                 'sales_amount' =>  !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
                                 'loan_number' => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
                                 'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
@@ -2202,7 +2222,7 @@ class DashboardMail extends MX_Controller {
 							$randomString = md5($randomString);
 
                             $orderData = array(
-                                'customer_id' => 0,
+                                'customer_id' => $customerId,
                                 'file_id' => $res['FileID'],
                                 'file_number' => $res['FileNumber'],
                                 'property_id' => $propertyId,
@@ -2216,7 +2236,7 @@ class DashboardMail extends MX_Controller {
                             );
 
                             $orderId = $this->home_model->insert($orderData,'order_details');
-                            $random_number = time() + (floor(rand() * (10000 - 1 + 1)) + 1);
+                            /*$random_number = time() + (floor(rand() * (10000 - 1 + 1)) + 1);
                             $propertyData['fipsCode'] = isset($property_details['fips']) && !empty($property_details['fips']) ? $property_details['fips'] : '';
                             $propertyData['address'] = $address;
                             $propertyData['city'] = isset($res['Properties'][0]['City']) && !empty($res['Properties'][0]['City']) ? $res['Properties'][0]['City'] : '';
@@ -2253,7 +2273,7 @@ class DashboardMail extends MX_Controller {
 
                             $tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
 
-                            $this->titlepoint->generateTaxDoc($tax_serviceId,$res['FileNumber'],$orderId);
+                            $this->titlepoint->generateTaxDoc($tax_serviceId,$res['FileNumber'],$orderId);*/
                             $response = array('status'=> 'success', 'random_number'=> $randomString);
                             echo json_encode($response); exit;
                         }
