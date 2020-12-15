@@ -977,6 +977,7 @@ class Dashboard extends MX_Controller {
 				$nestedData[] = $i;
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
+				$nestedData[] = date("m/d/Y", strtotime($order['document_created_date']));
 				if (!empty($order['cpl_document_name'])) {
 					$file_id = $order['file_id'];
 					$documentName = $order['cpl_document_name'];
