@@ -43,7 +43,7 @@ class DashboardMail extends MX_Controller {
         $orderDetails = $this->order->get_order_details($fileId, 1);
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
-        $data['created'] = date("m/d/Y", strtotime($orderDetails['created']));
+        $data['created'] = !empty($orderDetails['created']) ? date("m/d/Y", strtotime($orderDetails['created'])) : '';
         $file_id = $orderDetails['file_id'];
 
         if (!empty($orderDetails['cpl_document_name'])) {
