@@ -690,8 +690,8 @@ class DashboardMail extends MX_Controller {
             $resultResCPL = json_decode($resultCPL, true);
 
             if (is_array($resultResCPL)) {
-                if ($resultResCPL['Message']) {
-                    $errors[] = $res['Message'];
+                if ($resultResCPL['messages']['error']) {
+                    $errors[] = $res['messages']['error'];
                     $data = array(
                         "errors" =>  $errors,
                         "success" => $success
