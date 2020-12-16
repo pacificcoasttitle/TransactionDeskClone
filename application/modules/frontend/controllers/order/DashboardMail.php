@@ -691,6 +691,8 @@ class DashboardMail extends MX_Controller {
 
             if (is_array($resultResCPL)) {
                 if ($resultResCPL['messages']['error']) {
+                    print_r($res['messages']);
+                    print_r($res['messages']['error']);exit;
                     foreach($res['messages']['error'] as $error) {
 						$errors[] = $error;
 					}
