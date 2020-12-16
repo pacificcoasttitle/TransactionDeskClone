@@ -689,13 +689,9 @@ class DashboardMail extends MX_Controller {
             $this->apiLogs->syncLogs(0, 'westcor', 'generate_cpl', getenv('WESTCORE_URL').$endPointCreateCPL, $generateCplPostData, $resultCPL, $orderDetails['order_id'], $logid);
             $resultResCPL = json_decode($resultCPL, true);
 
-            echo "<pre>";
-            print_r($resultResCPL);
             if (is_array($resultResCPL)) {
                 if ($resultResCPL['messages']['error']) {
-                    print_r($res['messages']);
-                    print_r($res['messages']['error']);exit;
-                    foreach($res['messages']['error'] as $error) {
+                    foreach($resultResCPL['messages']['error'] as $error) {
 						$errors[] = $error;
 					}
                     $data = array(
