@@ -33,7 +33,6 @@
 
 
 .img-holder {
-    width: 750px;
     background-color: #000000;
 }
 
@@ -92,7 +91,8 @@
 -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;	
+  background-size: cover;
+  background-repeat: repeat-y;
 }
 
 
@@ -469,6 +469,8 @@
 .img-holder .bg.borrower-login {
     opacity: 1;
     background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/41bf830a-5566-4daa-9452-74f017a1c589.jpg");
+	background-size: cover;
+    background-position: center;
 }
 
 .form-content .form-items.borrower-login-from-items {

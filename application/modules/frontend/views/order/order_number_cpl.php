@@ -83,11 +83,11 @@
                                 </div>
                             </a>
                         </div>
-						<h2>Generic Landing Page<!--  for CPL --></h2>
+						<h2>PCT Smart Gen<!--  for CPL --></h2>
 						<p></p>
-                        <p>Enter order number below. You will redirect to order detail page <!-- to generate CPL -->.</p>
+                        <p>Enter order number below and choose your option. <!-- to generate CPL -->.</p>
                         <div class="page-links">
-                            <a href="" class="active">Order Log In From</a>
+                            <a href="" class="active">Order #</a>
                         </div>
                         <form method="POST" action="" id="order-number-login-form" enctype="multipart/form-data">
                             <label class="field" style="display:block;">
