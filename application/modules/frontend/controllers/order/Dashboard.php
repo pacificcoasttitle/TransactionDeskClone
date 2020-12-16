@@ -1272,9 +1272,10 @@ class Dashboard extends MX_Controller {
 
 			if (is_array($resultResCPL)) {
 				if ($resultResCPL['messages']['error']) {
-					foreach($res['messages']['error'] as $error) {
+					foreach($resultResCPL['messages']['error'] as $error) {
 						$errors[] = $error;
 					}
+                    
 					$data = array(
 						"errors" =>  $errors,
 						"success" => $success
