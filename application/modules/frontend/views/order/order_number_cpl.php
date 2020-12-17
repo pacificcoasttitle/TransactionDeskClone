@@ -49,7 +49,7 @@
             top: 5px !important;
             margin: 0px 10px !important;
             background: none !important;
-            left: unset !important;
+            left: 0 !important;
         }
 
         .radio:before {
@@ -61,7 +61,7 @@
             border-radius:50%;    
         }
         .radio:checked:before {
-            background:#d35411;
+            background: #d35411 !important;
         }
     </style>
 </head>
