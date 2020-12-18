@@ -824,5 +824,26 @@ class Order
         } else {
             return array();
         }
-    }   
+    }  
+    
+    public function storeCplError($data)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        if (!empty($userdata['id'])) {
+            $user_id = $userdata['id']; 
+        } else {
+            $user_id = 0; 
+        }
+        $errorLogsdata = array(
+            'user_id' => $user_id,
+            'order_id' => $data['order_id'],
+            'file_number' => $data['file_number'],
+            'cpl_page' => $data['cpl_page'],
+            'error' => $data['error'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        );
+        $this->CI->db->insert('pct_order_cpl_api_logs', $errorLogsdata);
+        return true;
+    }
 }

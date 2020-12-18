@@ -380,6 +380,13 @@ class DashboardMail extends MX_Controller {
                 $this->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
             } else {
                 $errors[] = $editCplResponse['error'];
+                $cplErrorData = array(
+                    'order_id' => $orderDetails['order_id'],
+                    'file_number' => $orderDetails['file_number'],
+                    'cpl_page' => 'Generic Or Mail page',
+                    'error' => $editCplResponse['error']
+                );
+                $this->order->storeCplError($cplErrorData);
             }
             $data = array(
                 "errors" =>  $errors,
@@ -407,6 +414,13 @@ class DashboardMail extends MX_Controller {
                 $this->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
             } else {
                 $errors[] = $generateCplResponse['error'];
+                $cplErrorData = array(
+                    'order_id' => $orderDetails['order_id'],
+                    'file_number' => $orderDetails['file_number'],
+                    'cpl_page' => 'Generic Or Mail page',
+                    'error' => $generateCplResponse['error']
+                );
+                $this->order->storeCplError($cplErrorData);
             }
             $data = array(
                 "errors" =>  $errors,
@@ -416,6 +430,13 @@ class DashboardMail extends MX_Controller {
 			redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
         } else {
             $errors[] = $getCPLFormNameResponse['error'];
+            $cplErrorData = array(
+                'order_id' => $orderDetails['order_id'],
+                'file_number' => $orderDetails['file_number'],
+                'cpl_page' => 'Generic Or Mail page',
+                'error' => $getCPLFormNameResponse['error']
+            );
+            $this->order->storeCplError($cplErrorData);
             $data = array(
                 "errors" =>  $errors,
                 "success" => $success
@@ -590,6 +611,13 @@ class DashboardMail extends MX_Controller {
             if(is_array($res)) {
                 if ($res['Message']) {
                     $errors[] = $res['Message'];
+                    $cplErrorData = array(
+						'order_id' => $orderDetails['order_id'],
+						'file_number' => $orderDetails['file_number'],
+						'cpl_page' => 'Generic Or Mail page',
+						'error' => $res['Message']
+					);
+					$this->order->storeCplError($cplErrorData);
                     $data = array(
                         "errors" =>  $errors,
                         "success" => $success
@@ -631,6 +659,13 @@ class DashboardMail extends MX_Controller {
 
             } else {
                 $errors[] = $result;
+                $cplErrorData = array(
+                    'order_id' => $orderDetails['order_id'],
+                    'file_number' => $orderDetails['file_number'],
+                    'cpl_page' => 'Generic Or Mail page',
+                    'error' => $result
+                );
+                $this->order->storeCplError($cplErrorData);
                 $data = array(
                     "errors" =>  $errors,
                     "success" => $success
@@ -692,7 +727,14 @@ class DashboardMail extends MX_Controller {
             if (is_array($resultResCPL)) {
                 if ($resultResCPL['messages']['error']) {
                     foreach($resultResCPL['messages']['error'] as $error) {
-						$errors[] = $error;
+                        $errors[] = $error;
+                        $cplErrorData = array(
+							'order_id' => $orderDetails['order_id'],
+							'file_number' => $orderDetails['file_number'],
+							'cpl_page' => 'Generic Or Mail page',
+							'error' => $error
+						);
+						$this->order->storeCplError($cplErrorData);
 					}
                     $data = array(
                         "errors" =>  $errors,
@@ -766,6 +808,13 @@ class DashboardMail extends MX_Controller {
             $this->uploadCPLDocumentToResware($document_name, $orderDetails, $responseArr['content']);
         } else {
             $errors[] = $responseArr['error'];
+            $cplErrorData = array(
+                'order_id' => $orderDetails['order_id'],
+                'file_number' => $orderDetails['file_number'],
+                'cpl_page' => 'Generic Or Mail page',
+                'error' => $responseArr['error']
+            );
+            $this->order->storeCplError($cplErrorData);
         }
         $data = array(
             "errors" =>  $errors,
