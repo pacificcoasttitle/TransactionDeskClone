@@ -2631,6 +2631,57 @@ $(document).ready(function () {
             },            
         }); 
     }
+console.log('hi');
+    if ($('#tbl-cpl-log-listing').length) 
+    {
+        console.log('hi2');
+        cpl_logs_list = $('#tbl-cpl-log-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                searchPlaceholder: "Order #",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            dom: '<"FilterCredentialListing">lfrtip',
+            buttons: [],
+            initComplete: function() {
+                   
+                    
+            },
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/order/getCplErrorLogs", 
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-cpl-log-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-cpl-log-listing_processing").css("display", "none");
+
+                }
+            },
+                        
+        });
+    }
 });
 
 

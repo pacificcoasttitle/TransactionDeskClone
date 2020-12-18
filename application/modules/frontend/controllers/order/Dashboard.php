@@ -1227,6 +1227,13 @@ class Dashboard extends MX_Controller {
 			if(is_array($res)) {
 				if ($res['Message']) {
 					$errors[] = $res['Message'];
+					$cplErrorData = array(
+						'order_id' => $orderDetails['order_id'],
+						'file_number' => $orderDetails['file_number'],
+						'cpl_page' => 'Dashboard',
+						'error' => $res['Message']
+					);
+					$this->order->storeCplError($cplErrorData);
 					$data = array(
 						"errors" =>  $errors,
 						"success" => $success
@@ -1268,6 +1275,13 @@ class Dashboard extends MX_Controller {
 
 			} else {
 				$errors[] = $result;
+				$cplErrorData = array(
+                    'order_id' => $orderDetails['order_id'],
+                    'file_number' => $orderDetails['file_number'],
+                    'cpl_page' => 'Dashboard',
+                    'error' => $result
+                );
+                $this->order->storeCplError($cplErrorData);
 				$data = array(
 					"errors" =>  $errors,
 					"success" => $success
@@ -1329,8 +1343,15 @@ class Dashboard extends MX_Controller {
 				if ($resultResCPL['messages']['error']) {
 					foreach($resultResCPL['messages']['error'] as $error) {
 						$errors[] = $error;
+						$cplErrorData = array(
+							'order_id' => $orderDetails['order_id'],
+							'file_number' => $orderDetails['file_number'],
+							'cpl_page' => 'Dashboard',
+							'error' => $error
+						);
+						$this->order->storeCplError($cplErrorData);
 					}
-                    
+                   
 					$data = array(
 						"errors" =>  $errors,
 						"success" => $success
@@ -2765,6 +2786,13 @@ class Dashboard extends MX_Controller {
 			$this->uploadCPLDocumentToResware($document_name, $orderDetails, $responseArr['content']);
 		} else {
 			$errors[] = $responseArr['error'];
+			$cplErrorData = array(
+                'order_id' => $orderDetails['order_id'],
+                'file_number' => $orderDetails['file_number'],
+                'cpl_page' => 'Dashboard',
+                'error' => $responseArr['error']
+            );
+            $this->order->storeCplError($cplErrorData);
 		}
 		$data = array(
 			"errors" =>  $errors,
@@ -2810,6 +2838,13 @@ class Dashboard extends MX_Controller {
 				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
 			} else {
 				$errors[] = $editCplResponse['error'];
+				$cplErrorData = array(
+                    'order_id' => $orderDetails['order_id'],
+                    'file_number' => $orderDetails['file_number'],
+                    'cpl_page' => 'Dashboard',
+                    'error' => $editCplResponse['error']
+                );
+                $this->order->storeCplError($cplErrorData);
 			}
 			$data = array(
 				"errors" =>  $errors,
@@ -2837,6 +2872,13 @@ class Dashboard extends MX_Controller {
 				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
 			} else {
 				$errors[] = $generateCplResponse['error'];
+				$cplErrorData = array(
+                    'order_id' => $orderDetails['order_id'],
+                    'file_number' => $orderDetails['file_number'],
+                    'cpl_page' => 'Dashboard',
+                    'error' => $generateCplResponse['error']
+                );
+                $this->order->storeCplError($cplErrorData);
 			}
 			$data = array(
 				"errors" =>  $errors,
@@ -2846,6 +2888,13 @@ class Dashboard extends MX_Controller {
 			redirect(base_url().'cpl-dashboard');
 		} else {
 			$errors[] = $getCPLFormNameResponse['error'];
+			$cplErrorData = array(
+				'order_id' => $orderDetails['order_id'],
+				'file_number' => $orderDetails['file_number'],
+				'cpl_page' => 'Dashboard',
+				'error' => $getCPLFormNameResponse['error']
+			);
+			$this->order->storeCplError($cplErrorData);
 			$data = array(
 				"errors" =>  $errors,
 				"success" => $successrev

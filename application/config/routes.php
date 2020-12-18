@@ -251,6 +251,8 @@ $route['order/admin/send-password'] = 'admin/order/home/sendPassword';
 $route['order/admin/resware-admin-credential'] = 'admin/order/home/reswareAdminCredential';
 $route['order/admin/edit-master-user/:num'] = 'admin/order/home/editMasterUser';
 $route['order/admin/import-orders'] = 'admin/order/home/importOrders';
+$route['order/admin/cpl-error-logs'] = 'admin/order/order/cplErrorLogs';
+$route['order/admin/get-cpl-error-logs'] = 'admin/order/order/getCplErrorLogs';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
