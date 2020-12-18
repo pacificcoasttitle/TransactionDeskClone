@@ -2631,10 +2631,9 @@ $(document).ready(function () {
             },            
         }); 
     }
-console.log('hi');
+
     if ($('#tbl-cpl-log-listing').length) 
     {
-        console.log('hi2');
         cpl_logs_list = $('#tbl-cpl-log-listing').DataTable({
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
