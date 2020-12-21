@@ -1661,6 +1661,13 @@ blockquote cite {
   background-image: linear-gradient(20deg, #022535 20%, #095886 60%, #095886 100%);
 }
 
+.area-bg_grad-7:after {
+  background-color: none;
+   /*background-image: -webkit-linear-gradient(70deg, rgba(0, 55, 87, 0.55) 0%, rgba(0, 55, 87, 0.55) 40%, rgba(79, 0, 88, 0.55) 100%);
+  background-image: linear-gradient(20deg, rgba(0, 55, 87, 0.55) 0%, rgba(0, 55, 87, 0.55) 40%, rgba(79, 0, 88, 0.55) 100%);*/
+  background-image: url(../media/content/bg/bgsi.png);
+}
+
 .area-bg_dark:after {
   background-color: #000;
 }
@@ -1744,6 +1751,11 @@ blockquote cite {
 .section-type-1a {
   color: #979797;
   background-image: url(../media/content/bg/bg-1.jpg);
+}
+
+.section-type-1si {
+  color: #979797;
+  height:400px;
 }
 
 .section-type-1a .ui-title-block-3 {

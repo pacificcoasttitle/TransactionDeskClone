@@ -274,10 +274,10 @@ html, body{
 	-ms-transition:all 0.5s ease-in-out;
 	-o-transition:all 0.5s ease-in-out;
 	transition:all 0.5s ease-in-out;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	border-radius: 3px;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	-o-border-radius: 0px;
+	border-radius: 0px;
 	outline:none;
 }
 
@@ -309,6 +309,9 @@ html, body{
 	height: 42px;
 	width: 100%;
 	*zoom: 1;
+	border-top:none;
+	border-left:none ;   
+	border-right:none ;  
 }
 
 /* @styling inputs and textareas 

@@ -766,6 +766,7 @@
             </div>
         </div>
     </div>
+	<section class="section-type-1si section-sm parallax area-bg area-bg_grad-7 area-bg_op_80"></section>
         <?php
             $this->load->view('layout/footer');
         ?>
