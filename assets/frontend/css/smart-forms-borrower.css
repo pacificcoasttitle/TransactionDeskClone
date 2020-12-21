@@ -83,7 +83,7 @@ html, body{
 /* @form label + field :: field class is useful for validation 
 ---------------------------------------------------------------------- */
 .smart-forms .field{ display:block; position:relative; }
-.smart-forms .field-icon i { color:#A2A6A8; position:relative; top:0; }
+.smart-forms .field-icon i { color:#B5C1C7; position:relative; top:0; }
 .smart-forms .field-label { display: block; margin-bottom: 7px; }
 .smart-forms .field-label.colm{ padding-top:12px; }
 .smart-forms .field-label em{ 
@@ -179,21 +179,21 @@ html, body{
 .smart-forms ::-webkit-search-decoration, 
 .smart-forms ::-webkit-search-cancel-button { -webkit-appearance: none; }
 .smart-forms input::-webkit-input-placeholder,
-.smart-forms textarea::-webkit-input-placeholder { color: #919DA8; }
+.smart-forms textarea::-webkit-input-placeholder { color: #B5C1C7; }
 .smart-forms input:focus::-webkit-input-placeholder,
 .smart-forms textarea:focus::-webkit-input-placeholder { color: #D6DBE0; }
 .smart-forms input:-moz-placeholder,
-.smart-forms textarea:-moz-placeholder { color: #919DA8; }
+.smart-forms textarea:-moz-placeholder { color: #B5C1C7; }
 .smart-forms input:focus:-moz-placeholder,
 .smart-forms textarea:focus:-moz-placeholder { color: #D6DBE0; }
 .smart-forms input::-moz-placeholder,
-.smart-forms textarea::-moz-placeholder { color: #919DA8; opacity: 1; }
+.smart-forms textarea::-moz-placeholder { color: #B5C1C7; opacity: 1; }
 .smart-forms input:focus::-moz-placeholder,
 .smart-forms textarea:focus::-moz-placeholder { color: #D6DBE0; opacity: 1; }
 .smart-forms input:-ms-input-placeholder,
-.smart-forms textarea:-ms-input-placeholder { color: #919DA8; }
+.smart-forms textarea:-ms-input-placeholder { color: #B5C1C7; }
 .smart-forms input:focus:-ms-input-placeholder,
-.smart-forms textarea:focus:-ms-input-placeholder { color: #D6DBE0; }
+.smart-forms textarea:focus:-ms-input-placeholder { color: #B5C1C7; }
 
 /* @element general styling :: fonts :: adjust accordingly
 ------------------------------------------------------------- */
@@ -300,7 +300,7 @@ html, body{
 	background: #fff;
 	position: relative;
 	vertical-align: top;
-	border: 2px solid #BDC3C7;
+	border: 1px solid #BDC3C7;
 	display: -moz-inline-stack;
     display: inline-block;
     *display: inline;
