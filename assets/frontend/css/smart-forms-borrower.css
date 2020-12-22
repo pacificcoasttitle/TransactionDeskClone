@@ -240,7 +240,9 @@ html, body{
 --------------------------------------------------------- */
 .smart-forms .switch, 
 .smart-forms .option,
-.smart-forms .field-label{ font-size:14px; }
+.smart-forms .field-label{ font-size:14px; font-size: 15px;
+    text-transform: uppercase;
+    color: #b0b0b0; }
 
 /* @prevent user selection for usability purposes
 ----------------------------------------------------- */

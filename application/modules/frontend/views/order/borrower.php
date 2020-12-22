@@ -37,7 +37,7 @@
                 <?php if($is_borrower_info_submitted == 0) {?>
                     <form method="post" action="<?php echo base_url();?>borrower-info-submit" enctype="multipart/form-data" name="borrower-form" id="borrower-form">
                         <input type="hidden" id="order_id" name="order_id" value="<?php echo $order_id;?>">
-                        <h2>1. Personal Info</h2>
+                        <h2>Personal <br>Information</h2>
                         <fieldset>  
                             <div class="spacer-b40">
                                 <p class="medium fine-grey">
@@ -94,7 +94,7 @@
                                 </div>
 								
 								 <div class="section colm colm4">
-                                    <label for="ssn" class="field-label">SSN (Last 4 Digits)  </label>
+                                    <label for="ssn" class="field-label">SSN Last 4 Digits  </label>
                                     <label class="field prepend-icon">
                                         <input type="text" name="ssn" id="ssn" class="gui-input" placeholder="1234">
                                         <span class="field-icon">
@@ -110,29 +110,29 @@
                                     <label class="field prepend-icon">
                                         <input type="email" name="birthplace" id="email" class="gui-input" placeholder="abc@gmail.com">
                                         <span class="field-icon">
-                                            <i class="fa fa-envelop"></i>
+                                            <i class="fa fa-envelope"></i>
                                         </span>  
                                     </label>
                                 </div>
                                 
-                                <div class="section colm colm4">
+                                <div class="section colm colm8">
                                  
 								  <div class="section">
-                                <div class="option-group field">
-                                    <label class="option">
-                                        <input type="radio" name="status" class="smartfm-ctrl" value="married"  data-show-id="married">
-                                        <span class="radio"></span> Married
-                                    </label>
-                                    <label class="option">
-                                        <input type="radio" name="status" class="smartfm-ctrl" value="domestic_partner" data-show-id="domestic_partner">
-                                        <span class="radio"></span>  Domestic Partner              
-                                    </label>
-                                    <label class="option">
-                                        <input type="radio" name="status" class="smartfm-ctrl" value="single"  data-show-id="single">
-                                        <span class="radio"></span> Single           
-                                    </label>                                                                   
-                                </div>
-                            </div>
+									<div class="option-group field">
+										<label class="option">
+											<input type="radio" name="status" class="smartfm-ctrl" value="married"  data-show-id="married">
+											<span class="radio"></span> Married
+										</label>
+										<label class="option">
+											<input type="radio" name="status" class="smartfm-ctrl" value="domestic_partner" data-show-id="domestic_partner">
+											<span class="radio"></span>  Domestic Partner              
+										</label>
+										<label class="option">
+											<input type="radio" name="status" class="smartfm-ctrl" value="single"  data-show-id="single">
+											<span class="radio"></span> Single           
+										</label>                                                                   
+									</div>
+								</div>
 								 
 								 
 								 
@@ -199,13 +199,6 @@
                                 </div>
                                     
                                 <div class="frm-row">
-                                    <div class="section colm colm4">
-                                        <label for="spouse_telephone" class="field-label">Spouse Home Phone </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="spouse_telephone" id="spouse_telephone" class="gui-input" placeholder="(999)-999-9999">
-                                            <span class="field-icon"><i class="fa fa-phone-square"></i></span>
-                                        </label>
-                                    </div>
                                         
                                     <div class="section colm colm4">
                                         <label for="spouse_mobile" class="field-label">Spouse Mobile Phone </label>
@@ -215,16 +208,20 @@
                                         </label>
                                     </div>
                                         
-                                    <div class="section colm colm4">
-                                        <label for="spouse_date_of_birth" class="field-label">Spouse Date of Birth </label>
+                                   <div class="section colm colm4">
+                                        <label for="spouse_ssn" class="field-label">Spouse SSN Last 4 Digits </label>
                                         <label class="field prepend-icon">
-                                            <input type="text" name="spouse_date_of_birth" id="spouse_date_of_birth" class="gui-input" placeholder="DD/MM/YYYY" >
-                                            <span class="field-icon"><i class="fa fa-phone-square"></i></span> 
+                                            <input type="text" name="spouse_ssn" id="spouse_ssn" class="gui-input" placeholder="1234">
+                                            <span class="field-icon"><i class="fa fa-user"></i></span>  
                                         </label>
                                     </div>
+									 <div class="section colm colm4">
+                                       
+                                    </div>
                                 </div>
-                                    
-                                <div class="frm-row">
+                                
+								
+                              <!--  <div class="frm-row">
                                     <div class="section colm colm4">
                                         <label for="spouse_birthplace" class="field-label">Spouse Birthplace </label>
                                         <label class="field prepend-icon">
@@ -248,7 +245,7 @@
                                             <span class="field-icon"><i class="fa fa-user"></i></span>  
                                         </label>
                                     </div>
-                                </div>                        
+                                </div>  -->                      
                             </div>
 
                             <div id="domestic_partner" class="hiddenbox section smartform-reset">        
@@ -279,13 +276,6 @@
                                 </div>
                                     
                                 <div class="frm-row">
-                                    <div class="section colm colm4">
-                                        <label for="partner_telephone" class="field-label">Partner Home Phone </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="partner_telephone" id="partner_telephone" class="gui-input" placeholder="(999)-999-9999">
-                                            <span class="field-icon"><i class="fa fa-phone-square"></i></span>
-                                        </label>
-                                    </div>
                                         
                                     <div class="section colm colm4">
                                         <label for="partner_mobile" class="field-label">Partner Mobile Phone </label>
@@ -295,40 +285,20 @@
                                         </label>
                                     </div>
                                         
-                                    <div class="section colm colm4">
-                                        <label for="partner_date_of_birth" class="field-label">Partner Date of Birth </label>
+                                   <div class="section colm colm4">
+                                        <label for="partner_ssn" class="field-label">Partner SSN. Last 4 </label>
                                         <label class="field prepend-icon">
-                                            <input type="text" name="partner_date_of_birth" id="partner_date_of_birth" class="gui-input" placeholder="DD/MM/YYYY" >
-                                            <span class="field-icon"><i class="fa fa-phone-square"></i></span> 
+                                            <input type="text" name="partner_ssn" id="partner_ssn" class="gui-input" placeholder="1234">
+                                            <span class="field-icon"><i class="fa fa-user"></i></span>  
                                         </label>
+                                    </div>
+									
+									 <div class="section colm colm4">
+                                       
                                     </div>
                                 </div>
                                     
-                                <div class="frm-row">
-                                    <div class="section colm colm4">
-                                        <label for="partner_birthplace" class="field-label">Partner Birthplace </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="partner_birthplace" id="partner_birthplace" class="gui-input" placeholder="United States">
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                        </label>
-                                    </div>
-                                        
-                                    <div class="section colm colm4">
-                                        <label for="partner_ssn" class="field-label">Partner Social Security No. </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="partner_ssn" id="partner_ssn" class="gui-input" placeholder="000-00-0000">
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                        </label>
-                                    </div>
-
-                                    <div class="section colm colm4">
-                                        <label for="partner_dln" class="field-label">Partner Drivers Lic No </label>
-                                        <label class="field prepend-icon">
-                                            <input type="text" name="partner_dln" id="partner_dln" class="gui-input" placeholder="D000000">
-                                            <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                        </label>
-                                    </div>
-                                </div>
+                               
                             </div>
 
                             <div class="spacer-b40 spacer-t40">
@@ -336,7 +306,7 @@
                             </div>
                         </fieldset>
                 
-                        <h2>2. Residences</h2>
+                       <h2>Property <br>Information</h2>
                         <fieldset>   
                             <div class="spacer-b40">
                                 <p class="medium fine-grey">
@@ -383,7 +353,7 @@
                             </div>      
                         </fieldset>
                                 
-                        <h2>3. Employment</h2>
+                        <h2>About Your <br>Transaction</h2>
                         <fieldset>  
                             <div class="spacer-b40">
                                 <p class="medium fine-grey">
@@ -434,9 +404,9 @@
                                 </div>
                             </div> 
                                 
-                            <div class="spacer-b40 spacer-t40">
+                         <!--   <div class="spacer-b40 spacer-t40">
                                 <div class="tagline"><span>Add Marriage or Domestic Partner Occupation</span></div>
-                            </div> 
+                            </div> -->
                                 
                             <div class="section">
                                 <div class="option-group field">
@@ -500,7 +470,7 @@
                             </div>	
                         </fieldset>
                                 
-                        <h2>4. Partnerships</h2>
+                       <h2>Wire <br>Instructions</h2>
                         <fieldset>
                             <div class="spacer-b40">
                                 <p class="medium fine-grey">
@@ -1313,8 +1283,8 @@
         $("#spouse_date_of_birth").mask('99/99/9999', {placeholder:'_'});
         $("#partner_date_of_birth").mask('99/99/9999', {placeholder:'_'});
         $("#ssn").mask('9999', {placeholder:'_'});
-        $("#spouse_ssn").mask('999-99-9999', {placeholder:'_'});
-        $("#partner_ssn").mask('999-99-9999', {placeholder:'_'});
+        $("#spouse_ssn").mask('9999', {placeholder:'_'});
+        $("#partner_ssn").mask('9999', {placeholder:'_'});
         $("#residence_from_date").mask('99/9999', {placeholder:'_'});
         $("#residence_to_date").mask('99/9999', {placeholder:'_'});
         $("#employment_from_date").mask('99/9999', {placeholder:'_'});

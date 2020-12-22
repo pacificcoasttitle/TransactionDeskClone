@@ -1329,9 +1329,11 @@ http://www.jquery-steps.com/
 .smart-steps .wizard > .steps a:hover,
 .smart-steps .wizard > .steps a:active{ 
 	height:54px; 
-	line-height:54px; 
+	line-height:18px; 
 	padding:0 1em; 
-	padding-left:1.2em;  
+	padding-left:1.2em; 
+	text-align:left;
+	padding-top:8px;
 }
 
 .smart-steps .wizard > .steps a{
