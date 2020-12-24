@@ -121,7 +121,7 @@
 						}
 					?>
 				Supplemental report dated as of: </span><?php echo $s_date; ?></p>
-				<p class="text-center">
+				<p class="text-center" style="display: none;">
 					<?php
 						$p_date = date('M d, Y');
 						if(isset($preliminary_report_date) && !empty($preliminary_report_date))
@@ -144,7 +144,7 @@
 					if(isset($vesting) && !empty($vesting))
 					{
 				?>
-						<p><?php echo $vesting; ?></p>
+						<p>Borrower: <?php echo $vesting; ?></p>
 				<?php
 					}
 				?>
