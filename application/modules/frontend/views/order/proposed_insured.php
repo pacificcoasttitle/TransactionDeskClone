@@ -1209,7 +1209,7 @@ function generateProposedInsured(fileId)
 					$("#TitleOfficer").val(res.orderDetails['title_officer']);
 					
 					
-					if(res.orderDetails['edit_supplemental_report_date'] == null || res.orderDetails['edit_supplemental_report_date'] == undefined || res.orderDetails['edit_supplemental_report_date'].length == 0)
+					if(res.orderDetails['supplemental_report_date'] == null || res.orderDetails['supplemental_report_date'] == undefined || res.orderDetails['supplemental_report_date'].length == 0)
 					{
 						
                 		// $('#edit_preliminary_report_date').val(res.orderDetails['preliminary_report_date']);
