@@ -340,13 +340,13 @@
 								<div class="tagline"><span>Report Date Section</span></div><!-- .tagline -->
 							</div>
 							<div class="frm-row">
-								<div class="section colm colm6" id="s-date-section">
+								<div class="section colm colm12" id="s-date-section">
 									<label class="field prepend-icon">
 										<input type="text" name="supplemental_report_date" id="supplemental_report_date" class="gui-input" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
 										<span class="field-icon"><i class="fa fa-calendar"></i></span>
 									</label>
 								</div>
-								<div class="section colm colm6" id="p-date-section">
+								<div class="section colm colm6" id="p-date-section" style="display: none;">
 									<label class="field prepend-icon">
 										<input type="text" name="preliminary_report_date" id="preliminary_report_date" class="gui-input" placeholder="Preliminary Report Date" value="<?php echo date('m/d/Y'); ?>">
 										<span class="field-icon"><i class="fa fa-calendar"></i></span>
@@ -619,13 +619,13 @@
 								<div class="tagline"><span>Report Date Section</span></div><!-- .tagline -->
 							</div>
 							<div class="frm-row">
-								<div class="section colm colm6" id="s-date-section">
+								<div class="section colm colm12" id="s-date-section">
 									<label class="field prepend-icon">
 										<input type="text" name="supplemental_report_date" id="edit_supplemental_report_date" class="gui-input" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
 										<span class="field-icon"><i class="fa fa-calendar"></i></span>
 									</label>
 								</div>
-								<div class="section colm colm6" id="p-date-section">
+								<div class="section colm colm6" id="p-date-section" style="display: none;">
 									<label class="field prepend-icon">
 										<input type="text" name="preliminary_report_date" id="edit_preliminary_report_date" class="gui-input" placeholder="Preliminary Report Date" value="<?php echo date('m/d/Y'); ?>">
 										<span class="field-icon"><i class="fa fa-calendar"></i></span>
@@ -657,10 +657,10 @@
 <script>
 $(document).ready(function () {
 
-		$('#supplemental_report_date').datepicker();
-		$('#preliminary_report_date').datepicker();
-		$('#edit_supplemental_report_date').datepicker();
-		$('#edit_preliminary_report_date').datepicker();	
+		$('#supplemental_report_date').datepicker().datepicker("setDate", new Date());
+		// $('#preliminary_report_date').datepicker();
+		$('#edit_supplemental_report_date').datepicker().datepicker("setDate", new Date());
+		// $('#edit_preliminary_report_date').datepicker();	
 
 		if(jQuery('#add-order-details').length)
 	    {
@@ -669,14 +669,14 @@ $(document).ready(function () {
 	            rules: {
 	                LenderCompany:"required",
 	                LenderEmailAddress:"required",
-	                LenderName:"required",
+	                // LenderName:"required",
 	                TitleOfficer:"required",
 	                // loan_amount:"required",
 	                loan_number:"required",
 	                primary_first_name:"required",
 	               // primary_last_name:"required",
 	                supplemental_report_date:"required",
-	                preliminary_report_date:"required",
+	               // preliminary_report_date:"required",
 	            },
 	            messages: {
 	                TitleOfficer:"Please select title officer",
@@ -983,14 +983,14 @@ $(document).ready(function () {
 		        rules: {
 		            LenderCompany:"required",
 	                LenderEmailAddress:"required",
-	                LenderName:"required",
+	                // LenderName:"required",
 	                TitleOfficer:"required",
 	                // loan_amount:"required",
 	                loan_number:"required",
 	                primary_first_name:"required",
 	                // primary_last_name:"required",
 	                supplemental_report_date:"required",
-	                preliminary_report_date:"required",
+	               // preliminary_report_date:"required",
 		        },
 		        messages: {
 		            TitleOfficer:"Please select title officer",
@@ -1154,79 +1154,25 @@ function generateProposedInsured(fileId)
 					$("#property_city").val(res.orderDetails['property_city']);
 					$("#property_state").val(res.orderDetails['property_state']);
 					$("#property_zipcode").val(res.orderDetails['property_zip']);
-					/*if((res.orderDetails['primary_owner_first_name'] == null || res.orderDetails['primary_owner_first_name'] == undefined || res.orderDetails['primary_owner_first_name'].length == 0))
-                	{
-                		dataRequired = 1;
-                		$('#primary-borrower-section').show();
-                	}
-                	else
-                	{
-                		$('#primary-borrower-section').hide();
-                	}*/
-
-					// $("#primary_first_name").val(res.orderDetails['primary_owner_first_name']);
-					// $("#primary_last_name").val(res.orderDetails['primary_owner_last_name']);
-
-					/*if((res.orderDetails['secondary_owner_first_name'] == null || res.orderDetails['secondary_owner_first_name'] == undefined || res.orderDetails['secondary_owner_first_name'].length == 0))
-                	{
-                		dataRequired = 1;
-                		$('#secondary-borrower-section').show();
-                	}
-                	else
-                	{
-                		$('#secondary-borrower-section').hide();
-                	}*/
-
-					// $("#first_name").val(res.orderDetails['secondary_owner_first_name']);
-					// $("#last_name").val(res.orderDetails['secondary_owner_last_name']);
-
-					/*if(res.orderDetails['vesting'] == null || res.orderDetails['vesting'] == undefined || res.orderDetails['vesting'].length == 0 )
-					{
-						dataRequired = 1;
-						$('#vesting-section').show();
-                	}
-                	else
-                	{
-                		$('#vesting-section').hide();
-                	}*/
-                	// $("#vesting").val(res.orderDetails['vesting']);
-
-					/*if((res.orderDetails['loan_amount'] == null || res.orderDetails['loan_amount'] == undefined || res.orderDetails['loan_amount'].length == 0) || (res.orderDetails['loan_number'] == null || res.orderDetails['loan_number'] == undefined || res.orderDetails['loan_number'].length == 0) )
-                	{
-                		dataRequired = 1;
-                		$('#loan-details-section').show();
-                	}
-                	else
-                	{
-                		$('#loan-details-section').hide();
-                	}
-*/
+					
 					$("#loan_amount").val(res.orderDetails['loan_amount']);
 					$("#loan_number").val(res.orderDetails['loan_number']);
+					$("#TitleOfficer").val(res.orderDetails['title_officer']);
 
-					/*if(res.orderDetails['title_officer'] == null || res.orderDetails['title_officer'] == undefined || res.orderDetails['title_officer'].length == 0 )
-                	{
-                		dataRequired = 1;
-                		$('#title-officer-section').show();
-                	}
-                	else
-                	{
-                		$('#title-officer-section').hide();
-                	}
-*/					$("#TitleOfficer").val(res.orderDetails['title_officer']);
-
-					/*if((res.orderDetails['preliminary_report_date'] == null || res.orderDetails['preliminary_report_date'] == undefined || res.orderDetails['preliminary_report_date'].length == 0) || (res.orderDetails['supplemental_report_date'] == null || res.orderDetails['supplemental_report_date'] == undefined || res.orderDetails['supplemental_report_date'].length == 0))
-                	{
-                		dataRequired = 1;
-                		$('#report-date-section').show();
-                	}
-                	else
-                	{
-                		$('#report-date-section').hide();
-                	}*/
                 	$("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
-                	$('#supplemental_report_date').val(res.orderDetails['supplemental_report_date']);
-                	$('#preliminary_report_date').val(res.orderDetails['preliminary_report_date']);
+
+                	if(res.orderDetails['supplemental_report_date'] == null || res.orderDetails['supplemental_report_date'] == undefined || res.orderDetails['supplemental_report_date'].length == 0)
+					{
+						
+                		// $('#edit_preliminary_report_date').val(res.orderDetails['preliminary_report_date']);
+					}
+					else
+					{
+						$('#supplemental_report_date').val(res.orderDetails['supplemental_report_date']);
+					}
+
+                	/*$('#supplemental_report_date').val(res.orderDetails['supplemental_report_date']);
+                	$('#preliminary_report_date').val(res.orderDetails['preliminary_report_date']);*/
 
                 	if (res.orderDetails['lender_id'] != '') 	
                 	{	
@@ -1344,9 +1290,18 @@ function editInformation(fileId)
 						$("#edit_TitleOfficer").val(res.orderDetails['title_officer']);
 
 						
-
-	                	$('#edit_supplemental_report_date').val(res.orderDetails['supplemental_report_date']);
-	                	$('#edit_preliminary_report_date').val(res.orderDetails['preliminary_report_date']);
+						if(res.orderDetails['supplemental_report_date'] == null || res.orderDetails['supplemental_report_date'] == undefined || res.orderDetails['supplemental_report_date'].length == 0)
+						{
+							
+	                		// $('#edit_preliminary_report_date').val(res.orderDetails['preliminary_report_date']);
+						}
+						else
+						{
+							$('#edit_supplemental_report_date').val(res.orderDetails['supplemental_report_date']);
+						}
+						
+	                	/*$('#edit_supplemental_report_date').val(res.orderDetails['supplemental_report_date']);
+	                	$('#edit_preliminary_report_date').val(res.orderDetails['preliminary_report_date']);*/
 
 	                }
 	                $('#edit_LenderId').val(res.orderDetails.lender_id);
