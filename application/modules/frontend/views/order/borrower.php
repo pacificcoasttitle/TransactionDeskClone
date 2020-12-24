@@ -638,7 +638,7 @@
 
                         </fieldset>                            
                                 
-                        <h2>5. Complete</h2>
+                        <h2>Sign & <br> Submit</h2>
                         <fieldset>
                             <div class="spacer-b40">
                                 <p class="medium fine-grey">Please complete the information below prior to hitting submit.</p>
