@@ -75,7 +75,7 @@ class TitlePoint extends MX_Controller {
                     
                     $lv_file_path = FCPATH.'uploads/legal-vesting/'.$value['file_number'].'.pdf';
 
-                    if (file_exists($lv_file_path)) 
+                    if (file_exists($lv_file_path) || file_exists(FCPATH.'uploads/legal-vesting/LV'.$value['file_number'].'.pdf')) 
                     {
                         $nestedData[] = 'success';
                     }

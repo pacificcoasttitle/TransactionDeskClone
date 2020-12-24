@@ -2088,6 +2088,10 @@ class Dashboard extends MX_Controller {
 		{
 		    $file_url = base_url().'uploads/legal-vesting/'.$file_number.'.pdf';
 		} 
+		else if(file_exists(FCPATH.'uploads/legal-vesting/LV'.$file_number.'.pdf')) 
+		{
+			$file_url = base_url().'uploads/legal-vesting/LV'.$file_number.'.pdf';
+		} 
 		else 
 		{
 			$this->load->model('order/titlePointData');

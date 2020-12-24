@@ -97,7 +97,7 @@ class Titlepoint
                                         mkdir('./uploads/legal-vesting', 0777, TRUE);
                                     }
                                     
-                                    $pdfFilePath = './uploads/legal-vesting/'.$fileNumber.'.pdf';
+                                    $pdfFilePath = './uploads/legal-vesting/LV'.$fileNumber.'.pdf';
                                     file_put_contents($pdfFilePath, $bin); 
                                 }
 
