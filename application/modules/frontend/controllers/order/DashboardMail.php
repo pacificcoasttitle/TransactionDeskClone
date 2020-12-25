@@ -910,9 +910,10 @@ class DashboardMail extends MX_Controller {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$data['mail_dashboard'] = 1;
 		$orderDetails = $this->order->get_order_details($fileId,1);
+        
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
-		
+		$data['created'] = !empty($orderDetails['created']) ? date("m/d/Y", strtotime($orderDetails['created'])) : '';
 
         if (!empty($orderDetails['proposed_insured_document_name'])) 
         {

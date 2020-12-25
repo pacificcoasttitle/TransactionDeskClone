@@ -52,6 +52,7 @@
 												<th>#</th>
 												<th>File Number</th>
 												<th>Property Address</th>
+												<th>Created</th>
 												<th>Action</th>
 											</tr>
 										</thead>
@@ -60,6 +61,7 @@
                                                 <td>1</td>
                                                 <td><?php echo $file_number;?></td>
                                                 <td><?php echo $full_address;?></td>
+                                                <td><?php echo $created;?></td>
                                                 <td><?php echo $action;?></td> 
                                             </tr>
 										</tbody>
