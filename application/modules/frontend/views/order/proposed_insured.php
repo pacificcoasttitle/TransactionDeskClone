@@ -56,6 +56,7 @@
 												<th>#</th>
 												<th>File Number</th>
 												<th>Property Address</th>
+												<th>Created</th>
 												<th style="text-align: center;">Action</th>
 											</tr>
 										</thead>
