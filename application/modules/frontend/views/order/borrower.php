@@ -357,10 +357,10 @@
                         <fieldset>  
                             <div class="spacer-b40">
                                 <p class="medium fine-grey">
-                                Please list your employment history for the last 10 years. If you need add occupation for your spouse or partner please add them below.</p>
+                                Please tell us a little more about you and your transaction. This will help us to spot any unknown surprises that might delay your transaction.</p>
                             </div> 
                                 
-                            <div class="toclone clone-widget">
+                           <!-- <div class="toclone clone-widget">
                                 <div id="clone-group-fields">
                                     <div class="toclone clone-widget2">
                                         <div class="frm-row">
@@ -402,24 +402,32 @@
                                         <a href="#" class="delete button"><i class="fa fa-minus"></i></a>
                                     </div>  
                                 </div>
-                            </div> 
+                            </div> -->
                                 
                          <!--   <div class="spacer-b40 spacer-t40">
                                 <div class="tagline"><span>Add Marriage or Domestic Partner Occupation</span></div>
                             </div> -->
                                 
                             <div class="section">
-                                <div class="option-group field">
-                                    <label class="option">
-                                        <input type="radio" name="employment_status" class="smartfm-ctrl" value="add_partner" data-show-id="add_partner">
-                                        <span class="radio"></span> Add Partner Occupation
-                                    </label>
-                                    <label class="option">
-                                        <input type="radio" name="employment_status" class="smartfm-ctrl" value="dont_add"  data-show-id="dont_add">
-                                        <span class="radio"></span> Don't Add          
-                                    </label>         
-                                </div>
+							 <div class="frm-row">
+								<div class="section colm colm8">
+								 <p class="medium fine-grey">
+                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
+								</div>
+								<div class="section colm colm4">
+									<div class="option-group field">
+										<label class="option">
+											<input type="radio" name="employment_status" class="smartfm-ctrl" value="add_partner" data-show-id="add_partner">
+											<span class="radio"></span> Yes
+										</label>
+										<label class="option">
+											<input type="radio" name="employment_status" class="smartfm-ctrl" value="dont_add"  data-show-id="dont_add">
+											<span class="radio"></span> No          
+										</label>         
+									</div>
+								</div>
                             </div>
+							</div>
                                     
                             <div id="add_partner" class="hiddenbox section smartform-reset">   
                                 <div class="toclone clone-widget">
@@ -464,7 +472,107 @@
                                         </div>  
                                     </div>
                                 </div>
-                            </div>        
+                            </div> 
+							
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm8">
+								 <p class="medium fine-grey">
+                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
+								</div>
+								<div class="section colm colm4">
+									 <label class="modern-switch">
+										<span class="switch-label">Yes</span>  
+										<input type="checkbox" checked>
+										<span class="switch-toggle"></span>
+										<span class="switch-label">No</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm8">
+								 <p class="medium fine-grey">
+                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
+								</div>
+								<div class="section colm colm4">
+									 <label class="modern-switch">
+										<span class="switch-label">Yes</span>  
+										<input type="checkbox" checked>
+										<span class="switch-toggle"></span>
+										<span class="switch-label">No</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm8">
+								 <p class="medium fine-grey">
+                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
+								</div>
+								<div class="section colm colm4">
+									 <label class="modern-switch">
+										<span class="switch-label">Yes</span>  
+										<input type="checkbox" checked>
+										<span class="switch-toggle"></span>
+										<span class="switch-label">No</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm8">
+								 <p class="medium fine-grey">
+                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
+								</div>
+								<div class="section colm colm4">
+									 <label class="modern-switch">
+										<span class="switch-label">Yes</span>  
+										<input type="checkbox" checked>
+										<span class="switch-toggle"></span>
+										<span class="switch-label">No</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm8">
+								 <p class="medium fine-grey">
+                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
+								</div>
+								<div class="section colm colm4">
+									 <label class="modern-switch">
+										<span class="switch-label">Yes</span>  
+										<input type="checkbox" checked>
+										<span class="switch-toggle"></span>
+										<span class="switch-label">No</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm8">
+								 <p class="medium fine-grey">
+                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
+								</div>
+								<div class="section colm colm4">
+									 <label class="modern-switch">
+										<span class="switch-label">Yes</span>  
+										<input type="checkbox" checked>
+										<span class="switch-toggle"></span>
+										<span class="switch-label">No</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+
+							
+							
                             <div class="spacer-b40 spacer-t40">
                                 <div class=""><span></span></div>
                             </div>	
