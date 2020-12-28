@@ -583,7 +583,7 @@
                         <fieldset>
                             <div class="spacer-b40">
                                 <p class="medium fine-grey">
-                                Please click the button below to verify your financial information. This is inteneded to prevent any wire fraud on your transaction. If you have questiona about wire fraud we have created a quick video the can help you understand what it us. <underline>Video Link?</underline></p>
+                                Please click the button below to verify your financial information. This is inteneded to prevent any wire fraud on your transaction. If you have questiona about wire fraud we have created a quick video the can help you understand what it us. <underline>Video Link</underline></p>
                             </div>
 							
 							<div class="section">
@@ -591,6 +591,23 @@
 								<div class="section colm colm10">
 								
 								<button type="" class="button btn-secondary">Verify Wire Instructions</button>
+								
+								
+								</div>
+								<div class="section colm colm2">
+									 
+								</div>
+                             </div>
+							</div>
+							
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm10">
+								
+								 <p class="medium fine-grey">Borrower Name: John A Doe</p>
+								 <p class="medium fine-grey">Borrower Address:  1234 Main St. Success City, CA 90201</p>
+								 <p class="medium fine-grey">Escrow Partner: Savannah Escrow</p>
+								 <p class="medium fine-grey">Escrow Officer: Dakota Johnson</p>
 								
 								
 								</div>
