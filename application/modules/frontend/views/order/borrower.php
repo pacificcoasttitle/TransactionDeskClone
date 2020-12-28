@@ -408,13 +408,111 @@
                                 <div class="tagline"><span>Add Marriage or Domestic Partner Occupation</span></div>
                             </div> -->
                                 
-                            <div class="section">
+                            
+							
+							<div class="section">
 							 <div class="frm-row">
-								<div class="section colm colm8">
+								<div class="section colm colm10">
+								 <p class="medium fine-grey">
+                                Is 1234 Main St. Rancho Cucamonga the property address for this transaction?</p>
+								</div>
+								<div class="section colm colm2">
+									 <label class="modern-switch">
+										<span class="switch-label">No</span>  
+										<input type="checkbox" >
+										<span class="switch-toggle"></span>
+										<span class="switch-label">Yes</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm10">
+								 <p class="medium fine-grey">
+                                Do the buyer intend to use this as their primary residence?</p>
+								</div>
+								<div class="section colm colm2">
+									 <label class="modern-switch">
+										<span class="switch-label">No</span>  
+										<input type="checkbox" >
+										<span class="switch-toggle"></span>
+										<span class="switch-label">Yes</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							<div class="frm-row">
+								<div class="section colm colm10">
+								 <p class="medium fine-grey">
+                                Is the Land Improved?</p>
+								</div>
+								<div class="section colm colm2">
+									 <label class="modern-switch">
+										<span class="switch-label">No</span>  
+										<input type="checkbox" >
+										<span class="switch-toggle"></span>
+										<span class="switch-label">Yes</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm10">
+								 <p class="medium fine-grey">
+                                Is this property a SFR, 1-4 Units, or Condominium?</p>
+								</div>
+								<div class="section colm colm2">
+									 <label class="modern-switch">
+										<span class="switch-label">No</span>  
+										<input type="checkbox" >
+										<span class="switch-toggle"></span>
+										<span class="switch-label">Yes</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm10">
+								 <p class="medium fine-grey">
+                                What other questions would we like to ask?</p>
+								</div>
+								<div class="section colm colm2">
+									 <label class="modern-switch">
+										<span class="switch-label">No</span>  
+										<input type="checkbox" >
+										<span class="switch-toggle"></span>
+										<span class="switch-label">Yes</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm10">
+								 <p class="medium fine-grey">
+                                What other questions would we like to ask?</p>
+								</div>
+								<div class="section colm colm2">
+									 <label class="modern-switch">
+										<span class="switch-label">No</span>  
+										<input type="checkbox" >
+										<span class="switch-toggle"></span>
+										<span class="switch-label">Yes</span>                      
+									</label>
+								</div>
+                             </div>
+							</div>
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm10">
 								 <p class="medium fine-grey">
                                 Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
 								</div>
-								<div class="section colm colm4">
+								<div class="section colm colm2">
 									<div class="option-group field">
 										<label class="option">
 											<input type="radio" name="employment_status" class="smartfm-ctrl" value="add_partner" data-show-id="add_partner">
@@ -473,103 +571,6 @@
                                     </div>
                                 </div>
                             </div> 
-							
-							<div class="section">
-							 <div class="frm-row">
-								<div class="section colm colm8">
-								 <p class="medium fine-grey">
-                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
-								</div>
-								<div class="section colm colm4">
-									 <label class="modern-switch">
-										<span class="switch-label">Yes</span>  
-										<input type="checkbox" checked>
-										<span class="switch-toggle"></span>
-										<span class="switch-label">No</span>                      
-									</label>
-								</div>
-                             </div>
-							</div>
-							<div class="section">
-							 <div class="frm-row">
-								<div class="section colm colm8">
-								 <p class="medium fine-grey">
-                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
-								</div>
-								<div class="section colm colm4">
-									 <label class="modern-switch">
-										<span class="switch-label">Yes</span>  
-										<input type="checkbox" checked>
-										<span class="switch-toggle"></span>
-										<span class="switch-label">No</span>                      
-									</label>
-								</div>
-                             </div>
-							</div>
-							<div class="section">
-							 <div class="frm-row">
-								<div class="section colm colm8">
-								 <p class="medium fine-grey">
-                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
-								</div>
-								<div class="section colm colm4">
-									 <label class="modern-switch">
-										<span class="switch-label">Yes</span>  
-										<input type="checkbox" checked>
-										<span class="switch-toggle"></span>
-										<span class="switch-label">No</span>                      
-									</label>
-								</div>
-                             </div>
-							</div>
-							<div class="section">
-							 <div class="frm-row">
-								<div class="section colm colm8">
-								 <p class="medium fine-grey">
-                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
-								</div>
-								<div class="section colm colm4">
-									 <label class="modern-switch">
-										<span class="switch-label">Yes</span>  
-										<input type="checkbox" checked>
-										<span class="switch-toggle"></span>
-										<span class="switch-label">No</span>                      
-									</label>
-								</div>
-                             </div>
-							</div>
-							<div class="section">
-							 <div class="frm-row">
-								<div class="section colm colm8">
-								 <p class="medium fine-grey">
-                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
-								</div>
-								<div class="section colm colm4">
-									 <label class="modern-switch">
-										<span class="switch-label">Yes</span>  
-										<input type="checkbox" checked>
-										<span class="switch-toggle"></span>
-										<span class="switch-label">No</span>                      
-									</label>
-								</div>
-                             </div>
-							</div>
-							<div class="section">
-							 <div class="frm-row">
-								<div class="section colm colm8">
-								 <p class="medium fine-grey">
-                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
-								</div>
-								<div class="section colm colm4">
-									 <label class="modern-switch">
-										<span class="switch-label">Yes</span>  
-										<input type="checkbox" checked>
-										<span class="switch-toggle"></span>
-										<span class="switch-label">No</span>                      
-									</label>
-								</div>
-                             </div>
-							</div>
 
 							
 							
@@ -582,9 +583,27 @@
                         <fieldset>
                             <div class="spacer-b40">
                                 <p class="medium fine-grey">
-                                Please use the information below to enter your marriage history. If you have a domestic partner please choose from the options below.</p>
+                                Please click the button below to verify your financial information. This is inteneded to prevent any wire fraud on your transaction. If you have questiona about wire fraud we have created a quick video the can help you understand what it us. <underline>Video Link?</underline></p>
                             </div>
+							
+							<div class="section">
+							 <div class="frm-row">
+								<div class="section colm colm10">
+								
+								<button type="" class="button btn-secondary">Verify Wire Instructions</button>
+								
+								
+								</div>
+								<div class="section colm colm2">
+									 
+								</div>
+                             </div>
+							</div>
+							
+							
                             
+							<!--
+							
                             <div class="section">
                                 <div class="option-group field">
                                     <label class="option">
@@ -739,6 +758,8 @@
                             <div id="notmarried" class="hiddenbox section smartform-reset">
                         
                             </div>
+							
+							-->
 
                             <div class="spacer-b40 spacer-t40">
                                 <div class=""><span></span></div>
@@ -840,7 +861,7 @@
                                 </div>
 
                                 <div class="section colm colm6">
-                                    <label for="spouse_signature" class="field-label">Please TYPE your spouse's name in the box below. (if applicable) </label>
+                                    <label for="spouse_signature" class="field-label">Please TYPE your spouse's name. (if applicable) </label>
                                     <label class="field prepend-icon">
                                         <input type="text" name="spouse_signature" id="spouse_signature" class="gui-input" placeholder="">
                                         <span class="field-icon"><i class="fa fa-user"></i></span>  

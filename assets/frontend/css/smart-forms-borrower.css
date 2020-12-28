@@ -946,8 +946,8 @@ html, body{
 }
 
 
-.smart-forms .modern-switch input:checked + .switch-toggle { background:#1ABC9C; }
-.smart-forms .modern-switch input:checked + .switch-toggle::before { left: 20px; background: #138871; }
+.smart-forms .modern-switch input:checked + .switch-toggle { background:#d35411; }
+.smart-forms .modern-switch input:checked + .switch-toggle::before { left: 20px; background: #ba4b0f; }
 .smart-forms .modern-switch input:disabled + .switch-toggle { background:#D9DEE1; pointer-events: none; }
 .smart-forms .modern-switch input:disabled + .switch-toggle::before { background: #C9D1D6; }
 .smart-forms .modern-switch input:disabled + .switch-toggle + .switch-label { color:#B5C1C7; }
@@ -1035,14 +1035,27 @@ html, body{
 
 /* @primary button theme
 -------------------------------------------- */
-.smart-forms .btn-primary {  background-color: #1abc9c;  }
+.smart-forms .btn-primary {  background-color: #1abc9c; height:64px; width:264px  }
 .smart-forms .btn-primary:hover,
-.smart-forms .btn-primary:focus { background-color: #48c9b0; }
-.smart-forms .btn-primary:active{ background-color: #16a085; }
+.smart-forms .btn-primary:focus { background-color: #f26013; }
+.smart-forms .btn-primary:active{ background-color: #c14d10; }
 .smart-forms .btn-primary, 
 .smart-forms .btn-primary:hover,
 .smart-forms .btn-primary:focus, 
 .smart-forms .btn-primary:active{ color: #fff; text-shadow: 0 1px rgba(0, 0, 0, 0.08); }
+
+
+
+/* @secondary button theme
+-------------------------------------------- */
+.smart-forms .btn-secondary {  background-color: #d35411;  }
+.smart-forms .btn-secondary:hover,
+.smart-forms .btn-secondary:focus { background-color: #48c9b0; }
+.smart-forms .btn-secondary:active{ background-color: #16a085; }
+.smart-forms .btn-secondary, 
+.smart-forms .btn-secondary:hover,
+.smart-forms .btn-secondary:focus, 
+.smart-forms .btn-secondary:active{ color: #fff; text-shadow: 0 1px rgba(0, 0, 0, 0.08); }
 
 /* @rounded buttons 
 -------------------------------------------- */
