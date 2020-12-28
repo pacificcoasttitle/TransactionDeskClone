@@ -1035,10 +1035,10 @@ html, body{
 
 /* @primary button theme
 -------------------------------------------- */
-.smart-forms .btn-primary {  background-color: #1abc9c; height:64px; width:264px  }
+.smart-forms .btn-primary {  background-color: #1abc9c; }
 .smart-forms .btn-primary:hover,
-.smart-forms .btn-primary:focus { background-color: #f26013; }
-.smart-forms .btn-primary:active{ background-color: #c14d10; }
+.smart-forms .btn-primary:focus { background-color: #48c9b0; }
+.smart-forms .btn-primary:active{ background-color: #16a085; }
 .smart-forms .btn-primary, 
 .smart-forms .btn-primary:hover,
 .smart-forms .btn-primary:focus, 
@@ -1048,10 +1048,10 @@ html, body{
 
 /* @secondary button theme
 -------------------------------------------- */
-.smart-forms .btn-secondary {  background-color: #d35411;  }
+.smart-forms .btn-secondary {  background-color: #d35411; height:64px; width:264px    }
 .smart-forms .btn-secondary:hover,
-.smart-forms .btn-secondary:focus { background-color: #48c9b0; }
-.smart-forms .btn-secondary:active{ background-color: #16a085; }
+.smart-forms .btn-secondary:focus { background-color: #f26013; }
+.smart-forms .btn-secondary:active{ background-color: #c14d10; }
 .smart-forms .btn-secondary, 
 .smart-forms .btn-secondary:hover,
 .smart-forms .btn-secondary:focus, 

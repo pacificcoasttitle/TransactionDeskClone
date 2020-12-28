@@ -508,11 +508,11 @@
 							</div>
 							<div class="section">
 							 <div class="frm-row">
-								<div class="section colm colm10">
+								<div class="section colm colm9">
 								 <p class="medium fine-grey">
                                 Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
 								</div>
-								<div class="section colm colm2">
+								<div class="section colm colm3">
 									<div class="option-group field">
 										<label class="option">
 											<input type="radio" name="employment_status" class="smartfm-ctrl" value="add_partner" data-show-id="add_partner">
