@@ -67,7 +67,7 @@ html, body{
 /* @form helper classes 
 --------------------------------------------------------------- */
 .smart-forms .section{ margin-bottom:22px; }
-.smart-forms .section .center{ margin-bottom:22px; text-align: center; }
+.smart-forms .section.center{ margin-bottom:22px; text-align: center; }
 .smart-forms .smart-link{ color:#1ABC9C; text-decoration:none; }
 .smart-forms .smart-link:hover{ text-decoration: underline; }
 .smart-forms .tagline{ height:0; border-top:1px solid #D9DDE5; text-align:center;  }
