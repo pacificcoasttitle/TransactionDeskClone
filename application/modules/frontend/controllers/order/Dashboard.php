@@ -1815,10 +1815,10 @@ class Dashboard extends MX_Controller {
 				$resPartners = json_decode($resultPartners, true);
 				if(!empty($resPartners)) {
 					$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-					if($resPartners['Partners'][$key]['PartnerName'] == 'Outside Title Order') {
-						$pdfData['underwriter'] = 'Westcor Land Title Insurance Company';
-					} else {
+					if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company' || $resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company' || $resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
 						$pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
+					} else {
+						$pdfData['underwriter'] = 'Westcor Land Title Insurance Company';
 					}
 				}
 

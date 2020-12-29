@@ -1679,9 +1679,13 @@ class DashboardMail extends MX_Controller {
                 $this->apiLogs->syncLogs($orderUser['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
                 $resPartners = json_decode($resultPartners, true);
                 if(!empty($resPartners)) {
-                    $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                    $pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
-                }
+					$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+					if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company' || $resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company' || $resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+						$pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
+					} else {
+						$pdfData['underwriter'] = 'Westcor Land Title Insurance Company';
+					}
+				}
 
                 $html=$this->load->view('order/proposed_insured_pdf',$pdfData, true);
                 $this->load->library('m_pdf');
