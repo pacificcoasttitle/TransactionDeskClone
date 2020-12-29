@@ -582,11 +582,15 @@
                        <h2>Wire <br>Instructions</h2>
                         <fieldset>
                             <div class="spacer-b40">
-                                <p class="medium fine-grey">
-                                Please click the button below to verify your financial information. This is inteneded to prevent any wire fraud on your transaction. If you have questiona about wire fraud we have created a quick video the can help you understand what it us. <underline>Video Link</underline></p>
+							
+							<div class="section center">
+							    <p class="medium fine-grey">
+                                Please click the button below to verify your financial information. This is inteneded to prevent any wire fraud on your transaction. If you have questions about wire fraud we have created a quick video the can help you understand what it us. <underline>Video Link</underline></p>
+							</div>
+								
                             </div>
 							
-							<div class="section">
+							<div class="section center">
 							 <div class="frm-row">
 								<div class="section colm colm10">
 								
@@ -600,7 +604,7 @@
                              </div>
 							</div>
 							
-							<div class="section">
+							<div class="section center">
 							 <div class="frm-row">
 								<div class="section colm colm10">
 								

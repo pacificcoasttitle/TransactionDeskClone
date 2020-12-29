@@ -67,6 +67,7 @@ html, body{
 /* @form helper classes 
 --------------------------------------------------------------- */
 .smart-forms .section{ margin-bottom:22px; }
+.smart-forms .section .center{ margin-bottom:22px; text-align: center; }
 .smart-forms .smart-link{ color:#1ABC9C; text-decoration:none; }
 .smart-forms .smart-link:hover{ text-decoration: underline; }
 .smart-forms .tagline{ height:0; border-top:1px solid #D9DDE5; text-align:center;  }
@@ -1048,9 +1049,9 @@ html, body{
 
 /* @secondary button theme
 -------------------------------------------- */
-.smart-forms .btn-secondary {  background-color: #d35411; height:64px; width:264px    }
+.smart-forms .btn-secondary {  background-color: #d35411; height:64px; width:264px ;border-radius:5px;   }
 .smart-forms .btn-secondary:hover,
-.smart-forms .btn-secondary:focus { background-color: #f26013; }
+.smart-forms .btn-secondary:focus { background-color: #b3480e; }
 .smart-forms .btn-secondary:active{ background-color: #c14d10; }
 .smart-forms .btn-secondary, 
 .smart-forms .btn-secondary:hover,
