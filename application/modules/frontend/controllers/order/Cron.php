@@ -2026,4 +2026,74 @@ class Cron extends MX_Controller {
             }
         }
     }
+
+    public function getOrderInformation()
+    {
+        $login = 'test_login';
+        $pass = 'test_pass';
+        $fileId = $this->uri->segment(2);
+        $response = array();
+
+        if(($_SERVER['PHP_AUTH_PW']!= $pass || $_SERVER['PHP_AUTH_USER'] != $login)|| !$_SERVER['PHP_AUTH_USER']) {
+            header('WWW-Authenticate: Basic realm="Test auth"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'Auth failed';
+            exit;
+        } else {
+            $this->load->library('order/order');
+            $orderDetails = $this->order->get_order_details($fileId);
+            if(!empty($orderDetails)) {
+                if ($orderDetails['sales_amount'] > 0) {
+                    if (!empty($orderDetails['borrower'])) {
+                        $orderDetails['primary_owner_name'] = $orderDetails['borrower'];
+                    } else {
+                        $orderDetails['primary_owner_name'] = '';
+                    }
+            
+                    if (!empty($orderDetails['secondary_borrower'])) {
+                        $orderDetails['secondary_owner_name'] = $orderDetails['secondary_borrower'];
+                    } else {
+                        $orderDetails['secondary_owner_name'] = '';
+                    }
+                } else {
+                    if (!empty($orderDetails['primary_owner'])) {
+                        $orderDetails['primary_owner_name'] = $orderDetails['primary_owner'];
+                    } else {
+                        $orderDetails['primary_owner_name'] = '';
+                    }
+            
+                    if (!empty($orderDetails['secondary_owner'])) {
+                        $orderDetails['secondary_owner_name'] =  $orderDetails['secondary_owner'];
+                    } else {
+                        $orderDetails['secondary_owner_name'] = '';
+                    }
+                }
+                $orderData = array(
+                    'Loans' => array(
+                        'LoanNumber' => $orderDetails['loan_number'],
+                        'LoanAmount' => $orderDetails['loan_amount'],
+                    ),
+                    'FileNumber' =>  $orderDetails['file_number'],
+                    'FileID' => $orderDetails['file_id'],
+                    'Borrower' => array(
+                        'PrimaryName' => $orderDetails['primary_owner_name'],
+                        'SecondaryName' => $orderDetails['secondary_owner_name']
+                    ),
+                    'Properties' => array(
+                        'Address' => $orderDetails['address'],
+                        'City' => $orderDetails['property_city'],
+                        'State' => $orderDetails['property_state'],
+                        'County' => $orderDetails['county'],
+                        'Zip' => $orderDetails['property_zip'], 
+                    ) 
+                );
+                $response = array('FileInformations' => $orderData);
+            } else {
+                $response = array('success' => false, 'error_msg' => 'This order is not found.');
+            }
+        }
+        header('Content-type: application/json');
+        echo json_encode($response, true);
+        exit;
+    }
 }
