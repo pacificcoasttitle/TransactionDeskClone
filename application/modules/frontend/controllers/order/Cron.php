@@ -2029,16 +2029,15 @@ class Cron extends MX_Controller {
 
     public function getOrderInformation()
     {
-        $login = 'test_login';
-        $pass = 'test_pass';
+        $login = 'ghernandez@pct.com';
+        $pass = 'hsk@12dhk';
         $fileId = $this->uri->segment(2);
         $response = array();
 
         if(($_SERVER['PHP_AUTH_PW']!= $pass || $_SERVER['PHP_AUTH_USER'] != $login)|| !$_SERVER['PHP_AUTH_USER']) {
             header('WWW-Authenticate: Basic realm="Test auth"');
             header('HTTP/1.0 401 Unauthorized');
-            echo 'Auth failed';
-            exit;
+            $response = array('success' => false, 'error_msg' => 'Please enter proper Authorization details.');
         } else {
             $this->load->library('order/order');
             $orderDetails = $this->order->get_order_details($fileId);
@@ -2068,6 +2067,62 @@ class Cron extends MX_Controller {
                         $orderDetails['secondary_owner_name'] = '';
                     }
                 }
+
+                $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			
+                if (!empty($orderUser) && $orderUser['is_escrow'] == 1) {
+                    if (!empty($orderDetails['cpl_lender_id'])) {
+                        $lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                        $orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+                        $orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+                        $orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+                        $orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
+                        $orderDetails['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+                        $orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+                        $orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+                        $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+                        $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+                        $orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+                    } else {			
+                        $orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
+                        $orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
+                        $orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
+                        $orderDetails['lender_state'] = $orderDetails['lender_state'] ? $orderDetails['lender_state'] : '';
+                        $orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
+                        $orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
+                        $orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
+                        $orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+                        $orderDetails['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
+                        $orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
+                    }
+                } else {
+                    if (!empty($orderDetails['cpl_lender_id'])) {
+                        $lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                        $orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+                        $orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+                        $orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+                        $orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
+                        $orderDetails['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+                        $orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+                        $orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+                        $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+                        $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+                        $orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+                    } else {
+                        $orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
+                        $orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
+                        $orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
+                        $orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
+                        $orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
+                        $orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
+                        $orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
+                        $orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
+                        $orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
+                        $orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
+                    }
+                    $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+                }
+
                 $orderData = array(
                     'Loans' => array(
                         'LoanNumber' => $orderDetails['loan_number'],
@@ -2075,6 +2130,7 @@ class Cron extends MX_Controller {
                     ),
                     'FileNumber' =>  $orderDetails['file_number'],
                     'FileID' => $orderDetails['file_id'],
+                    'Product' => $orderDetails['product_type'],
                     'Borrower' => array(
                         'PrimaryName' => $orderDetails['primary_owner_name'],
                         'SecondaryName' => $orderDetails['secondary_owner_name']
@@ -2085,7 +2141,17 @@ class Cron extends MX_Controller {
                         'State' => $orderDetails['property_state'],
                         'County' => $orderDetails['county'],
                         'Zip' => $orderDetails['property_zip'], 
-                    ) 
+                    ),
+                    'LenderInformations' => array(
+                        'FirstName' => $orderDetails['lender_first_name'],
+                        'LastName' => $orderDetails['lender_last_name'],
+                        'CompanyName' => $orderDetails['lender_company_name'],
+                        'Email' => $orderDetails['lender_email'],
+                        'Address' => $orderDetails['lender_address'],
+                        'City' => $orderDetails['lender_city'],
+                        'State' => $orderDetails['lender_state'],
+                        'Zip' => $orderDetails['lender_zipcode']
+                    )
                 );
                 $response = array('FileInformations' => $orderData);
             } else {
