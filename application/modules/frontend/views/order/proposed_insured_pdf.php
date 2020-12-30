@@ -62,6 +62,10 @@
     .spacer-t30 {
 	    margin-top: 30px;
 	}
+
+	.order-details {
+		line-height: 2px;
+	}
 	</style>
 </head>
 <body>
@@ -137,27 +141,26 @@
 				<p style="text-align: justify;">The above numbered report (including any Supplements or Amendments thereto) is hereby modified and/or supplemented in order to reflect the following additional items relating to the issuance of a Policy of Title Insurance as follows:</p>
 				<p style="text-align: justify;">UPON THE CLOSE OF ESCROW AND CONFIRMATION OF RECORDING PACIFIC COAST TITLE WILL BE IN A POSITION TO ISSUE A TITLE POLICY IN FAVOR OF:</p>
 			</div>
-			<div>
+			<div class="order-details">
 				<!-- <p>Borrower: <?php // echo isset($primary_owner) && !empty($primary_owner) ? $primary_owner : '-'; ?></p>
 				<p>Secondary Borrower: <?php // echo isset($secondary_owner) && !empty($secondary_owner) ? $secondary_owner : '-'; ?></p> -->
-				<?php
-					if(isset($vesting) && !empty($vesting))
-					{
-				?>
-						<p>Borrower: <?php echo $vesting; ?></p>
-				<?php
-					}
-				?>
+				
 				
 				<p>Lender: <?php echo isset($lender['company_name']) && !empty($lender['company_name']) ? $lender['company_name'] : '-'; ?></p>
 				<p>Address: <?php echo isset($lender['address']) && !empty($lender['address']) ? $lender['address'] : '-'; ?></p>
 				<p>Loan Officer: <?php echo isset($lender['lender_name']) && !empty($lender['lender_name']) ? $lender['lender_name'] : '-'; ?></p>
+				
+			</div>
+			<div class="order-details">
+				<p>Borrower: <?php echo isset($vesting) && !empty($vesting) ? $vesting : '-'; ?></p>
 				<p>Loan #: <?php echo isset($loan_number) && !empty($loan_number) ? $loan_number : '-'; ?></p>
 				<p>Loan Amount: <?php echo isset($loan_amount) && !empty($loan_amount) ? '$'.$loan_amount : ''; ?></p>
 			</div>
 			<div class="spacer-t30"></div>
-			<div class="">
-				<p>Sincerely,</p>
+			
+			
+			<div style="line-height: 4px;"><p>Sincerely,</p></div>	
+			<div class="order-details">
 				<p><?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
 				<p>Title Officer</p>
 			</div>
