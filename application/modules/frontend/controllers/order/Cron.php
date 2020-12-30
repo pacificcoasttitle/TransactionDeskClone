@@ -2155,7 +2155,7 @@ class Cron extends MX_Controller {
                 );
                 $response = array('FileInformations' => $orderData);
             } else {
-                $response = array('success' => false, 'error_msg' => 'This order is not found.');
+                $response = array('success' => false, 'error_msg' => 'Please enter the correct file id to get order information.');
             }
         }
         header('Content-type: application/json');
