@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Sales extends MX_Controller {
 
-	public function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->load->helper(
@@ -13,16 +13,16 @@ class Sales extends MX_Controller {
         $this->load->model('order/sales_model');
     }
 
-	public function index()
-	{
+    public function index()
+    {
         
         $this->is_admin();
-		$data = array();
+        $data = array();
         $data['title'] = 'PCT Order: Sales Rep.';
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/sales', $data);
         $this->load->view('order/layout/footer', $data);
-	}
+    }
 
     public function get_sales_rep_list()
     {
@@ -76,36 +76,76 @@ class Sales extends MX_Controller {
         $data = array();
         $data['title'] = 'PCT Order: Add Sales Rep.';
         $salesRepData = array();
-
         if ($this->input->post()) {
+
             $this->form_validation->set_rules('sales_rep_first_name', 'Sales Rep. First Name', 'required', array('required'=> 'Please Enter Sales Rep. First Name'));
             $this->form_validation->set_rules('sales_rep_last_name', 'Sales Rep. Last Name', 'required', array('required'=> 'Please Enter Sales Rep. Last Name'));
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
             $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
             $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
             $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
-
+            // $this->form_validation->set_rules('sales_rep_profile_img', 'sales_rep_profile_img', 'callback_sales_rep_profile_img_check');
+            
             if ($this->form_validation->run() == true) {
+                $fileuri = ''; $status = "success";
+                if(is_uploaded_file($_FILES['sales_rep_profile_img']['tmp_name'])) 
+                {  
+                    if (!is_dir('uploads/sales-rep')) 
+                    {
+                        mkdir('./uploads/sales-rep', 0777, TRUE);
+                    }
+                    $config['upload_path'] = 'uploads/sales-rep/';
+                    $config['allowed_types'] = 'jpg|png';
+                    $config['max_size']  = '2048';
+                    
+                    $new_name = 'sales_rep_'.time().rand(10,100000);
 
-                $salesRepData = array(
-                    'first_name' => $_POST['sales_rep_first_name'],
-                    'last_name' => $_POST['sales_rep_last_name'],
-                    'email_address' => $_POST['email_address'],
-                    'telephone_no' =>  $_POST['telephone'],
-                    'partner_id' => $_POST['partner_id'],
-                    'partner_type_id' =>  $_POST['partner_type_id'],
-                    'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
-                    'status' => 1,
-                    'is_sales_rep' => 1
-                );
+                    $config['file_name'] = $new_name;         
+                    $this->load->library('upload', $config);
 
-                $insert = $this->sales_model->insert($salesRepData);
-                
-                if ($insert) {
-                    $data['success_msg'] = 'Sales Rep. added successfully.';
-                } else {
-                    $data['error_msg'] = 'Sales Rep. not added.';
-                } 
+                    if (!$this->upload->do_upload('sales_rep_profile_img'))
+                    {
+                        $status = 'error';
+                        $msg = $this->upload->display_errors();
+                    }
+                    else
+                    {
+                        $data = $this->upload->data();
+                        $status = "success";
+                        $msg = "File successfully uploaded";
+                        $fileuri=  $config['upload_path'].$data['file_name'];
+                        
+                        // $salesRepData['sales_rep_profile_img'] = $fileuri;
+                    }
+                }
+
+                if($status == "success")
+                {
+                    $salesRepData = array(
+                        'first_name' => $_POST['sales_rep_first_name'],
+                        'last_name' => $_POST['sales_rep_last_name'],
+                        'email_address' => $_POST['email_address'],
+                        'telephone_no' =>  $_POST['telephone'],
+                        'partner_id' => $_POST['partner_id'],
+                        'partner_type_id' =>  $_POST['partner_type_id'],
+                        'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
+                        'status' => 1,
+                        'is_sales_rep' => 1,
+                        'sales_rep_profile_img' => $fileuri,
+                    );
+
+                    $insert = $this->sales_model->insert($salesRepData);
+                    
+                    if ($insert) {
+                        $data['success_msg'] = 'Sales Rep. added successfully.';
+                    } else {
+                        $data['error_msg'] = 'Sales Rep. not added.';
+                    }
+                }
+                else
+                {
+                    $data['sales_rep_profile_img_error_msg'] = $msg;
+                }
                 
             } else {
                 $data['first_name_error_msg'] = form_error('sales_rep_first_name');
@@ -113,7 +153,7 @@ class Sales extends MX_Controller {
                 $data['email_error_msg'] = form_error('email_address');
                 $data['phone_error_msg'] = form_error('telephone');
                 $data['partner_id_error_msg'] = form_error('partner_id');
-                $data['partner_type_id_error_msg'] = form_error('partner_type_id');
+                $data['partner_type_id_error_msg'] = form_error('file');
             }                                       
         }
         $this->load->view('order/layout/header', $data);
@@ -129,6 +169,8 @@ class Sales extends MX_Controller {
         $id = $this->uri->segment('4');
         
         if (isset($id) && !empty($id)) {
+            $con = array('id' => $id);
+            $sales_rep_info = $this->sales_model->getSalesRep($con);
             if (isset($_POST) && !empty($_POST)) {
                 $this->form_validation->set_rules('sales_rep_first_name', 'Sales Rep. First Name', 'required', array('required'=> 'Please Enter Sales Rep. First Name'));
                 $this->form_validation->set_rules('sales_rep_last_name', 'Sales Rep. Last Name', 'required', array('required'=> 'Please Enter Sales Rep. Last Name'));
@@ -139,25 +181,66 @@ class Sales extends MX_Controller {
 
 
                 if($this->form_validation->run() == true) {
-                    $salesRepData = array(
-                        'first_name' => $_POST['sales_rep_first_name'],
-                        'last_name' => $_POST['sales_rep_last_name'],
-                        'email_address' => $_POST['email_address'],
-                        'telephone_no' =>  $_POST['telephone'],
-                        'partner_id' => $_POST['partner_id'],
-                        'partner_type_id' =>  $_POST['partner_type_id'],
-                        'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
-                        'status' => 1
-                    );
-                    
-                    $condition = array('id' => $id);
-                    $update = $this->sales_model->update($salesRepData, $condition);
+                    $fileuri = isset($sales_rep_info['sales_rep_profile_img']) && !empty($sales_rep_info['sales_rep_profile_img']) ? $sales_rep_info['sales_rep_profile_img'] : '';
+                    $status = "success";
+                    if(is_uploaded_file($_FILES['sales_rep_profile_img']['tmp_name'])) 
+                    {  
+                        if (!is_dir('uploads/sales-rep')) 
+                        {
+                            mkdir('./uploads/sales-rep', 0777, TRUE);
+                        }
+                        $config['upload_path'] = 'uploads/sales-rep/';
+                        $config['allowed_types'] = 'jpg|png';
+                        $config['max_size']  = '2048';
                         
-                    if ($update) {
-                        $data['success_msg'] = 'Sales Rep. updated successfully.';
-                    } else {
-                        $data['error_msg'] = 'Error occurred while updating Sales Rep.';
+                        $new_name = 'sales_rep_'.time().rand(10,100000);
+
+                        $config['file_name'] = $new_name;         
+                        $this->load->library('upload', $config);
+
+                        if (!$this->upload->do_upload('sales_rep_profile_img'))
+                        {
+                            $status = 'error';
+                            $msg = $this->upload->display_errors();
+                        }
+                        else
+                        {
+                            $data = $this->upload->data();
+                            $status = "success";
+                            $msg = "File successfully uploaded";
+                            $fileuri=  $config['upload_path'].$data['file_name'];
+                        }
                     }
+
+                    if($status == "success")
+                    {
+                        $salesRepData = array(
+                            'first_name' => $_POST['sales_rep_first_name'],
+                            'last_name' => $_POST['sales_rep_last_name'],
+                            'email_address' => $_POST['email_address'],
+                            'telephone_no' =>  $_POST['telephone'],
+                            'partner_id' => $_POST['partner_id'],
+                            'partner_type_id' =>  $_POST['partner_type_id'],
+                            'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
+                            'status' => 1,
+                            'is_sales_rep' => 1,
+                            'sales_rep_profile_img' => $fileuri,
+                        );
+
+                        $condition = array('id' => $id);
+                        $update = $this->sales_model->update($salesRepData, $condition);
+                            
+                        if ($update) {
+                            $data['success_msg'] = 'Sales Rep. updated successfully.';
+                        } else {
+                            $data['error_msg'] = 'Error occurred while updating Sales Rep.';
+                        }
+                    }
+                    else
+                    {
+                        $data['sales_rep_profile_img_error_msg'] = $msg;
+                    }
+
                 } else {
                     $data['first_name_error_msg'] = form_error('sales_rep_first_name');
                     $data['last_name_error_msg'] = form_error('sales_rep_last_name');
@@ -169,6 +252,7 @@ class Sales extends MX_Controller {
             }
             $con = array('id' => $id);
             $sales_rep_info = $this->sales_model->getSalesRep($con);
+
         } else {
             redirect('order/admin/sales-rep');
         }
@@ -205,6 +289,23 @@ class Sales extends MX_Controller {
 
         } else {
             redirect(base_url().'order/admin');
+        }
+    }
+
+    public function sales_rep_profile_img_check($str)
+    {
+        $allowed_mime_type_arr = array('image/jpeg','image/pjpeg','image/png','image/x-png');
+        $mime = get_mime_by_extension($_FILES['sales_rep_profile_img']['name']);
+        if(isset($_FILES['sales_rep_profile_img']['name']) && $_FILES['sales_rep_profile_img']['name']!=""){
+            if(in_array($mime, $allowed_mime_type_arr)){
+                return true;
+            }else{
+                $this->form_validation->set_message('sales_rep_profile_img_check', 'Please select only jpg/png file.');
+                return false;
+            }
+        }else{
+            $this->form_validation->set_message('sales_rep_profile_img_check', 'Please choose a file to upload.');
+            return false;
         }
     }
 }

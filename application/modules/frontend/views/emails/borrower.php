@@ -553,7 +553,21 @@ h4{
 <tbody>
 <tr>
 <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
-<img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/ddba38a2-0594-4153-ae80-ae9514df2dcb.jpg'; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+	<?php
+		if(isset($headerImg) && !empty($headerImg))
+		{
+	?>
+			<img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/'.$headerImg; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+	<?php
+		}
+		else
+		{
+	?>
+			<img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/ddba38a2-0594-4153-ae80-ae9514df2dcb.jpg'; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+	<?php
+		}
+	?>
+
 </td>
 </tr>
 </tbody>

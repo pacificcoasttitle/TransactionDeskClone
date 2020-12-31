@@ -12,7 +12,7 @@
     <div class="card mx-auto mt-5">
       <div class="card-header">Edit Sales Rep</div>
         <div class="card-body">        
-            <form id="frm-add-sales-rep" method="POST">
+            <form id="frm-add-sales-rep" method="POST" enctype="multipart/form-data">
         
                 <div class="form-group row">
                     <label for="sales_rep_first_name" class="col-sm-2 col-form-label">First Name<span class="required"> *</span></label>
@@ -74,7 +74,26 @@
                     </div>
                 </div>
 
-                
+                <div class="form-group row">
+                    <label for="sales_rep_profile_img" class="col-sm-2 col-form-label">Profile Img</label>
+                    <div class="col-sm-6">
+                        <input type="file" class="form-control" name="sales_rep_profile_img" id="sales_rep_profile_img" accept=".png,.jpg" class="form-control">
+                        <?php if(!empty($sales_rep_profile_img_error_msg)){ ?>                     
+                            <span class="error"><?php echo $sales_rep_profile_img_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                    <div class="col-sm-4">
+                        <?php
+                       // echo "<pre>"; print_r($sales_rep_info); exit;
+                            if(isset($sales_rep_info['sales_rep_profile_img']) && !empty($sales_rep_info['sales_rep_profile_img']))
+                            {
+                                $img = $sales_rep_info['sales_rep_profile_img'];
+                            }
+                        ?>
+                        <img src="<?php echo base_url().$img; ?>" width="100" height="100">
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <label for="telephone" class="col-sm-2 col-form-label">&nbsp;</label>
                     <div class="col-sm-10">

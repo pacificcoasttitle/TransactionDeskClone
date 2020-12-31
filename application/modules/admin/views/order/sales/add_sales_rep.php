@@ -12,7 +12,7 @@
     <div class="card mx-auto mt-5">
       <div class="card-header">Add Sales Rep</div>
         <div class="card-body">        
-            <form id="frm-add-sales-rep" method="POST">
+            <form id="frm-add-sales-rep" method="POST" enctype="multipart/form-data">
         
                 <div class="form-group row">
                     <label for="sales_rep_first_name" class="col-sm-2 col-form-label">First Name<span class="required"> *</span></label>
@@ -75,6 +75,16 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="sales_rep_profile_img" class="col-sm-2 col-form-label">Profile Img</label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" name="sales_rep_profile_img" id="sales_rep_profile_img" accept=".png,.jpg" class="form-control">
+                        <?php if(!empty($sales_rep_profile_img_error_msg)){ ?>                     
+                            <span class="error"><?php echo $sales_rep_profile_img_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label for="telephone" class="col-sm-2 col-form-label">&nbsp;</label>
                     <div class="col-sm-10">
                         <input type="checkbox" class="" style="height:18px;width:18px;margin-right:10px;" name="is_mail_notification" id="is_mail_notification" class="form-control" placeholder="Mail Notification">Mail Notification
@@ -89,3 +99,34 @@
         </div>
     </div>
 </div>
+<script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/admin/js/jquery.validate.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if(jQuery('#frm-add-sales-rep').length)
+        {
+           jQuery('#frm-add-sales-rep').validate({
+                ignore:":not(:visible)",
+                rules: {
+                    sales_rep_first_name:"required",
+                    sales_rep_last_name:"required",
+                    email_address:"required",
+                    telephone:"required",
+                    partner_id:"required",
+                    partner_type_id:"required"
+                },
+                messages: {
+                    sales_rep_first_name:"Please Enter First Name",
+                    sales_rep_last_name:"Please Enter Last Name",
+                    email_address:"Please Enter Email address",
+                    telephone:"Please Enter Phone Number",
+                    partner_id:"Please Enter Partner Id",
+                    partner_type_id:"Please Enter Partner Type Id",
+                },
+                submitHandler: function(form) {
+                    form.submit();  
+                }
+            }); 
+        }
+    });
+</script>
