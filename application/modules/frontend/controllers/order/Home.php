@@ -769,11 +769,17 @@ class Home extends MX_Controller {
 
 							if($escrow_email == 'info@flaremedia.io')
 							{
+								$to = 'crestdev@protonmail.com';
+
+								$sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
+
 								$email_data = array(
 									'orderNumber'=> $orderNumber,
 									'randomString'=> $randomString,
+									'headerImg'=> $sales_rep_img,
 									'currYear'=> CURRENT_YEAR
 								);
+								
 								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
 								$message_body = $borrower_message_body; 
 								$subject = 'Statement Of Information: PCT';
