@@ -557,7 +557,7 @@ h4{
 		if(isset($headerImg) && !empty($headerImg))
 		{
 	?>
-			<img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/'.$headerImg; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+			<img align="center" alt="" src="<?php echo base_url().$headerImg; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
 	<?php
 		}
 		else

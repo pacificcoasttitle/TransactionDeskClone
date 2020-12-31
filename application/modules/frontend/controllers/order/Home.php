@@ -784,7 +784,7 @@ class Home extends MX_Controller {
 								$message_body = $borrower_message_body; 
 								$subject = 'Statement Of Information: PCT';
 								// $to = $escrow_email;
-								$to = 'crestdev@protonmail.com';
+								$to = 'chirag.patel@crestinfosystems.com';
 
 								$mailParams= array(
 									'from_mail'=>$from_mail, 
