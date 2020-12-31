@@ -153,7 +153,6 @@ class Sales extends MX_Controller {
                 $data['email_error_msg'] = form_error('email_address');
                 $data['phone_error_msg'] = form_error('telephone');
                 $data['partner_id_error_msg'] = form_error('partner_id');
-                $data['partner_type_id_error_msg'] = form_error('file');
             }                                       
         }
         $this->load->view('order/layout/header', $data);

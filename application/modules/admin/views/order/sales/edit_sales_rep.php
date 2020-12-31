@@ -90,7 +90,15 @@
                                 $img = $sales_rep_info['sales_rep_profile_img'];
                             }
                         ?>
-                        <img src="<?php echo base_url().$img; ?>" width="100" height="100">
+                        <?php
+                            if(isset($img) && !empty($img))
+                            {
+                        ?>
+                                <img src="<?php echo base_url().$img; ?>" width="100" height="100">
+                        <?php
+                            }
+                        ?>
+                        
                     </div>
                 </div>
 
