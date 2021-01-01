@@ -30,6 +30,7 @@
                             <th>Partner Company Name</th>
                             <th>Address</th>
                             <th>Underwriter</th>
+                            <th>Transaction</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>

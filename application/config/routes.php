@@ -255,6 +255,7 @@ $route['order/admin/edit-master-user/:num'] = 'admin/order/home/editMasterUser';
 $route['order/admin/import-orders'] = 'admin/order/home/importOrders';
 $route['order/admin/cpl-error-logs'] = 'admin/order/order/cplErrorLogs';
 $route['order/admin/get-cpl-error-logs'] = 'admin/order/order/getCplErrorLogs';
+$route['order/admin/update-transaction'] = 'admin/order/home/updateTransaction';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
