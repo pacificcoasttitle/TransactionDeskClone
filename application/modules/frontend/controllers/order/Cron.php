@@ -2133,7 +2133,9 @@ class Cron extends MX_Controller {
                     'Product' => $orderDetails['product_type'],
                     'Borrower' => array(
                         'PrimaryName' => $orderDetails['primary_owner_name'],
-                        'SecondaryName' => $orderDetails['secondary_owner_name']
+                        'SecondaryName' => $orderDetails['secondary_owner_name'],
+                        'Email' => 'ghernandez@pct.com',
+                        'Mobile' => '(213) 309-7286'
                     ),
                     'Properties' => array(
                         'Address' => $orderDetails['address'],
