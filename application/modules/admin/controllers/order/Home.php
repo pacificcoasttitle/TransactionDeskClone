@@ -1503,6 +1503,30 @@ class Home extends MX_Controller {
                                 </select>'; 
                 $underwriterSelection = str_replace('value="' .  $underwriter . '"','value="' .  $underwriter . '" selected', $underwriterSelection);          
                 $nestedData[] = $underwriterSelection;
+
+                if (!empty($value['transaction'])) {
+                    $transaction = $value['transaction'];
+                } else {
+                    $transaction = '';
+                }
+                $loan_checked = $sale_checked = '';
+
+                if($transaction == 'loan')
+                {
+                    $loan_checked = 'checked';
+                    $sale_checked = '';
+                }
+                elseif ($transaction == 'sale') 
+                {
+                    $sale_checked = 'checked';
+                    $loan_checked ='';
+                }
+
+                $transactionSelection = '<input type="radio" name="transaction_'.$i.'" value="loan" onchange="updateTransaction('.$value['partner_id'].',this.value);" '.$loan_checked.'>Loan <input type="radio" name="transaction_'.$i.'" value="sale" onchange="updateTransaction('.$value['partner_id'].',this.value);" '.$sale_checked.'>Sale';
+
+                // $transactionSelection = str_replace('value="' .  $transaction . '"','value="' .  $transaction . '" checked', $transactionSelection);          
+                $nestedData[] = $transactionSelection;
+
                 $data[] = $nestedData; 
                 $i++;           
             }
@@ -2426,5 +2450,15 @@ class Home extends MX_Controller {
         $json_data['recordsFiltered'] = intval( $incorrect_customer_lists['recordsFiltered'] );
         $json_data['data'] = $data;
         echo json_encode($json_data);
+    }
+
+    public function updateTransaction()
+    {
+        $partner_id = $this->input->post('partner_id');
+        $transaction = $this->input->post('transaction');
+        $condition = array('partner_id' => $partner_id);
+        $this->home_model->update(array('transaction' => $transaction), $condition, 'pct_order_partner_company_info');
+        $data = array('status'=>'success', 'msg'=> 'Transaction updated successfully.');
+        echo json_encode($data);
     }
 }
