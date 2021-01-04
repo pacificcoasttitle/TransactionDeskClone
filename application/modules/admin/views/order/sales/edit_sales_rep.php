@@ -84,7 +84,6 @@
                     </div>
                     <div class="col-sm-4">
                         <?php
-                       // echo "<pre>"; print_r($sales_rep_info); exit;
                             if(isset($sales_rep_info['sales_rep_profile_img']) && !empty($sales_rep_info['sales_rep_profile_img']))
                             {
                                 $img = $sales_rep_info['sales_rep_profile_img'];
@@ -95,6 +94,7 @@
                             {
                         ?>
                                 <img src="<?php echo base_url().$img; ?>" width="100" height="100">
+                                <a href="javascript:void(0);" onclick="removeSalesRepProfileImg(<?php echo $sales_rep_info['id'];?>);">Remove img</a>
                         <?php
                             }
                         ?>
