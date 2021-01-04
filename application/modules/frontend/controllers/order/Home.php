@@ -1190,7 +1190,6 @@ class Home extends MX_Controller {
             'id' => $customerId
         );
         $customerDetails = $this->home_model->get_customers($condition);
-        
         $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
         $password = isset($customerDetails['random_password']) && !empty($customerDetails['random_password']) ? $customerDetails['random_password'] : '';
         $data = array('email'=>$email_address,'password'=>$password);
@@ -1205,7 +1204,18 @@ class Home extends MX_Controller {
         $product_types = array();
 
         if(isset($response) && !empty($response))
-        {	          
+        {	     
+        	$partner_id = isset($customerDetails['partner_id']) && !empty($customerDetails['partner_id']) ? $customerDetails['partner_id'] : '';
+
+        	$con = array(
+				'where' => array(
+					'partner_id' => $partner_id,
+				)
+			);
+			$companyData = $this->home_model->get_company_rows($con);
+
+        	$transaction = isset($companyData[0]['transaction']) && !empty($companyData[0]['transaction']) ? $companyData[0]['transaction'] : '';
+
             foreach ($response as $key => $value) 
             {
             	if(isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3)
@@ -1218,6 +1228,7 @@ class Home extends MX_Controller {
                         'returnType' => 'count'
                     );
                     $prevCount = $this->home_model->get_product_types($con);
+
                     if(empty($prevCount))
                     {
                     	$productData = array(
@@ -1230,8 +1241,12 @@ class Home extends MX_Controller {
                                 );
                     	$insert = $this->home_model->insert($productData,'pct_order_product_types');
                     }
-
-                    $product_types[$value['ProductTypeID']] = $value['ProductType']; 
+                    
+                    if(strpos(strtolower($value['ProductType']), $transaction) !== false)
+					{
+						$product_types[$value['ProductTypeID']] = $value['ProductType'];
+					}
+                     
                 }
             }
         }
