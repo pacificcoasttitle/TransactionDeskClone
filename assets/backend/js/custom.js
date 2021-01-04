@@ -3484,3 +3484,58 @@ function updateTransaction(partner_id,transaction)
         }
     });
 }
+
+function removeSalesRepProfileImg(id)
+{
+
+    if (id=='') {
+        alert('Sales Rep. ID is required.');
+        return false;
+    }
+
+    var ready = confirm("Are you sure want to remove image?");
+    if (ready) {
+        $.ajax({
+            url: base_url+"admin/order/sales/remove_sales_rep",
+            method: "POST",
+            data : {
+                id: id
+            },
+            success: function(data) {
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('.alert-success').html(result.message).show();
+                    /*$([document.documentElement, document.body]).animate({
+                        scrollTop: $(".alert-success").offset().top
+                    }, 1000);*/
+                    // sales_rep_list.ajax.reload( null, false );
+                    location.reload();
+                    setTimeout(function () {
+                        $('.alert-success').html('').hide();
+                    }, 4000);
+                } else {
+                    $('.alert-danger').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $(".alert-danger").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('.alert-danger').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('.alert-danger').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $(".alert-danger").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('.alert-danger').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}

@@ -255,7 +255,6 @@ class Sales extends MX_Controller {
         } else {
             redirect('order/admin/sales-rep');
         }
-
         $data['sales_rep_info'] = $sales_rep_info;
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/edit_sales_rep', $data);
@@ -306,5 +305,28 @@ class Sales extends MX_Controller {
             $this->form_validation->set_message('sales_rep_profile_img_check', 'Please choose a file to upload.');
             return false;
         }
+    }
+
+    public function remove_sales_rep()
+    {
+        $this->is_admin();
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+        if ($id) {
+            $con = array('id' => $id);
+            $sales_rep_info = $this->sales_model->getSalesRep($con);
+            $imgPath = isset($sales_rep_info['sales_rep_profile_img']) && !empty($sales_rep_info['sales_rep_profile_img']) ? $sales_rep_info['sales_rep_profile_img'] : '';
+            $salesRepData = array('sales_rep_profile_img' => '');
+            $condition = array('id' => $id);
+            $update = $this->sales_model->update($salesRepData, $condition);
+            if($update) {
+                unlink('./'.$imgPath);
+                $successMsg = 'Sales Rep. profile image deleted successfully.';
+                $response = array('status' =>'success', 'message' => $successMsg);
+            }
+        } else {
+            $msg = 'Sales Rep. ID is required.';
+            $response = array('status' => 'error', 'message' => $msg);
+        }
+        echo json_encode($response);
     }
 }
