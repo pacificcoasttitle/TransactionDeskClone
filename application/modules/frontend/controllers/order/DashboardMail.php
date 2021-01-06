@@ -1828,6 +1828,7 @@ class DashboardMail extends MX_Controller {
                 $data['order_id'] = $order[0]['id'];
                 $data['errors'] = array();
                 $data['success'] = array();
+                $data['borrower_mobile_number'] = isset($orderDetails['borrower_mobile_number']) && !empty($orderDetails['borrower_mobile_number']) ? $orderDetails['borrower_mobile_number'] : '';
                 if ($this->session->userdata('errors')) {
                     $data['errors'] = $this->session->userdata('errors');
                     $this->session->unset_userdata('errors');
@@ -1844,6 +1845,7 @@ class DashboardMail extends MX_Controller {
                 $data['propertyAddress'] = $propertyAddress;
                 $data['randomNumber'] = $random_number;
                 $data['fileId'] = $fileId;
+                $data['borrower_mobile_number'] = isset($orderDetails['borrower_mobile_number']) && !empty($orderDetails['borrower_mobile_number']) ? $orderDetails['borrower_mobile_number'] : '';
                 $this->load->view('order/borrower_login', $data);
             }
         } else {
@@ -1893,7 +1895,7 @@ class DashboardMail extends MX_Controller {
 
             if($response['msg_status'] == 'success')
             {
-                $this->home_model->update(array('verification_code' => $code,'is_code_verified' => 0,'code_created_at'=> date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
+                $this->home_model->update(array('borrower_mobile_number' => $phoneNumber, 'verification_code' => $code,'is_code_verified' => 0,'code_created_at'=> date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
 
                 $data = array(
                     'message' => $response['body'],
@@ -1941,38 +1943,39 @@ class DashboardMail extends MX_Controller {
             'middle_name' => $this->input->post('middlename'),
             'last_name' => $this->input->post('lastname'),
             'mobile' => $this->input->post('mobile'),
-            'telephone' => $this->input->post('telephone'),
+            //'telephone' => $this->input->post('telephone'),
             'date_of_birth' => $this->input->post('date_of_birth'),
-            'birthplace' => $this->input->post('birthplace'),
+            //'birthplace' => $this->input->post('birthplace'),
             'ssn' => $this->input->post('ssn'),
-            'dln' => $this->input->post('dln'),
+            'email' => $this->input->post('email'),
+            //'dln' => $this->input->post('dln'),
             'status' => $this->input->post('status'),
             'spouse_first_name' => $this->input->post('spouse_firstname'),
             'spouse_middle_name' => $this->input->post('spouse_middlename'),
             'spouse_last_name' => $this->input->post('spouse_lastname'),
             'spouse_mobile' => $this->input->post('spouse_mobile'),
-            'spouse_telephone' => $this->input->post('spouse_telephone'),
-            'spouse_date_of_birth' => $this->input->post('spouse_date_of_birth'),
-            'spouse_birthplace' => $this->input->post('spouse_birthplace'),
+            //'spouse_telephone' => $this->input->post('spouse_telephone'),
+            //'spouse_date_of_birth' => $this->input->post('spouse_date_of_birth'),
+            //'spouse_birthplace' => $this->input->post('spouse_birthplace'),
             'spouse_ssn' => $this->input->post('spouse_ssn'),
-            'spouse_dln' => $this->input->post('spouse_dln'),
+            //'spouse_dln' => $this->input->post('spouse_dln'),
             'partner_first_name' => $this->input->post('partner_firstname'),
             'partner_middle_name' => $this->input->post('partner_middlename'),
             'partner_last_name' => $this->input->post('partner_lastname'),
             'partner_mobile' => $this->input->post('partner_mobile'),
-            'partner_telephone' => $this->input->post('partner_telephone'),
-            'partner_date_of_birth' => $this->input->post('partner_date_of_birth'),
-            'partner_birthplace' => $this->input->post('partner_birthplace'),
+            //'partner_telephone' => $this->input->post('partner_telephone'),
+            //'partner_date_of_birth' => $this->input->post('partner_date_of_birth'),
+            //'partner_birthplace' => $this->input->post('partner_birthplace'),
             'partner_ssn' => $this->input->post('partner_ssn'),
-            'partner_dln' => $this->input->post('partner_dln'),
+            //'partner_dln' => $this->input->post('partner_dln'),
             'order_id' => $this->input->post('order_id'),
-            'partnership_status' => $this->input->post('partnership_status'),
-            'prior_spouse_name' => $this->input->post('partnership_status') == 'both' ? $this->input->post('prior_spouse_name_both') : $this->input->post('prior_spouse_name'),
-            'prior_spouse_reason' => $this->input->post('partnership_status') == 'both' ? $this->input->post('prior_spouse_reason_both') : $this->input->post('prior_spouse_reason'),
-            'prior_spouse_end' => $this->input->post('partnership_status') == 'both' ? $this->input->post('prior_spouse_end_both') : $this->input->post('prior_spouse_end'),
-            'current_spouse_prior_spouse_name' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_name_both') : $this->input->post('current_spouse_prior_spouse_name'),
-            'current_spouse_prior_spouse_reason' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_reason_both') : $this->input->post('current_spouse_prior_spouse_reason'),
-            'current_spouse_prior_spouse_end' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_end_both') : $this->input->post('current_spouse_prior_spouse_end'),
+            //'partnership_status' => $this->input->post('partnership_status'),
+            //'prior_spouse_name' => $this->input->post('partnership_status') == 'both' ? $this->input->post('prior_spouse_name_both') : $this->input->post('prior_spouse_name'),
+            //'prior_spouse_reason' => $this->input->post('partnership_status') == 'both' ? $this->input->post('prior_spouse_reason_both') : $this->input->post('prior_spouse_reason'),
+            //'prior_spouse_end' => $this->input->post('partnership_status') == 'both' ? $this->input->post('prior_spouse_end_both') : $this->input->post('prior_spouse_end'),
+            //'current_spouse_prior_spouse_name' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_name_both') : $this->input->post('current_spouse_prior_spouse_name'),
+            //'current_spouse_prior_spouse_reason' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_reason_both') : $this->input->post('current_spouse_prior_spouse_reason'),
+            //'current_spouse_prior_spouse_end' => $this->input->post('partnership_status') == 'both' ? $this->input->post('current_spouse_prior_spouse_end_both') : $this->input->post('current_spouse_prior_spouse_end'),
             'street_address' => $this->input->post('street_address'),
             'buyer_intends_to_reside' => $this->input->post('buyer_intends'),
             'land_is_unimproved' => $this->input->post('land_is_unimproved'),

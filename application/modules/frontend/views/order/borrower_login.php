@@ -67,7 +67,7 @@
                         </div>
                         <form method="POST" action="" id="borrower-login-form" enctype="multipart/form-data">
                             <label class="field" style="display:block;" id="get_code_label">
-                                <input class="form-control gui-input" type="text" name="phone_number" id="phone_number" placeholder="Enter Mobile Number">
+                                <input class="form-control gui-input" value="<?php echo $borrower_mobile_number; ?>" type="text" name="phone_number" id="phone_number" placeholder="Enter Mobile Number">
                             </label>
 
                             <label class="field" style="display:none;" id="verification_code_label">

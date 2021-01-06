@@ -280,6 +280,7 @@ class Order
             order_details.proposed_insured_document_name,
             order_details.verification_code,
             order_details.code_created_at,
+            order_details.borrower_mobile_number,
             property_details.id as property_id, 
             property_details.address, 
             property_details.full_address, 
