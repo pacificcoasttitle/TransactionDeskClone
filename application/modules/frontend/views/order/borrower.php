@@ -76,7 +76,7 @@
                                 <div class="section colm colm4">
                                     <label for="mobile" class="field-label">Mobile Phone </label>
                                     <label class="field prepend-icon">
-                                        <input type="text" name="mobile" id="mobile" class="gui-input" placeholder="(999)-999-9999">
+                                        <input type="text" name="mobile" value="<?php echo $borrower_mobile_number;?>" id="mobile" class="gui-input" placeholder="(999)-999-9999">
                                         <span class="field-icon">
                                             <i class="fa fa-phone-square"></i>
                                         </span>
@@ -965,7 +965,7 @@
             errorElement: "em",
             onkeyup: false,
             onclick: false,
-            /*rules: {
+            rules: {
                 firstname: {
                     required: true
                 },
@@ -975,24 +975,24 @@
                 lastname: {
                     required: true
                 },
-                telephone: {
+                /*telephone: {
                     required: true
-                },
+                },*/
                 mobile: {
                     required: true
                 },			
                 date_of_birth: {
                     required: true
                 },
-                birthplace:{
+                /*birthplace:{
                     required: true
-                },
+                },*/
                 ssn:{
                     required: true
                 },
-                dln:{
+                /*dln:{
                     required: true
-                },	
+                },*/	
                 status:{
                     required: true
                 },	
@@ -1035,13 +1035,13 @@
                         },
                     },
                 },	
-                spouse_telephone:{
+                /*spouse_telephone:{
                     required: {
                         depends: function(element) {
                             return ($("input[name=status]:checked").val() == "married");
                         },
                     },
-                },	
+                },*/	
                 spouse_mobile:{
                     required: {
                         depends: function(element) {
@@ -1049,7 +1049,7 @@
                         },
                     },
                 },
-                spouse_date_of_birth:{
+                /*spouse_date_of_birth:{
                     required: {
                         depends: function(element) {
                             return ($("input[name=status]:checked").val() == "married");
@@ -1062,7 +1062,7 @@
                             return ($("input[name=status]:checked").val() == "married");
                         },
                     },
-                },
+                },*/
                 spouse_ssn:{
                     required: {
                         depends: function(element) {
@@ -1070,13 +1070,13 @@
                         },
                     },
                 },
-                spouse_dln:{
+                /*spouse_dln:{
                     required: {
                         depends: function(element) {
                             return ($("input[name=status]:checked").val() == "married");
                         },
                     },
-                },
+                },*/
                 partner_firstname:{
                     required: {
                         depends: function(element) {
@@ -1098,13 +1098,13 @@
                         },
                     },
                 },	
-                partner_telephone:{
+                /*partner_telephone:{
                     required: {
                         depends: function(element) {
                             return ($("input[name=status]:checked").val() == "domestic_partner");
                         },
                     },
-                },	
+                },*/
                 partner_mobile:{
                     required: {
                         depends: function(element) {
@@ -1112,7 +1112,7 @@
                         },
                     },
                 },
-                partner_date_of_birth:{
+                /*partner_date_of_birth:{
                     required: {
                         depends: function(element) {
                             return ($("input[name=status]:checked").val() == "domestic_partner");
@@ -1125,7 +1125,7 @@
                             return ($("input[name=status]:checked").val() == "domestic_partner");
                         },
                     },
-                },
+                },*/
                 partner_ssn:{
                     required: {
                         depends: function(element) {
@@ -1133,17 +1133,17 @@
                         },
                     },
                 },
-                partner_dln:{
+                /*partner_dln:{
                     required: {
                         depends: function(element) {
                             return ($("input[name=status]:checked").val() == "domestic_partner");
                         },
                     },
-                },
+                },*/
                 employment_status:{
                     required: true
                 },	
-                partnership_status:{
+                /*partnership_status:{
                     required: true
                 },	
                 prior_spouse_name:{
@@ -1229,7 +1229,7 @@
                             return ($("input[name=partnership_status]:checked").val() == "both");
                         },
                     },
-                },
+                },*/
                 "residence_addresses[]": "required",	
                 "residence_from_dates[]": "required",
                 "residence_to_dates[]": "required",	
@@ -1398,7 +1398,7 @@
                 "partner_addresses[]": "Please enter address",	
                 "partner_from_dates[]": "Please enter from date",
                 "partner_to_dates[]": "Please enter to date",			
-            },*/
+            },
             highlight: function(element, errorClass, validClass) {
                 $(element).closest('.field').addClass(errorClass).removeClass(validClass);
             },

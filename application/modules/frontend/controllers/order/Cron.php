@@ -2126,6 +2126,7 @@ class Cron extends MX_Controller {
                 $orderData = array(
                     'Loans' => array(
                         'LoanNumber' => $orderDetails['loan_number'],
+                        'SalesAmount' => $orderDetails['sales_amount'],
                         'LoanAmount' => $orderDetails['loan_amount'],
                     ),
                     'FileNumber' =>  $orderDetails['file_number'],
