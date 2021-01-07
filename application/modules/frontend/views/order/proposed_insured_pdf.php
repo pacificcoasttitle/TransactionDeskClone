@@ -41,6 +41,10 @@
     	text-align: center;
     }
 
+    .text-right {
+    	text-align: right;
+    }
+
     .header-section .company-details p, 
     .title-officer-basic-info p, 
     .title-officer-contact-info p, 
@@ -74,12 +78,12 @@
 			<div class="logo">
 				<img src="<?php echo base_url(); ?>assets/frontend/images/pi_logo.jpg" alt=""/>
 			</div>
-			<div class="company-details text-center">
+			<div class="company-details text-right">
 				<p>200 W. Glenoaks Blvd, Suite 100</p>
 				<p>Glendale, CA 91202</p>
 				<p>(818)662-6700</p>
 			</div>
-			<h5 class="text-center"> <?php echo isset($underwriter) && !empty($underwriter) ? 'Issuing Agent for '.$underwriter : ''; ?></h5>			
+			<h5 class="text-right"> <?php echo isset($underwriter) && !empty($underwriter) ? 'Issuing Agent for '.$underwriter : ''; ?></h5>			
 		</div>
 		<hr>
 		<div class="title-officer-info">
@@ -87,7 +91,7 @@
 				<p><span class="heading">Title Officer:</span> <?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
 				<p><span class="heading">Title Officer Email:</span>  <?php echo isset($title_officer_email) && !empty($title_officer_email) ? $title_officer_email : ''; ?></p>
 			</div>
-			<div class="title-officer-contact-info">
+			<div class="title-officer-contact-info text-right">
 				<p><span class="heading">Title Officer Phone:</span> <?php echo isset($title_officer_phone) && !empty($title_officer_phone) ? $title_officer_phone : ''; ?></p>
 				<!-- <p><span class="heading">Title Officer Fax:</span>  (818)484-2540</p> -->
 			</div>
@@ -147,14 +151,25 @@
 				
 				
 				<p>Lender: <?php echo isset($lender['company_name']) && !empty($lender['company_name']) ? $lender['company_name'] : '-'; ?></p>
+				<p><?php echo isset($lender['lender_name']) && !empty($lender['lender_name']) ? $lender['lender_name'] : '-'; ?></p>
 				<p>Address: <?php echo isset($lender['address']) && !empty($lender['address']) ? $lender['address'] : '-'; ?></p>
-				<p>Loan Officer: <?php echo isset($lender['lender_name']) && !empty($lender['lender_name']) ? $lender['lender_name'] : '-'; ?></p>
+				
 				
 			</div>
 			<div class="order-details">
 				<p>Borrower: <?php echo isset($vesting) && !empty($vesting) ? $vesting : '-'; ?></p>
 				<p>Loan #: <?php echo isset($loan_number) && !empty($loan_number) ? $loan_number : '-'; ?></p>
-				<p>Loan Amount: <?php echo isset($loan_amount) && !empty($loan_amount) ? '$'.$loan_amount : ''; ?></p>
+				<?php
+                	if(isset($loan_amount) && !empty($loan_amount))
+                	{
+                    	$loan_amount = str_replace(",", "", $loan_amount);
+              	?>
+                  <p>Loan Amount: $<?php echo number_format($loan_amount); ?></p>
+                  	<!-- <p>Loan Amount: <?php // echo isset($loan_amount) && !empty($loan_amount) ? '$'.$loan_amount : ''; ?></p> -->
+              	<?php
+                	}
+                ?>
+				
 			</div>
 			<div class="spacer-t30"></div>
 			
