@@ -830,11 +830,14 @@ class Order
     public function storeCplError($data)
     {
         $userdata = $this->CI->session->userdata('user');
+        $this->CI->load->model('order/home_model');
+
         if (!empty($userdata['id'])) {
             $user_id = $userdata['id']; 
         } else {
             $user_id = 0; 
         }
+
         $errorLogsdata = array(
             'user_id' => $user_id,
             'order_id' => $data['order_id'],
@@ -845,6 +848,34 @@ class Order
             'updated_at' => date('Y-m-d H:i:s'),
         );
         $this->CI->db->insert('pct_order_cpl_api_logs', $errorLogsdata);
+        $customer_id = $data['customer_id'];
+        $subject = 'CPL Document Not Generated';
+        $property = $data['property_address'];
+        $condition = array(
+            'id' => $customer_id
+        );
+        $customerDetails = $this->CI->home_model->get_customers($condition);
+
+        if (!empty($customerDetails)) {
+            $first_name = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
+            $last_name = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
+            $telephone_no = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
+            $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
+            $company_name = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
+            $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
+            $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
+            $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
+
+            $message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p>';
+            
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = env('FROM_EMAIL');
+            $subject = 'Notification for '.$subject;
+            //$to = env('ADMIN_EMAIL');
+            $to = 'hitesh.p@crestinfosystems.com';
+            $this->CI->load->helper('sendemail');
+            $mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
+        }
         return true;
     }
 }
