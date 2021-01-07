@@ -122,7 +122,7 @@
 							<div class="frm-row">
 								<div class="section colm colm12">
 									<label class="field prepend-icon">
-										<input type="text" name="LenderName" id="LenderName" class="gui-input ui-autocomplete-input" placeholder="Loan Officer Name">
+										<input type="text" name="LenderName" id="LenderName" class="gui-input ui-autocomplete-input" placeholder="Assignment clause">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 										
 										
@@ -414,7 +414,7 @@
 								<div class="section colm colm12">
 									<label class="field prepend-icon">
 										<input type="text" name="LenderName" id="edit_LenderName"
-											class="gui-input" placeholder="Loan Officer Name" autocomplete="off">
+											class="gui-input" placeholder="Assignment clause" autocomplete="off">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
 								</div>
