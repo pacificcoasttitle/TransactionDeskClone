@@ -871,8 +871,7 @@ class Order
             $from_name = 'Pacific Coast Title Company';
             $from_mail = env('FROM_EMAIL');
             $subject = 'Notification for '.$subject;
-            //$to = env('ADMIN_EMAIL');
-            $to = 'hitesh.p@crestinfosystems.com';
+            $to = env('ADMIN_EMAIL');
             $this->CI->load->helper('sendemail');
             $mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
         }
