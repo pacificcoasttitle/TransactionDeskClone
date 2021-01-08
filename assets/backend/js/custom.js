@@ -3180,7 +3180,7 @@ function deleteFees(id)
     }
 }
     
-function updateUnderwriter(partner_id, underwriter)
+function updateUnderwriter(partner_id, underwriter_type, underwriter)
 {
     $('body').animate({ opacity: 0.5 }, "slow");
     $.ajax({
@@ -3188,6 +3188,7 @@ function updateUnderwriter(partner_id, underwriter)
         method: "POST",
         data : {
             partner_id: partner_id,
+            underwriter_type: underwriter_type,
             underwriter: underwriter
         },
         success: function(data){

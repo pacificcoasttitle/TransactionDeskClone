@@ -1491,41 +1491,33 @@ class Home extends MX_Controller {
                 $nestedData[] = $value['partner_id'];
                 $nestedData[] = $value['partner_name'];
                 $nestedData[] = $value['address1'].", ".$value['city'].", ".$value['state'].", ".$value['zip'];
-                if (!empty($value['underwriter'])) {
-                    $underwriter = $value['underwriter'];
+                if (!empty($value['loan_underwriter'])) {
+                    $loan_underwriter = $value['loan_underwriter'];
                 } else {
-                    $underwriter = 'westcor';
+                    $loan_underwriter = 'westcor';
                 }
-                $underwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].', this.value);" id="underwriter_name" name="underwriter_name">
+                $loanUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'loan_underwriter\' ,this.value);" id="loan_underwriter" name="loan_underwriter">
                                     <option value="westcor">Westcor</option>
                                     <option value="north_american">North American</option>
                                     <option value="commonwealth">Commonwealth</option>
                                 </select>'; 
-                $underwriterSelection = str_replace('value="' .  $underwriter . '"','value="' .  $underwriter . '" selected', $underwriterSelection);          
-                $nestedData[] = $underwriterSelection;
+                $loanUnderwriterSelection = str_replace('value="' .  $loan_underwriter . '"','value="' .  $loan_underwriter . '" selected', $loanUnderwriterSelection);          
+                $nestedData[] = $loanUnderwriterSelection;
 
-                if (!empty($value['transaction'])) {
-                    $transaction = $value['transaction'];
+                if (!empty($value['sales_underwriter'])) {
+                    $sales_underwriter = $value['sales_underwriter'];
                 } else {
-                    $transaction = '';
+                    $sales_underwriter = 'westcor';
                 }
-                $loan_checked = $sale_checked = '';
+                $salesUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter">
+                                    <option value="westcor">Westcor</option>
+                                    <option value="north_american">North American</option>
+                                    <option value="commonwealth">Commonwealth</option>
+                                </select>'; 
+                $salesUnderwriterSelection = str_replace('value="' .  $sales_underwriter . '"','value="' .  $sales_underwriter . '" selected', $salesUnderwriterSelection);          
+                $nestedData[] = $salesUnderwriterSelection;
 
-                if($transaction == 'loan')
-                {
-                    $loan_checked = 'checked';
-                    $sale_checked = '';
-                }
-                elseif ($transaction == 'sale') 
-                {
-                    $sale_checked = 'checked';
-                    $loan_checked ='';
-                }
-
-                $transactionSelection = '<input type="radio" name="transaction_'.$i.'" value="loan" onchange="updateTransaction('.$value['partner_id'].',this.value);" '.$loan_checked.'>Loan <input type="radio" name="transaction_'.$i.'" value="sale" onchange="updateTransaction('.$value['partner_id'].',this.value);" '.$sale_checked.'>Sale';
-
-                // $transactionSelection = str_replace('value="' .  $transaction . '"','value="' .  $transaction . '" checked', $transactionSelection);          
-                $nestedData[] = $transactionSelection;
+                
 
                 $data[] = $nestedData; 
                 $i++;           
@@ -2094,10 +2086,26 @@ class Home extends MX_Controller {
 
     public function updateUnderwriter()
     {
+        // echo "<pre>"; print_r($this->input->post()); exit;
         $partner_id = $this->input->post('partner_id');
         $underwriter = $this->input->post('underwriter');
+        $underwriter_type = $this->input->post('underwriter_type');
+        
+        $updateData = array($underwriter_type => $underwriter);
+// echo "<pre>"; print_r($updateData); exit;
+        /*if($underwriter_type == 'loan_underwriter')
+        {
+            $updateData = array(
+                '' =>
+            );
+        }
+        elseif ($underwriter_type == 'sales_underwriter') 
+        {
+            # code...
+        }*/
+
         $condition = array('partner_id' => $partner_id);
-        $this->home_model->update(array('underwriter' => $underwriter), $condition, 'pct_order_partner_company_info');
+        $this->home_model->update($updateData, $condition, 'pct_order_partner_company_info');
         $data = array('status'=>'success', 'msg'=> 'Underwriter updated successfully.');
         echo json_encode($data);
     }
