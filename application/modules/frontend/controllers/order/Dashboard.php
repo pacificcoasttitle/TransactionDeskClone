@@ -959,7 +959,7 @@ class Dashboard extends MX_Controller {
 				$data['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
 				$data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
 				$data['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
-				$orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+				$data['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
 				$data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {
 				// $data['cpl_lender_id'] = $customer_data['id']; 
