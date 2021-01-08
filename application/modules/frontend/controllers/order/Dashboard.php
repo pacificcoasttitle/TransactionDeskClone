@@ -930,6 +930,7 @@ class Dashboard extends MX_Controller {
 				$data['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
 				$data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
 				$data['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+				$data['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
 				$data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 				// $data['escrow_lender_id'] = '';
 			} else {
@@ -958,7 +959,7 @@ class Dashboard extends MX_Controller {
 				$data['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
 				$data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
 				$data['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
-				$data['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+				$orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
 				$data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {
 				// $data['cpl_lender_id'] = $customer_data['id']; 
@@ -970,7 +971,7 @@ class Dashboard extends MX_Controller {
 				$data['lender_address'] = $customer_data['street_address'] ? $customer_data['street_address'] : '';
 				$data['lender_city'] = $customer_data['city'] ? $customer_data['city'] : '';
 				$data['lender_zipcode'] = $customer_data['zip_code'] ? $customer_data['zip_code'] : '';
-				// $data['lender_assignment_clause'] = $customer_data['assignment_clause'] ? $customer_data['assignment_clause'] : '';
+				$data['lender_assignment_clause'] = $customer_data['assignment_clause'] ? $customer_data['assignment_clause'] : '';
 				$data['lender_id'] = $customer_data['id'] ? $customer_data['id'] : '';
 			}
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
