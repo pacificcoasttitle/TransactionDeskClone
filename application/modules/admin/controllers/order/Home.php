@@ -1494,9 +1494,10 @@ class Home extends MX_Controller {
                 if (!empty($value['loan_underwriter'])) {
                     $loan_underwriter = $value['loan_underwriter'];
                 } else {
-                    $loan_underwriter = 'westcor';
+                    $loan_underwriter = '';
                 }
                 $loanUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'loan_underwriter\' ,this.value);" id="loan_underwriter" name="loan_underwriter">
+                                    <option value="">Select</option>
                                     <option value="westcor">Westcor</option>
                                     <option value="north_american">North American</option>
                                     <option value="commonwealth">Commonwealth</option>
@@ -1507,17 +1508,15 @@ class Home extends MX_Controller {
                 if (!empty($value['sales_underwriter'])) {
                     $sales_underwriter = $value['sales_underwriter'];
                 } else {
-                    $sales_underwriter = 'westcor';
+                    $sales_underwriter = '';
                 }
-                $salesUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter">
+                $salesUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter"><option value="">Select</option>
                                     <option value="westcor">Westcor</option>
                                     <option value="north_american">North American</option>
                                     <option value="commonwealth">Commonwealth</option>
                                 </select>'; 
                 $salesUnderwriterSelection = str_replace('value="' .  $sales_underwriter . '"','value="' .  $sales_underwriter . '" selected', $salesUnderwriterSelection);          
                 $nestedData[] = $salesUnderwriterSelection;
-
-                
 
                 $data[] = $nestedData; 
                 $i++;           
