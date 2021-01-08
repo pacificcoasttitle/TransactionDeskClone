@@ -1341,6 +1341,7 @@ class DashboardMail extends MX_Controller {
                 $data['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
                 $data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
                 $data['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+                $data['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
                 $data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';   
             } 
             else 
@@ -1354,6 +1355,8 @@ class DashboardMail extends MX_Controller {
                 $data['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';    
                 $data['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';    
                 $data['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+                $data['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
+
                 $data['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
     
             }
@@ -1380,6 +1383,8 @@ class DashboardMail extends MX_Controller {
                 $data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
     
                 $data['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+
+                $data['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
 
                 $data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
     
@@ -1470,7 +1475,8 @@ class DashboardMail extends MX_Controller {
                 'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
                 'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
                 'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
-                'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : ""
+                'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
+                'assignment_clause'  => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : ""
             );
 
             if($new_existing_lender == 'add_lender') 
@@ -1530,7 +1536,8 @@ class DashboardMail extends MX_Controller {
             $pdfData['lender'] = array(
                 'lender_name'=> $lender_details['lender_name'],
                 'address'=> implode(', ', $lender_address),
-                'company_name'=> $lender_details['company_name']
+                'company_name'=> $lender_details['company_name'],
+                'assignment_clause'=> $lender_details['assignment_clause']
             );  
             
 

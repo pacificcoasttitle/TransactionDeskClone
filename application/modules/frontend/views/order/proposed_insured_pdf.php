@@ -151,7 +151,8 @@
 				
 				
 				<p>Lender: <?php echo isset($lender['company_name']) && !empty($lender['company_name']) ? $lender['company_name'] : '-'; ?></p>
-				<p><?php echo isset($lender['lender_name']) && !empty($lender['lender_name']) ? $lender['lender_name'] : '-'; ?></p>
+
+				<p><?php echo isset($lender['assignment_clause']) && !empty($lender['assignment_clause']) ? $lender['assignment_clause'] : '-'; ?></p>
 				<p>Address: <?php echo isset($lender['address']) && !empty($lender['address']) ? $lender['address'] : '-'; ?></p>
 				
 				
