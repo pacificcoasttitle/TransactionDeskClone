@@ -29,8 +29,8 @@
                             <th>Partner Company Id</th>
                             <th>Partner Company Name</th>
                             <th>Address</th>
-                            <th>Underwriter</th>
-                            <th>Transaction</th>
+                            <th>Loan Underwriter</th>
+                            <th>Sales Underwriter</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>
