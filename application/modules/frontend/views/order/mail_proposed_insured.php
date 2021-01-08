@@ -118,11 +118,19 @@
 									</label>
 								</div><!-- end section -->
 							</div>
-
 							<div class="frm-row">
 								<div class="section colm colm12">
 									<label class="field prepend-icon">
-										<input type="text" name="LenderName" id="LenderName" class="gui-input ui-autocomplete-input" placeholder="Assignment clause">
+										<input type="text" name="assignment_clause" id="assignment_clause" class="gui-input ui-autocomplete-input"
+											placeholder="Assignment Clause">
+										<span class="field-icon"><i class="fa fa-user"></i></span>
+									</label>
+								</div>
+							</div>
+							<div class="frm-row" style="display: none;">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
+										<input type="text" name="LenderName" id="LenderName" class="gui-input ui-autocomplete-input" placeholder="Loan Officer">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 										
 										
@@ -413,6 +421,15 @@
 							<div class="frm-row">
 								<div class="section colm colm12">
 									<label class="field prepend-icon">
+										<input type="text" name="assignment_clause" id="edit_assignment_clause" class="gui-input ui-autocomplete-input"
+											placeholder="Assignment Clause">
+										<span class="field-icon"><i class="fa fa-user"></i></span>
+									</label>
+								</div>
+							</div>
+							<div class="frm-row" style="display: none;">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
 										<input type="text" name="LenderName" id="edit_LenderName"
 											class="gui-input" placeholder="Assignment clause" autocomplete="off">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
@@ -692,6 +709,7 @@ $(document).ready(function () {
 	            	$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 					$('#page-preloader').css('display', 'block');
 	            	var LenderCompany = $('#LenderCompany').val();
+	            	var assignment_clause = $('#assignment_clause').val();
 	            	var LenderEmailAddress = $('#LenderEmailAddress').val();
 	            	var LenderState = $('#LenderState').val();
 	            	var LenderName = $('#LenderName').val();
@@ -738,6 +756,7 @@ $(document).ready(function () {
 	                    // vesting: vesting,
 	                    LenderId: LenderId,
 	                    LenderCompany:LenderCompany,
+	                    assignment_clause:assignment_clause,
 	            		LenderEmailAddress:LenderEmailAddress,
 	            		LenderState:LenderState,
 	            		LenderName:LenderName,
@@ -848,6 +867,13 @@ $(document).ready(function () {
 						} else {
 							$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 						}
+
+						if (ui.item.assignment_clause) {
+							$("#assignment_clause").val(ui.item.assignment_clause);
+						} else {
+							$("#assignment_clause").val('');
+						}
+
 			            $("#LenderId").val(ui.item.id);
 			        },
 			        change: function( event, ui ) {
@@ -859,6 +885,7 @@ $(document).ready(function () {
 							$("#LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 			                $("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 							$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+							$("#assignment_clause").val('');
 							$("#LenderId").val('');
 			            }
 			        }
@@ -943,6 +970,11 @@ $(document).ready(function () {
 						} else {
 							$("#edit_LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 						}
+						if (ui.item.assignment_clause) {
+							$("#edit_assignment_clause").val(ui.item.assignment_clause);
+						} else {
+							$("#edit_assignment_clause").val('');
+						}
 			            $("#edit_LenderId").val(ui.item.id);
 			        },
 			        change: function( event, ui ) {
@@ -954,6 +986,7 @@ $(document).ready(function () {
 							$("#edit_LenderAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 			                $("#edit_LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 							$("#edit_LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+							$("#edit_assignment_clause").val('');
 							$("#edit_LenderId").val('');
 			            }
 			        }
@@ -1010,6 +1043,7 @@ $(document).ready(function () {
 	            	var LenderState = $('#edit_LenderState').val();
 	            	var LenderName = $('#edit_LenderName').val();
 	            	var LenderAddress = $('#edit_LenderAddress').val();
+	            	var assignment_clause = $('#edit_assignment_clause').val();
 	            	var LenderCity = $('#edit_LenderCity').val();
 	            	var LenderZipcode = $('#edit_LenderZipcode').val();
 	            	var TitleOfficer = $('#edit_TitleOfficer').val();
@@ -1048,6 +1082,7 @@ $(document).ready(function () {
 	                    // vesting: vesting,
 	                    LenderId: LenderId,
 	                    LenderCompany:LenderCompany,
+	                    assignment_clause:assignment_clause,
 	            		LenderEmailAddress:LenderEmailAddress,
 	            		LenderState:LenderState,
 	            		LenderName:LenderName,
@@ -1102,7 +1137,8 @@ $(document).ready(function () {
 			$("#LenderCompany").val('');	
 			$("#LenderAddress").val('');	
 			$("#LenderCity").val('');	
-			$("#LenderZipcode").val('');	
+			$("#LenderZipcode").val('');
+			$("#assignment_clause").val('');	
 			$("#LenderId").val('');	
 		});	
 		$("input[name=edit_new_existing_lender]").change(function(){	
@@ -1112,7 +1148,8 @@ $(document).ready(function () {
 			$("#edit_LenderCompany").val('');	
 			$("#edit_LenderAddress").val('');	
 			$("#edit_LenderCity").val('');	
-			$("#edit_LenderZipcode").val('');	
+			$("#edit_LenderZipcode").val('');
+			$("#edit_assignment_clause").val('');	
 			$("#edit_LenderId").val('');	
 		});
 	});
@@ -1131,7 +1168,6 @@ function generateProposedInsured(fileId)
             },
             success: function(response) {
             	var res = JSON.parse(response);
-            	console.log(res);
             	var dataRequired = 0;
                 if(res.status == 'success') 
                 {
@@ -1148,6 +1184,7 @@ function generateProposedInsured(fileId)
 					$("#LenderEmailAddress").val(res.orderDetails['lender_email']);
 					$("#LenderState").val(res.orderDetails['lender_state']);
 					$("#LenderCompany").val(res.orderDetails['lender_company_name']);
+					$("#assignment_clause").val(res.orderDetails['lender_assignment_clause']);
 					$("#LenderAddress").val(res.orderDetails['lender_address']);
 					$("#LenderCity").val(res.orderDetails['lender_city']);
 					$("#LenderZipcode").val(res.orderDetails['lender_zipcode']);
@@ -1249,7 +1286,6 @@ function editInformation(fileId)
             	$('#page-preloader').css('display', 'none');
             	
             	var res = JSON.parse(response);
-            	
             	if(res.status == 'success')
                 {
                 	if(res.status == 'success') 
@@ -1266,6 +1302,7 @@ function editInformation(fileId)
 						// $("#edit_LenderEmailAddress").val(res.orderDetails['lender_email']);
 						$("#edit_LenderState").val(res.orderDetails['lender_state']);
 						$("#edit_LenderCompany").val(res.orderDetails['lender_company_name']);
+						$("#edit_assignment_clause").val(res.orderDetails['lender_assignment_clause']);
 						$("#edit_LenderAddress").val(res.orderDetails['lender_address']);
 						$("#edit_LenderCity").val(res.orderDetails['lender_city']);
 						$("#edit_LenderZipcode").val(res.orderDetails['lender_zipcode']);

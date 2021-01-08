@@ -1578,7 +1578,6 @@ class Dashboard extends MX_Controller {
 		if($orderId)
 		{
 			$this->load->model('order/home_model');
-
 			$TitleOfficer = $this->input->post('TitleOfficer');
 			$loan_amount = $this->input->post('loan_amount');
 			$loan_number = $this->input->post('loan_number');
@@ -1611,7 +1610,8 @@ class Dashboard extends MX_Controller {
 				'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
 				'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
 				'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
-				'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : ""
+				'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
+				'assignment_clause'  => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : ""
 			);
 
 			if($new_existing_lender == 'add_lender') 
@@ -1671,9 +1671,9 @@ class Dashboard extends MX_Controller {
             $pdfData['lender'] = array(
                 'lender_name'=> $lender_details['lender_name'],
                 'address'=> implode(', ', $lender_address),
-                'company_name'=> $lender_details['company_name']
+                'company_name'=> $lender_details['company_name'],
+                'assignment_clause'=> $lender_details['assignment_clause']
             );
-			
 			
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 			
