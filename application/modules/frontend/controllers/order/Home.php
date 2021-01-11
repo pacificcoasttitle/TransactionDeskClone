@@ -284,6 +284,7 @@ class Home extends MX_Controller {
 							
 				/* Start place order at resware */
 				$place_order = array();
+				$loanFlag = 1;
 
 				$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>$PropertyAddress, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
 
@@ -303,6 +304,7 @@ class Home extends MX_Controller {
 					$place_order['Sellers'][] = $legalEntity;
 					$place_order['Buyers'][] = $borrowers;
 					$place_order['SalesPrice'] = $SalesAmount;
+					$loanFlag = 0;
 				}
 				
 				$place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID'=>$ProductTypeID);
@@ -409,40 +411,199 @@ class Home extends MX_Controller {
 									);
 								}
 							}
+							$removePartnerFlag = 0;
 
-							// if (!empty($companyData)) {
-							// 	if ($companyData[0]['underwriter'] == 'north_american') {
-							// 		$partners[] = array(
-							// 			'PartnerTypeID' => 7,
-							// 			'PartnerID' => 39919,
-							// 			'PartnerType' => array(
-							// 				'PartnerTypeID' => 7
-							// 			)
-							// 		);
-							// 	} else if ($companyData[0]['underwriter'] == 'commonwealth') {
-							// 		$partners[] = array(
-							// 			'PartnerTypeID' => 7,
-							// 			'PartnerID' => 6,
-							// 			'PartnerType' => array(
-							// 				'PartnerTypeID' => 7
-							// 			)
-							// 		);
-							// 	} else {
-							// 		$partners[] = array(
-							// 			'PartnerTypeID' => 7,
-							// 			'PartnerID' => 201324,
-							// 			'PartnerType' => array(
-							// 				'PartnerTypeID' => 7
-							// 			)
-							// 		);
-							// 	}
-							// }
+							if (!empty($companyData) && $orderUser['email_address'] == 'djorns@capstoneescrow.com') {
+								$endPoint = 'files/'. $fileId .'/partners';
+								$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $file_id, 0);
+                                $user_data['admin_api'] = 1; 
+								
+								$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+								$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+                                $resPartners = json_decode($resultPartners, true);
+                                $underWriter = '';
+								if(!empty($resPartners)) {
+									$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+									if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+										$underWriter = 'north_american';
+									} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
+										$underWriter = 'commonwealth';
+									} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+										$underWriter = 'westcor';
+									} else {
+                                        if ($key) {
+                                            $underWriter = 'other';
+                                        }
+									}
+                                } 
+                                
+								if($loanFlag == 1) {
+									if (!empty($underWriter)) {
+										if ($companyData[0]['loan_underwriter'] == 'north_american') {
+											if ($underWriter != 'north_american') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 39919,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+											
+										} else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
+											if ($underWriter != 'commonwealth') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 6,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+										} else if ($companyData[0]['loan_underwriter'] == 'westcor') {
+											if ($underWriter != 'westcor') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+										}
+									} else {
+										if ($companyData[0]['loan_underwriter'] == 'north_american') {
+											$partners[] = array(
+												'PartnerTypeID' => 7,
+												'PartnerID' => 39919,
+												'PartnerType' => array(
+													'PartnerTypeID' => 7
+												)
+											);
+										} else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
+											$partners[] = array(
+												'PartnerTypeID' => 7,
+												'PartnerID' => 6,
+												'PartnerType' => array(
+													'PartnerTypeID' => 7
+												)
+											);
+										} else {
+											$partners[] = array(
+												'PartnerTypeID' => 7,
+												'PartnerID' => 201324,
+												'PartnerType' => array(
+													'PartnerTypeID' => 7
+												)
+											);
+										}
+										$removePartnerFlag = 0;
+									}
+								} else {
+									if (!empty($underWriter)) {
+										if ($companyData[0]['sales_underwriter'] == 'north_american') {
+											if ($underWriter != 'north_american') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 39919,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+											
+										} else if ($companyData[0]['sales_underwriter'] == 'commonwealth') {
+											if ($underWriter != 'commonwealth') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 6,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+										} else if ($companyData[0]['sales_underwriter'] == 'westcor') {
+											if ($underWriter != 'westcor') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+										}
+									} else {
+										if ($companyData[0]['loan_underwriter'] == 'north_american') {
+											$partners[] = array(
+												'PartnerTypeID' => 7,
+												'PartnerID' => 39919,
+												'PartnerType' => array(
+													'PartnerTypeID' => 7
+												)
+											);
+										} else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
+											$partners[] = array(
+												'PartnerTypeID' => 7,
+												'PartnerID' => 6,
+												'PartnerType' => array(
+													'PartnerTypeID' => 7
+												)
+											);
+										} else {
+											$partners[] = array(
+												'PartnerTypeID' => 7,
+												'PartnerID' => 201324,
+												'PartnerType' => array(
+													'PartnerTypeID' => 7
+												)
+											);
+										}
+										$removePartnerFlag = 0;
+									}
+                                }
+							}
 
-							$partnerData = json_encode(array('Partners' => $partners));
-							$endPoint = 'files/'.$file_id.'/partners';
 							$partnerUserData = array(
 								'admin_api' => 1
 							);
+
+							if ($removePartnerFlag == 1) {
+								$removeExistingPartner = array(
+									'PartnerTypeID' => 7,
+									'PartnerID' => $resPartners['Partners'][$key]['PartnerID'],
+									'PartnerType' => array(
+										'PartnerTypeID' => 7
+									)
+								);
+								$removePartners[] = $removeExistingPartner;
+								$removePartnerData = json_encode(array('Partners' => $removePartners));
+								$endPoint = 'files/'.$file_id.'/partners';
+								$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
+								$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+								$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+							}
+
+							$partnerData = json_encode(array('Partners' => $partners));
+							$endPoint = 'files/'.$file_id.'/partners';
 							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
 							$resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
 							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
