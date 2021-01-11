@@ -414,7 +414,7 @@ class Home extends MX_Controller {
 							$removePartnerFlag = 0;
 
 							if (!empty($companyData) && $orderUser['email_address'] == 'djorns@capstoneescrow.com') {
-								$endPoint = 'files/'. $fileId .'/partners';
+								$endPoint = 'files/'. $file_id .'/partners';
 								$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $file_id, 0);
                                 $user_data['admin_api'] = 1; 
 								
