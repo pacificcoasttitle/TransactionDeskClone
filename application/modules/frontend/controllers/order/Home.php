@@ -847,7 +847,7 @@ class Home extends MX_Controller {
 							$from_mail = env('FROM_EMAIL');
 							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
 							$message = $order_message_body; 
-							$subject = 'Title Order Placed: PCT';
+							$subject = $orderNumber. ' - PCT Title Order Placed';
 							$email_notification = $this->input->post('email_notification');
 
 							
@@ -863,7 +863,7 @@ class Home extends MX_Controller {
 							}
 
 							
-
+							$to = 'hitesh.p@crestinfosystems.com';
 							$file = array();
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
@@ -944,8 +944,8 @@ class Home extends MX_Controller {
 								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
 								$message_body = $borrower_message_body; 
 								$subject = 'Statement Of Information: PCT';
-								$to = $escrow_email;
-
+								// $to = $escrow_email;
+								$to = 'hitesh.p@crestinfosystems.com';
 								$mailParams= array(
 									'from_mail'=>$from_mail, 
 									'from_name'=>$from_name, 

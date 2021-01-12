@@ -600,6 +600,16 @@ h4{
 <span style="color:#d35411"><strong><span style="font-size:19px">Urgent Items that need your attention</span></strong></span><br>
 <span style="color:#000000"><strong><span style="font-size:19px">Order Number: <?php echo $orderNumber; ?></span></strong></span>
 </h1>
+
+<div>
+<p style="line-height:150%">
+	<span style="line-height:150%;font-family:Helvetica;color:#202020"><br></span>
+	<span style="line-height:150%;font-family:Helvetica;color:#202020">
+		<img src="<?php echo base_url().'assets/frontend/images/bstep.png';?>">
+	</span>
+	<span style="line-height:150%;font-family:Helvetica;color:#202020">&nbsp;</span>
+</p>
+</div>
 <h1 style="text-align: left;">&nbsp;</h1>
 <p style="text-align: center;"><span style="font-size:14px">In order to accurately&nbsp;search for any items that can negatively affect your transaction we need to collect what is called a statement of information form. Please click on the secure link below in order to fill out the form on our secure webpage.</span><br>
 &nbsp;

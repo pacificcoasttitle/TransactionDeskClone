@@ -380,6 +380,24 @@
                     
                   </td>
                 </tr>
+                <?php
+                    if(isset($OpenEmail) && !empty($OpenEmail) && $OpenEmail == 'info@flaremedia.io') 
+                    {
+                ?>
+                        <tr>
+                          <td class="sp" height="33" style="font-size:1px;line-height:33px;">
+                             
+                          </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <img src="<?php echo base_url().'assets/frontend/images/gstep.png';?>" />
+                            </td>
+                        </tr>
+                <?php
+                    }
+                ?>
+                
                 <tr>
                   <td class="sp" height="33" style="font-size:1px;line-height:33px;">
                      
