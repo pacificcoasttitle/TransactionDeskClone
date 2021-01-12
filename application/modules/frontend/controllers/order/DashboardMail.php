@@ -927,7 +927,7 @@ class DashboardMail extends MX_Controller {
         
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
-		$data['created'] = !empty($orderDetails['created']) ? date("m/d/Y", strtotime($orderDetails['created'])) : '';
+		$data['created'] = !empty($orderDetails['proposed_document_created_date']) ? date("m/d/Y", strtotime($orderDetails['proposed_document_created_date'])) : '';
 
         if (!empty($orderDetails['proposed_insured_document_name'])) 
         {

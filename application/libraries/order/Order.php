@@ -61,10 +61,11 @@ class Order
             }
 
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date')
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+            ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
             
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
@@ -103,10 +104,11 @@ class Order
             $orders_lists = array();
            
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name, 
-                order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date')
+                order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+                ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             
@@ -149,10 +151,11 @@ class Order
                 $this->CI->db->where('order_details.resware_status', $status);
             }
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date')
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+            ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
@@ -190,10 +193,11 @@ class Order
                 $this->CI->db->where('order_details.resware_status', $status);
             }
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name,
-            order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date')
+            order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+                ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             
@@ -336,12 +340,13 @@ class Order
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
             pct_order_product_types.product_type,
-            pct_order_documents.created')
+            pct_order_documents.created, p.created as proposed_document_created_date')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+            ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
             ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
