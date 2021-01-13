@@ -2165,4 +2165,28 @@ class Cron extends MX_Controller {
         echo json_encode($response, true);
         exit;
     }
+
+    public function updateOrderStatus()
+    {
+        $status = array();
+        $userdata['admin_api'] = 1;
+        $status['Statuses'][] = array('StatusID' => 6,'Name' => 'Hold');
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($status), array(), 0, 0);
+        $res = $this->make_request('POST', 'files/search', json_encode($status),  $userdata);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($status), $res, 0, $logid);
+        $result = json_decode($res,TRUE);
+        $file_ids = array();
+
+        if (isset($result['Files']) && !empty($result['Files'])) {
+            foreach ($result['Files'] as $res) {
+                $file_ids[] = $res['FileID'];
+            }
+            $this->db->set('resware_status', 'hold');
+            $this->db->where_in('file_id', $file_ids);      
+            $this->db->update('order_details');   
+            echo "All orders with status hold updated successfully";exit;
+        } else {
+            echo "No orders found with status hold";exit;
+        }
+    }
 }
