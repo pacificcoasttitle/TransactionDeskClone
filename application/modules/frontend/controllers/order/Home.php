@@ -941,7 +941,7 @@ class Home extends MX_Controller {
 								
 								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
 								$message_body = $borrower_message_body; 
-								$subject = $orderNumber. ' - Statement Of Information: PCT';
+								$subject = $orderNumber. ' - Borrower Verification';
 								$to = $escrow_email;
 								
 								$mailParams = array(
