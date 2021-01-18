@@ -1826,11 +1826,55 @@ class DashboardMail extends MX_Controller {
             $borrower_info_submitted = $order[0]['borrower_info_submitted'];
             $is_code_verified = $order[0]['is_code_verified'];
             $orderDetails = $this->order->get_order_details($fileId, 1);
+            if ($orderDetails['sales_amount'] > 0) {
+                if (!empty($orderDetails['borrower'])) {
+                    $borrowerNameInfo = explode(" ", $orderDetails['borrower']);
+                    if(count($borrowerNameInfo) == 3) {
+                        $data['borrower_first_name'] = $borrowerNameInfo[0];
+                        $data['borrower_middle_name'] = $borrowerNameInfo[1];
+                        $data['borrower_last_name'] = $borrowerNameInfo[2];
+                    } else if(count($borrowerNameInfo) == 2) {
+                        $data['borrower_first_name'] = $borrowerNameInfo[0];
+                        $data['borrower_middle_name'] = '' ;
+                        $data['borrower_last_name'] = $borrowerNameInfo[1];
+                    } else {
+                        $data['borrower_first_name'] = '' ;
+                        $data['borrower_middle_name'] = '' ;
+                        $data['borrower_last_name'] = '' ;
+                    }
+                } else {
+                    $data['borrower_first_name'] = '' ;
+                    $data['borrower_middle_name'] = '' ;
+                    $data['borrower_last_name'] = '' ;
+                }
+            } else {
+                if (!empty($orderDetails['primary_owner'])) {
+                    $borrowerNameInfo = explode(" ", $orderDetails['primary_owner']);
+                    if(count($borrowerNameInfo) == 3) {
+                        $data['borrower_first_name'] = $borrowerNameInfo[0];
+                        $data['borrower_middle_name'] = $borrowerNameInfo[1];
+                        $data['borrower_last_name'] = $borrowerNameInfo[2];
+                    } else if(count($borrowerNameInfo) == 2) {
+                        $data['borrower_first_name'] = $borrowerNameInfo[0];
+                        $data['borrower_middle_name'] = '' ;
+                        $data['borrower_last_name'] = $borrowerNameInfo[1];
+                    } else {
+                        $data['borrower_first_name'] = '' ;
+                        $data['borrower_middle_name'] = '' ;
+                        $data['borrower_last_name'] = '' ;
+                    }
+                } else {
+                    $data['borrower_first_name'] = '' ;
+                    $data['borrower_middle_name'] = '' ;
+                    $data['borrower_last_name'] = '' ;
+                }
+            }
 
             if ($is_code_verified == 1 && $borrower_info_submitted == 1) {
                 $data['is_borrower_info_submitted'] = 1;
                 $data['mail_dashboard'] = 1;
                 $data['order_id'] = $order[0]['id'];
+                $data['file_id'] = $fileId;
                 $data['errors'] = array();
                 $data['success'] = array();
                 if ($this->session->userdata('errors')) {
@@ -1847,8 +1891,10 @@ class DashboardMail extends MX_Controller {
                 $data['is_borrower_info_submitted'] = 0;
                 $data['mail_dashboard'] = 1;
                 $data['order_id'] = $order[0]['id'];
+                $data['file_id'] = $fileId;
                 $data['errors'] = array();
                 $data['success'] = array();
+                
                 $data['borrower_mobile_number'] = isset($orderDetails['borrower_mobile_number']) && !empty($orderDetails['borrower_mobile_number']) ? $orderDetails['borrower_mobile_number'] : '';
                 if ($this->session->userdata('errors')) {
                     $data['errors'] = $this->session->userdata('errors');
@@ -2001,6 +2047,8 @@ class DashboardMail extends MX_Controller {
             'buyer_intends_to_reside' => $this->input->post('buyer_intends'),
             'land_is_unimproved' => $this->input->post('land_is_unimproved'),
             'type_of_property' => $this->input->post('type_of_property'),
+            'work_done_last_6_month' => $this->input->post('work_done_last_6_month'),
+            'previously_married' => $this->input->post('previously_married'),
             'general_terms' => 1,
             'signature' => $this->input->post('signature'),
             'spouse_signature' => $this->input->post('spouse_signature'),
@@ -2026,48 +2074,52 @@ class DashboardMail extends MX_Controller {
             $i++;
         }
 
-        $business_names = $this->input->post('business_names');
-        $employment_addresses = $this->input->post('employment_addresses');
-        $employment_from_dates = $this->input->post('employment_from_dates');
-        $employment_to_dates = $this->input->post('employment_to_dates');
-        $j = 0;
-        $this->db->delete('pct_order_borrower_employment_info', array('order_id' => $this->input->post('order_id')));
+        $employment_status = $this->input->post('employment_status');
+        if($employment_status == 'add_business') {
+            $business_names = $this->input->post('business_names');
+            $employment_addresses = $this->input->post('employment_addresses');
+            $employment_from_dates = $this->input->post('employment_from_dates');
+            $employment_to_dates = $this->input->post('employment_to_dates');
+            $j = 0;
+            $this->db->delete('pct_order_borrower_employment_info', array('order_id' => $this->input->post('order_id')));
 
-        foreach($business_names as $business_name) {
-            $borrowerEmploymentData = array(
-                'business_name' => $business_name,
-                'address' => $employment_addresses[$j],
-                'from_date' => $employment_from_dates[$j],
-                'to_date' => $employment_to_dates[$j],
-                'order_id' => $this->input->post('order_id'),
-                'is_partner_info' => 0,
-                'created_at' => date('Y-m-d H:i:s'),
-            );
-            $this->home_model->insert($borrowerEmploymentData, 'pct_order_borrower_employment_info');
-            $j++;
-        }
-
-        $partner_business_names = $this->input->post('partner_business_names');
-        $partner_addresses = $this->input->post('partner_addresses');
-        $partner_from_dates = $this->input->post('partner_from_dates');
-        $partner_to_dates = $this->input->post('partner_to_dates');
-        $k = 0;
-
-        if(!empty($partner_business_names)) {
-            foreach($partner_business_names as $partner_business_name) {
-                $borrowerEmploymentPartnerData = array(
-                    'business_name' => $partner_business_name,
-                    'address' => $partner_addresses[$k],
-                    'from_date' => $partner_from_dates[$k],
-                    'to_date' => $partner_to_dates[$k],
+            foreach($business_names as $business_name) {
+                $borrowerEmploymentData = array(
+                    'business_name' => $business_name,
+                    'address' => $employment_addresses[$j],
+                    'from_date' => $employment_from_dates[$j],
+                    'to_date' => $employment_to_dates[$j],
                     'order_id' => $this->input->post('order_id'),
-                    'is_partner_info' => 1,
+                    'is_partner_info' => 0,
                     'created_at' => date('Y-m-d H:i:s'),
                 );
-                $this->home_model->insert($borrowerEmploymentPartnerData, 'pct_order_borrower_employment_info');
-                $k++;
+                $this->home_model->insert($borrowerEmploymentData, 'pct_order_borrower_employment_info');
+                $j++;
             }
+
+            /*$partner_business_names = $this->input->post('partner_business_names');
+            $partner_addresses = $this->input->post('partner_addresses');
+            $partner_from_dates = $this->input->post('partner_from_dates');
+            $partner_to_dates = $this->input->post('partner_to_dates');
+            $k = 0;
+
+            if(!empty($partner_business_names)) {
+                foreach($partner_business_names as $partner_business_name) {
+                    $borrowerEmploymentPartnerData = array(
+                        'business_name' => $partner_business_name,
+                        'address' => $partner_addresses[$k],
+                        'from_date' => $partner_from_dates[$k],
+                        'to_date' => $partner_to_dates[$k],
+                        'order_id' => $this->input->post('order_id'),
+                        'is_partner_info' => 1,
+                        'created_at' => date('Y-m-d H:i:s'),
+                    );
+                    $this->home_model->insert($borrowerEmploymentPartnerData, 'pct_order_borrower_employment_info');
+                    $k++;
+                }
+            }*/
         }
+
         $this->home_model->update(array('borrower_info_submitted' => 1), array('random_number' => $order[0]['random_number']), 'order_details');
 
         /* Generate PDF */
@@ -3119,5 +3171,58 @@ class DashboardMail extends MX_Controller {
         } else {
             return array();
         }         
+    }
+
+    public function createOrderSafewire()
+    {
+        $file_id = $this->input->post('file_id');
+        $order_id = $this->input->post('order_id');
+        $orderDetails = $this->order->get_order_details($file_id);
+        $orderData = array(
+            'FileNumber' =>  $orderDetails['file_number'],
+            'FileID' => $orderDetails['file_id'],
+            'Properties' => array(
+                array(
+                    'Address' => $orderDetails['address'],
+                    'City' => $orderDetails['property_city'],
+                    'State' => $orderDetails['property_state'],
+                    'County' => $orderDetails['county'],
+                    'Zip' => $orderDetails['property_zip'], 
+                )
+            ),
+            'Buyers' => array(
+                array(
+                    'FirstName' => $this->input->post('firstname'),
+                    'LastName' => $this->input->post('lastname'),
+                    'MobilePhone' => $this->input->post('mobile'),
+                    'Email' => $this->input->post('email')
+                )
+            ),
+            'SalesPrice' => $orderDetails['sales_amount'], 
+        );
+
+        $bodyParams = array('FileInformations' => $orderData);
+        $body_params = json_encode($bodyParams, JSON_UNESCAPED_SLASHES);
+        $logid = $this->apiLogs->syncLogs(0, 'safewire', 'create_order_on_safewire', env('SAFEWIRE_URL'), $body_params, array(), $order_id, 0);
+        $ch = curl_init(env('SAFEWIRE_URL'));                                    
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Api-Key: jV0i1HY5.71I6FmoBg581iPMAIERe9Qnfmn0b8jLF',
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($body_params))
+        );
+        $error_msg = curl_error($ch);
+        $result = curl_exec($ch);
+        $this->apiLogs->syncLogs(0, 'safewire', 'create_order_on_safewire', env('SAFEWIRE_URL'), $body_params, $result, $order_id, $logid);
+       
+        $result = json_decode(curl_exec($ch), true);
+        if(!empty($result['action_link'])) {
+            $result = array('success' => true, 'message'=> 'order created successfully', 'action_link' => $result['action_link']);
+        } else {
+            $result = array('success' => false, 'message'=> $result['error']);
+        }
+        echo json_encode($result); exit;
     }
 }
