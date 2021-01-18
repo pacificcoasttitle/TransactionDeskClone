@@ -9,6 +9,14 @@
     color: #CC0000;
     font-size: 0.85em;
 }
+#page-preloader {
+    background: none;
+    display: none;
+}
+
+a {
+    color: white;
+}
 </style>
 
 <body>
@@ -16,7 +24,8 @@
         $this->load->view('layout/header_dashboard');
     ?>
 
-    <div class="smart-wrap">
+    <div id="page-preloader"><span class="spinner border-t_second_b border-t_prim_a"></span></div>  
+    <div class="smart-wrap" id="borrower_page">
         <div class="smart-forms smart-container wrap-0">
             <div class="form-body smart-steps steps-theme-primary">
                 <?php if(!empty($success)) {?>
@@ -37,6 +46,7 @@
                 <?php if($is_borrower_info_submitted == 0) {?>
                     <form method="post" action="<?php echo base_url();?>borrower-info-submit" enctype="multipart/form-data" name="borrower-form" id="borrower-form">
                         <input type="hidden" id="order_id" name="order_id" value="<?php echo $order_id;?>">
+                        <input type="hidden" id="file_id" name="file_id" value="<?php echo $file_id;?>">
                         <h2>Personal <br>Information</h2>
                         <fieldset>  
                             <div class="spacer-b40">
@@ -48,7 +58,7 @@
                                 <div class="section colm colm4">
                                 <label for="firstname" class="field-label">First Name </label>
                                     <label class="field prepend-icon">
-                                        <input type="text" name="firstname" id="firstname" class="gui-input" placeholder="First name">
+                                        <input type="text" value="<?php echo $borrower_first_name;?>" name="firstname" id="firstname" class="gui-input" placeholder="First name">
                                         <span class="field-icon"><i class="fa fa-user"></i></span>  
                                     </label>
                                 </div>
@@ -56,7 +66,7 @@
                                 <div class="section colm colm4">
                                 <label for="middlename" class="field-label">Middle Name </label>
                                     <label class="field prepend-icon">
-                                        <input type="text" name="middlename" id="middlename" class="gui-input" placeholder="Middle name">
+                                        <input type="text" value="<?php echo $borrower_middle_name;?>" name="middlename" id="middlename" class="gui-input" placeholder="Middle name">
                                         <span class="field-icon"><i class="fa fa-user"></i></span>  
                                     </label>
                                 </div>
@@ -64,7 +74,7 @@
                                 <div class="section colm colm4">
                                 <label for="lastname" class="field-label">Last Name </label>
                                     <label class="field prepend-icon">
-                                        <input type="text" name="lastname" id="lastname" class="gui-input" placeholder="Last name">
+                                        <input type="text" value="<?php echo $borrower_last_name;?>" name="lastname" id="lastname" class="gui-input" placeholder="Last name">
                                         <span class="field-icon"><i class="fa fa-user"></i></span>  
                                     </label>
                                 </div>
@@ -106,9 +116,9 @@
                                     
                             <div class="frm-row">
                                 <div class="section colm colm4">
-                                    <label for="birthplace" class="field-label">Email </label>
+                                    <label for="email" class="field-label">Email </label>
                                     <label class="field prepend-icon">
-                                        <input type="email" name="birthplace" id="email" class="gui-input" placeholder="abc@gmail.com">
+                                        <input type="email" name="email" id="email" class="gui-input" placeholder="abc@gmail.com">
                                         <span class="field-icon">
                                             <i class="fa fa-envelope"></i>
                                         </span>  
@@ -413,13 +423,12 @@
 							<div class="section">
 							 <div class="frm-row">
 								<div class="section colm colm10">
-								 <p class="medium fine-grey">
-                                Is 1234 Main St. Rancho Cucamonga the property address for this transaction?</p>
+                                    <p class="medium fine-grey">Is 1234 Main St. Rancho Cucamonga the property address for this transaction?</p>
 								</div>
 								<div class="section colm colm2">
 									 <label class="modern-switch">
 										<span class="switch-label">No</span>  
-										<input type="checkbox" >
+										<input type="checkbox" id="street_address" name="street_address">
 										<span class="switch-toggle"></span>
 										<span class="switch-label">Yes</span>                      
 									</label>
@@ -435,7 +444,7 @@
 								<div class="section colm colm2">
 									 <label class="modern-switch">
 										<span class="switch-label">No</span>  
-										<input type="checkbox" >
+										<input type="checkbox" id="buyer_intends_to_reside" name="buyer_intends_to_reside">
 										<span class="switch-toggle"></span>
 										<span class="switch-label">Yes</span>                      
 									</label>
@@ -451,7 +460,7 @@
 								<div class="section colm colm2">
 									 <label class="modern-switch">
 										<span class="switch-label">No</span>  
-										<input type="checkbox" >
+										<input type="checkbox" id="land_is_unimproved" name="land_is_unimproved">
 										<span class="switch-toggle"></span>
 										<span class="switch-label">Yes</span>                      
 									</label>
@@ -467,7 +476,7 @@
 								<div class="section colm colm2">
 									 <label class="modern-switch">
 										<span class="switch-label">No</span>  
-										<input type="checkbox" >
+										<input type="checkbox" id="type_of_property" name="type_of_property">
 										<span class="switch-toggle"></span>
 										<span class="switch-label">Yes</span>                      
 									</label>
@@ -478,12 +487,12 @@
 							 <div class="frm-row">
 								<div class="section colm colm10">
 								 <p class="medium fine-grey">
-                                What other questions would we like to ask?</p>
+                                 Any work done on the premise on the last 6 months?</p>
 								</div>
 								<div class="section colm colm2">
 									 <label class="modern-switch">
 										<span class="switch-label">No</span>  
-										<input type="checkbox" >
+										<input type="checkbox" id="work_done_last_6_month" name="work_done_last_6_month">
 										<span class="switch-toggle"></span>
 										<span class="switch-label">Yes</span>                      
 									</label>
@@ -494,12 +503,12 @@
 							 <div class="frm-row">
 								<div class="section colm colm10">
 								 <p class="medium fine-grey">
-                                What other questions would we like to ask?</p>
+                                 Were you previously married?</p>
 								</div>
 								<div class="section colm colm2">
 									 <label class="modern-switch">
 										<span class="switch-label">No</span>  
-										<input type="checkbox" >
+										<input type="checkbox" id="previously_married" name="previously_married">
 										<span class="switch-toggle"></span>
 										<span class="switch-label">Yes</span>                      
 									</label>
@@ -515,7 +524,7 @@
 								<div class="section colm colm3">
 									<div class="option-group field">
 										<label class="option">
-											<input type="radio" name="employment_status" class="smartfm-ctrl" value="add_partner" data-show-id="add_partner">
+											<input type="radio" name="employment_status" class="smartfm-ctrl" value="add_business" data-show-id="add_business">
 											<span class="radio"></span> Yes
 										</label>
 										<label class="option">
@@ -527,7 +536,7 @@
                             </div>
 							</div>
                                     
-                            <div id="add_partner" class="hiddenbox section smartform-reset">   
+                            <div id="add_business" class="hiddenbox section smartform-reset">   
                                 <div class="toclone clone-widget">
                                     <div id="clone-group-fields3">
                                         <div class="toclone clone-widget2">
@@ -535,7 +544,7 @@
                                                 <div class="spacer-b10 colm colm4">
                                                     <label for="partner_business_name" class="field-label">Business Name </label>
                                                     <label class="prepend-icon">
-                                                        <input type="text" name="partner_business_names[]" id="partner_business_name" class="gui-input" placeholder="Abc Company Inc">
+                                                        <input type="text" name="business_names[]" id="business_names" class="gui-input" placeholder="Abc Company Inc">
                                                         <span class="field-icon"><i class="fa fa-user"></i></span> 
                                                     </label>
                                                 </div>
@@ -543,7 +552,7 @@
                                                 <div class="spacer-b10 colm colm4">
                                                     <label for="partner_address" class="field-label">Address </label>
                                                     <label class="prepend-icon">
-                                                        <input type="text" name="partner_addresses[]" id="partner_address" class="gui-input" placeholder="789 Sucess Ave. Success City, CA">
+                                                        <input type="text" name="employment_addresses[]" id="employment_addresses" class="gui-input" placeholder="789 Sucess Ave. Success City, CA">
                                                         <span class="field-icon"><i class="fa fa-user"></i></span> 
                                                     </label>
                                                 </div>
@@ -551,7 +560,7 @@
                                                 <div class="spacer-b10 colm colm2">
                                                     <label for="partner_from_date" class="field-label">From: </label>
                                                     <label for="datesf1" class="field prepend-icon">
-                                                        <input type="text" name="partner_from_dates[]" id="partner_from_date" class="gui-input" placeholder="MM/YYYY" >
+                                                        <input type="text" name="employment_from_dates[]" id="employment_from_dates" class="gui-input" placeholder="MM/YYYY" >
                                                         <span class="field-icon"><i class="fa fa-user"></i></span>
                                                     </label>                 
                                                 </div>
@@ -559,7 +568,7 @@
                                                 <div class="spacer-b10 colm colm2">
                                                     <label for="partner_to_date" class="field-label">To: </label>
                                                     <label for="datesf2" class="field prepend-icon">
-                                                        <input type="text" name="partner_to_dates[]" id="partner_to_date" class="gui-input" placeholder="MM/YYYY" >
+                                                        <input type="text" name="employment_to_dates[]" id="employment_to_dates" class="gui-input" placeholder="MM/YYYY" >
                                                         <span class="field-icon"><i class="fa fa-user"></i></span>
                                                     </label>                
                                                 </div> 								
@@ -594,7 +603,7 @@
 							 <div class="frm-row">
 								<div class="section colm colm10">
 								
-								<button type="" class="button btn-secondary">Verify Wire Instructions</button>
+								<button type="" class="button btn-secondary"><a id="wire_instruction" href="">Verify Wire Instructions</a></button>
 								
 								
 								</div>
@@ -790,7 +799,7 @@
                                 
                         <h2>Sign & <br> Submit</h2>
                         <fieldset>
-                            <div class="spacer-b40">
+                            <!-- <div class="spacer-b40">
                                 <p class="medium fine-grey">Please complete the information below prior to hitting submit.</p>
                             </div> 
                                                     
@@ -849,9 +858,9 @@
                                         </label> 
                                     </div>         
                                 </div>
-                            </div>
+                            </div> -->
                                     
-                            <div class="spacer-b40">
+                            <div class="spacer-b30 spacer-t10">
                                 <div class="tagline"><span>Disclosure</span></div>
                             </div>   
 
@@ -933,6 +942,7 @@
 <script type="text/javascript">
     $(document).ready(function(){
         
+        var safeWireFlag = false;
         $("#borrower-form").steps({
             bodyTag: "fieldset",
             headerTag: "h2",
@@ -947,14 +957,60 @@
                 if (currentIndex > newIndex){return true; }
                 var form = $(this);
                 if (currentIndex < newIndex){}
-                return form.valid();
+                if(currentIndex == 0) {
+                    if(form.valid() === true) {
+                        $('#page-preloader').css('display', 'block');
+                        $('#borrower_page').css('opacity', '0.5');
+                        $.ajax({
+                            url: '<?php  echo base_url(); ?>create-order-safewire',
+                            type: "POST",
+                            data: {
+                                file_id: $("#file_id").val(),
+                                order_id: $("#order_id").val(),
+                                firstname: $("#firstname").val(),
+                                lastname: $("#lastname").val(),
+                                email: $("#email").val(),
+                                mobile:  $("#mobile").val()
+                            },
+                            async: false,
+                            success: function(result) {
+                                $('#page-preloader').css('display', 'none');
+                                $('#borrower_page').css('opacity', '1');
+                                var res = jQuery.parseJSON(result);
+                                if (res.success === true) {
+                                    $('#wire_instruction').attr("href", res.action_link);
+                                    safeWireFlag = true;
+                                } else {
+                                    alert(res.message);
+                                    safeWireFlag = false;
+                                }
+                            },
+                            error:function(){
+                                $('#page-preloader').css('display', 'none');
+                                $('#borrower_page').css('opacity', '1');
+                                alert('Something went wrong');
+                            },
+                        });
+                    } else {
+                        return form.valid();
+                    }
+                    return safeWireFlag;
+                } else {
+                    return form.valid();
+                }
             },
             onStepChanged: function (event, currentIndex, priorIndex){
             },
             onFinishing: function (event, currentIndex){
                 var form = $(this);
                 form.validate().settings.ignore = ":disabled";
-                return form.valid();
+                if(form.valid() === true) {
+                    console.log('fdfd');
+                    $("#borrower-form")[0].submit();
+                } else {
+                    return form.valid();
+                }
+               
             },
             onFinished: function (event, currentIndex){
                 var form = $(this);
@@ -975,9 +1031,10 @@
                 lastname: {
                     required: true
                 },
-                /*telephone: {
-                    required: true
-                },*/
+                email: {
+                    required: true,
+                    email: true    
+                },
                 mobile: {
                     required: true
                 },			
@@ -996,7 +1053,7 @@
                 status:{
                     required: true
                 },	
-                street_address:{
+                /*street_address:{
                     required: true
                 },
                 land_is_unimproved:{
@@ -1007,7 +1064,7 @@
                 },
                 buyer_intends:{
                     required: true
-                },
+                },*/
                 general_terms:{
                     required: true
                 },
@@ -1237,10 +1294,10 @@
                 "employment_addresses[]": "required",	
                 "employment_from_dates[]": "required",
                 "employment_to_dates[]": "required",
-                "partner_business_names[]": "required",	
+                /*"partner_business_names[]": "required",	
                 "partner_addresses[]": "required",	
                 "partner_from_dates[]": "required",
-                "partner_to_dates[]": "required",	
+                "partner_to_dates[]": "required",*/	
             },
             messages: {
                 firstname: {
@@ -1261,8 +1318,8 @@
                 date_of_birth: {
                     required: "Please enter date of birth"
                 },
-                birthplace: {
-                    required: "Please enter birth place"
+                email: {
+                    required: "Please enter email"
                 },
                 ssn:{
                     required: 'Please enter social security no'
@@ -1445,14 +1502,7 @@
         $("#prior_spouse_end_both").mask('99/9999', {placeholder:'_'});
         $("#current_spouse_prior_spouse_end_both").mask('99/9999', {placeholder:'_'});
         $("#current_spouse_prior_spouse_end").mask('99/9999', {placeholder:'_'});
-    
-        $("#borrower-form a").click(function() {
-            var borrVal = $(this).attr('href');
-            if(borrVal == '#finish') {
-                $("#borrower-form")[0].submit();
-            }
-        });
-        
+
         $('.smartfm-ctrl').formShowHide({
             resetClass: 'smartform-reset'
         });

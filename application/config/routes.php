@@ -188,6 +188,7 @@ $route['borrower-info-submit'] = 'frontend/order/dashboardMail/borrowerInfoSubmi
 $route['generic-landing-page'] = 'frontend/order/dashboardMail/genericLandingPage';
 $route['get-order-information/:any'] = 'frontend/order/cron/getOrderInformation';
 $route['update-order-status'] = 'frontend/order/cron/updateOrderStatus';
+$route['create-order-safewire'] = 'frontend/order/dashboardMail/createOrderSafewire';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
