@@ -981,7 +981,7 @@ class Home extends MX_Controller {
 						            );
 									$county_data = $this->home_model->get_counties_rows($condition);
 									$counties[] = $county_data['county'];
-									$County = 'Alpine';
+									
 									if(in_array($County, $counties))
 									{
 										$search_data = array(
@@ -994,8 +994,7 @@ class Home extends MX_Controller {
 										$search_package_body = $this->load->view('emails/search_package.php',$search_data,TRUE);
 										$message_body = $search_package_body; 
 										$subject = 'Search Package Needed - '.$PropertyAddress;
-										// $to = env('ADMIN_EMAIL');
-										$to = 'crestdev@protonmail.com';
+										$to = env('ADMIN_EMAIL');
 										
 										$mailParams = array(
 											'from_mail'=>env('FROM_EMAIL'),
