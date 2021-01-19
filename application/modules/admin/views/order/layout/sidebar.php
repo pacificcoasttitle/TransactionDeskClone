@@ -114,4 +114,10 @@
 			<span>Import Orders</span>
 		</a>
 	</li>
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/rules-manager') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/rules-manager'; ?>">
+			<i class="fas fa-fw fa-list"></i>
+			<span>Rules Manager</span>
+		</a>
+	</li>
 </ul>
