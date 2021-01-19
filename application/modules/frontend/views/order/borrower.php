@@ -603,7 +603,7 @@ a {
 							 <div class="frm-row">
 								<div class="section colm colm10">
 								
-								<button type="" class="button btn-secondary"><a id="wire_instruction" href="">Verify Wire Instructions</a></button>
+								<button type="" class="button btn-secondary"><a id="wire_instruction" target="_blank" href="">Verify Wire Instructions</a></button>
 								
 								
 								</div>
