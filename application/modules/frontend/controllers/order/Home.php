@@ -25,7 +25,7 @@ class Home extends MX_Controller {
 		$this->load->model('order/salesRep');
 		$this->load->model('order/partnerApiLogs');
 		$this->load->library('order/titlepoint');
-
+		
     	if(isset($_POST) && !empty($_POST))
     	{
     		$random_number = $this->input->post('random_number');
@@ -927,8 +927,7 @@ class Home extends MX_Controller {
 							$from_mail = env('FROM_EMAIL');*/
 
 							if($escrow_email == 'info@flaremedia.io')
-							{
-								
+							{							
 
 								$sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
 
@@ -959,7 +958,61 @@ class Home extends MX_Controller {
 								$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
 							}					
 
-							/* Escrow officer email */							
+							/* Escrow officer email */	
+
+							/* Send notification to admin based on rules */
+							$condition = array(
+				                'where' => array(
+				                    'title' => 'Send notification for open orders'
+				                )
+				            );
+							$rules = $this->home_model->get_rules_rows($condition);
+		
+							if(isset($rules) && !empty($rules))
+							{
+								$counties_rule = isset($rules[0]['value']) && !empty($rules[0]['value']) ? $rules[0]['value'] : array(); 
+								$counties_ids = explode(',', $counties_rule);
+								
+								$counties = array();
+								foreach ($counties_ids as $key => $value) 
+								{
+									$condition = array(
+						                'id' => $value	                
+						            );
+									$county_data = $this->home_model->get_counties_rows($condition);
+									$counties[] = $county_data['county'];
+									$County = 'Alpine';
+									if(in_array($County, $counties))
+									{
+										$search_data = array(
+											'orderNumber'=> $orderNumber,
+											'property_address'=> $FullProperty,
+											'apn'=> $apn,
+											'currYear'=> CURRENT_YEAR
+										);
+										
+										$search_package_body = $this->load->view('emails/search_package.php',$search_data,TRUE);
+										$message_body = $search_package_body; 
+										$subject = 'Search Package Needed - '.$PropertyAddress;
+										// $to = env('ADMIN_EMAIL');
+										$to = 'crestdev@protonmail.com';
+										
+										$mailParams = array(
+											'from_mail'=>env('FROM_EMAIL'),
+											'to'=>$to,
+											'subject'=>$subject,
+											'message'=>json_encode($search_data)
+										);
+
+										$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_admin_for_search_package', '', $mailParams, array(), $orderId, 0);
+
+										$search_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+
+										$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_admin_for_search_package', '', $mailParams, array('status'=>$search_mail_result), $orderId, $logid);
+									}
+								}
+							}			
+							/* Send notification to admin based on rules */						
 						}
 											
 						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','file_id'=>$file_id);

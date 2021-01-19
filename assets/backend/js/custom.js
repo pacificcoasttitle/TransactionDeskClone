@@ -2681,9 +2681,123 @@ $(document).ready(function () {
                         
         });
     }
+
+    /* Rules listing */
+    if ($('#tbl-rules-manager').length) 
+    {
+        rules_list = $('#tbl-rules-manager').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "columns": [
+                {
+                    "width": "5%"
+                },
+                {
+                    "width": "30%"
+                },
+                {
+                    "width": "65%"
+                }
+            ],
+            "language": {
+                // searchPlaceholder: "Name",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                $('#rules_county').selectpicker();
+                $('.bootstrap-select').on('hidden.bs.dropdown', function () {
+                    var selected = []
+                    selected = $('.selectpicker').val();
+                    var ruleId =  $('#rules_county').data("id");
+                    updateCounty(selected,ruleId);
+                });
+            },
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/rulesManager/get_rules", // json datasource
+                type: "post", // method  , by default get
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-rules-manager tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-rules-manager_processing").css("display", "none");
+
+                }
+            },
+                        
+        });
+    }
+    /* Rules listing */
+
 });
 
+function updateCounty(counties,ruleId)
+{
+    if (counties=='') {
+        alert('Please select county');
+        return false;
+    }
+    else
+    {
+        var list = JSON.stringify(counties);
+        $.ajax({
+            url: base_url+"admin/order/rulesManager/updateCounties",
+            method: "POST",
+            data : {counties:counties,rule_id:ruleId},
+            success: function(data){
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#rules_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#rules_success_msg").offset().top
+                    }, 1000);
+                    // rules_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#rules_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#rules_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#rules_error_msg").offset().top
+                    }, 1000);
 
+                    setTimeout(function () {
+                        $('#rules_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#rules_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#rules_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#rules_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    }
+}
 
 function deleteCustomer(id)
 {
