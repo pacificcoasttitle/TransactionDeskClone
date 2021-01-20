@@ -158,7 +158,7 @@
 				
 			</div>
 			<div class="order-details">
-				<p>Borrower: <?php echo isset($vesting) && !empty($vesting) ? $vesting : '-'; ?></p>
+				<p style="line-height: 20px;">Borrower: <?php echo isset($vesting) && !empty($vesting) ? $vesting : '-'; ?></p>
 				<p>Loan #: <?php echo isset($loan_number) && !empty($loan_number) ? $loan_number : '-'; ?></p>
 				<?php
                 	if(isset($loan_amount) && !empty($loan_amount))
