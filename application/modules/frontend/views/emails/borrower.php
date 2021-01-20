@@ -530,15 +530,22 @@ h4{
 <tbody class="mcnImageBlockOuter">
 <tr>
 <td valign="top" style="padding:0px" class="mcnImageBlockInner">
-<table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
+<!-- <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
 <tbody>
 <tr>
 <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
-<img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/c405dde6-8511-490a-87a6-c66628e59843.jpg'; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+<img align="center" alt="" src="<?php // echo base_url().'assets/frontend/images/c405dde6-8511-490a-87a6-c66628e59843.jpg'; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
 </td>
 </tr>
 </tbody>
-</table>
+</table> -->
+<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="full-image" style="border-collapse:collapse;font-size:0;">
+              <img width="800" src="<?php echo base_url().'assets/frontend/images/c405dde6-8511-490a-87a6-c66628e59843.jpg'; ?>"alt="" style="border: none; display: block;">
+            </td>
+          </tr>
+        </table>
 </td>
 </tr>
 </tbody>
@@ -570,6 +577,35 @@ h4{
 </tr>
 </tbody>
 </table>
+
+<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td class="full-image" style="border-collapse:collapse;font-size:0;">
+
+
+<?php
+if(isset($headerImg) && !empty($headerImg))
+{
+?>
+<img width="800" src="<?php echo base_url().$headerImg; ?>"alt="" style="border: none; display: block;">
+
+
+<?php
+}
+else
+{
+?>
+
+<img width="800" src="<?php echo base_url().'assets/frontend/images/ddba38a2-0594-4153-ae80-ae9514df2dcb.jpg'; ?>"alt="" style="border: none; display: block;">
+<?php
+}
+?>
+
+</td>
+</tr>
+</table>
+
+
 </td>
 </tr>
 </tbody>
@@ -703,15 +739,23 @@ Statement of Information?</strong>
 <tbody class="mcnImageBlockOuter">
 <tr>
 <td valign="top" style="padding:0px" class="mcnImageBlockInner">
-<table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
+<!-- <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
 <tbody>
 <tr>
 <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
-<img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+<img align="center" alt="" src="<?php // echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
 </td>
 </tr>
 </tbody>
+</table> -->
+<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td class="full-image" style="border-collapse:collapse;font-size:0;">
+      <img width="800" src="<?php echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" alt="" style="border: none; display: block;">
+    </td>
+  </tr>
 </table>
+
 <table class="footer" width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td class="color-bg" align="center" style="background-color:#002742;">
