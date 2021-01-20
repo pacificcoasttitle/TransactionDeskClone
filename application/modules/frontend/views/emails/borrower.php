@@ -589,7 +589,7 @@ h4{
 <!--[if mso]>
 <td valign="top" width="600" style="width:600px;">
 <![endif]-->
-<table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+<table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="">
 <tbody>
 <tr>
 <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
@@ -627,7 +627,7 @@ h4{
 </tr>
 </tbody>
 </table>
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;background-color: #ffffff;">
 <tbody class="mcnButtonBlockOuter">
 <tr>
 <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
@@ -644,7 +644,7 @@ h4{
 </tr>
 </tbody>
 </table>
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;background-color: #ffffff;">
 <tbody class="mcnTextBlockOuter">
 <tr>
 <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
@@ -655,7 +655,7 @@ h4{
 <!--[if mso]>
 <td valign="top" width="600" style="width:600px;">
 <![endif]-->
-<table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+<table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;background-color: #ffffff;" width="100%" class="mcnTextContentContainer">
 <tbody>
 <tr>
 <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
@@ -712,6 +712,49 @@ Statement of Information?</strong>
 </tr>
 </tbody>
 </table>
+<table class="footer" width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td class="color-bg" align="center" style="background-color:#002742;">
+          <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
+            <tr>
+              <td class="sp" height="30" style="font-size:1px;line-height:30px;">
+                 
+              </td>
+            </tr>
+            <tr>
+              <td align="center">
+                <table class="m-w100" align="center" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;">
+                  <tr>
+                    <td align="center">
+                      
+                      <!-- social icons -->
+                      <table align="center" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td style="text-align:center;padding:0 5px;"></td>
+                          <td style="text-align:center;padding:0 5px;">
+                            <img width="30" border="0" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/ac97afd1-e373-4ab9-b2e5-82af61f8c88c.png" alt="" style="border: none; display: block;">
+                          </td>
+                          <td style="text-align:center;padding:0 5px;">
+                            <img width="30" border="0" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/c9f40cb7-f2cc-4a72-9f5a-5f906cb5bfec.png" alt="" style="border: none; display: block;">
+                          </td>
+                          <td style="text-align:center;padding:0 5px;"></td>
+                        </tr>
+                      </table>
+                      <!-- end social icons -->
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td class="sp" height="30" style="font-size:1px;line-height:30px;">
+                 
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
 </td>
 </tr>
 </tbody>
