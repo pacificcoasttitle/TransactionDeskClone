@@ -88,11 +88,11 @@
 		<hr>
 		<div class="title-officer-info">
 			<div class="title-officer-basic-info">
-				<p style="line-height: 20px;"><span class="heading">Title Officer:</span> <?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
-				<p style="line-height: 20px;"><span class="heading">Title Officer Email:</span>  <?php echo isset($title_officer_email) && !empty($title_officer_email) ? $title_officer_email : ''; ?></p>
+				<p><span class="heading">Title Officer:</span> <?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
+				<p><span class="heading">Title Officer Email:</span>  <?php echo isset($title_officer_email) && !empty($title_officer_email) ? $title_officer_email : ''; ?></p>
 			</div>
 			<div class="title-officer-contact-info text-right">
-				<p style="line-height: 20px;"><span class="heading">Title Officer Phone:</span> <?php echo isset($title_officer_phone) && !empty($title_officer_phone) ? $title_officer_phone : ''; ?></p>
+				<p><span class="heading">Title Officer Phone:</span> <?php echo isset($title_officer_phone) && !empty($title_officer_phone) ? $title_officer_phone : ''; ?></p>
 				<!-- <p><span class="heading">Title Officer Fax:</span>  (818)484-2540</p> -->
 			</div>
 			<div style="clear: both;"></div>
@@ -102,15 +102,15 @@
 						if(isset($company) && !empty($company))
 						{
 					?>
-							<p class="heading-info" style="line-height: 20px;"><span class="heading">To:</span> <?php echo isset($company) && !empty($company) ? $company : ''; ?></p>
-							<p style="line-height: 20px;"><?php echo isset($address) && !empty($address) ? $address : ''; ?></p>
+							<p class="heading-info"><span class="heading">To:</span> <?php echo isset($company) && !empty($company) ? $company : ''; ?></p>
+							<p><?php echo isset($address) && !empty($address) ? $address : ''; ?></p>
 					<?php
 						}
 					?>
 					
 				</div>
 				<div class="order-number">
-					<p class="heading-info" style="line-height: 20px;"><span class="heading">Order No.:</span> <?php echo isset($order_number) && !empty($order_number) ? $order_number : ''; ?></p>
+					<p class="heading-info"><span class="heading">Order No.:</span> <?php echo isset($order_number) && !empty($order_number) ? $order_number : ''; ?></p>
 				</div>
 				<div class="property-info">
 					<p class="heading-info"><span class="heading">Property Address:</span> <?php echo isset($property_address) && !empty($property_address) ? $property_address : ''; ?></p>
