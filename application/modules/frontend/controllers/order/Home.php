@@ -861,7 +861,7 @@ class Home extends MX_Controller {
 								$to = $OpenEmail;
 								$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
 							}
-
+							$to='crestdev@protonmail.com';
 							$file = array();
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
@@ -941,8 +941,8 @@ class Home extends MX_Controller {
 								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
 								$message_body = $borrower_message_body; 
 								$subject = $orderNumber. ' - Borrower Verification';
-								$to = $escrow_email;
-								
+								// $to = $escrow_email;
+								$to='crestdev@protonmail.com';
 								$mailParams = array(
 									'from_mail'=>$from_mail, 
 									'from_name'=>$from_name, 
@@ -992,10 +992,10 @@ class Home extends MX_Controller {
 										);
 										
 										$search_package_body = $this->load->view('emails/search_package.php',$search_data,TRUE);
-										$message_body = $search_package_body; 
+										$search_package_message_body = $search_package_body; 
 										$subject = 'Search Package Needed - '.$PropertyAddress;
-										$to = env('ADMIN_EMAIL');
-										
+										// $to = env('ADMIN_EMAIL');
+										$to='crestdev@protonmail.com';
 										$mailParams = array(
 											'from_mail'=>env('FROM_EMAIL'),
 											'to'=>$to,
@@ -1005,7 +1005,7 @@ class Home extends MX_Controller {
 
 										$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_admin_for_search_package', '', $mailParams, array(), $orderId, 0);
 
-										$search_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+										$search_mail_result = send_email($from_mail,$from_name, $to, $subject, $search_package_message_body,array(),array(),array());
 
 										$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_admin_for_search_package', '', $mailParams, array('status'=>$search_mail_result), $orderId, $logid);
 									}
