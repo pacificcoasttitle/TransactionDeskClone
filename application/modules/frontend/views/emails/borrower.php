@@ -542,7 +542,7 @@ h4{
 <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td class="full-image" style="border-collapse:collapse;font-size:0;">
-              <img width="800" src="<?php echo base_url().'assets/frontend/images/c405dde6-8511-490a-87a6-c66628e59843.jpg'; ?>"alt="" style="border: none; display: block;">
+              <img width="100%" src="<?php echo base_url().'assets/frontend/images/c405dde6-8511-490a-87a6-c66628e59843.jpg'; ?>"alt="" style="border: none; display: block;">
             </td>
           </tr>
         </table>
@@ -564,7 +564,7 @@ h4{
 if(isset($headerImg) && !empty($headerImg))
 {
 ?>
-<img width="800" src="<?php echo base_url().$headerImg; ?>"alt="" style="border: none; display: block;">
+<img width="100%" src="<?php echo base_url().$headerImg; ?>"alt="" style="border: none; display: block;">
 
 
 <?php
@@ -573,7 +573,7 @@ else
 {
 ?>
 
-<img width="800" src="<?php echo base_url().'assets/frontend/images/ddba38a2-0594-4153-ae80-ae9514df2dcb.jpg'; ?>"alt="" style="border: none; display: block;">
+<img width="100%" src="<?php echo base_url().'assets/frontend/images/ddba38a2-0594-4153-ae80-ae9514df2dcb.jpg'; ?>"alt="" style="border: none; display: block;">
 <?php
 }
 ?>
@@ -720,7 +720,7 @@ Statement of Information?</strong>
 <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td class="full-image" style="border-collapse:collapse;font-size:0;">
-      <img width="800" src="<?php echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" alt="" style="border: none; display: block;">
+      <img width="100%" src="<?php echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" alt="" style="border: none; display: block;">
     </td>
   </tr>
 </table>
@@ -771,15 +771,6 @@ Statement of Information?</strong>
 </td>
 </tr>
 </tbody>
-</table>
-
-
-<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td class="full-image" style="border-collapse:collapse;font-size:0;">
-      <img width="800" src="<?php echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" alt="" style="border: none; display: block;">
-    </td>
-  </tr>
 </table>
 
 
