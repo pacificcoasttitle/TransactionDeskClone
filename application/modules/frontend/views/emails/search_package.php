@@ -1,687 +1,556 @@
-<!doctype html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title></title>
-<style type="text/css">
-p{
-margin:10px 0;
-padding:0;
-}
-table{
-border-collapse:collapse;
-}
-h1,h2,h3,h4,h5,h6{
-display:block;
-margin:0;
-padding:0;
-}
-img,a img{
-border:0;
-height:auto;
-outline:none;
-text-decoration:none;
-}
-body,#bodyTable,#bodyCell{
-height:100%;
-margin:0;
-padding:0;
-width:100%;
-}
-.mcnPreviewText{
-display:none !important;
-}
-#outlook a{
-padding:0;
-}
-img{
--ms-interpolation-mode:bicubic;
-}
-table{
-mso-table-lspace:0pt;
-mso-table-rspace:0pt;
-}
-.ReadMsgBody{
-width:100%;
-}
-.ExternalClass{
-width:100%;
-}
-p,a,li,td,blockquote{
-mso-line-height-rule:exactly;
-}
-a[href^=tel],a[href^=sms]{
-color:inherit;
-cursor:default;
-text-decoration:none;
-}
-p,a,li,td,body,table,blockquote{
--ms-text-size-adjust:100%;
--webkit-text-size-adjust:100%;
-}
-.ExternalClass,.ExternalClass p,.ExternalClass td,.ExternalClass div,.ExternalClass span,.ExternalClass font{
-line-height:100%;
-}
-a[x-apple-data-detectors]{
-color:inherit !important;
-text-decoration:none !important;
-font-size:inherit !important;
-font-family:inherit !important;
-font-weight:inherit !important;
-line-height:inherit !important;
-}
-#bodyCell{
-padding:10px;
-}
-.templateContainer{
-max-width:600px !important;
-}
-a.mcnButton{
-display:block;
-}
-.mcnImage,.mcnRetinaImage{
-vertical-align:bottom;
-}
-.mcnTextContent{
-word-break:break-word;
-}
-.mcnTextContent img{
-height:auto !important;
-}
-.mcnDividerBlock{
-table-layout:fixed !important;
-}
-/*
-@tab Page
-@section Background Style
-@tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
-*/
-body,#bodyTable{
-/*@editable*/background-color:#FAFAFA;
-}
-/*
-@tab Page
-@section Background Style
-@tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
-*/
-#bodyCell{
-/*@editable*/border-top:0;
-}
-/*
-@tab Page
-@section Email Border
-@tip Set the border for your email.
-*/
-.templateContainer{
-/*@editable*/border:0;
-}
-/*
-@tab Page
-@section Heading 1
-@tip Set the styling for all first-level headings in your emails. These should be the largest of your headings.
-@style heading 1
-*/
-h1{
-/*@editable*/color:#202020;
-/*@editable*/font-family:Helvetica;
-/*@editable*/font-size:26px;
-/*@editable*/font-style:normal;
-/*@editable*/font-weight:bold;
-/*@editable*/line-height:125%;
-/*@editable*/letter-spacing:normal;
-/*@editable*/text-align:left;
-}
-/*
-@tab Page
-@section Heading 2
-@tip Set the styling for all second-level headings in your emails.
-@style heading 2
-*/
-h2{
-/*@editable*/color:#202020;
-/*@editable*/font-family:Helvetica;
-/*@editable*/font-size:22px;
-/*@editable*/font-style:normal;
-/*@editable*/font-weight:bold;
-/*@editable*/line-height:125%;
-/*@editable*/letter-spacing:normal;
-/*@editable*/text-align:left;
-}
-/*
-@tab Page
-@section Heading 3
-@tip Set the styling for all third-level headings in your emails.
-@style heading 3
-*/
-h3{
-/*@editable*/color:#202020;
-/*@editable*/font-family:Helvetica;
-/*@editable*/font-size:20px;
-/*@editable*/font-style:normal;
-/*@editable*/font-weight:bold;
-/*@editable*/line-height:125%;
-/*@editable*/letter-spacing:normal;
-/*@editable*/text-align:left;
-}
-/*
-@tab Page
-@section Heading 4
-@tip Set the styling for all fourth-level headings in your emails. These should be the smallest of your headings.
-@style heading 4
-*/
-h4{
-/*@editable*/color:#202020;
-/*@editable*/font-family:Helvetica;
-/*@editable*/font-size:18px;
-/*@editable*/font-style:normal;
-/*@editable*/font-weight:bold;
-/*@editable*/line-height:125%;
-/*@editable*/letter-spacing:normal;
-/*@editable*/text-align:left;
-}
-/*
-@tab Preheader
-@section Preheader Style
-@tip Set the background color and borders for your email's preheader area.
-*/
-#templatePreheader{
-/*@editable*/background-color:#FAFAFA;
-/*@editable*/background-image:none;
-/*@editable*/background-repeat:no-repeat;
-/*@editable*/background-position:center;
-/*@editable*/background-size:cover;
-/*@editable*/border-top:0;
-/*@editable*/border-bottom:0;
-/*@editable*/padding-top:9px;
-/*@editable*/padding-bottom:9px;
-}
-/*
-@tab Preheader
-@section Preheader Text
-@tip Set the styling for your email's preheader text. Choose a size and color that is easy to read.
-*/
-#templatePreheader .mcnTextContent,#templatePreheader .mcnTextContent p{
-/*@editable*/color:#656565;
-/*@editable*/font-family:Helvetica;
-/*@editable*/font-size:12px;
-/*@editable*/line-height:150%;
-/*@editable*/text-align:left;
-}
-/*
-@tab Preheader
-@section Preheader Link
-@tip Set the styling for your email's preheader links. Choose a color that helps them stand out from your text.
-*/
-#templatePreheader .mcnTextContent a,#templatePreheader .mcnTextContent p a{
-/*@editable*/color:#656565;
-/*@editable*/font-weight:normal;
-/*@editable*/text-decoration:underline;
-}
-/*
-@tab Header
-@section Header Style
-@tip Set the background color and borders for your email's header area.
-*/
-#templateHeader{
-/*@editable*/background-color:#FFFFFF;
-/*@editable*/background-image:none;
-/*@editable*/background-repeat:no-repeat;
-/*@editable*/background-position:center;
-/*@editable*/background-size:cover;
-/*@editable*/border-top:0;
-/*@editable*/border-bottom:0;
-/*@editable*/padding-top:9px;
-/*@editable*/padding-bottom:0;
-}
-/*
-@tab Header
-@section Header Text
-@tip Set the styling for your email's header text. Choose a size and color that is easy to read.
-*/
-#templateHeader .mcnTextContent,#templateHeader .mcnTextContent p{
-/*@editable*/color:#202020;
-/*@editable*/font-family:Helvetica;
-/*@editable*/font-size:16px;
-/*@editable*/line-height:150%;
-/*@editable*/text-align:left;
-}
-/*
-@tab Header
-@section Header Link
-@tip Set the styling for your email's header links. Choose a color that helps them stand out from your text.
-*/
-#templateHeader .mcnTextContent a,#templateHeader .mcnTextContent p a{
-/*@editable*/color:#007C89;
-/*@editable*/font-weight:normal;
-/*@editable*/text-decoration:underline;
-}
-/*
-@tab Body
-@section Body Style
-@tip Set the background color and borders for your email's body area.
-*/
-#templateBody{
-/*@editable*/background-color:#FFFFFF;
-/*@editable*/background-image:none;
-/*@editable*/background-repeat:no-repeat;
-/*@editable*/background-position:center;
-/*@editable*/background-size:cover;
-/*@editable*/border-top:0;
-/*@editable*/border-bottom:2px solid #EAEAEA;
-/*@editable*/padding-top:0;
-/*@editable*/padding-bottom:9px;
-}
-/*
-@tab Body
-@section Body Text
-@tip Set the styling for your email's body text. Choose a size and color that is easy to read.
-*/
-#templateBody .mcnTextContent,#templateBody .mcnTextContent p{
-/*@editable*/color:#202020;
-/*@editable*/font-family:Helvetica;
-/*@editable*/font-size:16px;
-/*@editable*/line-height:150%;
-/*@editable*/text-align:left;
-}
-/*
-@tab Body
-@section Body Link
-@tip Set the styling for your email's body links. Choose a color that helps them stand out from your text.
-*/
-#templateBody .mcnTextContent a,#templateBody .mcnTextContent p a{
-/*@editable*/color:#007C89;
-/*@editable*/font-weight:normal;
-/*@editable*/text-decoration:underline;
-}
-/*
-@tab Footer
-@section Footer Style
-@tip Set the background color and borders for your email's footer area.
-*/
-#templateFooter{
-/*@editable*/background-color:#FAFAFA;
-/*@editable*/background-image:none;
-/*@editable*/background-repeat:no-repeat;
-/*@editable*/background-position:center;
-/*@editable*/background-size:cover;
-/*@editable*/border-top:0;
-/*@editable*/border-bottom:0;
-/*@editable*/padding-top:9px;
-/*@editable*/padding-bottom:9px;
-}
-/*
-@tab Footer
-@section Footer Text
-@tip Set the styling for your email's footer text. Choose a size and color that is easy to read.
-*/
-#templateFooter .mcnTextContent,#templateFooter .mcnTextContent p{
-/*@editable*/color:#656565;
-/*@editable*/font-family:Helvetica;
-/*@editable*/font-size:12px;
-/*@editable*/line-height:150%;
-/*@editable*/text-align:center;
-}
-/*
-@tab Footer
-@section Footer Link
-@tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
-*/
-#templateFooter .mcnTextContent a,#templateFooter .mcnTextContent p a{
-/*@editable*/color:#656565;
-/*@editable*/font-weight:normal;
-/*@editable*/text-decoration:underline;
-}
-@media only screen and (min-width:768px){
-.templateContainer{
-width:600px !important;
-}
-}	@media only screen and (max-width: 480px){
-body,table,td,p,a,li,blockquote{
--webkit-text-size-adjust:none !important;
-}
-}	@media only screen and (max-width: 480px){
-body{
-width:100% !important;
-min-width:100% !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnRetinaImage{
-max-width:100% !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnImage{
-width:100% !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnCartContainer,.mcnCaptionTopContent,.mcnRecContentContainer,.mcnCaptionBottomContent,.mcnTextContentContainer,.mcnBoxedTextContentContainer,.mcnImageGroupContentContainer,.mcnCaptionLeftTextContentContainer,.mcnCaptionRightTextContentContainer,.mcnCaptionLeftImageContentContainer,.mcnCaptionRightImageContentContainer,.mcnImageCardLeftTextContentContainer,.mcnImageCardRightTextContentContainer,.mcnImageCardLeftImageContentContainer,.mcnImageCardRightImageContentContainer{
-max-width:100% !important;
-width:100% !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnBoxedTextContentContainer{
-min-width:100% !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnImageGroupContent{
-padding:9px !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnCaptionLeftContentOuter .mcnTextContent,.mcnCaptionRightContentOuter .mcnTextContent{
-padding-top:9px !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnImageCardTopImageContent,.mcnCaptionBottomContent:last-child .mcnCaptionBottomImageContent,.mcnCaptionBlockInner .mcnCaptionTopContent:last-child .mcnTextContent{
-padding-top:18px !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnImageCardBottomImageContent{
-padding-bottom:9px !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnImageGroupBlockInner{
-padding-top:0 !important;
-padding-bottom:0 !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnImageGroupBlockOuter{
-padding-top:9px !important;
-padding-bottom:9px !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnTextContent,.mcnBoxedTextContentColumn{
-padding-right:18px !important;
-padding-left:18px !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcnImageCardLeftImageContent,.mcnImageCardRightImageContent{
-padding-right:18px !important;
-padding-bottom:0 !important;
-padding-left:18px !important;
-}
-}	@media only screen and (max-width: 480px){
-.mcpreview-image-uploader{
-display:none !important;
-width:100% !important;
-}
-}	@media only screen and (max-width: 480px){
-/*
-@tab Mobile Styles
-@section Heading 1
-@tip Make the first-level headings larger in size for better readability on small screens.
-*/
-h1{
-/*@editable*/font-size:22px !important;
-/*@editable*/line-height:125% !important;
-}
-}	@media only screen and (max-width: 480px){
-/*
-@tab Mobile Styles
-@section Heading 2
-@tip Make the second-level headings larger in size for better readability on small screens.
-*/
-h2{
-/*@editable*/font-size:20px !important;
-/*@editable*/line-height:125% !important;
-}
-}	@media only screen and (max-width: 480px){
-/*
-@tab Mobile Styles
-@section Heading 3
-@tip Make the third-level headings larger in size for better readability on small screens.
-*/
-h3{
-/*@editable*/font-size:18px !important;
-/*@editable*/line-height:125% !important;
-}
-}	@media only screen and (max-width: 480px){
-/*
-@tab Mobile Styles
-@section Heading 4
-@tip Make the fourth-level headings larger in size for better readability on small screens.
-*/
-h4{
-/*@editable*/font-size:16px !important;
-/*@editable*/line-height:150% !important;
-}
-}	@media only screen and (max-width: 480px){
-/*
-@tab Mobile Styles
-@section Boxed Text
-@tip Make the boxed text larger in size for better readability on small screens. We recommend a font size of at least 16px.
-*/
-.mcnBoxedTextContentContainer .mcnTextContent,.mcnBoxedTextContentContainer .mcnTextContent p{
-/*@editable*/font-size:14px !important;
-/*@editable*/line-height:150% !important;
-}
-}	@media only screen and (max-width: 480px){
-/*
-@tab Mobile Styles
-@section Preheader Visibility
-@tip Set the visibility of the email's preheader on small screens. You can hide it to save space.
-*/
-#templatePreheader{
-/*@editable*/display:block !important;
-}
-}	@media only screen and (max-width: 480px){
-/*
-@tab Mobile Styles
-@section Preheader Text
-@tip Make the preheader text larger in size for better readability on small screens.
-*/
-#templatePreheader .mcnTextContent,#templatePreheader .mcnTextContent p{
-/*@editable*/font-size:14px !important;
-/*@editable*/line-height:150% !important;
-}
-}	@media only screen and (max-width: 480px){
-/*
-@tab Mobile Styles
-@section Header Text
-@tip Make the header text larger in size for better readability on small screens.
-*/
-#templateHeader .mcnTextContent,#templateHeader .mcnTextContent p{
-/*@editable*/font-size:16px !important;
-/*@editable*/line-height:150% !important;
-}
-}	@media only screen and (max-width: 480px){
-/*
-@tab Mobile Styles
-@section Body Text
-@tip Make the body text larger in size for better readability on small screens. We recommend a font size of at least 16px.
-*/
-#templateBody .mcnTextContent,#templateBody .mcnTextContent p{
-/*@editable*/font-size:16px !important;
-/*@editable*/line-height:150% !important;
-}
-}	@media only screen and (max-width: 480px){
-/*
-@tab Mobile Styles
-@section Footer Text
-@tip Make the footer content text larger in size for better readability on small screens.
-*/
-#templateFooter .mcnTextContent,#templateFooter .mcnTextContent p{
-/*@editable*/font-size:14px !important;
-/*@editable*/line-height:150% !important;
-}
-}
-</style>
-</head>
-<body>
-<span class="mcnPreviewText" style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">*|MC_PREVIEW_TEXT|*</span>
-<center>
-<table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
-<tr>
-<td align="center" valign="top" id="bodyCell">
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
-<tr>
-<td valign="top" id="templatePreheader">
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
-<tbody class="mcnTextBlockOuter">
-<tr>
-<td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-<td valign="top" id="templateHeader">
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnImageBlock" style="min-width:100%;">
-<tbody class="mcnImageBlockOuter">
-<tr>
-<td valign="top" style="padding:0px" class="mcnImageBlockInner">
-<table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
-<tbody>
-<tr>
-<td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
-<img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/c405dde6-8511-490a-87a6-c66628e59843.jpg'; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnImageBlock" style="min-width:100%;">
-<tbody class="mcnImageBlockOuter">
-<tr>
-<td valign="top" style="padding:0px" class="mcnImageBlockInner">
-<table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
-<tbody>
-<tr>
-<td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
-	<img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/SeachPackage.jpg'; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1">
+        <title>Order Confirmation</title>
+        <link href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700&amp;subset=latin,cyrillic" rel="stylesheet" type="text/css">
+        
+        <style type="text/css">
+            * {
+                -webkit-text-size-adjust: none;
+                -ms-text-size-adjust: none;
+            }
 
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-<td valign="top" id="templateBody">
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
-<tbody class="mcnTextBlockOuter">
-<tr>
-<td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
-<!--[if mso]>
-<table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
-<tr>
-<![endif]-->
-<!--[if mso]>
-<td valign="top" width="600" style="width:600px;">
-<![endif]-->
-<table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-<tbody>
-<tr>
-<td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
-<h1 style="text-align: center;"><br>
-<font color="#000000"><strong>search package is needed for the following address</strong></font><br>
-<span style="color:#000000"><strong><span style="font-size:19px">Order Number: <?php echo $orderNumber; ?></span></strong></span>
-</h1>
+            #outlook a {
+                padding: 0;
+            }
 
-<div>
+            html {
+                width: 100%;
+            }
 
-</div>
-<h1 style="text-align: left;">&nbsp;</h1>
-</td>
-</tr>
-<tr>
-	<td>
-		<table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
-			<tr>
-				<td>property address</td>
-				<td><?php echo $property_address; ?></td>
-			</tr>
-			<tr>
-				<td>APN</td>
-				<td><?php echo $apn; ?></td>
-			</tr>
-		</table>
-	</td>
-</tr>
-</tbody>
-</table>
-<!--[if mso]>
-</td>
-<![endif]-->
-<!--[if mso]>
-</tr>
-</table>
-<![endif]-->
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr>
-<td valign="top" id="templateFooter">
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnImageBlock" style="min-width:100%;">
-<tbody class="mcnImageBlockOuter">
-<tr>
-<td valign="top" style="padding:0px" class="mcnImageBlockInner">
-<table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
-<tbody>
-<tr>
-<td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
-<img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
-<tbody class="mcnTextBlockOuter">
-<tr>
-<td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                background-color: #c0c0c0;
+                -webkit-font-smoothing: antialiased;
+            }
 
-<table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-<tbody>
-<tr>
-<td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
-<em>Copyright © <?php echo date("Y"); ?> Pacific Coast Title Company, All rights reserved.</em><br>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width:100%;">
-<tbody class="mcnDividerBlockOuter">
-<tr>
-<td class="mcnDividerBlockInner" style="min-width: 100%; padding: 10px 18px 25px;">
-<table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-top: 2px solid #EEEEEE;">
-<tbody>
-<tr>
-<td>
-<span></span>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-</table>
-</center>
-</body>
+            p {
+                margin: 0;
+            }
+
+            a[x-apple-data-detectors] {
+                color: inherit !important;
+                text-decoration: inherit !important;
+            }
+
+            .full-image img {
+                width: 100% !important;
+            }
+
+            * {
+                -webkit-text-size-adjust: none;
+                -ms-text-size-adjust: none;
+            }
+
+            #outlook a {
+                padding: 0;
+            }
+
+            html {
+                width: 100%;
+            }
+
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                background-color: #c0c0c0;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            p {
+                margin: 0;
+            }
+
+            a[x-apple-data-detectors] {
+                color: inherit !important;
+                text-decoration: inherit !important;
+            }
+
+            .full-image img {
+                width: 100% !important;
+            }
+            /* button css */
+            a.button {
+                line-height: 42px;
+                text-decoration: none;
+            }
+            .btn-primary,
+            .btn-primary:active {
+                color: #fff !important;
+                text-shadow: 0 1px rgba(0, 0, 0, 0.08);
+            }
+            .btn-primary:active,
+            .btn-primary:focus,
+            .btn-primary:hover {
+                background-color: #032f44 !important;
+            }
+            .button {
+                background-color: #d35411;
+                border: 0;
+                height: 42px;
+                line-height: 1;
+                font-size: 15px;
+                cursor: pointer;
+                padding: 0 18px;
+                text-align: center;
+                vertical-align: top;
+                display: inline-block;
+                -webkit-user-drag: none;
+            }
+            /* button css */
+            @media only screen and (max-width: 768px) {
+                .main-table {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    clear: both;
+                }
+            }
+
+            @media only screen and (max-width: 768px) {
+                .image img {
+                    width: 100% !important;
+                    height: auto !important;
+                }
+            }
+
+            @media only screen and (max-width: 768px) {
+                center>table {
+                    width: 100% !important;
+                }
+            }
+
+            @media only screen and (max-width: 768px) {
+                .mcnTextBlock {
+                    width: 100%;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .container {
+                    width: 320px !important;
+                    min-width: 0 !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .inner {
+                    width: 280px !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .img-bg {
+                    background-size: cover !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .m-cell {
+                    display: block !important;
+                    float: left !important;
+                    width: 100% !important;
+                    max-width: none !important;
+                    min-width: 0 !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .m-w100 {
+                    width: 100% !important;
+                    max-width: none !important;
+                    min-width: 0 !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .m-w50 {
+                    width: 54px;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .br-w50 {
+                    width: 50% !important;
+                    float: left;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .br2-w50 {
+                    width: 50% !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .tbl-sm {
+                    width: 190px !important;
+                    max-width: none !important;
+                    min-width: 0 !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .nav {
+                    width: 100% !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .h1-pre {
+                    font-size: 36px !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .h1 {
+                    font-size: 42px !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .h1-2 {
+                    font-size: 30px !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .h1-5 {
+                    font-size: 30px !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .mh-250 {
+                    height: 250px !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .sp40 {
+                    height: 40px !important;
+                    line-height: 40px !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .sp80 {
+                    height: 80px !important;
+                    line-height: 80px !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .pad0 {
+                    padding: 0 !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .h2 {
+                    font-size: 26px !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .sp0 {
+                    display: none !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .image img {
+                    width: 100% !important;
+                    height: auto !important;
+                }
+            }
+
+            @media only screen and (max-width: 640px) {
+                .footer .text,
+                .m-center {
+                    text-align: center !important;
+                }
+            }
+
+            @media only screen and (max-width: 380px) {
+                .container {
+                    width: 300px !important;
+                }
+            }
+
+            @media only screen and (max-width: 380px) {
+                .inner {
+                    width: 260px !important;
+                }
+            }
+
+            @media only screen and (max-width: 350px) {
+                .container {
+                    width: 260px !important;
+                }
+            }
+
+            @media only screen and (max-width: 350px) {
+                .inner {
+                    width: 220px !important;
+                }
+            }        
+        </style>
+    </head>
+    <body style="-webkit-text-size-adjust: none; margin: 0; padding: 0; font-family: 'Open Sans', Arial, sans-serif; background-color: #c0c0c0; color: #505050;">
+    <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" style="background-color:#c0c0c0;">
+    <tr>
+    <td align="center">
+    <table class="main-table" width="100%" align="center" cellpadding="0" cellspacing="0" border="0" style="max-width:800px;min-width:700px;">
+    <tr>
+      <td class="layouts-here">
+        
+        <!-- Pre-header 1 -->
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td align="center" class="color-bg" style="background-color:#c0c0c0;">
+              <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
+                <tr>
+                  <td class="spacer" height="14" style="line-height:14px;">
+                     
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text" style="color:#ffffff;font-family:'Open Sans', Arial, sans-serif;font-size:13px;line-height:16px;text-align:center;">
+                    <!-- <a href="#" style="text-decoration:none;color:#ffffff;">View this email in your browser</a> -->
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spacer" height="14" style="line-height:14px;">
+                     
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <!-- End Pre-header 1 -->
+        <!-- Layout 35 (Full width image) -->
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="full-image" style="border-collapse:collapse;font-size:0;">
+              <img width="800" src="<?php echo base_url().'assets/frontend/images/c405dde6-8511-490a-87a6-c66628e59843.jpg'; ?>"alt="" style="border: none; display: block;">
+            </td>
+          </tr>
+        </table>
+        <!-- End Layout 35 (Full width image) -->
+        <!-- Layout 35 (Full width image) -->
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="full-image" style="border-collapse:collapse;font-size:0;">
+              <img width="800" src="<?php echo base_url().'assets/frontend/images/SeachPackage.jpg'; ?>"alt="" style="border: none; display: block;">
+            </td>
+          </tr>
+        </table>
+        <!-- End Layout 35 (Full width image) -->
+        <!-- Layout 7 (Text block with title) -->
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td align="center" style="background-color:#ffffff;">
+              <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
+                <tr>
+                  <td class="sp" height="74" style="font-size:1px;line-height:74px;">
+                     
+                  </td>
+                </tr>
+                <tr>
+                  <td class="h2" style="font-family:'Open Sans', Arial, sans-serif;line-height:1.074;font-size:28px;font-weight:700;color:#111111;text-align:center;">Search package is needed for the following address<br>
+                    <br>
+                    <?php 
+                        if(isset($orderNumber) && !empty($orderNumber))
+                        {
+                    ?>
+                            <span style="color: #d35400; font-size: 22px;">Order Number: <?php echo $orderNumber; ?></span><br>
+                    <?php
+                        }
+                    ?>
+                    
+                  </td>
+                </tr>                
+                <tr>
+                  <td class="sp" height="33" style="font-size:1px;line-height:33px;">
+                     
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text" style="color:#505050;font-family:'Open Sans', Arial, sans-serif;font-size:14px;line-height:24px;text-align:center;">
+                      
+                      
+                      <p style="text-align:center;margin: 10px 0px;">
+                        <span style="font-size: 18px; color: #d35411;"><strong><span style="font-family: Helvetica;">Property Details</span></strong></span>
+                      </p>
+                      <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
+                        <?php 
+                            if(isset($property_address) && !empty($property_address))
+                            {
+                        ?>
+                                <tr>
+                                  <td style="width:282.465px;text-align:left;">
+                                    <strong>Property address:</strong>
+                                  </td>
+                                  <td style="width:283.576px;text-align:left;">
+                                     <?php echo $property_address; ?>
+                                  </td>
+                                </tr>
+                        <?php
+                            }
+                        ?>
+                        <?php
+                            if(isset($apn) && !empty($apn))
+                            {
+                        ?>
+                                <tr>
+                                  <td style="width:282.465px;text-align:left;">
+                                    <strong>APN:</strong>
+                                  </td>
+                                  <td style="width:283.576px;text-align:left;">
+                                     <?php echo $apn; ?>
+                                  </td>
+                                </tr>
+                        <?php
+                            }
+                        ?>
+                      </table>
+                      <p></p>
+                     <p></p>
+                  <p></p>
+
+              </td>
+            </tr>
+            <tr>
+              <td class="sp" height="5" style="font-size:1px;line-height:5px;">
+                 
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <!-- End Layout 7 (Text block with title) -->
+    <!-- Layout 35 (Full width image) -->
+    <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td class="full-image" style="border-collapse:collapse;font-size:0;">
+          <img width="800" src="<?php echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" alt="" style="border: none; display: block;">
+        </td>
+      </tr>
+    </table>
+    <!-- End Layout 35 (Full width image) -->
+    <!-- Layout 60 (Footer type 1) -->
+    <table class="footer" width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td class="color-bg" align="center" style="background-color:#002742;">
+          <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
+            <tr>
+              <td class="sp" height="30" style="font-size:1px;line-height:30px;">
+                 
+              </td>
+            </tr>
+            <tr>
+              <td align="center">
+                <table class="m-w100" align="center" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;">
+                  <tr>
+                    <td align="center">
+                      
+                      <!-- social icons -->
+                      <table align="center" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td style="text-align:center;padding:0 5px;"></td>
+                          <td style="text-align:center;padding:0 5px;">
+                            <img width="30" border="0" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/ac97afd1-e373-4ab9-b2e5-82af61f8c88c.png" alt="" style="border: none; display: block;">
+                          </td>
+                          <td style="text-align:center;padding:0 5px;">
+                            <img width="30" border="0" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/c9f40cb7-f2cc-4a72-9f5a-5f906cb5bfec.png" alt="" style="border: none; display: block;">
+                          </td>
+                          <td style="text-align:center;padding:0 5px;"></td>
+                        </tr>
+                      </table>
+                      <!-- end social icons -->
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td class="sp" height="30" style="font-size:1px;line-height:30px;">
+                 
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <!-- End Layout 60 (Footer type 1) -->
+    </td>
+    </tr>
+    <tr>
+    <td>
+
+    <!-- Footer -->
+    <table class="footer" width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td class="color-bg" align="center" style="background-color:#c0c0c0;">
+          <table class="container" align="center" width="610" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
+            <!-- Spacer -->
+            <tr>
+              <td class="sp" height="30" style="font-size:1px;line-height:30px;">
+                 
+              </td>
+            </tr>
+            <!-- End Spacer -->
+            <tr>
+              <td align="left">
+                
+                <!-- Copyright -->
+                <table class="m-w100" align="left" width="285" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:285px;">
+                  <tr>
+                    <td class="text" style="color:#ffffff;font-family:'Open Sans', Arial, sans-serif;font-size:14px;line-height:24px;">
+                      ©<?php echo date("Y"); ?> Pacific Coast Title Company
+                    </td>
+                  </tr>
+                </table>
+                <!-- Unsubscribe -->
+                <table class="m-w100" align="right" width="285" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;width:285px;">
+                  <tr>
+                    <td class="text" style="color:#ffffff;font-family:'Open Sans', Arial, sans-serif;font-size:14px;line-height:24px;text-align:right;">
+                      <a href="<?php // echo base_url(); ?>" style="text-decoration:none;color:#ffffff;">www.pct.com</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <!-- Spacer -->
+              <tr>
+                <td class="sp" height="30" style="font-size:1px;line-height:30px;">
+                   
+                </td>
+              </tr>
+              <!-- End Spacer -->
+            </table>
+          </td>
+        </tr>
+      </table>
+      <!-- End Footer -->
+    </td>
+    </tr>
+    </table>
+    <!--[if (gte mso 9)|(IE)]>
+    </td>     </tr>     </table>
+    <![endif]-->
+    </td>
+    </tr>
+    </table>
+    </body>
 </html>
