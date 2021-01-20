@@ -554,29 +554,6 @@ h4{
 <tbody class="mcnImageBlockOuter">
 <tr>
 <td valign="top" style="padding:0px" class="mcnImageBlockInner">
-<table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
-<tbody>
-<tr>
-<td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
-	<?php
-		if(isset($headerImg) && !empty($headerImg))
-		{
-	?>
-			<img align="center" alt="" src="<?php echo base_url().$headerImg; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
-	<?php
-		}
-		else
-		{
-	?>
-			<img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/ddba38a2-0594-4153-ae80-ae9514df2dcb.jpg'; ?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
-	<?php
-		}
-	?>
-
-</td>
-</tr>
-</tbody>
-</table>
 
 <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
 <tr>
@@ -739,15 +716,7 @@ Statement of Information?</strong>
 <tbody class="mcnImageBlockOuter">
 <tr>
 <td valign="top" style="padding:0px" class="mcnImageBlockInner">
-<!-- <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" class="mcnImageContentContainer" style="min-width:100%;">
-<tbody>
-<tr>
-<td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
-<img align="center" alt="" src="<?php // echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
-</td>
-</tr>
-</tbody>
-</table> -->
+
 <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td class="full-image" style="border-collapse:collapse;font-size:0;">
@@ -803,6 +772,17 @@ Statement of Information?</strong>
 </tr>
 </tbody>
 </table>
+
+
+<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td class="full-image" style="border-collapse:collapse;font-size:0;">
+      <img width="800" src="<?php echo base_url().'assets/frontend/images/8dabb0aa-15b8-4e34-9fc7-29792e09d561.jpg';?>" alt="" style="border: none; display: block;">
+    </td>
+  </tr>
+</table>
+
+
 <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
 <tbody class="mcnTextBlockOuter">
 <tr>
