@@ -578,7 +578,7 @@ h4{
 </tr>
 <tr>
 <td valign="top" id="templateBody">
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;background-color:#ffffff;">
 <tbody class="mcnTextBlockOuter">
 <tr>
 <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
