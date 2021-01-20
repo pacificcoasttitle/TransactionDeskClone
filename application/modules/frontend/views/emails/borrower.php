@@ -507,20 +507,18 @@ h4{
 }
 </style>
 </head>
-<body>
-<span class="mcnPreviewText" style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">*|MC_PREVIEW_TEXT|*</span>
+<body style="-webkit-text-size-adjust: none; margin: 0; padding: 0; font-family: 'Open Sans', Arial, sans-serif; background-color: #c0c0c0; color: #505050;">
 <center>
-<table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
+<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" style="background-color:#c0c0c0;">
 <tr>
-<td align="center" valign="top" id="bodyCell">
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
+<td align="center">
+<table class="main-table" width="100%" align="center" cellpadding="0" cellspacing="0" border="0" style="max-width:800px;min-width:700px;">
 <tr>
-<td valign="top" id="templatePreheader">
-<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
-<tbody class="mcnTextBlockOuter">
+<td valign="top" id="">
+<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+<tbody class="">
 <tr>
-<td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
-</td>
+<td align="center" class="color-bg" style="background-color:#c0c0c0;">
 </tr>
 </tbody>
 </table>
