@@ -481,18 +481,26 @@ class Home extends MX_Controller {
 												$removePartnerFlag = 0;
 											}
 										} else {
-											$partners[] = array(
-												'PartnerTypeID' => 7,
-												'PartnerID' => 201324,
-												'PartnerType' => array(
-													'PartnerTypeID' => 7
-												)
-											);
-											$underWriter = 'westcor';
 											if ($underWriter == 'other') {
 												$removePartnerFlag = 1;
-											} else {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$underWriter = 'westcor';
+											} else if ($underWriter == 'not_set') {
 												$removePartnerFlag = 0;
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$underWriter = 'westcor';
 											}	
 										}
 									} 
@@ -539,19 +547,27 @@ class Home extends MX_Controller {
 												$removePartnerFlag = 0;
 											}
 										} else {
-											$partners[] = array(
-												'PartnerTypeID' => 7,
-												'PartnerID' => 201324,
-												'PartnerType' => array(
-													'PartnerTypeID' => 7
-												)
-											);
-											$underWriter = 'westcor';
 											if ($underWriter == 'other') {
 												$removePartnerFlag = 1;
-											} else {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$underWriter = 'westcor';
+											} else if ($underWriter == 'not_set') {
 												$removePartnerFlag = 0;
-											}
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$underWriter = 'westcor';
+											}	
 										}
 									} 
                                 }
