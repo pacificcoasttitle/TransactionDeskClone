@@ -983,7 +983,7 @@ class Home extends MX_Controller {
 										
 										$search_package_body = $this->load->view('emails/search_package.php',$search_data,TRUE);
 										$search_package_message_body = $search_package_body; 
-										$subject = 'Search Package Needed - '.$PropertyAddress;
+										$subject = 'Starter Need: '.$PropertyAddress;
 										$to = env('ADMIN_EMAIL');
 										$mailParams = array(
 											'from_mail'=>env('FROM_EMAIL'),
