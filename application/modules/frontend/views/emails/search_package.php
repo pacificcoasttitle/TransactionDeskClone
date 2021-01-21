@@ -350,7 +350,7 @@
         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td class="full-image" style="border-collapse:collapse;font-size:0;">
-              <img width="800" src="<?php echo base_url().'assets/frontend/images/SeachPackage.jpg'; ?>"alt="" style="border: none; display: block;">
+              <img width="800" src="<?php echo base_url().'assets/frontend/images/Starter.jpg'; ?>"alt="" style="border: none; display: block;">
             </td>
           </tr>
         </table>
