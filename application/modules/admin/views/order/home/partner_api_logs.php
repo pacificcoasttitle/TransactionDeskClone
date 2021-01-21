@@ -41,6 +41,7 @@
                             <th>Order No</th>
                             <th>Title Officer</th>
                             <th>Sales Rep</th>
+                            <th>Underwriter</th>
                             <th>Message</th>
                             <th>Created At</th>
                         </tr>

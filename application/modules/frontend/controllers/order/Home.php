@@ -433,7 +433,9 @@ class Home extends MX_Controller {
 									} else {
                                         if ($key) {
                                             $underWriter = 'other';
-                                        }
+                                        } else {
+											$underWriter = 'not_set';
+										}
 									}
                                 } 
                                 
@@ -452,7 +454,6 @@ class Home extends MX_Controller {
 											} else {
 												$removePartnerFlag = 0;
 											}
-											
 										} else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
 											if ($underWriter != 'commonwealth') {
 												$partners[] = array(
@@ -479,24 +480,6 @@ class Home extends MX_Controller {
 											} else {
 												$removePartnerFlag = 0;
 											}
-										}
-									} else {
-										if ($companyData[0]['loan_underwriter'] == 'north_american') {
-											$partners[] = array(
-												'PartnerTypeID' => 7,
-												'PartnerID' => 39919,
-												'PartnerType' => array(
-													'PartnerTypeID' => 7
-												)
-											);
-										} else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
-											$partners[] = array(
-												'PartnerTypeID' => 7,
-												'PartnerID' => 6,
-												'PartnerType' => array(
-													'PartnerTypeID' => 7
-												)
-											);
 										} else {
 											$partners[] = array(
 												'PartnerTypeID' => 7,
@@ -505,9 +488,14 @@ class Home extends MX_Controller {
 													'PartnerTypeID' => 7
 												)
 											);
+											$underWriter = 'westcor';
+											if ($underWriter == 'other') {
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}	
 										}
-										$removePartnerFlag = 0;
-									}
+									} 
 								} else {
 									if (!empty($underWriter)) {
 										if ($companyData[0]['sales_underwriter'] == 'north_american') {
@@ -550,24 +538,6 @@ class Home extends MX_Controller {
 											} else {
 												$removePartnerFlag = 0;
 											}
-										}
-									} else {
-										if ($companyData[0]['loan_underwriter'] == 'north_american') {
-											$partners[] = array(
-												'PartnerTypeID' => 7,
-												'PartnerID' => 39919,
-												'PartnerType' => array(
-													'PartnerTypeID' => 7
-												)
-											);
-										} else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
-											$partners[] = array(
-												'PartnerTypeID' => 7,
-												'PartnerID' => 6,
-												'PartnerType' => array(
-													'PartnerTypeID' => 7
-												)
-											);
 										} else {
 											$partners[] = array(
 												'PartnerTypeID' => 7,
@@ -576,9 +546,14 @@ class Home extends MX_Controller {
 													'PartnerTypeID' => 7
 												)
 											);
+											$underWriter = 'westcor';
+											if ($underWriter == 'other') {
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
 										}
-										$removePartnerFlag = 0;
-									}
+									} 
                                 }
 							}
 
@@ -739,6 +714,7 @@ class Home extends MX_Controller {
 								'partner_api_log_id' => $partnerApiId,
 								'created_by' => $userdata['id'],
 								'random_number' => $randomString,
+								'underwriter' => $underWriter,
 								'status'=> 1
 							);
 

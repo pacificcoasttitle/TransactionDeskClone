@@ -2142,7 +2142,10 @@ $(document).ready(function () {
                     "width": "15%"
                 },
                 {
-                    "width": "15%"
+                    "width": "8%"
+                },
+                {
+                    "width": "7%"
                 },
                 {
                     "width": "35%"

@@ -286,6 +286,25 @@ class Order extends MX_Controller {
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['title_officer_name'];
                 $nestedData[] = $value['sales_rep_name'];
+                if (!empty($value['underwriter'])) {
+                    if ($value['underwriter'] == 'north_american') {
+                        $nestedData[] = 'North American Title Insurance Company';
+                    } else if ($value['underwriter'] == 'commonwealth') {
+                        $nestedData[] = 'Commonwealth Land Title Insurance Company';
+                    } else if ($value['underwriter'] == 'westcor') {
+                        $nestedData[] = 'Westcor Land Title Insurance Company';
+                    }
+                } else {
+                    if (strpos($value['cpl_document_name'], 'natic') !== false) {
+                        $nestedData[] = 'North American Title Insurance Company';
+                    } else if (strpos($value['cpl_document_name'], 'fnf') !== false) {
+                        $nestedData[] = 'Commonwealth Land Title Insurance Company';
+                    } else if (strpos($value['cpl_document_name'], 'westcor') !== false) {
+                        $nestedData[] = 'Westcor Land Title Insurance Company';
+                    } else {
+                        $nestedData[] = '';
+                    }
+                }
                 $response_data = $value['response_data'];
                 $response = json_decode($response_data,TRUE);
                 if(empty($response))

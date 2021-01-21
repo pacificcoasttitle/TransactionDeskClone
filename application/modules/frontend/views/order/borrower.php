@@ -1025,9 +1025,9 @@ a {
                 firstname: {
                     required: true
                 },
-                middlename: {
+                /*middlename: {
                     required: true
-                },
+                },*/
                 lastname: {
                     required: true
                 },
@@ -1078,13 +1078,13 @@ a {
                         },
                     },
                 },
-                spouse_middlename:{
+                /*spouse_middlename:{
                     required: {
                         depends: function(element) {
                             return ($("input[name=status]:checked").val() == "married");
                         },
                     },
-                },
+                },*/
                 spouse_lastname:{
                     required: {
                         depends: function(element) {
@@ -1141,13 +1141,13 @@ a {
                         },
                     },
                 },
-                partner_middlename:{
+                /*partner_middlename:{
                     required: {
                         depends: function(element) {
                             return ($("input[name=status]:checked").val() == "domestic_partner");
                         },
                     },
-                },
+                },*/
                 partner_lastname:{
                     required: {
                         depends: function(element) {

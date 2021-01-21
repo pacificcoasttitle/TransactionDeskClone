@@ -224,7 +224,6 @@ class Home_model extends CI_Model
         $this->db->from($table);
         
         if (array_key_exists("where", $params)) {
-
             foreach ($params['where'] as $key => $val){
                 $this->db->where($key, $val);
             }

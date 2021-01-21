@@ -22,7 +22,7 @@ class PartnerApiLogs extends CI_Model
         {
             $this->db->where('transaction_details.title_officer', $title_officer);
         }
-        $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
+        $this->db->select('pct_order_partner_api_logs.*,order_details.underwriter,order_details.cpl_document_name,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             CONCAT(customer_basic_details.first_name, " ", customer_basic_details.last_name) as sales_rep_name,
             transaction_details.title_officer,
@@ -53,7 +53,7 @@ class PartnerApiLogs extends CI_Model
                 $this->db->where('transaction_details.title_officer', $title_officer);
             }
 
-            $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
+            $this->db->select('pct_order_partner_api_logs.*,order_details.underwriter,order_details.cpl_document_name,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             CONCAT(customer_basic_details.first_name, " ", customer_basic_details.last_name) as sales_rep_name,
             transaction_details.title_officer,
@@ -80,7 +80,7 @@ class PartnerApiLogs extends CI_Model
                 $this->db->where('transaction_details.title_officer', $title_officer);
             }
 
-            $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
+            $this->db->select('pct_order_partner_api_logs.*,order_details.underwriter,order_details.cpl_document_name,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             CONCAT(customer_basic_details.first_name, " ", customer_basic_details.last_name) as sales_rep_name,
             transaction_details.title_officer,
@@ -116,7 +116,7 @@ class PartnerApiLogs extends CI_Model
                 $this->db->where('transaction_details.title_officer', $title_officer);
             }
 
-            $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
+            $this->db->select('pct_order_partner_api_logs.*,order_details.underwriter,order_details.cpl_document_name,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             CONCAT(customer_basic_details.first_name, " ", customer_basic_details.last_name) as sales_rep_name,
             transaction_details.title_officer,
@@ -139,7 +139,7 @@ class PartnerApiLogs extends CI_Model
                 $this->db->where('transaction_details.title_officer', $title_officer);
             }
             
-            $this->db->select('pct_order_partner_api_logs.*,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
+            $this->db->select('pct_order_partner_api_logs.*,order_details.underwriter,order_details.cpl_document_name,order_details.file_id,order_details.file_number,transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             CONCAT(customer_basic_details.first_name, " ", customer_basic_details.last_name) as sales_rep_name,
             transaction_details.title_officer,
