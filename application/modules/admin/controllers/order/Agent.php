@@ -49,62 +49,66 @@ class Agent extends MX_Controller {
                     // Parse data from CSV file
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
                     $rowNumber = '';
-                    
                     // Insert/update CSV data into database
                     if(!empty($csvData))
                     {
                         foreach($csvData as $row)
                         {
                             $rowCount++;
-                            $name = explode(" ", $row['Name']);
-                            $email = strtolower($row['Email Address']);
-                            $agentData = array(
-                                'name' => ucfirst($name[1])." ".ucfirst($name[0]),
-                                'email_address' => $email,
-                                'company' => ($row['Company']),
-                                'telephone_no' => $row['Telephone'],
-                                'address' => $row['Address'],
-                                'city' => $row['City'],
-                                'zipcode' => $row['Zip'],
-                                'list_unit' => $row['List Unit'],
-                                'list_volume' => $row['List Volume'],
-                                'selected_revenue' => $row['Selected Revenue'],
-                                'status'=> 1,
-                            );
+                            if(isset($row['Email']) && !empty($row['Email']))
+                            {
+                                $name = $row['First Name']." ".$row['Last Name'];
+                                $email_address = str_replace(' ','',$row['Email']);
+                                $email_address = strtolower($email_address);
 
-                            //$this->db->replace('agents', $agentData);
-                            $con = array(
-                                'where' => array(
-                                    'name' => ucfirst($name[1])." ".ucfirst($name[0]),
-                                    'email_address' => $email,
-                                    'company' => $row['Company']
-                                ),
-                                'returnType' => 'count'
-                            );
-                            $prevCount = $this->agent_model->get_rows($con);
-                            
-                            if($prevCount > 0){
-                                // Update member data                                
-                                $condition = array('name' => $row['Name'], 'email_address' => $email);
-                                $update = $this->agent_model->update($agentData, $condition);
+                                $agentData = array(
+                                    'partner_id' => $row['Partner Employee ID'],
+                                    'name' => $name,
+                                    'email_address' => $email_address,
+                                    'company' => ($row['Company']),
+                                    'telephone_no' => $row['Telephone'],
+                                    'address' => $row['Address'],
+                                    'city' => $row['City'],
+                                    'zipcode' => $row['Zip'],
+                                    /*'list_unit' => $row['List Unit'],
+                                    'list_volume' => $row['List Volume'],
+                                    'selected_revenue' => $row['Selected Revenue'],*/
+                                    'status'=> 1,
+                                );
+
+                                //$this->db->replace('agents', $agentData);
+                                $con = array(
+                                    'where' => array(
+                                        'email_address' => $email_address
+                                    ),
+                                    'returnType' => 'count'
+                                );
+                                $prevCount = $this->agent_model->get_rows($con);
                                 
-                                if($update){
-                                    $updateCount++;
-                                } else {
-                                    $notAddCount++;
-                                    $rowNumber .= $rowCount.",";
-                                }
-                            }else{
-                                // Insert member data
-                                $insert = $this->agent_model->insert($agentData);
-                                
-                                if($insert){
-                                    $insertCount++;
-                                } else {
-                                    $notAddCount++; 
-                                    $rowNumber .= $rowCount.",";
+                                if($prevCount > 0){
+                                    // Update member data                                
+                                    $condition = array('email_address' => $email_address);
+                                    $update = $this->agent_model->update($agentData, $condition);
+                                    
+                                    if($update){
+                                        $updateCount++;
+                                    } else {
+                                        $notAddCount++;
+                                        $rowNumber .= $rowCount.",";
+                                    }
+                                }else{
+                                    // Insert member data
+                                    $insert = $this->agent_model->insert($agentData);
+                                    
+                                    if($insert){
+                                        $insertCount++;
+                                    } else {
+                                        $notAddCount++; 
+                                        $rowNumber .= $rowCount.",";
+                                    }
                                 }
                             }
+                            
                         }
                         
                         
