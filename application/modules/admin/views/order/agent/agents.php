@@ -24,6 +24,7 @@
                 <table class="table table-bordered" id="tbl-agents-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>Partner Id</th>
                             <th>Name</th>
                             <!-- <th>Last Name</th> -->
                             <th>Email Address</th>
