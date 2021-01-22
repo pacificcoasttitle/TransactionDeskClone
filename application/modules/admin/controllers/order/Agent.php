@@ -194,6 +194,8 @@ class Agent extends MX_Controller {
             foreach ($agent_lists['data'] as $key => $value) 
             {
                 $nestedData=array();
+                $partner_id = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '-';
+                $nestedData[] = $partner_id;
                 $nestedData[] = $value['name'];
                 /*$nestedData[] = $value['last_name'];*/
                 $nestedData[] = $value['email_address'];
