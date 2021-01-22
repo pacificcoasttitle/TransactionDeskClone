@@ -79,6 +79,8 @@ class Agent extends MX_Controller {
                                 //$this->db->replace('agents', $agentData);
                                 $con = array(
                                     'where' => array(
+                                        'name' => $name,
+                                        'company' => $row['Company'],
                                         'email_address' => $email_address
                                     ),
                                     'returnType' => 'count'
@@ -87,7 +89,9 @@ class Agent extends MX_Controller {
                                 
                                 if($prevCount > 0){
                                     // Update member data                                
-                                    $condition = array('email_address' => $email_address);
+                                    $condition = array('name' => $name,
+                                        'company' => $row['Company'],
+                                        'email_address' => $email_address);
                                     $update = $this->agent_model->update($agentData, $condition);
                                     
                                     if($update){
