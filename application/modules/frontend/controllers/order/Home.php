@@ -688,7 +688,7 @@ class Home extends MX_Controller {
 								'legal_description' => $LegalDescription,
 								'primary_owner' => $PrimaryOwner,
 								'secondary_owner' => $SecondaryOwner,
-								// 'additional_details'=> $sendermessage,
+								'unit_number' => $this->input->post('unit_number'),
 								'status'=> 1
 							);
 
