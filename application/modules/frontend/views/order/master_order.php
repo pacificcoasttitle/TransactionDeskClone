@@ -233,6 +233,7 @@
 										</div><!-- end section -->
 									</div>
 
+									<input type="hidden" id="unit_number" name="unit_number" value="">
 									<div class="frm-row">
 										<div class="section colm colm12">
 											<label class="field prepend-icon">
