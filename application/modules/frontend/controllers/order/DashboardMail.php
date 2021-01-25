@@ -1122,7 +1122,8 @@ class DashboardMail extends MX_Controller {
 			$orderDetails['property_address'] = $orderDetails['cpl_proposed_property_address'];
 			$orderDetails['property_city'] = $orderDetails['cpl_proposed_property_city'];
 			$orderDetails['property_state'] = $orderDetails['cpl_proposed_property_state'];
-			$orderDetails['property_zipcode'] = $orderDetails['cpl_proposed_property_zip'];
+            $orderDetails['property_zipcode'] = $orderDetails['cpl_proposed_property_zip'];
+            $orderDetails['unit_number'] = '';
 		} else {
 			$orderDetails['property_address'] = $orderDetails['address'];
 			$orderDetails['property_city'] = $orderDetails['property_city'];
