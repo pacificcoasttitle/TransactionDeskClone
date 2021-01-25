@@ -305,6 +305,7 @@ class Order
             property_details.cpl_proposed_property_city,
             property_details.cpl_proposed_property_state,
             property_details.cpl_proposed_property_zip,
+            property_details.unit_number,
             transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             transaction_details.title_officer,

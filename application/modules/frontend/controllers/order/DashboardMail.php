@@ -1872,9 +1872,11 @@ class DashboardMail extends MX_Controller {
 
             if ($is_code_verified == 1 && $borrower_info_submitted == 1) {
                 $data['is_borrower_info_submitted'] = 1;
+                $propertyAddress = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
                 $data['mail_dashboard'] = 1;
                 $data['order_id'] = $order[0]['id'];
                 $data['file_id'] = $fileId;
+                $data['propertyAddress'] = $propertyAddress;
                 $data['errors'] = array();
                 $data['success'] = array();
                 if ($this->session->userdata('errors')) {
@@ -1888,8 +1890,10 @@ class DashboardMail extends MX_Controller {
                 $this->load->view('layout/head_dashboard', $data);
                 $this->load->view('order/borrower', $data);
             } else if ($is_code_verified == 1 && $borrower_info_submitted == 0) {
+                $propertyAddress = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
                 $data['is_borrower_info_submitted'] = 0;
                 $data['mail_dashboard'] = 1;
+                $data['propertyAddress'] = $propertyAddress;
                 $data['order_id'] = $order[0]['id'];
                 $data['file_id'] = $fileId;
                 $data['errors'] = array();

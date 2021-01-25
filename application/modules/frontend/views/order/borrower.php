@@ -423,7 +423,7 @@ a {
 							<div class="section">
 							 <div class="frm-row">
 								<div class="section colm colm10">
-                                    <p class="medium fine-grey">Is 1234 Main St. Rancho Cucamonga the property address for this transaction?</p>
+                                    <p class="medium fine-grey">Is <?php echo $propertyAddress;?> the property address for this transaction?</p>
 								</div>
 								<div class="section colm colm2">
 									 <label class="modern-switch">

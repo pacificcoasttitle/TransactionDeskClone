@@ -883,6 +883,7 @@ function multipleResults(response)
 
         apnInfo[apn]['fips'] = $(this).find('FIPS').text();
         var unit_number = $(this).find('UnitNumber').text();  
+        $('#unit_number').val(unit_number);
         
         $('.search-result table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-city"></span></td><td><span class="result-unit-number"></span></td><td><a href="javascript:void(0);" class="btn btn-sm btn-default" onclick="apnData(this)">Choose</a></td></tr>');
 

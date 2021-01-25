@@ -524,7 +524,11 @@
 						$("#LenderId").val(res.orderDetails['lender_id']);
 						$("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
 						$("#loan_number").val(res.orderDetails['loan_number']);
-						$("#property_address").val(res.orderDetails['property_address']);
+						if(res.orderDetails['unit_number']) {
+							$("#property_address").val(res.orderDetails['unit_number']+", "+res.orderDetails['property_address']);
+						} else {
+							$("#property_address").val(res.orderDetails['property_address']);
+						}
 						$("#property_city").val(res.orderDetails['property_city']);
 						$("#property_state").val(res.orderDetails['property_state']);
 						$("#property_zipcode").val(res.orderDetails['property_zipcode']);
