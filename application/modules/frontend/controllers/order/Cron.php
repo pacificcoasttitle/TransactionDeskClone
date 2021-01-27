@@ -2168,6 +2168,11 @@ class Cron extends MX_Controller {
 
     public function updateOrderStatus()
     {
+        $this->db->select('file_id, customer_id, file_number');
+        $this->db->from('order_details');   
+        $query = $this->db->get();
+        $filesResult = $query->result_array();
+        
         $status = array();
         $userdata['admin_api'] = 1;
         $status['Statuses'][] = array('StatusID' => 6,'Name' => 'Hold');
@@ -2179,7 +2184,38 @@ class Cron extends MX_Controller {
 
         if (isset($result['Files']) && !empty($result['Files'])) {
             foreach ($result['Files'] as $res) {
-                $file_ids[] = $res['FileID'];
+                $key = array_search($res['FileID'], array_column($filesResult, 'file_id'));
+                if ($key) {
+                    $file_ids[] = $filesResult[$key]['file_id'];
+                    $customer_id = $filesResult[$key]['customer_id'];
+                    $file_number = $filesResult[$key]['file_number'];
+                    $condition = array(
+                        'id' => $customer_id
+                    );
+                    $customerDetails = $this->home_model->get_customers($condition);
+                    $first_name = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
+                    $last_name = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
+                    $telephone_no = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
+                    $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
+                    $company_name = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
+                    $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
+                    $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
+                    $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
+    
+                    $property = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
+                   
+    
+                    $message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p><p>File Number: '.$file_number.'</p>';
+                    
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = env('FROM_EMAIL');
+                    $subject = 'Notification For On Hold Order';
+                    //$to = 'cs@pct.com';
+                    $to = 'hitesh.p2crestinfosystems.com';
+                    $this->load->helper('sendemail');
+                    
+                    $mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
+                }
             }
             $this->db->set('resware_status', 'hold');
             $this->db->where_in('file_id', $file_ids);      
