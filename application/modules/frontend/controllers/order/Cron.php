@@ -2186,40 +2186,43 @@ class Cron extends MX_Controller {
             foreach ($result['Files'] as $res) {
                 $key = array_search($res['FileID'], array_column($filesResult, 'file_id'));
                 if ($key) {
-                    $file_ids[] = $filesResult[$key]['file_id'];
-                    echo $filesResult[$key]['file_number'];
-                    $customer_id = $filesResult[$key]['customer_id'];
-                    $file_number = $filesResult[$key]['file_number'];
-                    $condition = array(
-                        'id' => $customer_id
-                    );
-                    $customerDetails = $this->home_model->get_customers($condition);
-                    $first_name = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
-                    $last_name = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
-                    $telephone_no = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
-                    $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
-                    $company_name = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
-                    $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
-                    $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
-                    $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
-    
-                    $property = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
-                   
-    
-                    $message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p><p>File Number: '.$file_number.'</p>';
+                    $on_hold_mail_sent = $filesResult[$key]['on_hold_mail_sent'];
+                    if ($on_hold_mail_sent == 0) {
+                        $file_ids[] = $filesResult[$key]['file_id'];
+                        $filesResult[$key]['file_number'];
+                        $customer_id = $filesResult[$key]['customer_id'];
+                        $file_number = $filesResult[$key]['file_number'];
+                        $condition = array(
+                            'id' => $customer_id
+                        );
+                        $customerDetails = $this->home_model->get_customers($condition);
+                        $first_name = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
+                        $last_name = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
+                        $telephone_no = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
+                        $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
+                        $company_name = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
+                        $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
+                        $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
+                        $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
+        
+                        $property = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
                     
-                    $from_name = 'Pacific Coast Title Company';
-                    $from_mail = env('FROM_EMAIL');
-                    $subject = 'Notification For On Hold Order';
-                    //$to = 'cs@pct.com';
-                    $to = 'hitesh.p@crestinfosystems.com';
-                    $this->load->helper('sendemail');
-                    
-                    $mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
+        
+                        $message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p><p>File Number: '.$file_number.'</p>';
+                        
+                        $from_name = 'Pacific Coast Title Company';
+                        $from_mail = env('FROM_EMAIL');
+                        $subject = 'Notification For On Hold Order';
+                        //$to = 'cs@pct.com';
+                        $to = 'hitesh.p@crestinfosystems.com';
+                        $this->load->helper('sendemail');
+                        $mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
+                    }
                 }
             }
             if(!empty($file_ids)) {
-                $this->db->set('resware_status', 'hold');
+                $updateData = array('resware_status' => 'hold', 'on_hold_mail_sent' => 1);
+                $this->db->set($updateData);
                 $this->db->where_in('file_id', $file_ids);      
                 $this->db->update('order_details'); 
                 echo "All orders with status hold updated successfully";exit; 
