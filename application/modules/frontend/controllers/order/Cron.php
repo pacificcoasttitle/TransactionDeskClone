@@ -2213,8 +2213,7 @@ class Cron extends MX_Controller {
                         $from_name = 'Pacific Coast Title Company';
                         $from_mail = env('FROM_EMAIL');
                         $subject = 'Notification For On Hold Order';
-                        //$to = 'cs@pct.com';
-                        $to = 'hitesh.p@crestinfosystems.com';
+                        $to = 'cs@pct.com';
                         $this->load->helper('sendemail');
                         $mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
                     }
