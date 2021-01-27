@@ -1022,37 +1022,37 @@ a {
             onkeyup: false,
             onclick: false,
             rules: {
-                firstname: {
-                    required: true
-                },
+                // firstname: {
+                //     required: true
+                // },
                 /*middlename: {
                     required: true
                 },*/
-                lastname: {
-                    required: true
-                },
-                email: {
-                    required: true,
-                    email: true    
-                },
-                mobile: {
-                    required: true
-                },			
-                date_of_birth: {
-                    required: true
-                },
+                // lastname: {
+                //     required: true
+                // },
+                // email: {
+                //     required: true,
+                //     email: true    
+                // },
+                // mobile: {
+                //     required: true
+                // },			
+                // date_of_birth: {
+                //     required: true
+                // },
                 /*birthplace:{
                     required: true
                 },*/
-                ssn:{
-                    required: true
-                },
+                // ssn:{
+                //     required: true
+                // },
                 /*dln:{
                     required: true
                 },*/	
-                status:{
-                    required: true
-                },	
+                // status:{
+                //     required: true
+                // },	
                 /*street_address:{
                     required: true
                 },
@@ -1065,19 +1065,19 @@ a {
                 buyer_intends:{
                     required: true
                 },*/
-                general_terms:{
-                    required: true
-                },
-                signature:{
-                    required: true
-                },
-                spouse_firstname:{
-                    required: {
-                        depends: function(element) {
-                            return ($("input[name=status]:checked").val() == "married");
-                        },
-                    },
-                },
+                // general_terms:{
+                //     required: true
+                // },
+                // signature:{
+                //     required: true
+                // },
+                // spouse_firstname:{
+                //     required: {
+                //         depends: function(element) {
+                //             return ($("input[name=status]:checked").val() == "married");
+                //         },
+                //     },
+                // },
                 /*spouse_middlename:{
                     required: {
                         depends: function(element) {
@@ -1085,13 +1085,13 @@ a {
                         },
                     },
                 },*/
-                spouse_lastname:{
-                    required: {
-                        depends: function(element) {
-                            return ($("input[name=status]:checked").val() == "married");
-                        },
-                    },
-                },	
+                // spouse_lastname:{
+                //     required: {
+                //         depends: function(element) {
+                //             return ($("input[name=status]:checked").val() == "married");
+                //         },
+                //     },
+                // },	
                 /*spouse_telephone:{
                     required: {
                         depends: function(element) {
@@ -1099,13 +1099,13 @@ a {
                         },
                     },
                 },*/	
-                spouse_mobile:{
-                    required: {
-                        depends: function(element) {
-                            return ($("input[name=status]:checked").val() == "married");
-                        },
-                    },
-                },
+                // spouse_mobile:{
+                //     required: {
+                //         depends: function(element) {
+                //             return ($("input[name=status]:checked").val() == "married");
+                //         },
+                //     },
+                // },
                 /*spouse_date_of_birth:{
                     required: {
                         depends: function(element) {
@@ -1120,13 +1120,13 @@ a {
                         },
                     },
                 },*/
-                spouse_ssn:{
-                    required: {
-                        depends: function(element) {
-                            return ($("input[name=status]:checked").val() == "married");
-                        },
-                    },
-                },
+                // spouse_ssn:{
+                //     required: {
+                //         depends: function(element) {
+                //             return ($("input[name=status]:checked").val() == "married");
+                //         },
+                //     },
+                // },
                 /*spouse_dln:{
                     required: {
                         depends: function(element) {
@@ -1134,13 +1134,13 @@ a {
                         },
                     },
                 },*/
-                partner_firstname:{
-                    required: {
-                        depends: function(element) {
-                            return ($("input[name=status]:checked").val() == "domestic_partner");
-                        },
-                    },
-                },
+                // partner_firstname:{
+                //     required: {
+                //         depends: function(element) {
+                //             return ($("input[name=status]:checked").val() == "domestic_partner");
+                //         },
+                //     },
+                // },
                 /*partner_middlename:{
                     required: {
                         depends: function(element) {
@@ -1148,13 +1148,13 @@ a {
                         },
                     },
                 },*/
-                partner_lastname:{
-                    required: {
-                        depends: function(element) {
-                            return ($("input[name=status]:checked").val() == "domestic_partner");
-                        },
-                    },
-                },	
+                // partner_lastname:{
+                //     required: {
+                //         depends: function(element) {
+                //             return ($("input[name=status]:checked").val() == "domestic_partner");
+                //         },
+                //     },
+                // },	
                 /*partner_telephone:{
                     required: {
                         depends: function(element) {
@@ -1162,13 +1162,13 @@ a {
                         },
                     },
                 },*/
-                partner_mobile:{
-                    required: {
-                        depends: function(element) {
-                            return ($("input[name=status]:checked").val() == "domestic_partner");
-                        },
-                    },
-                },
+                // partner_mobile:{
+                //     required: {
+                //         depends: function(element) {
+                //             return ($("input[name=status]:checked").val() == "domestic_partner");
+                //         },
+                //     },
+                // },
                 /*partner_date_of_birth:{
                     required: {
                         depends: function(element) {
@@ -1183,13 +1183,13 @@ a {
                         },
                     },
                 },*/
-                partner_ssn:{
-                    required: {
-                        depends: function(element) {
-                            return ($("input[name=status]:checked").val() == "domestic_partner");
-                        },
-                    },
-                },
+                // partner_ssn:{
+                //     required: {
+                //         depends: function(element) {
+                //             return ($("input[name=status]:checked").val() == "domestic_partner");
+                //         },
+                //     },
+                // },
                 /*partner_dln:{
                     required: {
                         depends: function(element) {
@@ -1197,9 +1197,9 @@ a {
                         },
                     },
                 },*/
-                employment_status:{
-                    required: true
-                },	
+                // employment_status:{
+                //     required: true
+                // },	
                 /*partnership_status:{
                     required: true
                 },	
@@ -1287,13 +1287,13 @@ a {
                         },
                     },
                 },*/
-                "residence_addresses[]": "required",	
-                "residence_from_dates[]": "required",
-                "residence_to_dates[]": "required",	
-                "business_names[]": "required",	
-                "employment_addresses[]": "required",	
-                "employment_from_dates[]": "required",
-                "employment_to_dates[]": "required",
+                // "residence_addresses[]": "required",	
+                // "residence_from_dates[]": "required",
+                // "residence_to_dates[]": "required",	
+                // "business_names[]": "required",	
+                // "employment_addresses[]": "required",	
+                // "employment_from_dates[]": "required",
+                // "employment_to_dates[]": "required",
                 /*"partner_business_names[]": "required",	
                 "partner_addresses[]": "required",	
                 "partner_from_dates[]": "required",
