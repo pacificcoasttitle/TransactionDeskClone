@@ -2168,7 +2168,7 @@ class Cron extends MX_Controller {
 
     public function updateOrderStatus()
     {
-        $this->db->select('file_id, customer_id, file_number');
+        $this->db->select('file_id, customer_id, file_number, on_hold_mail_sent');
         $this->db->from('order_details');   
         $query = $this->db->get();
         $filesResult = $query->result_array();
