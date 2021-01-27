@@ -2187,6 +2187,7 @@ class Cron extends MX_Controller {
                 $key = array_search($res['FileID'], array_column($filesResult, 'file_id'));
                 if ($key) {
                     $file_ids[] = $filesResult[$key]['file_id'];
+                    echo $filesResult[$key]['file_number'];
                     $customer_id = $filesResult[$key]['customer_id'];
                     $file_number = $filesResult[$key]['file_number'];
                     $condition = array(
@@ -2217,10 +2218,14 @@ class Cron extends MX_Controller {
                     $mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
                 }
             }
-            $this->db->set('resware_status', 'hold');
-            $this->db->where_in('file_id', $file_ids);      
-            $this->db->update('order_details');   
-            echo "All orders with status hold updated successfully";exit;
+            if(!empty($file_ids)) {
+                $this->db->set('resware_status', 'hold');
+                $this->db->where_in('file_id', $file_ids);      
+                $this->db->update('order_details'); 
+                echo "All orders with status hold updated successfully";exit; 
+            } else {
+                echo "No orders found with status hold";exit;
+            }
         } else {
             echo "No orders found with status hold";exit;
         }
