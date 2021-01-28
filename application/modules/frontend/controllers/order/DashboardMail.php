@@ -401,7 +401,8 @@ class DashboardMail extends MX_Controller {
         $getCPLFormNameResponse = $this->fnf->getCPLForm($orderDetails, $vendorTokenData, $userTokenData);
         if ($getCPLFormNameResponse['success'])  {
             $key = array_search('Lender', array_column($getCPLFormNameResponse['response'], 'a:RecipientType'));
-            $orderDetails['formname'] = $getCPLFormNameResponse['response'][$key]['a:FormName'];
+            $orderDetails['formname'] = 'Standard CPL_'.$orderDetails['property_state'];
+            //$orderDetails['formname'] = $getCPLFormNameResponse['response'][$key]['a:FormName'];
             $generateCplResponse = $this->fnf->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
             
             if ($generateCplResponse['success']) {
