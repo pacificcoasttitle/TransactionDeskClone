@@ -254,7 +254,7 @@ class Fnf
         if(!empty($responseData['s:Envelope']['s:Body']['GetCPLListResponse']['UnderwriterStateCPLs']['a:UnderwriterStateCPL'])) {
 			return array('success'=> true, 'response' => $responseData['s:Envelope']['s:Body']['GetCPLListResponse']['UnderwriterStateCPLs']['a:UnderwriterStateCPL']);
 		} else {
-			return array('success'=> false, 'error' => 'Something Went Wrong');
+			return array('success'=> false, 'error' => 'Something Went Wrong during generate CPL request.');
 		}
     }
 
@@ -600,7 +600,7 @@ class Fnf
         if(!empty($responseData['s:Envelope']['s:Body']['GenerateCPLResponse']['CPLLetters']['a:CPLLetter'])) {
 			return array('success'=> true, 'response' => $responseData['s:Envelope']['s:Body']['GenerateCPLResponse']['CPLLetters']['a:CPLLetter']);
 		} else {
-            if (strtolower($responseData['s:Envelope']['s:Body']['s:Fault']['detail']['CPLServiceApplicationException']['ExceptionType']) == 'authorization') {
+            if (empty($responseData['s:Envelope']['s:Body']['GenerateCPLResponse']['CPLLetters'])) {
                 $this->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
             } else {
                 return array('success'=> false, 'error' => 'Something Went Wrong during generate CPL request.');
