@@ -135,6 +135,7 @@ class Fnf
             $date = new DateTime(date("Y-m-d H:i:s", $expires));
             $date2 = new DateTime(date('Y-m-d H:i:s'));
             $diff = $date2->getTimestamp() - $date->getTimestamp();
+            echo  $diff;exit;
             if($diff < $result['expires_in']) {
                 return $result;
             } else {
