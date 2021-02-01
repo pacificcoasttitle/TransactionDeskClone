@@ -130,8 +130,9 @@ class Fnf
         $this->CI->db->from('pct_order_fnf_token');
         $query = $this->CI->db->get();
         $result = $query->row_array();
-        if(!empty($result)) {
-            $date = new DateTime($result['create_token_time']);
+        if (!empty($result)) {
+            $expires = strtotime($result['expires_at']); 
+            $date = new DateTime(date("Y-m-d H:i:s", $expires));
             $date2 = new DateTime(date('Y-m-d H:i:s'));
             $diff = $date2->getTimestamp() - $date->getTimestamp();
             if($diff < $result['expires_in']) {

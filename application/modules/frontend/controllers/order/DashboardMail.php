@@ -366,7 +366,17 @@ class DashboardMail extends MX_Controller {
             $userTokenData = $this->fnf->generateUserToken($orderDetails);
         }
 
-        if (!empty($orderDetails['fnf_document_id'])) {
+        $oldOrderFlag = 0;
+        if (!empty($orderDetails['created'])) {
+            $date = new DateTime($orderDetails['created']);
+            $date2 = new DateTime('2021-01-29 00:00:00');
+            $diff = $date2->getTimestamp() - $date->getTimestamp();
+            if ($diff > 0) {
+                $oldOrderFlag = 1;
+            }
+        }
+
+        if (!empty($orderDetails['fnf_document_id']) && $oldOrderFlag == 0) {
             $editCplResponse = $this->fnf->editCpl($orderDetails, $vendorTokenData, $userTokenData);
             if ($editCplResponse['success']) {
                 $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
