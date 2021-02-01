@@ -600,7 +600,11 @@ class Fnf
         if(!empty($responseData['s:Envelope']['s:Body']['GenerateCPLResponse']['CPLLetters']['a:CPLLetter'])) {
 			return array('success'=> true, 'response' => $responseData['s:Envelope']['s:Body']['GenerateCPLResponse']['CPLLetters']['a:CPLLetter']);
 		} else {
-			return array('success'=> false, 'error' => 'Something Went Wrong during generate CPL request.');
+            if (strtolower($responseData['s:Envelope']['s:Body']['s:Fault']['detail']['CPLServiceApplicationException']['ExceptionType']) == 'authorization') {
+                $this->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
+            } else {
+                return array('success'=> false, 'error' => 'Something Went Wrong during generate CPL request.');
+            }
 		}
     } 
 }
