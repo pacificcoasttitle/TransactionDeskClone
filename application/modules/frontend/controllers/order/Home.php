@@ -223,6 +223,7 @@ class Home extends MX_Controller {
 					$escrow_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
 					
 					$partner_type_ids = explode(",", $companyData[0]['partner_type_id']);
+					print_r($partner_type_ids);exit;
 					if(in_array("10006", $partner_type_ids)) {
 						$escrowLenderPartnerTypeID = '10006';
 					}
