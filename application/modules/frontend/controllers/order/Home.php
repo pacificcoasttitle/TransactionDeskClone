@@ -650,14 +650,16 @@ class Home extends MX_Controller {
 								
 								$this->agent_model->update($buyerData,$condition);
 				        	} else if (isset($agentDetailFlag)) {
-								$buyerData = array(
-									'name' => $BuyerAgentName,
-									'email_address' => $BuyerAgentEmailAddress,
-									'company' => $BuyerAgentCompany,
-									'telephone_no' => $BuyerAgentTelephone,
-									'status'=> 1
-								);
-								$BuyerAgentId = $this->agent_model->insert($buyerData);
+								if(!empty($BuyerAgentName) && !empty($BuyerAgentEmailAddress) && !empty($BuyerAgentCompany) && !empty($BuyerAgentTelephone)) {
+									$buyerData = array(
+										'name' => $BuyerAgentName,
+										'email_address' => $BuyerAgentEmailAddress,
+										'company' => $BuyerAgentCompany,
+										'telephone_no' => $BuyerAgentTelephone,
+										'status'=> 1
+									);
+									$BuyerAgentId = $this->agent_model->insert($buyerData);
+								}
 							}
 							/* Buyers Agent */
 
@@ -676,14 +678,16 @@ class Home extends MX_Controller {
 								);
 								$this->agent_model->update($listngAgentData,$condition);
 				        	} else if (isset($agentDetailFlag)) {
-				        		$listngAgentData = array(
-									'name' => $ListingAgentName,
-									'email_address' => $ListingAgentEmailAddress,
-									'company' => $ListingAgentCompany,
-									'telephone_no' => $ListingAgentTelephone,
-									'status'=> 1
-								);
-								$ListingAgentId = $this->agent_model->insert($listngAgentData);
+								if(!empty($ListingAgentName) && !empty($ListingAgentEmailAddress) && !empty($ListingAgentCompany) && !empty($ListingAgentCompany)) {
+									$listngAgentData = array(
+										'name' => $ListingAgentName,
+										'email_address' => $ListingAgentEmailAddress,
+										'company' => $ListingAgentCompany,
+										'telephone_no' => $ListingAgentCompany,
+										'status'=> 1
+									);
+									$ListingAgentId = $this->agent_model->insert($listngAgentData);
+								}	
 							}
 							/* Listing Agent */
 
