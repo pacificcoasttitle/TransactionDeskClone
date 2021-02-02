@@ -19,7 +19,7 @@ final class AddPartnerTypeId extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_order_partner_company_info');
-        $table->addColumn('partner_type_id', 'integer', ['null' => true, 'after' => 'partner_id'])
+        $table->addColumn('partner_type_id', 'string', ['null' => true, 'after' => 'partner_id'])
               ->update();
     }
 }
