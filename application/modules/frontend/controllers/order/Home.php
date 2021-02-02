@@ -221,7 +221,14 @@ class Home extends MX_Controller {
 	        		$EscrowLenderCompany      = $this->input->post('EscrowCompany');
 
 					$escrow_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
-					$escrowLenderPartnerTypeID = '10006';
+					
+					$partner_type_ids = explode(",", $companyData[0]['partner_type_id']);
+					if(in_array("10006", $partner_type_ids)) {
+						$escrowLenderPartnerTypeID = '10006';
+					}
+					if(in_array("9997", $partner_type_ids)) {
+						$escrowLenderPartnerTypeID = '9997';
+					}
 					$cplLenderId = $orderUser['id'];
 				}
 				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
