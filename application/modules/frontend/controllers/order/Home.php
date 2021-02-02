@@ -215,6 +215,14 @@ class Home extends MX_Controller {
 				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
 				{
 					$EscrowLenderId = $_POST['EscrowId'];
+					$escrow_lender_user_details = $this->home_model->get_user(array('id' => $EscrowLenderId));
+					$escrowCon = array(
+						'where' => array(
+							'partner_id' => $escrow_lender_user_details['partner_id'],
+						)
+					);
+					$escrowCompanyData = $this->home_model->get_company_rows($escrowCon);
+
 					$EscrowLenderName = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
 					$EscrowLenderEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
 					$EscrowLenderTelephone      = $this->input->post('EscrowTelephone');
@@ -222,8 +230,8 @@ class Home extends MX_Controller {
 
 					$escrow_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
 					
-					$partner_type_ids = explode(",", $companyData[0]['partner_type_id']);
-					print_r($partner_type_ids);exit;
+					$partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
+					
 					if(in_array("10006", $partner_type_ids)) {
 						$escrowLenderPartnerTypeID = '10006';
 					}
@@ -235,6 +243,7 @@ class Home extends MX_Controller {
 				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
 				{
 					$EscrowLenderId = $_POST['LenderId'];
+					$escrow_lender_user_details = $this->home_model->get_user(array('id' => $EscrowLenderId));
 					$EscrowLenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
 					$EscrowLenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
 					$EscrowLenderTelephone      = $this->input->post('LenderTelephone');
@@ -248,8 +257,7 @@ class Home extends MX_Controller {
 				$secondaryPartners = array();
 				if(isset($EscrowLenderId) && !empty($EscrowLenderId))
 				{
-					$escrow_lender_user_details = $this->home_model->get_user(array('id' => $EscrowLenderId));
-
+					
 					$escrow_lender_resware_user_id = isset($escrow_lender_user_details['resware_user_id']) && !empty($escrow_lender_user_details['resware_user_id']) ? $escrow_lender_user_details['resware_user_id'] : '';
 
 					$escrow_lender_partner_id = isset($escrow_lender_user_details['partner_id']) && !empty($escrow_lender_user_details['partner_id']) ? $escrow_lender_user_details['partner_id'] : '';
