@@ -959,7 +959,8 @@ class Cron extends MX_Controller {
                                             'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
                                             'city' => trim($response['AdminPartner']['MailingAddress']['City']),
                                             'state' => trim($response['AdminPartner']['MailingAddress']['State']),
-                                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip'])
+                                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
+                                            'partner_type_id' => (int)($response['AdminPartner']['PartnerTypes'][0]['PartnerTypeID'])
                                         );
                                         $condition = array('partner_id' => trim($response['AdminPartner']['PartnerCompanyID']));
                                         $update = $this->home_model->update($customerData, $condition, 'pct_order_partner_company_info');
@@ -975,7 +976,8 @@ class Cron extends MX_Controller {
                                             'city' => trim($response['AdminPartner']['MailingAddress']['City']),
                                             'state' => trim($response['AdminPartner']['MailingAddress']['State']),
                                             'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
-                                            'underwriter' => 'westcor'
+                                            'underwriter' => 'westcor',
+                                            'partner_type_id' => (int)($response['AdminPartner']['PartnerTypes'][0]['PartnerTypeID'])
                                         );
                                         $insert = $this->home_model->insert($customerData, 'pct_order_partner_company_info');
     
