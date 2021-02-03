@@ -121,6 +121,8 @@ class Fees_model extends CI_Model
     public function get_rows($params = array())
     {
         $table = $this->table;
+        $product_type = isset($params['product_type']) && !empty($params['product_type']) ? $params['product_type'] : '';
+
 
         $this->db->select('pct_order_fees.*, pct_order_fees_types.name as fee_type');
         $this->db->from($table);
@@ -131,6 +133,18 @@ class Fees_model extends CI_Model
             }
         }
         
+        if(!empty($product_type))
+        {
+            if($product_type == 'Loan:  Title and Escrow' || $product_type == 'Loan:  Escrow Only (Outside Title)' || $product_type == 'Sale:  Title and Escrow' || $product_type == 'Sale: Escrow Only (Outside Title)')
+            {
+
+            }
+            else
+            {
+                $this->db->where($key, $val);
+                $this->db->where("pct_order_fees_types.name !=",'Escrow');
+            }
+        }
         if(array_key_exists("returnType",$params) && $params['returnType'] == 'count')
         {
             $this->db->join('pct_order_fees_types','pct_order_fees.fee_type_id = pct_order_fees_types.id');

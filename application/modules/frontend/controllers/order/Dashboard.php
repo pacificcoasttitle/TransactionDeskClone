@@ -431,7 +431,10 @@ class Dashboard extends MX_Controller {
         }
 
         $salesAmount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
-        
+
+        $product_type = isset($orderDetails['product_type']) && !empty($orderDetails['product_type']) ? $orderDetails['product_type'] : '';
+        $data['productType'] = $product_type;
+
         if(isset($salesAmount) && !empty($salesAmount))
         {
             $request['SalesPrice'] = $salesAmount;
@@ -439,7 +442,8 @@ class Dashboard extends MX_Controller {
 	            'where' => array(
 	                'transaction_type' => 'sale',
 	                'pct_order_fees.status' => 1
-	            )
+	            ),
+	            'product_type' => $product_type,
 	        );
         }
         else
@@ -448,7 +452,8 @@ class Dashboard extends MX_Controller {
 	            'where' => array(
 	                'transaction_type' => 'loan',
 	                'pct_order_fees.status' => 1
-	            )
+	            ),
+	            'product_type' => $product_type,
 	        );
         }
 
@@ -461,8 +466,7 @@ class Dashboard extends MX_Controller {
         $result = $this->resware->make_request('POST', $endPoint, $fees_data);
         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, $result, $orderId, $logid);
 
-        $product_type = isset($orderDetails['product_type']) && !empty($orderDetails['product_type']) ? $orderDetails['product_type'] : '';
-        $data['productType'] = $product_type;
+        
 
         $fees = array();
         if(isset($result) && !empty($result))
@@ -481,49 +485,55 @@ class Dashboard extends MX_Controller {
                     $fees['Title Fee'][] = array('amount' => $v, 'description' => $k);
                 }
             }
-        }
-        $feesInfo = $this->fees_model->get_rows($condition);
-        
-        if(isset($feesInfo) && !empty(isset($feesInfo)))
-        {
-            foreach ($feesInfo as $k => $v) 
-            {
-                $fees[$v['fee_type']][] = array('amount' => $v['value'], 'description' => $v['name']);
-            }
-        }
 
-        if(strpos($product_type, 'Loan:') !== false)
-        {
-            if(isset($fees['Title Fee']) && !empty($fees['Title Fee']))
-            {
-                foreach ($fees['Title Fee'] as $key => $value)
-                {
-                    if($value['description'] == 'Stand Alone Title Policy')
-                    {
-                        unset($fees['Title Fee'][$key]);
-                    }
-                }
-            }
-        }
+            $feesInfo = $this->fees_model->get_rows($condition);
 
-        $data['fees'] = $fees;
-        $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
-        $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
-        $data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
-        $data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
-        
-        $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
+	        if(isset($feesInfo) && !empty(isset($feesInfo)))
+	        {
+	            foreach ($feesInfo as $k => $v) 
+	            {
+	                $fees[$v['fee_type']][] = array('amount' => $v['value'], 'description' => $v['name']);
+	            }
+	        }
 
-        $this->load->model('order/fee');
-        $feesData = array(
-            'closing_fee_estimate_id' => $closing_fee_estimate_id,
-            'user_id' => $userdata['id'],
-            'order_id' => $orderId
-        );
+	        if(strpos($product_type, 'Loan:') !== false)
+	        {
+	            if(isset($fees['Title Fee']) && !empty($fees['Title Fee']))
+	            {
+	                foreach ($fees['Title Fee'] as $key => $value)
+	                {
+	                    if($value['description'] == 'Stand Alone Title Policy')
+	                    {
+	                        unset($fees['Title Fee'][$key]);
+	                    }
+	                }
+	            }
+	        }
 
-        $feeId = $this->fee->insert($feesData);
+	        $data['fees'] = $fees;
+	        $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+	        $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+	        $data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+	        $data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+	        
+	        $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
 
-        /* end get fees details from resware */
+	        $this->load->model('order/fee');
+
+	        if(isset($closing_fee_estimate_id) && !empty($closing_fee_estimate_id))
+	        {
+	        	$feesData = array(
+		            'closing_fee_estimate_id' => $closing_fee_estimate_id,
+		            'user_id' => $userdata['id'],
+		            'order_id' => $orderId
+		        );
+
+		        $feeId = $this->fee->insert($feesData);
+	        }
+	        
+
+	        /* end get fees details from resware */
+        }        
 
         $this->load->view('layout/head_dashboard',$data);
         $this->load->view('order/get_fees');
