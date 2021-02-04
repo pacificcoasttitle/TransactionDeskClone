@@ -433,20 +433,26 @@
                                         $style = '';
                                         if($ProductType == 'Loan:  Title and Escrow' || $ProductType == 'Loan:  Escrow Only (Outside Title)' || $ProductType == 'Sale:  Title and Escrow' || $ProductType == 'Sale: Escrow Only (Outside Title)')
                                         {
-                                            $style = "display:none;";
+                                           
+                                        }
+                                        else
+                                        {
+                                    ?>
+                                            <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
+                                                <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 3px;background-color: #D35400;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Helvetica; font-size: 18px; padding: 18px;">
+                                                                <a class="mcnButton " title="Generate Fees" href="<?php echo base_url().'generate-fees/'. $randomString; ?>" target="_blank" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Generate Fees</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                    <?php
                                         }
                                     ?>
-                                    <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;<?php echo $style; ?>" valign="top" align="center" class="mcnButtonBlockInner">
-                                        <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 3px;background-color: #D35400;">
-                                            <tbody>
-                                                <tr>
-                                                    <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Helvetica; font-size: 18px; padding: 18px;">
-                                                        <a class="mcnButton " title="Generate Fees" href="<?php echo base_url().'generate-fees/'. $randomString; ?>" target="_blank" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Generate Fees</a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
+                                    
                                     <?php
                                         //if(isset($OpenEmail) && !empty($OpenEmail) && $OpenEmail == 'djorns@capstoneescrow.com') 
                                         //{
