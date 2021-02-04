@@ -433,7 +433,7 @@
                                         $style = '';
                                         if($ProductType == 'Loan:  Title and Escrow' || $ProductType == 'Loan:  Escrow Only (Outside Title)' || $ProductType == 'Sale:  Title and Escrow' || $ProductType == 'Sale: Escrow Only (Outside Title)')
                                         {
-                                            $style = "display:none;"
+                                            $style = "display:none;";
                                         }
                                     ?>
                                     <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;<?php echo $style; ?>" valign="top" align="center" class="mcnButtonBlockInner">
