@@ -431,6 +431,7 @@
                                 <tr>
                                     <?php
                                         $style = '';
+                                        $ProductType = trim($ProductType);
                                         if($ProductType == 'Loan:  Title and Escrow' || $ProductType == 'Loan:  Escrow Only (Outside Title)' || $ProductType == 'Sale:  Title and Escrow' || $ProductType == 'Sale: Escrow Only (Outside Title)')
                                         {
                                            
