@@ -429,7 +429,14 @@
                       <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
                             <tbody class="mcnButtonBlockOuter">
                                 <tr>
-                                    <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
+                                    <?php
+                                        $style = '';
+                                        if($ProductType == 'Loan:  Title and Escrow' || $ProductType == 'Loan:  Escrow Only (Outside Title)' || $ProductType == 'Sale:  Title and Escrow' || $ProductType == 'Sale: Escrow Only (Outside Title)')
+                                        {
+                                            $style = "display:none;"
+                                        }
+                                    ?>
+                                    <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;<?php echo $style; ?>" valign="top" align="center" class="mcnButtonBlockInner">
                                         <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 3px;background-color: #D35400;">
                                             <tbody>
                                                 <tr>
