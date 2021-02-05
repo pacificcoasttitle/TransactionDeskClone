@@ -1326,7 +1326,7 @@ class Dashboard extends MX_Controller {
 			$resCPL['CPL']['LetterName'] = $resCPL['CPL']['Forms'][1]['FormName'];
 			$resCPL['CPL']['FileInformation'] = null;
 			$resCPL['CPL']['CPLID'] = -1;
-			$resCPL['CPL']['LenderID'] = $orderDetails['westcor_lender_id'];
+			$resCPL['CPL']['LenderID'] = !empty($orderDetails['westcor_lender_id']) ? $orderDetails['westcor_lender_id'] : 0;
 			$resCPL['CPL']['PolicyProducingAgentAddressID'] = $resToken['agent_number'];
 			$resCPL['CPL']['PolicyProducingAgentAddress'] = $resToken['address'];
 			$resCPL['CPL']['PolicyProducingAgentCity'] = $resToken['city'];
