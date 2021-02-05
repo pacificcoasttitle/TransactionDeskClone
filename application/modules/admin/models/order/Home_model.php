@@ -1333,4 +1333,14 @@ class Home_model extends CI_Model
         );
     }
 
+    public function getNotifications() 
+    {
+        $this->db->select('*');
+        $this->db->from('pct_notifications');
+        $this->db->order_by('name', 'asc');
+        $query = $this->db->get();
+        $notifications = $query->result_array();  
+        return $notifications;  
+    }
+
 }

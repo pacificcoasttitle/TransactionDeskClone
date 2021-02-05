@@ -120,4 +120,10 @@
 			<span>Rules Manager</span>
 		</a>
 	</li>
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/notifications') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/notifications'; ?>">
+			<i class="fas fa-fw fa-list"></i>
+			<span>Notifications</span>
+		</a>
+	</li>
 </ul>

@@ -258,6 +258,7 @@ $route['order/admin/cpl-error-logs'] = 'admin/order/order/cplErrorLogs';
 $route['order/admin/get-cpl-error-logs'] = 'admin/order/order/getCplErrorLogs';
 $route['order/admin/update-transaction'] = 'admin/order/home/updateTransaction';
 $route['order/admin/rules-manager'] = 'admin/order/rulesManager/index';
+$route['order/admin/notifications'] = 'admin/order/home/notifications';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
