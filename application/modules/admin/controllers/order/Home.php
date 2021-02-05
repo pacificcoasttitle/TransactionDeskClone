@@ -2468,4 +2468,15 @@ class Home extends MX_Controller {
         $data = array('status'=>'success', 'msg'=> 'Transaction updated successfully.');
         echo json_encode($data);
     }
+
+    public function notifications()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Notification';
+        $data['notifications'] = $this->home_model->getNotifications();
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/notifications', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
 }

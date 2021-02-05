@@ -238,6 +238,9 @@ class Home extends MX_Controller {
 					if(in_array("9997", $partner_type_ids)) {
 						$escrowLenderPartnerTypeID = '9997';
 					}
+					if(in_array("10010", $partner_type_ids)) {
+						$escrowLenderPartnerTypeID = '10010';
+					}
 					$cplLenderId = $orderUser['id'];
 				}
 				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
