@@ -1192,7 +1192,7 @@ class Dashboard extends MX_Controller {
 			'agentnumber' => $resToken['original_agent_number'],
 			'agent_file_number' => $orderDetails['file_number'],
 			'email_requestor' => isset($orderUser['email_address']) && !empty($orderUser['email_address']) ? $orderUser['email_address'] : 'cpl@pct.com',
-			'purchase_price' => $purchase_price,
+			'purchase_price' => preg_replace('/[^0-9\-]/', '', $purchase_price),
 			'property' =>  $propery,
 			'buyers' => $buyers,
 			'sellers' => $sellers,
@@ -1344,7 +1344,7 @@ class Dashboard extends MX_Controller {
 			$res['actions']['update_buyers'] = true;
 			$res['actions']['update_sellers'] = true;
 			$res['actions']['update_lender'] = true;
-			$res['purchase_price']= $purchase_price;
+			$res['purchase_price']= preg_replace('/[^0-9\-]/', '', $purchase_price);
 			
 			$generateCplPostData = json_encode($res);
 			$endPointCreateCPL = 'VendorApi/Order/Update/'.getenv('WESTCORE_INTEGRATION_PARTNER');
