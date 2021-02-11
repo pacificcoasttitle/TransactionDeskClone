@@ -433,19 +433,6 @@ class Home extends MX_Controller {
 								}
 							}
 
-
-							if (!empty($salesRepDetails)) {
-								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
-									$partners[] = array(
-										'PartnerTypeID' => $salesRepDetails['partner_type_id'],
-										'PartnerID' => $salesRepDetails['partner_id'],
-										'PartnerType' => array(
-											'PartnerTypeID' => $salesRepDetails['partner_type_id']
-										)
-									);
-								}
-							}
-
 							if (!empty($titleOfficerDetails)) {
 								if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
 									$partners[] = array(
@@ -781,6 +768,7 @@ class Home extends MX_Controller {
 								'created_by' => $userdata['id'],
 								'random_number' => $randomString,
 								'underwriter' => $underWriter,
+								'escrow_officer_id' => $this->input->post('escrow_officer'),
 								'status'=> 1
 							);
 
