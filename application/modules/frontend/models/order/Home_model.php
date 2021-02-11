@@ -380,4 +380,17 @@ class Home_model extends CI_Model
         }
         return $result;
     }
+
+    public function getEscrowOfficerDetails()
+    {
+        $this->db->select('*');
+        $this->db->from('pct_order_partner_company_info');
+        $this->db->like('partner_type_id', '10010');
+        $query = $this->db->get();    
+        if($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return array();
+        }    
+    }
 }

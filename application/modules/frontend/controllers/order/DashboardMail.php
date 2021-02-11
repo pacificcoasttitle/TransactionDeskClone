@@ -3229,13 +3229,29 @@ class DashboardMail extends MX_Controller {
                     'Email' => $this->input->post('email')
                 )
             ),
-            'SalesPrice' => $orderDetails['sales_amount'], 
+            'SalesPrice' => $orderDetails['sales_amount'],
         );
 
+        if(!empty($orderDetails['escrow_lender_id'])) {
+            $orderData['EscrowPartner'][] =  array(
+                'PartnerID' => $orderDetails['lender_partner_id'],
+                'FirstName' =>  $orderDetails['lender_first_name'],
+                'LastName' => $orderDetails['lender_last_name'],
+                'Email' => $orderDetails['lender_email'],
+                'MobilePhone' => $orderDetails['lender_telephone_no']
+            );
+        }
+       
         $bodyParams = array('FileInformations' => $orderData);
         $body_params = json_encode($bodyParams, JSON_UNESCAPED_SLASHES);
-        $logid = $this->apiLogs->syncLogs(0, 'safewire', 'create_order_on_safewire', env('SAFEWIRE_URL'), $body_params, array(), $order_id, 0);
-        $ch = curl_init(env('SAFEWIRE_URL'));                                    
+        if ($orderDetails['is_create_order_on_safewire'] == 1) {
+            $url = env('SAFEWIRE_URL').$file_id."/synchronize";
+        } else {
+            $url = env('SAFEWIRE_URL')."invite";
+        }
+       
+        $logid = $this->apiLogs->syncLogs(0, 'safewire', 'create_order_on_safewire', $url, $body_params, array(), $order_id, 0);
+        $ch = curl_init($url);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -3246,10 +3262,11 @@ class DashboardMail extends MX_Controller {
         );
         $error_msg = curl_error($ch);
         $result = curl_exec($ch);
-        $this->apiLogs->syncLogs(0, 'safewire', 'create_order_on_safewire', env('SAFEWIRE_URL'), $body_params, $result, $order_id, $logid);
+        $this->apiLogs->syncLogs(0, 'safewire', 'create_order_on_safewire', $url, $body_params, $result, $order_id, $logid);
        
         $result = json_decode(curl_exec($ch), true);
         if(!empty($result['action_link'])) {
+            $this->home_model->update(array('is_create_order_on_safewire' => 1), array('id' => $orderDetails['order_id']), 'order_details');
             $result = array('success' => true, 'message'=> 'order created successfully', 'action_link' => $result['action_link']);
         } else {
             $result = array('success' => false, 'message'=> $result['error']);

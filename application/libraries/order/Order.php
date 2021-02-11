@@ -321,6 +321,7 @@ class Order
             transaction_details.secondary_borrower,
             transaction_details.vesting,
             customer_basic_details.id as lender_id,
+            customer_basic_details.partner_id as lender_partner_id,
             customer_basic_details.street_address as lender_address,
             customer_basic_details.city as lender_city,
             customer_basic_details.state as lender_state,

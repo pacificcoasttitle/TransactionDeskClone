@@ -331,6 +331,14 @@ $(document).ready(function() {
         }        
     });
 
+    $('#add-escrow-officer-details').change(function() {
+        if (this.checked) {
+            $('#escrow-officer-field').show();
+        } else {
+            $('#escrow-officer-field').hide();
+        }        
+    });
+
     $("#BuyerAgentName").autocomplete({
         source: function(request, response) {
             $.ajax({
@@ -517,6 +525,13 @@ $(document).ready(function() {
 
     $('#ProductTypeID').change(function() {
         var selectedText = $(this).find('option:selected').text();
+        if ($(this).val() == '4' || $(this).val() == '5') {
+            $('#add-escrow-officer-section').show();
+        } else {
+            $('#add-escrow-officer-section').hide();
+            $('#escrow-officer-field').hide();
+            $('#add-escrow-officer-details').prop('checked', false); 
+        }
        
         $('#sales-loan-amount-fields').show();
         if(selectedText.includes("Loan"))

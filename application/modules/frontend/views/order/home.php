@@ -463,6 +463,15 @@
                                                     }
                                                 ?>
 
+										<div class="section colm colm4" id="add-escrow-officer-section" style="display:none;">
+											<div class="option-group field">
+												<label class="option block spacer-t10">
+													<input type="checkbox" name="add-escrow-officer-details"
+														id="add-escrow-officer-details">
+													<span class="checkbox"></span> Add Escrow Officer
+												</label>
+											</div>
+										</div>
 									</div>
 
 									<div id="agent-details-fields" style="display: none;">
@@ -658,6 +667,31 @@
 										
 									</div>
 									<!-- end escrow details -->
+
+									<div class="spacer-b30" id="escrow-officer-field" style="display: none;">
+										<div class="spacer-b30">
+											<div class="tagline"><span> Select Escrow Officer</span></div>
+										</div>
+
+										<div class="frm-row">
+											<div class="section colm colm12">
+												<label class="field select">
+													<select id="escrow_officer" name="escrow_officer">
+														<option value="">----Select Escrow Officer----</option>
+														<?php
+															if (isset($escrowOfficers) && !empty($escrowOfficers)) {
+																foreach ($escrowOfficers as $escrowOfficer) {	
+														?>
+																	<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
+														<?php 	}
+															} 
+														?>
+													</select>
+													<i class="arrow double"></i>
+												</label>
+											</div>
+										</div>
+									</div>
 
 									<?php if($is_escrow == 0) { ?>
 										<div class="spacer-b20 spacer-t30">

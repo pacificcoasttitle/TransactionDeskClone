@@ -407,6 +407,33 @@ class Home extends MX_Controller {
 								$partners[] = $secondaryPartners;
 							}
 
+							$escrowOfficerFlag =  $this->input->post('add-escrow-officer-details');
+							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5)) {
+								$escrowOfficer =  $this->input->post('escrow_officer');
+								if (!empty($escrowOfficer)) {
+									$partners[] = array(
+										'PartnerTypeID' => 10010,
+										'PartnerID' => $escrowOfficer,
+										'PartnerType' => array(
+											'PartnerTypeID' => 10010
+										)
+									);
+								}
+							}
+
+							if (!empty($salesRepDetails)) {
+								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
+									$partners[] = array(
+										'PartnerTypeID' => $salesRepDetails['partner_type_id'],
+										'PartnerID' => $salesRepDetails['partner_id'],
+										'PartnerType' => array(
+											'PartnerTypeID' => $salesRepDetails['partner_type_id']
+										)
+									);
+								}
+							}
+
+
 							if (!empty($salesRepDetails)) {
 								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
 									$partners[] = array(
@@ -1077,6 +1104,7 @@ class Home extends MX_Controller {
                 )
             );
 			$data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
+			$data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
 
 	        if($is_master)
 	        {
