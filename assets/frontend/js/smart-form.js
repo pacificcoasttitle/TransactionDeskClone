@@ -95,13 +95,13 @@
 				                    },
 				                    email: true,
 				                },
-				                BuyerAgentTelephone:{
-				                    required: {
-				                        depends: function(element) {
-				                            return ($("input[name=BuyerAgentName]").val() != "" || $("input[name=BuyerAgentEmailAddress]").val() != "" || $("input[name=BuyerAgentCompany]").val() != "");
-				                        },
-				                    },
-				                },
+				                // BuyerAgentTelephone:{
+				                //     required: {
+				                //         depends: function(element) {
+				                //             return ($("input[name=BuyerAgentName]").val() != "" || $("input[name=BuyerAgentEmailAddress]").val() != "" || $("input[name=BuyerAgentCompany]").val() != "");
+				                //         },
+				                //     },
+				                // },
 				                BuyerAgentCompany:{
 				                    required: {
 				                        depends: function(element) {
@@ -124,13 +124,13 @@
 				                    },
 				                    email: true,
 				                },
-				                ListingAgentTelephone:{
-				                    required: {
-				                        depends: function(element) {
-				                            return ($("input[name=ListingAgentName]").val() != "" || $("input[name=ListingAgentEmailAddress]").val() != "" || $("input[name=ListingAgentCompany]").val() != "");
-				                        },
-				                    },
-				                },
+				                // ListingAgentTelephone:{
+				                //     required: {
+				                //         depends: function(element) {
+				                //             return ($("input[name=ListingAgentName]").val() != "" || $("input[name=ListingAgentEmailAddress]").val() != "" || $("input[name=ListingAgentCompany]").val() != "");
+				                //         },
+				                //     },
+				                // },
 				                ListingAgentCompany:{
 				                    required: {
 				                        depends: function(element) {
