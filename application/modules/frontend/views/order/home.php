@@ -495,6 +495,7 @@
 														class="gui-input" placeholder="Agent Name">
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 													<input type="hidden" name="BuyerAgentId" id="BuyerAgentId" value="">
+													<input type="hidden" name="buyer_agent_partner_id" id="buyer_agent_partner_id" value="">
 												</label>
 											</div><!-- end section -->
 											<div class="section colm colm6">
@@ -504,6 +505,7 @@
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 													<input type="hidden" name="ListingAgentId" id="ListingAgentId"
 														value="">
+													<input type="hidden" name="listing_agent_partner_id" id="listing_agent_partner_id" value="">
 												</label>
 											</div><!-- end section -->
 										</div>

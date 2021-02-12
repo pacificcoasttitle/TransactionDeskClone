@@ -421,6 +421,26 @@ class Home extends MX_Controller {
 								}
 							}
 
+							if(isset($BuyerAgentId) && !empty($BuyerAgentId)) {
+								$partners[] = array(
+									'PartnerTypeID' => 14,
+									'PartnerID' => $this->input->post('buyer_agent_partner_id'),
+									'PartnerType' => array(
+										'PartnerTypeID' => 14
+									)
+								);
+							}
+
+							if(isset($ListingAgentId) && !empty($ListingAgentId)) {
+								$partners[] = array(
+									'PartnerTypeID' => 15,
+									'PartnerID' => $this->input->post('listing_agent_partner_id'),
+									'PartnerType' => array(
+										'PartnerTypeID' => 15
+									)
+								);
+							}
+
 							if (!empty($salesRepDetails)) {
 								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
 									$partners[] = array(
