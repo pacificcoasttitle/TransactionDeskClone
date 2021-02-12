@@ -71,7 +71,7 @@ class Agent extends MX_Controller {
                                     'address' => $row['Street1'],
                                     'city' => $row['City'],
                                     'zipcode' => $row['Zip'],
-                                    'is_listing_agent' => 1,
+                                    'is_listing_agent' => 0,
                                     /*'list_unit' => $row['List Unit'],
                                     'list_volume' => $row['List Volume'],
                                     'selected_revenue' => $row['Selected Revenue'],*/
