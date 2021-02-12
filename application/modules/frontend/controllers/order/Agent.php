@@ -32,7 +32,9 @@ class Agent extends MX_Controller {
 	            /* $data['last_name'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';*/
 	            $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
 	            $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
-	            $data['company'] = isset($value['company']) && !empty($value['company']) ? $value['company'] : '';
+				$data['company'] = isset($value['company']) && !empty($value['company']) ? $value['company'] : '';
+				$data['company'] = isset($value['company']) && !empty($value['company']) ? $value['company'] : '';
+				$data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
 	            // array_push($agentInfo, $data); 
 	            $agentInfo[] =$data;
     		}

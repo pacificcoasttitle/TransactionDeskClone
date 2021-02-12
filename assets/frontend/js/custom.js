@@ -373,6 +373,7 @@ $(document).ready(function() {
             $("#BuyerAgentTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
             $("#BuyerAgentCompany").val(ui.item.company).parent().addClass('state-success');
             $("#BuyerAgentId").val(ui.item.id);
+            $("#buyer_agent_partner_id").val(ui.item.partner_id);
         },
         change: function( event, ui ) {
             if (ui.item == null)
@@ -418,6 +419,7 @@ $(document).ready(function() {
             $("#ListingAgentTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
             $("#ListingAgentCompany").val(ui.item.company).parent().addClass('state-success');
             $("#ListingAgentId").val(ui.item.id);
+            $("#listing_agent_partner_id").val(ui.item.partner_id);
         },
         change: function( event, ui ) {
             if (ui.item == null)
