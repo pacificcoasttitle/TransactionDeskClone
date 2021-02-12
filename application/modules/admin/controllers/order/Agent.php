@@ -62,14 +62,16 @@ class Agent extends MX_Controller {
                                 $email_address = strtolower($email_address);
 
                                 $agentData = array(
-                                    'partner_id' => $row['Partner Employee ID'],
+                                    'partner_id' => $row['Partner Company ID'],
+                                    'partner_employee_id' => $row['Partner Employee ID'],
                                     'name' => $name,
                                     'email_address' => $email_address,
-                                    'company' => ($row['Company']),
-                                    'telephone_no' => $row['Telephone'],
-                                    'address' => $row['Address'],
+                                    'company' => ($row['Name']),
+                                    'telephone_no' => $row['Cell Phone'],
+                                    'address' => $row['Street1'],
                                     'city' => $row['City'],
                                     'zipcode' => $row['Zip'],
+                                    'is_listing_agent' => 1,
                                     /*'list_unit' => $row['List Unit'],
                                     'list_volume' => $row['List Volume'],
                                     'selected_revenue' => $row['Selected Revenue'],*/
@@ -79,19 +81,16 @@ class Agent extends MX_Controller {
                                 //$this->db->replace('agents', $agentData);
                                 $con = array(
                                     'where' => array(
-                                        'name' => $name,
-                                        'company' => $row['Company'],
-                                        'email_address' => $email_address
+                                        'partner_id' => $row['Partner Company ID'],
+                                        'partner_employee_id' => $row['Partner Employee ID']
                                     ),
                                     'returnType' => 'count'
                                 );
                                 $prevCount = $this->agent_model->get_rows($con);
                                 
                                 if($prevCount > 0){
-                                    // Update member data                                
-                                    $condition = array('name' => $name,
-                                        'company' => $row['Company'],
-                                        'email_address' => $email_address);
+                                                                  
+                                    $condition = array('partner_id' => $row['Partner Company ID'], 'partner_employee_id' => $row['Partner Employee ID']);
                                     $update = $this->agent_model->update($agentData, $condition);
                                     
                                     if($update){
