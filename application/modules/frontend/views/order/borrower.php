@@ -588,7 +588,113 @@ a {
                             </div>	
                         </fieldset>
                                 
-                       <h2>Wire <br>Instructions</h2>
+                                                
+                                
+                        <h2>Sign & <br> Submit</h2>
+                        <fieldset>
+                            <!-- <div class="spacer-b40">
+                                <p class="medium fine-grey">Please complete the information below prior to hitting submit.</p>
+                            </div> 
+                                                    
+                            <div class="spacer-b30 spacer-t30">
+                                <div class="tagline"><span>About the Property</span></div>
+                            </div>
+
+                            <div class="frm-row">
+                                <div class="section colm colm12">
+                                    <label for="street_address" class="field-label">Street Address </label>
+                                    <label class="field prepend-icon">
+                                        <input type="text" name="street_address" id="street_address" class="gui-input" placeholder="Street Address">
+                                        <span class="field-icon"><i class="fa fa-user"></i></span>  
+                                    </label>
+                                </div>
+                            </div>
+                                    
+                            <div class="frm-row">
+                                <div class="section colm colm6">
+                                    <label for="land_is_unimproved" class="field-label">The land is unimproved </label>
+                                    <label class="field select">
+                                        <select id="land_is_unimproved" name="land_is_unimproved">
+                                            <option value="">Select</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                        <i class="arrow double"></i>
+                                    </label>
+                                </div>
+
+                                <div class="section colm colm6">
+                                    <label for="type_of_property" class="field-label">Type of property on land </label>
+                                    <label class="field select">
+                                        <select id="type_of_property" name="type_of_property">
+                                            <option value="">Select</option>
+                                            <option value="single_family_1_4">Single Family 1-4</option>
+                                            <option value="condo_unit">Condo Unit</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                        <i class="arrow double"></i>
+                                    </label>
+                                </div>
+                            </div>
+                                        
+                            <div class="frm-row">     
+                                <div class="section colm colm12">
+                                    <label for="buyer_intends" class="field-label">Buyer Intends to reside on the property for this transaction? </label>
+                                    <div class="option-group field">
+                                        <label class="option">
+                                            <input type="radio" name="buyer_intends" class="smartfm-ctrl" value="yes">
+                                            <span class="radio"></span> Yes
+                                        </label>
+                                        <label class="option">
+                                            <input type="radio" name="buyer_intends" class="smartfm-ctrl" value="no">
+                                            <span class="radio"></span> No
+                                        </label> 
+                                    </div>         
+                                </div>
+                            </div> -->
+                                    
+                            <div class="spacer-b30 spacer-t10">
+                                <div class="tagline"><span>Disclosure</span></div>
+                            </div>   
+
+                            <div class="frm-row">
+                                <div class="section colm colm12">
+                                    <div class="option-group field">
+                                        <label class="option">
+                                            <input type="checkbox" id="general_terms" name="general_terms" value="General Terms">
+                                            <span class="checkbox"></span> 
+                                            The undersigned declare, under penalty of perjury, that the foregoing is true and correct.                
+                                        </label>
+                                    </div>
+
+                                    <div class="spacer-b20">
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                                        
+                            <div class="frm-row">
+                                <div class="section colm colm6">
+                                    <label for="signature" class="field-label">Please Type your name in the box below </label>
+                                    <label class="field prepend-icon">
+                                        <input type="text" name="signature" id="signature" class="gui-input" placeholder="">
+                                        <span class="field-icon"><i class="fa fa-user"></i></span>   
+
+                                    </label>
+                                </div>
+
+                                <div class="section colm colm6">
+                                    <label for="spouse_signature" class="field-label">Please TYPE your spouse's name. (if applicable) </label>
+                                    <label class="field prepend-icon">
+                                        <input type="text" name="spouse_signature" id="spouse_signature" class="gui-input" placeholder="">
+                                        <span class="field-icon"><i class="fa fa-user"></i></span>  
+                                    </label>
+                                </div>
+                            </div>     
+                            <div class="result"></div>
+                        </fieldset>
+
+                        <h2>Wire <br>Instructions</h2>
                         <fieldset>
                             <div class="spacer-b40">
 							
@@ -795,111 +901,7 @@ a {
                                 <div class=""><span></span></div>
                             </div>
 
-                        </fieldset>                            
-                                
-                        <h2>Sign & <br> Submit</h2>
-                        <fieldset>
-                            <!-- <div class="spacer-b40">
-                                <p class="medium fine-grey">Please complete the information below prior to hitting submit.</p>
-                            </div> 
-                                                    
-                            <div class="spacer-b30 spacer-t30">
-                                <div class="tagline"><span>About the Property</span></div>
-                            </div>
-
-                            <div class="frm-row">
-                                <div class="section colm colm12">
-                                    <label for="street_address" class="field-label">Street Address </label>
-                                    <label class="field prepend-icon">
-                                        <input type="text" name="street_address" id="street_address" class="gui-input" placeholder="Street Address">
-                                        <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                    </label>
-                                </div>
-                            </div>
-                                    
-                            <div class="frm-row">
-                                <div class="section colm colm6">
-                                    <label for="land_is_unimproved" class="field-label">The land is unimproved </label>
-                                    <label class="field select">
-                                        <select id="land_is_unimproved" name="land_is_unimproved">
-                                            <option value="">Select</option>
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
-                                        </select>
-                                        <i class="arrow double"></i>
-                                    </label>
-                                </div>
-
-                                <div class="section colm colm6">
-                                    <label for="type_of_property" class="field-label">Type of property on land </label>
-                                    <label class="field select">
-                                        <select id="type_of_property" name="type_of_property">
-                                            <option value="">Select</option>
-                                            <option value="single_family_1_4">Single Family 1-4</option>
-                                            <option value="condo_unit">Condo Unit</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                        <i class="arrow double"></i>
-                                    </label>
-                                </div>
-                            </div>
-                                        
-                            <div class="frm-row">     
-                                <div class="section colm colm12">
-                                    <label for="buyer_intends" class="field-label">Buyer Intends to reside on the property for this transaction? </label>
-                                    <div class="option-group field">
-                                        <label class="option">
-                                            <input type="radio" name="buyer_intends" class="smartfm-ctrl" value="yes">
-                                            <span class="radio"></span> Yes
-                                        </label>
-                                        <label class="option">
-                                            <input type="radio" name="buyer_intends" class="smartfm-ctrl" value="no">
-                                            <span class="radio"></span> No
-                                        </label> 
-                                    </div>         
-                                </div>
-                            </div> -->
-                                    
-                            <div class="spacer-b30 spacer-t10">
-                                <div class="tagline"><span>Disclosure</span></div>
-                            </div>   
-
-                            <div class="frm-row">
-                                <div class="section colm colm12">
-                                    <div class="option-group field">
-                                        <label class="option">
-                                            <input type="checkbox" id="general_terms" name="general_terms" value="General Terms">
-                                            <span class="checkbox"></span> 
-                                            The undersigned declare, under penalty of perjury, that the foregoing is true and correct.                
-                                        </label>
-                                    </div>
-
-                                    <div class="spacer-b20">
-                                    
-                                    </div>
-                                </div>
-                            </div>
-                                        
-                            <div class="frm-row">
-                                <div class="section colm colm6">
-                                    <label for="signature" class="field-label">Please Type your name in the box below </label>
-                                    <label class="field prepend-icon">
-                                        <input type="text" name="signature" id="signature" class="gui-input" placeholder="">
-                                        <span class="field-icon"><i class="fa fa-user"></i></span>   
-
-                                    </label>
-                                </div>
-
-                                <div class="section colm colm6">
-                                    <label for="spouse_signature" class="field-label">Please TYPE your spouse's name. (if applicable) </label>
-                                    <label class="field prepend-icon">
-                                        <input type="text" name="spouse_signature" id="spouse_signature" class="gui-input" placeholder="">
-                                        <span class="field-icon"><i class="fa fa-user"></i></span>  
-                                    </label>
-                                </div>
-                            </div>     
-                            <div class="result"></div>
-                        </fieldset>
+                        </fieldset>  
                     </form>  
                 <?php } else { ?>   
                     <div id="borrower_error_msg" class="w-100 alert alert-danger alert-dismissible">

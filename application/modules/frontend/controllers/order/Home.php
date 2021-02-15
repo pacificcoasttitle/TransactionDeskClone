@@ -408,8 +408,8 @@ class Home extends MX_Controller {
 							}
 
 							$escrowOfficerFlag =  $this->input->post('add-escrow-officer-details');
+							$escrowOfficer =  $this->input->post('escrow_officer');
 							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5)) {
-								$escrowOfficer =  $this->input->post('escrow_officer');
 								if (!empty($escrowOfficer)) {
 									$partners[] = array(
 										'PartnerTypeID' => 10010,
@@ -958,25 +958,19 @@ class Home extends MX_Controller {
 
 							/* Escrow officer email */
 						
-							if (isset($orderUser) && !empty($orderUser))
-							{
-								$is_escrow_user = $orderUser['is_escrow'];
-
-								if(isset($is_escrow_user) && !empty($is_escrow_user))
-								{
-									$escrow_email = $orderUser['email_address'];
-								}
-								else
-								{
-									$escrow_email = $escrow_lender_user_details['email_address'];
-								}
+							$escrow_email = '';
+							if (isset($escrowOfficer) && !empty($escrowOfficer)) {
+								$con = array(
+									'where' => array(
+										'partner_id' => $escrowOfficer,
+									)
+								);
+								$escrowCompanyData = $this->home_model->get_company_rows($con);
+								$escrow_email = $escrowCompanyData[0]['email'];
+								echo $escrow_email;
 							}
 
-							/*$from_name = 'Pacific Coast Title Company';
-							$from_mail = env('FROM_EMAIL');*/
-
-							if($escrow_email == 'info@flaremedia.io')
-							{							
+							if (!empty($escrow_email)) {							
 
 								$sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
 
