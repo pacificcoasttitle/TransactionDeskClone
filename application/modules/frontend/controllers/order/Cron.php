@@ -963,6 +963,7 @@ class Cron extends MX_Controller {
                                     if ($prevCount > 0) {
                                         $customerData = array(
                                             'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                                            'email' => !empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
                                             'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
                                             'city' => trim($response['AdminPartner']['MailingAddress']['City']),
                                             'state' => trim($response['AdminPartner']['MailingAddress']['State']),
@@ -978,6 +979,7 @@ class Cron extends MX_Controller {
                                     } else {
                                         $customerData = array(
                                             'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                                            'email' => !empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
                                             'partner_name' => trim($response['AdminPartner']['PartnerName']),
                                             'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
                                             'city' => trim($response['AdminPartner']['MailingAddress']['City']),
