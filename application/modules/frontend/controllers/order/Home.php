@@ -967,6 +967,7 @@ class Home extends MX_Controller {
 								);
 								$escrowCompanyData = $this->home_model->get_company_rows($con);
 								$escrow_email = $escrowCompanyData[0]['email'];
+								echo $escrow_email;
 							}
 
 							if (!empty($escrow_email)) {							
