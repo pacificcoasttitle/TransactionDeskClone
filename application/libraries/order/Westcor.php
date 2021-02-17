@@ -62,6 +62,7 @@ class Westcor
                 'create_token_time' => date('Y-m-d H:i:s'), 
                 'expires_in' => $resToken['expires_in'],
                 'agent_number' => $group['agentNumber'],
+                'is_proposed_branch' => ($group['city'] == 'Glendale' || $group['city'] == 'Orange' || $group['city'] == 'Oxnard' || $group['city'] == 'San Diego') ? 1 : 0,
                 'original_agent_number' => $resToken['agentNumber'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
