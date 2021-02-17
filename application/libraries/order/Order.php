@@ -285,6 +285,7 @@ class Order
             order_details.verification_code,
             order_details.code_created_at,
             order_details.borrower_mobile_number,
+            order_details.proposed_branch_id,
             property_details.id as property_id, 
             property_details.address, 
             property_details.full_address, 
@@ -883,5 +884,25 @@ class Order
             $mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
         }
         return true;
+    }
+
+    public function getProposedBranches()
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_order_westcore_token');
+        $this->CI->db->where('is_proposed_branch', 1);
+        $query = $this->CI->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
+
+    public function getProposedBranchDetail($branchId)
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_order_westcore_token');
+        $this->CI->db->where('id', $branchId);
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        return $result;
     }
 }

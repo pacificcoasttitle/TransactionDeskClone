@@ -982,6 +982,7 @@ class DashboardMail extends MX_Controller {
         );
         
         $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
+        $data['proposedBranches'] = $this->order->getProposedBranches();
 
         $this->load->view('layout/head_dashboard',$data);
         $this->load->view('order/mail_proposed_insured', $data);
@@ -1359,6 +1360,7 @@ class DashboardMail extends MX_Controller {
         $data['preliminary_report_date'] = isset($p_report_date) && !empty($p_report_date) ? $p_report_date : '';
 
         $data['is_escrow'] = $customer_data['is_escrow'];
+        $data['proposed_branch_id'] = $orderDetails['proposed_branch_id'];
 
         if ($customer_data['is_escrow'] == 1) {
     
@@ -1489,6 +1491,7 @@ class DashboardMail extends MX_Controller {
             $property_state = $this->input->post('property_state');
             $property_zipcode = $this->input->post('property_zipcode');
             $borrowers_vesting = $this->input->post('borrowers_vesting');
+            $branch = $this->input->post('branch');
             $fileId = $this->input->post('fileId');
             $s_report_date = $this->input->post('s_report_date');
             $p_report_date = $this->input->post('p_report_date');
@@ -1527,7 +1530,7 @@ class DashboardMail extends MX_Controller {
                 $this->home_model->update($lender_details, $condition, 'customer_basic_details');
             }
                 
-
+            $this->home_model->update(array('proposed_branch_id' => $branch), array('file_id' => $fileId), 'order_details');
             if(empty($lender_details['first_name']) && empty($lender_details['lender_last_name'])) {
                 $lender_details['lender_name'] = '';
             } else if(empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
@@ -1738,6 +1741,15 @@ class DashboardMail extends MX_Controller {
 					}
 				}
 
+                $pdfData['proposed_branch_id'] = $orderDetails['proposed_branch_id'];
+				if (!empty($orderDetails['proposed_branch_id'])) {
+					$branchDetails = $this->order->getProposedBranchDetail($orderDetails['proposed_branch_id']);
+					$pdfData['branch_address'] = $branchDetails['address'];
+					$pdfData['branch_city'] = $branchDetails['city'];
+					$pdfData['branch_state'] = $branchDetails['state'];
+					$pdfData['branch_zip'] = $branchDetails['zip'];
+                } 
+                
                 $html=$this->load->view('order/proposed_insured_pdf',$pdfData, true);
                 $this->load->library('m_pdf');
                 $this->m_pdf->pdf->WriteHTML($html);

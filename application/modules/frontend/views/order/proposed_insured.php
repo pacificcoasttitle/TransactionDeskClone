@@ -276,6 +276,29 @@
 									</label>
 								</div>
 							</div>
+							
+							</div>
+							<div class="spacer-b20">
+								<div class="tagline"><span>Select Branch</span></div>
+							</div>
+							<div class="frm-row">
+								<div class="section colm colm12">
+									<label class="field select">
+                                        <select id="branch" name="branch">
+                                            <option value="">Select Branch</option>
+                                            <?php 
+												if (isset($proposedBranches) && !empty($proposedBranches)) {
+													foreach ($proposedBranches as $proposedBranch) {
+											?>
+												<option value="<?php echo $proposedBranch['id']; ?>"><?php echo $proposedBranch['city']; ?></option>
+											<?php
+													}
+												}
+											?>
+                                        </select>
+                                        <i class="arrow double"></i>                    
+                                    </label> 
+								</div><!-- end section -->
 							</div>
 						</div>
 						<div class="form-footer" style="margin: 0px 20px;">
@@ -565,6 +588,29 @@
 									</label>
 								</div>
 							</div>
+							
+							</div>
+							<div class="spacer-b20">
+								<div class="tagline"><span>Select Branch</span></div>
+							</div>
+							<div class="frm-row">
+								<div class="section colm colm12">
+									<label class="field select">
+                                        <select id="edit_branch" name="edit_branch">
+                                            <option value="">Select Branch</option>
+                                            <?php 
+												if (isset($proposedBranches) && !empty($proposedBranches)) {
+													foreach ($proposedBranches as $proposedBranch) {
+											?>
+												<option value="<?php echo $proposedBranch['id']; ?>"><?php echo $proposedBranch['city']; ?></option>
+											<?php
+													}
+												}
+											?>
+                                        </select>
+                                        <i class="arrow double"></i>                    
+                                    </label> 
+								</div><!-- end section -->
 							</div>
 						</div>
 						<div class="form-footer" style="margin: 0px 20px;">
@@ -656,7 +702,8 @@
 	                primary_first_name:"required",
 	                // primary_last_name:"required",
 	                supplemental_report_date:"required",
-	                preliminary_report_date:"required",
+					preliminary_report_date:"required",
+					branch:"required",
 	            },
 	            messages: {
 	                TitleOfficer:"Please select title officer",
@@ -664,7 +711,8 @@
 	                borrower:"Please enter borrower",
 	                lender:"Please enter lender",
 	                supplemental_report_date:"Please select date",
-	                preliminary_report_date:"Please select date",
+					preliminary_report_date:"Please select date",
+					branch:"Please select branch",
 	            },
 	            submitHandler: function(form) {
 	            	$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
@@ -697,7 +745,8 @@
 	            	var fileId = $('#fileId').val();
 	            	var supplemental_report_date = $('#supplemental_report_date').val();
 	            	var preliminary_report_date = $('#preliminary_report_date').val();
-	            	var new_existing_lender = $('input[name="new_existing_lender"]:checked').val();
+					var new_existing_lender = $('input[name="new_existing_lender"]:checked').val();
+					var branch = $('#branch').val();
 
 	                $.ajax({
 	                url: base_url + "add-order-details",
@@ -726,7 +775,8 @@
 	                    fileId: fileId,
 	                    s_report_date: supplemental_report_date,
 	                    p_report_date: preliminary_report_date,
-	                    new_existing_lender: new_existing_lender,
+						new_existing_lender: new_existing_lender,
+						branch: branch
 	                }, 
 	                success: function(response) {
 	                	$('#page-preloader').css('display', 'none');
@@ -1092,7 +1142,8 @@
 	                primary_first_name:"required",
 	               // primary_last_name:"required",
 	                supplemental_report_date:"required",
-	                preliminary_report_date:"required",
+					preliminary_report_date:"required",
+					edit_branch:"required",
 		        },
 		        messages: {
 		            TitleOfficer:"Please select title officer",
@@ -1100,7 +1151,8 @@
 	                borrower:"Please enter borrower",
 	                lender:"Please enter lender",
 	                supplemental_report_date:"Please select date",
-	                preliminary_report_date:"Please select date",
+					preliminary_report_date:"Please select date",
+					edit_branch:"Please select branch",
 		        },
 		        submitHandler: function(form) {
 		        	$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
@@ -1128,7 +1180,8 @@
 	            	var fileId = $('#edit_fileId').val();
 	            	var supplemental_report_date = $('#edit_supplemental_report_date').val();
 	            	var preliminary_report_date = $('#edit_preliminary_report_date').val();
-	            	var new_existing_lender = $('input[name="edit_new_existing_lender"]:checked').val();
+					var new_existing_lender = $('input[name="edit_new_existing_lender"]:checked').val();
+					var branch = $('#edit_branch').val();
 
 		            $.ajax({
 		            url: base_url + "add-order-details",
@@ -1157,7 +1210,8 @@
 	                    fileId: fileId,
 	                    s_report_date: supplemental_report_date,
 	                    p_report_date: preliminary_report_date,
-	                    new_existing_lender: new_existing_lender,
+						new_existing_lender: new_existing_lender,
+						branch: branch
 		            }, 
 		            success: function(response) {
 		            	$('#page-preloader').css('display', 'none');
@@ -1371,6 +1425,7 @@ function editInformation(fileId)
 
 						
 						$("#edit_TitleOfficer").val(res.orderDetails['title_officer']);
+						$("#edit_branch").val(res.orderDetails['proposed_branch_id']);
 
 						
 						if(res.orderDetails['supplemental_report_date'] == null || res.orderDetails['supplemental_report_date'] == undefined || res.orderDetails['supplemental_report_date'].length == 0)

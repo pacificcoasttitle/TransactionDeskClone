@@ -79,9 +79,14 @@
 				<img src="<?php echo base_url(); ?>assets/frontend/images/pi_logo.jpg" alt=""/>
 			</div>
 			<div class="company-details text-right">
-				<p>200 W. Glenoaks Blvd, Suite 100</p>
-				<p>Glendale, CA 91202</p>
-				<p>(818)662-6700</p>
+				<?php if(!empty($proposed_branch_id)) { ?>
+					<p><?php echo $branch_address;?></p>
+					<p><?php echo $branch_city;?>, <?php echo $branch_state;?> <?php echo $branch_zip;?></p>
+				<?php } else {?>
+					<p>200 W. Glenoaks Blvd, Suite 100</p>
+					<p>Glendale, CA 91202</p>
+					<p>(818)662-6700</p>
+				<?php } ?>
 			</div>
 			<h5 class="text-right"> <?php echo isset($underwriter) && !empty($underwriter) ? 'Issuing Agent for '.$underwriter : ''; ?></h5>			
 		</div>
