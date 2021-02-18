@@ -1865,6 +1865,21 @@ class DashboardMail extends MX_Controller {
             $borrower_info_submitted = $order[0]['borrower_info_submitted'];
             $is_code_verified = $order[0]['is_code_verified'];
             $orderDetails = $this->order->get_order_details($fileId, 1);
+
+            if(!empty($orderDetails['escrow_officer_id'])) {
+                $escrowOfficerCon = array(
+                    'where' => array(
+                        'partner_id' => $orderDetails['escrow_officer_id'],
+                    )
+                );
+                $escrowOfficerData = $this->home_model->get_company_rows($escrowOfficerCon);
+                $data['escrow_officer'] =  $escrowOfficerData[0]['partner_name'];
+            } else {
+                $data['escrow_officer'] = '';
+            }
+            
+            
+            $name = explode(" ", $escrowOfficerData[0]['partner_name']);
             if ($orderDetails['sales_amount'] > 0) {
                 if (!empty($orderDetails['borrower'])) {
                     $borrowerNameInfo = explode(" ", $orderDetails['borrower']);

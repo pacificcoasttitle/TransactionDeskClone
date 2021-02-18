@@ -723,10 +723,10 @@ a {
 							 <div class="frm-row">
 								<div class="section colm colm10">
 								
-								 <p class="medium fine-grey">Borrower Name: John A Doe</p>
-								 <p class="medium fine-grey">Borrower Address:  1234 Main St. Success City, CA 90201</p>
-								 <p class="medium fine-grey">Escrow Partner: Savannah Escrow</p>
-								 <p class="medium fine-grey">Escrow Officer: Dakota Johnson</p>
+								 <p class="medium fine-grey" id="borrower_name"></p>
+								 <p class="medium fine-grey" id="borrower_address"></p>
+								 <p class="medium fine-grey" id="escrow_partner">Escrow Partner: Pacific Coast Title Company - Escrow Officer</p>
+								 <p class="medium fine-grey" id="escrow_officer">Escrow Officer: <?php echo $escrow_officer;?></p>
 								
 								
 								</div>
@@ -960,6 +960,8 @@ a {
                 var form = $(this);
                 if (currentIndex < newIndex){}
                 if(currentIndex == 0) {
+                    var borrowerName = "Borrower Name: "+$('#firstname').val()+" "+$('#middlename').val()+" "+$('#lastname').val();
+                    $('#borrower_name').html(borrowerName);
                     if(form.valid() === true) {
                         $('#page-preloader').css('display', 'block');
                         $('#borrower_page').css('opacity', '0.5');
@@ -999,6 +1001,10 @@ a {
                     return safeWireFlag;
                 } else {
                     return form.valid();
+                }
+                if(currentIndex == 1) {
+                    var borrower_address = "Borrower Address: "+residence_addresses[0].value;
+                    $('#borrower_address').html(borrower_address);
                 }
             },
             onStepChanged: function (event, currentIndex, priorIndex){
