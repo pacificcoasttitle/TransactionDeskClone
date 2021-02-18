@@ -3298,4 +3298,29 @@ class DashboardMail extends MX_Controller {
         }
         echo json_encode($response); exit;
     }
+
+    public function getSafewireOrderStatus()
+    {
+        ini_set('max_execution_time', 0); 
+		ini_set('memory_limit','2048M');
+        $json = file_get_contents('php://input');
+        $response = array();
+        
+		if ($json) { 
+            $data = json_decode($json,TRUE);
+            $orderDetails = $this->order->get_order_details($data['order_id']);
+            if(!empty($orderDetails)) {
+                $this->home_model->update(array('safewire_order_status' => $data['status']), array('file_id' => $data['order_id']), 'order_details');
+                $response = array('success' => true, 'message' => 'Received order information successfully.');
+            } else {
+                $response = array('success' => false, 'error_msg' => 'Order not found');
+            }
+        } else {
+            $response = array('success' => false, 'error_msg' => 'No data received.');
+        }
+        header('HTTP/1.0 200 OK');
+        header('Content-type: application/json');
+        echo json_encode($response, true);
+        exit;
+    }
 }
