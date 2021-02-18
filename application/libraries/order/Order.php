@@ -286,6 +286,7 @@ class Order
             order_details.code_created_at,
             order_details.borrower_mobile_number,
             order_details.proposed_branch_id,
+            order_details.escrow_officer_id,
             property_details.id as property_id, 
             property_details.address, 
             property_details.full_address, 
