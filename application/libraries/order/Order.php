@@ -287,7 +287,7 @@ class Order
             order_details.borrower_mobile_number,
             order_details.proposed_branch_id,
             order_details.escrow_officer_id,
-            order_details.create_order_on_safewire,
+            order_details.is_create_order_on_safewire,
             order_details.safewire_action_link,
             property_details.id as property_id, 
             property_details.address, 
