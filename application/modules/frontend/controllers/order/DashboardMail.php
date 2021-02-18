@@ -3268,13 +3268,15 @@ class DashboardMail extends MX_Controller {
         $body_params = json_encode($bodyParams, JSON_UNESCAPED_SLASHES);
         if ($orderDetails['is_create_order_on_safewire'] == 1) {
             $url = env('SAFEWIRE_URL').$file_id."/synchronize";
+            $method = 'GET';
         } else {
             $url = env('SAFEWIRE_URL')."invite";
+            $method = 'POST';
         }
        
         $logid = $this->apiLogs->syncLogs(0, 'safewire', 'create_order_on_safewire', $url, $body_params, array(), $order_id, 0);
         $ch = curl_init($url);                                    
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
