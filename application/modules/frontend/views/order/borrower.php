@@ -998,13 +998,14 @@ a {
                     } else {
                         return form.valid();
                     }
-                    return safeWireFlag;
+                    return true;
                 } else {
+                    if(currentIndex == 1) {
+                        var residence_address = $("input[name^='residence_addresses']");
+                        var borrower_address = "Borrower Address: "+residence_address[0].value;
+                        $('#borrower_address').html(borrower_address);
+                    }
                     return form.valid();
-                }
-                if(currentIndex == 1) {
-                    var borrower_address = "Borrower Address: "+residence_addresses[0].value;
-                    $('#borrower_address').html(borrower_address);
                 }
             },
             onStepChanged: function (event, currentIndex, priorIndex){
