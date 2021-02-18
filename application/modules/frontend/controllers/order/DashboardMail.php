@@ -3244,14 +3244,24 @@ class DashboardMail extends MX_Controller {
             'SalesPrice' => $orderDetails['sales_amount'],
         );
 
-        if(!empty($orderDetails['escrow_lender_id'])) {
-            $orderData['EscrowPartner'][] =  array(
-                'PartnerID' => $orderDetails['lender_partner_id'],
-                'FirstName' =>  $orderDetails['lender_first_name'],
-                'LastName' => $orderDetails['lender_last_name'],
-                'Email' => $orderDetails['lender_email'],
-                'MobilePhone' => $orderDetails['lender_telephone_no']
+        if(!empty($orderDetails['escrow_officer_id'])) {
+            $escrowOfficerCon = array(
+                'where' => array(
+                    'partner_id' => $orderDetails['escrow_officer_id'],
+                )
             );
+            $escrowOfficerData = $this->home_model->get_company_rows($escrowOfficerCon);
+            if(!empty($escrowOfficerData)) {
+                $name = explode(" ", $escrowOfficerData[0]['partner_name']);
+                $orderData['EscrowPartner'][] =  array(
+                    'PartnerID' => $orderDetails['escrow_officer_id'],
+                    'FirstName' =>  $name[0],
+                    'LastName' => $name[1],
+                    'Email' => $escrowOfficerData[0]['email'],
+                    'MobilePhone' => null
+                );
+            }
+            
         }
        
         $bodyParams = array('FileInformations' => $orderData);
