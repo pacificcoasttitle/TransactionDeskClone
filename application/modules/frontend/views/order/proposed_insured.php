@@ -1321,7 +1321,7 @@ function generateProposedInsured(fileId)
 						// $('input[name=new_existing_lender]').attr("disabled",true);
 					} else {
 						// $('input[name=new_existing_lender]').attr("disabled",false);
-						$("#add_lender").prop("checked", true);
+						$("#add_lender").prop("checked", true)
 					}
 
                 }
