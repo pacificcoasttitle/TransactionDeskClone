@@ -3289,10 +3289,10 @@ class DashboardMail extends MX_Controller {
         $this->apiLogs->syncLogs(0, 'safewire', 'create_order_on_safewire', $url, $body_params, $result, $order_id, $logid);
         $res = json_decode(curl_exec($result), true);
         if(isset($res['action_link']) && !empty($res['action_link'])) {
-            $this->home_model->update(array('is_create_order_on_safewire' => 1), array('id' => $orderDetails['order_id']), 'order_details');
+            $this->home_model->update(array('is_create_order_on_safewire' => 1, 'safewire_action_link' => $res['action_link']), array('id' => $orderDetails['order_id']), 'order_details');
             $response = array('success' => true, 'message'=> 'order created successfully', 'action_link' => $res['action_link']);
         } else if(isset($res['result']) && $res['result'] == 'success') {
-            $response = array('success' => true, 'message'=> 'order updated successfully', 'action_link' => $res['action_link']);
+            $response = array('success' => true, 'message'=> 'order updated successfully', 'action_link' => $orderDetails['safewire_action_link']);
         } else {
             $response = array('success' => false, 'message'=> $res['error']);
         }
