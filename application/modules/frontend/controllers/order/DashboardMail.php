@@ -3313,7 +3313,11 @@ class DashboardMail extends MX_Controller {
         } else if(isset($res['result']) && $res['result'] == 'success') {
             $response = array('success' => true, 'message'=> 'order updated successfully', 'action_link' => $orderDetails['safewire_action_link']);
         } else {
-            $response = array('success' => false, 'message'=> $res['error']);
+            if(isset($error_msg) && !empty($error_msg)) {
+                $response = array('success' => false, 'message'=> $error_msg);
+            } else {
+                $response = array('success' => false, 'message'=> $res['error']);
+            }
         }
         echo json_encode($response); exit;
     }
