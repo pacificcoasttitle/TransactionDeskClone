@@ -23,8 +23,6 @@ a {
     <?php
         $this->load->view('layout/header_dashboard');
     ?>
-
-    <div id="page-preloader"><span class="spinner border-t_second_b border-t_prim_a"></span></div>  
     <div class="smart-wrap" id="borrower_page">
         <div class="smart-forms smart-container wrap-0">
             <div class="form-body smart-steps steps-theme-primary">
@@ -709,7 +707,7 @@ a {
 							 <div class="frm-row">
 								<div class="section colm colm10">
 								
-								<button type="" class="button btn-secondary"><a id="wire_instruction" target="_blank" href="">Verify Wire Instructions</a></button>
+								<button type="" class="button btn-secondary"><a id="wire_instruction" target="_blank" href="">Check Your Email</a></button>
 								
 								
 								</div>
@@ -963,8 +961,6 @@ a {
                     var borrowerName = "Borrower Name: "+$('#firstname').val()+" "+$('#middlename').val()+" "+$('#lastname').val();
                     $('#borrower_name').html(borrowerName);
                     if(form.valid() === true) {
-                        $('#page-preloader').css('display', 'block');
-                        $('#borrower_page').css('opacity', '0.5');
                         $.ajax({
                             url: '<?php  echo base_url(); ?>create-order-safewire',
                             type: "POST",
@@ -977,12 +973,16 @@ a {
                                 mobile:  $("#mobile").val()
                             },
                             async: false,
+                            beforeSend: function() {
+                                $('#page-preloader').css('display', 'block');
+                                $('#borrower_page').css('opacity', '0.5');
+                            },
                             success: function(result) {
                                 $('#page-preloader').css('display', 'none');
                                 $('#borrower_page').css('opacity', '1');
                                 var res = jQuery.parseJSON(result);
                                 if (res.success === true) {
-                                    $('#wire_instruction').attr("href", res.action_link);
+                                    //$('#wire_instruction').attr("href", res.action_link);
                                     safeWireFlag = true;
                                 } else {
                                     alert(res.message);
@@ -993,12 +993,13 @@ a {
                                 $('#page-preloader').css('display', 'none');
                                 $('#borrower_page').css('opacity', '1');
                                 alert('Something went wrong');
+                                safeWireFlag = false;
                             },
                         });
                     } else {
                         return form.valid();
                     }
-                    return true;
+                    return safeWireFlag;
                 } else {
                     if(currentIndex == 1) {
                         var residence_address = $("input[name^='residence_addresses']");
@@ -1014,7 +1015,6 @@ a {
                 var form = $(this);
                 form.validate().settings.ignore = ":disabled";
                 if(form.valid() === true) {
-                    console.log('fdfd');
                     $("#borrower-form")[0].submit();
                 } else {
                     return form.valid();
@@ -1561,6 +1561,8 @@ a {
             $("#partner_to_date2").mask('99/9999', {placeholder:'_'});
             $("#partner_to_date3").mask('99/9999', {placeholder:'_'});
             $("#partner_to_date4").mask('99/9999', {placeholder:'_'});
-		});	
-    });    
+        });	
+    }); 
+    
+    
 </script>
