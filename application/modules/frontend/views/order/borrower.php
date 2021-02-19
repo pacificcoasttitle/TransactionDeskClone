@@ -1481,10 +1481,6 @@ a {
         
         });
 
-        function safewireResponse(value) {
-            return value;
-        }
-
         /* Show hide payment options
         ------------------------------------------------------- */
         $('.smartfm-ctrl').formShowHide();
