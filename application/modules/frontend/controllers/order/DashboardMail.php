@@ -3324,11 +3324,14 @@ class DashboardMail extends MX_Controller {
 		ini_set('memory_limit','2048M');
         $json = file_get_contents('php://input');
         $response = array();
-        
+        $logId = $this->apiLogs->syncLogs(0, 'SafeWire', 'send_order_status', null, $json, array());
+        $order_id = 0;
+
 		if ($json) { 
             $data = json_decode($json,TRUE);
             $orderDetails = $this->order->get_order_details($data['order_id']);
             if(!empty($orderDetails)) {
+                $order_id = $orderDetails['order_id'];
                 $this->home_model->update(array('safewire_order_status' => $data['status']), array('file_id' => $data['order_id']), 'order_details');
                 $response = array('success' => true, 'message' => 'Received order information successfully.');
             } else {
@@ -3337,6 +3340,7 @@ class DashboardMail extends MX_Controller {
         } else {
             $response = array('success' => false, 'error_msg' => 'No data received.');
         }
+        $this->apiLogs->syncLogs(0, 'resware WCF', 'get_prelim', 'https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', $json, $response, $order_id, $logId);
         header('HTTP/1.0 200 OK');
         header('Content-type: application/json');
         echo json_encode($response, true);
