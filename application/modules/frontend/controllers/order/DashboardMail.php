@@ -2077,7 +2077,7 @@ class DashboardMail extends MX_Controller {
             //'birthplace' => $this->input->post('birthplace'),
             'ssn' => $this->input->post('ssn'),
             'email' => $this->input->post('email'),
-            //'dln' => $this->input->post('dln'),
+            'dln' => $this->input->post('dln'),
             'status' => $this->input->post('status'),
             'spouse_first_name' => $this->input->post('spouse_firstname'),
             'spouse_middle_name' => $this->input->post('spouse_middlename'),

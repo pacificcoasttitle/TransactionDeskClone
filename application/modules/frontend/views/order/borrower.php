@@ -123,47 +123,45 @@ a {
                                     </label>
                                 </div>
                                 
-                                <div class="section colm colm8">
-                                 
-								  <div class="section">
-									<div class="option-group field">
-										<label class="option">
-											<input type="radio" name="status" class="smartfm-ctrl" value="married"  data-show-id="married">
-											<span class="radio"></span> Married
-										</label>
-										<label class="option">
-											<input type="radio" name="status" class="smartfm-ctrl" value="domestic_partner" data-show-id="domestic_partner">
-											<span class="radio"></span>  Domestic Partner              
-										</label>
-										<label class="option">
-											<input type="radio" name="status" class="smartfm-ctrl" value="single"  data-show-id="single">
-											<span class="radio"></span> Single           
-										</label>                                                                   
-									</div>
-								</div>
-								 
-								 
-								 
-								 
-								 <!--   <label for="ssn" class="field-label">Social Security No. </label>
-                                    <label class="field prepend-icon">
-                                        <input type="text" name="ssn" id="ssn" class="gui-input" placeholder="000-00-0000">
-                                        <span class="field-icon">
-                                            <i class="fa fa-user"></i>
-                                        </span>  
-                                    </label> -->
-                                </div>
 
                                 <div class="section colm colm4">
-                                   <!-- <label for="dln" class="field-label">Drivers Lic No </label>
+                                    <label for="dln" class="field-label">Drivers Lic No </label>
                                     <label class="field prepend-icon">
                                         <input type="text" name="dln" id="dln" class="gui-input" placeholder="D000000">
                                         <span class="field-icon">
                                             <i class="fa fa-user"></i>
                                         </span>  
-                                    </label>-->
+                                    </label>
                                 </div>
 								
+                            </div>
+
+                            <div class="frm-row">
+                                <div class="section colm colm8">
+                                    <div class="section">
+                                        <div class="option-group field">
+                                            <label class="option">
+                                                <input type="radio" name="status" class="smartfm-ctrl" value="married"  data-show-id="married">
+                                                <span class="radio"></span> Married
+                                            </label>
+                                            <label class="option">
+                                                <input type="radio" name="status" class="smartfm-ctrl" value="domestic_partner" data-show-id="domestic_partner">
+                                                <span class="radio"></span>  Domestic Partner              
+                                            </label>
+                                            <label class="option">
+                                                <input type="radio" name="status" class="smartfm-ctrl" value="single"  data-show-id="single">
+                                                <span class="radio"></span> Single           
+                                            </label>                                                                   
+                                        </div>
+                                    </div>
+                                    <!--   <label for="ssn" class="field-label">Social Security No. </label>
+                                        <label class="field prepend-icon">
+                                            <input type="text" name="ssn" id="ssn" class="gui-input" placeholder="000-00-0000">
+                                            <span class="field-icon">
+                                                <i class="fa fa-user"></i>
+                                            </span>  
+                                        </label> -->
+                                </div>
                             </div>
                                     
                         <!--    <div class="spacer-b40 spacer-t30">
