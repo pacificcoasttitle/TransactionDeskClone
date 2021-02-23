@@ -970,7 +970,7 @@ a {
                                 email: $("#email").val(),
                                 mobile:  $("#mobile").val()
                             },
-                            async: false,
+                            async: true,
                             beforeSend: function() {
                                 $('#page-preloader').css('display', 'block');
                                 $('#borrower_page').css('opacity', '0.5');
@@ -984,7 +984,7 @@ a {
                                     safeWireFlag = true;
                                 } else {
                                     alert(res.message);
-                                    safeWireFlag = false;
+                                    $("a[href$='previous']").click();
                                 }
                             },
                             error:function(){
@@ -997,7 +997,7 @@ a {
                     } else {
                         return form.valid();
                     }
-                    return safeWireFlag;
+                    return true;
                 } else {
                     if(currentIndex == 1) {
                         var residence_address = $("input[name^='residence_addresses']");
