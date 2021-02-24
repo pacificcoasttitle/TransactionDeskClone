@@ -49,22 +49,22 @@
         </tbody>
     </table>
 
-    <!-- <table class="table table-bordered">
+     <table class="table table-bordered">
         <thead>
             <tr>
-                <th scope="col">Birthplace</th>
-                <th scope="col">Social Security No.</th>
+                <!-- <th scope="col">Birthplace</th>
+                <th scope="col">Social Security No.</th> -->
                 <th scope="col">Drivers Lic No</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><?php // echo isset($borrower_info[0]['birthplace']) && !empty($borrower_info[0]['birthplace']) ? $borrower_info[0]['birthplace'] : ''; ?></td>
-                <td><?php // echo isset($borrower_info[0]['ssn']) && !empty($borrower_info[0]['ssn']) ? $borrower_info[0]['ssn'] : ''; ?></td>
-                <td><?php // echo isset($borrower_info[0]['dln']) && !empty($borrower_info[0]['dln']) ? $borrower_info[0]['dln'] : ''; ?></td>
+                <!-- <td><?php // echo isset($borrower_info[0]['birthplace']) && !empty($borrower_info[0]['birthplace']) ? $borrower_info[0]['birthplace'] : ''; ?></td>
+                <td><?php // echo isset($borrower_info[0]['ssn']) && !empty($borrower_info[0]['ssn']) ? $borrower_info[0]['ssn'] : ''; ?></td> -->
+                <td><?php  echo isset($borrower_info[0]['dln']) && !empty($borrower_info[0]['dln']) ? $borrower_info[0]['dln'] : ''; ?></td>
             </tr>
         </tbody>
-    </table> -->
+    </table> 
     <?php 
         /*if($borrower_info[0]['status'] == 'single')
         {*/
