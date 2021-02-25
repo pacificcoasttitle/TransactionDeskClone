@@ -908,4 +908,30 @@ class Order
         $result = $query->row_array();
         return $result;
     }
+
+    public function getBorrowerInfo($orderId)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_borrower_info'); 
+        $this->CI->db->where('order_id', $orderId);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }
+    }  
+
+    public function getBorrowerResidenceInfo($orderId)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_borrower_residence_info'); 
+        $this->CI->db->where('order_id', $orderId);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }  
 }

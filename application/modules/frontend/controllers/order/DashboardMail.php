@@ -1945,6 +1945,10 @@ class DashboardMail extends MX_Controller {
                     $data['success'] = $this->session->userdata('success');
                     $this->session->unset_userdata('success');
                 }
+                $borrowerInfo = $this->order->getBorrowerInfo($order[0]['id']);
+                $borrowerResidenceInfo = $this->order->getBorrowerResidenceInfo($order[0]['id']);
+                $data['borrower_name'] = $borrowerInfo['first_name']." ".$borrowerInfo['middle_name']." ".$borrowerInfo['last_name'];
+                $data['borrower_address'] = $borrowerResidenceInfo[0]['address'];
                 $this->load->view('layout/head_dashboard', $data);
                 $this->load->view('order/borrower', $data);
             } else if ($is_code_verified == 1 && $borrower_info_submitted == 0) {
@@ -2250,7 +2254,7 @@ class DashboardMail extends MX_Controller {
                                 'PartnerTypeID' => 1
                             )
                         ),
-                        'DueDate' => 'Date('.(strtotime('Y-m-d H:i:s')*1000).'-0000)'
+                        'DueDate' => 'Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)'
                     ),
                     'CompleteTask' => array(
                         'Partner' => array(
@@ -2258,7 +2262,7 @@ class DashboardMail extends MX_Controller {
                                 'PartnerTypeID' => 1
                             )
                         ),
-                        'DueDate' => 'Date('.(strtotime("+1 day", strtotime("Y-m-d H:i:s"))*1000).'-0000)'
+                        'DueDate' => 'Date('.(strtotime("+1 day", strtotime(date('Y-m-d H:i:s')))*1000).'-0000)'
                     ),
                 );
                 $endPoint = 'files/'. $fileId.'/actions/'.$result['Actions'][$array_keymap[0]]['FileActionID'];
@@ -2283,7 +2287,7 @@ class DashboardMail extends MX_Controller {
                                 'PartnerTypeID' => 1
                             )
                         ),
-                        'DueDate' => 'Date('.(strtotime('Y-m-d H:i:s')*1000).'-0000)'
+                        'DueDate' => 'Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)'
                     ),
                     'CompleteTask' => array(
                         'Partner' => array(
@@ -2291,7 +2295,7 @@ class DashboardMail extends MX_Controller {
                                 'PartnerTypeID' => 1
                             )
                         ),
-                        'DueDate' => 'Date('.(strtotime("+1 day", strtotime("Y-m-d H:i:s"))*1000).'-0000)'
+                        'DueDate' => 'Date('.(strtotime("+1 day", strtotime(date('Y-m-d H:i:s')))*1000).'-0000)'
                     ),
                 );
                 $endPoint = 'files/'. $fileId.'/actions/';

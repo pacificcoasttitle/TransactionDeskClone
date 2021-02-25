@@ -850,8 +850,8 @@ a {
 							-->
                     </form>  
                 <?php } else { ?>   
-                    <div id="borrower_error_msg" class="w-100 alert alert-danger alert-dismissible">
-                        <h2>Wire <br>Instructions</h2>
+                    <div id="borrower_error_msg" class="w-100">
+                        <h2 style="margin: 20px 0;">Wire Instructions</h2>
                         <fieldset>
                             <div class="spacer-b40">
                                 <div class="section center">
@@ -859,31 +859,31 @@ a {
                                     Please click the button below to verify your financial information. This is inteneded to prevent any wire fraud on your transaction. If you have questions about wire fraud we have created a quick video the can help you understand what it us. <underline>Video Link</underline></p>
                                 </div>
                             </div>
-							
-							<div class="section center">
-							    <div class="frm-row">
-								    <div class="section colm colm10">
-								        <button type="" class="button btn-secondary"><a id="wire_instruction" target="_blank" href="">Check Your Email</a></button>
-								    </div>
+                            
+                            <div class="section center">
+                                <div class="frm-row">
+                                    <div class="section colm colm10">
+                                        <button type="" class="button btn-secondary"><a id="wire_instruction" target="_blank" href="">Check Your Email</a></button>
+                                    </div>
                                     <div class="section colm colm2">
                                         
                                     </div>
                                 </div>
-							</div>
-							
-							<div class="section center">
-							    <div class="frm-row">
-								    <div class="section colm colm10">
-                                        <p class="medium fine-grey" id="borrower_name"></p>
-                                        <p class="medium fine-grey" id="borrower_address"></p>
+                            </div>
+                            
+                            <div class="section center">
+                                <div class="frm-row">
+                                    <div class="section colm colm10">
+                                        <p class="medium fine-grey" id="borrower_name">Borrower Name: <?php echo $borrower_name;?></p>
+                                        <p class="medium fine-grey" id="borrower_address">Borrower Address: <?php echo $borrower_address;?></p>
                                         <p class="medium fine-grey" id="escrow_partner">Escrow Partner: Pacific Coast Title Company - Escrow Officer</p>
                                         <p class="medium fine-grey" id="escrow_officer">Escrow Officer: <?php echo $escrow_officer;?></p>
-								    </div>
+                                    </div>
                                     <div class="section colm colm2">
                                         
                                     </div>
                                 </div>
-							</div>
+                            </div>
                             <div class="spacer-b40 spacer-t40">
                                 <div class=""><span></span></div>
                             </div>
@@ -943,8 +943,6 @@ a {
                 var form = $(this);
                 if (currentIndex < newIndex){}
                 if(currentIndex == 0) {
-                    var borrowerName = "Borrower Name: "+$('#firstname').val()+" "+$('#middlename').val()+" "+$('#lastname').val();
-                    $('#borrower_name').html(borrowerName);
                     if(form.valid() === true) {
                         $.ajax({
                             url: '<?php  echo base_url(); ?>create-order-safewire',
@@ -986,11 +984,7 @@ a {
                     }
                     return true;
                 } else {
-                    if(currentIndex == 1) {
-                        var residence_address = $("input[name^='residence_addresses']");
-                        var borrower_address = "Borrower Address: "+residence_address[0].value;
-                        $('#borrower_address').html(borrower_address);
-                    }
+                    
                     return form.valid();
                 }
             },
@@ -1465,6 +1459,8 @@ a {
             }
         
         });
+
+        
 
         /* Show hide payment options
         ------------------------------------------------------- */
