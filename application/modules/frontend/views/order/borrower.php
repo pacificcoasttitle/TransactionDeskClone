@@ -984,11 +984,7 @@ a {
                     }
                     return true;
                 } else {
-                    if(currentIndex == 1) {
-                        var residence_address = $("input[name^='residence_addresses']");
-                        var borrower_address = "Borrower Address: "+residence_address[0].value;
-                        $('#borrower_address').html(borrower_address);
-                    }
+                    
                     return form.valid();
                 }
             },
