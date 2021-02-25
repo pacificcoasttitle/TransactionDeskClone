@@ -1464,54 +1464,7 @@ a {
         
         });
 
-        $("#wire-instruction-form").steps({
-            bodyTag: "fieldset",
-            headerTag: "h2",
-            bodyTag: "fieldset",
-            transitionEffect: "slideLeft",
-            labels: {
-                next: "",
-                previous: "",
-                loading: "" 
-            },
-            onStepChanging: function (event, currentIndex, newIndex){
-                
-            },
-            onStepChanged: function (event, currentIndex, priorIndex){
-
-            },
-            onFinishing: function (event, currentIndex){
-             
-            },
-            onFinished: function (event, currentIndex){
-                var form = $(this);
-            }
-        }).validate({
-            errorClass: "state-error",
-            validClass: "state-success",
-            errorElement: "em",
-            onkeyup: false,
-            onclick: false,
-            rules: {
-                
-            },
-            messages: {
-                		
-            },
-            highlight: function(element, errorClass, validClass) {
-                $(element).closest('.field').addClass(errorClass).removeClass(validClass);
-            },
-            unhighlight: function(element, errorClass, validClass) {
-                $(element).closest('.field').removeClass(errorClass).addClass(validClass);
-            },
-            errorPlacement: function(error, element) {
-                if (element.is(":radio") || element.is(":checkbox")) {
-                    element.closest('.option-group').after(error);
-                } else {
-                    error.insertAfter(element.parent());
-                }
-            }
-        });
+        
 
         /* Show hide payment options
         ------------------------------------------------------- */
