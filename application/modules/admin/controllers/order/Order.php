@@ -401,4 +401,50 @@ class Order extends MX_Controller {
         $json_data['data'] = $data;
         echo json_encode($json_data);
     }
+
+    public function safewireOrders()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Safewire Orders';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/safewire_orders', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_safewire_orders_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $safewire_orders_lists = $this->order_model->get_safewire_orders_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $safewire_orders_lists = $this->order_model->get_safewire_orders_list($params);            
+        }
+
+        $data = array(); 
+        $count = $params['start'] + 1;
+	    if (isset($safewire_orders_lists['data']) && !empty($safewire_orders_lists['data'])) {
+	    	foreach ($safewire_orders_lists['data'] as $key => $value)  {
+	    		$nestedData=array();
+                $nestedData[] = $count;
+	            $nestedData[] = $value['file_number'];
+	            $nestedData[] = $value['full_address'];
+	            $nestedData[] = $value['partner_name'];
+	            $nestedData[] = $value['safewire_order_status'];
+	            $data[] = $nestedData;            
+	    	}
+	    }
+        $json_data['recordsTotal'] = intval( $safewire_orders_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $safewire_orders_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+	    echo json_encode($json_data);
+    }
 }

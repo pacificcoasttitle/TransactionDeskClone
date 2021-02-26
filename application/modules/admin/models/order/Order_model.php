@@ -345,4 +345,93 @@ class Order_model extends CI_Model
             'tax_total_records' => $tax_total_records
         ); 
     }
+
+    public function get_safewire_orders_list($params)
+    {
+        $this->db->select('order_details.file_number,order_details.file_id, order_details.safewire_order_status,property_details.full_address,order_details.id,order_details.created_at, pct_order_partner_company_info.partner_name')
+                 ->from('order_details')
+                 ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
+                 ->join('property_details', 'order_details.property_id = property_details.id');
+        $this->db->where('order_details.escrow_officer_id != ""');
+        
+        $total_records =  $this->db->count_all_results();
+    
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $safewire_orders_lists = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('order_details.file_number', $keyword)
+                        ->or_like('order_details.safewire_order_status', $keyword)
+                        ->or_like('property_details.full_address', $keyword)
+                        ->or_like('pct_order_partner_company_info.partner_name', $keyword)
+                        ->group_end();
+            }
+
+            $this->db->select('order_details.file_number,order_details.file_id, order_details.safewire_order_status,property_details.full_address,order_details.id,order_details.created_at, pct_order_partner_company_info.partner_name')
+                 ->from('order_details')
+                 ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
+                 ->join('property_details', 'order_details.property_id = property_details.id');
+            $this->db->where('order_details.escrow_officer_id != ""');
+			$filter_total_records =  $this->db->count_all_results();
+
+			if(isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('order_details.safewire_order_status', $keyword)
+                    ->or_like('property_details.full_address', $keyword)
+                    ->or_like('pct_order_partner_company_info.partner_name', $keyword)
+                    ->group_end();
+			}
+
+            $this->db->select('order_details.file_number,order_details.file_id, order_details.safewire_order_status,property_details.full_address,order_details.id,order_details.created_at, pct_order_partner_company_info.partner_name')
+                ->from('order_details')
+                ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
+                ->join('property_details', 'order_details.property_id = property_details.id');
+            $this->db->where('order_details.escrow_officer_id != ""');
+            $this->db->order_by('order_details.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }	
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $safewire_orders_lists = $query->result_array();
+	        }
+    	} else {    		
+
+    		$this->db->select('order_details.file_number,order_details.file_id, order_details.safewire_order_status,property_details.full_address,order_details.id,order_details.created_at, pct_order_partner_company_info.partner_name')
+                ->from('order_details')
+                ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
+                ->join('property_details', 'order_details.property_id = property_details.id');
+            $this->db->where('order_details.escrow_officer_id != ""');
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->select('order_details.file_number,order_details.file_id, order_details.safewire_order_status,property_details.full_address,order_details.id,order_details.created_at, pct_order_partner_company_info.partner_name')
+                ->from('order_details')
+                ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
+                ->join('property_details', 'order_details.property_id = property_details.id');
+            $this->db->where('order_details.escrow_officer_id != ""');
+            $this->db->order_by('pct_order_documents.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $safewire_orders_lists = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $safewire_orders_lists
+        );
+    }
 }
