@@ -3314,6 +3314,11 @@ class DashboardMail extends MX_Controller {
         $file_id = $this->input->post('file_id');
         $order_id = $this->input->post('order_id');
         $orderDetails = $this->order->get_order_details($file_id);
+        if ($orderDetails['sales_amount'] > 0)  {
+            $purchase_price = $orderDetails['sales_amount'];
+        } else {
+            $purchase_price = $orderDetails['loan_amount'];
+        }
         $orderData = array(
             'FileNumber' =>  $orderDetails['file_number'],
             'FileID' => $orderDetails['file_id'],
@@ -3334,7 +3339,7 @@ class DashboardMail extends MX_Controller {
                     'Email' => $this->input->post('email')
                 )
             ),
-            'SalesPrice' => $orderDetails['sales_amount'],
+            'SalesPrice' => $purchase_price,
         );
 
         if(!empty($orderDetails['escrow_officer_id'])) {
