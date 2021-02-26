@@ -416,7 +416,7 @@ class Order_model extends CI_Model
                 ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
                 ->join('property_details', 'order_details.property_id = property_details.id');
             $this->db->where('order_details.escrow_officer_id != ""');
-            $this->db->order_by('pct_order_documents.id', 'desc');
+            $this->db->order_by('order_details.id', 'desc');
 
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
