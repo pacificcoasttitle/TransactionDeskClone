@@ -126,4 +126,10 @@
 			<span>Notifications</span>
 		</a>
 	</li>
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/safewire-orders') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/safewire-orders'; ?>">
+			<i class="fas fa-fw fa-list"></i>
+			<span>Safewire Orders</span>
+		</a>
+	</li>
 </ul>

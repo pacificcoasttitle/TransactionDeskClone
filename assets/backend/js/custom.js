@@ -282,6 +282,22 @@ $(document).ready(function () {
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-password-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
+                else if(this.context[0].sTableId == 'tbl-safewire-orders-listing')
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"admin/order/order/get_safewire_orders_list",
+                        data: {
+                            keyword: $('#tbl-safewire-orders-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-safewire-orders-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
                 else 
                 {
                     var jsonResult = $.ajax({
@@ -2751,6 +2767,79 @@ $(document).ready(function () {
         });
     }
     /* Rules listing */
+
+    if ($('#tbl-safewire-orders-listing').length) 
+    {
+        order_customer_list = $('#tbl-safewire-orders-listing').DataTable({
+           /*"pageLength": 2,*/
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1,2] }
+            ],
+            "language": {
+                // searchPlaceholder: "Customer Number",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_safewire_orders').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if(export_type)
+                    {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: '<"FilterCredentialListing">lfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Safewire Orders',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/order/get_safewire_orders_list", // json datasource
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-safewire-orders-listing tbody").append('<tr><td colspan="5" class="text-center">No records found</td></tr>');
+                    $("#tbl-safewire-orders-listing_processing").css("display", "none");
+
+                }
+            },            
+        }); 
+    }
 
 });
 
