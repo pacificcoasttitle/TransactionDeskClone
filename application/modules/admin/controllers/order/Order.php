@@ -439,7 +439,8 @@ class Order extends MX_Controller {
 	            $nestedData[] = $value['full_address'];
 	            $nestedData[] = $value['partner_name'];
 	            $nestedData[] = $value['safewire_order_status'];
-	            $data[] = $nestedData;            
+	            $data[] = $nestedData;    
+                $count++;          
 	    	}
 	    }
         $json_data['recordsTotal'] = intval( $safewire_orders_lists['recordsTotal'] );

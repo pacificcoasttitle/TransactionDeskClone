@@ -403,7 +403,6 @@ class Order_model extends CI_Model
 	            $safewire_orders_lists = $query->result_array();
 	        }
     	} else {    		
-
     		$this->db->select('order_details.file_number,order_details.file_id, order_details.safewire_order_status,property_details.full_address,order_details.id,order_details.created_at, pct_order_partner_company_info.partner_name')
                 ->from('order_details')
                 ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
