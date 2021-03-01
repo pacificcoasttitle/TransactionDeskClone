@@ -2532,7 +2532,7 @@ class Home extends MX_Controller {
         } else if($notificationId == 6) {
             $results = $this->load->view('emails/search_package', $data, TRUE);
         } else {
-            $results = "<div style='margin:50px;'><b>No Email Template Found For this Notification</b></div>";
+            $results = "<div style='margin:50px;'><h3>User Details:</h3><p>Name: </p><p>Telephone: </p><p>Email Address: </p><p>Company Name: </p><p>Street Address: </p><p>City: </p><p>Zipcode: </p><p>Property Address: </p></div>";
         } 
         
         echo json_encode($results, true);
