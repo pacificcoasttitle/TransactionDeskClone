@@ -2796,14 +2796,14 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: '<"FilterCredentialListing">lfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
                     text: 'Export',
                     title: 'Safewire Orders',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        columns: [0, 1, 2, 3, 4],
                         format: {
                             body: function ( data, row, column, node ) {
                                 return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4) ?
