@@ -2474,9 +2474,67 @@ class Home extends MX_Controller {
         $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Notification';
-        $data['notifications'] = $this->home_model->getNotifications();
+        //$data['notifications'] = $this->home_model->getNotifications();
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/home/notifications', $data);
         $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_notifications_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $notification_lists = $this->home_model->get_notifications_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $notification_lists = $this->home_model->get_notifications_list($params);            
+        }
+
+        $data = array(); 
+        $count = $params['start'] + 1;
+	    if (isset($notification_lists['data']) && !empty($notification_lists['data'])) {
+	    	foreach ($notification_lists['data'] as $key => $value)  {
+	    		$nestedData=array();
+                $nestedData[] = $count;
+	            $nestedData[] = $value['name'];
+                $notification_id = $value['id'];
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a onclick='preview_email($notification_id)'><i class='fas fa-eye'></i></a>
+                    </div>";
+                }
+	            $data[] = $nestedData;    
+                $count++;          
+	    	}
+	    }
+        $json_data['recordsTotal'] = intval( $notification_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $notification_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+	    echo json_encode($json_data);
+    }
+
+    public function email_preview()
+    {
+        $data = array();
+        $notificationId = $this->input->post('notificationId');
+        if($notificationId == 5) {
+            $results = $this->load->view('emails/borrower', $data, TRUE);
+        } else if($notificationId == 4) {
+            $results = $this->load->view('emails/order', $data, TRUE);
+        } else if($notificationId == 7) {
+            $results = $this->load->view('emails/prelim', $data, TRUE);
+        } else if($notificationId == 6) {
+            $results = $this->load->view('emails/search_package', $data, TRUE);
+        } else {
+            $results = "<div style='margin:50px;'><b>No Email Template Found For this Notification</b></div>";
+        } 
+        
+        echo json_encode($results, true);
     }
 }

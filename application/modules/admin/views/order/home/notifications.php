@@ -9,36 +9,54 @@
         <div class="card-header">
             <i class="fas fa-table"></i>
              Notifications
+             <div class="float-right">
+                <a href="javascript:void(0);" data-export-type="csv" id="export_notification" class="btn btn-secondary">Export </a>
+            </div>
         </div>
 
         <div class="card-body">
-            <div id="notifications_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-            <div id="notifications_success_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-notifications-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Sr No</th>
                             <th>Name</th>
+                            <th>Action</th>
                         </tr>
                     </thead>                
-                    <tbody>
-                        <?php if (!empty($notifications)) {
-                            $i = 1; 
-                            foreach($notifications as $notification) { ?>
-                                <tr> 
-                                    <td><?php echo $i;?></td>
-                                    <td><?php echo $notification['name'];?></td>
-                                </tr>
-                            <?php $i++; }
-                        } else { ?>
-                            <tr>
-                                <td colspan=2> No Records Found.</td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
+            </div>
+        </div>
+
+        <div class="modal fade" id="email_preview" tabindex="-1" role="dialog" aria-labelledby="Email Preview" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document" style="width:100%;">
+                <div class="modal-content">
+                    <div id="mail_preview"></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function preview_email(notificationId)
+	{
+		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+		$.ajax({
+			url:base_url+"admin/order/home/email_preview",
+			type: "post",
+			data: {
+				notificationId: notificationId
+			},
+			dataType: "html",
+			success: function (response) {
+				var results = JSON.parse(response);
+				$('#mail_preview').html(results);
+                $('#email_preview').modal('show');
+				$('#page-preloader').css('display', 'none');
+			}
+		});
+	}
+</script>
