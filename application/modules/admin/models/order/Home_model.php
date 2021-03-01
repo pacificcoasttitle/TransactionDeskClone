@@ -1343,4 +1343,58 @@ class Home_model extends CI_Model
         return $notifications;  
     }
 
+    public function get_notifications_list($params)
+    {
+        $this->db->from('pct_notifications');
+        $total_records =  $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $notification_lists =array();
+
+        if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+            $this->db->from('pct_notifications');
+
+            if(isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like('name', $keyword)
+                    ->group_end();
+            }
+            $filter_total_records =  $this->db->count_all_results();
+
+            if(isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like('name', $keyword)
+                    ->group_end();
+            }
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }           
+            $query = $this->db->get('pct_notifications');
+
+            if ($query->num_rows() > 0)  {
+                $notification_lists = $query->result_array();
+            }
+        } else {           
+            $this->db->from('pct_notifications');
+            $filter_total_records =  $this->db->count_all_results();
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('pct_notifications');
+            
+            if ($query->num_rows() > 0) {
+                $notification_lists = $query->result_array();
+            } 
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $notification_lists
+        );
+    }
+
 }
