@@ -2807,7 +2807,7 @@ $(document).ready(function () {
                         format: {
                             body: function ( data, row, column, node ) {
                                 return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4) ?
-                                    data.replace( /[$,]/g, '' ) :
+                                    data.toString().replace( /[$,]/g, '' ) :
                                     data;
                             }
                         }
