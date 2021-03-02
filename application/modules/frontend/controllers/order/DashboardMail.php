@@ -2236,7 +2236,7 @@ class DashboardMail extends MX_Controller {
         $this->uploadBorrowerDocumentToResware($document_name, $orderDetails, $binaryData);
         /* Generate PDF */
 
-        $success[] = "Borrwer information added successfully";
+        $success[] = "Borrower form submitted successfully.";
         $endPoint = 'files/'. $fileId.'/actions';
         $user_data['admin_api'] = 1; 
         $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
@@ -2249,19 +2249,11 @@ class DashboardMail extends MX_Controller {
             if(!empty($array_keymap)) {
                 $actionData = array(
                     'StartTask' => array(
-                        'Partner' => array(
-                            'PartnerType' => array(
-                                'PartnerTypeID' => 1
-                            )
-                        ),
+                        'CoordinatorTypeID'=> 19,
                         'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
                     ),
                     'CompleteTask' => array(
-                        'Partner' => array(
-                            'PartnerType' => array(
-                                'PartnerTypeID' => 1
-                            )
-                        ),
+                        'CoordinatorTypeID' => 30,
                         'DueDate' => '/Date('.(strtotime("+1 day", strtotime(date('Y-m-d H:i:s')))*1000).'-0000)/'
                     ),
                 );
@@ -2281,20 +2273,11 @@ class DashboardMail extends MX_Controller {
                         'ActionGroupID' => 6
                     ),    
                     'StartTask' => array(
-                        'CoordinatorTypeID'=> 18,
-                        'Partner' => array(
-                            'PartnerType' => array(
-                                'PartnerTypeID' => 1
-                            )
-                        ),
+                        'CoordinatorTypeID'=> 19,
                         'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
                     ),
                     'CompleteTask' => array(
-                        'Partner' => array(
-                            'PartnerType' => array(
-                                'PartnerTypeID' => 1
-                            )
-                        ),
+                        'CoordinatorTypeID' => 30,
                         'DueDate' => '/Date('.(strtotime("+1 day", strtotime(date('Y-m-d H:i:s')))*1000).'-0000)/'
                     ),
                 );
