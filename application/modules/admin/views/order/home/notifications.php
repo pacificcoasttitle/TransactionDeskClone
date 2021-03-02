@@ -31,6 +31,7 @@
 
         <div class="modal fade" id="email_preview" tabindex="-1" role="dialog" aria-labelledby="Email Preview" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document" style="width:100%;">
+                
                 <div class="modal-content">
                     <div id="mail_preview"></div>
                 </div>
