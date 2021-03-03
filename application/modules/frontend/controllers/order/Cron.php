@@ -2263,8 +2263,6 @@ class Cron extends MX_Controller {
                 $res = $this->make_request('POST', 'files/search', json_encode($data),  $userdata);
                 $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), $res, 0, $logid);
                 $result = json_decode($res,TRUE);
-                echo "<pre>";
-                print_r($result);
 
                 $customer_id = $file['customer_id'];
                 $file_number = $file['file_number'];
