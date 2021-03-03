@@ -2250,7 +2250,7 @@ class Cron extends MX_Controller {
         $this->db->select('file_id, customer_id, file_number, on_hold_mail_sent');
         $this->db->from('order_details'); 
         $this->db->order_by("id", "desc");
-        $this->db->limit(10);   
+        $this->db->limit(100);   
         $query = $this->db->get();
         $filesResult = $query->result_array();
 
@@ -2291,7 +2291,7 @@ class Cron extends MX_Controller {
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Notification For On Hold Order';
-                $to = 'hitesh.p@crestinfosytems.com';
+                $to = 'hitesh.p@crestinfosystems.com';
                 $this->load->helper('sendemail');
                 send_email($from_mail,$from_name, $to, $subject, $message);
                 $orderData = array(         
