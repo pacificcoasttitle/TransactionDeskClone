@@ -1517,7 +1517,17 @@ class Home extends MX_Controller {
                                 </select>'; 
                 $salesUnderwriterSelection = str_replace('value="' .  $sales_underwriter . '"','value="' .  $sales_underwriter . '" selected', $salesUnderwriterSelection);          
                 $nestedData[] = $salesUnderwriterSelection;
-
+                if(!empty($value['deliverables'])) {
+                    $deliverables = explode(',', $value['deliverables']);
+                    $deliverablesInfo = '';
+                    foreach($deliverables as $deliverable) {
+                        $deliverablesInfo .= $deliverable."<br>";
+                    }
+                    $deliverablesInfo .= "<a style='margin-top:10px;' onclick='addOrUpdateDeliverables(".$value['partner_id'].");'><i class='fas fa-edit'></i></a>";
+                    $nestedData[] = $deliverablesInfo;
+                } else {
+                    $nestedData[] = "<a style='margin-top:10px;' onclick='addOrUpdateDeliverables(".$value['partner_id'].")'><i class='fas fa-plus-circle'></i></a>";
+                }
                 $data[] = $nestedData; 
                 $i++;           
             }
@@ -2536,5 +2546,22 @@ class Home extends MX_Controller {
         } 
         
         echo json_encode($results, true);
+    }
+
+    public function getDeliverables()
+    {
+        $partner_id = $this->input->post('partner_id');
+        $this->db->select('*');
+        $this->db->from('pct_order_partner_company_info');
+        $this->db->where('partner_id', $partner_id);
+        $query = $this->db->get();
+        $partnerInfo = $query->row_array(); 
+        if(!empty($partnerInfo['deliverables'])) {
+            $deliverables = explode(',', $partnerInfo['deliverables']);
+            $result = array('deliverables'=> $deliverables);    
+        } else {
+            $result = array('deliverables'=> array());    
+        }
+        echo json_encode($result); exit;
     }
 }

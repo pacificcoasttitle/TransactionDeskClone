@@ -31,11 +31,107 @@
                             <th>Address</th>
                             <th>Loan Underwriter</th>
                             <th>Sales Underwriter</th>
+                            <th>Deliverables</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>
                 </table>
             </div>
         </div>
+        
+        <div class="modal fade" width="500px" id="deliverables_information" tabindex="-1" role="dialog" aria-labelledby="Lender Infromation" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document" style="width:40%;">
+                <div class="modal-content">
+                    <form method="POST" action="<?php echo base_url();?>add-lender-order">
+                        <div class="smart-forms smart-container wrap-2" style="margin:30px">
+                            <div class="modal-body search-result">
+                                <div id="lender-details-fields">
+                                    <div class="spacer-b20">
+                                        <div class="tagline"><span>Deliverables</span></div>
+                                    </div>
+                                    <div class="frm-row" id="clone_container">
+										<div class="section colm colm12" id="clone-email-address" style="margin-bottom: 0px !important;">
+                                            <div class="toclone clone-widget">
+                                                <div class="spacer-b10">
+                                                    <label class="field">
+                                                        <input type="email" class="gui-input" name="AdditionalEmail"
+                                                            id="AdditionalEmail" placeholder="Email Address">
+                                                    </label>
+                                                </div>
+                                                <a id="clonea" href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
+                                                <a href="#" class="delete button"><i class="fa fa-minus"></i></a>
+                                            </div>
+                                            
+										</div>
+									</div> 
+                                </div>
+                            </div>
+                            <div class="form-footer" style="padding: 0px 1rem !important;">
+                                <button type="submit" data-btntext-sending="Sending..."
+                                    class="button btn-primary">Submit</button>
+                                <button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div><!-- /.container-fluid -->
+
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
+<script src="<?php echo base_url(); ?>assets/backend/vendor/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-cloneya.min.js"></script>
+
+<script>
+    jQuery(document).ready(function ($) {
+
+        $('#clone-email-address').cloneya({
+            maximum: 5
+        }).on('after_append.cloneya', function (event, toclone, newclone) {
+            var name = $(newclone).find("input[type='email']").attr('id');
+            $(newclone).find("input[type='email']").attr('name', name);
+        }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
+            $(clone).slideToggle('slow', function () {
+                $(clone).remove();
+            })
+        });
+    });
+
+    function addOrUpdateDeliverables(partner_id)
+	{
+		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+		$('#deliverables_information').modal('show');
+        
+        $.ajax({
+            url:base_url+"admin/order/home/getDeliverables",
+            type: "POST",
+            data: {
+                partner_id: partner_id,
+            },
+            async: false,
+            success: function(result) {
+                $('#page-preloader').css('display', 'none');
+                $('#borrower_page').css('opacity', '1');
+                var res = jQuery.parseJSON(result);
+                if (res.deliverables.length > 0) {
+                    console.log(res.deliverables.length);
+                    for (i = 0; i < res.deliverables.length; i++) {
+                        if(i == 0) {
+                            $('#AdditionalEmail').val(res.deliverables[i]);
+                        } else if(i == 1) {
+                            $("#clonea")[0].click();
+                            var emailVal = res.deliverables[i];
+                            $('#AdditionalEmail'+i).val(emailVal);
+                        }
+                    }
+                } 
+            },
+            error:function(){
+                  
+            },
+        });
+	}
+</script>
