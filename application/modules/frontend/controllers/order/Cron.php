@@ -2243,4 +2243,16 @@ class Cron extends MX_Controller {
             echo "No orders found with status hold";exit;
         }
     }
+
+    public function getOrderStatus()
+    {
+        $status = array();
+        $userdata['admin_api'] = 1;
+        $status['Statuses'][] = array('StatusID' => 8,'Name' => 'Cancelled');
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($status), array(), 0, 0);
+        $res = $this->make_request('POST', 'files/search', json_encode($status),  $userdata);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($status), $res, 0, $logid);
+        $result = json_decode($res,TRUE);
+        print_r($result);exit;
+    }
 }
