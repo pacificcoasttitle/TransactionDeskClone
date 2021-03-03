@@ -2249,8 +2249,8 @@ class Cron extends MX_Controller {
         echo date('Y-m-d H:i:s');
         $this->db->select('file_id, customer_id, file_number, on_hold_mail_sent');
         $this->db->from('order_details'); 
+        $this->db->where('resware_status IS NULL'); 
         $this->db->order_by("id", "desc");
-        $this->db->limit(10000);   
         $query = $this->db->get();
         $filesResult = $query->result_array();
 
