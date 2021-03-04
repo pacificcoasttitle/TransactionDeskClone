@@ -263,6 +263,7 @@ $route['order/admin/rules-manager'] = 'admin/order/rulesManager/index';
 $route['order/admin/notifications'] = 'admin/order/home/notifications';
 $route['order/admin/safewire-orders'] = 'admin/order/order/safewireOrders';
 $route['order/admin/get-safewire-orders-list'] = 'admin/order/order/get_safewire_orders_list';
+$route['store-deliverables'] = 'admin/order/home/storeDeliverables';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  

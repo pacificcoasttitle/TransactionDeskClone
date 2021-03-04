@@ -282,23 +282,12 @@ class Home extends MX_Controller {
 				{
 					$parties_email[] = $EscrowLenderEmail;
 				}
-				$AdditionalEmail = $this->input->post('AdditionalEmail');
-				$AdditionalEmail1 = $this->input->post('AdditionalEmail1');
-				$AdditionalEmail2 = $this->input->post('AdditionalEmail2');
 
-				if(isset($AdditionalEmail) && !empty($AdditionalEmail))
-				{
-					$parties_email[] = $AdditionalEmail;
-				}
-
-				if(isset($AdditionalEmail1) && !empty($AdditionalEmail1))
-				{
-					$parties_email[] = $AdditionalEmail1;
-				}
-
-				if(isset($AdditionalEmail2) && !empty($AdditionalEmail2))
-				{
-					$parties_email[] = $AdditionalEmail2;
+				$AdditionalEmails = $this->input->post('AdditionalEmail');
+				if(isset($AdditionalEmails) && !empty($AdditionalEmails)) {
+					foreach($AdditionalEmails as $AdditionalEmail) {
+						$parties_email[] = $AdditionalEmail;
+					}	
 				}
 							
 				/* Start place order at resware */
@@ -763,9 +752,7 @@ class Home extends MX_Controller {
 								'is_ccr' => $CCR,
 								'is_underlying_docs' => $Docs,
 								'is_plotted_easements' => $Ease,
-								'additional_email' => $AdditionalEmail,
-								'additional_email_1' => $AdditionalEmail1,
-								'additional_email_2' => $AdditionalEmail2,
+								'additional_email' => implode(',', $AdditionalEmails),
 								'borrower' => $primaryBorrower,
 								'secondary_borrower' => $secondaryBorrower,
 								'status'=> 1
@@ -1116,6 +1103,13 @@ class Home extends MX_Controller {
 	        else 
 	        {
 	        	$data['customer_data'] = $customer_data;
+				$con = array(
+					'where' => array(
+						'partner_id' => $customer_data['partner_id'],
+					)
+				);
+				$companyData = $this->home_model->get_company_rows($con);
+				$data['deliverables'] = !empty($companyData[0]['deliverables']) ? explode(',', $companyData[0]['deliverables']) : array();
 	        	$this->load->view('layout/head',$data);
 	        	$this->load->view('order/home');
 	        }	       	
@@ -1274,6 +1268,7 @@ class Home extends MX_Controller {
     			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
     			
 	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
+				$data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
 
 	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
 	            $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
