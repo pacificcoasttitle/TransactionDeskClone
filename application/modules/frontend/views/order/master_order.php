@@ -1069,7 +1069,6 @@
 
 		function getDeliverables(partner_id)
 		{
-			console.log('hi');
 			$.ajax({
 				url:base_url+"admin/order/home/getDeliverables",
 				type: "POST",
@@ -1080,8 +1079,8 @@
 				success: function(result) {
 					var res = jQuery.parseJSON(result);
 					var preDeliverables = $("input[name^='AdditionalEmail']").length;
-					for (j=1; i<preDeliverables.length; j++) {
-						$("#cloner")[0].click();
+					for (j=1; j< preDeliverables; j++) {
+						$("#cloner"+j)[0].click();
 					}
 					$('#AdditionalEmail').val('');
 
