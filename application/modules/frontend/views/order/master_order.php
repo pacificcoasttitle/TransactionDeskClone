@@ -440,12 +440,12 @@
 										<div class="toclone clone-widget">
 											<div class="spacer-b10">
 												<label class="field">
-													<input type="email" class="gui-input" name="AdditionalEmail"
+													<input type="email" class="gui-input" name="AdditionalEmail[]"
 														id="AdditionalEmail" placeholder="Email Address">
 												</label>
 											</div>
 											<a id="clonea" href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
-											<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
+											<a id="cloner" href="#" class="delete button"><i class="fa fa-minus"></i></a>
 										</div>
 									
 										</div><!-- end section -->
@@ -1079,7 +1079,14 @@
 				async: true,
 				success: function(result) {
 					var res = jQuery.parseJSON(result);
+					var preDeliverables = $("input[name^='AdditionalEmail']").length;
+					for (j=1; i<preDeliverables.length; j++) {
+						$("#cloner")[0].click();
+					}
+					$('#AdditionalEmail').val('');
+
 					if (res.deliverables.length > 0) {
+						
 						for (i = 0; i < res.deliverables.length; i++) {
 							if(i == 0) {
 								$('#AdditionalEmail').val(res.deliverables[i]);
