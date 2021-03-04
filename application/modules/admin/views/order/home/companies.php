@@ -19,6 +19,16 @@
         </div>
      
         <div class="card-body">
+            <?php if(!empty($success)) {?>
+                <div class="w-100 alert alert-success alert-dismissible">
+                    <?php echo $success;?>
+                </div>
+            <?php } 
+                if(!empty($errors)) {?>
+                    <div class="w-100 alert alert-success alert-dismissible">
+                        <?php echo $errors;?>
+                    </div>
+            <?php } ?>
             <div id="companies_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="companies_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
@@ -42,10 +52,10 @@
         <div class="modal fade" width="500px" id="deliverables_information" tabindex="-1" role="dialog" aria-labelledby="Lender Infromation" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document" style="width:40%;">
                 <div class="modal-content">
-                    <form method="POST" action="<?php echo base_url();?>add-lender-order">
+                    <form method="POST" action="<?php echo base_url();?>store-deliverables">
                         <div class="smart-forms smart-container wrap-2" style="margin:30px">
                             <div class="modal-body search-result">
-                                <div id="lender-details-fields">
+                                <div id="deliverables-details-fields">
                                     <div class="spacer-b20">
                                         <div class="tagline"><span>Deliverables</span></div>
                                     </div>
@@ -54,16 +64,16 @@
                                             <div class="toclone clone-widget">
                                                 <div class="spacer-b10">
                                                     <label class="field">
-                                                        <input type="email" class="gui-input" name="AdditionalEmail"
-                                                            id="AdditionalEmail" placeholder="Email Address">
+                                                        <input type="email" class="gui-input" name="AdditionalEmail[]"
+                                                            id="AdditionalEmail" placeholder="Email Address" required>
                                                     </label>
                                                 </div>
                                                 <a id="clonea" href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
                                                 <a href="#" class="delete button"><i class="fa fa-minus"></i></a>
                                             </div>
-                                            
 										</div>
-									</div> 
+									</div>
+                                    <input type="hidden" id="partner_id" name="partner_id" value="">
                                 </div>
                             </div>
                             <div class="form-footer" style="padding: 0px 1rem !important;">
@@ -91,7 +101,6 @@
             maximum: 5
         }).on('after_append.cloneya', function (event, toclone, newclone) {
             var name = $(newclone).find("input[type='email']").attr('id');
-            $(newclone).find("input[type='email']").attr('name', name);
         }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
             $(clone).slideToggle('slow', function () {
                 $(clone).remove();
@@ -104,7 +113,7 @@
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
 		$('#deliverables_information').modal('show');
-        
+        $('#partner_id').val(partner_id);
         $.ajax({
             url:base_url+"admin/order/home/getDeliverables",
             type: "POST",
@@ -117,15 +126,18 @@
                 $('#borrower_page').css('opacity', '1');
                 var res = jQuery.parseJSON(result);
                 if (res.deliverables.length > 0) {
-                    console.log(res.deliverables.length);
                     for (i = 0; i < res.deliverables.length; i++) {
                         if(i == 0) {
                             $('#AdditionalEmail').val(res.deliverables[i]);
-                        } else if(i == 1) {
+                        } else {
                             $("#clonea")[0].click();
+                        } 
+                    }
+                    for (i = 0; i < res.deliverables.length; i++) {
+                        if(i != 0) {
                             var emailVal = res.deliverables[i];
                             $('#AdditionalEmail'+i).val(emailVal);
-                        }
+                        } 
                     }
                 } 
             },

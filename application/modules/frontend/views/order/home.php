@@ -395,19 +395,40 @@
 
 									<div class="frm-row">
 										<div class="section colm colm12" id="clone-email-address">
-											
-										<div class="toclone clone-widget">
-											<div class="spacer-b10">
-												<label class="field">
-													<input type="email" class="gui-input" name="AdditionalEmail"
-														id="AdditionalEmail" placeholder="Email Address">
-												</label>
-											</div>
-											<a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
-											<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
+											<?php if(!empty($deliverables)) {
+													$i = 0;
+													foreach($deliverables as $deliverable) { ?>
+														<div class="toclone clone-widget">
+															<div class="spacer-b10">
+																<label class="field">
+																	<?php if($i == 0) { ?>
+																		<input type="email" class="gui-input" name="AdditionalEmail[]"
+																		id="AdditionalEmail" placeholder="Email Address" value="<?php echo $deliverable?>">
+																	<?php } else { ?>
+																		<input type="email" class="gui-input" name="AdditionalEmail[]"
+																		id="AdditionalEmail<?php echo $i;?>" placeholder="Email Address" value="<?php echo $deliverable?>">
+																	<?php } ?>
+																	
+																</label>
+															</div>
+															<a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
+															<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
+														</div>
+
+													<?php $i++; }
+											} else {?>
+												<div class="toclone clone-widget">
+													<div class="spacer-b10">
+														<label class="field">
+															<input type="email" class="gui-input" name="AdditionalEmail[]"
+																id="AdditionalEmail" placeholder="Email Address">
+														</label>
+													</div>
+													<a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
+													<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
+												</div>
+											<?php }?>
 										</div>
-									
-										</div><!-- end section -->
 
 									</div>
 									
@@ -908,7 +929,7 @@
 			maximum: 5
 		}).on('after_append.cloneya', function (event, toclone, newclone) {
 			var name = $(newclone).find("input[type='email']").attr('id');
-			$(newclone).find("input[type='email']").attr('name', name);
+			//$(newclone).find("input[type='email']").attr('name', name);
 		}).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
 			$(clone).slideToggle('slow', function () {
 				$(clone).remove();

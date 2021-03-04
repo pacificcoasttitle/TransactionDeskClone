@@ -444,7 +444,7 @@
 														id="AdditionalEmail" placeholder="Email Address">
 												</label>
 											</div>
-											<a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
+											<a id="clonea" href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
 											<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
 										</div>
 									
@@ -934,7 +934,7 @@
 			maximum: 5
 		}).on('after_append.cloneya', function (event, toclone, newclone) {
 			var name = $(newclone).find("input[type='email']").attr('id');
-			$(newclone).find("input[type='email']").attr('name', name);
+			//$(newclone).find("input[type='email']").attr('name', name);
 		}).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
 			$(clone).slideToggle('slow', function () {
 				$(clone).remove();
@@ -981,6 +981,7 @@
 	            $("#City").val(ui.item.city).parent().addClass('state-success');
 	            $("#Zipcode").val(ui.item.zip_code).parent().addClass('state-success');
 	            $("#CustomerId").val(ui.item.id);
+				
 
 	            var is_escrow = ui.item.is_escrow;
 
@@ -1005,6 +1006,7 @@
 					$('#upload_escrow').hide();
 	            }
 	            getProductTypes();
+				getDeliverables(ui.item.partner_id);
 	        },
 	        change: function( event, ui ) {
 	            if (ui.item == null)
@@ -1063,6 +1065,40 @@
 			       },
 			  });
 			}
+		}
+
+		function getDeliverables(partner_id)
+		{
+			console.log('hi');
+			$.ajax({
+				url:base_url+"admin/order/home/getDeliverables",
+				type: "POST",
+				data: {
+					partner_id: partner_id,
+				},
+				async: true,
+				success: function(result) {
+					var res = jQuery.parseJSON(result);
+					if (res.deliverables.length > 0) {
+						for (i = 0; i < res.deliverables.length; i++) {
+							if(i == 0) {
+								$('#AdditionalEmail').val(res.deliverables[i]);
+							} else {
+								$("#clonea")[0].click();
+							} 
+						}
+						for (i = 0; i < res.deliverables.length; i++) {
+							if(i != 0) {
+								var emailVal = res.deliverables[i];
+								$('#AdditionalEmail'+i).val(emailVal);
+							} 
+						}
+					} 
+				},
+				error:function(){
+					
+				},
+			});
 		}
 	});
 
