@@ -2247,9 +2247,9 @@ class Cron extends MX_Controller {
     public function getOrderStatus()
     {
         echo date('Y-m-d H:i:s');
-        $this->db->select('file_id, customer_id, file_number, on_hold_mail_sent');
+        $this->db->select('file_id, customer_id, file_number, on_hold_mail_sent, resware_status');
         $this->db->from('order_details'); 
-        $this->db->where('resware_status IS NULL'); 
+        $this->db->where('resware_status != "closed"'); 
         $this->db->order_by("id", "desc");
         $query = $this->db->get();
         $filesResult = $query->result_array();
@@ -2259,48 +2259,50 @@ class Cron extends MX_Controller {
                 $data = array();
                 $userdata['admin_api'] = 1;
                 $data = array('FileNumber' => $file['file_number']);
-                $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), array(), 0, 0);
+                //$logid = $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), array(), 0, 0);
                 $res = $this->make_request('POST', 'files/search', json_encode($data),  $userdata);
-                $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), $res, 0, $logid);
+                //$this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), $res, 0, $logid);
                 $result = json_decode($res,TRUE);
 
-                $customer_id = $file['customer_id'];
-                $file_number = $file['file_number'];
-                $condition = array(
-                    'id' => $customer_id
-                );
-                $customerDetails = $this->home_model->get_customers($condition);
-                $first_name = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
-                $last_name = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
-                $telephone_no = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
-                $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
-                $company_name = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
-                $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
-                $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
-                $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
+                if(strtolower($result['Files'][0]['Status']['Name']) != $file['resware_status']) {
+                    $customer_id = $file['customer_id'];
+                    $file_number = $file['file_number'];
+                    $condition = array(
+                        'id' => $customer_id
+                    );
+                    $customerDetails = $this->home_model->get_customers($condition);
+                    $first_name = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
+                    $last_name = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
+                    $telephone_no = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
+                    $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
+                    $company_name = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
+                    $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
+                    $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
+                    $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
 
-                $property = $result['Files'][0]['Properties'][0]['StreetNumber']." ".$result['Files'][0]['Properties'][0]['StreetDirection']." ".$result['Files'][0]['Properties'][0]['StreetName']." ".$result['Files'][0]['Properties'][0]['StreetSuffix'].", ".$result['Files'][0]['Properties'][0]['City'].", ".$result['Files'][0]['Properties'][0]['State'].", ".$result['Files'][0]['Properties'][0]['Zip'];
-            
-
-                $message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p><p>File Number: '.$file_number.'</p><p>Order Status: '.$result['Files'][0]['Status']['Name'].'</p>';
-
-               
+                    $property = $result['Files'][0]['Properties'][0]['StreetNumber']." ".$result['Files'][0]['Properties'][0]['StreetDirection']." ".$result['Files'][0]['Properties'][0]['StreetName']." ".$result['Files'][0]['Properties'][0]['StreetSuffix'].", ".$result['Files'][0]['Properties'][0]['City'].", ".$result['Files'][0]['Properties'][0]['State'].", ".$result['Files'][0]['Properties'][0]['Zip'];
                 
-                $from_name = 'Pacific Coast Title Company';
-                $from_mail = env('FROM_EMAIL');
-                $subject = 'Notification For On Hold Order';
-                $to = 'hitesh.p@crestinfosystems.com';
-                $this->load->helper('sendemail');
-               // send_email($from_mail,$from_name, $to, $subject, $message);
-                $orderData = array(         
-                    'resware_status'=> strtolower($result['Files'][0]['Status']['Name'])
-                );
-                $condition = array(
-                    'file_id' => $file['file_id'],
-                    'file_number' => $file['file_number'],
-                );
 
-                $this->home_model->update($orderData,$condition,'order_details');
+                    $message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p><p>File Number: '.$file_number.'</p><p>Order Status: '.$result['Files'][0]['Status']['Name'].'</p>';
+
+                
+                    
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = env('FROM_EMAIL');
+                    $subject = 'Notification For Order Status - '.$result['Files'][0]['Status']['Name'];
+                    $to = 'cs@pct.com';
+                    $this->load->helper('sendemail');
+                    //send_email($from_mail,$from_name, $to, $subject, $message);
+                    $orderData = array(         
+                        'resware_status'=> strtolower($result['Files'][0]['Status']['Name'])
+                    );
+                    $condition = array(
+                        'file_id' => $file['file_id'],
+                        'file_number' => $file['file_number'],
+                    );
+
+                    $this->home_model->update($orderData,$condition,'order_details');
+                }
             }
         }
         echo date('Y-m-d H:i:s');exit;
