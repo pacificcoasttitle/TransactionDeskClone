@@ -2246,7 +2246,7 @@ class Cron extends MX_Controller {
 
     public function getOrderStatus()
     {
-        echo date('Y-m-d H:i:s');
+        echo date('Y-m-d H:i:s')."<br>";
         $this->db->select('file_id, customer_id, file_number, on_hold_mail_sent, resware_status');
         $this->db->from('order_details'); 
         $this->db->where('resware_status != "closed"'); 
