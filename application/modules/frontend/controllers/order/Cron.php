@@ -2259,9 +2259,9 @@ class Cron extends MX_Controller {
                 $data = array();
                 $userdata['admin_api'] = 1;
                 $data = array('FileNumber' => $file['file_number']);
-                $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), array(), 0, 0);
+                //$logid = $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), array(), 0, 0);
                 $res = $this->make_request('POST', 'files/search', json_encode($data),  $userdata);
-                $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), $res, 0, $logid);
+                //$this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), $res, 0, $logid);
                 $result = json_decode($res,TRUE);
 
                 if(strtolower($result['Files'][0]['Status']['Name']) != $file['resware_status']) {
@@ -2292,7 +2292,7 @@ class Cron extends MX_Controller {
                     $subject = 'Notification For Order Status - '.$result['Files'][0]['Status']['Name'];
                     $to = 'cs@pct.com';
                     $this->load->helper('sendemail');
-                    send_email($from_mail,$from_name, $to, $subject, $message);
+                    //send_email($from_mail,$from_name, $to, $subject, $message);
                     $orderData = array(         
                         'resware_status'=> strtolower($result['Files'][0]['Status']['Name'])
                     );
