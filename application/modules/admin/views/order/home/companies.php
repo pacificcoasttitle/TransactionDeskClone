@@ -65,7 +65,7 @@
                                                 <div class="spacer-b10">
                                                     <label class="field">
                                                         <input type="email" class="gui-input" name="AdditionalEmail[]"
-                                                            id="AdditionalEmail" placeholder="Email Address" required>
+                                                            id="AdditionalEmail" placeholder="Email Address">
                                                     </label>
                                                 </div>
                                                 <a id="clonea" href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
