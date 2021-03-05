@@ -2292,7 +2292,7 @@ class Cron extends MX_Controller {
                     $subject = 'Notification For Order Status - '.$result['Files'][0]['Status']['Name'];
                     $to = 'cs@pct.com';
                     $this->load->helper('sendemail');
-                    //send_email($from_mail,$from_name, $to, $subject, $message);
+                    send_email($from_mail,$from_name, $to, $subject, $message);
                     $orderData = array(         
                         'resware_status'=> strtolower($result['Files'][0]['Status']['Name'])
                     );
