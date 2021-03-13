@@ -478,6 +478,7 @@ class Order extends MX_Controller {
                 if(isset($resultSafewire['order_id']) && !empty($resultSafewire['order_id'])) {
                     $this->home_model->update(array('safewire_order_status' => $resultSafewire['status']), array('file_id' => $res['file_id']), 'order_details');
                     if ( $resultSafewire['status'] == 'completed' && $res['safewire_order_status'] != 'completed') {
+                        $this->load->library('order/order');
                         $orderDetails = $this->order->get_order_details($res['file_id']);
                         $this->order->syncSafewireDocuments($resultSafewire['order_details'], $resultSafewire['wire_instruction_details'], $orderDetails);
                     }
