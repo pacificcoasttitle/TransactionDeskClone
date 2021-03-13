@@ -1159,7 +1159,7 @@ $(document).ready(function () {
                     var result = jQuery.parseJSON(data);
                     if (result.success) {
                         $('body').animate({ opacity: 1.0 }, "slow");
-                        $('#safewire_success_msg').html(result.msg).show();
+                        $('#safewire_success_msg').html(result.message).show();
                         $([document.documentElement, document.body]).animate({
                             scrollTop: $("#safewire_success_msg").offset().top
                         }, 1000);
