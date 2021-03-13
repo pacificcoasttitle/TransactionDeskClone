@@ -1005,7 +1005,8 @@ class Order
             'is_safewire_doc' => 1, 
             'created' => date("Y-m-d H:i:s")
 		);
-        $documentId =  $this->CI->db->insert('pct_order_documents', $documentData);
+        $this->CI->db->insert('pct_order_documents', $documentData);
+        $documentId = $this->CI->db->insert_id();
 
 		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
 		$documentApiData = array(			
