@@ -478,15 +478,14 @@ class Order extends MX_Controller {
                 if(isset($resultSafewire['order_id']) && !empty($resultSafewire['order_id'])) {
                     $this->home_model->update(array('safewire_order_status' => $resultSafewire['status']), array('file_id' => $res['file_id']), 'order_details');
                     if ( $resultSafewire['status'] == 'completed' && $res['safewire_order_status'] != 'completed') {
-                        $this->load->library('order/order');
-                        $orderDetails = $this->order->get_order_details($res['file_id']);
-                        $this->order->syncSafewireDocuments($resultSafewire['order_details'], $resultSafewire['wire_instruction_details'], $orderDetails);
+                        $orderDetails = $this->order_model->get_order_details($res['file_id']);
+                        $this->order_model->syncSafewireDocuments($resultSafewire['order_details'], $resultSafewire['wire_instruction_details'], $orderDetails);
                     }
                 } 
                 $response = array('success' => true, 'message' => 'Safewire order status updated successfully.');
             }
         } else {
-            $response = array('success' => false, 'error_msg' => 'No Order found for update status');
+            $response = array('success' => false, 'message' => 'No Order found for update status');
         }
         echo json_encode($response);exit;
     }
