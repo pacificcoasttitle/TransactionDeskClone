@@ -1148,6 +1148,50 @@ $(document).ready(function () {
         });
     }
 
+    if($('#refresh-safewire-data').length)
+    {
+        $('#refresh-safewire-data').click(function(e){
+            $('body').animate({ opacity: 0.5 }, "slow");
+            $.ajax({
+                url: base_url+"/order/admin/update-safewire-orders-status",
+                method: "POST",
+                success: function(data){
+                    var result = jQuery.parseJSON(data);
+                    if (result.status == 'success') {
+                        $('body').animate({ opacity: 1.0 }, "slow");
+                        $('#safewire_success_msg').html(result.msg).show();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#safewire_success_msg").offset().top
+                        }, 1000);
+                        safewire_orders_list.ajax.reload( null, false );
+                        setTimeout(function () {
+                            $('#safewire_success_msg').html('').hide();
+                        }, 4000);
+                    } else {
+                        $('#safewire_error_msg').html(result.message).show();
+                        $([document.documentElement, document.body]).animate({
+                            scrollTop: $("#safewire_error_msg").offset().top
+                        }, 1000);
+
+                        setTimeout(function () {
+                            $('#safewire_error_msg').html('').hide();
+                        }, 4000);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('#safewire_error_msg').html('Something went wrong. Please try it again.').show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#safewire_success_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#safewire_error_msg').html('').hide();
+                    }, 4000);
+                }
+            })
+        });
+    }
+
     if ($('#tbl-orders-listing').length) 
     {
         order_list = $('#tbl-orders-listing').DataTable({

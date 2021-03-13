@@ -3395,54 +3395,10 @@ class DashboardMail extends MX_Controller {
 
 		if ($json) { 
             $data = json_decode($json,TRUE);
-            $orderDetails = $this->order->get_order_details($data['order_id']);
+            $orderDetails = $this->order->get_order_details($data['order_id'], 1);
             if(!empty($orderDetails)) {
                 $order_id = $orderDetails['order_id'];
-                $orderUrl = $data['order_details'];
-                $wireUrl = $data['wire_instruction_details'];
-                $logid = $this->apiLogs->syncLogs(0, 'safewire', 'get_order_detail_pdf', $orderUrl, array(), array(), $order_id, 0);
-                $ch = curl_init($orderUrl);                                    
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');                        
-                curl_setopt($ch, CURLOPT_POSTFIELDS, array());                   
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                        'Api-Key: jV0i1HY5.71I6FmoBg581iPMAIERe9Qnfmn0b8jLF',
-                        'Content-Type: application/json',
-                    )
-                );
-                $error_msg = curl_error($ch);
-                $result = curl_exec($ch);
-
-                if (!is_dir('uploads/order_safewire_documents')) {
-                    mkdir('./uploads/order_safewire_documents', 0777, TRUE);
-                }
-                file_put_contents('./uploads/order_safewire_documents/'.$data['order_id'].'.pdf', $result);
-                $binaryOrderData   = base64_encode($result); 
-                $this->sendSafewireDocumentToResware($data['order_id'].'.pdf', $orderDetails, $binaryOrderData, 1);
-
-                $logid = $this->apiLogs->syncLogs(0, 'safewire', 'get_wire_detail_pdf', $wireUrl, array(), array(), $order_id, 0);
-                $ch = curl_init($wireUrl);                                    
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');                        
-                curl_setopt($ch, CURLOPT_POSTFIELDS, array());                   
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                        'Api-Key: jV0i1HY5.71I6FmoBg581iPMAIERe9Qnfmn0b8jLF',
-                        'Content-Type: application/json',
-                    )
-                );
-                $error_msg = curl_error($ch);
-                $resultWire = curl_exec($ch);
-
-                if (!is_dir('uploads/wire_safewire_documents')) {
-                    mkdir('./uploads/wire_safewire_documents', 0777, TRUE);
-                }
-                file_put_contents('./uploads/wire_safewire_documents/'.$data['order_id'].'.pdf', $resultWire);
-                $binaryWireOrderData   = base64_encode($resultWire); 
-                $this->sendSafewireDocumentToResware($data['order_id'].'.pdf', $orderDetails, $binaryWireOrderData, 0);
-                
-                $this->apiLogs->syncLogs(0, 'safewire', 'get_wire_detail_pdf', $wireUrl, array(), $resultWire, $order_id, $logid);
-                $res = json_decode($result, true);
-        
+                $this->order->syncSafewireDocuments($data['order_details'], $data['wire_instruction_details'], $orderDetails);
                 $this->home_model->update(array('safewire_order_status' => $data['status']), array('file_id' => $data['order_id']), 'order_details');
                 $response = array('success' => true, 'message' => 'Received order information successfully.');
             } else {
@@ -3472,53 +3428,4 @@ class DashboardMail extends MX_Controller {
         }
         return false;
     }
-
-    public function sendSafewireDocumentToResware($document_name, $orderDetails, $binaryData, $orderFlag = 0)
-	{
-		$this->load->model('order/document');
-		$this->load->library('order/resware');
-		$this->load->model('order/apiLogs');
-
-        if ($orderFlag == 1) {
-            $fileSize = filesize('./uploads/order_safewire_documents/'.$document_name);
-        } else {
-            $fileSize = filesize('./uploads/wire_safewire_documents/'.$document_name);
-        }
-		
-		$documentData = array(
-			'document_name' => $document_name,
-			'original_document_name' => $document_name,
-			'document_type_id' => 1051,
-			'document_size' => $fileSize,
-			'user_id' => 0,
-			'order_id' => $orderDetails['order_id'],
-			'description' => 'CPL Document',
-			'is_sync' => 1,
-			'is_prelim_document' => 0,
-			'is_cpl_doc' => 0,
-            'is_safewire_doc' => 1
-		);
-		$documentId = $this->document->insert($documentData);
-		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
-		$documentApiData = array(			
-			'DocumentName' => $document_name,
-			'DocumentType' => array(
-				'DocumentTypeID' => 1051,
-			),
-			'Description' => 'Safewire Document',
-			'InternalOnly' => false,
-			'DocumentBody' => $binaryData
-		);
-		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
-
-        $userData = array(
-            'admin_api' => 1
-        );	
-
-		$logid = $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
-		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $userData);
-		$this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
-		$res = json_decode($result);
-		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-	}
 }
