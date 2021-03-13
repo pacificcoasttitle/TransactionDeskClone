@@ -263,6 +263,8 @@ $route['order/admin/rules-manager'] = 'admin/order/rulesManager/index';
 $route['order/admin/notifications'] = 'admin/order/home/notifications';
 $route['order/admin/safewire-orders'] = 'admin/order/order/safewireOrders';
 $route['order/admin/get-safewire-orders-list'] = 'admin/order/order/get_safewire_orders_list';
+
+
 $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';
 $route['order/admin/update-safewire-orders-status'] = 'frontend/order/dashboardMail/getSafewireOrderStatus';
 
