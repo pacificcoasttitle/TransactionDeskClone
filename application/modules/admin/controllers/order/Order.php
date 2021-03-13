@@ -459,7 +459,7 @@ class Order extends MX_Controller {
        
         if(!empty($result)) {
             foreach($result as $res) {
-                $url = env('SAFEWIRE_URL').'pct-orders/'.$res['file_id'].'/status';
+                $url = env('SAFEWIRE_URL').$res['file_id'].'/status';
                 $logid = $this->apiLogs->syncLogs(0, 'safewire', 'get_order_status', $url, array(), array(), $res['id'], 0);
                 $ch = curl_init($url);                                    
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');                        
