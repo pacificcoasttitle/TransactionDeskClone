@@ -267,7 +267,7 @@ $route['store-deliverables'] = 'admin/order/home/storeDeliverables';
 
 
 $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';
-$route['order/admin/update-safewire-orders-status'] = 'frontend/order/dashboardMail/getSafewireOrderStatus';
+$route['order/admin/update-safewire-orders-status'] = 'frontend/order/dashboardMail/updateSafewireStatusForAllorders';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
