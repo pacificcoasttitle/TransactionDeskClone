@@ -448,4 +448,45 @@ class Order extends MX_Controller {
         $json_data['data'] = $data;
 	    echo json_encode($json_data);
     }
+
+    public function updateSafewireStatusForAllorders()
+    {
+        $this->db->select('*');
+        $this->db->from('order_details');
+        $this->db->where('is_create_order_on_safewire = 1');
+        $query = $this->db->get();
+        $result = $query->result_array();
+       
+        if(!empty($result)) {
+            foreach($result as $res) {
+                $url = env('SAFEWIRE_URL').'pct-orders/'.$res['file_id'].'/status';
+                $logid = $this->apiLogs->syncLogs(0, 'safewire', 'get_order_status', $url, array(), array(), $res['id'], 0);
+                $ch = curl_init($url);                                    
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');                        
+                curl_setopt($ch, CURLOPT_POSTFIELDS, array());                   
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Api-Key: jV0i1HY5.71I6FmoBg581iPMAIERe9Qnfmn0b8jLF',
+                        'Content-Type: application/json',
+                    )
+                );
+                $error_msg = curl_error($ch);
+                $result = curl_exec($ch);
+                $this->apiLogs->syncLogs(0, 'safewire', 'get_wire_detail_pdf', $url, array(), $result, $res['id'], $logid);
+
+                $resultSafewire = json_decode($result, true);
+                if(isset($resultSafewire['order_id']) && !empty($resultSafewire['order_id'])) {
+                    $this->home_model->update(array('safewire_order_status' => $resultSafewire['status']), array('file_id' => $res['file_id']), 'order_details');
+                    if ( $resultSafewire['status'] == 'completed' && $res['safewire_order_status'] != 'completed') {
+                        $orderDetails = $this->order->get_order_details($res['file_id']);
+                        $this->order->syncSafewireDocuments($resultSafewire['order_details'], $resultSafewire['wire_instruction_details'], $orderDetails);
+                    }
+                } 
+                $response = array('success' => true, 'message' => 'Safewire order status updated successfully.');
+            }
+        } else {
+            $response = array('success' => false, 'error_msg' => 'No Order found for update status');
+        }
+        echo json_encode($response);exit;
+    }
 }

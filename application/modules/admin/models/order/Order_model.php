@@ -352,7 +352,7 @@ class Order_model extends CI_Model
                  ->from('order_details')
                  ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
                  ->join('property_details', 'order_details.property_id = property_details.id');
-        $this->db->where('order_details.escrow_officer_id != ""');
+        $this->db->where('order_details.is_create_order_on_safewire = 1');
         
         $total_records =  $this->db->count_all_results();
     
@@ -376,7 +376,7 @@ class Order_model extends CI_Model
                  ->from('order_details')
                  ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
                  ->join('property_details', 'order_details.property_id = property_details.id');
-            $this->db->where('order_details.escrow_officer_id != ""');
+            $this->db->where('order_details.is_create_order_on_safewire = 1');
 			$filter_total_records =  $this->db->count_all_results();
 
 			if(isset($keyword) && !empty($keyword)) {
@@ -392,7 +392,7 @@ class Order_model extends CI_Model
                 ->from('order_details')
                 ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
                 ->join('property_details', 'order_details.property_id = property_details.id');
-            $this->db->where('order_details.escrow_officer_id != ""');
+            $this->db->where('order_details.is_create_order_on_safewire = 1');
             $this->db->order_by('order_details.id', 'desc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -407,14 +407,14 @@ class Order_model extends CI_Model
                 ->from('order_details')
                 ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
                 ->join('property_details', 'order_details.property_id = property_details.id');
-            $this->db->where('order_details.escrow_officer_id != ""');
+            $this->db->where('order_details.is_create_order_on_safewire = 1');
             $filter_total_records =  $this->db->count_all_results();
 
             $this->db->select('order_details.file_number,order_details.file_id, order_details.safewire_order_status,property_details.full_address,order_details.id,order_details.created_at, pct_order_partner_company_info.partner_name')
                 ->from('order_details')
                 ->join('pct_order_partner_company_info', 'order_details.escrow_officer_id = pct_order_partner_company_info.partner_id')
                 ->join('property_details', 'order_details.property_id = property_details.id');
-            $this->db->where('order_details.escrow_officer_id != ""');
+            $this->db->where('order_details.is_create_order_on_safewire = 1');
             $this->db->order_by('order_details.id', 'desc');
 
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
