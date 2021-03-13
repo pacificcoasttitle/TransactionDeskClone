@@ -190,6 +190,7 @@ $route['get-order-information/:any'] = 'frontend/order/cron/getOrderInformation'
 $route['update-order-status'] = 'frontend/order/cron/updateOrderStatus';
 $route['create-order-safewire'] = 'frontend/order/dashboardMail/createOrderSafewire';
 $route['get-safewire-order-status'] = 'frontend/order/dashboardMail/getSafewireOrderStatus';
+$route['update-safewire-orders-status'] = 'frontend/order/cron/updateSafewireStatusForAllorders';
 
 
 /* Route for PCT-Order backend*/
@@ -267,7 +268,7 @@ $route['store-deliverables'] = 'admin/order/home/storeDeliverables';
 
 
 $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';
-$route['order/admin/update-safewire-orders-status'] = 'admin/order/order/updateSafewireStatusForAllorders';
+
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
