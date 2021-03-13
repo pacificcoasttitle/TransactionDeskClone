@@ -1153,7 +1153,7 @@ $(document).ready(function () {
         $('#refresh-safewire-data').click(function(e){
             $('body').animate({ opacity: 0.5 }, "slow");
             $.ajax({
-                url: base_url+"/order/admin/update-safewire-orders-status",
+                url: base_url+"order/admin/update-safewire-orders-status",
                 method: "POST",
                 success: function(data){
                     var result = jQuery.parseJSON(data);
