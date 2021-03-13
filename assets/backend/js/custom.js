@@ -1157,7 +1157,7 @@ $(document).ready(function () {
                 method: "POST",
                 success: function(data){
                     var result = jQuery.parseJSON(data);
-                    if (result.status == 'success') {
+                    if (result.success) {
                         $('body').animate({ opacity: 1.0 }, "slow");
                         $('#safewire_success_msg').html(result.msg).show();
                         $([document.documentElement, document.body]).animate({
