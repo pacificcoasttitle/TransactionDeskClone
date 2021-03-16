@@ -63,8 +63,22 @@ button:focus {outline:0;}
 							<h3 class="ui-title-block_light"></h3>
 							<div style="width: 100%;">
                                 <h3 class="ui-title-block_light" style="display: inline-block;"><?php echo $orderDetails['full_address'];?></h3>
+								<span class="bg-border" style="float: right;background: #d35411;margin-left:10px;"><a style="color:#fff;" href="<?php echo base_url();?>update-prelim-action/<?php echo $orderDetails['file_id'];?>">Update Prelim Action</a></span>
 								<span class="bg-border" style="float: right;cursor:pointer;background: #d35411;" onClick="window.location.reload();">Refresh</span>
 							</div>
+
+							<div style="width: 100%;margin-top:10px;">
+								<?php if(!empty($success)) { ?>
+									<div id="prelim_action_success_msg" class="w-100 alert alert-success alert-dismissible">
+										<?php echo $success;?>
+									</div>
+								<?php } if(!empty($error)) { ?>
+									<div id="prelim_action_success_msg" class="w-100 alert alert-danger alert-dismissible">
+										<?php echo $error."<br \>";	?>
+									</div>
+								<?php } ?>
+							</div>
+
 							<input type="hidden" id="fileId" name="fileId" value="<?php echo $orderDetails['file_id'];?>">
 							<input type="hidden" id="orderId" name="orderId" value="<?php echo $orderDetails['order_id'];?>">
 						</div>

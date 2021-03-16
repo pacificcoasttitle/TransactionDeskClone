@@ -191,7 +191,7 @@ $route['update-order-status'] = 'frontend/order/cron/updateOrderStatus';
 $route['create-order-safewire'] = 'frontend/order/dashboardMail/createOrderSafewire';
 $route['get-safewire-order-status'] = 'frontend/order/dashboardMail/getSafewireOrderStatus';
 $route['update-safewire-orders-status'] = 'frontend/order/cron/updateSafewireStatusForAllorders';
-
+$route['update-prelim-action/:num'] = 'frontend/order/dashboard/updatePrelimAction';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

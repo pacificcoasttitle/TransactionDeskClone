@@ -2245,7 +2245,7 @@ class DashboardMail extends MX_Controller {
         $result = json_decode($res,TRUE);
 
         if (isset($result['Actions']) && !empty($result['Actions'])) {
-            $array_keymap = $this->array_recursive_search_key_map(108, $result['Actions']);
+            $array_keymap = $this->order->array_recursive_search_key_map(108, $result['Actions']);
             if(!empty($array_keymap)) {
                 $actionData = array(
                     'StartTask' => array(
@@ -3412,20 +3412,5 @@ class DashboardMail extends MX_Controller {
         header('Content-type: application/json');
         echo json_encode($response, true);
         exit;
-    }
-
-    public function array_recursive_search_key_map($needle, $haystack) 
-    {
-        foreach($haystack as $first_level_key=>$value) {
-            if ($needle === $value) {
-                return array($first_level_key);
-            } elseif (is_array($value)) {
-                $callback = $this->array_recursive_search_key_map($needle, $value);
-                if ($callback) {
-                    return array_merge(array($first_level_key), $callback);
-                }
-            }
-        }
-        return false;
     }
 }
