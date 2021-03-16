@@ -1989,6 +1989,19 @@ class Dashboard extends MX_Controller {
 			$update = $this->reviewPrelimData->update($summaryData, $condition);
 		}
 
+		$data['error'] = array();
+		$data['success'] = array();
+
+		if ($this->session->userdata('errors')) {
+			$data['error'] = $this->session->userdata('error');
+			$this->session->unset_userdata('error');
+		}
+
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+
 		$data['linked_doc'] = $linked_doc;
 		$data['uploaded_docs'] = $uploaded_docs;
 		$data['prelimDocument'] = $prelimDocument;
@@ -3226,4 +3239,83 @@ class Dashboard extends MX_Controller {
             echo json_encode($response); exit;
     	}
     }
+
+	public function updatePrelimAction()
+	{
+		$fileId = $this->uri->segment(2);
+		$endPoint = 'files/'. $fileId.'/actions';
+        $user_data['admin_api'] = 1; 
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+        $res = $this->resware->make_request('GET', $endPoint, array(), $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API').$endPoint, array(), $res, 0, $logid);
+        $result = json_decode($res,TRUE);
+		$error = '';
+		$success = '';
+
+        if (isset($result['Actions']) && !empty($result['Actions'])) {
+            $array_keymap = $this->order->array_recursive_search_key_map(126, $result['Actions']);
+            if(!empty($array_keymap)) {
+                $actionData = array(
+                    'StartTask' => array(
+                        'CoordinatorTypeID'=> 19,
+                        'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
+                    ),
+                    'CompleteTask' => array(
+                        'CoordinatorTypeID' => 31,
+                        'DueDate' => '/Date('.(strtotime("+1 day", strtotime(date('Y-m-d H:i:s')))*1000).'-0000)/'
+                    ),
+                );
+                $endPoint = 'files/'. $fileId.'/actions/'.$result['Actions'][$array_keymap[0]]['FileActionID'];
+                $user_data['admin_api'] = 1; 
+                $actionData = json_encode($actionData);
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, array(), $fileId, 0);
+                $res = $this->resware->make_request('PUT', $endPoint,  $actionData, $user_data);
+                $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API').$endPoint,  $actionData, $res, $fileId, $logid);
+                $result = json_decode($res,TRUE);
+
+				if(!empty($result['FileActionID'])) {
+					$success = 'Prelim action updated successfully.';
+				} else {
+					$error = 'Something went wrong during update action prelim';
+				}
+
+            } else {
+                $actionData = array(
+                    'ActionType' => array(
+                        'ActionTypeID' => 126
+                    ),
+                    'Group' => array(
+                        'ActionGroupID' => 6
+                    ),    
+                    'StartTask' => array(
+                        'CoordinatorTypeID'=> 19,
+                        'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
+                    ),
+                    'CompleteTask' => array(
+                        'CoordinatorTypeID' => 31,
+                        'DueDate' => '/Date('.(strtotime("+1 day", strtotime(date('Y-m-d H:i:s')))*1000).'-0000)/'
+                    ),
+                );
+                $endPoint = 'files/'. $fileId.'/actions/';
+                $user_data['admin_api'] = 1; 
+                $actionData = json_encode($actionData);
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, array(), $fileId, 0);
+                $res = $this->resware->make_request('POST', $endPoint, $actionData, $user_data);
+                $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, $res, $fileId, $logid);
+                $result = json_decode($res,TRUE);
+
+				if(!empty($result['FileActionID'])) {
+					$success = 'Prelim action updated successfully.';
+				} else {
+					$error = 'Something went wrong during update action prelim';
+				}
+            }
+        }
+		$data = array(
+			"error" =>  $error,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'review-file/'.$fileId);
+	}
 }

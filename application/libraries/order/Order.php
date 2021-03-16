@@ -994,11 +994,11 @@ class Order
 		$documentData = array(
 			'document_name' => $document_name,
 			'original_document_name' => $document_name,
-			'document_type_id' => 1051,
+			'document_type_id' => 1037,
 			'document_size' => $fileSize,
 			'user_id' => 0,
 			'order_id' => $orderDetails['order_id'],
-			'description' => 'CPL Document',
+			'description' => 'Safewire Document',
 			'is_sync' => 1,
 			'is_prelim_document' => 0,
 			'is_cpl_doc' => 0,
@@ -1012,7 +1012,7 @@ class Order
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
 			'DocumentType' => array(
-				'DocumentTypeID' => 1051,
+				'DocumentTypeID' => 1037,
 			),
 			'Description' => 'Safewire Document',
 			'InternalOnly' => false,
@@ -1033,4 +1033,19 @@ class Order
         $data['api_document_id'] = $res->Document->DocumentID;
         $this->CI->db->update('pct_order_documents', $data, array('id' => $documentId));
 	}
+
+    public function array_recursive_search_key_map($needle, $haystack) 
+    {
+        foreach($haystack as $first_level_key=>$value) {
+            if ($needle === $value) {
+                return array($first_level_key);
+            } elseif (is_array($value)) {
+                $callback = $this->array_recursive_search_key_map($needle, $value);
+                if ($callback) {
+                    return array_merge(array($first_level_key), $callback);
+                }
+            }
+        }
+        return false;
+    }
 }
