@@ -3259,11 +3259,7 @@ class Dashboard extends MX_Controller {
                     'StartTask' => array(
                         'CoordinatorTypeID'=> 19,
                         'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
-                    ),
-                    'CompleteTask' => array(
-                        'CoordinatorTypeID' => 31,
-                        'DueDate' => '/Date('.(strtotime("+1 day", strtotime(date('Y-m-d H:i:s')))*1000).'-0000)/'
-                    ),
+                    )
                 );
                 $endPoint = 'files/'. $fileId.'/actions/'.$result['Actions'][$array_keymap[0]]['FileActionID'];
                 $user_data['admin_api'] = 1; 
@@ -3290,11 +3286,7 @@ class Dashboard extends MX_Controller {
                     'StartTask' => array(
                         'CoordinatorTypeID'=> 19,
                         'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
-                    ),
-                    'CompleteTask' => array(
-                        'CoordinatorTypeID' => 31,
-                        'DueDate' => '/Date('.(strtotime("+1 day", strtotime(date('Y-m-d H:i:s')))*1000).'-0000)/'
-                    ),
+                    )
                 );
                 $endPoint = 'files/'. $fileId.'/actions/';
                 $user_data['admin_api'] = 1; 
