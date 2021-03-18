@@ -942,7 +942,7 @@ a {
 <script type="text/javascript">
     $(document).ready(function(){
         
-        var safeWireFlag = true;
+        var safeWireFlag = false;
         $("#borrower-form").steps({
             bodyTag: "fieldset",
             headerTag: "h2",
