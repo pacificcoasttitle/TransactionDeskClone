@@ -1928,7 +1928,7 @@ class DashboardMail extends MX_Controller {
                 }
             }
 
-            if ($is_code_verified == 1 && $borrower_info_submitted == 1) {
+            if ($borrower_info_submitted == 1) {
                 $data['is_borrower_info_submitted'] = 1;
                 $propertyAddress = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
                 $data['mail_dashboard'] = 1;
@@ -1970,6 +1970,7 @@ class DashboardMail extends MX_Controller {
                     $data['success'] = $this->session->userdata('success');
                     $this->session->unset_userdata('success');
                 }
+                $this->home_model->update(array('is_code_verified' => 0), array('file_id' => $fileId), 'order_details');
                 $this->load->view('layout/head_dashboard', $data);
                 $this->load->view('order/borrower', $data); 
             } else {
@@ -2117,6 +2118,7 @@ class DashboardMail extends MX_Controller {
             'previously_married' => $this->input->post('previously_married'),
             'general_terms' => 1,
             'signature' => $this->input->post('signature'),
+            'is_buyer' => $this->input->post('buyer_seller') == 'buyer' ? 1 : 0,
             'spouse_signature' => $this->input->post('spouse_signature'),
             'created_at' => date('Y-m-d H:i:s')
         );
