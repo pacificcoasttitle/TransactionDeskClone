@@ -133,6 +133,21 @@ a {
                                         </span>  
                                     </label>
                                 </div>
+
+                                <div class="section colm colm4">
+                                    <div class="section">
+                                        <div class="option-group field">
+                                            <label class="option">
+                                                <input type="radio" name="buyer_seller" class="smartfm-ctrl" value="buyer"  data-show-id="buyer">
+                                                <span class="radio"></span> Buyer
+                                            </label>
+                                            <label class="option">
+                                                <input type="radio" name="buyer_seller" class="smartfm-ctrl" value="seller" data-show-id="seller">
+                                                <span class="radio"></span>  Seller              
+                                            </label>                                                               
+                                        </div>
+                                    </div>
+                                </div>
 								
                             </div>
 
@@ -1037,7 +1052,10 @@ a {
                 // },
                 /*dln:{
                     required: true
-                },*/	
+                },*/
+                 buyer_seller :{
+                     required: true
+                 },		
                 // status:{
                 //     required: true
                 // },	
@@ -1318,6 +1336,9 @@ a {
                 status:{
                     required: 'Please select one of option'
                 },	
+                buyer_seller:{
+                    required: 'Please select one of option'
+                },
                 spouse_firstname: {
                     required: "Please enter spouse first name"
                 },
