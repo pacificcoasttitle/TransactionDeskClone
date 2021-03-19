@@ -2007,7 +2007,11 @@ class DashboardMail extends MX_Controller {
                     $data['success'] = $this->session->userdata('success');
                     $this->session->unset_userdata('success');
                 }
-                $this->home_model->update(array('is_code_verified' => 0), array('file_id' => $fileId), 'order_details');
+                if ($sellerFlag) {
+                    $this->home_model->update(array('is_code_verified_for_seller' => 0), array('file_id' => $fileId), 'order_details');
+                } else {
+                    $this->home_model->update(array('is_code_verified' => 0), array('file_id' => $fileId), 'order_details');
+                }
                 $this->load->view('layout/head_dashboard', $data);
                 $this->load->view('order/borrower', $data); 
             } else {

@@ -181,6 +181,7 @@ $route['import-all-sales-rep-orders'] = 'frontend/order/cron/import_all_sales_re
 $route['get-sales-rep-orders-count'] = 'frontend/order/dashboard/get_sales_rep_orders_count';
 $route['export-users/:any'] = 'frontend/order/cron/exportUsers';
 $route['borrower-information/:any'] = 'frontend/order/dashboardMail/borrowerInformation';
+$route['borrower-information/:any/:any'] = 'frontend/order/dashboardMail/borrowerInformation';
 $route['generate-verification-code'] = 'frontend/order/dashboardMail/generate_verification_code';
 $route['code-verification'] = 'frontend/order/dashboardMail/code_verification';
 $route['borrower-details'] = 'frontend/order/dashboardMail/borrowerDetails';
