@@ -2362,7 +2362,11 @@ class DashboardMail extends MX_Controller {
                 }
                 else
                 {
-                    $this->home_model->update(array('is_code_verified' => 1), array('id' => $orderDetails['order_id']), 'order_details');
+                    if($is_seller) {
+                        $this->home_model->update(array('is_code_verified_for_seller' => 1), array('id' => $orderDetails['order_id']), 'order_details');
+                    } else {
+                        $this->home_model->update(array('is_code_verified' => 1), array('id' => $orderDetails['order_id']), 'order_details');
+                    }
                     $response = array('status'=>'success');
                 }                
             }
