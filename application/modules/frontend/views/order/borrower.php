@@ -45,6 +45,7 @@ a {
                     <form method="post" action="<?php echo base_url();?>borrower-info-submit" enctype="multipart/form-data" name="borrower-form" id="borrower-form">
                         <input type="hidden" id="order_id" name="order_id" value="<?php echo $order_id;?>">
                         <input type="hidden" id="file_id" name="file_id" value="<?php echo $file_id;?>">
+                        <input type="hidden" name="is_seller" id="is_seller" value="<?php echo $sellerFlag; ?>">
                         <h2>Personal <br>Information</h2>
                         <fieldset>  
                             <div class="spacer-b40">

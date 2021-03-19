@@ -1856,6 +1856,13 @@ class DashboardMail extends MX_Controller {
     public function borrowerInformation()
     {
         $random_number = $this->uri->segment(2);
+        if ($random_number == 'seller') {
+            $sellerFlag = 1;
+            $random_number = $this->uri->segment(3);
+        } else {
+            $sellerFlag = 0;
+        }
+
         $condition = array(
             'where' => array(
                 'random_number' => $random_number,
@@ -1866,10 +1873,18 @@ class DashboardMail extends MX_Controller {
         if(!empty($order)) {
             $orderNumber = isset($order[0]['file_number']) && !empty($order[0]['file_number']) ? $order[0]['file_number'] : '';
             $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
-            $borrower_info_submitted = $order[0]['borrower_info_submitted'];
-            $is_code_verified = $order[0]['is_code_verified'];
-            $orderDetails = $this->order->get_order_details($fileId, 1);
+            $data['sellerFlag'] = $sellerFlag;
+            if ($sellerFlag) {
+                $borrower_info_submitted = $order[0]['borrower_info_submitted_for_seller'];
+                $is_code_verified = $order[0]['is_code_verified_for_seller'];
+                $borrower_mobile_number = isset($orderDetails['borrower_mobile_number_for_seller']) && !empty($orderDetails['borrower_mobile_number_for_seller']) ? $orderDetails['borrower_mobile_number_for_seller'] : '';
+            } else {
+                $borrower_info_submitted = $order[0]['borrower_info_submitted'];
+                $is_code_verified = $order[0]['is_code_verified'];
+                $borrower_mobile_number = isset($orderDetails['borrower_mobile_number']) && !empty($orderDetails['borrower_mobile_number']) ? $orderDetails['borrower_mobile_number'] : '';
+            }
 
+            $orderDetails = $this->order->get_order_details($fileId, 1);
             if(!empty($orderDetails['escrow_officer_id'])) {
                 $escrowOfficerCon = array(
                     'where' => array(
@@ -1882,28 +1897,50 @@ class DashboardMail extends MX_Controller {
                 $data['escrow_officer'] = '';
             }
             
-            
-            $name = explode(" ", $escrowOfficerData[0]['partner_name']);
+        
             if ($orderDetails['sales_amount'] > 0) {
-                if (!empty($orderDetails['borrower'])) {
-                    $borrowerNameInfo = explode(" ", $orderDetails['borrower']);
-                    if(count($borrowerNameInfo) == 3) {
-                        $data['borrower_first_name'] = $borrowerNameInfo[0];
-                        $data['borrower_middle_name'] = $borrowerNameInfo[1];
-                        $data['borrower_last_name'] = $borrowerNameInfo[2];
-                    } else if(count($borrowerNameInfo) == 2) {
-                        $data['borrower_first_name'] = $borrowerNameInfo[0];
-                        $data['borrower_middle_name'] = '' ;
-                        $data['borrower_last_name'] = $borrowerNameInfo[1];
+                if ($sellerFlag) {
+                    if (!empty($orderDetails['primary_owner'])) {
+                        $borrowerNameInfo = explode(" ", $orderDetails['primary_owner']);
+                        if(count($borrowerNameInfo) == 3) {
+                            $data['borrower_first_name'] = $borrowerNameInfo[0];
+                            $data['borrower_middle_name'] = $borrowerNameInfo[1];
+                            $data['borrower_last_name'] = $borrowerNameInfo[2];
+                        } else if(count($borrowerNameInfo) == 2) {
+                            $data['borrower_first_name'] = $borrowerNameInfo[0];
+                            $data['borrower_middle_name'] = '' ;
+                            $data['borrower_last_name'] = $borrowerNameInfo[1];
+                        } else {
+                            $data['borrower_first_name'] = '' ;
+                            $data['borrower_middle_name'] = '' ;
+                            $data['borrower_last_name'] = '' ;
+                        }
                     } else {
                         $data['borrower_first_name'] = '' ;
                         $data['borrower_middle_name'] = '' ;
                         $data['borrower_last_name'] = '' ;
                     }
                 } else {
-                    $data['borrower_first_name'] = '' ;
-                    $data['borrower_middle_name'] = '' ;
-                    $data['borrower_last_name'] = '' ;
+                    if (!empty($orderDetails['borrower'])) {
+                        $borrowerNameInfo = explode(" ", $orderDetails['borrower']);
+                        if(count($borrowerNameInfo) == 3) {
+                            $data['borrower_first_name'] = $borrowerNameInfo[0];
+                            $data['borrower_middle_name'] = $borrowerNameInfo[1];
+                            $data['borrower_last_name'] = $borrowerNameInfo[2];
+                        } else if(count($borrowerNameInfo) == 2) {
+                            $data['borrower_first_name'] = $borrowerNameInfo[0];
+                            $data['borrower_middle_name'] = '' ;
+                            $data['borrower_last_name'] = $borrowerNameInfo[1];
+                        } else {
+                            $data['borrower_first_name'] = '' ;
+                            $data['borrower_middle_name'] = '' ;
+                            $data['borrower_last_name'] = '' ;
+                        }
+                    } else {
+                        $data['borrower_first_name'] = '' ;
+                        $data['borrower_middle_name'] = '' ;
+                        $data['borrower_last_name'] = '' ;
+                    }
                 }
             } else {
                 if (!empty($orderDetails['primary_owner'])) {
@@ -1945,8 +1982,8 @@ class DashboardMail extends MX_Controller {
                     $data['success'] = $this->session->userdata('success');
                     $this->session->unset_userdata('success');
                 }
-                $borrowerInfo = $this->order->getBorrowerInfo($order[0]['id']);
-                $borrowerResidenceInfo = $this->order->getBorrowerResidenceInfo($order[0]['id']);
+                $borrowerInfo = $this->order->get_borrower_info($order[0]['id'], $sellerFlag ? 0 : 1);
+                $borrowerResidenceInfo = $this->order->get_borrower_residence_info($order[0]['id'], $sellerFlag ? 0 : 1);
                 $data['borrower_name'] = $borrowerInfo['first_name']." ".$borrowerInfo['middle_name']." ".$borrowerInfo['last_name'];
                 $data['borrower_address'] = $borrowerResidenceInfo[0]['address'];
                 $this->load->view('layout/head_dashboard', $data);
@@ -1961,7 +1998,7 @@ class DashboardMail extends MX_Controller {
                 $data['errors'] = array();
                 $data['success'] = array();
                 
-                $data['borrower_mobile_number'] = isset($orderDetails['borrower_mobile_number']) && !empty($orderDetails['borrower_mobile_number']) ? $orderDetails['borrower_mobile_number'] : '';
+                $data['borrower_mobile_number'] =  $borrower_mobile_number;
                 if ($this->session->userdata('errors')) {
                     $data['errors'] = $this->session->userdata('errors');
                     $this->session->unset_userdata('errors');
@@ -1979,7 +2016,7 @@ class DashboardMail extends MX_Controller {
                 $data['propertyAddress'] = $propertyAddress;
                 $data['randomNumber'] = $random_number;
                 $data['fileId'] = $fileId;
-                $data['borrower_mobile_number'] = isset($orderDetails['borrower_mobile_number']) && !empty($orderDetails['borrower_mobile_number']) ? $orderDetails['borrower_mobile_number'] : '';
+                $data['borrower_mobile_number'] = $borrower_mobile_number;
                 $this->load->view('order/borrower_login', $data);
             }
         } else {
@@ -1990,17 +2027,15 @@ class DashboardMail extends MX_Controller {
     public function generate_verification_code()
     {
         $phoneNumber = $this->input->post('phone_number');
+        $is_seller = $this->input->post('is_seller');
 
-        if(isset($phoneNumber) && !empty($phoneNumber))
-        {
+        if(isset($phoneNumber) && !empty($phoneNumber)) {
             $randomNumber = $this->input->post('random_number');
-            // $code = $this->order->randomPassword();
             $code = rand(10000000,99999999);
             $sid = env('TWILIO_SID');
             $token = env('TWILIO_TOKEN');
             $from = env('TWILIO_FROM');
-
-            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>$to, 'from'=>$from), array(), 0, 0);
+            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>'', 'from'=>$from), array(), 0, 0);
 
             try {
                 $result = $this->twilio->message($phoneNumber, $code,'',array('from'=>$from));
@@ -2008,29 +2043,30 @@ class DashboardMail extends MX_Controller {
                 $response['msg_status'] = 'success';
                 $response['code'] = $code;
 
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 $response['sid'] = '';
                 $response['to'] = $phoneNumber;
                 $response['msg_status'] = 'error';
                 $response['errorCode'] = $e->getCode();
                 $response['errorMessage'] = $e->getMessage();
-                // $response = (object)$response;
             } catch (\Twilio\Exceptions\RestException $e) {
                 $response['sid'] = '';
                 $response['to'] = $phoneNumber;
                 $response['msg_status'] = 'error';
                 $response['errorCode'] = $e->getCode();
                 $response['errorMessage'] = $e->getMessage();
-                // $response = (object)$response;
             }
 
-            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>$to, 'from'=>$from), $response, 0, $logid);
+            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>'', 'from'=>$from), $response, 0, $logid);
 
-            if($response['msg_status'] == 'success')
-            {
-                $this->home_model->update(array('borrower_mobile_number' => $phoneNumber, 'verification_code' => $code,'is_code_verified' => 0,'code_created_at'=> date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
+            if($response['msg_status'] == 'success') {
 
+                if($is_seller) {
+                    $this->home_model->update(array('borrower_mobile_number_for_seller' => $phoneNumber, 'verification_code_for_seller' => $code,'is_code_verified_for_seller' => 0,'code_created_at_for_seller'=> date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
+                } else {
+                    $this->home_model->update(array('borrower_mobile_number' => $phoneNumber, 'verification_code' => $code,'is_code_verified' => 0,'code_created_at'=> date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
+                }
+            
                 $data = array(
                     'message' => $response['body'],
                     'sent_from' => $response['from'],
@@ -2042,20 +2078,13 @@ class DashboardMail extends MX_Controller {
                 );
 
                 $this->twilioMessage->insert($data);
-                // $result = $response;
                 $result = array('msg_status'=>'success', 'message'=> 'Code generated successfully.');
-            }
-            else
-            {
+            } else {
                 $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
             }
-            
-        }
-        else
-        {
+        } else {
             $result = array('msg_status'=>'error', 'error_message'=> 'Please enter phone number.');               
         }
-
         echo json_encode($result); exit;
     }
 
@@ -2118,7 +2147,7 @@ class DashboardMail extends MX_Controller {
             'previously_married' => $this->input->post('previously_married'),
             'general_terms' => 1,
             'signature' => $this->input->post('signature'),
-            'is_buyer' => $this->input->post('buyer_seller') == 'buyer' ? 1 : 0,
+            'is_buyer' => $this->input->post('is_seller') == 1 ? 0 : 1,
             'spouse_signature' => $this->input->post('spouse_signature'),
             'created_at' => date('Y-m-d H:i:s')
         );
@@ -2136,6 +2165,7 @@ class DashboardMail extends MX_Controller {
                 'from_date' => $residence_from_dates[$i],
                 'to_date' => $residence_to_dates[$i],
                 'order_id' => $this->input->post('order_id'),
+                'is_buyer' => $this->input->post('is_seller') == 1 ? 0 : 1,
                 'created_at' => date('Y-m-d H:i:s'),
             );
             $this->home_model->insert($borrowerResidenceData, 'pct_order_borrower_residence_info');
@@ -2159,6 +2189,7 @@ class DashboardMail extends MX_Controller {
                     'to_date' => $employment_to_dates[$j],
                     'order_id' => $this->input->post('order_id'),
                     'is_partner_info' => 0,
+                    'is_buyer' => $this->input->post('is_seller') == 1 ? 0 : 1,
                     'created_at' => date('Y-m-d H:i:s'),
                 );
                 $this->home_model->insert($borrowerEmploymentData, 'pct_order_borrower_employment_info');
@@ -2192,11 +2223,11 @@ class DashboardMail extends MX_Controller {
 
         /* Generate PDF */
         
-        $borrower_info = $this->order->get_borrower_info($this->input->post('order_id'));
+        $borrower_info = $this->order->get_borrower_info($this->input->post('order_id'), $this->input->post('is_seller') == 1 ? 0 : 1);
 
-        $borrower_residence_info = $this->order->get_borrower_residence_info($this->input->post('order_id'));
+        $borrower_residence_info = $this->order->get_borrower_residence_info($this->input->post('order_id'), $this->input->post('is_seller') == 1 ? 0 : 1);
 
-        $borrower_employment_info = $this->order->get_borrower_employment_info($this->input->post('order_id'));
+        $borrower_employment_info = $this->order->get_borrower_employment_info($this->input->post('order_id'), $this->input->post('is_seller') == 1 ? 0 : 1);
 
         $borrower_data['borrower_info'] = isset($borrower_info) && !empty($borrower_info) ? $borrower_info : array();
 
@@ -2218,8 +2249,6 @@ class DashboardMail extends MX_Controller {
 
         $this->m_pdf->pdf->WriteHTML($combinedCss, 1); // CSS Script goes here.
         $this->m_pdf->pdf->WriteHTML($html,2);
-        // $document_name = "borrower_".$proposedDocumentCount."_".$fileId.".pdf";
-        $document_name = "borrower_".$fileId.".pdf";
         $this->load->model('order/document');
         $borrowerDocumentCount = $this->document->countBorrowerDocument($orderDetails['order_id']);
         $document_name = "borrower_".$borrowerDocumentCount."_".$fileId.".pdf";

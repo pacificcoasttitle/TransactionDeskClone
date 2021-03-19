@@ -648,12 +648,26 @@ else
 <tbody>
 <tr>
 <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 16px; padding: 22px;">
-<a class="mcnButton " title="Statement of Information Form" href="<?php echo base_url().'/borrower-information/'.$randomString; ?>" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Statement of Information Form</a>
+<a class="mcnButton " title="Statement of Information Form" href="<?php echo base_url().'/borrower-information/'.$randomString; ?>" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Statement of Information Buyer Form</a>
 </td>
 </tr>
 </tbody>
 </table>
 </td>
+<?php if($productTypeID == 5) { ?>
+    <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
+        <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 0px;background-color: #D35411;">
+            <tbody>
+                <tr>
+                    <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 16px; padding: 22px;">
+                        <a class="mcnButton " title="Statement of Information Form" href="<?php echo base_url().'/borrower-information/seller/'.$randomString; ?>" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Statement of Information Seller Form</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </td>
+<?php } ?>
+
 </tr>
 </tbody>
 </table>

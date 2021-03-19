@@ -87,6 +87,7 @@
                             </div>
                             <input type="hidden" name="random_number" id="random_number" value="<?php echo $randomNumber; ?>">
                             <input type="hidden" name="fileId" id="fileId" value="<?php echo $fileId; ?>">
+                            <input type="hidden" name="is_seller" id="is_seller" value="<?php echo $sellerFlag; ?>">
                         </form>
                     </div>
                 </div>

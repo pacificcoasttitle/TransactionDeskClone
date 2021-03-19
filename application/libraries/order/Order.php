@@ -285,6 +285,7 @@ class Order
             order_details.verification_code,
             order_details.code_created_at,
             order_details.borrower_mobile_number,
+            order_details.borrower_mobile_number_for_seller,
             order_details.proposed_branch_id,
             order_details.escrow_officer_id,
             order_details.is_create_order_on_safewire,
@@ -795,12 +796,13 @@ class Order
     }
 
 
-    public function get_borrower_info($orderId)
+    public function get_borrower_info($orderId, $buyerFlag)
     {
         $this->CI->db->select('*')
             ->from('pct_order_borrower_info');
             
         $this->CI->db->where('order_id', $orderId);
+        $this->CI->db->where('is_buyer', $buyerFlag);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();
@@ -809,12 +811,13 @@ class Order
         }
     }
 
-    public function get_borrower_residence_info($orderId)
+    public function get_borrower_residence_info($orderId, $buyerFlag)
     {
         $this->CI->db->select('*')
             ->from('pct_order_borrower_residence_info');
             
         $this->CI->db->where('order_id', $orderId);
+        $this->CI->db->where('is_buyer', $buyerFlag);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();
@@ -823,12 +826,13 @@ class Order
         }
     }
 
-    public function get_borrower_employment_info($orderId)
+    public function get_borrower_employment_info($orderId, $buyerFlag)
     {
         $this->CI->db->select('*')
             ->from('pct_order_borrower_employment_info');
             
         $this->CI->db->where('order_id', $orderId);
+        $this->CI->db->where('is_buyer', $buyerFlag);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();
@@ -907,32 +911,6 @@ class Order
         $result = $query->row_array();
         return $result;
     }
-
-    public function getBorrowerInfo($orderId)
-    {
-        $this->CI->db->select('*')
-            ->from('pct_order_borrower_info'); 
-        $this->CI->db->where('order_id', $orderId);
-        $query = $this->CI->db->get();
-        if ($query->num_rows() > 0)  {
-            return $query->row_array();
-        } else {
-            return array();
-        }
-    }  
-
-    public function getBorrowerResidenceInfo($orderId)
-    {
-        $this->CI->db->select('*')
-            ->from('pct_order_borrower_residence_info'); 
-        $this->CI->db->where('order_id', $orderId);
-        $query = $this->CI->db->get();
-        if ($query->num_rows() > 0)  {
-            return $query->result_array();
-        } else {
-            return array();
-        }
-    }  
 
     public function syncSafewireDocuments($orderUrl, $wireUrl, $orderDetails)
     {
