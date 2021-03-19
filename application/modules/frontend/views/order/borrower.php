@@ -135,7 +135,7 @@ a {
                                     </label>
                                 </div>
 
-                                <div class="section colm colm4">
+                                <!-- <div class="section colm colm4">
                                     <div class="section">
                                         <div class="option-group field">
                                             <label class="option">
@@ -148,7 +148,7 @@ a {
                                             </label>                                                               
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
 								
                             </div>
 
