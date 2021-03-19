@@ -2104,7 +2104,6 @@ class DashboardMail extends MX_Controller {
         $order = $this->order->get_order($condition);
         $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
         $orderDetails = $this->order->get_order_details($fileId, 1);
-        $this->db->delete('pct_order_borrower_info', array('order_id' => $this->input->post('order_id')));
         $borrowerInfoData = array(
             'first_name' => $this->input->post('firstname'),
             'middle_name' => $this->input->post('middlename'),
@@ -2161,7 +2160,6 @@ class DashboardMail extends MX_Controller {
         $residence_from_dates = $this->input->post('residence_from_dates');
         $residence_to_dates = $this->input->post('residence_to_dates');
         $i = 0;
-        $this->db->delete('pct_order_borrower_residence_info', array('order_id' => $this->input->post('order_id')));
 
         foreach($residence_addresses as $residence_address) {
             $borrowerResidenceData = array(
@@ -2183,7 +2181,6 @@ class DashboardMail extends MX_Controller {
             $employment_from_dates = $this->input->post('employment_from_dates');
             $employment_to_dates = $this->input->post('employment_to_dates');
             $j = 0;
-            $this->db->delete('pct_order_borrower_employment_info', array('order_id' => $this->input->post('order_id')));
 
             foreach($business_names as $business_name) {
                 $borrowerEmploymentData = array(
@@ -2336,6 +2333,7 @@ class DashboardMail extends MX_Controller {
     public function code_verification()
     {
         $code = $this->input->post('code');
+        $is_seller = $this->input->post('is_seller');
 
         if(isset($code) && !empty($code))
         {
@@ -2343,9 +2341,13 @@ class DashboardMail extends MX_Controller {
 
             $orderDetails = $this->order->get_order_details($fileId, 1);
 
-            $verification_code = isset($orderDetails['verification_code']) && !empty($orderDetails['verification_code']) ? $orderDetails['verification_code'] : '';
-
-            $code_created_at = isset($orderDetails['code_created_at']) && !empty($orderDetails['code_created_at']) ? $orderDetails['code_created_at'] : '';
+            if($is_seller) {
+                $verification_code = isset($orderDetails['verification_code_for_seller']) && !empty($orderDetails['verification_code_for_seller']) ? $orderDetails['verification_code_for_seller'] : '';
+                $code_created_at = isset($orderDetails['code_created_at_for_seller']) && !empty($orderDetails['code_created_at_for_seller']) ? $orderDetails['code_created_at_for_seller'] : '';
+            } else {
+                $verification_code = isset($orderDetails['verification_code']) && !empty($orderDetails['verification_code']) ? $orderDetails['verification_code'] : '';
+                $code_created_at = isset($orderDetails['code_created_at']) && !empty($orderDetails['code_created_at']) ? $orderDetails['code_created_at'] : '';
+            }
 
             if($verification_code == $code)
             {

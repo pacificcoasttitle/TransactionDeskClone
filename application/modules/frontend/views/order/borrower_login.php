@@ -228,6 +228,7 @@
                         data: {
                             phone_number: $("#phone_number").val(),
                             random_number: $("#random_number").val(),
+                            is_seller: $("#is_seller").val(),
                         },
                         success: function(result)
                         {
@@ -271,6 +272,7 @@
                     data: {
                         code: $("#verification_code").val(),
                         fileId: $("#fileId").val(),
+                        is_seller: $("#is_seller").val(),
                     },
                     success: function(result)
                     {
