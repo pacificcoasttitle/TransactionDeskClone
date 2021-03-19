@@ -281,7 +281,12 @@
                         {
                             var base_url = "<?php echo base_url(); ?>";
                             var random_number = $("#random_number").val();
-                            window.location.replace(base_url+'borrower-information/'+random_number);
+                            if($("#is_seller").val() == 1) {
+                                window.location.replace(base_url+'borrower-information/seller/'+random_number);
+                            } else {
+                                window.location.replace(base_url+'borrower-information/'+random_number);
+                            }
+                            
                         }
                         else if(res.status == 'error')
                         {
