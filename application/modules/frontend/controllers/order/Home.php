@@ -965,13 +965,15 @@ class Home extends MX_Controller {
 									'orderNumber'=> $orderNumber,
 									'randomString'=> $randomString,
 									'headerImg'=> $sales_rep_img,
-									'currYear'=> CURRENT_YEAR
+									'currYear'=> CURRENT_YEAR,
+									'productTypeID' => $ProductTypeID 
 								);
 								
 								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
 								$message_body = $borrower_message_body; 
 								$subject = $orderNumber. ' - Borrower Verification';
 								$to = $escrow_email;
+								$to = 'hitesh.p@crestinfosystems.com';
 								$mailParams = array(
 									'from_mail'=>$from_mail, 
 									'from_name'=>$from_name, 
