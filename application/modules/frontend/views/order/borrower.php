@@ -531,7 +531,7 @@ a {
 							 <div class="frm-row">
 								<div class="section colm colm9">
 								 <p class="medium fine-grey">
-                                Do you currently or in the past own a business/corporation/llc/sole proprietorship</p>
+                                Are you currently employed or in the past own a business/corporation/llc/sole proprietorship</p>
 								</div>
 								<div class="section colm colm3">
 									<div class="option-group field">
@@ -872,7 +872,7 @@ a {
                             <div class="spacer-b40">
                                 <div class="section center">
                                     <p class="medium fine-grey">
-                                    Please click the button below to verify your financial information. This is inteneded to prevent any wire fraud on your transaction. If you have questions about wire fraud we have created a quick video the can help you understand what it us. <underline>Video Link</underline></p>
+                                    Please verify that the information below is correct. You will receive an email invitation from us in order to verify your banking information. This is inteneded to prevent any wire fraud on your transaction. If you have questions about wire fraud we have created a quick video the can help you understand what it us. <underline>Video Link</underline></p>
                                 </div>
                             </div>
                             
@@ -890,18 +890,65 @@ a {
                             <div class="section center">
                                 <div class="frm-row">
                                     <div class="section colm colm10">
-                                        <p class="medium fine-grey" id="borrower_name">Borrower Name: <?php echo $borrower_name;?></p>
-                                        <p class="medium fine-grey" id="borrower_address">Borrower Address: <?php echo $borrower_address;?></p>
-                                        <p class="medium fine-grey" id="escrow_partner">Escrow Partner: Pacific Coast Title Company - Escrow Officer</p>
-                                        <p class="medium fine-grey" id="escrow_officer">Escrow Officer: <?php echo $escrow_officer;?></p>
+                                        <p class="medium fine-grey" id="borrower_name"><strong>Borrower Name:</strong> <?php echo $borrower_name;?></p>
+                                        <p class="medium fine-grey" id="borrower_address"><strong>Borrower Address:</strong> <?php echo $borrower_address;?></p>
+                                        <p class="medium fine-grey" id="escrow_partner"><strong>Escrow Partner:</strong> Pacific Coast Title Company - Escrow Officer</p>
+                                        <p class="medium fine-grey" id="escrow_officer"><strong>Escrow Officer:</strong> <?php echo $escrow_officer;?></p>
                                     </div>
-                                    <div class="section colm colm2">
-                                        
-                                    </div>
+                                    <div class="section colm colm2"></div>
                                 </div>
                             </div>
                             <div class="spacer-b40 spacer-t40">
                                 <div class=""><span></span></div>
+                            </div>
+							<div class="section center">
+                                <div class="frm-row">
+                                    <div class="section colm colm12">
+                                        <p class="medium fine-grey">  
+										<h3>What is Wire Fraud?</h3>
+										<img src="http://dev.pacificcoasttitle.com/assets/media/content/bg/Email.jpg"/>
+										</p>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+							 <div class="spacer-b40 spacer-t40">
+                                <div class=""><span></span></div>
+                            </div>
+							
+							<div class="section">
+                                <div class="frm-row">
+                                    <div class="section colm colm5">
+                                        <p class="medium fine-grey">  
+										<h3>What is a wire?</h3>
+										<p>A wire, or wire transfer, is an electronic transfer of money across a network from one bank or credit union to another. With a wire, no physical money moves between bank locations, but people or entities are able to “wire” money to another person or entity as long as they have a bank account. Wires are typically used in most real estate transactions because funds are received more quickly (usually the same day), and there are no holds placed on the money once received.</p>
+										</p>
+                                        
+										<p class="medium fine-grey">
+										<h3>What is a wire?</h3>										
+										<p>Wire instructions are the directions you follow when sending money electronically to another person or entity. In the case of your home purchase, the funds are typically sent to your settlement agent. Wire instructions typically include:
+										
+										<ul>
+										<li>Bank Name and Address</li>
+										<li>Bank ABA Number</li>
+										<li>Bank Account Number</li>
+										<li>Account Holder’s Name</li>
+										<li>Reference Information (in real estate transactions, this is usually a file number)</li>
+										
+										</p>
+                                        
+                                    </div>
+                                    <div class="section colm colm5"> 
+
+									<p class="medium fine-grey">  
+										<h3>What is wire Fraud?</h3>
+										<p>Wire fraud typically involves a hacker gaining access to an email account and posing as a trusted party involved in your real estate transaction. This could be someone pretending to be your real estate agent, loan officer, title agent, or even an attorney. Once the hacker has access to a trusted email account, the hacker sends an email from that account or from a similar account that looks “almost” the same as one of the parties in the transaction – with information related to your transaction, including wire instructions for your closing funds. If you react to that email, your funds are sent to an account controlled by the hacker in some manner. Once receipt of the money is confirmed, the hacker immediately withdrawals your funds from that account using multiple transfers to accounts normally outside the United States. Once these transfers occur, the likelihood of recovery is small, if at all.</p>
+									
+									
+									
+									
+									</div>
+                                </div>
                             </div>
 
                         </fieldset>  
