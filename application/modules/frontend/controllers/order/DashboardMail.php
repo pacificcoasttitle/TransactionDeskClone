@@ -2102,6 +2102,7 @@ class DashboardMail extends MX_Controller {
             )
         );
         $order = $this->order->get_order($condition);
+        $is_seller = $this->input->post('is_seller');
         $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
         $orderDetails = $this->order->get_order_details($fileId, 1);
         $borrowerInfoData = array(
@@ -2220,7 +2221,12 @@ class DashboardMail extends MX_Controller {
             }*/
         }
 
-        $this->home_model->update(array('borrower_info_submitted' => 1), array('random_number' => $order[0]['random_number']), 'order_details');
+        if($is_seller == 1) {
+            $this->home_model->update(array('borrower_info_submitted_for_seller' => 1), array('random_number' => $order[0]['random_number']), 'order_details');
+        } else {
+            $this->home_model->update(array('borrower_info_submitted' => 1), array('random_number' => $order[0]['random_number']), 'order_details');
+        }
+       
 
         /* Generate PDF */
         
@@ -2327,7 +2333,11 @@ class DashboardMail extends MX_Controller {
             "success" => $success
         );
         $this->session->set_userdata($data);
-        redirect(base_url().'/borrower-information/'.$order[0]['random_number']);
+        if($is_seller == 1) {
+            redirect(base_url().'/borrower-information/seller/'.$order[0]['random_number']);
+        } else {
+            redirect(base_url().'/borrower-information/'.$order[0]['random_number']);
+        }
     }
     
     public function code_verification()
