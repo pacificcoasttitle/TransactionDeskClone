@@ -923,7 +923,7 @@ class Order
         curl_setopt($ch, CURLOPT_POSTFIELDS, array());                   
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Api-Key: jV0i1HY5.71I6FmoBg581iPMAIERe9Qnfmn0b8jLF',
+                'Api-Key: '.env('SAFEWIRE_API_KEY'),
                 'Content-Type: application/json',
             )
         );
@@ -942,7 +942,7 @@ class Order
         curl_setopt($ch, CURLOPT_POSTFIELDS, array());                   
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Api-Key: jV0i1HY5.71I6FmoBg581iPMAIERe9Qnfmn0b8jLF',
+                'Api-Key: '.env('SAFEWIRE_API_KEY'),
                 'Content-Type: application/json',
             )
         );
