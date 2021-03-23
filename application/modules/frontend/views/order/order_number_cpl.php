@@ -83,7 +83,7 @@
                                 </div>
                             </a>
                         </div>
-						<h2>PCT Smart Gen<!--  for CPL --></h2>
+						<h2>PCT Transaction Desk<!--  for CPL --></h2>
 						<p></p>
                         <p>Enter order number below and choose your option. <!-- to generate CPL -->.</p>
                         <div class="page-links">
