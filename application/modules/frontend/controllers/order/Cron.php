@@ -2265,7 +2265,7 @@ class Cron extends MX_Controller {
                 $result = json_decode($res,TRUE);
 
                 if(strtolower($result['Files'][0]['Status']['Name']) != $file['resware_status']) {
-                    $customer_id = $file['customer_id'];
+                    /*$customer_id = $file['customer_id'];
                     $file_number = $file['file_number'];
                     $condition = array(
                         'id' => $customer_id
@@ -2292,7 +2292,7 @@ class Cron extends MX_Controller {
                     $subject = 'Notification For Order Status - '.$result['Files'][0]['Status']['Name'];
                     $to = 'cs@pct.com';
                     $this->load->helper('sendemail');
-                    send_email($from_mail,$from_name, $to, $subject, $message);
+                    send_email($from_mail,$from_name, $to, $subject, $message);*/
                     $orderData = array(         
                         'resware_status'=> strtolower($result['Files'][0]['Status']['Name'])
                     );
@@ -2348,5 +2348,34 @@ class Cron extends MX_Controller {
             $response = array('success' => false, 'message' => 'No Order found for update status');
         }
         echo json_encode($response);exit;
+    }
+
+    public function sendMailEscrowUsers()
+    {
+        $this->db->select('*');
+        $this->db->from('order_details');
+        $this->db->where('MONTH(order_details.created_at)', date('m')); 
+        $this->db->where('YEAR(order_details.created_at)', date('Y')); 
+        $this->db->where('property_details.escrow_lender_id != ""');
+        $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
+        $query = $this->db->get();
+        $res   = $query->result_array();  
+
+        if(!empty($res)) {
+            $this->db->select('property_details.escrow_lender_id');
+            $this->db->from('order_details');
+            $this->db->where('MONTH(order_details.created_at)', date('m')); 
+            $this->db->where('YEAR(order_details.created_at)', date('Y')); 
+            $this->db->where('property_details.escrow_lender_id != ""');
+            $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
+            $this->db->group_by('property_details.escrow_lender_id');
+            $query = $this->db->get();
+            $result   = $query->result_array();
+            foreach($result as $resu)  {
+                $keys = array_keys(array_column($res, 'escrow_lender_id'), $resu['escrow_lender_id']);
+
+            }
+        }
+
     }
 }
