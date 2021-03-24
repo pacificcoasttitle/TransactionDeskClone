@@ -86,13 +86,13 @@
 
 .form-content {
     background-color: #03374f;
-	background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/tpbg.png);
+/*	background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/tpbg.png);
 	background-repeat: repeat-x;
 -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  background-repeat: repeat-y;
+  background-repeat: repeat-y; */
 }
 
 
