@@ -1,52 +1,49 @@
 <?php 
 
-if(!function_exists('send_email')){
-	function send_email($fromemail, $from_name, $to, $subject, $content,$myPdf=array(),$ccTo=null,$bcc=array()){
-		$instance = &get_instance();
-		$instance->load->library('email');
+if(!function_exists('send_email')) {
 
-		$config['protocol']     = 'smtp';
-        $config['smtp_host']    = 'smtp.sendgrid.net';
-        $config['smtp_port']    = '25';
-        $config['smtp_timeout'] = '120';
-        $config['smtp_user']    = 'pacificcoasttitlecompany';
-        $config['smtp_pass']    = 'Alpha637#';
-        $config['charset']      = 'utf-8';
-        $config['newline']      = "\r\n";
-        $config['mailtype']     = 'html'; // or html
-        $config['validation']   = TRUE; // bool whether to validate email or not  
-		$instance->email->initialize($config);
-		    
+	function send_email($fromemail, $from_name, $to, $subject, $content, $pdfs =array(), $ccTo=null, $bcc=array())
+    {
+        $email = new SendGrid\Mail\Mail();
+        $email->setFrom($fromemail, $from_name);
+        $email->setSubject($subject);
+        $email->addTo($to, "To User");
 
-        $instance->email->initialize($config);
-		
-		$instance->email->from($fromemail, $from_name);
-        $instance->email->to($to); 
-        if(!is_null($ccTo)){
-            $instance->email->cc($ccTo);
-        }
-        $instance->email->subject($subject);
-        $instance->email->message($content);  
-
-        if(isset($bcc) && !empty($bcc))
-        {
-            $instance->email->bcc($bcc);
+        if(isset($ccTo) && !empty($ccTo)) {
+            $email->addCc($ccTo);
         }
 
-
-        foreach($myPdf as $file){
-            $instance->email->attach($file);
+        if(isset($bcc) && !empty($bcc)) {
+            $email->addBcc($bcc);
         }
-
-        if($instance->email->send())
-        {
-         	return true;
-        }
-        else
-        {
-          	return false;
+         
+        $email->addContent(
+            "text/html", $content
+        );
+        if(!empty($pdfs)) {
+            foreach($pdfs as $pdf) {
+                $email->addAttachment(
+                    file_get_contents($pdf),
+                    "application/pdf",
+                    $pdf,
+                    "attachment"
+                );
+            }
         }
         
+        $sendgrid = new SendGrid(getenv('SENDGRID_API_KEY'));
+        try {
+            $response = $sendgrid->send($email);
+            if($response->statusCode() == 202 || $response->statusCode() == 200) {
+                return true;
+            } else {
+                return false;
+            }
+            
+        } catch (Exception $e) {
+           return false;
+        }
+        exit;  
 	}          
 }
 
