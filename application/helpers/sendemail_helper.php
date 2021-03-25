@@ -2,21 +2,30 @@
 
 if(!function_exists('send_email')) {
 
-	function send_email($fromemail, $from_name, $to, $subject, $content, $pdfs =array(), $ccTo=null, $bcc=array())
+	function send_email($fromemail, $from_name, $to, $subject, $content, $pdfs =array(), $ccs = array(), $bccs = array())
     {
+        
         $email = new SendGrid\Mail\Mail();
         $email->setFrom($fromemail, $from_name);
         $email->setSubject($subject);
         $email->addTo($to, "To User");
+        $ccEmails = array();
+        $bccEmails = array();
 
-        if(isset($ccTo) && !empty($ccTo)) {
-            $email->addCc($ccTo);
+        if(isset($ccs) && !empty($ccs)) {
+           foreach($ccs as $cc) {
+                $ccEmails[$cc] = 'CC User';
+           }
+           $email->addCcs($ccEmails);
         }
 
-        if(isset($bcc) && !empty($bcc)) {
-            $email->addBcc($bcc);
+        if(isset($bccs) && !empty($bccs)) {
+            foreach($bccs as $bcc) {
+                $bccEmails[$bcc] = 'CC User';
+            }
+            $email->addCcs($bccEmails);
         }
-         
+
         $email->addContent(
             "text/html", $content
         );
@@ -30,14 +39,14 @@ if(!function_exists('send_email')) {
                 );
             }
         }
-        
+    
         $sendgrid = new SendGrid(getenv('SENDGRID_API_KEY'));
         try {
             $response = $sendgrid->send($email);
             if($response->statusCode() == 202 || $response->statusCode() == 200) {
                 return true;
             } else {
-                return false;
+                return "failuer";
             }
             
         } catch (Exception $e) {
