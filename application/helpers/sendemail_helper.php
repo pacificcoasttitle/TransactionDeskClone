@@ -31,10 +31,11 @@ if(!function_exists('send_email')) {
         );
         if(!empty($pdfs)) {
             foreach($pdfs as $pdf) {
+                $documentName = pathinfo($pdf);
                 $email->addAttachment(
                     file_get_contents($pdf),
                     "application/pdf",
-                    $pdf,
+                    $documentName['basename'],
                     "attachment"
                 );
             }
