@@ -898,7 +898,6 @@ class Home extends MX_Controller {
 								$to = $OpenEmail;
 								$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
 							}
-							$to = 'hitesh.p@crestinfosystems.com';
 							$file = array();
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
