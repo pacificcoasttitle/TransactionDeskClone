@@ -23,7 +23,7 @@ if(!function_exists('send_email')) {
             foreach($bccs as $bcc) {
                 $bccEmails[$bcc] = 'CC User';
             }
-            $email->addCcs($bccEmails);
+            $email->addBccs($bccEmails);
         }
 
         $email->addContent(
