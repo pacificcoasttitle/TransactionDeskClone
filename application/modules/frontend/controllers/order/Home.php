@@ -939,7 +939,7 @@ class Home extends MX_Controller {
 							);
 							$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array(), $orderId, 0);
 
-							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array('hitesh.p@crestinfosystem.com'));
 
 							$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
 
