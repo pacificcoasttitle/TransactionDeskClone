@@ -3322,7 +3322,7 @@ class Dashboard extends MX_Controller {
 		$cc = array();
 		
 		$cc = array('hit9391@gmail.com');
-		$bcc = array('hitesh_9391@yahoo.com');
+		$bcc = array();
 			
 		
 		$file = array(base_url().'uploads/documents/fnf_155300.pdf');
