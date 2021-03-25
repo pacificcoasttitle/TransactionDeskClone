@@ -47,7 +47,7 @@ if(!function_exists('send_email')) {
             if($response->statusCode() == 202 || $response->statusCode() == 200) {
                 return true;
             } else {
-                return "failuer";
+                return false;
             }
             
         } catch (Exception $e) {
