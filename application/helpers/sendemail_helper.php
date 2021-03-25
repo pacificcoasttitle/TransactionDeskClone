@@ -14,14 +14,14 @@ if(!function_exists('send_email')) {
 
         if(isset($ccs) && !empty($ccs)) {
            foreach($ccs as $cc) {
-                $ccEmails[$cc] = 'CC User';
+                $ccEmails[$cc] = 'Cc User';
            }
            $email->addCcs($ccEmails);
         }
 
         if(isset($bccs) && !empty($bccs)) {
             foreach($bccs as $bcc) {
-                $bccEmails[$bcc] = 'CC User';
+                $bccEmails[$bcc] = 'Bcc User';
             }
             $email->addBccs($bccEmails);
         }
