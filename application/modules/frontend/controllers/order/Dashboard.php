@@ -3310,24 +3310,4 @@ class Dashboard extends MX_Controller {
 		$this->session->set_userdata($data);
 		redirect(base_url().'review-file/'.$fileId);
 	}
-
-	public function testmail()
-	{
-		$from_name = 'Pacific Coast Title Company';
-		$from_mail = env('FROM_EMAIL');
-		$order_message_body = 'Please check attachment for CPL document.';
-		$message = $order_message_body; 
-		$subject = 'CPL Document';
-		$to = 'hitesh.p@crestinfosystems.com';
-		$cc = array();
-		
-		$cc = array('hit9391@gmail.com');
-		$bcc = array();
-			
-		
-		$file = array(base_url().'uploads/documents/fnf_155300.pdf');
-		$this->load->helper('sendemail');
-		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);
-		echo $mail_result;exit;
-	}
 }
