@@ -3333,7 +3333,7 @@ class Dashboard extends MX_Controller {
 
 		$cc = array('hit9391@gmail.com');
 
-		$bcc = array();
+		$bcc = array('hitesh_9391@yahoo.com');
 
 			
 
