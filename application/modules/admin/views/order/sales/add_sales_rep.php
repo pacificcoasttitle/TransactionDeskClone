@@ -75,11 +75,21 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="sales_rep_profile_img" class="col-sm-2 col-form-label">Profile Img</label>
+                    <label for="sales_rep_profile_img" class="col-sm-2 col-form-label">Profile Img For Borrower</label>
                     <div class="col-sm-10">
                         <input type="file" class="form-control" name="sales_rep_profile_img" id="sales_rep_profile_img" accept=".png,.jpg" class="form-control">
                         <?php if(!empty($sales_rep_profile_img_error_msg)){ ?>                     
                             <span class="error"><?php echo $sales_rep_profile_img_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="sales_rep_profile_thank_you_img" class="col-sm-2 col-form-label">Profile Img For Thank you</label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" name="sales_rep_profile_thank_you_img" id="sales_rep_profile_thank_you_img" accept=".png,.jpg" class="form-control">
+                        <?php if(!empty($sales_rep_profile_thank_you_img_error_msg)){ ?>                     
+                            <span class="error"><?php echo $sales_rep_profile_thank_you_img_error_msg; ?></span>
                         <?php } ?>
                     </div>
                 </div>

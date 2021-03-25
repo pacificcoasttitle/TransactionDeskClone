@@ -99,7 +99,6 @@ class Sales extends MX_Controller {
                     $config['max_size']  = '2048';
                     
                     $new_name = 'sales_rep_'.time().rand(10,100000);
-
                     $config['file_name'] = $new_name;         
                     $this->load->library('upload', $config);
 
@@ -114,8 +113,20 @@ class Sales extends MX_Controller {
                         $status = "success";
                         $msg = "File successfully uploaded";
                         $fileuri=  $config['upload_path'].$data['file_name'];
-                        
-                        // $salesRepData['sales_rep_profile_img'] = $fileuri;
+                    }
+
+                    $sales_rep_profile_thank_you_img_name = 'sales_rep_thank_you'.time().rand(10,100000);
+                    $config['file_name'] = $sales_rep_profile_thank_you_img_name;         
+                    $this->load->library('upload', $config);
+
+                    if (!$this->upload->do_upload('sales_rep_profile_thank_you_img')) {
+                        $status = 'error';
+                        $msg = $this->upload->display_errors();
+                    } else {
+                        $data = $this->upload->data();
+                        $status = "success";
+                        $msg = "File successfully uploaded";
+                        $fileUrlThankYou =  $config['upload_path'].$data['file_name'];
                     }
                 }
 
