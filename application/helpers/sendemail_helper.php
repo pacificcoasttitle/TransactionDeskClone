@@ -1,6 +1,58 @@
 <?php 
 
-if(!function_exists('send_email')) {
+if(!function_exists('send_email')){
+	function send_email($fromemail, $from_name, $to, $subject, $content,$myPdf=array(),$ccTo=null,$bcc=array()){
+		$instance = &get_instance();
+		$instance->load->library('email');
+
+		$config['protocol']     = 'smtp';
+        $config['smtp_host']    = 'smtp.sendgrid.net';
+        $config['smtp_port']    = '587';
+        $config['smtp_timeout'] = '120';
+        $config['smtp_user']    = 'apikey';
+        $config['smtp_pass']    =  getenv('SENDGRID_API_KEY');
+        $config['charset']      = 'utf-8';
+        $config['newline']      = "\r\n";
+        $config['mailtype']     = 'html'; 
+        $config['validation']   = TRUE; 
+		$instance->email->initialize($config);
+		    
+
+        $instance->email->initialize($config);
+		
+		$instance->email->from($fromemail, $from_name);
+        $instance->email->to($to); 
+        if(!is_null($ccTo)){
+            $instance->email->cc($ccTo);
+        }
+        $instance->email->subject($subject);
+        $instance->email->message($content);  
+
+        if(isset($bcc) && !empty($bcc))
+        {
+            $instance->email->bcc($bcc);
+        }
+
+
+        foreach($myPdf as $file){
+            $instance->email->attach($file);
+        }
+       
+        if($instance->email->send())
+        {
+         	return true;
+        }
+        else
+        {
+          	return false;
+        }
+        
+	}          
+}
+
+
+
+/*if(!function_exists('send_email')) {
 
 	function send_email($fromemail, $from_name, $to, $subject, $content, $pdfs =array(), $ccs = array(), $bccs = array())
     {
@@ -57,4 +109,4 @@ if(!function_exists('send_email')) {
 	}          
 }
 
-?>
+?>*/
