@@ -2225,8 +2225,9 @@ class Cron extends MX_Controller {
                         $from_mail = env('FROM_EMAIL');
                         $subject = 'Notification For On Hold Order';
                         $to = 'cs@pct.com';
+                        $cc = array('ghernandez@pct.com');
                         $this->load->helper('sendemail');
-                        $mail_result = send_email($from_mail,$from_name, $to, $subject, $message);
+                        $mail_result = send_email($from_mail,$from_name, $to, $subject, $message, $cc);
                     }
                 }
             }
