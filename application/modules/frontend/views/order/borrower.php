@@ -19,6 +19,9 @@ a {
 }
 </style>
 
+<link rel="stylesheet" type="text/css" href="assets/js/lightbox/themes/evolution-dark/jquery.lightbox.css" />
+
+
 <body>
     <?php
         $this->load->view('layout/header_dashboard');
@@ -904,7 +907,7 @@ a {
                                     <div class="section colm colm12">
                                         <p class="medium fine-grey">  
 										<h3>What is Wire Fraud?</h3>
-										<img src="http://dev.pacificcoasttitle.com/assets/media/content/bg/Email.jpg"/>
+										<a class="lightbox" href="https://youtu.be/_1cVVoJG5x8" <img src="http://dev.pacificcoasttitle.com/assets/media/content/bg/Email.jpg"/></a>
 										</p>
                                     </div>
                                     
@@ -982,6 +985,20 @@ a {
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.maskedinput.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-cloneya.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/plugins/rendro-easy-pie-chart/waypoints.min.js"></script>
+
+	
+	<!-- ligthbox-->
+    <script type="text/javascript" src="http://www.pct.com/assets/js/lightbox/jquery.lightbox.min.js"></script>
+	
+	
+	<script type="text/javascript">
+  jQuery(document).ready(function($){
+    $('.lightbox').lightbox();
+  });
+</script>
+
+<!-- Facebook Pixel Code -->
+<script>
 
 
 
