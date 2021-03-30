@@ -907,7 +907,7 @@ a {
                                     <div class="section colm colm12">
                                         <p class="medium fine-grey">  
 										<h3>What is Wire Fraud?</h3>
-										<a class="lightbox" href="https://youtu.be/_1cVVoJG5x8" <img src="http://dev.pacificcoasttitle.com/assets/media/content/bg/Email.jpg"/></a>
+										<a class="lightbox" href="https://youtu.be/_1cVVoJG5x8"/> <img src="http://dev.pacificcoasttitle.com/assets/media/content/bg/Email.jpg"/></a>
 										</p>
                                     </div>
                                     
