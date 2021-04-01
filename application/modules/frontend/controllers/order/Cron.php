@@ -2201,8 +2201,9 @@ class Cron extends MX_Controller {
                     if ($on_hold_mail_sent == 0) {
                         $file_ids[] = $filesResult[$key]['file_id'];
                         $filesResult[$key]['file_number'];
-                        $customer_id = $filesResult[$key]['customer_id'];
+                        
                         $file_number = $filesResult[$key]['file_number'];
+                        /*$customer_id = $filesResult[$key]['customer_id'];
                         $condition = array(
                             'id' => $customer_id
                         );
@@ -2215,19 +2216,18 @@ class Cron extends MX_Controller {
                         $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
                         $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
                         $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
-        
                         $property = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
-                    
+                        $message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p><p>File Number: '.$file_number.'</p>';*/
         
-                        $message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p><p>File Number: '.$file_number.'</p>';
-                        
+                        $data['file_number'] = $file_number;
+                        $message = $this->load->view('emails/onhold.php',$data,TRUE);
                         $from_name = 'Pacific Coast Title Company';
                         $from_mail = env('FROM_EMAIL');
                         $subject = 'Notification For On Hold Order';
                         $to = 'cs@pct.com';
                         $cc = array('ghernandez@pct.com');
                         $this->load->helper('sendemail');
-                        $mail_result = send_email($from_mail,$from_name, $to, $subject, $message, $cc);
+                        send_email($from_mail,$from_name, $to, $subject, $message, $cc);
                     }
                 }
             }
