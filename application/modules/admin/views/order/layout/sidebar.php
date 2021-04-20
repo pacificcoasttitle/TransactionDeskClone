@@ -29,6 +29,7 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/companies' || $this->uri->uri_string() == 'order/admin/add-company') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/companies'; ?>">Companies</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/incorrect-users') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/incorrect-users'; ?>">Incorrect Users</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/cpl-proposed-users' || $this->uri->segment(3) == 'edit-cpl-proposed-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/cpl-proposed-users'; ?>">CPL/Proposed Users</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/escrow-officers' || $this->uri->segment(3) == 'edit-escrow-officer' || $this->uri->segment(3) == 'add-escrow-officer') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/escrow-officers'; ?>">Escrow Officers</a>
         </div>
 	</li>
 	

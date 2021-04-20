@@ -1397,4 +1397,106 @@ class Home_model extends CI_Model
         );
     }
 
+    public function get_escrow_officers($params)
+    {
+        $this->db->where('status', 1);
+        $this->db->from('pct_order_partner_company_info');
+        $this->db->like('partner_type_id', '10010');
+        $total_records =  $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $escrow_officer_lists =array();
+        
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like("partner_name", $keyword)
+                    ->or_like('email',$keyword)
+                    ->group_end();
+            }
+            $this->db->like('partner_type_id', '10010');
+            $this->db->where('status', 1);
+
+            $this->db->from('pct_order_partner_company_info');
+            $filter_total_records =  $this->db->count_all_results();
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like("partner_name", $keyword)
+                    ->or_like('email',$keyword)
+                    ->group_end();
+            }
+            $this->db->like('partner_type_id', '10010');
+            $this->db->where('status', 1);
+
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }           
+            $query = $this->db->get('pct_order_partner_company_info');
+            if ($query->num_rows() > 0) {
+                $escrow_officer_lists = $query->result_array();
+            }
+        } else {            
+            $this->db->where('status', 1);
+            $this->db->like('partner_type_id', '10010');
+            $this->db->from('pct_order_partner_company_info');
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->like('partner_type_id', '10010');
+            $this->db->where('status', 1);
+            
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('pct_order_partner_company_info');
+            
+            if ($query->num_rows() > 0) {
+                $escrow_officer_lists = $query->result_array();
+            } 
+        }
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $escrow_officer_lists
+        );
+    }
+
+    public function get_escrow_officer($params = array())
+    {
+        $this->db->select('*');
+        $this->db->from('pct_order_partner_company_info');
+        
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
+        }
+        
+        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+            $result = $this->db->count_all_results();
+        }else{
+            if(array_key_exists("id", $params)){
+                $this->db->where('id', $params['id']);
+                $query = $this->db->get();
+                $result = $query->row_array();
+            }else{
+                $this->db->order_by('id', 'asc');
+                if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                    $this->db->limit($params['limit'],$params['start']);
+                }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                    $this->db->limit($params['limit']);
+                }
+                
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+            }
+        }
+        
+        // Return fetched data
+        return $result;
+    }
 }

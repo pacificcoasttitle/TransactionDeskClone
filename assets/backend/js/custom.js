@@ -2,6 +2,7 @@ var customer_list ='';
 var agent_list ='';
 var credentials_customer_list = '';
 var incorrect_customer_list = '';
+var escrow_officers_list = '';
 var fees_list = '';
 var fees_type_list = '';
 var code_book_list = '';
@@ -2974,6 +2975,82 @@ $(document).ready(function () {
         }); 
     }
 
+    if ($('#tbl-escrow-officers-listing').length) 
+    {
+        escrow_officers_list = $('#tbl-escrow-officers-listing').DataTable({
+           /*"pageLength": 2,*/
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1,2] }
+            ],
+            "language": {
+                // searchPlaceholder: "Customer Number",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_customer').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if(export_type)
+                    {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: '<"FilterCredentialListing">lfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Customers',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6 || column === 7 || column === 8 || column === 9) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/home/get_escrow_officers_list", // json datasource
+                type: "post",
+                /*data   : function( d ) {
+                    d.credentials_check = $('#FilterCredentialListing').val();
+                }, */// method  , by default get
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-escrow-officers-listing-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-escrow-officers-listing-listing_processing").css("display", "none");
+
+                }
+            },            
+        }); 
+    }
+
 });
 
 function updateCounty(counties,ruleId)
@@ -3873,6 +3950,61 @@ function removeSalesRepProfileImg(id)
 
                 setTimeout(function () {
                     $('.alert-danger').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}
+
+function deleteEscrowOfficer(id)
+{
+    if (id=='') {
+        alert('Escrow Officer ID is required.');
+        return false;
+    }
+
+    var ready = confirm("Are you sure want to delete?");
+
+    if (ready) {
+        $.ajax({
+            url: base_url+"admin/order/home/delete_escrow_officer",
+            method: "POST",
+            data : {id:id},
+            success: function(data){
+
+                var result = jQuery.parseJSON(data);
+                
+                if (result.status == 'success') {
+                    $('#escrow_officer_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#escrow_officer_success_msg").offset().top
+                    }, 1000);
+
+                    escrow_officers_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#escrow_officer_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#escrow_officer_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#escrow_officer_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#escrow_officer_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#escrow_officer_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#agent_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#escrow_officer_error_msg').html('').hide();
                 }, 4000);
             }
         })
