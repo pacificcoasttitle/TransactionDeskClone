@@ -2590,4 +2590,225 @@ class Home extends MX_Controller {
 		$this->session->set_userdata($data);
         redirect(base_url().'order/admin/companies');
     }
+
+    public function escrow_officers()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Escrow Officers';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/escrow_officers', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_escrow_officers_list()
+    {
+        $params = array();
+        
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['where']['status'] = 1;
+
+            $pageno = ($params['start'] / $params['length'])+1;
+
+            $escrow_officer_lists = $this->home_model->get_escrow_officers($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $escrow_officer_lists = $this->home_model->get_escrow_officers($params);            
+        }
+        
+        $data = array(); 
+        
+        if(isset($escrow_officer_lists['data']) && !empty($escrow_officer_lists['data']))
+        {
+            foreach ($escrow_officer_lists['data'] as $key => $value) 
+            {
+                $nestedData=array();
+                
+                $nestedData[] = $value['partner_id'];
+                $nestedData[] = $value['partner_type_id'];
+                $nestedData[] = $value['partner_name'];  
+                $nestedData[] = $value['email'];
+               
+                $action = "";
+                $editUrl = base_url().'order/admin/edit-escrow-officer/'.$value['id'];
+                $action = "<a href='".$editUrl."' class='btn btn-action edit-agent'title ='Edit Escrow Officer Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+
+                $action .= "<a href='javascript:void(0);' onclick='deleteEscrowOfficer(".$value['id'].")' class='btn btn-action'  title='Delete Escrow Officer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                $nestedData[] = $action;       
+                          
+                $data[] = $nestedData;            
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal'] = intval( $escrow_officer_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $escrow_officer_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function add_escrow_officer()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Add Escrow Officer';
+        $escrowData = array();
+        if ($this->input->post()) 
+        {
+           // echo "<pre>"; print_r($this->input->post()); exit;
+            $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
+            $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
+            $this->form_validation->set_rules('partner_name', 'Partner Name', 'required', array('required'=> 'Please Enter Partner Name'));
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+            $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));            
+            $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+            $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+            $this->form_validation->set_rules('zip', 'Zip', 'required', array('required'=> 'Please Enter Zip'));
+            $partner_type_ids = array();
+            if ($this->form_validation->run() == true) 
+            {
+                $partner_type_ids[] = 1;
+                $partner_type_ids[] = $_POST['partner_type_id'];
+                $escrowData = array(
+                    'partner_id' => $_POST['partner_id'],
+                    'partner_type_id' =>  implode(',', $partner_type_ids),
+                    'partner_name' => $_POST['partner_name'],
+                    'email' => $_POST['email_address'],
+                    'address1' => $_POST['address'],               
+                    'city' =>  $_POST['city'],
+                    'state' => $_POST['state'],
+                    'zip' => $_POST['zip'],
+                    'status' => 1
+                );
+
+                $insert = $this->home_model->insert($escrowData,'pct_order_partner_company_info');
+                    
+                if ($insert) {
+                    $data['success_msg'] = 'Escrow Officer added successfully.';
+                } else {
+                    $data['error_msg'] = 'Escrow Officer not added.';
+                }              
+                
+            } else {
+                $data['partner_id_error_msg'] = form_error('partner_id');
+                $data['partner_type_id_error_msg'] = form_error('partner_type_id');
+                $data['partner_name_error_msg'] = form_error('partner_name');
+                $data['email_error_msg'] = form_error('email_address');
+                $data['address_error_msg'] = form_error('address');
+                $data['city_error_msg'] = form_error('city');
+                $data['state_error_msg'] = form_error('state');
+                $data['zip_error_msg'] = form_error('zip');
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/add_escrow_officer', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function delete_escrow_officer()
+    {
+        $this->is_admin();
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+
+        if($id)
+        {
+            $escrowData = array('status' => 0);
+
+            $condition = array('id' => $id);
+
+            $update = $this->home_model->update($escrowData, $condition,'pct_order_partner_company_info');
+
+            if($update)
+            {
+                $successMsg = 'Escrow Officer deleted successfully.';
+                $response = array('status'=>'success', 'message'=>$successMsg);
+            }
+        }
+        else
+        {
+            $msg = 'Escrow Officer ID is required.';
+            $response = array('status' => 'error','message'=>$msg);
+        }
+
+        echo json_encode($response);
+    }
+
+    public function edit_escrow_officer()
+    {
+        $this->is_admin();
+        $data = array();
+        $id = $this->uri->segment(4);
+        $data['title'] = 'PCT Order: Add Escrow Officer';
+        $escrowData = array();
+
+        if(isset($id) && !empty($id))
+        {
+            if ($this->input->post()) 
+            {
+                $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
+                $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'required', array('required'=> 'Please Enter Partner Type Id'));
+                $this->form_validation->set_rules('partner_name', 'Partner Name', 'required', array('required'=> 'Please Enter Partner Name'));
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+                $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));            
+                $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+                $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+                $this->form_validation->set_rules('zip', 'Zip', 'required', array('required'=> 'Please Enter Zip'));
+                
+                if ($this->form_validation->run() == true) 
+                {
+                    $escrowData = array(
+                        'partner_id' => $_POST['partner_id'],
+                        'partner_type_id' =>  $_POST['partner_type_id'],
+                        'partner_name' => $_POST['partner_name'],
+                        'email' => $_POST['email_address'],
+                        'address1' => $_POST['address'],               
+                        'city' =>  $_POST['city'],
+                        'state' => $_POST['state'],
+                        'zip' => $_POST['zip'],
+                        'status' => 1
+                    );
+
+                    $condition = array('id' => $id);
+                    $update = $this->home_model->update($escrowData,$condition,'pct_order_partner_company_info');
+                        
+                    if ($update) {
+                        $data['success_msg'] = 'Escrow Officer updated successfully.';
+                    } else {
+                        $data['error_msg'] = 'Error occurred while updating Escrow Officer.';
+                    }              
+                    
+                } else {
+                    $data['partner_id_error_msg'] = form_error('partner_id');
+                    $data['partner_name_error_msg'] = form_error('partner_name');
+                    $data['email_error_msg'] = form_error('email_address');
+                    $data['address_error_msg'] = form_error('address');
+                    $data['city_error_msg'] = form_error('city');
+                    $data['state_error_msg'] = form_error('state');
+                    $data['zip_error_msg'] = form_error('zip');
+                }                                       
+            }
+            $con = array('id' => $id);
+            $data['escrow_info'] = $this->home_model->get_escrow_officer($con);
+        }
+        else
+        {
+            redirect(base_url().'escrow-officers');
+        }
+        
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/edit_escrow_officer', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
 }

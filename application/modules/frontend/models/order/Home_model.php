@@ -386,6 +386,7 @@ class Home_model extends CI_Model
         $this->db->select('*');
         $this->db->from('pct_order_partner_company_info');
         $this->db->like('partner_type_id', '10010');
+        $this->db->where('status', 1);
         $query = $this->db->get();    
         if($query->num_rows() > 0) {
             return $query->result_array();

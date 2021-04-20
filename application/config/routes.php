@@ -270,7 +270,9 @@ $route['store-deliverables'] = 'admin/order/home/storeDeliverables';
 
 
 $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';
-
+$route['order/admin/escrow-officers'] = 'admin/order/home/escrow_officers';
+$route['order/admin/add-escrow-officer'] = 'admin/order/home/add_escrow_officer';
+$route['order/admin/edit-escrow-officer/:num'] = 'admin/order/home/edit_escrow_officer';
 
 /* Route for PCT-Order backend*/
 $route['calculator'] = 'frontend/calc/welcome/index';  
