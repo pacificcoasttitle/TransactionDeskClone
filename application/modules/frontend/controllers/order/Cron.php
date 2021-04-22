@@ -2375,7 +2375,6 @@ class Cron extends MX_Controller {
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
         $query = $this->db->get();
         $result   = $query->result_array();  
-        print_r($result);
 
         if(!empty($result)) {
             $checkFlag = 0;
