@@ -2390,7 +2390,7 @@ class Cron extends MX_Controller {
                 }
                 if ($res['sales_representative'] == $sales_rep_user_id && $res['escrow_lender_id'] == $escrow_user_id) {
                     $data['order_info'][$i]['address'] = $res['full_address'];
-                    $data['order_info'][$i]['resware_status'] = $res['resware_status'];
+                    $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     if(!empty($res['sales_rep_profile_thank_you_img'])) {
                         $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
                     }
@@ -2400,7 +2400,7 @@ class Cron extends MX_Controller {
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'Notification For Thank you';
-                    $to = 'hitesh.p@crestinfosystems.com';
+                    $to = 'ghernandez@pct.com';
                     $cc = array();
                     $this->load->helper('sendemail');
                     send_email($from_mail,$from_name, $to, $subject, $message, $cc);
@@ -2409,7 +2409,7 @@ class Cron extends MX_Controller {
                     $escrow_user_id = $res['escrow_lender_id'];
                     $escrow_email_address = $res['email_address'];
                     $data['order_info'][$i]['address'] = $res['full_address'];
-                    $data['order_info'][$i]['resware_status'] = $res['resware_status'];
+                    $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     if(!empty($res['sales_rep_profile_thank_you_img'])) {
                         $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
                     }
@@ -2421,7 +2421,7 @@ class Cron extends MX_Controller {
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Notification For Thank you';
-                $to = 'hitesh.p@crestinfosystems.com';
+                $to = 'ghernandez@pct.com';
                 $cc = array();
                 $this->load->helper('sendemail');
                 send_email($from_mail,$from_name, $to, $subject, $message, $cc);
