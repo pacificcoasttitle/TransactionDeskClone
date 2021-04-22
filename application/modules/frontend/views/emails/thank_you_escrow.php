@@ -824,9 +824,11 @@
                                                                     <tr>
                                                                         <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
 
-
-                                                                            <img align="center" alt="" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/e854fc5d-4bfc-4fe1-9509-63837cc6df2b.jpg" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
-
+                                                                            <?php if($sales_rep_profile_thank_you_img) { ?>
+                                                                                <img align="center" alt="" src="<?php echo base_url().$sales_rep_profile_thank_you_img;?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+                                                                            <?php } else { ?>
+                                                                                <img align="center" alt="" src="<?php echo base_url().'uploads/sales-rep/default.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+                                                                            <?php }  ?>
 
                                                                         </td>
                                                                     </tr>
@@ -864,30 +866,15 @@
 
                                                                             <table style="height: 253px; width: 505px;">
                                                                                 <tbody>
-                                                                                    <tr>
-                                                                                        <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411">123 Success Ave, Los Angeles CA 91202</span></td>
-                                                                                        <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong>Closed</strong></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411">123 Success Ave, Los Angeles CA 91202</span></td>
-                                                                                        <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong>Open</strong></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411">123 Success Ave, Los Angeles CA 91202</span></td>
-                                                                                        <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong>Cleared For Policy</strong></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411">123 Success Ave, Los Angeles CA 91202</span></td>
-                                                                                        <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong>On-Hold</strong></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411">123 Success Ave, Los Angeles CA 91202</span></td>
-                                                                                        <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong>Closed</strong></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411">123 Success Ave, Los Angeles CA 91202</span></td>
-                                                                                        <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong>Closed</strong></td>
-                                                                                    </tr>
+                                                                                    <?php if(!empty($addresses)) { 
+                                                                                        foreach($addresses as $address) {?>
+                                                                                            <tr>
+                                                                                                <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411"><?php echo $address;?></span></td>
+                                                                                                <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong>Closed</strong></td>
+                                                                                            </tr>
+                                                                                    <?php }} ?>
+                                                                                    
+                                                                                    
                                                                                 </tbody>
                                                                             </table>
                                                                             <br>

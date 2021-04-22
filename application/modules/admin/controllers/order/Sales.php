@@ -76,16 +76,19 @@ class Sales extends MX_Controller {
         $data = array();
         $data['title'] = 'PCT Order: Add Sales Rep.';
         $salesRepData = array();
-        if ($this->input->post()) {
 
+        if ($this->input->post()) {
             $this->form_validation->set_rules('sales_rep_first_name', 'Sales Rep. First Name', 'required', array('required'=> 'Please Enter Sales Rep. First Name'));
             $this->form_validation->set_rules('sales_rep_last_name', 'Sales Rep. Last Name', 'required', array('required'=> 'Please Enter Sales Rep. Last Name'));
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
             $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
             $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
             $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
-            // $this->form_validation->set_rules('sales_rep_profile_img', 'sales_rep_profile_img', 'callback_sales_rep_profile_img_check');
-            
+              
+            $config['upload_path'] = 'uploads/sales-rep/';
+            $config['allowed_types'] = 'jpg|png';
+            $config['max_size']  = 12000;
+                    
             if ($this->form_validation->run() == true) {
                 $fileuri = ''; $status = "success";
                 if(is_uploaded_file($_FILES['sales_rep_profile_img']['tmp_name'])) 
@@ -94,43 +97,48 @@ class Sales extends MX_Controller {
                     {
                         mkdir('./uploads/sales-rep', 0777, TRUE);
                     }
-                    $config['upload_path'] = 'uploads/sales-rep/';
-                    $config['allowed_types'] = 'jpg|png';
-                    $config['max_size']  = '2048';
                     
                     $new_name = 'sales_rep_'.time().rand(10,100000);
                     $config['file_name'] = $new_name;         
                     $this->load->library('upload', $config);
 
-                    if (!$this->upload->do_upload('sales_rep_profile_img'))
-                    {
+                    if (!$this->upload->do_upload('sales_rep_profile_img')) {
                         $status = 'error';
                         $msg = $this->upload->display_errors();
-                    }
-                    else
-                    {
+                    } else{
                         $data = $this->upload->data();
                         $status = "success";
-                        $msg = "File successfully uploaded";
-                        $fileuri=  $config['upload_path'].$data['file_name'];
-                    }
-
-                    $sales_rep_profile_thank_you_img_name = 'sales_rep_thank_you'.time().rand(10,100000);
-                    $config['file_name'] = $sales_rep_profile_thank_you_img_name;         
-                    $this->load->library('upload', $config);
-
-                    if (!$this->upload->do_upload('sales_rep_profile_thank_you_img')) {
-                        $status = 'error';
-                        $msg = $this->upload->display_errors();
-                    } else {
-                        $data = $this->upload->data();
-                        $status = "success";
-                        $msg = "File successfully uploaded";
-                        $fileUrlThankYou =  $config['upload_path'].$data['file_name'];
+                        $msg = "Borrower File successfully uploaded";
+                        $document_name = 'sales_rep_'.time().rand(10,100000).'.'.$data['image_type'];
+                        rename('./uploads/sales-rep/'.$data['file_name'], './uploads/sales-rep/'.$document_name);
+                        $fileuri=  $config['upload_path'].$document_name;
                     }
                 }
 
-                if($status == "success")
+                $fileUrlThankYou = ''; $statusThank = "success";
+                if (is_uploaded_file($_FILES['sales_rep_profile_thank_you_img']['tmp_name'])) { 
+
+                    if (!is_dir('uploads/sales-rep')) {
+                        mkdir('./uploads/sales-rep', 0777, TRUE);
+                    }
+                    $sales_rep_profile_thank_you_img_name = 'sales_rep_thank_you'.time().rand(10,100000);
+                    $config['file_name'] = $sales_rep_profile_thank_you_img_name;         
+                    $this->load->library('upload', $config);
+                    $msgThankyou = '';
+                    if (!$this->upload->do_upload('sales_rep_profile_thank_you_img')) {
+                        $statusThank = 'error';
+                        $msgThankyou = $this->upload->display_errors();
+                    } else {
+                        $dataThank = $this->upload->data();
+                        $statusThank = "success";
+                        $msgThankyou = "Thank you File successfully uploaded";
+                        $document_name = 'sales_rep_thank_you'.time().rand(10,100000).'.'.$dataThank['image_type'];
+                        rename('./uploads/sales-rep/'.$dataThank['file_name'], './uploads/sales-rep/'.$document_name);
+                        $fileUrlThankYou =  $config['upload_path'].$document_name;
+                    }
+                }
+
+                if($status == "success" && $statusThank == "success")
                 {
                     $salesRepData = array(
                         'first_name' => $_POST['sales_rep_first_name'],
@@ -143,6 +151,7 @@ class Sales extends MX_Controller {
                         'status' => 1,
                         'is_sales_rep' => 1,
                         'sales_rep_profile_img' => $fileuri,
+                        'sales_rep_profile_thank_you_img' => $fileUrlThankYou,
                     );
 
                     $insert = $this->sales_model->insert($salesRepData);
@@ -156,6 +165,7 @@ class Sales extends MX_Controller {
                 else
                 {
                     $data['sales_rep_profile_img_error_msg'] = $msg;
+                    $data['sales_rep_profile_thank_you_img_error_msg'] = $msgThankyou;
                 }
                 
             } else {
@@ -189,7 +199,10 @@ class Sales extends MX_Controller {
                 $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
                 $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
 
-
+                $config['upload_path'] = 'uploads/sales-rep/';
+                $config['allowed_types'] = 'jpg|png';
+                $config['max_size']  = '2048';
+                        
                 if($this->form_validation->run() == true) {
                     $fileuri = isset($sales_rep_info['sales_rep_profile_img']) && !empty($sales_rep_info['sales_rep_profile_img']) ? $sales_rep_info['sales_rep_profile_img'] : '';
                     $status = "success";
@@ -199,9 +212,6 @@ class Sales extends MX_Controller {
                         {
                             mkdir('./uploads/sales-rep', 0777, TRUE);
                         }
-                        $config['upload_path'] = 'uploads/sales-rep/';
-                        $config['allowed_types'] = 'jpg|png';
-                        $config['max_size']  = '2048';
                         
                         $new_name = 'sales_rep_'.time().rand(10,100000);
 
@@ -218,11 +228,38 @@ class Sales extends MX_Controller {
                             $data = $this->upload->data();
                             $status = "success";
                             $msg = "File successfully uploaded";
-                            $fileuri=  $config['upload_path'].$data['file_name'];
+                            $document_name = 'sales_rep_'.time().rand(10,100000).'.'.$data['image_type'];
+                            rename('./uploads/sales-rep/'.$data['file_name'], './uploads/sales-rep/'.$document_name);
+                            $fileuri=  $config['upload_path'].$document_name;
                         }
                     }
 
-                    if($status == "success")
+                    $fileUrlThankYou = isset($sales_rep_info['sales_rep_profile_thank_you_img']) && !empty($sales_rep_info['sales_rep_profile_thank_you_img']) ? $sales_rep_info['sales_rep_profile_thank_you_img'] : ''; 
+                    $statusThank = "success";
+                    if(is_uploaded_file($_FILES['sales_rep_profile_thank_you_img']['tmp_name'])) { 
+    
+                        if (!is_dir('uploads/sales-rep')) {
+                            mkdir('./uploads/sales-rep', 0777, TRUE);
+                        }
+                        
+                        $sales_rep_profile_thank_you_img_name = 'sales_rep_thank_you'.time().rand(10,100000);
+                        $config['file_name'] = $sales_rep_profile_thank_you_img_name;         
+                        $this->load->library('upload', $config);
+                        $msgThankyou = '';
+                        if (!$this->upload->do_upload('sales_rep_profile_thank_you_img')) {
+                            $statusThank = 'error';
+                            $msgThankyou = $this->upload->display_errors();
+                        } else {
+                            $data = $this->upload->data();
+                            $statusThank = "success";
+                            $msgThankyou = "Thank you File successfully uploaded";
+                            $document_name = 'sales_rep_thank_you'.time().rand(10,100000).'.'.$data['image_type'];
+                            rename('./uploads/sales-rep/'.$data['file_name'], './uploads/sales-rep/'.$document_name);
+                            $fileUrlThankYou =  $config['upload_path'].$document_name;
+                        }
+                    }
+
+                    if($status == "success" && $statusThank == "success")
                     {
                         $salesRepData = array(
                             'first_name' => $_POST['sales_rep_first_name'],
@@ -235,6 +272,7 @@ class Sales extends MX_Controller {
                             'status' => 1,
                             'is_sales_rep' => 1,
                             'sales_rep_profile_img' => $fileuri,
+                            'sales_rep_profile_thank_you_img' => $fileUrlThankYou,
                         );
 
                         $condition = array('id' => $id);
@@ -249,6 +287,7 @@ class Sales extends MX_Controller {
                     else
                     {
                         $data['sales_rep_profile_img_error_msg'] = $msg;
+                        $data['sales_rep_profile_thank_you_img_error_msg'] = $msgThankyou;
                     }
 
                 } else {
@@ -331,7 +370,30 @@ class Sales extends MX_Controller {
             $update = $this->sales_model->update($salesRepData, $condition);
             if($update) {
                 unlink('./'.$imgPath);
-                $successMsg = 'Sales Rep. profile image deleted successfully.';
+                $successMsg = 'Sales Rep. Borrower profile image deleted successfully.';
+                $response = array('status' =>'success', 'message' => $successMsg);
+            }
+        } else {
+            $msg = 'Sales Rep. ID is required.';
+            $response = array('status' => 'error', 'message' => $msg);
+        }
+        echo json_encode($response);
+    }
+
+    public function remove_sales_rep_thank_you()
+    {
+        $this->is_admin();
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+        if ($id) {
+            $con = array('id' => $id);
+            $sales_rep_info = $this->sales_model->getSalesRep($con);
+            $imgPath = isset($sales_rep_info['sales_rep_profile_thank_you_img']) && !empty($sales_rep_info['sales_rep_profile_thank_you_img']) ? $sales_rep_info['sales_rep_profile_thank_you_img'] : '';
+            $salesRepData = array('sales_rep_profile_thank_you_img' => '');
+            $condition = array('id' => $id);
+            $update = $this->sales_model->update($salesRepData, $condition);
+            if($update) {
+                unlink('./'.$imgPath);
+                $successMsg = 'Sales Rep. Thank you profile image deleted successfully.';
                 $response = array('status' =>'success', 'message' => $successMsg);
             }
         } else {

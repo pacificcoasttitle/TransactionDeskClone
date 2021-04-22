@@ -2353,30 +2353,63 @@ class Cron extends MX_Controller {
 
     public function sendMailEscrowUsers()
     {
-        $this->db->select('*');
+        $this->db->select('order_details.file_id, 
+            order_details.file_number, 
+            property_details.full_address,
+            customer_basic_details.first_name,
+            customer_basic_details.last_name,
+            customer_basic_details.sales_rep_profile_thank_you_img,
+            property_details.escrow_lender_id,
+            escrow_details.email_address, 
+            transaction_details.sales_representative');
         $this->db->from('order_details');
         $this->db->where('MONTH(order_details.created_at)', date('m')); 
         $this->db->where('YEAR(order_details.created_at)', date('Y')); 
+        //$this->db->where('order_details.resware_status = "closed"');
         $this->db->where('property_details.escrow_lender_id != ""');
+        $this->db->where('transaction_details.sales_representative = "11967"');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
+        $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
+        $this->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
+        $this->db->join('customer_basic_details as escrow_details', 'customer_basic_details.id = property_details.escrow_lender_id','inner');
+        $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
         $query = $this->db->get();
-        $res   = $query->result_array();  
+        $result   = $query->result_array();  
 
         if(!empty($res)) {
-            $this->db->select('property_details.escrow_lender_id');
-            $this->db->from('order_details');
-            $this->db->where('MONTH(order_details.created_at)', date('m')); 
-            $this->db->where('YEAR(order_details.created_at)', date('Y')); 
-            $this->db->where('property_details.escrow_lender_id != ""');
-            $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
-            $this->db->group_by('property_details.escrow_lender_id');
-            $query = $this->db->get();
-            $result   = $query->result_array();
-            foreach($result as $resu)  {
-                $keys = array_keys(array_column($res, 'escrow_lender_id'), $resu['escrow_lender_id']);
-
+            $checkFlag = 0;
+            $data = array();
+            foreach($result as $res) {
+                if ($checkFlag == 0) {
+                    $sales_rep_user_id = $res['sales_representative'];
+                    $escrow_user_id = $res['escrow_lender_id'];
+                    $escrow_email_address = $res['email_address'];
+                    $checkFlag = 1;
+                }
+                if ($res['sales_representative'] == $sales_rep_user_id && $res['escrow_lender_id'] == $escrow_user_id) {
+                    $data['addresses'][] = $res['full_address'];
+                    if(!empty($res['sales_rep_profile_thank_you_img'])) {
+                        $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
+                    }
+                } else {
+                    $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = env('FROM_EMAIL');
+                    $subject = 'Notification For Thank you';
+                    $to = 'hitesh.p@crestinfosystems.com';
+                    //$cc = array('ghernandez@pct.com');
+                    $this->load->helper('sendemail');
+                    send_email($from_mail,$from_name, $to, $subject, $message, $cc);
+                    $data = array();
+                    $sales_rep_user_id = $res['sales_representative'];
+                    $escrow_user_id = $res['escrow_lender_id'];
+                    $escrow_email_address = $res['email_address'];
+                    $data['addresses'][] = $res['full_address'];
+                    if(!empty($res['sales_rep_profile_thank_you_img'])) {
+                        $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
+                    }
+                }
             }
         }
-
     }
 }
