@@ -2355,6 +2355,7 @@ class Cron extends MX_Controller {
     {
         $this->db->select('order_details.file_id, 
             order_details.file_number, 
+            order_details.resware_status, 
             property_details.full_address,
             customer_basic_details.first_name,
             customer_basic_details.last_name,
@@ -2379,6 +2380,7 @@ class Cron extends MX_Controller {
         if(!empty($result)) {
             $checkFlag = 0;
             $data = array();
+            $i = 0;
             foreach($result as $res) {
                 if ($checkFlag == 0) {
                     $sales_rep_user_id = $res['sales_representative'];
@@ -2387,10 +2389,12 @@ class Cron extends MX_Controller {
                     $checkFlag = 1;
                 }
                 if ($res['sales_representative'] == $sales_rep_user_id && $res['escrow_lender_id'] == $escrow_user_id) {
-                    $data['addresses'][] = $res['full_address'];
+                    $data['order_info'][$i]['address'] = $res['full_address'];
+                    $data['order_info'][$i]['resware_status'] = $res['resware_status'];
                     if(!empty($res['sales_rep_profile_thank_you_img'])) {
                         $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
                     }
+                    $i++;
                 } else {
                     $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
                     $from_name = 'Pacific Coast Title Company';
@@ -2404,10 +2408,12 @@ class Cron extends MX_Controller {
                     $sales_rep_user_id = $res['sales_representative'];
                     $escrow_user_id = $res['escrow_lender_id'];
                     $escrow_email_address = $res['email_address'];
-                    $data['addresses'][] = $res['full_address'];
+                    $data['order_info'][$i]['address'] = $res['full_address'];
+                    $data['order_info'][$i]['resware_status'] = $res['resware_status'];
                     if(!empty($res['sales_rep_profile_thank_you_img'])) {
                         $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
                     }
+                    $i++;
                 }
             }
             if(!empty($data)){

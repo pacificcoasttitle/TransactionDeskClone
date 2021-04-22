@@ -866,11 +866,11 @@
 
                                                                             <table style="height: 253px; width: 505px;">
                                                                                 <tbody>
-                                                                                    <?php if(!empty($addresses)) { 
-                                                                                        foreach($addresses as $address) {?>
+                                                                                    <?php if(!empty($order_info)) { 
+                                                                                        foreach($order_info as $order) {?>
                                                                                             <tr>
-                                                                                                <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411"><?php echo $address;?></span></td>
-                                                                                                <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong>Closed</strong></td>
+                                                                                                <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411"><?php echo $order['address'];?></span></td>
+                                                                                                <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $order['resware_status'];?></strong></td>
                                                                                             </tr>
                                                                                     <?php }} ?>
                                                                                     
