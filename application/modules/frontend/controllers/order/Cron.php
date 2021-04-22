@@ -2400,7 +2400,7 @@ class Cron extends MX_Controller {
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'Notification For Thank you';
-                    $to = 'hitesh.p@crestinfosystems.com';
+                    $to = 'ghernandez@pct.com';
                     $cc = array();
                     $this->load->helper('sendemail');
                     send_email($from_mail,$from_name, $to, $subject, $message, $cc);
@@ -2421,7 +2421,7 @@ class Cron extends MX_Controller {
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Notification For Thank you';
-                $to = 'hitesh.p@crestinfosystems.com';
+                $to = 'ghernandez@pct.com';
                 $cc = array();
                 $this->load->helper('sendemail');
                 send_email($from_mail,$from_name, $to, $subject, $message, $cc);
