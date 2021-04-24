@@ -2260,43 +2260,18 @@ class Cron extends MX_Controller {
                 $data = array();
                 $userdata['admin_api'] = 1;
                 $data = array('FileNumber' => $file['file_number']);
-                //$logid = $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), array(), 0, 0);
                 $res = $this->make_request('POST', 'files/search', json_encode($data),  $userdata);
-                //$this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API').'files/search', json_encode($data), $res, 0, $logid);
                 $result = json_decode($res,TRUE);
 
                 if(strtolower($result['Files'][0]['Status']['Name']) != $file['resware_status']) {
-                    /*$customer_id = $file['customer_id'];
-                    $file_number = $file['file_number'];
-                    $condition = array(
-                        'id' => $customer_id
-                    );
-                    $customerDetails = $this->home_model->get_customers($condition);
-                    $first_name = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
-                    $last_name = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
-                    $telephone_no = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
-                    $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
-                    $company_name = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
-                    $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
-                    $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
-                    $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
-
-                    $property = $result['Files'][0]['Properties'][0]['StreetNumber']." ".$result['Files'][0]['Properties'][0]['StreetDirection']." ".$result['Files'][0]['Properties'][0]['StreetName']." ".$result['Files'][0]['Properties'][0]['StreetSuffix'].", ".$result['Files'][0]['Properties'][0]['City'].", ".$result['Files'][0]['Properties'][0]['State'].", ".$result['Files'][0]['Properties'][0]['Zip'];
-                
-
-                    $message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p><p>File Number: '.$file_number.'</p><p>Order Status: '.$result['Files'][0]['Status']['Name'].'</p>';
-
-                
-                    
-                    $from_name = 'Pacific Coast Title Company';
-                    $from_mail = env('FROM_EMAIL');
-                    $subject = 'Notification For Order Status - '.$result['Files'][0]['Status']['Name'];
-                    $to = 'cs@pct.com';
-                    $this->load->helper('sendemail');
-                    send_email($from_mail,$from_name, $to, $subject, $message);*/
                     $orderData = array(         
                         'resware_status'=> strtolower($result['Files'][0]['Status']['Name'])
                     );
+
+                    if(strtolower($result['Files'][0]['Status']['Name']) == 'closed') {
+                        $orderData['resware_closed_status_date'] = date('Y-m-d H:i:s');
+                    }
+
                     $condition = array(
                         'file_id' => $file['file_id'],
                         'file_number' => $file['file_number'],
@@ -2364,11 +2339,10 @@ class Cron extends MX_Controller {
             escrow_details.email_address, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('MONTH(order_details.created_at)', date('m')); 
-        $this->db->where('YEAR(order_details.created_at)', date('Y')); 
-        //$this->db->where('order_details.resware_status = "closed"');
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', date('m')); 
+        $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
-        $this->db->where('transaction_details.sales_representative = "11967"');
+        $this->db->where('transaction_details.sales_representative != ""');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
         $this->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
