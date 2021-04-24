@@ -22,6 +22,13 @@
             padding: 0;
         }
 
+        th {
+            text-align: center;
+			color: #444444;
+			border-bottom: 1px solid #ccc;
+			height: 50px;
+		}
+
         table {
             border-collapse: collapse;
         }
@@ -865,6 +872,12 @@
                                                                                 &nbsp;</p>
 
                                                                             <table style="height: 253px; width: 505px;">
+                                                                            <thead>
+		<tr>
+			<th>Property Addres</th>
+			<th>Status</th>
+		</tr>
+	</thead>
                                                                                 <tbody>
                                                                                     <?php if(!empty($order_info)) { 
                                                                                         foreach($order_info as $order) {?>
