@@ -194,6 +194,7 @@ $route['get-safewire-order-status'] = 'frontend/order/dashboardMail/getSafewireO
 $route['update-safewire-orders-status'] = 'frontend/order/cron/updateSafewireStatusForAllorders';
 $route['update-prelim-action/:num'] = 'frontend/order/dashboard/updatePrelimAction';
 $route['send-mail-escrow-users'] = 'frontend/order/cron/sendMailEscrowUsers';
+$route['transfer-all-files-on-aws'] = 'frontend/order/cron/transferAllFilesOnAws';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

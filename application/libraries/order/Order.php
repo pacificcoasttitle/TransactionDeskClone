@@ -933,6 +933,13 @@ class Order
             mkdir('./uploads/order_safewire_documents', 0777, TRUE);
         }
         file_put_contents('./uploads/order_safewire_documents/'.$orderDetails['file_id'].'.pdf', $result);
+        $this->CI->load->library('order/order');
+        $syncResult = $this->CI->order->uploadDocumentOnAwsS3($orderDetails['file_id'].'.pdf', 'order_safewire_documents');
+        if (isset($syncResult['ObjectURL']) && !empty($syncResult['ObjectURL'])) {
+            
+        } else {
+
+        }
         $binaryOrderData   = base64_encode($result); 
         $this->sendSafewireDocumentToResware($orderDetails['file_id'].'.pdf', $orderDetails, $binaryOrderData, 1);
 
@@ -1027,5 +1034,37 @@ class Order
             }
         }
         return false;
+    }
+
+    public function uploadDocumentOnAwsS3($fileName, $folder= '')
+    {
+        $bucket = env('AWS_BUCKET');
+        if(!empty($folder)) {
+            $keyname = $folder."/".basename($fileName);    
+            $filepath = FCPATH."/uploads/".$folder."/".$fileName;             
+        } else {
+            $keyname = basename($fileName); 
+            $filepath = FCPATH."/uploads/".$fileName;                
+        }
+        
+        try {
+            $s3Client = new Aws\S3\S3Client([
+                'region' => env('AWS_REGION'),
+                'version' => '2006-03-01',
+                'credentials' => [
+                    'key' => env('AWS_ACCESS_KEY_ID'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY')
+                ],
+            ]);
+            
+            $result = $s3Client->putObject([
+                'Bucket' => $bucket,
+                'Key' => $keyname,
+                'SourceFile' => $filepath,
+            ]);
+        } catch (Aws\Exception\AwsException $e) {
+            return $e->getMessage() . "\n";
+        }
+        return $result['ObjectURL'];
     }
 }
