@@ -9,7 +9,8 @@
 		"vlucas/phpdotenv": "^4.1",
 		"gufy/pdftohtml-php": "~2",
 		"twilio/sdk": "^6.13",
-		"sendgrid/sendgrid": "~7"
+		"sendgrid/sendgrid": "~7",
+		"aws/aws-sdk-php": "^3.178"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

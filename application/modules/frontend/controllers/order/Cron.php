@@ -2,6 +2,8 @@
 
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 
+
+
 class Cron extends MX_Controller {
 
     function __construct() 
@@ -2402,4 +2404,59 @@ class Cron extends MX_Controller {
             }
         }
     }
+
+    public function transferAllFilesOnAws() 
+    {
+        //$this->load->library('order/order');
+        //$credResult = $this->order->uploadDocumentOnAwsS3('3795645.pdf', 'test');  
+        //echo $credResult;exit;
+
+        $bucket = env('AWS_BUCKET');
+        try {
+            $s3Client = new Aws\S3\S3Client([
+                'region' => env('AWS_REGION'),
+                'version' => '2006-03-01',
+                'credentials' => [
+                    'key' => env('AWS_ACCESS_KEY_ID'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY')
+                ]
+            ]);
+            $dir = FCPATH."/uploads";
+            $keyPrefix = '';
+
+            $result = $s3Client->uploadDirectory($dir, $bucket, $keyPrefix, array(
+                'params'      => array('ACL' => 'public-read'),
+                'concurrency' => 50,
+                'debug'       => true
+            ));
+
+        } catch (Aws\Exception\AwsException $e) {
+            return $e->getMessage() . "\n";
+        }
+        echo "All files uploaded successfully on AWS S3.";exit;
+
+        /*$this->load->library('order/order');
+        $folders = array();
+        $path = FCPATH."/uploads/";
+        $sub_folder = scandir($path);
+        $num = count($sub_folder);
+        for ($i = 2; $i < $num; $i++) {
+            if (is_file($path.'\\'.$sub_folder[$i])) {
+                $syncResult = $this->order->uploadDocumentOnAwsS3($sub_folder[$i]);  
+                echo $syncResult;
+            } else {
+                $folders[] = $sub_folder[$i];
+            }
+        }
+        
+        foreach ($folders as $folder) {
+            $fileSystemIterator = new FilesystemIterator(FCPATH."/uploads/".$folder."/");
+            foreach ($fileSystemIterator as $fileInfo) {
+                $credResult = $this->order->uploadDocumentOnAwsS3($fileInfo->getFilename(), $folder);  
+                echo $credResult;
+            }
+        }*/
+        
+    }
+
 }
