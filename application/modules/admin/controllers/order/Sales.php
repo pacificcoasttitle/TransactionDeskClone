@@ -10,7 +10,6 @@ class Sales extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
-        $this->load->library('order/order');
         $this->load->model('order/sales_model');
     }
 
@@ -112,7 +111,6 @@ class Sales extends MX_Controller {
                         $msg = "Borrower File successfully uploaded";
                         $document_name = 'sales_rep_'.time().rand(10,100000).'.'.$data['image_type'];
                         rename('./uploads/sales-rep/'.$data['file_name'], './uploads/sales-rep/'.$document_name);
-                        $this->order->uploadDocumentOnAwsS3($document_name, 'sales-rep');
                         $fileuri=  $config['upload_path'].$document_name;
                     }
                 }
@@ -136,7 +134,6 @@ class Sales extends MX_Controller {
                         $msgThankyou = "Thank you File successfully uploaded";
                         $document_name = 'sales_rep_thank_you'.time().rand(10,100000).'.'.$dataThank['image_type'];
                         rename('./uploads/sales-rep/'.$dataThank['file_name'], './uploads/sales-rep/'.$document_name);
-                        $this->order->uploadDocumentOnAwsS3($document_name, 'sales-rep');
                         $fileUrlThankYou =  $config['upload_path'].$document_name;
                     }
                 }
@@ -233,7 +230,6 @@ class Sales extends MX_Controller {
                             $msg = "File successfully uploaded";
                             $document_name = 'sales_rep_'.time().rand(10,100000).'.'.$data['image_type'];
                             rename('./uploads/sales-rep/'.$data['file_name'], './uploads/sales-rep/'.$document_name);
-                            $this->order->uploadDocumentOnAwsS3($document_name, 'sales-rep');
                             $fileuri=  $config['upload_path'].$document_name;
                         }
                     }
@@ -259,7 +255,6 @@ class Sales extends MX_Controller {
                             $msgThankyou = "Thank you File successfully uploaded";
                             $document_name = 'sales_rep_thank_you'.time().rand(10,100000).'.'.$data['image_type'];
                             rename('./uploads/sales-rep/'.$data['file_name'], './uploads/sales-rep/'.$document_name);
-                            $this->order->uploadDocumentOnAwsS3($document_name, 'sales-rep');
                             $fileUrlThankYou =  $config['upload_path'].$document_name;
                         }
                     }

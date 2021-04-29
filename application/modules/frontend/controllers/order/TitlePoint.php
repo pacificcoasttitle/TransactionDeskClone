@@ -8,7 +8,6 @@ class TitlePoint extends MX_Controller {
         parent::__construct();
         $this->load->model('order/apiLogs');
 		$this->load->model('order/titlePointData');
-		$this->load->library('order/order');
 		// $this->order->is_user();
 	}
 
@@ -720,7 +719,6 @@ class TitlePoint extends MX_Controller {
 				}
 				$pdfFilePath = './uploads/legal-vesting/'.$fileNumber.'.pdf';
 				file_put_contents($pdfFilePath, $bin);
-				$this->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'legal-vesting');
 			}
 			if($methodId == 3)
 			{
@@ -729,7 +727,6 @@ class TitlePoint extends MX_Controller {
 				}
 				$pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
 				file_put_contents($pdfFilePath, $bin);
-				$this->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'tax');
 			}
 		}
 		echo trim($file);
@@ -831,7 +828,7 @@ class TitlePoint extends MX_Controller {
 				}
 				$pdfFilePath = './uploads/grant-deed/'.$fileNumber.'.pdf';
 				file_put_contents($pdfFilePath, $bin);
-				$this->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'grant-deed');
+
 				$tpData = array(
 	                'grant_deed_status' => $docStatus,
 	                'grant_deed_message' => 'success'
