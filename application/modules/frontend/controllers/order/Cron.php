@@ -2458,5 +2458,4 @@ class Cron extends MX_Controller {
         }*/
         
     }
-
 }

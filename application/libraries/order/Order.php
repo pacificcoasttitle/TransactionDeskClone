@@ -933,15 +933,10 @@ class Order
             mkdir('./uploads/order_safewire_documents', 0777, TRUE);
         }
         file_put_contents('./uploads/order_safewire_documents/'.$orderDetails['file_id'].'.pdf', $result);
-        $this->CI->load->library('order/order');
-        $syncResult = $this->CI->order->uploadDocumentOnAwsS3($orderDetails['file_id'].'.pdf', 'order_safewire_documents');
-        if (isset($syncResult['ObjectURL']) && !empty($syncResult['ObjectURL'])) {
-            
-        } else {
-
-        }
+        
         $binaryOrderData   = base64_encode($result); 
         $this->sendSafewireDocumentToResware($orderDetails['file_id'].'.pdf', $orderDetails, $binaryOrderData, 1);
+        $this->uploadDocumentOnAwsS3($orderDetails['file_id'].'.pdf', 'order_safewire_documents');
 
         $logid = $this->CI->apiLogs->syncLogs(0, 'safewire', 'get_wire_detail_pdf', $wireUrl, array(), array(), $orderDetails['order_id'], 0);
         $ch = curl_init($wireUrl);                                    
@@ -962,6 +957,7 @@ class Order
         file_put_contents('./uploads/wire_safewire_documents/'.$orderDetails['file_id'].'.pdf', $resultWire);
         $binaryWireOrderData   = base64_encode($resultWire); 
         $this->sendSafewireDocumentToResware($orderDetails['file_id'].'.pdf', $orderDetails, $binaryWireOrderData, 0);
+        $this->uploadDocumentOnAwsS3($orderDetails['file_id'].'.pdf', 'wire_safewire_documents');
         $this->CI->apiLogs->syncLogs(0, 'safewire', 'get_wire_detail_pdf', $wireUrl, array(), $resultWire, $orderDetails['order_id'], $logid);
         $res = json_decode($result, true);
         return $res;
@@ -1063,8 +1059,15 @@ class Order
                 'SourceFile' => $filepath,
             ]);
         } catch (Aws\Exception\AwsException $e) {
-            return $e->getMessage() . "\n";
+            //return $e->getMessage() . "\n";
+            return false;
         }
-        return $result['ObjectURL'];
+        if(!empty($result['ObjectURL'])) {
+            //unlink($filepath);
+            return true;
+        } else {
+            return false;
+        }
+        
     }
 }
