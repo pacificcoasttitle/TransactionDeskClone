@@ -72,13 +72,8 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $count;
                     $nestedData[] = $value['file_number'];
                     $nestedData[] = $order_details['full_address'];
-
-
-                    if (env('AWS_ENABLE_FLAG') == 1) {
-                        $lv_file_path = env('AWS_PATH')."legal-vesting/".$value['file_number'].'.pdf';
-                    } else {
-                        $lv_file_path = FCPATH.'uploads/legal-vesting/'.$value['file_number'].'.pdf';
-                    }
+                    
+                    $lv_file_path = FCPATH.'uploads/legal-vesting/'.$value['file_number'].'.pdf';
 
                     if (file_exists($lv_file_path)) 
                     {
@@ -237,11 +232,6 @@ class TitlePoint extends MX_Controller {
                         }
                         
                     }*/
-                    if (env('AWS_ENABLE_FLAG') == 1) {
-                        $tax_file_path = env('AWS_PATH')."tax/".$value['file_number'].'.pdf';
-                    } else {
-                        $tax_file_path = FCPATH.'uploads/tax/'.$value['file_number'].'.pdf';
-                    }
 
                     $tax_file_path = FCPATH.'uploads/tax/'.$value['file_number'].'.pdf';
 
@@ -334,11 +324,7 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $order_details['full_address'];
                     $nestedData[] = $value['grant_deed_type'];
 
-                    if (env('AWS_ENABLE_FLAG') == 1) {
-                        $deed_file_path = env('AWS_PATH')."grant-deed/".$value['file_number'].'.pdf';
-                    } else {
-                        $deed_file_path = FCPATH.'uploads/grant-deed/'.$value['file_number'].'.pdf';
-                    }
+                    $deed_file_path = FCPATH.'uploads/grant-deed/'.$value['file_number'].'.pdf';
 
                     if (file_exists($deed_file_path)) 
                     {

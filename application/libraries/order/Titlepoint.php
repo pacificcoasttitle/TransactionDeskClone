@@ -15,7 +15,6 @@ class Titlepoint
         $this->CI->load->library('session');
         $this->CI->load->model('order/titlePointData');
         $this->CI->load->model('order/apiLogs');
-        $this->CI->load->library('order/order');
 		self::$CI = $this->CI;
     }
 
@@ -97,9 +96,9 @@ class Titlepoint
                                     if (!is_dir('uploads/legal-vesting')) {
                                         mkdir('./uploads/legal-vesting', 0777, TRUE);
                                     }
+                                    
                                     $pdfFilePath = './uploads/legal-vesting/'.$fileNumber.'.pdf';
                                     file_put_contents($pdfFilePath, $bin); 
-                                    $this->CI->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'legal-vesting');
                                 }
 
                                 $tpData = array(
@@ -264,7 +263,7 @@ class Titlepoint
                 }
                 $pdfFilePath = './uploads/grant-deed/'.$fileNumber.'.pdf';
                 file_put_contents($pdfFilePath, $bin);
-                $this->CI->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'grant-deed');
+
                 $tpData = array(
                     'grant_deed_status' => $docStatus,
                     'grant_deed_message' => 'success'
@@ -372,7 +371,6 @@ class Titlepoint
                                 
                                 $pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
                                 file_put_contents($pdfFilePath, $bin); 
-                                $this->CI->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'tax');
                             }
 
                             $tpData = array(
