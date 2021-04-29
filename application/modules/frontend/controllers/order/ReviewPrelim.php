@@ -681,6 +681,7 @@ class ReviewPrelim extends MX_Controller {
 												mkdir(FCPATH.'/uploads/documents', 0777, TRUE);
 											}
 											file_put_contents(FCPATH.'/uploads/documents/'.$document_name, $documentContent);
+											$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
 											$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 
 											$source_pdf = FCPATH.'/uploads/documents/'.$document_name;
@@ -719,6 +720,7 @@ class ReviewPrelim extends MX_Controller {
 														if (!in_array($documentId[1], $apiDocumentIds))  {
 															file_put_contents(FCPATH.'/uploads/documents/'.$document_name, file_get_contents($linkHref));
 															$fileSize = filesize(FCPATH.'/uploads/documents/'.$document_name);
+															$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
 															$documentData = array(
 																'document_name' => $document_name,
 																'original_document_name' => $linkText,
@@ -832,6 +834,7 @@ class ReviewPrelim extends MX_Controller {
 												mkdir(FCPATH.'/uploads/documents', 0777, TRUE);
 											}
 											file_put_contents(FCPATH.'/uploads/documents/'.$document_name, $documentContent);
+											$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
 											$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 
 											$source_pdf = FCPATH.'/uploads/documents/'.$document_name;
@@ -875,6 +878,7 @@ class ReviewPrelim extends MX_Controller {
 															if (!in_array($documentId[1], $apiDocumentIds))  {
 																file_put_contents(FCPATH.'/uploads/documents/'.$document_name, file_get_contents($linkHref));
 																$fileSize = filesize(FCPATH.'/uploads/documents/'.$document_name);
+																$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
 																$documentData = array(
 																	'document_name' => $document_name,
 																	'original_document_name' => $linkText,
@@ -924,9 +928,18 @@ class ReviewPrelim extends MX_Controller {
 					
 					$file = array();
 					$prelimfilename = $prelimDocument['document_name'];
+					if (env('AWS_ENABLE_FLAG') == 1) {
+						$prelimFile = env('AWS_PATH')."documents/".$prelimfilename;
+					} else {
+						$prelimFile = FCPATH.'uploads/documents/'.$prelimfilename;
+					}
 					
-					if (file_exists(FCPATH.'uploads/documents/'.$prelimfilename)) {
-						$file[] = base_url().'uploads/documents/'.$prelimfilename;
+					if (file_exists($prelimFile)) {
+						if (env('AWS_ENABLE_FLAG') == 1) {
+							$file[] = env('AWS_PATH')."documents/".$prelimfilename;
+						} else {
+							$file[] = base_url().'uploads/documents/'.$prelimfilename;
+						}
 					}
 
 					$emailContent['file_number'] = $file_number;

@@ -300,6 +300,8 @@ class Dashboard extends MX_Controller {
 						'is_sync' => 1,
 						'is_prelim_document' => 0
 					);
+
+					$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
 					
 					$documentId = $this->document->insert($documentData);
 					
@@ -760,9 +762,12 @@ class Dashboard extends MX_Controller {
                 {
                 	$file_id = $order['file_id'];
 					$documentName = $order['proposed_insured_document_name'];
-					
-
-                	$action = '<a href="./uploads/proposed-insured/'.$documentName.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
+					if (env('AWS_ENABLE_FLAG') == 1) {
+                        $documentUrl = env('AWS_PATH')."proposed-insured/".$documentName;
+                    } else {
+                        $documentUrl = FCPATH.'uploads/proposed-insured/'.$documentName;
+                    }	
+                	$action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
                 }
                 else
                 {
@@ -1049,7 +1054,12 @@ class Dashboard extends MX_Controller {
 				if (!empty($order['cpl_document_name'])) {
 					$file_id = $order['file_id'];
 					$documentName = $order['cpl_document_name'];
-					$nestedData[] = "<div style='display:flex;'><a href='./uploads/documents/$documentName' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+					if (env('AWS_ENABLE_FLAG') == 1) {
+                        $documentUrl = env('AWS_PATH')."documents/".$documentName;
+                    } else {
+                        $documentUrl = FCPATH.'uploads/documents/'.$documentName;
+                    }
+					$nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
 						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
 				} else if(!empty($order['westcor_file_id'])) {
 					$file_id = $order['file_id'];
@@ -1422,6 +1432,7 @@ class Dashboard extends MX_Controller {
 	
 				$this->home_model->update($order_details, $condition, 'order_details');
 				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']);
+				$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
 				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
 			} else {
 				$errors[] = $resultCPL;
@@ -1887,6 +1898,7 @@ class Dashboard extends MX_Controller {
 				$this->home_model->update(array('proposed_insured_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
 
 				$this->uploadProposedDocumentToResware($document_name, $orderDetails, $binaryData);
+				$this->order->uploadDocumentOnAwsS3($document_name, 'proposed-insured');
 				/*$fileSize = filesize('./uploads/proposed-insured/'.$document_name);
 				$documentData = array(
 					'document_name' => $document_name,
@@ -2115,6 +2127,7 @@ class Dashboard extends MX_Controller {
 				    mkdir('./uploads/documents', 0777, TRUE);
 				}
 				file_put_contents('./uploads/documents/'.$documentDetail['document_name'], $documentContent);
+				$this->order->uploadDocumentOnAwsS3($documentDetail['document_name'], 'documents');
 				$this->document->update(array('is_sync' => 1), array('api_document_id' => $resware_document_id));
 			}	
 		} 
@@ -2123,11 +2136,23 @@ class Dashboard extends MX_Controller {
 		$data['order_id'] = $order_id;
 		$data['document_name'] = $documentDetail['document_name'];
 		if ($documentDetail['is_grant_doc'] == 1) {
-			$data['url'] = base_url().'uploads/grant-deed/'.$documentDetail['document_name'];
+			if (env('AWS_ENABLE_FLAG') == 1) {
+				$data['url'] = env('AWS_PATH')."grant-deed/".$documentDetail['document_name'];
+			} else {
+				$data['url'] = base_url().'uploads/grant-deed/'.$documentDetail['document_name'];
+			}
 		} else if ($documentDetail['is_proposed_insured_doc'] == 1) {
-			$data['url'] = base_url().'uploads/proposed-insured/'.$documentDetail['document_name'];
+			if (env('AWS_ENABLE_FLAG') == 1) {
+				$data['url'] = env('AWS_PATH')."proposed-insured/".$documentDetail['document_name'];
+			} else {
+				$data['url'] = base_url().'uploads/proposed-insured/'.$documentDetail['document_name'];
+			}
 		} else {
-			$data['url'] = base_url().'uploads/documents/'.$documentDetail['document_name'];
+			if (env('AWS_ENABLE_FLAG') == 1) {
+				$data['url'] = env('AWS_PATH')."documents/".$documentDetail['document_name'];
+			} else {
+				$data['url'] = base_url().'uploads/documents/'.$documentDetail['document_name'];
+			}
 		}
         $results = $this->load->view('order/review_file_load_doc', $data, TRUE);
         echo json_encode($results, true);
@@ -2139,13 +2164,22 @@ class Dashboard extends MX_Controller {
         $orderDetails = $this->order->get_order_details($fileId);
         
         $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
-        $file_path = FCPATH.'uploads/legal-vesting/'.$file_number.'.pdf';
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$file_path = env('AWS_PATH')."legal-vesting/".$file_number.'.pdf';
+		} else {
+			$file_path = FCPATH.'uploads/legal-vesting/'.$file_number.'.pdf';
+		}
+        
 
         $file_url = '';
 
 		if (file_exists($file_path)) 
 		{
-		    $file_url = base_url().'uploads/legal-vesting/'.$file_number.'.pdf';
+			if (env('AWS_ENABLE_FLAG') == 1) {
+				$file_url = env('AWS_PATH')."legal-vesting/".$file_number.'.pdf';
+			} else {
+				$file_url = base_url().'uploads/legal-vesting/'.$file_number.'.pdf';
+			}
 		} 
 		else 
 		{
@@ -2176,13 +2210,21 @@ class Dashboard extends MX_Controller {
         $orderDetails = $this->order->get_order_details($fileId);
 
         $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
-        $file_path = FCPATH.'uploads/plat-map/'.$file_number.'.png';
-
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$file_path = env('AWS_PATH')."plat-map/".$file_number.'.pdf';
+		} else {
+			$file_path = FCPATH.'uploads/plat-map/'.$file_number.'.pdf';
+		}
+    
         $file_url = '';
 
 		if (file_exists($file_path)) 
 		{
-		    $file_url = base_url().'uploads/plat-map/'.$file_number.'.png';
+			if (env('AWS_ENABLE_FLAG') == 1) {
+				$file_url = env('AWS_PATH')."plat-map/".$file_number.'.pdf';
+			} else {
+				$file_url = base_url().'uploads/plat-map/'.$file_number.'.pdf';
+			}
 		} 
 		else
 		{
@@ -2243,6 +2285,7 @@ class Dashboard extends MX_Controller {
 
 			file_put_contents($path, base64_decode($imagedata,true));
 			$plat_map_url = base_url().'uploads/plat-map/'.$file_number.'.png';
+			$this->order->uploadDocumentOnAwsS3($file_number.'.png', 'plat-map');
 			$response = array('status'=>'success','plat_map_url'=>$plat_map_url);
 		}
 		else
@@ -2606,6 +2649,7 @@ class Dashboard extends MX_Controller {
 
 				$pdfFilePath = './uploads/proposed-insured/'.$document_name;
 		        $this->m_pdf->pdf->Output($pdfFilePath,'F');
+				$this->order->uploadDocumentOnAwsS3($document_name, 'proposed-insured');
 		        $contents = file_get_contents($pdfFilePath);
 				$binaryData   = base64_encode($contents);		
 				// unlink($pdfFilePath);
@@ -2849,6 +2893,7 @@ class Dashboard extends MX_Controller {
 			$this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
 			$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
 			$this->uploadCPLDocumentToResware($document_name, $orderDetails, $responseArr['content']);
+			$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
 		} else {
 			$errors[] = $responseArr['error']."<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
 			$cplErrorData = array(
@@ -2913,6 +2958,7 @@ class Dashboard extends MX_Controller {
 				$this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $editCplResponse['response']['a:DocumentId']), array('file_id' => $fileId), 'order_details');
 				$success[] = "CPL document edited successfully for file number - ".$orderDetails['file_number'];
 				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $editCplResponse['response']['a:Content']);
+				$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
 			} else {
 				$errors[] = $editCplResponse['error']."<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
 				$cplErrorData = array(
@@ -2950,6 +2996,7 @@ class Dashboard extends MX_Controller {
 				$this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('file_id' => $fileId), 'order_details');
 				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
 				$this->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
+				$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
 			} else {
 				$errors[] = $generateCplResponse['error']."<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
 				$cplErrorData = array(
