@@ -1073,19 +1073,23 @@ class Order
 
     public function fileExistOrNotOnS3($key)
     {
-        $s3Client = new Aws\S3\S3Client([
-            'region' => env('AWS_REGION'),
-            'version' => '2006-03-01',
-            'credentials' => [
-                'key' => env('AWS_ACCESS_KEY_ID'),
-                'secret' => env('AWS_SECRET_ACCESS_KEY')
-            ],
-        ]);
-        
-        $result = $s3Client->getObject([
-            'Bucket' => env('AWS_BUCKET'),
-            'Key' => $key
-        ]);
+        try {
+            $s3Client = new Aws\S3\S3Client([
+                'region' => env('AWS_REGION'),
+                'version' => '2006-03-01',
+                'credentials' => [
+                    'key' => env('AWS_ACCESS_KEY_ID'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY')
+                ],
+            ]);
+            
+            $result = $s3Client->getObject([
+                'Bucket' => env('AWS_BUCKET'),
+                'Key' => $key
+            ]);
+        } catch (Aws\Exception\AwsException $e) {
+            return false;
+        }
 
         if (!empty($result)) {
             return true;
