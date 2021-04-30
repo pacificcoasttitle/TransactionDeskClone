@@ -910,51 +910,39 @@ class Home extends MX_Controller {
 
 							
 							if (env('AWS_ENABLE_FLAG') == 1) {
-								$lv_url = env('AWS_PATH')."legal-vesting/".$lvfilename;
+								if ($this->order->fileExistOrNotOnS3('legal-vesting/'.$lvfilename)) {
+									$file[] = env('AWS_PATH')."legal-vesting/".$lvfilename;
+									$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
+								}
+
+								if ($this->order->fileExistOrNotOnS3('grant-deed/'.$deedfilename)) {
+									$file[] = env('AWS_PATH')."grant-deed/".$deedfilename;
+									$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
+								}
+
+								if ($this->order->fileExistOrNotOnS3('tax/'.$taxfilename)) {
+									$file[] = env('AWS_PATH')."tax/".$taxfilename;
+									$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
+								}
+								
 							} else {
 								$lv_url = FCPATH.'uploads/legal-vesting/'.$lvfilename;
-							}
-
-							if (file_exists($lv_url)) {
-								if (env('AWS_ENABLE_FLAG') == 1) {
-									//$file[] = env('AWS_PATH')."legal-vesting/".$lvfilename;
+								if (file_exists($lv_url)) {
 									$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
-								} else {
-									$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
+									$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
 								}
-								$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
-							}
 
-							if (env('AWS_ENABLE_FLAG') == 1) {
-								$grant_url = env('AWS_PATH')."grant-deed/".$deedfilename;
-							} else {
 								$grant_url = FCPATH.'uploads/grant-deed/'.$deedfilename;
-							}
-
-							if (file_exists($grant_url)) {
-								if (env('AWS_ENABLE_FLAG') == 1) {
-									//$file[] = env('AWS_PATH')."grant-deed/".$deedfilename;
+								if (file_exists($grant_url)) {
 									$file[] = base_url().'uploads/grant-deed/'.$deedfilename;
-								} else {
-									$file[] = base_url().'uploads/grant-deed/'.$deedfilename;
+									$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
 								}
-								$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
-							}
 
-							if (env('AWS_ENABLE_FLAG') == 1) {
-								$tax_url = env('AWS_PATH')."tax/".$taxfilename;
-							} else {
 								$tax_url = FCPATH.'uploads/tax/'.$taxfilename;
-							}
-
-							if (file_exists($tax_url)) {
-								if (env('AWS_ENABLE_FLAG') == 1) {
-									//$file[] = env('AWS_PATH')."tax/".$taxfilename;
+								if (file_exists($tax_url)) {
 									$file[] = base_url().'uploads/tax/'.$taxfilename;
-								} else {
-									$file[] = base_url().'uploads/tax/'.$taxfilename;
+									$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
 								}
-								$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
 							}
 							
 							/*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
