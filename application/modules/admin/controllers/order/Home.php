@@ -27,8 +27,62 @@ class Home extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('order/home_model'); 
+        $this->load->model('order/order_model'); 
     }
     
+    public function index()
+    {
+        $this->is_admin();
+        $data = array();
+        // $data['title'] = 'PCT Order: Dashboard';
+        $orderData = $this->order_model->get_order_count();
+        $titlePointData = $this->order_model->get_title_point_count();
+        
+        $loanCount = $salesCount = $totalCount = 0;
+        if(isset($orderData) && !empty($orderData))
+        {
+            foreach ($orderData as $key => $value) 
+            {
+                if($value['type'] == 'Loan')
+                {
+                    $loanCount = $value['total'];
+                    $totalCount += $loanCount;
+                }
+                if($value['type'] == 'Sale')
+                {
+                    $salesCount = $value['total'];
+                    $totalCount += $salesCount;
+                }
+            }
+        }
+        $totalFailCount = 0;
+
+        $lvCount = isset($titlePointData['lv_total_records']) && !empty($titlePointData['lv_total_records']) ? $titlePointData['lv_total_records'] : 0;
+        $totalFailCount += $lvCount;
+
+        $grantDeedCount = isset($titlePointData['grant_deed_total_records']) && !empty($titlePointData['grant_deed_total_records']) ? $titlePointData['grant_deed_total_records'] : 0;    
+        $totalFailCount += $grantDeedCount;
+
+        $taxCount = isset($titlePointData['tax_total_records']) && !empty($titlePointData['tax_total_records']) ? $titlePointData['tax_total_records'] : 0;
+
+        $totalFailCount += $taxCount;
+        
+        $data = array(
+            'title' => 'PCT Order: Dashboard',
+            'loanCount' => $loanCount,
+            'salesCount' => $salesCount,
+            'totalCount' => $totalCount,
+            'lvCount' => $lvCount,
+            'grantDeedCount' => $grantDeedCount,
+            'taxCount' => $taxCount,
+            'totalFailCount' => $totalFailCount
+        );
+        
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/index', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
 	public function login()
 	{
         $data = array();
@@ -36,6 +90,8 @@ class Home extends MX_Controller {
         if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
             redirect(base_url().'order/admin/dashboard');
         } else {
+            $data['msg'] = $this->session->userdata('msg');
+            $this->session->unset_userdata('msg');
             $this->load->view('order/layout/login_header', $data);
             $this->load->view('order/home/login', $data);
             $this->load->view('order/layout/login_footer', $data);
@@ -82,7 +138,7 @@ class Home extends MX_Controller {
                 {
                     $this->session->set_userdata('msg', 'Incorrect email or password');
                     // $result['msg'] = "Incorrect email or password";
-                    redirect(base_url());
+                    redirect(base_url().'order/admin');
                 }
             }
     	}
@@ -92,7 +148,7 @@ class Home extends MX_Controller {
     {
         $this->is_admin();
     	$data = array();
-        $data['title'] = 'PCT Order: Dashboard';
+        $data['title'] = 'PCT Order: Escrow';
 		$this->load->view('order/layout/header', $data);
         $this->load->view('order/home/dashboard', $data);
         $this->load->view('order/layout/footer', $data);
@@ -187,40 +243,41 @@ class Home extends MX_Controller {
                     // Parse data from CSV file
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
 
-                    $password = md5('Pacific2');
+                    $password = md5('Pacific1');
+                    
                     // Insert/update CSV data into database
                     if(!empty($csvData)){                        
-
-                        
                         foreach($csvData as $row)
-                        { 
+                        {
                             $rowCount++;
-                            if(isset($row['Email Address']) && !empty($row['Email Address']))
+                            if(isset($row['Email']) && !empty($row['Email']))
                             {
-                                // Check whether email already exists in the database
-                                /*$random_number = $this->home_model->get_customer_number();
-                                $customer_number = isset($random_number['random_num']) && !empty($random_number['random_num']) ? $random_number['random_num'] : '';*/
-
+                                $email_address = str_replace(' ','',$row['Email']);
+                                $email_address = strtolower($email_address);
                                 // Prepare data for DB insertion
                                 $customerData = array(
-                                    /*'customer_number' => $customer_number,*/
-                                    'first_name' => ucfirst(strtolower($row['First Name'])),
-                                    'last_name' => ucfirst(strtolower($row['Last Name'])),
-                                    'email_address' => strtolower(str_replace(' ','',$row['Email Address'])),
-                                    'telephone_no' => $row['Telephone'],
+                                    'resware_user_id' => $row['Partner Employee ID'],
+                                    'partner_id' => $row['Partner Company ID'],
+                                    'first_name' => $row['First Name'],
+                                    'last_name' => $row['Last Name'],
+                                    'title' => $row['Title'],
+                                    'telephone_no' => $row['Phone'],
+                                    'email_address' => $email_address,
+                                    'password' => $password,    
                                     'company_name' => $row['Company Name'],
-                                    'street_address' => $row['Street Address'],
+                                    'street_address' => $row['Street1'],
+                                    'street_address_2' => $row['Street2'],
                                     'city' => $row['City'],
-                                    'zip_code' => $row['Zipcode'],
-                                    'password' => $password,
+                                    'state' => $row['State'],
+                                    'zip_code' => $row['Zip'],
+                                    'is_escrow' => 1,
                                     'status'=> 1,
-                                    'is_escrow' => 1
                                 );
 
                                 $con = array(
                                     'where' => array(
-                                        'first_name' => $row['First Name'],
-                                        'email_address' => strtolower(str_replace(' ','',$row['Email Address'])),
+                                        'email_address' => $email_address,
+                                        'resware_user_id' => $row['Partner Employee ID'],
                                         'is_escrow' => 1
                                     ),
                                     'returnType' => 'count'
@@ -230,7 +287,7 @@ class Home extends MX_Controller {
                                 if($prevCount > 0){
                                     // Update member data
                                     // unset($customerData['customer_number']);
-                                    $condition = array('first_name' => $row['First Name'], 'email_address' => strtolower(str_replace(' ','',$row['Email Address'])));
+                                    $condition = array('email_address' => $email_address,'resware_user_id'=>$row['Partner Employee ID'],'is_escrow' => 1);
                                     $update = $this->home_model->update($customerData, $condition);
                                     
                                     if($update){
@@ -342,6 +399,7 @@ class Home extends MX_Controller {
     {    
         $this->is_admin();  
         $data = array();
+        $successMsg = '';
         $data['title'] = 'PCT Order: Import';
         if($this->input->post())
         {
@@ -367,7 +425,8 @@ class Home extends MX_Controller {
                     
                     // Parse data from CSV file
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
-                    $password = md5('Pacific2');
+
+                    $password = md5('Pacific1');
 
                     // Insert/update CSV data into database
                     if(!empty($csvData))
@@ -375,73 +434,65 @@ class Home extends MX_Controller {
                         foreach($csvData as $row)
                         {
                             $rowCount++;
-                            if(isset($row['Email Address']) && !empty($row['Email Address']))
-                            {
-                                // Check whether email already exists in the database
-                                /*$random_number = $this->home_model->get_customer_number();
-                                $customer_number = isset($random_number['random_num']) && !empty($random_number['random_num']) ? $random_number['random_num'] : '';*/
 
-                                $street_address = '';
-                                if(isset($row['Address Line 1']) && !empty($row['Address Line 1']))
-                                {
-                                    $street_address .= $row['Address Line 1'];
-                                }
-                                if(isset($row['Address Line 2']) && !empty($row['Address Line 2']))
-                                {
-                                    $street_address .= $row['Address Line 2'];
-                                }
-                                
+                            if(isset($row['Email']) && !empty($row['Email']))
+                            {
+                                $email_address = str_replace(' ','',$row['Email']);
+                                $email_address = strtolower($email_address);
                                 // Prepare data for DB insertion
-                                $customerData = array(
-                                    'first_name' => ucfirst(strtolower($row['First Name'])),
-                                    'last_name' => ucfirst(strtolower($row['Last Name'])),
-                                    'email_address' => strtolower(str_replace(' ','',$row['Email Address'])),
-                                    'telephone_no' => $row['Telephone'],
+                                $lenderData = array(
+                                    'resware_user_id' => $row['Partner Employee ID'],
+                                    'partner_id' => $row['Partner Company ID'],
+                                    'first_name' => $row['First Name'],
+                                    'last_name' => $row['Last Name'],
+                                    'title' => $row['Title'],
+                                    'telephone_no' => $row['Phone'],
+                                    'email_address' => $email_address,
+                                    'password' => $password,    
                                     'company_name' => $row['Company Name'],
-                                    'street_address' => $street_address,
+                                    'street_address' => $row['Street1'],
+                                    'street_address_2' => $row['Street2'],
                                     'city' => $row['City'],
-                                    'zip_code' => $row['Zipcode'],
-                                    'password' => $password,
-                                    'status'=> 1,
+                                    'state' => $row['State'],
+                                    'zip_code' => $row['Zip'],
                                     'is_escrow' => 0,
-                                    'lender_type' => $lenderType
+                                    'lender_type' => $lenderType,
+                                    'status'=> 1,
                                 );
 
                                 $con = array(
                                     'where' => array(
-                                        'first_name' => $row['First Name'],
-                                        'email_address' => strtolower(str_replace(' ','',$row['Email Address'])),
+                                        'email_address' => $email_address,
+                                        'resware_user_id' => $row['Partner Employee ID'],
                                         'is_escrow' => 0
                                     ),
                                     'returnType' => 'count'
                                 );
                                 $prevCount = $this->home_model->get_rows($con);
                               
-                                if($prevCount > 0)
-                                {
+                                if($prevCount > 0){
                                     // Update member data
-                                    $condition = array('first_name' => $row['First Name'], 'email_address' => strtolower(str_replace(' ','',$row['Email Address'])));
-                                    $update = $this->home_model->update($customerData, $condition);
+                                    $condition = array('email_address' => $email_address,'resware_user_id'=>$row['Partner Employee ID'],'is_escrow' => 0);
+                                    $update = $this->home_model->update($lenderData, $condition);
                                     
                                     if($update){
                                         $updateCount++;
                                     }
-                                }
-                                else
-                                {
+                                }else{
                                     // Insert member data
-                                    $insert = $this->home_model->insert($customerData);
+                                    $insert = $this->home_model->insert($lenderData);
                                     
                                     if($insert){
                                         $insertCount++;
                                     }
-                                }  
-                            }                            
+                                }
+                            }   
+                                                        
                         }
                         
                         // Status message with imported data count
                         $notAddCount = ($rowCount - ($insertCount + $updateCount));
-                        $successMsg = 'Customers imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                        $successMsg = 'Lenders imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
                         // $this->session->set_userdata('success_msg', $successMsg);
                         $data['success_msg'] = $successMsg;
                     }
@@ -511,12 +562,16 @@ class Home extends MX_Controller {
                 $nestedData[] = $value['first_name'];
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
-                $nestedData[] = $value['telephone_no'];
+                // $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['company_name'];
                 $nestedData[] = $value['street_address'];
                 $nestedData[] = $value['city'];
                 $nestedData[] = $value['zip_code'];
-                $nestedData[] = $value['lender_type'];
+                $specialSel = $value['is_special_lender'] == 1 ? 'selected' : '';
+                $normalSel = $value['is_special_lender'] == 0 ? 'selected' : '';
+                $id = $value['id'];
+                $nestedData[] = "<select onchange='changeLenderUserType($id, this.value);' id='user_type' name='user_type'><option $normalSel value='0'>Normal</option><option $specialSel value='1'>Special</option></select>";
+                // $nestedData[] = $value['lender_type'];
                          
                 
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
@@ -535,5 +590,2225 @@ class Home extends MX_Controller {
         $json_data['recordsFiltered'] = intval( $lender_lists['recordsFiltered'] );
         $json_data['data'] = $data;
         echo json_encode($json_data);
+    }
+
+    public function cpl_document()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: CPL Documents';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/cpl_document', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_cpl_document_list()
+    {
+        $params = array();
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $cpl_document_list = $this->home_model->get_cpl_document_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $cpl_document_list = $this->home_model->get_cpl_document_list($params);            
+        }
+
+        $data = array(); 
+        
+        if(isset($cpl_document_list['data']) && !empty($cpl_document_list['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($cpl_document_list['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $i;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['document_name'];
+                $documentName = $value['document_name'];
+                if ($value['api_document_id'] > 0) {
+                    $nestedData[] = 'Yes';
+                } else {
+                    $nestedData[] = 'No';
+                }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/documents/$documentName' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/documents/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
+                }
+                $data[] = $nestedData;   
+                $i++;         
+            }
+        }
+        $json_data['recordsTotal'] = intval( $cpl_document_list['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $cpl_document_list['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function newUsers()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: New Users';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/new_users', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_new_users_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $new_users_lists = $this->home_model->get_new_users_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $new_users_lists = $this->home_model->get_new_users_list($params);        
+        }
+
+        $data = array(); 
+        if (isset($new_users_lists['data']) && !empty($new_users_lists['data'])) {
+            foreach ($new_users_lists['data'] as $key => $value) {
+                $nestedData=array();
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) { 
+                    $nestedData[] = $value['first_name'];
+                    $nestedData[] = $value['last_name'];
+                    $nestedData[] = $value['email_address'];
+                    $nestedData[] = $value['company_name'];
+                    $nestedData[] = 'Pacific1';
+                    $nestedData[] = $value['random_password'];
+                } else {
+                    $nestedData[] = $value['email_address'];
+                    $nestedData[] = 'Pacific1';
+                    $nestedData[] = $value['random_password'];
+                }
+                $data[] = $nestedData;            
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $new_users_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $new_users_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function addNewUser()
+    {
+        $this->load->model('order/apiLogs');
+        $userdata = $this->session->userdata('admin');
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Add New User';
+        $salesRepData = array();
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
+            $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+            $this->form_validation->set_rules('company', 'Company', 'required', array('required'=> 'Please Enter Company'));
+            $this->form_validation->set_rules('user_type', 'User type', 'required', array('required'=> 'Please Select User Type'));
+            $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));
+            $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+            $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+            $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', array('required'=> 'Please Enter Zipcode'));
+            $this->form_validation->set_rules('partner_id', 'Company', 'required', array('required'=> 'Please select company based on search'));
+
+            if ($this->form_validation->run() == true) {
+                $customerData = array(
+                    'partner_id' =>  $this->input->post('partner_id'),
+                    'resware_user_id' =>  !empty($this->input->post('resware_client_id')) ? $this->input->post('resware_client_id') : 0,
+                    'first_name' => $this->input->post('first_name'),
+                    'last_name' => $this->input->post('last_name'),
+                    'telephone_no' => $this->input->post('telephone_no'),
+                    'email_address' => $this->input->post('email_address'),
+                    'password' => 'Pacific1',    
+                    'company_name' => $this->input->post('company'),
+                    'street_address' => $this->input->post('address'),
+                    'city' => $this->input->post('city'),
+                    'state' => $this->input->post('state'),
+                    'zip_code' => $this->input->post('zipcode'),
+                    'is_escrow' => $this->input->post('user_type') == 'escrow' ? 1 : 0,
+                    'is_master' => 0,
+                    'is_password_updated' => 0,
+                    'is_new_user' => 1,
+                    'status'=> 1,
+                );
+                $response = $this->addNewUserToResware($customerData);
+
+                if ($response['success']) {
+                    $customerData['resware_user_id'] = $response['resware_user_id'];
+                    $customerData['random_password'] = $this->order->randomPassword();
+                    $reswareUpdatePwdData = array(
+                        'user_name' =>  $this->input->post('email_address'),
+                        'password' => 'Pacific1',
+                        'new_password' => $customerData['random_password'],
+                    );
+                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+                    $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+                    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                    $responsePwd = json_decode($updatePwdResult,true);
+
+                    if(!empty($responsePwd['message'])) {
+                        $customerData['resware_error_msg'] = $responsePwd['message'];
+                        $data['error_msg'] = 'Password update failed due to: '.$responsePwd['message'];
+                        
+                    } else {
+                        $customerData['is_password_updated'] = 1;
+                        $data['success_msg'] = 'Password updated successfully for email user: '. $userInfo['email_address'];
+                    }
+
+                    if (!empty($this->input->post('resware_client_id'))) {
+                        $condition = array(
+                            'where' => array(
+                                'partner_id' => $this->input->post('partner_id'),
+                                'resware_user_id' => $this->input->post('resware_client_id'),
+                            ),
+                            'returnType' => 'count'
+                        );
+                        $prevCount = $this->home_model->get_rows($condition);
+                        if ($prevCount > 0) {
+                            $updateCondition = array(
+                                'partner_id' => $this->input->post('partner_id'),
+                                'resware_user_id' => $this->input->post('resware_client_id')
+                            );
+                            $update = $this->home_model->update($customerData, $updateCondition);
+                        } else {
+                            $insert = $this->home_model->insert($customerData);
+                        }
+                    } else {
+                        $insert = $this->home_model->insert($customerData);
+                    }
+                } else {
+                    $data['error_msg'] = $response['msg'];
+                }
+            } else {
+                $data['first_name_error_msg'] = form_error('first_name');
+                $data['last_name_error_msg'] = form_error('last_name');
+                $data['email_address_error_msg'] = form_error('email_address');
+                $data['company_error_msg'] = form_error('company');
+                $data['user_type_error_msg'] = form_error('user_type');
+                $data['address_error_msg'] = form_error('address');
+                $data['city_error_msg'] = form_error('city');
+                $data['state_error_msg'] = form_error('state');
+                $data['zipcode_error_msg'] = form_error('zipcode');
+                if (empty(form_error('company')) && !empty(form_error('partner_id'))) {
+                    $data['company_error_msg'] = form_error('partner_id');
+                }
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/add_new_user', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    function get_company_list()
+    {
+    	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
+    	$condition = array(
+            'partner_name' => $searchTerm,
+        );
+    	$companyDetails = $this->home_model->get_company_list($condition);
+        $companyInfo = array();
+        
+    	if (isset($companyDetails) && !empty($companyDetails)) {
+    		foreach ($companyDetails as $key => $value) {
+    			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
+	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
+                $data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
+                $data['partner_name'] = isset($value['partner_name']) && !empty($value['partner_name']) ? $value['partner_name'] : '';
+                $data['address1'] = isset($value['address1']) && !empty($value['address1']) ? $value['address1'] : '';
+                $data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+                $data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
+                $data['zip'] = isset($value['zip']) && !empty($value['zip']) ? $value['zip'] : '';
+	            $companyInfo[] =$data;
+    		}
+    	}
+    	echo json_encode($companyInfo);
+    }
+
+    public function addNewUserToResware($customerData)
+    {
+        $this->load->model('order/apiLogs');
+        $this->load->library('order/resware');
+        $this->load->library('order/order');
+        $userdata = $this->session->userdata('admin');
+
+        if(!empty($customerData['resware_user_id'])) {
+            $endPoint = 'admin/partners/'.$customerData['partner_id'].'/employees/'.$customerData['resware_user_id'];
+            $method = 'PUT';
+            $apiType = 'update_user';
+        } else {
+            $endPoint = 'admin/partners/'.$customerData['partner_id'].'/employees';
+            $method = 'POST';
+            $apiType = 'create_user';
+        }
+        
+        $newUserData = array(			
+            'Password' => 'Pacific1',
+            'Enabled' => true,
+            'Roles' => array (
+                0 => array (
+                    'RoleID' => 5033,
+                    'Name' => 'Web Services: Access All Files for ResWare-to-ResWare Services',
+                ),
+                1 => 
+                array (
+                    'RoleID' => 6013,
+                    'Name' => 'Web Services: Add Actions',
+                ),
+                2 => 
+                array (
+                    'RoleID' => 6005,
+                    'Name' => 'Web Services: Add Documents',
+                ),
+                3 => 
+                array (
+                    'RoleID' => 6002,
+                    'Name' => 'Web Services: Add Notes',
+                ),
+                4 => 
+                array (
+                    'RoleID' => 6009,
+                    'Name' => 'Web Services: Add Partners',
+                ),
+                5 => 
+                array (
+                    'RoleID' => 6015,
+                    'Name' => 'Web Services: Add WebURL Documents',
+                ),
+                6 => 
+                array (
+                    'RoleID' => 5027,
+                    'Name' => 'Web Services: Bypass Address Validation',
+                ),
+                7 => 
+                array (
+                    'RoleID' => 6003,
+                    'Name' => 'Web Services: Cancel Files',
+                ),
+                8 => 
+                array (
+                    'RoleID' => 5023,
+                    'Name' => 'Web Services: Estimate Costs as 2010 HUD',
+                ),
+                9 => 
+                array (
+                    'RoleID' => 6016,
+                    'Name' => 'Web Services: Expense Reports',
+                ),
+                10 => 
+                array (
+                    'RoleID' => 6012,
+                    'Name' => 'Web Services: Get Actions',
+                ),
+                11 => 
+                array (
+                    'RoleID' => 6007,
+                    'Name' => 'Web Services: Get Custom Fields',
+                ),
+                12 => 
+                array (
+                    'RoleID' => 6006,
+                    'Name' => 'Web Services: Get Documents',
+                ),
+                13 => 
+                array (
+                    'RoleID' => 6001,
+                    'Name' => 'Web Services: Get Notes',
+                ),
+                14 => 
+                array (
+                    'RoleID' => 6010,
+                    'Name' => 'Web Services: Get Partners',
+                ),
+                15 => 
+                array (
+                    'RoleID' => 69,
+                    'Name' => 'Web Services: Order Placement',
+                ),
+                16 => 
+                array (
+                    'RoleID' => 6004,
+                    'Name' => 'Web Services: Override Property Address Validation and Reformatting',
+                ),
+                17 => 
+                array (
+                    'RoleID' => 6011,
+                    'Name' => 'Web Services: Remove Partners',
+                ),
+                18 => 
+                array (
+                    'RoleID' => 6014,
+                    'Name' => 'Web Services: Search Files',
+                ),
+                19 => 
+                array (
+                    'RoleID' => 6019,
+                    'Name' => 'Web Services: Update Partner',
+                ),
+                20 => 
+                array (
+                    'RoleID' => 6008,
+                    'Name' => 'Web Services: Write Custom Fields',
+                ),
+                21 => 
+                array (
+                    'RoleID' => 51,
+                    'Name' => 'Website',
+                ),
+            ),
+            'WebsiteAccess' => true,
+            'Name' => $customerData['email_address'],
+            'PasswordExpirationDate' => '/Date(3025656585000-0000)/',
+            'FirstName' => $customerData['first_name'],
+            'LastName' => $customerData['last_name'],
+            'ContactInformation' => array(
+                'EmailAddress' => $customerData['email_address'],
+            ),
+        );
+
+        $userdata['email'] = $userdata['email_address'];
+        $userdata['admin_api'] = 1;
+        $newUserData = json_encode($newUserData);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, array(), 0, 0);
+        $result = $this->resware->make_request($method, $endPoint, $newUserData, $userdata);
+        $this->apiLogs->syncLogs($v['id'], 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, $result, 0, $logid);
+
+        if (isset($result) && !empty($result)) {
+            $response = json_decode($result,true);
+            if (isset($response['Employee']) && !empty($response['Employee'])) {
+                $res = array(
+                    'resware_user_id' => $response['Employee']['UserID'],
+                    'msg' => !empty($customerData['resware_user_id']) ? 'User created successfully on Resware Side' : 'User updated successfully on Resware Side',
+                    'success' => true
+                );
+            } else {
+                $res = array(
+                    'resware_user_id' => 0,
+                    'msg' => $response['ResponseStatus']['Message'],
+                    'success' => false
+                );
+            }
+        } else {
+            $res = array(
+                'resware_user_id' => 0,
+                'msg' => 'Something wrong! Please try again',
+                'success' => false
+            );
+        }
+        return $res;
+    }
+
+    public function grant_deed_document()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Grant Deed Documents';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/grant_deed_document', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function lv_document()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Legal & Vesting Documents';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/lv_document', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_grant_deed_document_list()
+    {
+        $params = array();
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $grant_document_lists = $this->home_model->get_grant_deed_document_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $grant_document_lists = $this->home_model->get_grant_deed_document_list($params);            
+        }
+
+        $data = array(); 
+        
+        if(isset($grant_document_lists['data']) && !empty($grant_document_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($grant_document_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $i;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['document_name'];
+                $documentName = $value['document_name'];
+                if ($value['api_document_id'] > 0) {
+                    $nestedData[] = 'Yes';
+                } else {
+                    $nestedData[] = 'No';
+                }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/grant-deed/$documentName' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/grant-deed/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
+                }
+                $data[] = $nestedData;  
+                $i++;          
+            }
+        }
+        $json_data['recordsTotal'] = intval( $grant_document_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $grant_document_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function get_lv_document_list()
+    {
+        $params = array();
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $lv_document_lists = $this->home_model->get_lv_document_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $lv_document_lists = $this->home_model->get_lv_document_list($params);            
+        }
+
+        $data = array(); 
+        
+        if(isset($lv_document_lists['data']) && !empty($lv_document_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($lv_document_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $i;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['document_name'];
+                $documentName = $value['document_name'];
+                if ($value['api_document_id'] > 0) {
+                    $nestedData[] = 'Yes';
+                } else {
+                    $nestedData[] = 'No';
+                }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/legal-vesting/$documentName' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/legal-vesting/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
+                }
+                $data[] = $nestedData;  
+                $i++;          
+            }
+        }
+        $json_data['recordsTotal'] = intval( $lv_document_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $lv_document_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function masterUsers()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Master Users';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/master_users', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_master_users_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $master_users_lists = $this->home_model->get_master_users_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $master_users_lists = $this->home_model->get_master_users_list($params);        
+        }
+
+        $data = array(); 
+        if (isset($master_users_lists['data']) && !empty($master_users_lists['data'])) {
+            foreach ($master_users_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $editUrl = base_url().'order/admin/edit-master-user/'.$value['id'];
+                    $nestedData[] = "<a href='".$editUrl."'  class='btn btn-action'  title='Edit Master User'><span class='fa fa-edit' aria-hidden='true'></span></a><a href='javascript:void(0);' onclick='deleteMasterUser(".$value['id'].")' class='btn btn-action'  title='Delete Master User'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                }
+                $data[] = $nestedData;            
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $master_users_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $master_users_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function addNewMasterUser()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Add New Master User';
+        $salesRepData = array();
+        $this->db->select('*')
+            ->from('pct_order_partner_company_info');
+        
+        $query = $this->db->get();
+        $data['companys'] = $query->result_array();
+        
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
+            $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email|is_unique[customer_basic_details.email_address]', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email','is_unique' => 'The %s is already taken'));
+            $this->form_validation->set_rules('company', 'Company', 'required', array('required'=> 'Please Enter Company'));
+            $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));
+            $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+            $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+            $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', array('required'=> 'Please Enter Zipcode'));
+            
+            if ($this->form_validation->run() == true) {
+                $customerData = array(
+                    'first_name' => $this->input->post('first_name'),
+                    'last_name' => $this->input->post('last_name'),
+                    'telephone_no' => $this->input->post('telephone_no'),
+                    'email_address' => $this->input->post('email_address'),
+                    'password' => 'Pacific1',    
+                    'company_name' => $this->input->post('company'),
+                    'street_address' => $this->input->post('address'),
+                    'city' => $this->input->post('city'),
+                    'state' => $this->input->post('state'),
+                    'zip_code' => $this->input->post('zipcode'),
+                    'partner_companies' => implode(",",$this->input->post('partner_companies')),
+                    'is_escrow' => 0,
+                    'is_master' => 1,
+                    'is_password_updated' => 1,
+                    'is_new_user' => 0,
+                    'status'=> 1,
+                );
+                $insert = $this->home_model->insert($customerData);
+                if ($insert) {
+                    $data['success_msg'] = 'Master User added successfully.';
+                    $this->form_validation->reset_validation();
+                } else {
+                    $data['error_msg'] = 'User not added.';
+                } 
+            } else {
+                $data['first_name_error_msg'] = form_error('first_name');
+                $data['last_name_error_msg'] = form_error('last_name');
+                $data['email_address_error_msg'] = form_error('email_address');
+                $data['company_error_msg'] = form_error('company');
+                $data['address_error_msg'] = form_error('address');
+                $data['city_error_msg'] = form_error('city');
+                $data['state_error_msg'] = form_error('state');
+                $data['zipcode_error_msg'] = form_error('zipcode');
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/add_new_master_user', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function editMasterUser()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Edit Master User';
+        $id = $this->uri->segment(4);     
+        $this->db->select('*')
+            ->from('pct_order_partner_company_info');
+        
+        $query = $this->db->get();
+        $data['companys'] = $query->result_array();
+        
+        if(isset($id) && !empty($id)) {
+            if ($this->input->post()) {
+                $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
+                $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+                $this->form_validation->set_rules('company', 'Company', 'required', array('required'=> 'Please Enter Company'));
+                $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));
+                $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+                $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+                $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', array('required'=> 'Please Enter Zipcode'));
+                
+                if ($this->form_validation->run() == true) {
+                    $customerData = array(
+                        'first_name' => $this->input->post('first_name'),
+                        'last_name' => $this->input->post('last_name'),
+                        'telephone_no' => $this->input->post('telephone_no'),
+                        'email_address' => $this->input->post('email_address'),
+                        'password' => 'Pacific1',    
+                        'company_name' => $this->input->post('company'),
+                        'street_address' => $this->input->post('address'),
+                        'city' => $this->input->post('city'),
+                        'state' => $this->input->post('state'),
+                        'zip_code' => $this->input->post('zipcode'),
+                        'partner_companies' => implode(",",$this->input->post('partner_companies')),
+                        'is_escrow' => 0,
+                        'is_master' => 1,
+                        'is_password_updated' => 1,
+                        'is_new_user' => 0,
+                        'status'=> 1,
+                    );
+
+                    $updateCondition = array(
+                        'id' => $id,
+                    );
+                    $update = $this->home_model->update($customerData, $updateCondition);
+                    if ($update) {
+                        $data['success_msg'] = 'Master User updated successfully.';
+                        $this->form_validation->reset_validation();
+                    } else {
+                        $data['error_msg'] = 'Master User not updated.';
+                    } 
+                } else {
+                    $data['first_name_error_msg'] = form_error('first_name');
+                    $data['last_name_error_msg'] = form_error('last_name');
+                    $data['email_address_error_msg'] = form_error('email_address');
+                    $data['company_error_msg'] = form_error('company');
+                    $data['address_error_msg'] = form_error('address');
+                    $data['city_error_msg'] = form_error('city');
+                    $data['state_error_msg'] = form_error('state');
+                    $data['zipcode_error_msg'] = form_error('zipcode');
+                }                                       
+            } 
+            $con = array('id' => $id);
+            $data['master_user_info'] = $this->home_model->get_rows($con);
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/edit_master_user', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function tax_document()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Tax Documents';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/tax_document', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_tax_document_list()
+    {
+        $params = array();
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $tax_document_lists = $this->home_model->get_tax_document_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $tax_document_lists = $this->home_model->get_tax_document_list($params);            
+        }
+
+        $data = array(); 
+        
+        if(isset($tax_document_lists['data']) && !empty($tax_document_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($tax_document_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $i;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['document_name'];
+                $documentName = $value['document_name'];
+                if ($value['api_document_id'] > 0) {
+                    $nestedData[] = 'Yes';
+                } else {
+                    $nestedData[] = 'No';
+                }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/tax/$documentName' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/tax/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
+                }
+                $data[] = $nestedData;  
+                $i++;          
+            }
+        }
+        $json_data['recordsTotal'] = intval( $tax_document_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $tax_document_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function curative_document()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Curative Documents';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/curative_document', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_curative_document_list()
+    {
+        $params = array();
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $curative_document_lists = $this->home_model->get_curative_document_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $curative_document_lists = $this->home_model->get_curative_document_list($params);            
+        }
+
+        $data = array(); 
+        
+        if(isset($curative_document_lists['data']) && !empty($curative_document_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($curative_document_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $i;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['document_name'];
+                $documentName = $value['document_name'];
+                if ($value['api_document_id'] > 0) {
+                    $nestedData[] = 'Yes';
+                } else {
+                    $nestedData[] = 'No';
+                }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a href='".base_url()."uploads/curative/$documentName' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='".base_url()."uploads/curative/$documentName'><i class='fas fa-fw fa-eye'></i></a></div>";
+                }
+                $data[] = $nestedData;  
+                $i++;          
+            }
+        }
+        $json_data['recordsTotal'] = intval( $curative_document_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $curative_document_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function changeLenderUserType()
+    {
+        $selectValue = $this->input->post('selectValue');
+        $user_id = $this->input->post('user_id');
+		$customerData = array('is_special_lender' => $selectValue);
+        $condition = array('id' => $user_id);
+        $update = $this->home_model->update($customerData, $condition);
+
+		if ($update) {
+			echo json_encode(array('success' => true)); 
+		} else {
+			echo json_encode(array('success' => false)); 
+		} 
+    }
+
+    public function companies()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['errors'] = '';
+		$data['success'] = '';
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+        $data['title'] = 'PCT Order: Companies';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/companies', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_companies_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $company_lists = $this->home_model->get_companies_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $company_lists = $this->home_model->get_companies_list($params);        
+        }
+       
+        $data = array(); 
+        if (isset($company_lists['data']) && !empty($company_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($company_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $i;
+                $nestedData[] = $value['partner_id'];
+                $nestedData[] = $value['partner_name'];
+                $nestedData[] = $value['address1'].", ".$value['city'].", ".$value['state'].", ".$value['zip'];
+                if (!empty($value['loan_underwriter'])) {
+                    $loan_underwriter = $value['loan_underwriter'];
+                } else {
+                    $loan_underwriter = '';
+                }
+                $loanUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'loan_underwriter\' ,this.value);" id="loan_underwriter" name="loan_underwriter">
+                                    <option value="">Select</option>
+                                    <option value="westcor">Westcor</option>
+                                    <option value="north_american">North American</option>
+                                    <option value="commonwealth">Commonwealth</option>
+                                </select>'; 
+                $loanUnderwriterSelection = str_replace('value="' .  $loan_underwriter . '"','value="' .  $loan_underwriter . '" selected', $loanUnderwriterSelection);          
+                $nestedData[] = $loanUnderwriterSelection;
+
+                if (!empty($value['sales_underwriter'])) {
+                    $sales_underwriter = $value['sales_underwriter'];
+                } else {
+                    $sales_underwriter = '';
+                }
+                $salesUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter"><option value="">Select</option>
+                                    <option value="westcor">Westcor</option>
+                                    <option value="north_american">North American</option>
+                                    <option value="commonwealth">Commonwealth</option>
+                                </select>'; 
+                $salesUnderwriterSelection = str_replace('value="' .  $sales_underwriter . '"','value="' .  $sales_underwriter . '" selected', $salesUnderwriterSelection);          
+                $nestedData[] = $salesUnderwriterSelection;
+                if(!empty($value['deliverables'])) {
+                    $deliverables = explode(',', $value['deliverables']);
+                    $deliverablesInfo = '';
+                    foreach($deliverables as $deliverable) {
+                        $deliverablesInfo .= $deliverable."<br>";
+                    }
+                    $deliverablesInfo .= "<a style='margin-top:10px;' onclick='addOrUpdateDeliverables(".$value['partner_id'].");'><i class='fas fa-edit'></i></a>";
+                    $nestedData[] = $deliverablesInfo;
+                } else {
+                    $nestedData[] = "<a style='margin-top:10px;' onclick='addOrUpdateDeliverables(".$value['partner_id'].")'><i class='fas fa-plus-circle'></i></a>";
+                }
+                $data[] = $nestedData; 
+                $i++;           
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $company_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $company_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function addCompany()
+    {
+        $this->load->model('order/apiLogs');
+        $this->load->library('order/order');
+        $this->load->library('order/resware');
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Add Company';
+        $userdata = $this->session->userdata('admin');
+        $userdata['email'] = $userdata['email_address'];
+        $userdata['admin_api'] = 1;
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('resware_company_id', 'Resware Partner Company Id', 'required', array('required'=> 'Please Enter Resware Partner Company Id'));
+        
+            if ($this->form_validation->run() == true) {
+                $partner_id = $this->input->post('resware_company_id');
+                $endPoint = 'admin/partners/'.$partner_id;
+                $userdata['email'] = $userdata['email_address'];
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+                $result = $this->resware->make_request('GET', $endPoint, array(), $userdata);
+                $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), $result, 0, $logid);
+
+                if (isset($result) && !empty($result)) {
+                    $response = json_decode($result,true);
+                    
+                    if (isset($response['AdminPartner']) && !empty($response['AdminPartner'])) {
+                        $companyData = array(
+                            'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                            'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                            'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
+                            'city' => trim($response['AdminPartner']['MailingAddress']['City']),
+                            'state' => trim($response['AdminPartner']['MailingAddress']['State']),
+                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip'])
+                        );
+                        $companyExist = $this->order->checkCompanyExist($partner_id);
+                        if ($companyExist) {
+                            $condition = array(
+                                'partner_id' => $response['AdminPartner']['PartnerCompanyID']
+                            );
+                            unset($companyData['partner_id']);
+                            $update = $this->home_model->update($companyData, $condition, 'pct_order_partner_company_info');
+                            $data['success_msg'] = 'Company information updated successfully.';
+                           
+                        } else {
+                            $insert = $this->home_model->insert($companyData, 'pct_order_partner_company_info');
+                            $data['success_msg'] = 'Company information added successfully.';
+                        }
+                        
+                    } else {
+                        $data['error_msg'] = 'User is not found with this id on Resware side.';
+                    }
+                } else {
+                    $data['error_msg'] = 'Something went wrong. Please try again.';
+                }
+
+               
+            } else {
+                $data['resware_company_id_error_msg'] = form_error('resware_company_id');
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/add_company', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function primaryCheck()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Primary Account';
+        $params = array();
+        if(isset($_POST) && !empty($_POST))
+        {
+            $keyword = $this->input->post('keyword');
+            $params['keyword'] = $keyword;
+        }
+        
+        
+        $users = $this->home_model->get_user_with_duplicate_email($params);
+
+        if(isset($users) && !empty($users))
+        {
+            $new_users = array();
+            foreach ($users as $key => $value) 
+            {
+                $new_users[$value['email_address']][] = $value;
+            }
+        }
+        
+        $data['users'] = $new_users;
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/users_check', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function make_customer_primary()
+    {
+        $this->load->model('order/apiLogs');
+        $this->load->library('order/order');
+        $this->load->library('order/resware');
+        $this->is_admin();
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+        $email = isset($_POST['email']) && !empty($_POST['email']) ? $_POST['email'] : '';
+        $userdata = $this->session->userdata('admin');
+        $userdata['email'] = $userdata['email_address'];
+        $userdata['admin_api'] = 1;
+
+        if($id) {
+            $userLists = $this->home_model->getUsersForEmail($email, $id);
+
+            if(!empty($userLists)) {
+
+                foreach($userLists as $user) {
+
+                    if (!empty($user['resware_user_id']) && !empty($user['partner_id']) && !empty($user['email_address'])) {
+                        $endPoint = 'admin/partners/'.$user['partner_id'].'/employees/'.$user['resware_user_id'];
+                        $userUpdateData = array(			
+                            'Enabled' => false,
+                            'WebsiteAccess' => false,
+                            'FirstName' => $user['first_name'],
+                            'LastName' => $user['last_name'],
+                            'ContactInformation' => array(
+                                'EmailAddress' => $user['email_address'],
+                            ),
+                        );
+                        $userUpdateData = json_encode($userUpdateData);
+                        $logid = $this->apiLogs->syncLogs($user['id'], 'resware', 'update_password', env('RESWARE_ORDER_API').$endPoint, $userUpdateData, array(), 0, 0);
+                        $result = $this->resware->make_request('PUT', $endPoint, $userUpdateData, $userdata);
+                        $this->apiLogs->syncLogs($user['id'], 'resware', 'update_password', env('RESWARE_ORDER_API').$endPoint, $userUpdateData, $result, 0, $logid);
+
+                        if (isset($result) && !empty($result)) {
+                            $response = json_decode($result,true);
+                            
+                            if (isset($response['Employee']) && !empty($response['Employee'])) {
+                                $condition = array(
+                                    'id' => $user['id']
+                                );
+                                $customerData = array(
+                                    'is_password_updated' => 0,
+                                    'is_new_user' => 0,
+                                    'random_password' => '',
+                                    'password' => 'Pacific1',
+                                    'is_primary' => 0
+                                );
+                                $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                            } else {
+                                $msg = 'Something went wrong. Please try again.';
+                                $response = array('status' => 'error', 'message' => $msg);
+                                echo json_encode($response);exit;
+                            }
+                        } else {
+                            $msg = 'Something went wrong. Please try again.';
+                            $response = array('status' => 'error', 'message' => $msg);
+                            echo json_encode($response);exit;
+                        }
+                    }
+                }
+            }
+
+            $params = array(
+                'id' => $id
+            );
+            $userInfo = $this->home_model->get_rows($params);
+            $userUpdateData = array();
+
+            if (!empty($userInfo['resware_user_id']) && !empty($userInfo['partner_id']) && !empty($userInfo['email_address'])) {
+                $endPoint = 'admin/partners/'.$userInfo['partner_id'].'/employees/'.$userInfo['resware_user_id'];
+                $userUpdateData = array(			
+                    'Password' => 'Pacific1',
+                    'Enabled' => true,
+                    'Roles' => array (
+                        0 => array (
+                            'RoleID' => 5033,
+                            'Name' => 'Web Services: Access All Files for ResWare-to-ResWare Services',
+                        ),
+                        1 => 
+                        array (
+                        'RoleID' => 6013,
+                        'Name' => 'Web Services: Add Actions',
+                        ),
+                        2 => 
+                        array (
+                        'RoleID' => 6005,
+                        'Name' => 'Web Services: Add Documents',
+                        ),
+                        3 => 
+                        array (
+                        'RoleID' => 6002,
+                        'Name' => 'Web Services: Add Notes',
+                        ),
+                        4 => 
+                        array (
+                        'RoleID' => 6009,
+                        'Name' => 'Web Services: Add Partners',
+                        ),
+                        5 => 
+                        array (
+                        'RoleID' => 6015,
+                        'Name' => 'Web Services: Add WebURL Documents',
+                        ),
+                        6 => 
+                        array (
+                        'RoleID' => 5027,
+                        'Name' => 'Web Services: Bypass Address Validation',
+                        ),
+                        7 => 
+                        array (
+                        'RoleID' => 6003,
+                        'Name' => 'Web Services: Cancel Files',
+                        ),
+                        8 => 
+                        array (
+                        'RoleID' => 5023,
+                        'Name' => 'Web Services: Estimate Costs as 2010 HUD',
+                        ),
+                        9 => 
+                        array (
+                        'RoleID' => 6016,
+                        'Name' => 'Web Services: Expense Reports',
+                        ),
+                        10 => 
+                        array (
+                        'RoleID' => 6012,
+                        'Name' => 'Web Services: Get Actions',
+                        ),
+                        11 => 
+                        array (
+                        'RoleID' => 6007,
+                        'Name' => 'Web Services: Get Custom Fields',
+                        ),
+                        12 => 
+                        array (
+                        'RoleID' => 6006,
+                        'Name' => 'Web Services: Get Documents',
+                        ),
+                        13 => 
+                        array (
+                        'RoleID' => 6001,
+                        'Name' => 'Web Services: Get Notes',
+                        ),
+                        14 => 
+                        array (
+                        'RoleID' => 6010,
+                        'Name' => 'Web Services: Get Partners',
+                        ),
+                        15 => 
+                        array (
+                        'RoleID' => 69,
+                        'Name' => 'Web Services: Order Placement',
+                        ),
+                        16 => 
+                        array (
+                        'RoleID' => 6004,
+                        'Name' => 'Web Services: Override Property Address Validation and Reformatting',
+                        ),
+                        17 => 
+                        array (
+                        'RoleID' => 6011,
+                        'Name' => 'Web Services: Remove Partners',
+                        ),
+                        18 => 
+                        array (
+                        'RoleID' => 6014,
+                        'Name' => 'Web Services: Search Files',
+                        ),
+                        19 => 
+                        array (
+                        'RoleID' => 6019,
+                        'Name' => 'Web Services: Update Partner',
+                        ),
+                        20 => 
+                        array (
+                        'RoleID' => 6008,
+                        'Name' => 'Web Services: Write Custom Fields',
+                        ),
+                        21 => 
+                        array (
+                        'RoleID' => 51,
+                        'Name' => 'Website',
+                        ),
+                    ),
+                    'WebsiteAccess' => true,
+                    'Name' => $userInfo['email_address'],
+                    'PasswordExpirationDate' => '/Date(3025656585000-0000)/',
+                    'FirstName' => $userInfo['first_name'],
+                    'LastName' => $userInfo['last_name'],
+                    'ContactInformation' => array(
+                        'EmailAddress' => $userInfo['email_address'],
+                    ),
+                );
+                $userUpdateData = json_encode($userUpdateData);
+                $logid = $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'update_password', env('RESWARE_ORDER_API').$endPoint, $userUpdateData, array(), 0, 0);
+                $result = $this->resware->make_request('PUT', $endPoint, $userUpdateData, $userdata);
+                $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'update_password', env('RESWARE_ORDER_API').$endPoint, $userUpdateData, $result, 0, $logid);
+                
+                if (isset($result) && !empty($result)) {
+                    $response = json_decode($result,true);
+                    
+                    if (isset($response['Employee']) && !empty($response['Employee'])) {
+                        $random_password = $this->order->randomPassword();
+                        $reswareUpdatePwdData = array(
+                            'user_name' =>  $userInfo['email_address'],
+                            'password' => 'Pacific1',
+                            'new_password' => $random_password,
+                        );
+                        
+                        $logid = $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+                        $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+                        $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                        $responsePwd = json_decode($updatePwdResult,true);
+                        $condition = array(
+                            'id' => $userInfo['id']
+                        );
+                        $customerData = array(
+                            'is_password_updated' => 0,
+                            'random_password' => $random_password,
+                            'password' => 'Pacific1',
+                            'is_primary' => 1
+                        );
+
+                        if(!empty($responsePwd['message'])) {
+                            $customerData['is_password_updated'] = 0;
+                            $customerData['resware_error_msg'] = $responsePwd['message'];
+                            $response = array('status' => 'error', 'message' =>  'Password update failed due to: '.$responsePwd['message']);
+                        } else {
+                            $customerData['is_password_updated'] = 1;
+                            $response = array('status' => 'success', 'message' =>  'Password updated successfully for email user: '. $userInfo['email_address']);
+                        }
+                        
+                        $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                        echo json_encode($response);exit;
+                    } else {
+                        $msg = $response['ResponseStatus']['Errors'][0]['Message'];
+                        $condition = array(
+                            'id' => $userInfo['id']
+                        );
+                        $customerData = array(
+                            'is_password_updated' => 0,
+                            'password' => 'Pacific1',
+                            'is_primary' => 1,
+                            'resware_error_msg' => $msg
+                        );
+                        $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                        $response = array('status' => 'error', 'message' => $msg);
+                        echo json_encode($response);exit;
+                    }
+                } else {
+                    $msg = 'Something went wrong. Please try again.';
+                    $response = array('status' => 'error', 'message' => $msg);
+                    echo json_encode($response);exit;
+                }
+            }
+        } else {
+            $msg = 'Customer ID is required.';
+            $response = array('status' => 'error','message'=>$msg);
+        }
+        echo json_encode($response);
+    }
+
+    public function incorrect_users()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Incorrect Users';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/incorrect_users', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_incorrect_customer_list()
+    {
+        $params = array();
+        
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['where']['status'] = 1;
+
+            $pageno = ($params['start'] / $params['length'])+1;
+
+            $incorrect_customer_lists = $this->home_model->get_incorrect_customers($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $incorrect_customer_lists = $this->home_model->get_incorrect_customers($params);            
+        }
+        $data = array(); 
+        
+        if(isset($incorrect_customer_lists['data']) && !empty($incorrect_customer_lists['data']))
+        {
+            foreach ($incorrect_customer_lists['data'] as $key => $value) 
+            {  
+                $nestedData=array();
+                /*$nestedData[] = $value['customer_number'];*/
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+               
+                $nestedData[] = $value['company_name'];
+               // $nestedData[] = $value['street_address'].", ".$value['city'].", ". $value['zip_code'];
+                $nestedData[] = $value['random_password'];
+                
+                $type = isset($value['is_escrow']) && !empty($value['is_escrow']) ? 'Escrow' : 'Lender';            
+               // $nestedData[] = $type;    
+                $nestedData[] = $value['resware_error_msg'];
+
+                $action = "<a href='javascript:void(0);' onclick='resetPassword(".$value['id'].")' class='btn btn-secondary'  title='Reset Password'>Reset</a>";
+                $nestedData[] = $action;       
+                          
+                $data[] = $nestedData;            
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal'] = intval( $incorrect_customer_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $incorrect_customer_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function reset_user_password()
+    {
+        $this->load->model('order/apiLogs');
+        $this->is_admin();
+        $id = $this->input->post('id');
+        $params = array(
+            'id' => $id
+        );
+        $userInfo = $this->home_model->get_rows($params);
+        $reswareUpdatePwdData = array(
+            'user_name' =>  $userInfo['email_address'],
+            'password' => 'Pacific1',
+            'new_password' => $userInfo['random_password'],
+        );
+        $logid = $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+        $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+        $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+        $responsePwd = json_decode($updatePwdResult,true);
+        $condition = array(
+            'id' => $userInfo['id']
+        );
+        $customerData = array(
+            'password' => 'Pacific1',
+        );
+
+        if(!empty($responsePwd['message'])) {
+            $customerData['is_password_updated'] = 0;
+            $customerData['resware_error_msg'] = $responsePwd['message'];
+            $response = array('status' => 'error', 'message' =>  'Password update failed due to: '.$responsePwd['message']);
+        } else {
+            $customerData['is_password_updated'] = 1;
+            $response = array('status' => 'success', 'message' =>  'Password updated successfully for email user: '. $userInfo['email_address']);
+        }
+
+        $this->home_model->update($customerData, $condition, 'customer_basic_details');
+        echo json_encode($response);exit;
+    }
+    
+    public function updatePasswordResware($postData)
+    {
+        $this->is_admin();
+        $body_params = http_build_query($postData);
+        $ch = curl_init(env('RESWARE_UPDATE_PWD_API'));    
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
+        $result = curl_exec($ch);
+        return $result;
+    }
+
+    public function import_underwriters()
+    {    
+        $this->is_admin();  
+        $data = array();
+        $successMsg = '';
+        $data['title'] = 'PCT Order: Import Underwriters';
+
+        if ($this->input->post()) {
+            ini_set('max_execution_time', 0); 
+            ini_set('memory_limit','2048M');
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+            
+            if ($this->form_validation->run($this) == true) {
+                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
+
+                if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                    $this->load->library('CSVReader');
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+                    $password = md5('Pacific1');
+
+                    if (!empty($csvData)) {
+
+                        foreach ($csvData as $row) {
+                            $rowCount++;
+
+                            if (isset($row['Partner Company ID']) && !empty($row['Partner Company ID'])) {
+                                $con = array(
+                                    'where' => array(
+                                        'partner_id' => trim($row['Partner Company ID']),
+                                    ),
+                                    'returnType' => 'count'
+                                );
+                                $prevCount = $this->home_model->get_company_rows($con);
+                              
+                                if ($prevCount > 0) {
+
+                                    if (strpos(strtolower(trim($row['Underwriter'])), 'commonwealth') !== false) {
+                                        $underwriter = 'commonwealth';
+                                    } else if (strpos(strtolower(trim($row['Underwriter'])), 'north american') !== false) {
+                                        $underwriter = 'north_american';
+                                    } else {
+                                        $underwriter = 'westcor';
+                                    }
+                                    $condition = array('partner_id' => trim($row['Partner Company ID']));
+                                    $update = $this->home_model->update(array('underwriter' => $underwriter), $condition, 'pct_order_partner_company_info');
+                                    
+                                    if ($update) {
+                                        $insertCount++;
+                                    }
+                                }
+                            }                              
+                        }
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'Underwriters imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Not Inserted ('.$notAddCount.')';
+                        $data['success_msg'] = $successMsg;
+                    }
+                } else {
+                    $data['error_msg'] = 'Error on file upload, please try again.';
+                }
+            } else {
+                $data['error_msg'] = 'Invalid file, please select only CSV file.';
+            }
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/import_underwriter', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function updateUnderwriter()
+    {
+        // echo "<pre>"; print_r($this->input->post()); exit;
+        $partner_id = $this->input->post('partner_id');
+        $underwriter = $this->input->post('underwriter');
+        $underwriter_type = $this->input->post('underwriter_type');
+        
+        $updateData = array($underwriter_type => $underwriter);
+// echo "<pre>"; print_r($updateData); exit;
+        /*if($underwriter_type == 'loan_underwriter')
+        {
+            $updateData = array(
+                '' =>
+            );
+        }
+        elseif ($underwriter_type == 'sales_underwriter') 
+        {
+            # code...
+        }*/
+
+        $condition = array('partner_id' => $partner_id);
+        $this->home_model->update($updateData, $condition, 'pct_order_partner_company_info');
+        $data = array('status'=>'success', 'msg'=> 'Underwriter updated successfully.');
+        echo json_encode($data);
+    }
+
+    public function cplProposedUsers()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: CPL/Proposed Users';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/cpl_proposed_users', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_cpl_proposed_users_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $master_users_lists = $this->home_model->get_cpl_proposed_users_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $master_users_lists = $this->home_model->get_cpl_proposed_users_list($params);        
+        }
+
+        $data = array(); 
+        if (isset($master_users_lists['data']) && !empty($master_users_lists['data'])) {
+            foreach ($master_users_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
+                if($value['lender_cpl_proposed_status'] == 1) {
+                    $lenderStatus = 'Approved';
+                } else if ($value['lender_cpl_proposed_status'] == 2) {
+                    $lenderStatus = 'Rejected';
+                } else {
+                    $lenderStatus = 'Pending';
+                }
+                $nestedData[] = $lenderStatus;
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $editUrl = base_url().'order/admin/edit-cpl-proposed-user/'.$value['id'];
+                    $nestedData[] = "<a href='".$editUrl."'  class='btn btn-action'  title='Edit CPL/Proposed User'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                }
+                $data[] = $nestedData;            
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $master_users_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $master_users_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function editCplProposedUser()
+    {
+        $this->is_admin();
+        $data = array();
+        $id = $this->uri->segment(4);      
+        $data['title'] = 'PCT Order: Edit CPL/Proposed User';
+        $salesRepData = array();
+
+        if(isset($id) && !empty($id)) {
+            if ($this->input->post()) {
+                $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
+                $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+                $this->form_validation->set_rules('company', 'Company', 'required', array('required'=> 'Please Enter Company'));
+                $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));
+                $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+                $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+                $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', array('required'=> 'Please Enter Zipcode'));
+                $this->form_validation->set_rules('partner_id', 'Company', 'required', array('required'=> 'Please select company based on search'));
+                
+                if ($this->form_validation->run() == true) {
+                    $customerData = array(
+                        'partner_id' =>  $this->input->post('partner_id'),
+                        'resware_user_id' =>  0,
+                        'first_name' => $this->input->post('first_name'),
+                        'last_name' => $this->input->post('last_name'),
+                        'telephone_no' => $this->input->post('telephone_no'),
+                        'email_address' => $this->input->post('email_address'),
+                        'password' => 'Pacific1',    
+                        'company_name' => $this->input->post('company'),
+                        'street_address' => $this->input->post('address'),
+                        'city' => $this->input->post('city'),
+                        'state' => $this->input->post('state'),
+                        'zip_code' => $this->input->post('zipcode'),
+                        'is_escrow' => 0,
+                        'is_master' => 0,
+                        'is_password_updated' => 0,
+                        'is_new_user' => 0,
+                        'status'=> 1,
+                    );
+                    $response = $this->addNewUserToResware($customerData);
+    
+                    if ($response['success']) {
+                        $customerData['resware_user_id'] = $response['resware_user_id'];
+                        $customerData['random_password'] = $this->order->randomPassword();
+                        $reswareUpdatePwdData = array(
+                            'user_name' =>  $this->input->post('email_address'),
+                            'password' => 'Pacific1',
+                            'new_password' => $customerData['random_password'],
+                        );
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+                        $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                        $responsePwd = json_decode($updatePwdResult,true);
+    
+                        if (!empty($responsePwd['message'])) {
+                            $customerData['resware_error_msg'] = $responsePwd['message'];
+                            $data['error_msg'] = 'Password update failed due to: '.$responsePwd['message'];
+                        } else {
+                            $customerData['is_password_updated'] = 1;
+                            $customerData['is_added_lender_by_cpl_proposed'] = 0;
+                            $customerData['lender_cpl_proposed_status'] = 1;
+                            $data['success_msg'] = 'Password updated successfully for email user: '. $userInfo['email_address'];
+                        }
+                        $updateCondition = array(
+                            'id' => $id,
+                        );
+                        $update = $this->home_model->update($customerData, $updateCondition);
+                    } else {
+                        $data['error_msg'] = $response['msg'];
+                    }
+                } else {
+                    $data['first_name_error_msg'] = form_error('first_name');
+                    $data['last_name_error_msg'] = form_error('last_name');
+                    $data['email_address_error_msg'] = form_error('email_address');
+                    $data['company_error_msg'] = form_error('company');
+                    $data['user_type_error_msg'] = form_error('user_type');
+                    $data['address_error_msg'] = form_error('address');
+                    $data['city_error_msg'] = form_error('city');
+                    $data['state_error_msg'] = form_error('state');
+                    $data['zipcode_error_msg'] = form_error('zipcode');
+                    if (empty(form_error('company')) && !empty(form_error('partner_id'))) {
+                        $data['company_error_msg'] = "This partner company is not available on Resware side so please remove this company and select new company based on search.";
+                    }
+                }                                       
+            }
+            $con = array('id' => $id);
+            $data['cpl_proposed_user_info'] = $this->home_model->get_rows($con);
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/edit_cpl_proposed_user', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function rejectCplProposedUser()
+    {
+        $this->is_admin();
+        $data = array();
+        $id = $this->uri->segment(4);      
+        $updateCondition = array(
+            'id' => $id,
+        );
+        $customerData['lender_cpl_proposed_status'] = 2;
+        $customerData['is_added_lender_by_cpl_proposed'] = 0;
+        $update = $this->home_model->update($customerData, $updateCondition);
+        redirect(base_url().'order/admin/cpl-proposed-users');
+    }
+
+    
+	public function sendPassword()
+	{
+        $this->is_admin();
+		$data = array();
+        $data['title'] = 'PCT Order: Send Password Listing';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/password_listing', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+    
+    public function get_password_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $customer_lists = $this->home_model->get_password_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $customer_lists = $this->home_model->get_password_list($params);            
+        }
+
+        $data = array(); 
+	    if (isset($customer_lists['data']) && !empty($customer_lists['data'])) {
+	    	foreach ($customer_lists['data'] as $key => $value)  {
+	    		$nestedData=array();
+	            $nestedData[] = $value['first_name'];
+	            $nestedData[] = $value['last_name'];
+	            $nestedData[] = $value['email_address'];
+	            $nestedData[] = $value['telephone_no'];
+	            $nestedData[] = $value['company_name'];
+	            $nestedData[] = $value['street_address'];
+	            $nestedData[] = $value['city'];
+	            $nestedData[] = $value['zip_code'];
+	                    
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $action = "<a href='javascript:void(0);' onclick='sendPasswordMail(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-envelope' aria-hidden='true'></span></a>";
+                    $nestedData[] = $action;
+                }
+	            $data[] = $nestedData;            
+	    	}
+	    }
+        $json_data['recordsTotal'] = intval( $customer_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $customer_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+	    echo json_encode($json_data);
+    }
+
+    public function sendPasswordMail()
+    {
+        $this->is_admin();
+        $id =  $this->input->post('id');
+        
+    	if ($id) {
+            $user = $this->home_model->get_user(array('id' => $id));
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = getenv('FROM_EMAIL');
+            $message_body = "Hi ".$user['first_name']." ".$user['last_name'].", <br><br>";
+            $message_body .= "Please login with tempoary password and change your password. <br><br>";
+            $this->load->library('order/order');
+            $randomPassword = $this->order->randomPassword();
+
+            $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
+            $message_body .= "Use this link for login: ".getenv('APP_URL')."order/login_test <br><br>";
+           
+            $this->home_model->update(array('password' => password_hash($randomPassword, PASSWORD_DEFAULT), 'is_tmp_password' => 1), array('id' => $user['id']));
+            $subject = 'Change Passsword';
+           // $to = $user['email_address'];
+            $to = 'ghernandez@pct.com';
+            $cc = array();
+            $bcc = array();
+            $file = array();
+            $this->load->helper('sendemail');
+            $mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body, $file, $cc, $bcc);
+            if($mail_result) {
+                $response = array('status' => 'success', 'message' => 'Mail sent successfully.');
+            } else {
+                $response = array('status' => 'success', 'message' => 'Mail not sent due to some error. Please try again.');
+            }
+    	} else {
+    		$msg = 'Customer ID is required.';
+			$response = array('status' => 'error', 'message' => $msg);
+    	}
+    	echo json_encode($response);
+    }
+
+    public function reswareAdminCredential()
+    {
+        $this->is_admin();
+        $this->load->library('order/order');
+        $data = array();
+        $data['title'] = 'PCT Order: Resware Admin Credential';
+        $data['credResult'] = $this->order->get_resware_admin_credential();
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('resware_username', 'Username', 'required', array('required'=> 'Please Enter Username'));
+            $this->form_validation->set_rules('resware_password', 'Password', 'required', array('required'=> 'Please Enter Password'));
+            if ($this->form_validation->run() == true) {
+                $this->db->update('pct_resware_admin_credential', array('username' => $this->input->post('resware_username'), 'password' => $this->input->post('resware_password')));  
+                $data['success_msg'] = 'Resware Admin credentials updated successfully';  
+                $data['credResult'] = $this->order->get_resware_admin_credential();      
+            } else {
+                $data['resware_username_error_msg'] = form_error('resware_username');
+                $data['resware_password_error_msg'] = form_error('resware_password');
+            }                                       
+        }
+        
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/resware_admin_credential', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function importOrders($value='')
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Import Orders';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/import_order', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_import_order_customer_list()
+    {
+        $params = array();
+        
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['where']['status'] = 1;
+
+            $pageno = ($params['start'] / $params['length'])+1;
+
+            $incorrect_customer_lists = $this->home_model->get_import_order_users($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $incorrect_customer_lists = $this->home_model->get_import_order_users($params);            
+        }
+        $data = array(); 
+        
+        if(isset($incorrect_customer_lists['data']) && !empty($incorrect_customer_lists['data']))
+        {
+            foreach ($incorrect_customer_lists['data'] as $key => $value) 
+            {  
+                $nestedData=array();
+                /*$nestedData[] = $value['customer_number'];*/
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+               
+                $nestedData[] = $value['company_name'];
+               
+
+                $action = "<a href='javascript:void(0);' onclick='importOrders(".$value['id'].")' class='btn btn-secondary'  title='Import'>Import</a>";
+                $nestedData[] = $action;       
+                          
+                $data[] = $nestedData;            
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal'] = intval( $incorrect_customer_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $incorrect_customer_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function updateTransaction()
+    {
+        $partner_id = $this->input->post('partner_id');
+        $transaction = $this->input->post('transaction');
+        $condition = array('partner_id' => $partner_id);
+        $this->home_model->update(array('transaction' => $transaction), $condition, 'pct_order_partner_company_info');
+        $data = array('status'=>'success', 'msg'=> 'Transaction updated successfully.');
+        echo json_encode($data);
+    }
+
+    public function notifications()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Notification';
+        //$data['notifications'] = $this->home_model->getNotifications();
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/notifications', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_notifications_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $notification_lists = $this->home_model->get_notifications_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $notification_lists = $this->home_model->get_notifications_list($params);            
+        }
+
+        $data = array(); 
+        $count = $params['start'] + 1;
+	    if (isset($notification_lists['data']) && !empty($notification_lists['data'])) {
+	    	foreach ($notification_lists['data'] as $key => $value)  {
+	    		$nestedData=array();
+                $nestedData[] = $count;
+	            $nestedData[] = $value['name'];
+                $notification_id = $value['id'];
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a onclick='preview_email($notification_id)'><i class='fas fa-eye'></i></a>
+                    </div>";
+                }
+	            $data[] = $nestedData;    
+                $count++;          
+	    	}
+	    }
+        $json_data['recordsTotal'] = intval( $notification_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $notification_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+	    echo json_encode($json_data);
+    }
+
+    public function email_preview()
+    {
+        $data = array();
+        $notificationId = $this->input->post('notificationId');
+        if($notificationId == 5) {
+            $results = $this->load->view('emails/borrower', $data, TRUE);
+        } else if($notificationId == 4) {
+            $results = $this->load->view('emails/order', $data, TRUE);
+        } else if($notificationId == 7) {
+            $results = $this->load->view('emails/prelim', $data, TRUE);
+        } else if($notificationId == 6) {
+            $results = $this->load->view('emails/search_package', $data, TRUE);
+        } else {
+            $results = "<div style='margin:50px;'><h3>User Details:</h3><p>Name: </p><p>Telephone: </p><p>Email Address: </p><p>Company Name: </p><p>Street Address: </p><p>City: </p><p>Zipcode: </p><p>Property Address: </p></div>";
+        } 
+        
+        echo json_encode($results, true);
+    }
+
+    public function getDeliverables()
+    {
+        $partner_id = $this->input->post('partner_id');
+        $this->db->select('*');
+        $this->db->from('pct_order_partner_company_info');
+        $this->db->where('partner_id', $partner_id);
+        $query = $this->db->get();
+        $partnerInfo = $query->row_array(); 
+        if(!empty($partnerInfo['deliverables'])) {
+            $deliverables = explode(',', $partnerInfo['deliverables']);
+            $result = array('deliverables'=> $deliverables);    
+        } else {
+            $result = array('deliverables'=> array());    
+        }
+        echo json_encode($result); exit;
+    }
+
+    public function storeDeliverables()
+    {
+        $AdditionalEmail = $this->input->post('AdditionalEmail');
+        $partner_id = $this->input->post('partner_id');
+        $condition = array(
+            'partner_id' =>  $partner_id
+        );
+        $this->home_model->update(array('deliverables' => implode(',',  $AdditionalEmail)), $condition, 'pct_order_partner_company_info');
+        $success = 'Deliverables added successfully.';
+        $data = array(
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+        redirect(base_url().'order/admin/companies');
+    }
+
+    public function escrow_officers()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Escrow Officers';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/escrow_officers', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_escrow_officers_list()
+    {
+        $params = array();
+        
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['where']['status'] = 1;
+
+            $pageno = ($params['start'] / $params['length'])+1;
+
+            $escrow_officer_lists = $this->home_model->get_escrow_officers($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $escrow_officer_lists = $this->home_model->get_escrow_officers($params);            
+        }
+        
+        $data = array(); 
+        
+        if(isset($escrow_officer_lists['data']) && !empty($escrow_officer_lists['data']))
+        {
+            foreach ($escrow_officer_lists['data'] as $key => $value) 
+            {
+                $nestedData=array();
+                
+                $nestedData[] = $value['partner_id'];
+                $nestedData[] = $value['partner_type_id'];
+                $nestedData[] = $value['partner_name'];  
+                $nestedData[] = $value['email'];
+               
+                $action = "";
+                $editUrl = base_url().'order/admin/edit-escrow-officer/'.$value['id'];
+                $action = "<a href='".$editUrl."' class='btn btn-action edit-agent'title ='Edit Escrow Officer Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+
+                $action .= "<a href='javascript:void(0);' onclick='deleteEscrowOfficer(".$value['id'].")' class='btn btn-action'  title='Delete Escrow Officer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                $nestedData[] = $action;       
+                          
+                $data[] = $nestedData;            
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal'] = intval( $escrow_officer_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $escrow_officer_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function add_escrow_officer()
+    {
+        $this->is_admin();
+        $data = array();
+        $data['title'] = 'PCT Order: Add Escrow Officer';
+        $escrowData = array();
+        if ($this->input->post()) 
+        {
+           // echo "<pre>"; print_r($this->input->post()); exit;
+            $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
+            $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
+            $this->form_validation->set_rules('partner_name', 'Partner Name', 'required', array('required'=> 'Please Enter Partner Name'));
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+            $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));            
+            $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+            $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+            $this->form_validation->set_rules('zip', 'Zip', 'required', array('required'=> 'Please Enter Zip'));
+            $partner_type_ids = array();
+            if ($this->form_validation->run() == true) 
+            {
+                $partner_type_ids[] = 1;
+                $partner_type_ids[] = $_POST['partner_type_id'];
+                $escrowData = array(
+                    'partner_id' => $_POST['partner_id'],
+                    'partner_type_id' =>  implode(',', $partner_type_ids),
+                    'partner_name' => $_POST['partner_name'],
+                    'email' => $_POST['email_address'],
+                    'address1' => $_POST['address'],               
+                    'city' =>  $_POST['city'],
+                    'state' => $_POST['state'],
+                    'zip' => $_POST['zip'],
+                    'status' => 1
+                );
+
+                $insert = $this->home_model->insert($escrowData,'pct_order_partner_company_info');
+                    
+                if ($insert) {
+                    $data['success_msg'] = 'Escrow Officer added successfully.';
+                } else {
+                    $data['error_msg'] = 'Escrow Officer not added.';
+                }              
+                
+            } else {
+                $data['partner_id_error_msg'] = form_error('partner_id');
+                $data['partner_type_id_error_msg'] = form_error('partner_type_id');
+                $data['partner_name_error_msg'] = form_error('partner_name');
+                $data['email_error_msg'] = form_error('email_address');
+                $data['address_error_msg'] = form_error('address');
+                $data['city_error_msg'] = form_error('city');
+                $data['state_error_msg'] = form_error('state');
+                $data['zip_error_msg'] = form_error('zip');
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/add_escrow_officer', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function delete_escrow_officer()
+    {
+        $this->is_admin();
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+
+        if($id)
+        {
+            $escrowData = array('status' => 0);
+
+            $condition = array('id' => $id);
+
+            $update = $this->home_model->update($escrowData, $condition,'pct_order_partner_company_info');
+
+            if($update)
+            {
+                $successMsg = 'Escrow Officer deleted successfully.';
+                $response = array('status'=>'success', 'message'=>$successMsg);
+            }
+        }
+        else
+        {
+            $msg = 'Escrow Officer ID is required.';
+            $response = array('status' => 'error','message'=>$msg);
+        }
+
+        echo json_encode($response);
+    }
+
+    public function edit_escrow_officer()
+    {
+        $this->is_admin();
+        $data = array();
+        $id = $this->uri->segment(4);
+        $data['title'] = 'PCT Order: Add Escrow Officer';
+        $escrowData = array();
+
+        if(isset($id) && !empty($id))
+        {
+            if ($this->input->post()) 
+            {
+                $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
+                $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'required', array('required'=> 'Please Enter Partner Type Id'));
+                $this->form_validation->set_rules('partner_name', 'Partner Name', 'required', array('required'=> 'Please Enter Partner Name'));
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+                $this->form_validation->set_rules('address', 'Address', 'required', array('required'=> 'Please Enter Address'));            
+                $this->form_validation->set_rules('city', 'City', 'required', array('required'=> 'Please Enter City'));
+                $this->form_validation->set_rules('state', 'State', 'required', array('required'=> 'Please Enter State'));
+                $this->form_validation->set_rules('zip', 'Zip', 'required', array('required'=> 'Please Enter Zip'));
+                
+                if ($this->form_validation->run() == true) 
+                {
+                    $escrowData = array(
+                        'partner_id' => $_POST['partner_id'],
+                        'partner_type_id' =>  $_POST['partner_type_id'],
+                        'partner_name' => $_POST['partner_name'],
+                        'email' => $_POST['email_address'],
+                        'address1' => $_POST['address'],               
+                        'city' =>  $_POST['city'],
+                        'state' => $_POST['state'],
+                        'zip' => $_POST['zip'],
+                        'status' => 1
+                    );
+
+                    $condition = array('id' => $id);
+                    $update = $this->home_model->update($escrowData,$condition,'pct_order_partner_company_info');
+                        
+                    if ($update) {
+                        $data['success_msg'] = 'Escrow Officer updated successfully.';
+                    } else {
+                        $data['error_msg'] = 'Error occurred while updating Escrow Officer.';
+                    }              
+                    
+                } else {
+                    $data['partner_id_error_msg'] = form_error('partner_id');
+                    $data['partner_name_error_msg'] = form_error('partner_name');
+                    $data['email_error_msg'] = form_error('email_address');
+                    $data['address_error_msg'] = form_error('address');
+                    $data['city_error_msg'] = form_error('city');
+                    $data['state_error_msg'] = form_error('state');
+                    $data['zip_error_msg'] = form_error('zip');
+                }                                       
+            }
+            $con = array('id' => $id);
+            $data['escrow_info'] = $this->home_model->get_escrow_officer($con);
+        }
+        else
+        {
+            redirect(base_url().'escrow-officers');
+        }
+        
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/edit_escrow_officer', $data);
+        $this->load->view('order/layout/footer', $data);
     }
 }

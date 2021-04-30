@@ -259,116 +259,133 @@ body {
 
 .btn-type-1a {
     font-weight: 400;
-    color: #03374f;
-    border: 8px solid #fff;
+    color: #ffffff;
+    border: 0px solid #fff;
     background-color: white;
-    width: 257px;
-    height: 160px;
-    padding-top: 120px;
-    background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/1.png);
+    width: 300px;
+    height: 200px;
+    padding-top: 140px;
+    background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/1.jpg);
     box-shadow: 0 1px 6px rgba(57,73,76,.35);
 	text-transform:uppercase;
-	font-size: 14px;
+	font-size: 17px;
+	margin-bottom:15px;
+	background-repeat: no-repeat;
+
 }
 
 .btn-type-1b {
     font-weight: 400;
-    color: #03374f;
-    border: 8px solid #fff;
+    color: #ffffff;
+    border: 0px solid #fff;
     background-color: white;
-    width: 257px;
-    height: 160px;
-    padding-top: 120px;
-    background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/2.png);
+    width: 300px;
+    height: 200px;
+    padding-top: 140px;
+    background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/12.jpg);
     box-shadow: 0 1px 6px rgba(57,73,76,.35);
 	text-transform:uppercase;
-	font-size: 14px;
+	font-size: 17px;
+	margin-bottom:15px;
+	background-repeat: no-repeat;
 
 }
 .btn-type-1c {
     font-weight: 400;
-    color: #03374f;
-    border: 8px solid #fff;
+    color: #ffffff;
+    border: 0px solid #fff;
     background-color: white;
-    width: 257px;
-    height: 160px;
-    padding-top: 120px;
-    background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/4.png);
+    width: 300px;
+    height: 200px;
+    padding-top: 140px;
+    background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/15.jpg);
     box-shadow: 0 1px 6px rgba(57,73,76,.35);
 	text-transform:uppercase;
-	font-size: 14px;
+	font-size: 17px;
+	margin-bottom:15px;
+	background-repeat: no-repeat;
 
 }
 .btn-type-1d {
     font-weight: 400;
-    color: #03374f;
-    border: 8px solid #fff;
+    color: #ffffff;
+    border: 0px solid #fff;
     background-color: white;
-    width: 257px;
-    height: 160px;
-    padding-top: 120px;
-    background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/5.png);
+    width: 300px;
+    height: 200px;
+    padding-top: 140px;
+    background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/16.jpg);
     box-shadow: 0 1px 6px rgba(57,73,76,.35);
 	text-transform:uppercase;
-	font-size: 14px;
+	font-size: 17px;
+	margin-bottom:15px;
+	background-repeat: no-repeat;
 
 }
 
 .btn-type-1e {
     font-weight: 400;
-    color: #03374f;
-    border: 8px solid #fff;
+    color: #ffffff;
+    border: 0px solid #fff;
     background-color: white;
-    width: 257px;
-    height: 160px;
-    padding-top: 120px;
-    background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/6.png);
+    width: 300px;
+    height: 200px;
+    padding-top: 140px;
+    background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/13.jpg);
     box-shadow: 0 1px 6px rgba(57,73,76,.35);
 	text-transform:uppercase;
-	font-size: 14px;
+	font-size: 17px;
+	margin-bottom:15px;
+	background-repeat: no-repeat;
 
 }
 .btn-type-1f {
     font-weight: 400;
-    color: #03374f;
-    border: 8px solid #fff;
+    color: #ffffff;
+    border: 0px solid #fff;
     background-color: white;
-    width: 257px;
-    height: 160px;
-    padding-top: 120px;
-    background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/7.png);
+    width: 300px;
+    height: 200px;
+    padding-top: 140px;
+    background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/1.jpg);
     box-shadow: 0 1px 6px rgba(57,73,76,.35);
 	text-transform:uppercase;
-	font-size: 14px;
+	font-size: 17px;
+	margin-bottom:15px;
+	background-repeat: no-repeat;
 
 }
 .btn-type-1g {
     font-weight: 400;
-    color: #03374f;
-    border: 8px solid #fff;
+    color: #ffffff;
+    border: 0px solid #fff;
     background-color: white;
-    width: 257px;
-    height: 160px;
-    padding-top: 120px;
-    background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/3.png);
+    width: 300px;
+    height: 200px;
+    padding-top: 140px;
+    background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/14.jpg);
     box-shadow: 0 1px 6px rgba(57,73,76,.35);
 	text-transform:uppercase;
-	font-size: 14px;
+	font-size: 17px;
+	margin-bottom:15px;
+	background-repeat: no-repeat;
 
 }
 
 .btn-type-1h {
     font-weight: 400;
-    color: #03374f;
-    border: 8px solid #fff;
+    color: #ffffff;
+    border: 0px solid #fff;
     background-color: white;
-    width: 257px;
-    height: 160px;
-    padding-top: 120px;
-    background-image: url(http://www.pct.com/assets/media/components/b-title-page/dashboard/8.png);
+    width: 300px;
+    height: 200px;
+    padding-top: 140px;
+    background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/1.jpg);
     box-shadow: 0 1px 6px rgba(57,73,76,.35);
 	text-transform:uppercase;
-	font-size: 14px;
+	font-size: 17px;
+	margin-bottom:15px;
+	background-repeat: no-repeat;
 
 }
 
@@ -1644,6 +1661,13 @@ blockquote cite {
   background-image: linear-gradient(20deg, #022535 20%, #095886 60%, #095886 100%);
 }
 
+.area-bg_grad-7:after {
+  background-color: none;
+   /*background-image: -webkit-linear-gradient(70deg, rgba(0, 55, 87, 0.55) 0%, rgba(0, 55, 87, 0.55) 40%, rgba(79, 0, 88, 0.55) 100%);
+  background-image: linear-gradient(20deg, rgba(0, 55, 87, 0.55) 0%, rgba(0, 55, 87, 0.55) 40%, rgba(79, 0, 88, 0.55) 100%);*/
+  background-image: url(../media/content/bg/bgsi.png);
+}
+
 .area-bg_dark:after {
   background-color: #000;
 }
@@ -1727,6 +1751,11 @@ blockquote cite {
 .section-type-1a {
   color: #979797;
   background-image: url(../media/content/bg/bg-1.jpg);
+}
+
+.section-type-1si {
+  color: #979797;
+  height:400px;
 }
 
 .section-type-1a .ui-title-block-3 {
@@ -4690,9 +4719,10 @@ blockquote cite {
     height: 100px;
     padding-top: 0px;
     padding-bottom: 0px;
-    background-image: url("http://www.pct.com/assets/media/components/b-title-page/bluebar1.png");
-    opacity: 0.80;
+    background-color: #03374f;
+	background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/tp.png);
 	text-align: center;
+	background-repeat: repeat-x; 
 }
 
 

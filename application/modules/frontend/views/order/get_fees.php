@@ -1,4 +1,5 @@
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script> 
     <link rel="stylesheet" href="<?php echo base_url()?>assets/front/css/style.css" media="screen" type="text/css" />
     <?php
         $this->load->view('layout/header_dashboard');
@@ -7,6 +8,7 @@
   <div class="row"></div>
   <div class="row">
     <div class="recipt-body" id="artcle_main">
+        <div id="editor"></div>
       <div class="article" id="artcle_div">
         <?php
           if(empty($fees))
@@ -41,10 +43,18 @@
                   <?php
                     if(isset($loan_amount) && !empty($loan_amount))
                     {
+                        $loan_amount = str_replace(",", "", $loan_amount);
                   ?>
                       <td><b>Loan Amount </b></td>
-                      <td>$ <?php echo number_format($loan_amount); ?></td>
+                      <td>$<?php echo number_format($loan_amount); ?></td>
                   <?php
+                    }
+                    else
+                    {
+                ?>
+                        <td></td>
+                        <td></td>
+                <?php
                     }
                   ?>
                 </tr>
@@ -54,7 +64,9 @@
                     {
                   ?>
                       <td><b>Sales Amount </b></td>
-                      <td>$ <?php echo number_format($sales_amount); ?> </td>
+                      <td>$<?php echo number_format($sales_amount); ?> </td>
+                      <td></td>
+                      <td></td>
                   <?php
                     }
                   ?>
@@ -84,11 +96,13 @@
                                         {
                                             foreach ($value as $k => $v) 
                                             {
+                                                $description = $v['description']; 
+                                                $amount = str_replace(",", "", $v['amount']);
                                     ?>
                                                 <tr>
-                                                  <td><?php echo $v['description']; ?></td>
+                                                  <td><?php echo $description; ?></td>
                                                   <td class="aright">
-                                                    $ <?php echo number_format($v['amount'], 2); ?>
+                                                    $<?php echo number_format($amount, 2); ?>
                                                   </td>
                                                 </tr>
                                     <?php
@@ -107,7 +121,7 @@
               </tbody>              
             </table>
             </div>
-            <div class="clearfix" id="act_btns">  
+            <div class="clearfix" id="act_btns" style="display: none;">  
                 <br/>
                 <a class="button small orange" id="download_estimate" data-closing-fee-id= "<?php echo $closing_fee_estimate_id; ?>" href="javascript:void(0);">Download Fee Estimate</a>
             </div>
@@ -126,12 +140,24 @@
 </html>
 <script>
     $(document).ready(function () {
+        var doc = new jsPDF();
         $('#download_estimate').click(function() {
-            $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+            var specialElementHandlers = {
+    '#editor': function (element, renderer) {
+        return true;
+    }
+};
+
+doc.fromHTML($('#artcle_main').html(), 15, 15, {
+        'width': 170,
+            'elementHandlers': specialElementHandlers
+    });
+    doc.save('sample-file.pdf');
+           /* $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
             $('#page-preloader').css('display', 'block');
-            var closing_fee_id = $(this).data('closing-fee-id');
-            
-            $.ajax({
+            var closing_fee_id = $(this).data('closing-fee-id');*/
+             
+            /*$.ajax({
                 url: base_url + "get-fee-estimate-pdf",
                 type: "post",
                 data:{
@@ -167,7 +193,7 @@
                         $('#page-preloader').css('display', 'none');
                     }
                 }
-            });
+            });*/
         });
     });
     

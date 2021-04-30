@@ -1,6 +1,19 @@
+<style>
+label {
+  padding: 0.20rem 0.75rem !important;
+  font-size: 12px;
+  color: #777;
+}
+
+.input-fields {
+  padding-top: 1.25rem !important;
+  padding-bottom: .25rem !important;
+}
+</style>
 <div class="container">
+<div class="adlogo"><img class="normal-logo" src="http://pct.com/assets/media/general/logo2.png" alt="logo"></div>
     <div class="card card-login mx-auto mt-5">
-      <div class="card-header">Login</div>
+      <div class="card-header">Admin Squad</div>
       <div class="card-body">
         <div id="login-result">
             <?php if(!empty($msg)){ ?>
@@ -14,13 +27,13 @@
         <form id="login-form" name="login-form" method="POST" action="<?php echo base_url()?>order/admin/home/do_login">
           <div class="form-group">
             <div class="form-label-group">
-              <input type="email" id="email_address" name="email_address" class="form-control" autofocus="autofocus">
+              <input type="email" id="email_address" name="email_address" class="form-control input-fields" autofocus="autofocus">
               <label for="inputEmail">Email address</label>
             </div>
           </div>
           <div class="form-group">
             <div class="form-label-group">
-              <input type="password" id="password" name="password" class="form-control">
+              <input type="password" id="password" name="password" class="form-control input-fields">
               <label for="inputPassword">Password</label>
             </div>
           </div>

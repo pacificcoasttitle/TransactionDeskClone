@@ -11,7 +11,7 @@
 	@page toc { sheet-size: A4; }
 	body{
 		font-family:Roboto, 'Segoe UI', Tahoma, sans-serif; 
-		font-size:16px; 
+		font-size:12px; 
 		color:#000000; 
 		max-width:100%;
 		-webkit-print-color-adjust:exact;
@@ -41,6 +41,10 @@
     	text-align: center;
     }
 
+    .text-right {
+    	text-align: right;
+    }
+
     .header-section .company-details p, 
     .title-officer-basic-info p, 
     .title-officer-contact-info p, 
@@ -62,6 +66,10 @@
     .spacer-t30 {
 	    margin-top: 30px;
 	}
+
+	.order-details {
+		line-height: 2px;
+	}
 	</style>
 </head>
 <body>
@@ -70,12 +78,17 @@
 			<div class="logo">
 				<img src="<?php echo base_url(); ?>assets/frontend/images/pi_logo.jpg" alt=""/>
 			</div>
-			<div class="company-details text-center">
-				<p>200 W. Glenoaks Blvd, Suite 100</p>
-				<p>Glendale, CA 91202</p>
-				<p>(818)662-6700</p>
+			<div class="company-details text-right">
+				<?php if(!empty($proposed_branch_id)) { ?>
+					<p><?php echo $branch_address;?></p>
+					<p><?php echo $branch_city;?>, <?php echo $branch_state;?> <?php echo $branch_zip;?></p>
+				<?php } else {?>
+					<p>200 W. Glenoaks Blvd, Suite 100</p>
+					<p>Glendale, CA 91202</p>
+					<p>(818)662-6700</p>
+				<?php } ?>
 			</div>
-			<h5 class="text-center">Issuing Agent for Commonwealth Land Title Insurance Company</h5>			
+			<h5 class="text-right"> <?php echo isset($underwriter) && !empty($underwriter) ? 'Issuing Agent for '.$underwriter : ''; ?></h5>			
 		</div>
 		<hr>
 		<div class="title-officer-info">
@@ -83,15 +96,23 @@
 				<p><span class="heading">Title Officer:</span> <?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
 				<p><span class="heading">Title Officer Email:</span>  <?php echo isset($title_officer_email) && !empty($title_officer_email) ? $title_officer_email : ''; ?></p>
 			</div>
-			<div class="title-officer-contact-info">
+			<div class="title-officer-contact-info text-right">
 				<p><span class="heading">Title Officer Phone:</span> <?php echo isset($title_officer_phone) && !empty($title_officer_phone) ? $title_officer_phone : ''; ?></p>
 				<!-- <p><span class="heading">Title Officer Fax:</span>  (818)484-2540</p> -->
 			</div>
 			<div style="clear: both;"></div>
 			<div class= "customer-info">
 				<div class="company-details">
-					<p class="heading-info"><span class="heading">To:</span> <?php echo isset($company) && !empty($company) ? $company : ''; ?></p>
-					<p><?php echo isset($address) && !empty($address) ? $address : ''; ?></p>
+					<?php
+						if(isset($company) && !empty($company))
+						{
+					?>
+							<p class="heading-info"><span class="heading">To:</span> <?php echo isset($company) && !empty($company) ? $company : ''; ?></p>
+							<p><?php echo isset($address) && !empty($address) ? $address : ''; ?></p>
+					<?php
+						}
+					?>
+					
 				</div>
 				<div class="order-number">
 					<p class="heading-info"><span class="heading">Order No.:</span> <?php echo isset($order_number) && !empty($order_number) ? $order_number : ''; ?></p>
@@ -113,7 +134,7 @@
 						}
 					?>
 				Supplemental report dated as of: </span><?php echo $s_date; ?></p>
-				<p class="text-center">
+				<p class="text-center" style="display: none;">
 					<?php
 						$p_date = date('M d, Y');
 						if(isset($preliminary_report_date) && !empty($preliminary_report_date))
@@ -129,16 +150,38 @@
 				<p style="text-align: justify;">The above numbered report (including any Supplements or Amendments thereto) is hereby modified and/or supplemented in order to reflect the following additional items relating to the issuance of a Policy of Title Insurance as follows:</p>
 				<p style="text-align: justify;">UPON THE CLOSE OF ESCROW AND CONFIRMATION OF RECORDING PACIFIC COAST TITLE WILL BE IN A POSITION TO ISSUE A TITLE POLICY IN FAVOR OF:</p>
 			</div>
-			<div>
-				<p>Borrower: <?php echo isset($borrowers) && !empty($borrowers) ? $borrowers : '-'; ?></p>
-				<p>Secondary Borrower: <?php echo isset($secondary_borrower) && !empty($secondary_borrower) ? $secondary_borrower : '-'; ?></p>
-				<p>Lender: <?php echo isset($lender) && !empty($lender) ? $lender : '-'; ?></p>
+			<div class="order-details">
+				<!-- <p>Borrower: <?php // echo isset($primary_owner) && !empty($primary_owner) ? $primary_owner : '-'; ?></p>
+				<p>Secondary Borrower: <?php // echo isset($secondary_owner) && !empty($secondary_owner) ? $secondary_owner : '-'; ?></p> -->
+				
+				
+				<p>Lender: <?php echo isset($lender['company_name']) && !empty($lender['company_name']) ? $lender['company_name'] : '-'; ?></p>
+
+				<p><?php echo isset($lender['assignment_clause']) && !empty($lender['assignment_clause']) ? $lender['assignment_clause'] : '-'; ?></p>
+				<p>Address: <?php echo isset($lender['address']) && !empty($lender['address']) ? $lender['address'] : '-'; ?></p>
+				
+				
+			</div>
+			<div class="order-details">
+				<p style="line-height: 20px;">Borrower: <?php echo isset($vesting) && !empty($vesting) ? $vesting : '-'; ?></p>
 				<p>Loan #: <?php echo isset($loan_number) && !empty($loan_number) ? $loan_number : '-'; ?></p>
-				<p>Loan Amount: <?php echo isset($loan_amount) && !empty($loan_amount) ? '$'.$loan_amount : ''; ?></p>
+				<?php
+                	if(isset($loan_amount) && !empty($loan_amount))
+                	{
+                    	$loan_amount = str_replace(",", "", $loan_amount);
+              	?>
+                  <p>Loan Amount: $<?php echo number_format($loan_amount); ?></p>
+                  	<!-- <p>Loan Amount: <?php // echo isset($loan_amount) && !empty($loan_amount) ? '$'.$loan_amount : ''; ?></p> -->
+              	<?php
+                	}
+                ?>
+				
 			</div>
 			<div class="spacer-t30"></div>
-			<div class="">
-				<p>Sincerely,</p>
+			
+			
+			<div style="line-height: 4px;"><p>Sincerely,</p></div>	
+			<div class="order-details">
 				<p><?php echo isset($title_officer) && !empty($title_officer) ? $title_officer : ''; ?></p>
 				<p>Title Officer</p>
 			</div>

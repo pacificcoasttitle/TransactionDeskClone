@@ -1,5 +1,17 @@
-<?php 
-?>
+<style type="text/css">
+	.entry-content p {
+		font-size: 14px;
+	}
+
+	.entry-content strong, 
+	.entry-content b {
+		font-weight: 700;
+	}
+
+	br {
+		line-height: 12px;
+	}
+</style>
 <div class="typography-section__inner">
 	<h3 class="ui-title-block_light">Prelim Info</h3>
 	<div class="ui-decor-1a bg-accent"></div>
@@ -10,15 +22,13 @@
 			<div class="col-md-6">
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Borrower Vesting</span><br> <?php echo isset($prelim_details['vesting']) && !empty($prelim_details['vesting']) ? $prelim_details['vesting'] : '-'; ?></p>
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Address</span><br> <?php echo isset($prelim_details['address']) && !empty($prelim_details['address']) ? $prelim_details['address'] : '-'; ?></p>
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Type of Policy</span><br> CLTA Standard Coverage
-					Policy 1990 (04-08-14)
-					ALTA Loan Policy 2006</p>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Type of Policy</span><br> <?php echo isset($prelim_details['policy_type']) && !empty($prelim_details['policy_type']) ? $prelim_details['policy_type'] : '-'; ?></p>
 			</div>
 			<div class="col-md-6">
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Order Number</span><br>
 					<?php echo isset($prelim_details['file_number']) && !empty($prelim_details['file_number']) ? $prelim_details['file_number'] : '-'; ?></p>
 				
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Date Generated</span><br> <?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
+				<p class="typography__highlights">&nbsp;<span class="bg-border">Commitment Date</span><br> <?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
 				</p><br>
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Type</span><br> <?php echo isset($prelim_details['property_type']) && !empty($prelim_details['property_type']) ? $prelim_details['property_type'] : '-'; ?></p>
 			</div>
@@ -28,7 +38,8 @@
 			<h3 class="ui-title-block_light">Prelim Hot Items</h3>
 			<div class="ui-decor-1a bg-accent"></div>
 		</div>
-		<?php 
+		<?php
+			$count = 1;
 			if(isset($prelim_details['tax']) && !empty($prelim_details['tax']))
 			{				
 		?>
@@ -45,17 +56,19 @@
 					<div class="entry-content">
 						<?php
 							$tax = json_decode($prelim_details['tax'],TRUE);
+
 							if(isset($tax) && !empty($tax))
 							{
 
 						?>
-								<ol>
+								<ol start="<?php echo $count; ?>">
 						<?php
 								foreach ($tax as $key => $tax_val) 
 								{
+									$count++;
 							?>
 									<li><p><?php echo nl2br($tax_val); ?>
-									</p></li>
+									</p></li></br>
 							<?php
 								}
 							?>
@@ -70,6 +83,51 @@
 							}
 						?>
 						
+					</div>
+				</div>
+		<?php
+			}
+		?>
+		<?php
+			if(isset($prelim_details['easement']) && !empty($prelim_details['easement']))
+			{
+		?>
+				<div class="entry-main">
+					<div class="entry-header">
+						<div class="alert alert-6">
+							<div class="alert__inner">
+								<h3 class="alert-titlesmall3">Easements</h3>
+								<!-- <div class="alert-text">If there are any urgent Items they
+									will appear below.</div> -->
+							</div>
+						</div>
+					</div>
+					<div class="entry-content">
+						<?php
+							$easements = json_decode($prelim_details['easement'],TRUE);
+							if(isset($easements) && !empty($easements))
+							{
+						?>
+								<ol start="<?php echo $count; ?>">
+						<?php
+								foreach ($easements as $key => $easement) 
+								{
+									$count++;
+						?>									
+									<li><p><?php echo nl2br($easement); ?></p></li></br>
+						<?php
+								}
+						?>
+								</ol>
+						<?php
+							}
+							else
+							{
+						?>
+								<p><?php echo "No data found"; ?></p>
+						<?php
+							}							
+						?>				
 					</div>
 				</div>
 		<?php
@@ -94,14 +152,16 @@
 							$liens = json_decode($prelim_details['lien'],TRUE);
 							if(isset($liens) && !empty($liens))
 							{
+								$tax_count = count($tax)+1;
 
 						?>
-								<ol>
+								<ol start="<?php echo $count; ?>">
 						<?php
 								foreach ($liens as $key => $lien) 
 								{
+									$count++;
 							?>
-									<li><p><?php echo nl2br($lien); ?></p></li>
+									<li><p><?php echo nl2br($lien); ?></p></li></br>
 							<?php
 								}
 							?>
@@ -116,51 +176,6 @@
 							}
 						?>
 						
-					</div>
-				</div>
-		<?php
-			}
-		?>
-		
-		<?php
-			if(isset($prelim_details['easement']) && !empty($prelim_details['easement']))
-			{
-		?>
-				<div class="entry-main">
-					<div class="entry-header">
-						<div class="alert alert-6">
-							<div class="alert__inner">
-								<h3 class="alert-titlesmall3">Easements</h3>
-								<!-- <div class="alert-text">If there are any urgent Items they
-									will appear below.</div> -->
-							</div>
-						</div>
-					</div>
-					<div class="entry-content">
-						<?php
-							$easements = json_decode($prelim_details['easement'],TRUE);
-							if(isset($easements) && !empty($easements))
-							{
-						?>
-								<ol>
-						<?php
-								foreach ($easements as $key => $easement) 
-								{
-						?>									
-									<li><p><?php echo nl2br($easement); ?></p></li>
-						<?php
-								}
-						?>
-								</ol>
-						<?php
-							}
-							else
-							{
-						?>
-								<p><?php echo "No data found"; ?></p>
-						<?php
-							}							
-						?>				
 					</div>
 				</div>
 		<?php
@@ -186,12 +201,12 @@
 							if(isset($requirements) && !empty($requirements))
 							{
 						?>
-								<ol>
+								<ol start="<?php echo $count; ?>">
 						<?php
 								foreach ($requirements as $key => $requirement) 
 								{
 							?>
-									<li><p><?php echo nl2br($requirement); ?></p></li>
+									<li><p><?php echo nl2br($requirement); ?></p></li></br>
 							<?php
 								}
 							?>
@@ -210,11 +225,56 @@
 		<?php
 			}
 		?>
+		<?php
+			if(isset($prelim_details['easement']) && !empty($prelim_details['easement']))
+			{
+		?>
+				<div class="entry-main" style="display: none;">
+					<div class="entry-header">
+						<div class="alert alert-6">
+							<div class="alert__inner">
+								<h3 class="alert-titlesmall3">Easements</h3>
+								<!-- <div class="alert-text">If there are any urgent Items they
+									will appear below.</div> -->
+							</div>
+						</div>
+					</div>
+					<div class="entry-content">
+						<?php
+							$easements = json_decode($prelim_details['easement'],TRUE);
+							if(isset($easements) && !empty($easements))
+							{
+						?>
+								<ol>
+						<?php
+								foreach ($easements as $key => $easement) 
+								{
+						?>									
+									<li><p><?php echo nl2br($easement); ?></p></li></br>
+						<?php
+								}
+						?>
+								</ol>
+						<?php
+							}
+							else
+							{
+						?>
+								<p><?php echo "No data found"; ?></p>
+						<?php
+							}							
+						?>				
+					</div>
+				</div>
+		<?php
+			}
+		?>
+		
 		<?php 
 			if(isset($prelim_details['restrictions']) && !empty($prelim_details['restrictions']))
 			{
 		?>
-				<div class="entry-main">
+				<div class="entry-main" style="display: none;">
 					<div class="entry-header">
 						<div class="alert alert-8">
 							<div class="alert__inner">
@@ -235,7 +295,7 @@
 								foreach ($restrictions as $key => $restriction) 
 								{
 						?>
-									<p><?php echo nl2br($restriction); ?></p>
+									<li><p><?php echo nl2br($restriction); ?></p></li></br>
 						<?php
 								}
 						?>

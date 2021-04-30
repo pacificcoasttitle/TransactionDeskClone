@@ -22,6 +22,8 @@
   <!-- <script src="<?php // echo base_url(); ?>assets/backend/vendor/jquery/jquery.min.js"></script> -->
   <!-- <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script> -->
   <script src="<?php echo base_url(); ?>assets/backend/js/jquery.validate.min.js"></script>
+  <script src="<?php echo base_url(); ?>assets/backend/js/moment.js"></script>
+  <script src="<?php echo base_url(); ?>assets/backend/js/daterangepicker.js"></script>
   <script src="<?php echo base_url(); ?>assets/backend/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
@@ -34,7 +36,8 @@
 
   <!-- Custom scripts for all pages-->
   <script src="<?php echo base_url(); ?>assets/backend/js/sb-admin.min.js"></script>
-  <script src="<?php echo base_url(); ?>assets/backend/js/custom.js"></script>
+  <script src="<?php echo base_url(); ?>assets/backend/js/custom.js?random=<?php echo uniqid(); ?>"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 </body>
 
 </html>

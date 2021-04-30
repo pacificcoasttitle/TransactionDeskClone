@@ -1,20 +1,9 @@
 <body>
     <?php
-        $this->load->view('layout/header');
+       // $this->load->view('layout/header');
+        $this->load->view('layout/header_dashboard');
     ?>
-<div class="section-title-page7q area-bg area-bg_blue area-bg_op_60 parallax">
-  <div class="area-bg__inner">
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
-          <h1 class="b-title-page"></h1>
-          <div class="b-title-page__info"></div>
-          <!-- end breadcrumb-->
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+
         <!-- end .b-title-page-->
         <article class="b-about section-default">
           <div class="container">
@@ -28,8 +17,7 @@
               <div class="col-md-6">
                 <footer class="b-about__footer">
 				<ul class="list list-mark-2">
-                    <?php 
-                    // echo "<pre>"; print_r($tp_data); exit;
+                    <?php
                         if(isset($tp_data['file_number']) && !empty($tp_data['file_number']))
                         {
                     ?>
@@ -37,6 +25,8 @@
                                 <h3>Order Number:</h3><br>
                                 <span class="orderinfo1" id="orderNumber"><?php echo $tp_data['file_number']; ?></span>
                             </li><br>
+                            <input type="hidden" name="id" id="CustomerId" value="<?php echo $customer_id;?>">
+                            <input type="hidden" name="property-full-address" id="property-full-address" value="<?php echo $property;?>">
                     <?php
                         }
                     ?>
@@ -52,7 +42,7 @@
                                     }
                                     else
                                     {
-                                        echo 'No data found.';
+                                        echo 'Refer to grant deed below.';
                                     }
                                 ?>
                             </span>
@@ -69,7 +59,7 @@
                                     }
                                     else
                                     {
-                                        echo 'No data found.';
+                                        echo 'Refer to grant deed below.';
                                     }
                                 ?>
                             </span>
@@ -131,6 +121,12 @@
                                 <p>TaxYear: <?php echo isset($secondInstallment['TaxYear']) && !empty($secondInstallment['TaxYear']) ? $secondInstallment['TaxYear'] : '-'?></p>
                         <?php
                             }
+                            else
+                            {
+                        ?>
+                                <span class="orderinfo1">No data found.</span>
+                        <?php
+                            }
                         ?>
                     </div>                           
                     </div>
@@ -142,31 +138,152 @@
                 <div class="col-md-12">
                     <h3>Grant Deed Information:</h3>
                 </div>
-                <div class="col-md-3"> 
-                    <div id="grantDeedInfoFile">
-                        <?php 
-                            $L_V_serviceId = isset($tp_data['cs4_service_id']) && !empty($tp_data['cs4_service_id']) ? $tp_data['cs4_service_id'] : '';
-                            $instrumentNumber = isset($tp_data['cs4_instrument_no']) && !empty($tp_data['cs4_instrument_no']) ? $tp_data['cs4_instrument_no'] : '';
-                            $state = isset($state) && !empty($state) ? $state : '';
-                            $county = isset($county) && !empty($county) ? $county : '';
-                            $recordedDate = isset($tp_data['cs4_recorded_date']) && !empty($tp_data['cs4_recorded_date']) ? $tp_data['cs4_recorded_date'] : '';
-                            $time = strtotime($recordedDate);
-                            $year = date('Y',$time);
-                            
-                            $docId = str_replace($year, '', $instrumentNumber);
-                            $file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : ''; 
-                           
-                        ?>
-                        <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php echo $L_V_serviceId; ?>",4,"<?php echo $file_number; ?>");'>Download L&V</a>
-                    </div>
-                    <div class="loader" style="display: none;"></div>
-                </div>
-                <div class="col-md-3">
-                    <div id="instrumentInfoFile">
-                        <a href="javascript:void(0);" onclick='instrumentSearch("<?php echo $docId; ?>","<?php echo $recordedDate; ?>","<?php echo $state; ?>","<?php echo $county; ?>","<?php echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a>
-                    </div>
-                    <div class="loader" style="display: none;"></div>
-                </div>
+                <?php 
+                    $cs4_result_id_status = isset($tp_data['cs4_message']) && !empty($tp_data['cs4_message']) ? $tp_data['cs4_message'] : '';
+                    
+                    /*if($cs4_result_id_status == 'Success')
+                    {*/
+                ?>
+                        <div class="col-md-3"> 
+                            <div id="grantDeedInfoFile">
+                                <?php 
+                                    $L_V_serviceId = isset($tp_data['cs4_service_id']) && !empty($tp_data['cs4_service_id']) ? $tp_data['cs4_service_id'] : '';
+                                    $instrumentNumber = isset($tp_data['cs4_instrument_no']) && !empty($tp_data['cs4_instrument_no']) ? $tp_data['cs4_instrument_no'] : '';
+                                    $state = isset($state) && !empty($state) ? $state : '';
+                                    $county = isset($county) && !empty($county) ? $county : '';
+                                    $recordedDate = isset($tp_data['cs4_recorded_date']) && !empty($tp_data['cs4_recorded_date']) ? $tp_data['cs4_recorded_date'] : '';
+    
+                                    if(isset($instrumentNumber) && !empty($instrumentNumber))
+                                    {
+                                        if(isset($recordedDate) && !empty($recordedDate))
+                                        {
+                                            $time = strtotime($recordedDate);
+                                            $year = date('Y',$time);
+                                        }
+
+                                        $count = substr_count($instrumentNumber, '-');
+
+                                        if(isset($count) && !empty($count))
+                                        {
+                                            $detailDocInfo = explode('-', $instrumentNumber);
+                                            
+                                            $docId = isset($detailDocInfo['1']) && !empty($detailDocInfo['1']) ? $detailDocInfo['1'] : '';   
+                                        }
+                                        else
+                                        {
+                                            $docId = str_replace($year, '', $instrumentNumber);
+                                        }
+                                        $docId = (string)((int)($docId));
+                                    }
+                                    
+                                    $file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : ''; 
+                                    $fips = isset($tp_data['fips']) && !empty($tp_data['fips']) ? $tp_data['fips'] : '';
+                                ?>
+                                <?php
+                                    if(isset($lv_file_url) && !empty($lv_file_url))
+                                    {
+                                ?>
+                                        <a href="<?php echo $lv_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="L&V.pdf">Download L&V</a>
+                                <?php
+                                    }
+                                    else
+                                    {
+                                ?>
+                                        <!-- <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php // echo $L_V_serviceId; ?>",4,"<?php // echo $file_number; ?>");'>Download L&V</a> -->
+                                        <div class="legal-vesting-no-data">
+                                            <span class="orderinfo1">No legal vesting available. Our customer service will look for it and contact you within X minutes.</span>
+                                        </div>
+                                <?php
+                                    }
+                                ?>
+                                
+                            </div>
+                            <div class="loader" style="display: none;"></div>
+                        </div>
+                    <?php
+                        /*if(isset($docId) && !empty($docId))
+                        {*/
+                    ?>
+                            <div class="col-md-3">
+                                <div id="instrumentInfoFile">
+                                    <?php
+                                        if(isset($deed_file_url) && !empty($deed_file_url))
+                                        {
+                                    ?>
+                                            <a href="<?php echo $deed_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="GrantDeed.pdf">Download Grant Deed</a>
+                                    <?php
+                                        }
+                                        else
+                                        {
+                                    ?>
+                                            <!-- <a href="javascript:void(0);" onclick='generateGrantDeed("<?php // echo $fips; ?>","<?php // echo $year; ?>","<?php // echo $docId; ?>","<?php // echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a> -->
+                                            <div class="grant-deed-no-data">
+                                                <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
+                                            </div>
+                                    <?php  
+                                        }
+                                    ?>
+                                    
+                                </div>
+                                <div class="loader" style="display: none;"></div>
+                            </div>
+                    <?php
+                        /*}
+                        else
+                        {*/
+                    ?>
+                            <!-- <div class="col-md-6 grant-deed-no-data">
+                                <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
+                            </div> -->
+                    <?php
+                        /*}*/
+                    ?>
+                        
+                <?php
+                    /*}
+                    else
+                    {*/
+                ?>
+                        <!-- <div class="col-md-6 grant-deed-no-data">
+                            <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
+                        </div> -->
+                <?php
+                    /*}*/
+                ?>
+                <?php
+                        $cs3_message = isset($tp_data['cs3_message']) && !empty($tp_data['cs3_message']) ? $tp_data['cs3_message'] : '';
+                        
+                        /*if($cs3_message == 'Success')
+                        {*/
+                            $apn = str_replace('0000', '0-000', $apn);
+                    ?>
+                            <div class="col-md-3">
+                                <div id="taxDocumentInfo">
+                                    <?php
+                                        if(isset($tax_file_url) && !empty($tax_file_url))
+                                        {
+                                    ?>
+                                            <a href="<?php echo $tax_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="Tax.pdf">Download Tax Document</a>
+                                    <?php
+                                        }
+                                        else
+                                        {
+                                            $tax_serviceId = isset($tp_data['cs3_service_id']) && !empty($tp_data['cs3_service_id']) ? $tp_data['cs3_service_id'] : '';
+                                    ?>
+                                            <!-- <a href="javascript:void(0);" onclick='imageCreateRequest("<?php // echo $tax_serviceId; ?>",3,"<?php // echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-tax-doc">Download Tax Document</a> -->
+                                            <div class="tax-no-data">
+                                                <span class="orderinfo1">No tax document available. Our customer service will look for it and contact you within X minutes.</span>
+                                            </div>
+                                    <?php  
+                                        }
+                                    ?>
+                                    
+                                </div>
+                                <div class="loader" style="display: none;"></div>
+                            </div>
+                    <?php
+                        /*}*/
+                    ?>
             </div>
           </div>
         </article>
@@ -178,25 +295,25 @@
               <div class="b-advantages-group">
                   <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-screen"></i>
                     <div class="b-advantages__inner">
-                      <h3 class="b-advantages__title ui-title-inner"><a href="home.html">Order a Farm</a></h3>
+                      <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></h3>
                       <div class="b-advantages__info">Our customer service team is ready to help create a farm package to help you alert the neighbors about your new listing.</div>
-					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="#">Order</a>
+					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a>
                     </div>
                   </section>
                   <!-- end .b-advantages-->
                   <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-worldwide"></i>
                     <div class="b-advantages__inner">
-                      <h3 class="b-advantages__title ui-title-inner"><a href="https://www.pcttitletoolbox.com/#!/">Create a Farm</a></h3>
+                      <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed</a></h3>
                       <div class="b-advantages__info">Login in to our PCT Title Toolbox program and create your own farm package consisting of the various types of owners.</div>
-					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="https://www.pcttitletoolbox.com/#!/">Login</a>
+					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="<?php echo base_url().'proposed-insured'; ?>">Generate Proposed</a>
                     </div>
                   </section>
                   <!-- end .b-advantages-->
                   <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-analytics"></i>
                     <div class="b-advantages__inner">
-                      <h3 class="b-advantages__title ui-title-inner"><a href="home.html">Open New Order</a></h3>
+                      <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'order'; ?>">Open New Order</a></h3>
                       <div class="b-advantages__info">Need to open another order? That's fantastic. The link below will redirect you back to our Open Order form.</div>
-					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="#">Create</a>
+					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="<?php echo base_url().'order'; ?>">Create</a>
                     </div>
                   </section>
                   <!-- end .b-advantages-->
@@ -230,25 +347,9 @@
 </html>
 <script type="text/javascript">
     var base_url = '<?php echo base_url(); ?>';
-    /*var address = "<?php // echo isset($address) && !empty($address) ? $address : ''; ?>";
-    var city = "<?php // echo isset($city) && !empty($city) ? $city : ''; ?>";
-    var apn = "<?php // echo isset($apn) && !empty($apn) ? $apn : '' ; ?>";
-    var state = "<?php // echo isset($state) && !empty($state) ? $state : ''; ?>";
-    var county = "<?php // echo isset($county) && !empty($county) ? $county : ''; ?>";
-    var fipCode = "<?php // echo isset($fipCode) && !empty($fipCode) ? $fipCode : ''; ?>";
-    var L_V_RequestId = "<?php // echo isset($L_V_RequestId) && !empty($L_V_RequestId) ? $L_V_RequestId : ''; ?>";
-    var L_V_CreateService = "<?php // echo isset($L_V_CreateService) && !empty($L_V_CreateService) ? $L_V_CreateService : ''; ?>";
-    var Tax_RequestId = "<?php // echo isset($Tax_RequestId) && !empty($Tax_RequestId) ? $Tax_RequestId : ''; ?>";
-    var Tax_CreateService = "<?php // echo isset($Tax_CreateService) && !empty($Tax_CreateService) ? $Tax_CreateService : ''; ?>";
-    var L_V_GetRequestSummary = "<?php // echo isset($L_V_GetRequestSummary) && !empty($L_V_GetRequestSummary) ? $L_V_GetRequestSummary : ''; ?>";
-    var L_V_ResultId = "<?php // echo isset($L_V_ResultId) && !empty($L_V_ResultId) ? $L_V_ResultId : ''; ?>";
-    var Tax_ResultId = "<?php // echo isset($Tax_ResultId) && !empty($Tax_ResultId) ? $Tax_ResultId : ''; ?>";
-    var Tax_GetRequestSummary = "<?php // echo isset($Tax_GetRequestSummary) && !empty($Tax_GetRequestSummary) ? $Tax_GetRequestSummary : ''; ?>";
-    var L_V_GetResultById = "<?php // echo isset($L_V_GetResultById) && !empty($L_V_GetResultById) ? $L_V_GetResultById : ''; ?>";
-    var Tax_GetResultById = "<?php // echo isset($Tax_GetResultById) && !empty($Tax_GetResultById) ? $Tax_GetResultById : ''; ?>";*/
 </script>
 
 <?php
     $this->load->view('layout/footer');
 ?>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js?random=<?php echo uniqid(); ?>"></script>

@@ -21,6 +21,11 @@
     overflow-y: auto
 }
 
+.modal-open #searchResultModal.modal {
+    overflow-x: hidden;
+    overflow-y: hidden
+}
+
 .modal-dialog {
     position: relative;
     width: auto;

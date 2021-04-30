@@ -19,16 +19,61 @@ class Home extends MX_Controller {
 
     function index() 
     {
-		$userdata = $this->session->userdata('user');
+    	$userdata = $this->session->userdata('user');
 		$this->load->model('order/apiLogs');
+		$this->load->model('order/titleOfficer');
+		$this->load->model('order/salesRep');
+		$this->load->model('order/partnerApiLogs');
+		$this->load->library('order/titlepoint');
+		
     	if(isset($_POST) && !empty($_POST))
-    	{        
-    		// echo "<pre>"; print_r($_POST); exit;
+    	{
+    		$random_number = $this->input->post('random_number');
+    		if(isset($random_number) && !empty($random_number))
+    		{
+    			$condition = array(
+		            'where' => array(
+		                'session_id' => 'tp_api_id_'.$random_number,
+		            ),
+		            'returnType' => 'count'
+		        );
+
+				$count = $this->titlePointData->gettitlePointDetails($condition);
+
+				if($count != 1)
+				{
+					$response = array('status'=>'error', 'message'=> 'Something went wrong.Please hard refresh(Ctrl+F5) your page.');
+					echo json_encode($response); exit;
+				}
+    		}
+    		else
+    		{
+    			$response = array('status'=>'error', 'message'=> 'Something went wrong.Please hard refresh (Ctrl+F5) your page.');
+				echo json_encode($response); exit;
+    		}
     		$this->form_validation->set_rules('OpenName', 'First Name', 'required',array('required'=> 'Enter your first name'));
     		$this->form_validation->set_rules('OpenLastName', 'Last Name', 'required',array('required'=> 'Enter your last name'));
-    		$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
-    		// $this->form_validation->set_rules('sendermessage', 'Sender Message', 'required',array('required'=> 'Oops you forgot your message'));
+			$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required',array('required'=> 'Enter your email address'));
+			
+			$config['upload_path'] = './uploads/curative/';
+			$config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';   
+			$config['max_size'] = 20000;
+			$this->load->library('upload', $config);
 
+			if (!empty($_FILES['upload_curative']['name'])) {
+				if (! $this->upload->do_upload('upload_curative')) {
+					$response = array('status'=>'error', 'message'=> $this->upload->display_errors());
+					echo json_encode($response); exit;
+				}
+			}
+
+			$result = $this->order->checkDuplicateOrder($this->input->post('apn'));
+			if ($result) {	
+				$response = array('status'=>'error', 'message'=> 'Order is already exist for this property.');
+				echo json_encode($response); exit;
+			}
+
+    		$parties_email = array();
     		if($this->form_validation->run($this) == true)
     		{
 	        	$OpenName      = $this->input->post('OpenName');
@@ -41,7 +86,7 @@ class Home extends MX_Controller {
 	        	$Zipcode      = $this->input->post('Zipcode');
 	        	$PropertyAddress      = $this->input->post('Property');
 
-	        	$SplitPropertyAddress = explode(' ', $PropertyAddress);
+	        	$SplitPropertyAddress = explode(' ',$PropertyAddress);
 
 				$StreetNumber = isset($SplitPropertyAddress[0]) && !empty($SplitPropertyAddress[0]) ? $SplitPropertyAddress[0] : '';
 
@@ -56,9 +101,6 @@ class Home extends MX_Controller {
 	        	$PropertyType      = $this->input->post('property-type');
 	        	$FullProperty      = $this->input->post('FullProperty');
 
-	        	/*$AddressPropertyParts = explode(',', $FullProperty);	
-				$PropertyZip = trim(end($AddressPropertyParts));*/
-
 	        	$apn      = $this->input->post('apn');
 	        	$County      = $this->input->post('County');
 	        	$LegalDescription      = $this->input->post('LegalDescription');
@@ -71,9 +113,37 @@ class Home extends MX_Controller {
 
 	        	$SecondaryOwner      = $this->input->post('SecondaryOwner');
 	        	$SalesRep      = $this->input->post('SalesRep');
+
+	        	/* Fetch details of Sales Rep */
+	        	$condition = array(
+	                'id' => $SalesRep	                
+	            );
+
+				$salesRepDetails = $this->home_model->getSalesRepDetails($condition);
+				
+				if ($salesRepDetails["is_mail_notification"] == 1) {
+					$parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
+				}
+	        	$salesRepName = isset($salesRepDetails["name"]) && !empty($salesRepDetails["name"]) ? $salesRepDetails["name"] : '';
+	        	/* Fetch details of Sales Rep */
+
 	        	$TitleOfficer      = $this->input->post('TitleOfficer');
+
+	        	/*Fetch details of Title Officer */
+	        	$condition = array(
+	                'id' => $TitleOfficer
+	            );
+				
+				$titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
+				$titleOfficerName = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';				
+				/*Fetch details of Title Officer */
+				
 	        	$LoanAmount      = $this->input->post('loanAmount');
+	        	$LoanNumber      = $this->input->post('loanNumber');
+	        	$EscrowNumber      = $this->input->post('escrowNumber');
+	        	$Notes      = $this->input->post('notes');
 	        	$SalesAmount      = $this->input->post('salesAmount');
+	        	$ProductTypeTxt      = $this->input->post('ProductType');
 	        	$primaryBorrower      = $this->input->post('primaryBorrower');
 	        	$secondaryBorrower      = $this->input->post('secondaryBorrower');
 	        	$TransactionTypeID = isset($_POST["TransactionTypeID"]) && !empty($_POST["TransactionTypeID"]) ? $_POST["TransactionTypeID"] : 3;
@@ -83,93 +153,154 @@ class Home extends MX_Controller {
 				$Ease = isset($_POST["Ease"]) && !empty($_POST["Ease"]) ? 1 : 0;
 
 	        	$sendermessage      = $this->input->post('sendermessage');
-	        	$BuyerAgentId      = $this->input->post('BuyerAgentId');
+				$BuyerAgentId      = $this->input->post('BuyerAgentId');
+				$agentDetailFlag =  $this->input->post('add-agent-details');
+				$user_data = array();
 
-	        	$parties_email = $buyers_agent_details = $listing_agent_details = array();
-	        	if(isset($BuyerAgentId) && !empty($BuyerAgentId))
+	        	$buyers_agent_details = $listing_agent_details = array();
+	        	if((isset($BuyerAgentId) && !empty($BuyerAgentId)) || isset($agentDetailFlag))
 	        	{
 	        		$BuyerAgentName      = $this->input->post('BuyerAgentName');
 	        		$BuyerAgentEmailAddress      = $this->input->post('BuyerAgentEmailAddress');
 	        		$BuyerAgentTelephone      = $this->input->post('BuyerAgentTelephone');
 	        		$BuyerAgentCompany      = $this->input->post('BuyerAgentCompany');
 
-	        		$parties_email[$BuyerAgentEmailAddress] = isset($_POST["BuyerAgentName"]) && !empty($_POST["BuyerAgentName"]) ? strip_tags(trim($_POST["BuyerAgentName"])) : '';
+	        		
+	        		$parties_email[] = $BuyerAgentEmailAddress;
 
 	        		$buyers_agent_details = array('name'=>$BuyerAgentName, 'email'=>$BuyerAgentEmailAddress, 'telephone'=> $BuyerAgentTelephone,'company'=>$BuyerAgentCompany);
-	        	}
+	        	} 
 	        	
 	        	
 	        	$ListingAgentId      = $this->input->post('ListingAgentId');
-	        	if(isset($ListingAgentId) && !empty($ListingAgentId))
+	        	if((isset($ListingAgentId) && !empty($ListingAgentId)) || isset($agentDetailFlag))
 	        	{
 	        		$ListingAgentName      = $this->input->post('ListingAgentName');
 	        		$ListingAgentEmailAddress = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
 	        		$ListingAgentTelephone      = $this->input->post('ListingAgentTelephone');
 	        		$ListingAgentCompany      = $this->input->post('ListingAgentCompany');
-	        		
-
-					$parties_email[$ListingAgentEmailAddress] = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
+	        
+					$parties_email[] = $ListingAgentEmailAddress;
 
 					$listing_agent_details = array('name'=>$ListingAgentName, 'email'=>$ListingAgentEmailAddress, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
 	        	}
 	        	
-
-				$EscrowLenderId = '';
+				$EscrowLenderId = $escrowLenderPartnerTypeID ='';
 				$lender_details = $escrow_details = array();
+
+				if(isset($userdata['is_master']) && !empty($userdata['is_master']))
+				{
+					$orderUser =  $this->home_model->get_user(array('id' => $_POST['id']));
+					$is_escrow = $orderUser['is_escrow'];
+					$user_data['email'] = $orderUser['email_address'];
+					$user_data['password'] = $orderUser['random_password'];
+					$con = array(
+						'where' => array(
+							'partner_id' => $orderUser['partner_id'],
+						)
+					);
+					$companyData = $this->home_model->get_company_rows($con);
+				} else {
+					$orderUser =  $this->home_model->get_user(array('id' => $userdata['id']));
+					$con = array(
+						'where' => array(
+							'partner_id' => $orderUser['partner_id'],
+						)
+					);
+					$companyData = $this->home_model->get_company_rows($con);
+				}
+
+
+				$cplLenderId = 0;
 				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
 				{
 					$EscrowLenderId = $_POST['EscrowId'];
+					$escrow_lender_user_details = $this->home_model->get_user(array('id' => $EscrowLenderId));
+					$escrowCon = array(
+						'where' => array(
+							'partner_id' => $escrow_lender_user_details['partner_id'],
+						)
+					);
+					$escrowCompanyData = $this->home_model->get_company_rows($escrowCon);
+
 					$EscrowLenderName = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
 					$EscrowLenderEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
 					$EscrowLenderTelephone      = $this->input->post('EscrowTelephone');
 	        		$EscrowLenderCompany      = $this->input->post('EscrowCompany');
 
 					$escrow_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
+					
+					$partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
+					
+					if(in_array("10006", $partner_type_ids)) {
+						$escrowLenderPartnerTypeID = '10006';
+					}
+					if(in_array("9997", $partner_type_ids)) {
+						$escrowLenderPartnerTypeID = '9997';
+					}
+					if(in_array("10010", $partner_type_ids)) {
+						$escrowLenderPartnerTypeID = '10010';
+					}
+					$cplLenderId = $orderUser['id'];
 				}
 				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
 				{
 					$EscrowLenderId = $_POST['LenderId'];
+					$escrow_lender_user_details = $this->home_model->get_user(array('id' => $EscrowLenderId));
 					$EscrowLenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
 					$EscrowLenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
 					$EscrowLenderTelephone      = $this->input->post('LenderTelephone');
 	        		$EscrowLenderCompany      = $this->input->post('LenderCompany');
 
 					$lender_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
+					$escrowLenderPartnerTypeID = '3';
 				}
+
+				/* Partners API */
+				$secondaryPartners = array();
+				if(isset($EscrowLenderId) && !empty($EscrowLenderId))
+				{
+					
+					$escrow_lender_resware_user_id = isset($escrow_lender_user_details['resware_user_id']) && !empty($escrow_lender_user_details['resware_user_id']) ? $escrow_lender_user_details['resware_user_id'] : '';
+
+					$escrow_lender_partner_id = isset($escrow_lender_user_details['partner_id']) && !empty($escrow_lender_user_details['partner_id']) ? $escrow_lender_user_details['partner_id'] : '';
+
+					$secondaryEmp[] = array('UserID'=> $escrow_lender_resware_user_id);
+
+					$secondaryPartners = array(
+							'SecondaryEmployees'=> $secondaryEmp,
+							'PartnerTypeID' => $escrowLenderPartnerTypeID,
+							'PartnerID' => $escrow_lender_partner_id,
+							'PartnerType' => array(
+								'PartnerTypeID' => $escrowLenderPartnerTypeID
+							)
+					);
+				}
+				/* Partners API */
+
 				if(isset($EscrowLenderEmail) && !empty($EscrowLenderEmail))
 				{
-					$parties_email[$EscrowLenderEmail] = $EscrowLenderName;
-				}
-				$AdditionalEmail = $this->input->post('AdditionalEmail');
-				$AdditionalEmail1 = $this->input->post('AdditionalEmail1');
-				$AdditionalEmail2 = $this->input->post('AdditionalEmail2');
-
-				if(isset($AdditionalEmail) && !empty($AdditionalEmail))
-				{
-					$parties_email[$AdditionalEmai] = '';
+					$parties_email[] = $EscrowLenderEmail;
 				}
 
-				if(isset($AdditionalEmail1) && !empty($AdditionalEmail1))
-				{
-					$parties_email[$AdditionalEmail1] = '';
+				$AdditionalEmails = $this->input->post('AdditionalEmail');
+				if(isset($AdditionalEmails) && !empty($AdditionalEmails)) {
+					foreach($AdditionalEmails as $AdditionalEmail) {
+						$parties_email[] = $AdditionalEmail;
+					}	
 				}
-
-				if(isset($AdditionalEmail2) && !empty($AdditionalEmail2))
-				{
-					$parties_email[$AdditionalEmail2] = '';
-				}
-
+							
 				/* Start place order at resware */
 				$place_order = array();
+				$loanFlag = 1;
 
 				$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>$PropertyAddress, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
 
-				if($ProductTypeID == '19' || $ProductTypeID == '33')
+				if(strpos($ProductTypeTxt, 'Loan') !== false)
 				{
 					$place_order['Buyers'][] = $legalEntity;
-					$ProductType = 'Residential: Loan: Refinance';
 				}
-				elseif ($ProductTypeID == '20' || $ProductTypeID == '32') 
+				elseif(strpos($ProductTypeTxt, 'Sale') !== false)
 				{
 					$borrowerName = explode(' ', $primaryBorrower);
 					$borrowerLastName = end($borrowerName);
@@ -181,31 +312,61 @@ class Home extends MX_Controller {
 					$place_order['Sellers'][] = $legalEntity;
 					$place_order['Buyers'][] = $borrowers;
 					$place_order['SalesPrice'] = $SalesAmount;
-					$ProductType = 'Residential: Sales: Purchase';
-				}		
+					$loanFlag = 0;
+				}
 				
 				$place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID'=>$ProductTypeID);
-
+				$loan = array();
 				if(isset($LoanAmount) && !empty($LoanAmount))
 				{
-					$place_order['Loans'][]['LoanAmount'] = $LoanAmount;
+					$loan['LoanAmount'] = $LoanAmount;
 				}
-
+				if(isset($LoanNumber) && !empty($LoanNumber))
+				{
+					$loan['LoanNumber'] = $LoanNumber;
+				}
+				$place_order['Loans'][] = $loan;
 				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
 
-				$order_data = json_encode($place_order);
-				$user_data = array();
-				
-				if(isset($userdata['is_master']) && !empty($userdata['is_master']))
-				{
-					$user_data['email'] = isset($_POST['OpenEmail']) && !empty($_POST['OpenEmail']) ? $_POST['OpenEmail'] : '';
+				$place_order['Note']['APN'] = $apn;
+				$place_order['Note']['parcel_id'] = $apn;
+				$place_order['Note']['legal_description'] = $LegalDescription;
+
+				if (!empty($TitleOfficer)) {
+					$place_order['Note']['title_Officer'] = $titleOfficerName;
 				}
+				if (!empty($SalesRep)) {
+					$place_order['Note']['sales_rep'] = $salesRepName;
+				}
+				if (!empty($buyers_agent_details)) {
+					$place_order['Note']['buyers_agent'] = $buyers_agent_details;
+				}
+				if (!empty($listing_agent_details)) {
+					$place_order['Note']['listing_agent'] = $listing_agent_details;
+				}
+				if (!empty($lender_details)) {
+					$place_order['Note']['lender_details'] = $lender_details;
+				}
+				if (!empty($escrow_details)) {
+					$place_order['Note']['escrow_details'] = $escrow_details;
+				}
+				if (!empty($EscrowNumber)) {
+					$place_order['Note']['EscrowNumber'] = $EscrowNumber;
+				}
+				if (!empty($Notes)) {
+					$place_order['Note']['Notes'] = $Notes;
+				}				
+				
+				$order_data = json_encode($place_order);
+				
+				
+				
 				
 				$this->load->library('order/resware');
-				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, array(), 0, 0);
+				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, array(), 0, 0);
 				$result = $this->resware->make_request('POST', 'orders', $order_data,$user_data);
 				
-				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', RESWARE_ORDER_API.'orders', $order_data, $result, 0, $logid);
+				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, $result, 0, $logid);
 
 				if(isset($result) && !empty($result))
 				{
@@ -228,29 +389,473 @@ class Home extends MX_Controller {
 
 						if($orderNumber)
 						{
-							if($this->session->has_userdata('tp_api_id'))
+							$partners = array();
+							
+							if(isset($secondaryPartners) && !empty($secondaryPartners))
 							{
-								$id = $this->session->userdata('tp_api_id');
+								$partners[] = $secondaryPartners;
+							}
+
+							$escrowOfficerFlag =  $this->input->post('add-escrow-officer-details');
+							$escrowOfficer =  $this->input->post('escrow_officer');
+							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5)) {
+								if (!empty($escrowOfficer)) {
+									$partners[] = array(
+										'PartnerTypeID' => 10010,
+										'PartnerID' => $escrowOfficer,
+										'PartnerType' => array(
+											'PartnerTypeID' => 10010
+										)
+									);
+								}
+							}
+
+							if(isset($BuyerAgentId) && !empty($BuyerAgentId)) {
+								$partners[] = array(
+									'PartnerTypeID' => 14,
+									'PartnerID' => $this->input->post('buyer_agent_partner_id'),
+									'PartnerType' => array(
+										'PartnerTypeID' => 14
+									)
+								);
+							}
+
+							if(isset($ListingAgentId) && !empty($ListingAgentId)) {
+								$partners[] = array(
+									'PartnerTypeID' => 15,
+									'PartnerID' => $this->input->post('listing_agent_partner_id'),
+									'PartnerType' => array(
+										'PartnerTypeID' => 15
+									)
+								);
+							}
+
+							if (!empty($salesRepDetails)) {
+								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
+									$partners[] = array(
+										'PartnerTypeID' => $salesRepDetails['partner_type_id'],
+										'PartnerID' => $salesRepDetails['partner_id'],
+										'PartnerType' => array(
+											'PartnerTypeID' => $salesRepDetails['partner_type_id']
+										)
+									);
+								}
+							}
+
+							if (!empty($titleOfficerDetails)) {
+								if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
+									$partners[] = array(
+										'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
+										'PartnerID' => $titleOfficerDetails['partner_id'],
+										'PartnerType' => array(
+											'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
+										)
+									);
+								}
+							}
+							$removePartnerFlag = 0;
+
+							if (!empty($companyData)) {
+								$endPoint = 'files/'. $file_id .'/partners';
+								$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $file_id, 0);
+                                $user_data['admin_api'] = 1; 
+								
+								$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+								$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+                                $resPartners = json_decode($resultPartners, true);
+                                $underWriter = '';
+								if(!empty($resPartners)) {
+									$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+									if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+										$underWriter = 'north_american';
+									} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
+										$underWriter = 'commonwealth';
+									} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+										$underWriter = 'westcor';
+									} else {
+                                        if ($key) {
+                                            $underWriter = 'other';
+                                        } else {
+											$underWriter = 'not_set';
+										}
+									}
+                                } 
+                                
+								if($loanFlag == 1) {
+									if (!empty($underWriter)) {
+										if ($companyData[0]['loan_underwriter'] == 'north_american') {
+											if ($underWriter != 'north_american') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 39919,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+										} else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
+											if ($underWriter != 'commonwealth') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 6,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+										} else if ($companyData[0]['loan_underwriter'] == 'westcor') {
+											if ($underWriter != 'westcor') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+										} else {
+											if ($underWriter == 'other') {
+												$removePartnerFlag = 1;
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$underWriter = 'westcor';
+											} else if ($underWriter == 'not_set') {
+												$removePartnerFlag = 0;
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$underWriter = 'westcor';
+											}	
+										}
+									} 
+								} else {
+									if (!empty($underWriter)) {
+										if ($companyData[0]['sales_underwriter'] == 'north_american') {
+											if ($underWriter != 'north_american') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 39919,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+											
+										} else if ($companyData[0]['sales_underwriter'] == 'commonwealth') {
+											if ($underWriter != 'commonwealth') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 6,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+										} else if ($companyData[0]['sales_underwriter'] == 'westcor') {
+											if ($underWriter != 'westcor') {
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$removePartnerFlag = 1;
+											} else {
+												$removePartnerFlag = 0;
+											}
+										} else {
+											if ($underWriter == 'other') {
+												$removePartnerFlag = 1;
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$underWriter = 'westcor';
+											} else if ($underWriter == 'not_set') {
+												$removePartnerFlag = 0;
+												$partners[] = array(
+													'PartnerTypeID' => 7,
+													'PartnerID' => 201324,
+													'PartnerType' => array(
+														'PartnerTypeID' => 7
+													)
+												);
+												$underWriter = 'westcor';
+											}	
+										}
+									} 
+                                }
+							}
+
+							$partnerUserData = array(
+								'admin_api' => 1
+							);
+
+							if ($removePartnerFlag == 1) {
+								$removeExistingPartner = array(
+									'PartnerTypeID' => 7,
+									'PartnerID' => $resPartners['Partners'][$key]['PartnerID'],
+									'PartnerType' => array(
+										'PartnerTypeID' => 7
+									)
+								);
+								$removePartners[] = $removeExistingPartner;
+								$removePartnerData = json_encode(array('Partners' => $removePartners));
+								$endPoint = 'files/'.$file_id.'/partners';
+								$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
+								$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+								$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+							}
+
+							$partnerData = json_encode(array('Partners' => $partners));
+							$endPoint = 'files/'.$file_id.'/partners';
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
+							$resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
+							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
+
+							$remoteFileNumberData = json_encode(array('RemoteFileNumber' => $orderNumber));
+							$remoteFileEndPoint = 'files/'.$file_id.'/partners/'.$orderUser['partner_id'];
+							
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API').$remoteFileEndPoint, $remoteFileNumberData, array(), 0, 0);
+							$resultRemotePartner = $this->resware->make_request('PUT', $remoteFileEndPoint, $remoteFileNumberData, $partnerUserData);
+							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API').$remoteFileEndPoint, $remoteFileNumberData, $resultRemotePartner, 0, $logid);
+
+							/* Add partner api logs */
+							$partnerApiData = array(
+								'request_url' => env('RESWARE_ORDER_API').$endPoint,
+								'request_data' => $partnerData,
+								'response_data' => $resultPartner
+							);
+
+							$partnerApiId = $this->partnerApiLogs->insert($partnerApiData);
+							/* Add partner api logs */
+
+							$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+
+							/* Buyers Agent */				
+							if(isset($BuyerAgentId) && !empty($BuyerAgentId))
+				        	{
+				        		$buyerData = array(
+									'name' => $BuyerAgentName,
+									'email_address' => $BuyerAgentEmailAddress,
+									'company' => $BuyerAgentCompany,
+									'telephone_no' => $BuyerAgentTelephone,
+									'status'=> 1
+								);
 								$condition = array(
-									'id' => $id
+									'id' => $BuyerAgentId
+								);
+								
+								$this->agent_model->update($buyerData,$condition);
+				        	} else if (isset($agentDetailFlag)) {
+								if(!empty($BuyerAgentName) && !empty($BuyerAgentEmailAddress) && !empty($BuyerAgentCompany) && !empty($BuyerAgentTelephone)) {
+									$buyerData = array(
+										'name' => $BuyerAgentName,
+										'email_address' => $BuyerAgentEmailAddress,
+										'company' => $BuyerAgentCompany,
+										'telephone_no' => $BuyerAgentTelephone,
+										'status'=> 1
+									);
+									$BuyerAgentId = $this->agent_model->insert($buyerData);
+								}
+							}
+							/* Buyers Agent */
+
+							/* Listing Agent */				
+							if(isset($ListingAgentId) && !empty($ListingAgentId))
+				        	{
+				        		$listngAgentData = array(
+									'name' => $ListingAgentName,
+									'email_address' => $ListingAgentEmailAddress,
+									'company' => $ListingAgentCompany,
+									'telephone_no' => $ListingAgentTelephone,
+									'status'=> 1
+								);
+								$condition = array(
+									'id' => $ListingAgentId
+								);
+								$this->agent_model->update($listngAgentData,$condition);
+				        	} else if (isset($agentDetailFlag)) {
+								if(!empty($ListingAgentName) && !empty($ListingAgentEmailAddress) && !empty($ListingAgentCompany) && !empty($ListingAgentCompany)) {
+									$listngAgentData = array(
+										'name' => $ListingAgentName,
+										'email_address' => $ListingAgentEmailAddress,
+										'company' => $ListingAgentCompany,
+										'telephone_no' => $ListingAgentCompany,
+										'status'=> 1
+									);
+									$ListingAgentId = $this->agent_model->insert($listngAgentData);
+								}	
+							}
+							/* Listing Agent */
+
+							$propertyData = array(
+								'customer_id' => $customer_id,
+								'buyer_agent_id' => $BuyerAgentId,
+								'listing_agent_id' => $ListingAgentId,
+								'escrow_lender_id' => $EscrowLenderId,
+								'cpl_lender_id' => $cplLenderId,
+								'address' => $PropertyAddress,
+								'city' => $PropertyCity,
+								'state' => $PropertyState,
+								'zip' => $PropertyZip,
+								'property_type' => $PropertyType,
+								'full_address' => $FullProperty,
+								'apn' => $apn,
+								'county' => $County,
+								'legal_description' => $LegalDescription,
+								'primary_owner' => $PrimaryOwner,
+								'secondary_owner' => $SecondaryOwner,
+								'unit_number' => $this->input->post('unit_number'),
+								'status'=> 1
+							);
+
+							$propertyId = $this->home_model->insert($propertyData,'property_details');				
+
+							$transactionData = array(
+								'customer_id' => $customer_id,
+								'sales_representative' => $SalesRep,
+								'title_officer' => $TitleOfficer,
+								'sales_amount' => $SalesAmount,
+								'loan_amount' => $LoanAmount,
+								'loan_number' => $LoanNumber,
+								'transaction_type' => $TransactionTypeID,
+								'purchase_type' => $ProductTypeID,
+								'is_ccr' => $CCR,
+								'is_underlying_docs' => $Docs,
+								'is_plotted_easements' => $Ease,
+								'additional_email' => implode(',', $AdditionalEmails),
+								'borrower' => $primaryBorrower,
+								'secondary_borrower' => $secondaryBorrower,
+								'status'=> 1
+							);
+
+							$transactionId = $this->home_model->insert($transactionData,'transaction_details');
+
+							$randomString = $this->order->randomPassword();
+							
+							$randomString = md5($orderUser['id'] . $orderUser['email_address'] .$randomString);
+			
+
+							$orderData = array(
+								'customer_id' => $customer_id,
+								'file_id' => $file_id,
+								'file_number' => $orderNumber,
+								'property_id' => $propertyId,
+								'transaction_id' => $transactionId,
+								'partner_api_log_id' => $partnerApiId,
+								'created_by' => $userdata['id'],
+								'random_number' => $randomString,
+								'underwriter' => $underWriter,
+								'escrow_officer_id' => $this->input->post('escrow_officer'),
+								'status'=> 1
+							);
+
+							$orderId = $this->home_model->insert($orderData,'order_details');
+
+							/* Escrow Lender Details */					
+							if(isset($EscrowLenderId) && !empty($EscrowLenderId))
+				        	{
+				        		$name = explode(' ', $EscrowLenderName);
+				        		$first_name = $name[0];
+				        		$last_name = $name[1];
+				        		$EscrowLenderData = array(
+									'first_name' => $first_name,
+									'last_name' => $last_name,
+									'email_address' => $EscrowLenderEmail,
+									'company_name' => $EscrowLenderCompany,
+									'telephone_no' => $EscrowLenderTelephone,
+									'status'=> 1
+								);
+								$condition = array(
+									'id' => $EscrowLenderId
+								);
+								
+								$lenderId = $this->home_model->update($EscrowLenderData,$condition);
+							}
+							/* Escrow Lender Details */
+
+							
+							if($this->session->has_userdata('tp_api_id_'.$random_number))
+							{
+								$session_id = 'tp_api_id_'.$random_number;
+
+								$condition = array(
+									'session_id' => $session_id
 								);
 								$tpData = array(
 									'file_id' => $file_id,
 									'file_number' => $orderNumber,
-								);					
+								);
 								$this->titlePointData->update($tpData,$condition);
-							}							
+								
+								$this->load->library('order/titlepoint');
 
+								$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+								
+								$tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
+								$this->titlepoint->generateTaxDoc($tax_serviceId,$orderNumber,$orderId);
+								
+								$serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
+								$this->titlepoint->generateImg($serviceId,$orderNumber,$orderId);
+								
+								$instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && !empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
+
+								$recordedDate = isset($titlePointDetails['cs4_recorded_date']) && !empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
+								$fips = isset($titlePointDetails['fips']) && !empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
+								
+								$this->titlepoint->generateGrantDeed($instrumentNumber,$recordedDate,$fips,$orderNumber,$orderId);
+							}
 							
+							$orderDetails = $this->order->get_order_details($file_id);
+
+							// Convert to PST
+							
+    						$timezone  = -8;
+
+							$opened_date = gmdate("m-d-Y h:i A", strtotime($orderDetails['opened_date']) + 3600*($timezone+date("I")));
+
+							// Convert to PST
+
 							$data = array(
 								'orderNumber'=> $orderNumber,
+								'orderId'=> $file_id,
 								'OpenName'=> $OpenName.' '.$OpenLastName,
 								'Opentelephone'=> $Opentelephone,
 								'OpenEmail'=> $OpenEmail,
 								'CompanyName'=> $CompanyName,
 								'StreetAddress'=> $StreetAddress,
 								'City'=> $City,
-								'Zipcode'=> $Zipcode,
+								'Zipcode'=> $Zipcode,	
+								'openAt'=> $opened_date,
 								'PropertyAddress'=> $PropertyAddress,
 								'FullProperty'=> $FullProperty,
 								'APN'=> $apn,
@@ -258,300 +863,195 @@ class Home extends MX_Controller {
 								'LegalDescription'=> $LegalDescription,
 								'PrimaryOwner'=> $PrimaryOwner,
 								'SecondaryOwner'=> $SecondaryOwner,
-								'SalesRep'=> $SalesRep,
-								'TitleOfficer'=> $TitleOfficer,
-								'ProductType'=> $ProductType,
+								'SalesRep'=> $salesRepName,
+								'TitleOfficer'=> $titleOfficerName,
+								'ProductType'=> $ProductTypeTxt,
 								'SalesAmount'=> $SalesAmount,
 								'LoanAmount'=> $LoanAmount,
+								'LoanNumber'=> $LoanNumber,
+								'EscrowNumber'=> $EscrowNumber,
+								'Notes'=> $Notes,
 								'sendermessage'=> $sendermessage,
 								'buyers_agent'=> $buyers_agent_details,
 								'listing_agent'=> $listing_agent_details,
 								'lender_details'=> $lender_details,
 								'escrow_details'=> $escrow_details,
-								'currYear'=> CURRENT_YEAR
+								'currYear'=> CURRENT_YEAR,
+								'randomString'=> $randomString
 							 );
 
 							$from_name = 'Pacific Coast Title Company';
-							$from_mail = 'ghernandez@pct.com';
+							$from_mail = env('FROM_EMAIL');
 							$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
 							$message = $order_message_body; 
-							$subject = 'Order Placed at Resware';
-							$to = 'cs@pct.com';
-							$bcc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
+							$subject = $orderNumber. ' - PCT Title Order Placed';
+							$email_notification = $this->input->post('email_notification');
+
 							
+							if(($is_escrow == 0) && (isset($userdata['is_master']) && !empty($userdata['is_master'])) && (empty($email_notification)))
+							{
+								$to = env('OPEN_ORDER_ADMIN_EMAIL');
+								/*$cc = array();*/
+							}
+							else
+							{
+								$to = $OpenEmail;
+								$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
+							}
+							$file = array();
+							$lvfilename = $orderNumber.'.pdf';
+							$deedfilename = $orderNumber.'.pdf';
+							$taxfilename = $orderNumber.'.pdf';
+							// $orderDetails = $this->order->get_order_details($file_id);
+
+							if (!empty($_FILES['upload_curative']['name'])) {
+								$this->uploadCurativeDocsToResware($orderDetails); 
+							}
+
+							if (file_exists(FCPATH.'uploads/legal-vesting/'.$lvfilename)) {
+								$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
+								$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
+							}
+
+							if (file_exists(FCPATH.'uploads/grant-deed/'.$deedfilename)) {
+								$file[] = base_url().'uploads/grant-deed/'.$deedfilename;
+								$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
+							}
+
+							if (file_exists(FCPATH.'uploads/tax/'.$taxfilename)) {
+								$file[] = base_url().'uploads/tax/'.$taxfilename;
+								$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
+							}
+							
+							/*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
+							$parties_email[] = env('ORDER_ADMIN_EMAIL');
+							$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 							$this->load->helper('sendemail');
 							
-							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,array(),'',$bcc);
-							//send order deatils to all parties						
-							/*if(isset($parties_email) && !empty($parties_email))
-							{
-								foreach($parties_email as $email => $name){
-									$mail->AddBCC($email, $name);
-								}
-							}*/
-						}
+							$mailParams= array(
+								'from_mail'=>$from_mail, 
+								'from_name'=>$from_name, 
+								'to'=>$to,
+								'subject'=>$subject,
+								'message'=>json_encode($data),
+								'file'=>json_encode($file),
+								'cc'=>json_encode($cc)
+							);
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array(), $orderId, 0);
+
+							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+
+							$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
+
+							/* Escrow officer email */
 						
-						$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
-
-						$propertyData = array(
-							'customer_id' => $customer_id,
-							'buyer_agent_id' => $BuyerAgentId,
-							'listing_agent_id' => $ListingAgentId,
-							'escrow_lender_id' => $EscrowLenderId,
-							'address' => $PropertyAddress,
-							'city' => $PropertyCity,
-							'state' => $PropertyState,
-							'zip' => $PropertyZip,
-							'property_type' => $PropertyType,
-							'full_address' => $FullProperty,
-							'apn' => $apn,
-							'county' => $County,
-							'legal_description' => $LegalDescription,
-							'primary_owner' => $PrimaryOwner,
-							'secondary_owner' => $SecondaryOwner,
-							// 'additional_details'=> $sendermessage,
-							'status'=> 1
-						);
-
-						$propertyId = $this->home_model->insert($propertyData,'property_details');				
-
-						$transactionData = array(
-							'customer_id' => $customer_id,
-							'sales_representative' => $SalesRep,
-							'title_officer' => $TitleOfficer,
-							'sales_amount' => $SalesAmount,
-							'loan_amount' => $LoanAmount,
-							'transaction_type' => $TransactionTypeID,
-							'purchase_type' => $ProductTypeID,
-							'is_ccr' => $CCR,
-							'is_underlying_docs' => $Docs,
-							'is_plotted_easements' => $Ease,
-							'additional_email' => $AdditionalEmail,
-							'additional_email_1' => $AdditionalEmail1,
-							'additional_email_2' => $AdditionalEmail2,
-							'borrower' => $primaryBorrower,
-							'secondary_borrower' => $secondaryBorrower,
-							'status'=> 1
-						);
-
-						$transactionId = $this->home_model->insert($transactionData,'transaction_details');
-
-						$orderData = array(
-							'customer_id' => $customer_id,
-							'file_id' => $file_id,
-							'file_number' => $orderNumber,
-							'property_id' => $propertyId,
-							'transaction_id' => $transactionId,
-							'created_by' => $userdata['id'],
-							'status'=> 1
-						);
-
-						$orderId = $this->home_model->insert($orderData,'order_details');
-
-						/* Buyers Agent */						
-						if(isset($BuyerAgentId) && !empty($BuyerAgentId))
-			        	{
-			        		$buyerData = array(
-								'name' => $BuyerAgentName,
-								'email_address' => $BuyerAgentEmailAddress,
-								'company' => $BuyerAgentCompany,
-								'telephone_no' => $BuyerAgentTelephone,
-								'status'=> 1
-							);
-							$condition = array(
-								'id' => $BuyerAgentId
-							);
-							
-							$buyeragentId = $this->agent_model->update($buyerData,$condition);
-			        	}
-						/* Buyers Agent */
-
-						/* Listing Agent */					
-						if(isset($ListingAgentId) && !empty($ListingAgentId))
-			        	{
-			        		$listngAgentData = array(
-								'name' => $ListingAgentName,
-								'email_address' => $ListingAgentEmailAddress,
-								'company' => $ListingAgentCompany,
-								'telephone_no' => $ListingAgentTelephone,
-								'status'=> 1
-							);
-							$condition = array(
-								'id' => $ListingAgentId
-							);
-							
-							$listingAgentId = $this->agent_model->update($listngAgentData,$condition);
-			        	}
-						/* Listing Agent */
-
-						/* Escrow Lender Details */					
-						if(isset($EscrowLenderId) && !empty($EscrowLenderId))
-			        	{
-			        		$name = explode(' ', $EscrowLenderName);
-			        		$first_name = $name[0];
-			        		$last_name = $name[1];
-			        		$EscrowLenderData = array(
-								'first_name' => $first_name,
-								'last_name' => $last_name,
-								'email_address' => $EscrowLenderEmail,
-								'company_name' => $EscrowLenderCompany,
-								'telephone_no' => $EscrowLenderTelephone,
-								'status'=> 1
-							);
-							$condition = array(
-								'id' => $EscrowLenderId
-							);
-							
-							$lenderId = $this->home_model->update($EscrowLenderData,$condition);
-			        	}
-						/* Escrow Lender Details */
-
-						$order_file = uniqid();
-						$order_upload = $order_file.isset($_FILES['orderfiles']['name']) && !empty($_FILES['orderfiles']['name']) ? $_FILES['orderfiles']['name'] : '';	
-				
-						/*	----------------------------------------------------------------------
-							: Prepare form field variables for CSV export
-							----------------------------------------------------------------------- */
-				
-						/*if(GENERATE_CSV == true){
-							$csvFile = CSV_FILE_NAME;	
-							$csvData = array(
-								"$sendername",
-								"$emailaddress",
-								"$telephone",
-								"$senderwebsite",
-								"$orderservices",
-								"$orderbudget",
-								"$ordertimeframe"			
-							);
-						}*/
-						$mail_status= $mail_response = '';
-						if(isset($_FILES['orderfiles']) && !empty($_FILES['orderfiles']))
-						{
-							if ($_FILES['orderfiles']['error'] == 0) 
-							{
-								move_uploaded_file($_FILES['orderfiles']['tmp_name'], FCPATH.'smuploads/' .$order_upload);
-
-								$data = array(
-							       'OpenName'=> $OpenName,
-							       'OpenEmail'=> $OpenEmail,
-							       'Opentelephone'=> $Opentelephone,
-							       'OpenRole'=> $OpenRole,
-							       'PartnerName'=> $PartnerName,
-							       'ParnterEmailaddress'=> $ParnterEmailaddress,
-							       'PartnerTelephone'=> $PartnerTelephone,
-							       'PartnerRole'=> $PartnerRole,
-							       'Property'=> $Property,
-							       'SalesRep'=> $SalesRep,
-							       'TitleOfficer'=> $TitleOfficer,
-							       'LoanAmount'=> $LoanAmount,
-							       'sendermessage'=> $sendermessage,
-							       'poweredby_url'=> POWEREDBY_URL,
-								   'poweredby_name'=> POWEREDBY_NAME,
-								   'currYear'=> CURRENT_YEAR
-							    );
-
-								$from_name = 'Pacific Coast Title Company';
-								$from_mail = 'ghernandez@pct.com';
-								$message = $this->load->view('emails/smartmessage.php',$data,TRUE);
-								$subject = RECEIVER_SUBJECT;
-								$to = RECEIVER_EMAIL;
-								$file = FCPATH.'smuploads/'.$order_upload;
-								$bcc = array('rmcmahon@pct.com', 'openorders@pct.com');
-
-								$recipients = false;
-								$bcc = array();
-								if($recipients == true)
-								{
-									$bcc = array('rmcmahon@pct.com', 'openorders@pct.com');	
-								}
-
-								$this->load->helper('sendemail');
-								
-								$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,array($file),'',$bcc);
-
-								if($mail_result) {
-									// -----------------------------------------------------------------
-									// : Generate the CSV file and post values if its true
-									// ----------------------------------------------------------------- 		
-									if(GENERATE_CSV == true){	
-										if (file_exists($csvFile)) {
-											$csvFileData = fopen($csvFile, 'a');
-											fputcsv($csvFileData, $csvData );
-										} else {
-											$csvFileData = fopen($csvFile, 'a'); 
-											$headerRowFields = array(
-												"Sender Name",
-												"Email Address",
-												"Telephone",
-												"Website",
-												"Services",
-												"Budget",
-												"Time Frame"										
-											);
-											fputcsv($csvFileData,$headerRowFields);
-											fputcsv($csvFileData, $csvData );
-										}
-										fclose($csvFileData);
-									}
-									
-									// ---------------------------------------------------------------------
-									// : Send the auto responder message if its true
-									// --------------------------------------------------------------------- 
-									if(AUTORESPONDER == true){
-										
-										$automail = $this->phpmailer_library->load();
-										$automail->isSendmail();
-										$automail->setFrom(RECEIVER_EMAIL,RECEIVER_NAME);
-										$automail->isHTML(true);                                 
-										$automail->CharSet = "UTF-8";
-										$automail->Encoding = "base64";
-										$automail->Timeout = 200;
-										$automail->ContentType = "text/html";
-										$automail->AddAddress($OpenEmail, $OpenName);
-										$automail->Subject = "Thank you for contacting us";
-										$data = array(
-									       'receiver_email'=> RECEIVER_EMAIL,
-									       'sendername'=> $OpenName,
-									       'poweredby_url'=> POWEREDBY_URL,
-									       'poweredby_name'=> POWEREDBY_NAME,
-									       'currYear'=> CURRENT_YEAR
-									    );
-									    $automessage = $this->load->view('emails/autoresponder.php',$data,TRUE);
-										$automail->Body = $automessage;
-										$automail->AltBody = "Use an HTML compatible email client";
-										$automail->Send();	 
-									}	
-								  	
-								  	$mail_status='success'; 
-								  	$mail_response='Your title order is being submitted. Please wait for confirmation.'; 
-								  
-									// Start delete function 
-									// Automatically deletes files from the smuploads folder after successful sending
-									// You can remove this function if you want to keep uploads on your server
-									$files = glob(FCPATH.'smuploads/*'); 
-									foreach($files as $file){ 
-									  if(is_file($file))
-										unlink($file); 
-									}	  
-								  
-									} 
-									else 
-									{
-										$mail_status='error'; 
-								  		$mail_response='Message not sent - server error occured!';	
-									}
+							$escrow_email = '';
+							if (isset($escrowOfficer) && !empty($escrowOfficer)) {
+								$con = array(
+									'where' => array(
+										'partner_id' => $escrowOfficer,
+									)
+								);
+								$escrowCompanyData = $this->home_model->get_company_rows($con);
+								$escrow_email = $escrowCompanyData[0]['email'];
+								//$escrow_email = 'ghernandez@pct.com';
 							}
+
+							if (!empty($escrow_email)) {							
+
+								$sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
+
+								$email_data = array(
+									'orderNumber'=> $orderNumber,
+									'randomString'=> $randomString,
+									'headerImg'=> $sales_rep_img,
+									'currYear'=> CURRENT_YEAR,
+									'productTypeID' => $ProductTypeID 
+								);
+								
+								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
+								$message_body = $borrower_message_body; 
+								$subject = $orderNumber. ' - Borrower Verification';
+								$to = $escrow_email;
+								//$to = 'hitesh.p@crestinfosystems.com';
+								$mailParams = array(
+									'from_mail'=>$from_mail, 
+									'from_name'=>$from_name, 
+									'to'=>$to,
+									'subject'=>$subject,
+									'message'=>json_encode($email_data)
+								);
+
+								$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
+
+								$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+
+								$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
+							}					
+
+							/* Escrow officer email */	
+
+							/* Send notification to admin based on rules */
+							$condition = array(
+				                'where' => array(
+				                    'title' => 'Send notification for open orders'
+				                )
+				            );
+							$rules = $this->home_model->get_rules_rows($condition);
+		
+							if(isset($rules) && !empty($rules))
+							{
+								$counties_rule = isset($rules[0]['value']) && !empty($rules[0]['value']) ? $rules[0]['value'] : array(); 
+								$counties_ids = explode(',', $counties_rule);
+								
+								$counties = array();
+								foreach ($counties_ids as $key => $value) 
+								{
+									$condition = array(
+						                'id' => $value	                
+						            );
+									$county_data = $this->home_model->get_counties_rows($condition);
+									$counties[] = $county_data['county'];
+									
+									if(in_array($County, $counties))
+									{
+										$search_data = array(
+											'orderNumber'=> $orderNumber,
+											'property_address'=> $FullProperty,
+											'apn'=> $apn,
+											'currYear'=> CURRENT_YEAR
+										);
+										
+										$search_package_body = $this->load->view('emails/search_package.php',$search_data,TRUE);
+										$search_package_message_body = $search_package_body; 
+										$subject = 'Starter Need: '.$PropertyAddress;
+										$to = env('ADMIN_EMAIL');
+										$mailParams = array(
+											'from_mail'=>env('FROM_EMAIL'),
+											'to'=>$to,
+											'subject'=>$subject,
+											'message'=>json_encode($search_data)
+										);
+
+										$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_admin_for_search_package', '', $mailParams, array(), $orderId, 0);
+
+										$search_mail_result = send_email($from_mail,$from_name, $to, $subject, $search_package_message_body,array(),array(),array());
+
+										$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_admin_for_search_package', '', $mailParams, array('status'=>$search_mail_result), $orderId, $logid);
+									}
+								}
+							}			
+							/* Send notification to admin based on rules */						
 						}
-						
-						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','mail_status'=>$mail_status,'mail_response'=>$mail_response,'file_id'=>$file_id);
+											
+						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','file_id'=>$file_id);
 						echo json_encode($response); exit;
 					} 
 				}
 				else
 				{
 					
-					$response = array('status'=>'error', 'message'=> 'Something went wrong. Please try again.');
+					$response = array('status'=>'error', 'message'=> 'Credentials error.');
 					echo json_encode($response); exit;
 				}
     		}
@@ -570,15 +1070,33 @@ class Home extends MX_Controller {
 
 			$is_master = isset($customer_data['is_master']) && !empty($customer_data['is_master']) ? $customer_data['is_master'] : '';
 
-			$condition = array(
+			/*$condition = array(
 	            'where' => array(
 	                'status' => 1,
 	                'transaction_type_id' => 3
 	            )
 	        );
 			
-			$data['productType'] =  $this->productType->getProductTypes($condition);
-	        
+			$data['productType'] =  $this->productType->getProductTypes($condition);*/
+
+			$condition = array(
+                'where' => array(
+                    'status' => 1
+                )
+            );
+
+			$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
+
+			// $data['salesRep'] = $this->salesRep->getSalesRepDetails($condition);
+			$condition = array(
+                'where' => array(
+                    'is_sales_rep' => 1,
+                    'status' => 1,
+                )
+            );
+			$data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
+			$data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
+
 	        if($is_master)
 	        {
 	        	$this->load->view('layout/head',$data);
@@ -587,6 +1105,13 @@ class Home extends MX_Controller {
 	        else 
 	        {
 	        	$data['customer_data'] = $customer_data;
+				$con = array(
+					'where' => array(
+						'partner_id' => $customer_data['partner_id'],
+					)
+				);
+				$companyData = $this->home_model->get_company_rows($con);
+				$data['deliverables'] = !empty($companyData[0]['deliverables']) ? explode(',', $companyData[0]['deliverables']) : array();
 	        	$this->load->view('layout/head',$data);
 	        	$this->load->view('order/home');
 	        }	       	
@@ -596,9 +1121,15 @@ class Home extends MX_Controller {
 
     function getSearchResults()
     {
+    	$userdata = $this->session->userdata('user');
+    	
     	ini_set('max_execution_time', 300);
-    	$request = $_GET['requrl'];        
-		$request .= '&key=' . '22C75EF7-5DBF-4B26-B2DB-998BE080F29C';
+    	$request = $_GET['requrl'];
+    	$api_key = env('BLACK_KNIGHT_KEY');        
+		$request .= '&key=' . $api_key;
+
+		$query_string = parse_url($request,PHP_URL_QUERY);
+        parse_str($query_string, $requestParams);
         
         $getsortedresults = isset($_GET['getsortedresults'])?$_GET['getsortedresults']:'false';
         
@@ -612,7 +1143,18 @@ class Home extends MX_Controller {
 		    )
         );
         $context = stream_context_create($opts);
+        $this->load->model('order/apiLogs');
+
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, $requestParams, array(), 0, 0);
+
         $file = file_get_contents($request,false,$context);
+        $xmlData = simplexml_load_string($file);
+		$response = json_encode($xmlData);
+		$result = json_decode($response,TRUE);
+
+		$this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, array(), $result, 0, $logid);
+
+        
         echo trim($file);
     }
 
@@ -695,12 +1237,11 @@ class Home extends MX_Controller {
     function getDetailsByName()
     {
     	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
-    	// $isEscrow = isset($_POST['is_escrow']) && !empty($_POST['is_escrow']) ? $_POST['is_escrow'] : 0;
 
+		$is_master_search = isset($_POST['is_master_search']) && !empty($_POST['is_master_search']) ? $_POST['is_master_search'] : 0;
 
     	$condition = array(
-            'company_name' => $searchTerm,
-            // 'is_escrow' => $isEscrow,
+            'company_name' => $searchTerm
         );
 
     	if(isset($_POST['is_escrow']))
@@ -708,16 +1249,28 @@ class Home extends MX_Controller {
     		$isEscrow = $_POST['is_escrow'];
     		$condition['is_escrow'] = $isEscrow;
     	}
+    	
 
-    	$userDetails = $this->home_model->get_customers($condition);
+    	if(isset($_POST['is_escrow']))
+    	{
+    		$isEscrow = $_POST['is_escrow'];
+    		$condition['is_escrow'] = $isEscrow;
+    	}
+    	$condition['where']['is_sales_rep'] = 0;
+
+    	$is_from_order_form = $this->input->post('is_from_order_form');
+    	$condition['is_from_order_form'] = isset($is_from_order_form) && !empty($is_from_order_form) ? $is_from_order_form : 0;
+
+    	$userDetails = $this->home_model->get_customers($condition, $is_master_search);
     	$userInfo = array();
     	if(isset($userDetails) && !empty($userDetails))
     	{
     		foreach ($userDetails as $key => $value) 
     		{
     			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
-            
+    			
 	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
+				$data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
 
 	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
 	            $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
@@ -727,8 +1280,10 @@ class Home extends MX_Controller {
 				$data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
 				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
 				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+				$data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
 				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
 				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
+				$data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
 	            // array_push($userInfo, $data); 
 	            $userInfo[] =$data;
     		}
@@ -739,7 +1294,7 @@ class Home extends MX_Controller {
     function orderSubmit()
     {
     	$fileId = $this->uri->segment(2);
-    	$this->session->unset_userdata('tp_api_id');
+    	
 		
 		if($fileId)
 		{
@@ -749,23 +1304,63 @@ class Home extends MX_Controller {
 	            )
 	        );
 			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+			
+			$session_id = isset($titlePointDetails[0]['session_id']) && !empty($titlePointDetails[0]['session_id']) ? $titlePointDetails[0]['session_id'] : '';
+
+			$this->session->unset_userdata($session_id);
 
 			$orderDetails = $this->order->get_order_details($fileId);
+
+			$file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] :'';
+
 			$property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] :'';
+			$customer_id = isset($orderDetails['customer_id']) && !empty($orderDetails['customer_id']) ? $orderDetails['customer_id'] :'';
 			$propertyData = $this->home_model->get_property_details($property_id);
 			
 			$county = isset($propertyData['county']) && !empty($propertyData['county']) ? $propertyData['county'] :'';
+			$apn = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] :'';
 			$FullProperty = isset($propertyData['full_address']) && !empty($propertyData['full_address']) ? $propertyData['full_address'] :'';
 			
 	        $propertyState = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] :'';
 	        
-	        $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] :'';			
+	        $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] :'';
+
+	        $lv_file_path = FCPATH.'uploads/legal-vesting/'.$file_number.'.pdf';
+
+	        $lv_file_url = '';
+
+			if (file_exists($lv_file_path)) 
+			{
+			    $lv_file_url = base_url().'uploads/legal-vesting/'.$file_number.'.pdf';
+			}
+			$data['lv_file_url'] = $lv_file_url;
+
+			$deed_file_path = FCPATH.'uploads/grant-deed/'.$file_number.'.pdf';
+
+	        $deed_file_url = '';
+
+			if (file_exists($deed_file_path)) 
+			{
+			    $deed_file_url = base_url().'uploads/grant-deed/'.$file_number.'.pdf';
+			}
+			$data['deed_file_url'] = $deed_file_url;
+
+			$tax_file_url = '';
+			$tax_file_path = FCPATH.'uploads/tax/'.$file_number.'.pdf';
+			if (file_exists($tax_file_path)) 
+			{
+			    $tax_file_url = base_url().'uploads/tax/'.$file_number.'.pdf';
+			}
+			$data['tax_file_url'] = $tax_file_url;		
 		}
 		
 		$data['tp_data'] = isset($titlePointDetails[0]) && !empty($titlePointDetails[0]) ? $titlePointDetails[0] : array();
-		$data['state'] = isset($propertyState) && !empty($propertyState) ? $propertyState : array();
-		$data['city'] = isset($propertyCity) && !empty($propertyCity) ? $propertyCity : array();
-		$data['county'] = isset($county) && !empty($county) ? $county : array();
+		$data['state'] = isset($propertyState) && !empty($propertyState) ? $propertyState : '';
+		$data['city'] = isset($propertyCity) && !empty($propertyCity) ? $propertyCity : '';
+		$data['county'] = isset($county) && !empty($county) ? $county : '';
+		$data['apn'] = isset($apn) && !empty($apn) ? $apn : '';
+		$data['property'] = isset($FullProperty) && !empty($FullProperty) ? $FullProperty : '';
+		$data['customer_id'] = isset($customer_id) && !empty($customer_id) ? $customer_id : '';
 		
         $this->load->view('layout/head',$data);
        	$this->load->view('order/order-submission',$data);
@@ -784,24 +1379,31 @@ class Home extends MX_Controller {
 		if($this->input->post())
 		{
 			$customer_id = $this->input->post('customer_id');
-			$first_name = $this->input->post('first_name');
-			$last_name = $this->input->post('last_name');
-			$telephone_no = $this->input->post('telephone_no');
-			$email_address = $this->input->post('email_address');
-			$company_name = $this->input->post('company_name');
-			$street_address = $this->input->post('street_address');
-			$city = $this->input->post('city');
-			$zipcode = $this->input->post('zipcode');
-			$property = $this->input->post('property');
+			$subject = $this->input->post('subject');
 
-			if((isset($customer_id) && !empty($customer_id)) || (isset($first_name) && !empty($first_name)))
+			if(isset($customer_id) && !empty($customer_id))
 			{
-				$message = '<h3>User Details:</h3><p>Customer Number: '.$customer_no.'</p><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p>';
+				$condition = array(
+		            'id' => $customer_id
+		        );
+		        $customerDetails = $this->home_model->get_customers($condition);
+		        $first_name = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
+		        $last_name = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
+		        $telephone_no = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
+		        $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
+		        $company_name = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
+		        $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
+		        $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
+		        $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
+
+		        $property = $this->input->post('property');
+
+				$message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p>';
 				
 				$from_name = 'Pacific Coast Title Company';
-				$from_mail = 'ghernandez@pct.com';
-				$subject = 'Notification for No Hit on property search';
-				$to = 'cs@pct.com';
+				$from_mail = env('FROM_EMAIL');
+				$subject = 'Notification for '.$subject;
+				$to = env('ADMIN_EMAIL');
 				
 				$this->load->helper('sendemail');
 				
@@ -825,4 +1427,280 @@ class Home extends MX_Controller {
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/dashboard');
     }
+
+    function getProductTypes()
+    {
+    	$this->load->model('order/apiLogs');
+    	$userdata = $this->session->userdata('user');
+    	
+    	$email = isset($_POST['email']) && !empty($_POST['email']) ? $_POST['email'] : '';
+    	$customerId = isset($_POST['customerId']) && !empty($_POST['customerId']) ? $_POST['customerId'] : '';
+    	
+    	$condition = array(
+            'id' => $customerId
+        );
+        $customerDetails = $this->home_model->get_customers($condition);
+        
+        $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
+        $password = isset($customerDetails['random_password']) && !empty($customerDetails['random_password']) ? $customerDetails['random_password'] : '';
+        $data = array('email'=>$email_address,'password'=>$password);
+
+        $resware_user_id = isset($customerDetails['resware_user_id']) && !empty($customerDetails['resware_user_id']) ? $customerDetails['resware_user_id'] : '';
+        $endPoint = 'types/products?ClientsClientID='.$resware_user_id;
+    	$logid = $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API').$endPoint, $requestParams, array(), 0, 0);
+        $this->load->library('order/resware');
+        $result = $this->resware->make_request('GET', $endPoint, array(),$data);
+       $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API').$endPoint, array(), $result, 0, $logid);
+        $response = json_decode($result,TRUE);
+        $product_types = array();
+
+        if(isset($response) && !empty($response))
+        {	          
+            foreach ($response as $key => $value) 
+            {
+            	if(isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3)
+                {
+                	$con = array(
+                        'where' => array(
+                            'product_type_id' => $value['ProductTypeID'],
+                            'status' => 1
+                        ),
+                        'returnType' => 'count'
+                    );
+                    $prevCount = $this->home_model->get_product_types($con);
+                    if(empty($prevCount))
+                    {
+                    	$productData = array(
+                                    'transaction_type'=> trim($value['TransactionType']),
+                                    'transaction_type_id'=> $value['TransactionTypeID'],
+                                    'product_type'=> trim($value['ProductType']),
+                                    'product_type_id'=> $value['ProductTypeID'],
+                                    'state'=> 'CA',
+                                    'status'=> 1,
+                                );
+                    	$insert = $this->home_model->insert($productData,'pct_order_product_types');
+                    }
+
+                    $product_types[$value['ProductTypeID']] = $value['ProductType']; 
+                }
+            }
+        }
+    	echo json_encode($product_types); exit;
+	}
+	
+	public function uploadLvDocsToResware($document_name, $fileId, $orderDetails)
+	{
+		$this->load->model('order/document');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		$fileSize = filesize(FCPATH.'uploads/legal-vesting/'.$document_name);
+		$contents = file_get_contents(base_url().'uploads/legal-vesting/'.$document_name);
+		$binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Legal & Vesting Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_lv_doc' => 1
+		);
+		$documentId = $this->document->insert($documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1037,
+			),
+			'Description' => 'Legal & Vesting Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+    }
+    
+
+    public function uploadGrantDeedDocsToResware($document_name, $fileId, $orderDetails)
+	{
+		$this->load->model('order/document');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		$fileSize = filesize(FCPATH.'uploads/grant-deed/'.$document_name);
+		$contents = file_get_contents(base_url().'uploads/grant-deed/'.$document_name);
+		$binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Grant Deed Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_grant_doc' => 1
+		);
+		$documentId = $this->document->insert($documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1037,
+			),
+			'Description' => 'Grant Deed Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+	}
+
+	public function uploadTaxDocsToResware($document_name, $fileId, $orderDetails)
+	{
+		$this->load->model('order/document');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		$fileSize = filesize(FCPATH.'uploads/tax/'.$document_name);
+		$contents = file_get_contents(base_url().'uploads/tax/'.$document_name);
+		$binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Tax Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_tax_doc' => 1
+		);
+		$documentId = $this->document->insert($documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1037,
+			),
+			'Description' => 'Tax Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+	}
+
+	public function checkDuplicateOrder()
+    {
+		$apn = $this->input->post('apn');
+		$result = $this->order->checkDuplicateOrder($apn);
+		if ($result) {
+			echo json_encode(array('success' => true)); 
+		} else {
+			echo json_encode(array('success' => false)); 
+		} 
+	}
+
+	public function uploadCurativeDocsToResware($orderDetails)
+	{
+		$this->load->model('order/document');
+		$this->load->model('order/apiLogs');
+		$this->load->library('order/resware');
+		$userdata = $this->session->userdata('user');
+		$data = $this->upload->data();
+		$contents = file_get_contents($data['full_path']);
+		$binaryData   = base64_encode($contents); 
+		$document_name = date('YmdHis')."_".$data['file_name'];
+		rename(FCPATH."/uploads/curative/".$data['file_name'], FCPATH."/uploads/curative/".$document_name);
+		
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $data['file_name'],
+			'document_type_id' => 1033,
+			'document_size' => ($data['file_size'] * 1000),
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Curative Documents',
+			'is_sync' => 1,
+			'is_curative_doc' => 1
+		);
+		
+		$documentId = $this->document->insert($documentData);
+		
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		
+		$documentApiData = array(			
+			'DocumentName' => $data['file_name'],
+			'DocumentType' => array(
+				'DocumentTypeID' => 1033,
+			),
+			'Description' => 'Curative Documents',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+	}	
 }

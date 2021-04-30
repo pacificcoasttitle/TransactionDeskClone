@@ -12,8 +12,58 @@
 							<div class="ui-decor-1a bg-accent"></div>
 							<h3 class="ui-title-block_light">How can we help you today?</h3>
 						</div>
-						<div class="typography-sectiona">
-							<div class="col-md-12">
+						
+						
+								<div class="typography-sectiona">
+									<div class="col-md-12">
+									
+									
+									<a href="<?php echo base_url().'order'; ?>">
+											<button class="btn1 btn-type-1a btn-lg" type="button">New Title Order</button>
+										</a>
+										<a href="<?php echo base_url().'cpl-dashboard'; ?>">
+											<button class="btn1 btn-type-1b btn-lg" type="button">Generate CPL</button>
+										</a>
+										
+										<a href="<?php echo base_url().'proposed-insured'; ?>">
+											<button class="btn1 btn-type-1e btn-lg" type="button">Proposed</button>
+										</a>
+										
+										
+									</div>
+								</div>
+					
+								<div class="typography-sectionc">
+									<div class="col-md-12">
+									
+										<?php
+											if(isset($is_master) && empty($is_master))
+											{
+										?>
+												<a href="<?php echo base_url().'fees'; ?>">
+													<button class="btn1 btn-type-1g btn-lg" type="button">Fee Estimate</button>
+												</a>
+										<?php
+											}
+											
+										?>
+										
+										<?php if (isset($user_email) && !empty($user_email) && (trim($user_email) == 'gladys@greenforestescrow.net' || trim($user_email) == 'openorders@empowerescrow.com' || trim($user_email) == 'docs@greenforestescrow.net' || trim($user_email) == 'patricia@greenforestescrow.net' || trim($user_email) == 'ashley@legacyfirstescrow.com')) { ?>
+											<a href="<?php echo base_url().'prelim-files'; ?>">
+												<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
+											</a>
+										<?php } ?>
+										
+										
+										<a href="<?php // echo base_url().'attach-files'; ?>">
+											<button class="btn1 btn-type-1d btn-lg" type="button">Upload Doc</button>
+										</a>
+									
+									
+									</div>
+							    </div>
+							
+							
 							
 							<!-- 
 								<div class="col-md-3">
@@ -29,39 +79,16 @@
 									<div class="card-block"></div>
 								</div>
 							     -->
-								<a href="<?php echo base_url().'order'; ?>">
-									<button class="btn1 btn-type-1a btn-lg" type="button">New Title Order</button>
-								</a>
-								<a href="<?php echo base_url().'cpl-dashboard'; ?>">
-									<button class="btn1 btn-type-1b btn-lg" type="button">Generate CPL</button>
-								</a>
-								<a href="<?php echo base_url().'proposed-insured'; ?>">
-									<button class="btn1 btn-type-1e btn-lg" type="button">Proposed</button>
-								</a>
-								<?php
-									if(isset($is_master) && empty($is_master))
-									{
-								?>
-										<a href="<?php echo base_url().'fees'; ?>">
-											<button class="btn1 btn-type-1g btn-lg" type="button">Fee Estimate</button>
-										</a>
-								<?php
-									}
-
-								?>
-								
-								<!-- <a href="<?php // echo base_url().'prelim-files'; ?>">
-									<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
-								</a>
-                  				<a href="<?php // echo base_url().'attach-files'; ?>">
-                  					<button class="btn1 btn-type-1d btn-lg" type="button">Upload Doc</button>
-                  				</a> -->
 								
 								
-							</div>
-						</div>
-						<div class="typography-sectionc">
-							<div class="col-md-9">
+								
+							
+								
+								
+								
+                  				
+								
+						
 							
 							<!--
 							   <div class="col-md-3">
@@ -93,8 +120,7 @@
 								</a> --> 
 								
 								
-							</div>
-						</div>
+						
 					</div>
 				</div>
 			</div>

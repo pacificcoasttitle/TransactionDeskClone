@@ -1,0 +1,86 @@
+<div class="container">
+    <?php if(!empty($success_msg)){ ?>
+        <div class="col-xs-12">
+            <div class="alert alert-success"><?php echo $success_msg; ?></div>
+        </div>
+    <?php } ?>
+
+    <?php if(!empty($error_msg)){ ?>
+        <div class="col-xs-12">
+            <div class="alert alert-danger"><?php echo $error_msg; ?></div>
+        </div>
+    <?php } ?>
+
+    <div class="card mx-auto mt-5">
+      <div class="card-header">Edit Code Book</div>
+        <div class="card-body">        
+            <form id="add-new-master-user" method="POST">
+                <div class="form-group row">
+                    <label for="code" class="col-sm-2 col-form-label">Code<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <?php $code = set_value('code') ?  set_value('code') :  $codeBookInfo['code']; ?>
+                        <input type="text" class="form-control" name="code" id="code" value="<?php echo $code; ?>" class="form-control" placeholder="First Name">
+                        <?php if(!empty($code_error_msg)){ ?>                     
+                            <span class="error"><?php echo $code_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="type_id" class="col-sm-2 col-form-label">Type Id<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <?php $type_id = set_value('type_id') ?  set_value('type_id') :  $codeBookInfo['type_id']; ?>
+                        <input type="text" class="form-control" name="type_id" id="type_id" value="<?php echo $type_id;?>" class="form-control" placeholder="Last Name">
+                        <?php if(!empty($type_id_error_msg)){ ?>                     
+                            <span class="error"><?php echo $type_id_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="type" class="col-sm-2 col-form-label">Type<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <?php $type = set_value('type') ?  set_value('type') :  $codeBookInfo['type']; ?>
+                        <select id="type" name="type">
+                            <option value="">Select</option>
+                            <option <?php echo (trim(strtolower($type)) == 'easement') ? 'selected' : '';?> value="Easement">Easement</option>
+                            <option <?php echo (trim(strtolower($type)) == 'lien') ? 'selected' : '';?> value="Lien">Lien</option>
+                            <option <?php echo (trim(strtolower($type)) == 'requirement') ? 'selected' : '';?> value="Requirement">Requirement</option>
+                            <option <?php echo (trim(strtolower($type)) == 'restriction') ? 'selected' : '';?> value="Restriction">Restriction</option>
+                            <option <?php echo (trim(strtolower($type)) == 'tax') ? 'selected' : '';?> value="Tax">Tax</option>
+                        </select>
+                        <?php if(!empty($type_error_msg)){ ?>                     
+                            <span class="error"><?php echo $type_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="language" class="col-sm-2 col-form-label">Language</label>
+                    <div class="col-sm-10">
+                        <?php $language = set_value('language') ?  set_value('language') :  $codeBookInfo['language']; 
+                            $language = str_replace('<br>', PHP_EOL, $language);
+                        ?>
+                        <textarea id="language" name="language" rows="10" cols="100"><?php echo $language;?></textarea>
+                        <?php if(!empty($language_error_msg)){ ?>                     
+                            <span class="error"><?php echo $language_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="language" class="col-sm-2 col-form-label">Required Number</label>
+                    <div class="col-sm-1">
+                        <input <?php echo $codeBookInfo['required_number'] == 1 ? "checked" : "";?> type="checkbox" class="form-control" name="required_number" id="required_number" class="form-control">
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-secondary">Save</button>
+                    <a href="<?php echo base_url().'order/admin/code-book'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
+                </div>      
+            </form>
+        </div>
+    </div>
+</div>
+

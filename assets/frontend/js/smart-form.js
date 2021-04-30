@@ -83,58 +83,58 @@
 								BuyerAgentName:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=BuyerAgentEmailAddress]").val() != "" || $("input[name=BuyerAgentTelephone]").val() != "" || $("input[name=BuyerAgentCompany]").val() != "");
 				                        },
 				                    },
 				                },
 				                BuyerAgentEmailAddress:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=BuyerAgentName]").val() != "" || $("input[name=BuyerAgentTelephone]").val() != "" || $("input[name=BuyerAgentCompany]").val() != "");
 				                        },
 				                    },
 				                    email: true,
 				                },
-				                BuyerAgentTelephone:{
-				                    required: {
-				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
-				                        },
-				                    },
-				                },
+				                // BuyerAgentTelephone:{
+				                //     required: {
+				                //         depends: function(element) {
+				                //             return ($("input[name=BuyerAgentName]").val() != "" || $("input[name=BuyerAgentEmailAddress]").val() != "" || $("input[name=BuyerAgentCompany]").val() != "");
+				                //         },
+				                //     },
+				                // },
 				                BuyerAgentCompany:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=BuyerAgentName]").val() != "" || $("input[name=BuyerAgentEmailAddress]").val() != "" || $("input[name=BuyerAgentTelephone]").val() != "");
 				                        },
 				                    },
 				                },
 				                ListingAgentName:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=ListingAgentEmailAddress]").val() != "" || $("input[name=ListingAgentTelephone]").val() != "" || $("input[name=ListingAgentCompany]").val() != "");
 				                        },
 				                    },
 				                },
 				                ListingAgentEmailAddress:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=ListingAgentName]").val() != "" || $("input[name=ListingAgentTelephone]").val() != "" || $("input[name=ListingAgentCompany]").val() != "");
 				                        },
 				                    },
 				                    email: true,
 				                },
-				                ListingAgentTelephone:{
-				                    required: {
-				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
-				                        },
-				                    },
-				                },
+				                // ListingAgentTelephone:{
+				                //     required: {
+				                //         depends: function(element) {
+				                //             return ($("input[name=ListingAgentName]").val() != "" || $("input[name=ListingAgentEmailAddress]").val() != "" || $("input[name=ListingAgentCompany]").val() != "");
+				                //         },
+				                //     },
+				                // },
 				                ListingAgentCompany:{
 				                    required: {
 				                        depends: function(element) {
-				                            return ($("input[name=add-agent-details]").val() != "");
+				                            return ($("input[name=ListingAgentName]").val() != "" || $("input[name=ListingAgentEmailAddress]").val() != "" || $("input[name=ListingAgentTelephone]").val() != "");
 				                        },
 				                    },
 				                },
@@ -149,13 +149,6 @@
 				                    },
 				                },
 				                primaryBorrower:{
-				                    required: {
-				                        depends: function(element) {
-				                            return ($("select[name=ProductTypeID]").val() == "20" || $("select[name=ProductTypeID]").val() == "32");
-				                        },
-				                    },
-				                },
-				                secondaryBorrower:{
 				                    required: {
 				                        depends: function(element) {
 				                            return ($("select[name=ProductTypeID]").val() == "20" || $("select[name=ProductTypeID]").val() == "32");
@@ -260,9 +253,9 @@
 								primaryBorrower: {
 									required: 'Enter primary borrower',
 								},
-								secondaryBorrower: {
-									required: 'Enter secondary borrower',
-								},
+								// secondaryBorrower: {
+								// 	required: 'Enter secondary borrower',
+								// },
 								loanAmount: {
 									required: 'Enter loan amount',
 								}
@@ -305,7 +298,10 @@
 
 									},
 									uploadProgress: function(event, position, total, percentComplete) {
-										
+										console.log(event);
+										console.log(position);
+										console.log(total);
+										console.log(percentComplete);
 										/*var percentVal = percentComplete + '%';
 										bar.width(percentVal);
 										percent.html(percentVal);*/
@@ -314,7 +310,7 @@
 					    	            $("#progressBar").animate({
 					    	                width: '' + percentValue + ''
 					    	            }, {
-					    	                duration: 5000,
+					    	                duration: 8000,
 					    	                easing: "linear",
 					    	                step: function (x) {
 					                        percentText = Math.round(x * 100 / percentComplete);
@@ -339,26 +335,15 @@
 										else if(res.status == 'success')
 										{
 											$('.result').html('<div class="alert alert-success">'+res.message+'</div>');
-											setTimeout(function () { 
+											/*setTimeout(function () { */
 						                    	window.location.replace(base_url+'order-submit/'+res.file_id)
-						                    }, 8000);
+						                    /*}, 8000);*/
 										}
-										if(res.mail_status != '')
-										{
-											if(res.mail_status == 'error')
-											{
-												$('.result').append('<div class="alert notification alert-error">'+res.mail_response+'</div>');
-											}
-											else if(res.status == 'success')
-											{
-												$('.result').append('<div class="alert alert-success">'+res.mail_response+'</div>');
-											}
-										}
-										
 										swapButton(); 
-										$("#progressBar").stop();								
+																		
 										$('#progressDivId').show().delay(5000).fadeOut();
 										$('.form-footer').removeClass('progress');
+										$("#progressBar").stop();
 										$('.alert-success').show().delay(7000).fadeOut();
 										
 										$('.field').removeClass("state-error, state-success");
@@ -386,19 +371,24 @@
 					------------------------------------------ */
 					rules: {
 						email_address: {
-								required: true,
-								email: true
-							},
+							required: true,
+							email: true
+						},
+						pwd: {
+							required: true
+						},
 					},
 					
 					/* @validation error messages 
 					---------------------------------------------- */
 					messages:{
-							
 						email_address: {
-								required: 'Enter your email address',
-								email: 'Enter a Valid email address'
-							},
+							required: 'Enter your email address',
+							email: 'Enter a Valid email address'
+						},
+						pwd: {
+							required: 'Enter your password'
+						},
 					},
 
 					/* @validation highlighting + error placement  
@@ -416,6 +406,7 @@
 								error.insertAfter(element.parent());
 					   }
 					   $('#email_address_php_error').hide();
+					   $('#password_php_error').hide();
 					},
 					
 					/* @ajax form submition 
@@ -436,15 +427,117 @@
 								success:function(data){
 									var res = jQuery.parseJSON(data);
 									if (res.status == 'error') {
-										$('#email_address_php_error').html(res.message);
-										$('#email_address_php_error').show();
+										if (res.email_err_msg) {
+											$('#email_address_php_error').html(res.email_err_msg);
+											$('#email_address_php_error').show();
+										} else {
+											$('#email_address_php_error').hide();
+										}
+
+										if (res.password_err_msg) {
+											$('#password_php_error').html(res.password_err_msg);
+											$('#password_php_error').show();
+										} else {
+											$('#password_php_error').hide();
+										}
 									} else {
-										window.location.replace(base_url+'dashboard');
+										window.location.replace(base_url+res.url);
 									}
 								}
 						  });
 					}
-			});	
+				});	
+
+				$( "#change-password-form" ).validate({
+				
+					/* @validation states + elements 
+					------------------------------------------- */
+					errorClass: "state-error",
+					validClass: "state-success",
+					errorElement: "em",
+					onkeyup: false,
+					onclick: false,						
+					
+					/* @validation rules 
+					------------------------------------------ */
+					rules: {
+						password: {
+							required: true
+						},
+						confirm_password: {
+							required: true,
+							equalTo : "#password"
+						},
+					},
+					
+					/* @validation error messages 
+					---------------------------------------------- */
+					messages:{
+						password: {
+							required: 'Enter your password',
+						},
+						confirm_password: {
+							required: 'Enter your confirm password',
+							equalTo: 'Confirm password should match with password'
+						},
+					},
+
+					/* @validation highlighting + error placement  
+					---------------------------------------------------- */	
+					highlight: function(element, errorClass, validClass) {
+							$(element).closest('.field').addClass(errorClass).removeClass(validClass);
+					},
+					unhighlight: function(element, errorClass, validClass) {
+							$(element).closest('.field').removeClass(errorClass).addClass(validClass);
+					},
+					errorPlacement: function(error, element) {
+					   if (element.is(":radio") || element.is(":checkbox")) {
+								element.closest('.option-group').after(error);
+					   } else {
+								error.insertAfter(element.parent());
+					   }
+					   $('#confirm_password_php_error').hide();
+					   $('#password_php_error').hide();
+					},
+					
+					/* @ajax form submition 
+					---------------------------------------------------- */
+					submitHandler:function(form) {
+						$(form).ajaxSubmit({
+								target:'#password',			   
+								beforeSubmit:function(){
+									
+								},
+								uploadProgress: function(event, position, total, percentComplete) {
+									
+									
+								},								
+								error:function(){
+									
+								},
+								success:function(data){
+									var res = jQuery.parseJSON(data);
+									if (res.status == 'error') {
+										if (res.pwd_err_msg) {
+											$('#password_php_error').html(res.pwd_err_msg);
+											$('#password_php_error').show();
+										} else {
+											$('#password_php_error').hide();
+										}
+
+										if (res.confirm_pwd_err_msg) {
+											$('#confirm_password_php_error').html(res.confirm_pwd_err_msg);
+											$('#confirm_password_php_error').show();
+										} else {
+											$('#confirm_password_php_error').hide();
+										}
+									} else {
+										window.location.replace(base_url+res.url);
+									}
+								}
+						  });
+					}
+				});	
 		
 	});				
     

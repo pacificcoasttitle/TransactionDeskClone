@@ -85,30 +85,6 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 define('BASE_URL_MAIN','http://pct.com/');
-/* Start Resware API */
-define('RESWARE_ORDER_API','http://clients.pacificcoasttitle.com/api/');
-/* End Resware API */
-
-/* Start TP API */
-define("TP_CREATE_SERVICE_ENDPOINT",'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/CreateService4?');
-define("TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT",'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/CreateService3?');
-define("TP_REQUEST_SUMMARY_ENDPOINT",'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/GetRequestSummaries?');
-define("TP_GET_RESULT_BY_ID",'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/GetResultByID?');
-define("TP_GET_RESULT_BY_ID_3",'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/GetResultByID3?');
-define("TP_USERNAME",'pctxmltrial01');
-define("TP_PASSWORD",'Mf9w6R7Tbq');
-define("SERVICE_TYPE",'TitlePoint.LegalAndVesting2');
-define("TAX_SEARCH_SERVICE_TYPE",'TitlePoint.Geo.Tax');
-define("INSTRUMENT_SEARCH_SERVICE_TYPE",'TitlePoint.Geo.Document');
-
-/* Image API */
-define('TP_IMAGE_ENDPOINT', 'https://www.titlepoint.com/TitlePointServices/tpsgenerateimage.asmx/CreateRequest3?');
-define('TP_IMAGE_REQUEST_STATUS', 'https://www.titlepoint.com/TitlePointServices/tpsgenerateimage.asmx/GetRequestStatus?');
-define('TP_GENERATE_IMAGE', 'https://www.titlepoint.com/titlepointservices/TpsGenerateImage.asmx/GetGeneratedImage?');
-
-/* Image API */
-/* End TP API */
-
 
 /* settings.php */
 
@@ -125,16 +101,3 @@ define('AUTORESPONDER', "FALSE");
 define('CURRENT_YEAR', date("Y"));
 /* settings.php */
 
-/* Recording API */
-define('GET_RECORDING_URL', 'https://dev-app.quickcloze.net/api/order-recorded/all?');
-define('RECORDING_API_TOKEN', 'testPCTGtoken');
-define('WESTCORE_GRANT_TYPE', "password");
-define('WESTCORE_USERNAME', "pacificCT");
-define('WESTCORE_PASSWORD', "P@ssw0rd1!");
-define('WESTCORE_INTEGRATION_PARTNER', "7758");
-
-if(ENVIRONMENT == 'development') {
-    define('WESTCORE_URL', "https://uatservices.ewestcor.com/");
-} else {
-    define('WESTCORE_URL', "https://services.ewestcor.com/");
-}

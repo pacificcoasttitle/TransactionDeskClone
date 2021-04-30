@@ -4,6 +4,10 @@
         margin-left: 10%;
         margin-bottom: 0px !important;
     }
+	.progress {
+		height: auto;
+		margin-bottom: 0px;
+	}
 </style>
 
 <body>
@@ -15,7 +19,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="typography-section__inner">
-					<h2 class="ui-title-block ui-title-block_light">Open Order Form</h2>
+					<h2 class="ui-title-block ui-title-block_light"></h2>
 					<div class="ui-decor-1a bg-accent"></div>
 					<h3 class="ui-title-block_light">Helping Get Your Transaction Started.</h3>
 				</div>
@@ -116,28 +120,72 @@
 										</div><!-- .tagline -->
 									</div>
 
-									<div class="frm-row">
-										<div class="section colm colm10">
-											<label class="field prepend-icon">
-												<input type="text" name="Property" id="property-search"
-													class="gui-input" placeholder="Property Address">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-												<input type="hidden" name="property-state" id="property-state" value="">
-												<input type="hidden" name="property-city" id="property-city" value="">
-												<input type="hidden" name="property-fips" id="property-fips" value="">
-												<input type="hidden" name="property-full-address"
-													id="property-full-address" value="">
-												<input type="hidden" name="property-type" id="property-type" value="">
-												<input type="hidden" name="property-zip" id="property-zip" value="">
-											</label>
-										</div>
-										<div class="section colm colm2">
-											<!-- <button type="" data-btntext-sending="Searching..." class="button btn-primary">Search</button> -->
+									<input type="hidden" name="property-state" id="property-state" value="">
+									<input type="hidden" name="property-city" id="property-city" value="">
+									<input type="hidden" name="neighbourhood" id="neighbourhood" value="">
+									<input type="hidden" name="property-fips" id="property-fips" value="">
+									<input type="hidden" name="property-full-address"
+										id="property-full-address" value="">
+									<input type="hidden" name="property-type" id="property-type" value="">
+									<input type="hidden" name="property-zip" id="property-zip" value="">
+									<input type="hidden" name="random_number" id="random_number" value="">
 
-											<a class="button btn-primary search-property search-property-button"
-												href="javascript:void(0);" id="search-btn">Search</a>
+									<div id="address_container">
+										<div class="frm-row">
+											<div class="section colm colm12">
+												<label class="field prepend-icon">
+													<input type="text" name="Property" id="property-search"
+														class="gui-input" placeholder="Property Address">
+													<span class="field-icon"><i class="fa fa-user"></i></span>
+												</label>
+											</div>
+										</div>
+
+										<div class="frm-row">
+											<div class="section colm colm3">
+												<a class="button btn-primary search-property search-property-button"
+													href="javascript:void(0);" id="search-btn">Property Search</a>
+											</div>
+											<div class="section colm colm4">
+												<a class="button switch-apn-button search-property-button"
+													href="javascript:void(0);" id="switch-apn-btn">Switch To APN Search</a>
+											</div>
 										</div>
 									</div>
+
+									<div id="apn_container" style="display:none;">
+										<div class="frm-row">
+											<div class="section colm colm6">
+												<label class="field prepend-icon">
+													<input type="text" name="apn_num" id="apn_num"
+														class="gui-input" placeholder="APN">
+													<span class="field-icon"><i class="fa fa-user"></i></span>
+													
+												</label>
+											</div>
+
+											<div class="section colm colm6">
+												<label class="field prepend-icon">
+													<input type="text" name="apn_county" id="apn_county"
+														class="gui-input" placeholder="County">
+													<span class="field-icon"><i class="fa fa-envelope"></i></span>
+												</label>
+											</div>
+										</div>
+
+										<div class="frm-row">
+											<div class="section colm colm3" style="width:auto !important;">
+												<a class="button btn-primary search-apn search-apn-button"
+													href="javascript:void(0);" id="search-apn-btn">APN Search</a>
+											</div>
+											<div class="section colm colm5">
+												<a class="button switch-property-button search-apn-button"
+													href="javascript:void(0);" id="switch-property-btn">Switch To Property Search</a>
+											</div>
+										</div>
+									</div>
+									
+
 									<div class="pma-error alert alert-danger" style="display:none;"></div>
 									<div class="search-loader hidden"></div>
 
@@ -173,6 +221,7 @@
 										</div><!-- end section -->
 									</div>
 
+									<input type="hidden" id="unit_number" name="unit_number" value="">
 									<div class="frm-row">
 										<div class="section colm colm12">
 											<label class="field prepend-icon">
@@ -215,31 +264,21 @@
 											<label class="field select">
 												<select id="SalesRep" name="SalesRep">
 													<option value="">Sales Rep...</option>
-													<option value="Angeline Ahn">Angeline Ahn</option>
-													<option value="Bethany Cummins">Bethany Cummins</option>
-													<option value="Cibeli Tregembo">Cibeli Tregembo</option>
-													<option value="Daphne Alt">Daphne Alt</option>
-													<option value="David Gomez">David Gomez</option>
-													<option value="Edgar Rivas">Edgar Rivas</option>
-													<option value="Eddie Castro">Eddie Castro</option>
-													<option value="Evelyn Lindgren">Evelyn Lindgren</option>
-													<option value="Felicia Pantoja">Felicia Pantoja</option>
-													<option value="Hai Tran">Hai Tran</option>
-													<option value="Hugo Lopez">Hugo Lopez</option>
-													<option value="Justin Nouri">Justin Nouri</option>
-													<option value="Kim Buchok">Kim Buchok</option>
-													<option value="Linda Ruiz">Linda Ruiz</option>
-													<option value="Lisa Lee">Lisa Lee</option>
-													<option value="Lou Morreale">Lou Morreale</option>
-													<option value="Malay Wadhwa">Malay Wadhwa</option>
-													<option value="Max Galindo">Max Galindo</option>
-													<option value="Meza Group">Meza Group</option>
-													<option value="Michael Nouri">Michael Nouri</option>
-													<option value="Mike Johnson">Mike Johnson</option>
-													<option value="Nelson Torres">Nelson Torres</option>
-													<option value="Richard Bohn">Richard Bohn</option>
-													<option value="Scott Smith">Scott Smith</option>
-													<option value="Sonia Flores">Sonia Flores</option>
+													<?php
+														if(isset($salesRep) && !empty($salesRep))
+														{
+															foreach ($salesRep as $k => $v) 
+															{
+																$name = array($v['first_name'],$v['last_name']);
+																$full_name = implode(' ', $name);
+													?>
+																<option value="<?php
+																 echo $v['id']; ?>"><?php
+																 echo $full_name; ?></option>
+													<?php
+															}
+														} 
+													?>
 												</select>
 												<i class="arrow double"></i>
 											</label>
@@ -249,10 +288,17 @@
 											<label class="field select">
 												<select id="TitleOfficer" name="TitleOfficer">
 													<option value="">Title Officer</option>
-													<option value="Albert Wassif">Albert Wassif</option>
-													<option value="Clive Virata">Clive Virata</option>
-													<option value="Eddie LasMarias">Eddie LasMarias</option>
-													<option value="Jim Jean">Jim Jean</option>
+													<?php 
+														if(isset($titleOfficer) && !empty($titleOfficer))
+														{
+															foreach ($titleOfficer as $key => $value) 
+															{
+													?>
+																<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+													<?php
+															}
+														}
+													?>
 												</select>
 												<i class="arrow double"></i>
 											</label>
@@ -260,31 +306,11 @@
 									</div><!-- end frm-row section -->
 
 									<div class="frm-row">
-										<!-- <div class="section colm colm6">
-                                                    <label class="field select">
-                                                        <select id="TransactionTypeID" name="TransactionTypeID">
-                                                            <option value="">Select Transaction Type</option>
-                                                            <option value="3">Residential</option>
-                                                            <option value="2">Commercial</option>
-                                                        </select>
-                                                        <i class="arrow double"></i>
-                                                    </label>
-                                                </div> -->
 										<div class="section colm colm12">
 											<label class="field select">
+												<input type="hidden" name="ProductType" id="ProductType">
 												<select id="ProductTypeID" name="ProductTypeID">
 													<option value="">Select Product</option>
-												<?php
-													if(isset($productType) && !empty($productType))
-													{
-														foreach ($productType as $key => $value) 
-														{
-												?>
-															<option value="<?php echo $value['product_type_id']; ?>"><?php echo $value['display_name'];  ?></option>
-												<?php
-														}
-													} 
-												?>
 												</select>
 												<i class="arrow double"></i>
 											</label>
@@ -314,6 +340,22 @@
 											</label>
 										</div>
 									</div>
+									<label class="field">
+										<input type="text" class="gui-input" name="escrowNumber" id="escrowNumber"
+											placeholder="Escrow Number">
+									</label>
+									<div class="spacer-b10"></div>
+									<label class="field">
+										<input type="text" class="gui-input" name="loanNumber" id="loanNumber"
+											placeholder="Loan Number">
+									</label>
+											
+									<div class="section spacer-t20">
+                                        <label class="field prepend-icon">
+                                            <textarea class="gui-textarea" id="notes" name="notes" placeholder="Additional details"></textarea>
+                                            <span class="field-icon"><i class="fa fa-comments"></i></span>        
+                                        </label>
+                                    </div>
 									<div class="spacer-t30">
 										<div class="tagline"><span> Special Instructions </span></div><!-- .tagline -->
 									</div>
@@ -345,14 +387,6 @@
 											</div><!-- end .option-group section -->
 										</div><!-- end .colm section -->
 									</div>
-
-									<!-- <div class="section spacer-t20">
-                                                <label class="field prepend-icon">
-                                                    <textarea class="gui-textarea" id="sendermessage" name="sendermessage" placeholder="Additional details"></textarea>
-                                                    <span class="field-icon"><i class="fa fa-comments"></i></span>
-                                                    <span class="input-hint"> <strong>NOTE:</strong> Be as detailed as possible for better feedback.</span>   
-                                                </label>
-                                            </div> -->
 									<!-- end section -->
 									<div class="spacer-b30 spacer-t30">
 										<div class="tagline"><span>Add Deliverables</span></div>
@@ -361,19 +395,40 @@
 
 									<div class="frm-row">
 										<div class="section colm colm12" id="clone-email-address">
-											
-										<div class="toclone clone-widget">
-											<div class="spacer-b10">
-												<label class="field">
-													<input type="email" class="gui-input" name="AdditionalEmail"
-														id="AdditionalEmail" placeholder="Email Address">
-												</label>
-											</div>
-											<a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
-											<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
+											<?php if(!empty($deliverables)) {
+													$i = 0;
+													foreach($deliverables as $deliverable) { ?>
+														<div class="toclone clone-widget">
+															<div class="spacer-b10">
+																<label class="field">
+																	<?php if($i == 0) { ?>
+																		<input type="email" class="gui-input" name="AdditionalEmail[]"
+																		id="AdditionalEmail" placeholder="Email Address" value="<?php echo $deliverable?>">
+																	<?php } else { ?>
+																		<input type="email" class="gui-input" name="AdditionalEmail[]"
+																		id="AdditionalEmail<?php echo $i;?>" placeholder="Email Address" value="<?php echo $deliverable?>">
+																	<?php } ?>
+																	
+																</label>
+															</div>
+															<a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
+															<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
+														</div>
+
+													<?php $i++; }
+											} else {?>
+												<div class="toclone clone-widget">
+													<div class="spacer-b10">
+														<label class="field">
+															<input type="email" class="gui-input" name="AdditionalEmail[]"
+																id="AdditionalEmail" placeholder="Email Address">
+														</label>
+													</div>
+													<a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
+													<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
+												</div>
+											<?php }?>
 										</div>
-									
-										</div><!-- end section -->
 
 									</div>
 									
@@ -407,6 +462,7 @@
 												</label>
 											</div><!-- end .option-group section -->
 										</div>
+
 										<?php
                                                     }
                                                 ?>
@@ -423,10 +479,20 @@
 												</label>
 											</div><!-- end .option-group section -->
 										</div>
+
 										<?php
                                                     }
                                                 ?>
 
+										<div class="section colm colm4" id="add-escrow-officer-section" style="display:none;">
+											<div class="option-group field">
+												<label class="option block spacer-t10">
+													<input type="checkbox" name="add-escrow-officer-details"
+														id="add-escrow-officer-details">
+													<span class="checkbox"></span> Add Escrow Officer
+												</label>
+											</div>
+										</div>
 									</div>
 
 									<div id="agent-details-fields" style="display: none;">
@@ -450,6 +516,7 @@
 														class="gui-input" placeholder="Agent Name">
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 													<input type="hidden" name="BuyerAgentId" id="BuyerAgentId" value="">
+													<input type="hidden" name="buyer_agent_partner_id" id="buyer_agent_partner_id" value="">
 												</label>
 											</div><!-- end section -->
 											<div class="section colm colm6">
@@ -459,6 +526,7 @@
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 													<input type="hidden" name="ListingAgentId" id="ListingAgentId"
 														value="">
+													<input type="hidden" name="listing_agent_partner_id" id="listing_agent_partner_id" value="">
 												</label>
 											</div><!-- end section -->
 										</div>
@@ -519,6 +587,7 @@
 												</label>
 											</div><!-- end section -->
 										</div>
+										<div style="display: none;" class="alert notification alert-error" id="required-agent-details">Enter Buyers Agent or Listing Agent details</div>
 									</div>
 									<!-- end agent details -->
 
@@ -622,6 +691,67 @@
 									</div>
 									<!-- end escrow details -->
 
+									<div class="spacer-b30" id="escrow-officer-field" style="display: none;">
+										<div class="spacer-b30">
+											<div class="tagline"><span> Select Escrow Officer</span></div>
+										</div>
+
+										<div class="frm-row">
+											<div class="section colm colm12">
+												<label class="field select">
+													<select id="escrow_officer" name="escrow_officer">
+														<option value="">----Select Escrow Officer----</option>
+														<?php
+															if (isset($escrowOfficers) && !empty($escrowOfficers)) {
+																foreach ($escrowOfficers as $escrowOfficer) {	
+														?>
+																	<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
+														<?php 	}
+															} 
+														?>
+													</select>
+													<i class="arrow double"></i>
+												</label>
+											</div>
+										</div>
+									</div>
+
+									<?php if($is_escrow == 0) { ?>
+										<div class="spacer-b20 spacer-t30">
+											<div class="tagline"><span> Upload Curative Document</span></div>
+										</div>
+										<div class="frm-row">
+											<div class="section colm colm12" id="upload_1003">
+												<div class="option-group field">
+													<div class="spacer-t20">
+														<label class="button btn-primary search-file-btn">
+															<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload 1003</span>
+														</label>
+														<span></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									<?php } ?>
+
+									<?php if($is_escrow == 1) { ?>
+										<div class="spacer-b20 spacer-t30">
+											<div class="tagline"><span> Upload Curative Document</span></div>
+										</div>
+										<div class="frm-row">
+											<div class="section colm colm12" id="upload_rpa">
+												<div class="option-group field">
+													<div class="spacer-t20">
+														<label class="button btn-primary search-file-btn">
+															<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload RPA</span>
+														</label>
+														<span></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									<?php } ?>
+
 									<div class="result spacer-b10"></div><!-- end .result  section -->
 
 									<!-- <div class="section progress-section">
@@ -641,7 +771,7 @@
 								</div><!-- end .form-body section -->
 								<div class="form-footer">
 									<button type="submit" data-btntext-sending="Sending..."
-										class="button btn-primary">Submit</button>
+										class="button btn-primary" id="btn-place-order">Submit</button>
 									<button type="reset" class="button">Cancel</button>
 									<a style="border: 0;height: 42px;color: #243140;line-height: 1;font-size: 15px;cursor: pointer;padding: 0 18px;text-align: center;vertical-align: top;background: #bdc3c7;display: inline-block;-webkit-user-drag: none;text-shadow: 0 1px rgba(255, 255, 255, 0.2);margin-right: 10px;margin-bottom: 5px;text-decoration: none;border-radius: 3px;padding-top: 13px;"
 										href="http://www.pct.com">Homepage</a>
@@ -675,7 +805,7 @@
         ?>
 	<div class="modal fade" id="searchResultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 		aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h4 class="modal-title">Search Results</h4>
@@ -689,8 +819,8 @@
 							<tr>
 								<th width="21%">APN</th>
 								<th width="22%">Address</th>
-								<!-- <th width="21%">County</th> -->
 								<th width="21%">City</th>
+								<th width="21%">Unit Number</th>
 								<th width="15%">Run Listing</th>
 							</tr>
 						</thead>
@@ -785,9 +915,9 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/additional-methods.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/custom.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/custom.js?random=<?php echo uniqid(); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js?random=<?php echo uniqid(); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-cloneya.min.js"></script>
 
 <script type="text/javascript">
@@ -796,15 +926,54 @@
 	jQuery(document).ready(function ($) {
 
 		$('#clone-email-address').cloneya({
-			maximum: 3
+			maximum: 5
 		}).on('after_append.cloneya', function (event, toclone, newclone) {
 			var name = $(newclone).find("input[type='email']").attr('id');
-			$(newclone).find("input[type='email']").attr('name', name);
+			//$(newclone).find("input[type='email']").attr('name', name);
 		}).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
 			$(clone).slideToggle('slow', function () {
 				$(clone).remove();
 			})
 		});
-	});
 
+		getProductTypes();
+
+		$('.search-file-btn').children("input").bind('change', function() {
+			var fileName = '';
+			fileName = $(this).val().split("\\").slice(-1)[0];
+			$(this).parent().parent().children("span").html(fileName);
+		});
+	});
+	function getProductTypes()
+	{
+		var email = $('#OpenEmail').val();
+		var customerId = $('#CustomerId').val();
+		if(email)
+		{
+			$.ajax({
+		       url: base_url+'get-product-types',
+		       type: "POST",//type of posting the data
+		       data: {
+		            email: email,
+		            customerId: customerId
+		       },
+		       success: function (data) {
+		            var res = jQuery.parseJSON(data);
+		            
+		            if(res)
+		            {
+		                var output = [];
+		                output.push('<option value="">Select Product</option>')
+		                $.each(res, function(key, value) {
+		                    output.push('<option value="'+ key +'">'+ value +'</option>');
+		                });
+		                $('#ProductTypeID').html(output.join(''));
+		            }
+		       },
+		       error: function(xhr, ajaxOptions, thrownError){
+		          
+		       },
+		  });
+		}
+	}
 </script>

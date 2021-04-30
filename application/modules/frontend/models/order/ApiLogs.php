@@ -21,8 +21,12 @@ class ApiLogs extends CI_Model
                 'request_url' => $request_url,
                 'created' => date('Y-m-d H:i:s')
             );
-            $this->db->insert($this->table, $data);
-            return $this->db->insert_id();
+            if (getenv('API_LOGS_ENABLE') == 1) {
+                $this->db->insert($this->table, $data);
+                return $this->db->insert_id();
+            } else {
+                return 1;
+            }
         } else {
             if (is_array($response_data)) {
                 $response_data = json_encode($response_data, true);
@@ -31,7 +35,9 @@ class ApiLogs extends CI_Model
                 'response_data' => !empty($response_data) ? $response_data : '',
                 'updated' => date('Y-m-d H:i:s'),
             );
-            $this->db->update($this->table, $data, array('id' => $logId));
+            if (getenv('API_LOGS_ENABLE') == 1) {
+                $this->db->update($this->table, $data, array('id' => $logId));
+            }
         }
     }
 

@@ -39,18 +39,65 @@ class Natic
         }
     }
 
-    public function getDocumentContentForCpl($fileId)
+    public function getDocumentContentForCpl($fileId, $orderDetails)
     {
         $this->CI->load->library('order/order');
         $userdata = $this->CI->session->userdata('user');
-        $orderDetails = $this->CI->order->get_order_details($fileId);
+        if (!isset($userdata)) {
+            $userdata = array();
+            $userdata['id'] = 0;
+        }
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $xmlData = '';
-        $address = $orderDetails['address'] ? $orderDetails['address'] : trim($propertyDetail[0])." ".trim($propertyDetail[1]);
-        $city = $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]);
-        $city = $orderDetails['property_city'] ? $orderDetails['property_city'] : trim($propertyDetail[2]);
-        $state = $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]);
-        $zipcode = $orderDetails['property_zip'] ? $orderDetails['property_zip'] : trim($propertyDetail[4]);
+        $address = $orderDetails['cpl_proposed_property_address'];
+        $city = $orderDetails['cpl_proposed_property_city'];
+        $state = $orderDetails['cpl_proposed_property_state'];
+        $zipcode = $orderDetails['cpl_proposed_property_zip'];
+
+        $this->CI->load->model('order/home_model');
+        $orderUser =  $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
+
+        if (!empty($orderDetails['cpl_lender_id'])) {
+            $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+            $orderDetails['lender_assignment_clause'] =  $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+            $orderDetails['lender_address'] = $lenderDetails['street_address'];
+            $orderDetails['lender_city'] = $lenderDetails['city'];
+            $orderDetails['lender_state'] = $lenderDetails['state'];
+            $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
+            $orderDetails['lender_company_name'] = $lenderDetails['company_name'];
+            $orderDetails['lender_first_name'] = $lenderDetails['first_name'];
+            $orderDetails['lender_last_name'] = $lenderDetails['last_name'];
+        }
+        
+        $borrower = $orderDetails['borrowers_vesting'];
+
+        $branchData = array(303 => 
+                        array(
+                            'address1' => '1111 East Katella Avenue',
+                            'address2' => 'Suite 120',
+                            'city' => 'Orange',
+                            'state' => 'CA',
+                            'zipcode' => '92867'
+                        ),
+                        1879 => 
+                        array(
+                            'address1' => '1000 Town Center Drive',
+                            'address2' => 'Suite 300-7',
+                            'city' => 'Oxnard',
+                            'state' => 'CA',
+                            'zipcode' => '93036'
+                        ),
+                        1880 => 
+                        array(
+                            'address1' => '200 West Glenoaks Boulevard',
+                            'address2' => 'Suite 100',
+                            'city' => 'Glendale',
+                            'state' => 'CA',
+                            'zipcode' => '91202'
+                        )
+                    );
+
+        $branchId = $orderDetails['fnf_agent_id'];
 
         $xmlData = "<Field>
                     <FieldId>FileNumber</FieldId>
@@ -62,7 +109,7 @@ class Natic
                 <Field>
                     <FieldId>PropertyAddress1</FieldId>
                     <Name>Property Address 1</Name>
-                    <Value>".$address."</Value>
+                    <Value>".htmlspecialchars($address, ENT_XML1)."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -91,14 +138,14 @@ class Natic
                 <Field>
                     <FieldId>PropertyDescription</FieldId>
                     <Name>Brief Legal Description</Name>
-                    <Value>".$orderDetails['legal_description']."</Value>
+                    <Value>".htmlspecialchars($orderDetails['legal_description'], ENT_XML1)."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>LoanNumber</FieldId>
                     <Name>Loan Number</Name>
-                    <Value>".$orderDetails['loan_number']."</Value>
+                    <Value>Loan No: ".$orderDetails['loan_number']."</Value>
                     <Type>String</Type>
                     <Required>false</Required>
                 </Field>
@@ -112,22 +159,28 @@ class Natic
                 <Field>
                     <FieldId>LenderName</FieldId>
                     <Name>Lender Name</Name>
-                    <Value>".$orderDetails['lender_first_name']." ".$orderDetails['lender_last_name']."</Value>
+                    <Value>".htmlspecialchars($orderDetails['lender_company_name'], ENT_XML1)."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
-                
+                <Field>
+                    <FieldId>LenderNote</FieldId>
+                    <Name>Lender Note</Name>
+                    <Value>".htmlspecialchars($orderDetails['lender_assignment_clause'], ENT_XML1)."</Value>
+                    <Type>String</Type>
+                    <Required>true</Required>
+                </Field>
                 <Field>
                     <FieldId>LenderContactName</FieldId>
                     <Name>Lender Contact Name</Name>
-                    <Value>".$orderDetails['lender_company_name']."</Value>
+                    <Value>".$orderDetails['lender_first_name']." ".$orderDetails['lender_last_name']."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>LenderAddress1</FieldId>
                     <Name>Lender Address 1</Name>
-                    <Value>".$orderDetails['lender_address']."</Value>
+                    <Value>".htmlspecialchars($orderDetails['lender_address'], ENT_XML1)."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -148,7 +201,7 @@ class Natic
                 <Field>
                     <FieldId>LenderState</FieldId>
                     <Name>Lender State</Name>
-                    <Value>CA</Value>
+                    <Value>".$orderDetails['lender_state']."</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -160,12 +213,55 @@ class Natic
                     <Required>true</Required>
                 </Field>
                 <Field>
-                    <FieldId>Buyer</FieldId>
-                    <Name>Buyer/Borrower Name</Name>
-                    <Value>".$orderDetails['primary_owner']."</Value>
+                    <FieldId>TitleCompanyName</FieldId>
+                    <Name>Title Company Name</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                </Field>";
+                    <Value>Pacific Coast Title Company</Value>
+                </Field>
+                <Field>
+                    <FieldId>TitleCompanyAddress1</FieldId>
+                    <Name>Title Company Address 1</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>".htmlspecialchars($branchData[$branchId]['address1'], ENT_XML1)."</Value>
+                </Field>
+                <Field>
+                    <FieldId>TitleCompanyAddress2</FieldId>
+                    <Name>Title Company Address 2</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>".$branchData[$branchId]['address2']."</Value>
+                </Field>
+                <Field>
+                    <FieldId>TitleCompanyCity</FieldId>
+                    <Name>Title Company City</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>".$branchData[$branchId]['city']."</Value>
+                </Field>
+                <Field>
+                    <FieldId>TitleCompanyState</FieldId>
+                    <Name>Title Company State</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>".$branchData[$branchId]['state']."</Value>
+                </Field>
+                <Field>
+                    <FieldId>TitleCompanyPostalCode</FieldId>
+                    <Name>Title Company Postal Code</Name>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                    <Value>".$branchData[$branchId]['zipcode']."</Value>
+                </Field>
+                <Field>
+                    <FieldId>Buyer</FieldId>
+                    <Name>Buyer/Borrower Name</Name>
+                    <Value>".htmlspecialchars($borrower, ENT_XML1)."</Value>
+                    <Type>String</Type>
+                    <Required>false</Required>
+                </Field>
+                ";
 
         $xmlData = "<?xml version='1.0' encoding='utf-8'?>
                         <RequestWrapper>
@@ -187,11 +283,12 @@ class Natic
                                     </Document>
                                 </DocumentList>
                                 <ApprovedAttorneyList />
-                                <ApprovedSettlementOfficeList />
+                                <ApprovedSettlementOffice />
                             </DocumentCollection>
                         </RequestWrapper>";
 
         $endPoint = 'GetDocuments';
+        
         $this->CI->load->model('order/apiLogs');
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', getenv('NATIC_URL').$endPoint, $xmlData, array(), $orderDetails['order_id'], 0);                
         $resultDocument = $this->make_request($xmlData, $endPoint);

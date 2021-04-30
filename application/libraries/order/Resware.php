@@ -6,35 +6,32 @@ class Resware
 {
     public static $CI;
     
-	public function __construct($params = array())
-	{
-		$this->CI =& get_instance();                        
-		$this->CI->load->database();
+    public function __construct($params = array())
+    {
+        $this->CI =& get_instance();                        
+        $this->CI->load->database();
         $this->CI->load->library('email');
         $this->CI->load->library('session');
-		self::$CI = $this->CI;
+        self::$CI = $this->CI;
     }
 
-    public function make_request($http_method, $endpoint, $body_params='',$data = array())
+    public function make_request($http_method, $endpoint, $body_params='', $data = array())
     {
         $userdata = $this->CI->session->userdata('user');
-        if(isset($userdata['is_master']) && !empty($userdata['is_master']))
-        {
+        if (isset($data['admin_api']) && $data['admin_api'] == 1) {
+            $this->CI->load->library('order/order');
+            $credResult = $this->CI->order->get_resware_admin_credential();  
+            $login = $credResult['username'];
+            $password = $credResult['password'];
+        } else if ((isset($userdata['is_master']) && !empty($userdata['is_master'])) || isset($data['from_mail']) && !empty($data['from_mail'])) {
             $login = isset($data['email']) && !empty($data['email']) ? $data['email'] : '' ;
-        }
-        else
-        {
-            $login = $userdata['email'];
-        }
-        if ($login == 'ghernandez@pct.com') {
-            $password= 'Alpha637#';
-        }elseif ($login == 'teamrestine@eatonescrow.com') {
-            $password= 'Pacific12';
+            $password = isset($data['password']) && !empty($data['password']) ? $data['password'] : '' ;
         } else {
-            $password= 'Pacific2';
+            $login = $userdata['email'];
+            $password = $userdata['random_password'];
         }
-        
-        $ch = curl_init(RESWARE_ORDER_API.$endpoint);                                    
+
+        $ch = curl_init(env('RESWARE_ORDER_API').$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

@@ -1,3 +1,9 @@
+<style>
+.dataTables_length {
+    width: 250px !important;
+    float: left;
+}
+</style>
 <div class="container-fluid">
     <!-- DataTables Example -->
     <div class="card mb-3">
@@ -18,11 +24,13 @@
                 <table class="table table-bordered" id="tbl-agents-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>Partner Id</th>
                             <th>Name</th>
                             <!-- <th>Last Name</th> -->
                             <th>Email Address</th>
                             <th>Telephone</th>
                             <th>Company</th>
+                            <th>Full Address</th>
                             <th>Action</th>
                         </tr>
                     </thead>                

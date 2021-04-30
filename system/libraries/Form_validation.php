@@ -1587,5 +1587,4 @@ class CI_Form_validation {
 		$this->error_string = '';
 		return $this;
 	}
-
 }

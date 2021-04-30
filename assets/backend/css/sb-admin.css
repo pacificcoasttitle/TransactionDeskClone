@@ -2155,7 +2155,7 @@ textarea.form-control {
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .form-text {
@@ -2613,15 +2613,17 @@ fieldset:disabled a.btn {
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+    color: #fff;
+    background-color: #d35411;
+    border-color: #d35411;
+    font-weight: bold;
 }
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #0069d9;
-  border-color: #0062cc;
+  background-color: #D35411;
+  border-color: #D35411;
+  opacity: 0.8;
 }
 
 .btn-primary:focus, .btn-primary.focus {
@@ -4898,7 +4900,9 @@ input[type="button"].btn-block {
   -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
-  padding: 1.25rem;
+  padding: 40px 25px 25px 25px;
+  color: #a8a8a8;
+  font-size: 20px;
 }
 
 .card-title {
@@ -4923,10 +4927,15 @@ input[type="button"].btn-block {
 }
 
 .card-header {
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 0;
-  background-color: rgba(0, 0, 0, 0.03);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 25px;
+    margin-bottom: 0;
+    /* background-color: rgba(0, 0, 0, 0.03); */
+    /* border-bottom: 1px solid rgba(0, 0, 0, 0.125); */
+    text-align: center;
+    color: white;
+    font-weight: 300;
+    font-size: 22px;
+  
 }
 
 .card-header:first-child {
@@ -4941,6 +4950,7 @@ input[type="button"].btn-block {
   padding: 0.75rem 1.25rem;
   background-color: rgba(0, 0, 0, 0.03);
   border-top: 1px solid rgba(0, 0, 0, 0.125);
+  color:#a8a8a8;
 }
 
 .card-footer:last-child {
@@ -6985,7 +6995,15 @@ button.bg-light:focus {
 }
 
 .bg-dark {
-  background-color: #343a40 !important;
+  background-color: #223D7F !important;
+    background: url(http://www.pct.com/assets/media/content/bg/adminBG3.jpg) no-repeat 0 0;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.adlogo{
+	text-align: center;
+    margin-top: 149px;
 }
 
 a.bg-dark:hover, a.bg-dark:focus,
@@ -10670,7 +10688,7 @@ body {
 
 .sidebar {
   width: 90px !important;
-  background-color: #212529;
+  background-color: #01374f;
   min-height: calc(100vh - 56px);
 }
 
@@ -10815,7 +10833,9 @@ body {
 }
 
 .card-login {
-  max-width: 25rem;
+    max-width: 22rem;
+    max-height: 27rem;
+    background: rgba(255,255,255,.45);
 }
 
 .card-register {

@@ -21,6 +21,9 @@
   <!-- Custom styles for this template-->
   <link href="<?php echo base_url(); ?>assets/backend/css/sb-admin.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>assets/backend/css/custom.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>assets/backend/css/daterangepicker.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
   <script>
         var base_url = "<?php echo base_url(); ?>";
   </script>
@@ -31,7 +34,7 @@
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
     <a class="navbar-brand mr-1" href="<?php echo site_url().'admin/dashboard'; ?>">
-      <img src="<?php echo base_url(); ?>assets/backend/images/logo2.png">
+      <img src="http://pct.com/assets/media/general/logo2.png">
     </a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">

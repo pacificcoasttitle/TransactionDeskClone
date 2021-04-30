@@ -33,7 +33,6 @@
 
 
 .img-holder {
-    width: 750px;
     background-color: #000000;
 }
 
@@ -62,7 +61,7 @@
 
 .img-holder .bg {
     opacity: 1;
-    background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/404a4df1-bc03-4696-b50e-a2885c6b8342.jpg");
+    background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/d118cae2-70f9-4767-b63d-ddfdf6870c85.jpg");
 }
 
 .form-holder {
@@ -70,24 +69,32 @@
 }
 
 .form-holder .form-content ::-webkit-input-placeholder {
-    color: #DEDBDB;
+    color: #03374f;
 }
 
 .form-holder .form-content :-moz-placeholder {
-    color: #DEDBDB;
+    color: #03374f;
 }
 
 .form-holder .form-content ::-moz-placeholder {
-    color: #DEDBDB;
+    color: #03374f;
 }
 
 .form-holder .form-content :-ms-input-placeholder {
-    color: #DEDBDB;
+    color: #03374f;
 }
 
 .form-content {
-    background-color: #23394A;
+    background-color: #03374f;
+/*	background-image: url(http://www.pct.com/assets/media/content/dashboardIcons/tpbg.png);
+	background-repeat: repeat-x;
+-webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-repeat: repeat-y; */
 }
+
 
 .form-content .form-group {
     color: #fff;
@@ -131,8 +138,8 @@
 
 .form-content input, .form-content .dropdown-toggle.btn-default {
     border: 0;
-    background-color: #445867;
-    color: #DEDBDB;
+    background-color: #fff;
+    color: #03374f;
 }
 
 .form-content input:hover, .form-content input:focus, .form-content .dropdown-toggle.btn-default:hover, .form-content .dropdown-toggle.btn-default:focus {
@@ -457,6 +464,27 @@
 .form-body.without-side .form-content .form-button .ibtn:hover, .form-body.without-side .form-content .form-button .ibtn:focus {
     -webkit-box-shadow: 0 5px 6px rgba(0, 0, 0, 0.16);
     box-shadow: 0 5px 6px rgba(0, 0, 0, 0.16);
+}
+
+.img-holder .bg.borrower-login {
+    opacity: 1;
+    background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/d118cae2-70f9-4767-b63d-ddfdf6870c85.jpg");
+	background-size: cover;
+    background-position: center;
+}
+
+.form-content .form-items.borrower-login-from-items {
+    max-width: 490px;
+    text-align: left;
+}
+
+.form-content .borrower-login-from-items h2 {  
+    color: #fff;    
+    text-align: left;   
+    font-size: 32px;    
+    margin-bottom: 10px;    
+    font-family: 'Manrope', sans-serif; 
+    font-weight: 800;   
 }
 
 /* -----------------------------------
