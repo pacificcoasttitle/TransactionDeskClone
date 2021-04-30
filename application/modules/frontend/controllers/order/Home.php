@@ -917,7 +917,8 @@ class Home extends MX_Controller {
 
 							if (file_exists($lv_url)) {
 								if (env('AWS_ENABLE_FLAG') == 1) {
-									$file[] = env('AWS_PATH')."legal-vesting/".$lvfilename;
+									//$file[] = env('AWS_PATH')."legal-vesting/".$lvfilename;
+									$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
 								} else {
 									$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
 								}
@@ -932,7 +933,8 @@ class Home extends MX_Controller {
 
 							if (file_exists($grant_url)) {
 								if (env('AWS_ENABLE_FLAG') == 1) {
-									$file[] = env('AWS_PATH')."grant-deed/".$deedfilename;
+									//$file[] = env('AWS_PATH')."grant-deed/".$deedfilename;
+									$file[] = base_url().'uploads/grant-deed/'.$deedfilename;
 								} else {
 									$file[] = base_url().'uploads/grant-deed/'.$deedfilename;
 								}
@@ -947,7 +949,8 @@ class Home extends MX_Controller {
 
 							if (file_exists($tax_url)) {
 								if (env('AWS_ENABLE_FLAG') == 1) {
-									$file[] = env('AWS_PATH')."tax/".$taxfilename;
+									//$file[] = env('AWS_PATH')."tax/".$taxfilename;
+									$file[] = base_url().'uploads/tax/'.$taxfilename;
 								} else {
 									$file[] = base_url().'uploads/tax/'.$taxfilename;
 								}
