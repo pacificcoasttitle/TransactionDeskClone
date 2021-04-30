@@ -50,11 +50,14 @@ class DashboardMail extends MX_Controller {
             $documentName = $orderDetails['cpl_document_name'];
             if (env('AWS_ENABLE_FLAG') == 1) {
                 $documentUrl = env('AWS_PATH')."documents/".$documentName;
+                $data['action'] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+                                <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
             } else {
                 $documentUrl = FCPATH.'uploads/documents/'.$documentName;
-            }
-            $data['action'] = "<div style='display:flex;'><a href='$documentUrl' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+                $data['action'] = "<div style='display:flex;'><a href='$documentUrl' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
                                 <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+            }
+            
         } else if(!empty($orderDetails['westcor_file_id'])) {
             $westcorFileId = $orderDetails['westcor_file_id'];
             $westcorOrderId = $orderDetails['westcor_order_id'];
@@ -973,11 +976,12 @@ class DashboardMail extends MX_Controller {
             $file_id = $orderDetails['file_id'];
             $documentName = $orderDetails['proposed_insured_document_name'];
             if (env('AWS_ENABLE_FLAG') == 1) {
-				$documentUrl = env('AWS_PATH')."proposed-insured/".$documentName;
-			} else {
-				$documentUrl = base_url().'uploads/proposed-insured/'.$documentName;
-			}
-            $action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
+                $documentUrl = env('AWS_PATH')."proposed-insured/".$documentName;
+                $action = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"proposed_insured"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";
+            } else {
+                $documentUrl = FCPATH.'uploads/proposed-insured/'.$documentName;
+                $action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
+            }
         }
         else
         {

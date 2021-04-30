@@ -182,8 +182,12 @@
                                 <?php
                                     if(isset($lv_file_url) && !empty($lv_file_url))
                                     {
-                                ?>
-                                        <a href="<?php echo $lv_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="L&V.pdf">Download L&V</a>
+                                        if (env('AWS_ENABLE_FLAG') == 1) { ?>
+                                            <a href="#" class="btn btn-default btn-sm btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $lv_file_url;?>', 'legal_vesting');">Download L&V</a>
+                                        <?php } else { ?>
+                                            <a href="<?php echo $lv_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="L&V.pdf">Download L&V</a>
+                                        <?php } ?>
+
                                 <?php
                                     }
                                     else
@@ -208,9 +212,12 @@
                                 <div id="instrumentInfoFile">
                                     <?php
                                         if(isset($deed_file_url) && !empty($deed_file_url))
-                                        {
-                                    ?>
-                                            <a href="<?php echo $deed_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="GrantDeed.pdf">Download Grant Deed</a>
+                                        { 
+                                            if (env('AWS_ENABLE_FLAG') == 1) { ?>
+                                                <a href="#" class="btn btn-default btn-sm btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $deed_file_url;?>', 'grant_deed');">Download Grant Deed</a>
+                                            <?php } else { ?>
+                                                <a href="<?php echo $deed_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="GrantDeed.pdf">Download Grant Deed</a>
+                                            <?php } ?>
                                     <?php
                                         }
                                         else
@@ -262,8 +269,11 @@
                                     <?php
                                         if(isset($tax_file_url) && !empty($tax_file_url))
                                         {
-                                    ?>
-                                            <a href="<?php echo $tax_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="Tax.pdf">Download Tax Document</a>
+                                            if (env('AWS_ENABLE_FLAG') == 1) { ?>
+                                                <a href="#" class="btn btn-default btn-sm btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $tax_file_url;?>', 'tax');">Download Tax Document</a>
+                                            <?php } else { ?>
+                                                <a href="<?php echo $tax_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="Tax.pdf">Download Tax Document</a>
+                                            <?php } ?>
                                     <?php
                                         }
                                         else
@@ -353,3 +363,45 @@
     $this->load->view('layout/footer');
 ?>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js?random=<?php echo uniqid(); ?>"></script>
+<script>
+    function downloadDocumentFromAws(url, documentType)
+    {
+        $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+        var fileNameIndex = url.lastIndexOf("/") + 1;
+        var filename = url.substr(fileNameIndex);
+        $.ajax({
+			url: base_url + "download-aws-document",
+			type: "post",
+			data: {
+				url : url
+			},
+            async: false,
+			success: function (response) {
+				if (response) {
+					if (navigator.msSaveBlob) {
+						var csvData = base64toBlob(response, 'application/octet-stream');
+						var csvURL = navigator.msSaveBlob(csvData, filename);
+						var element = document.createElement('a');
+						element.setAttribute('href', csvURL);
+						element.setAttribute('download', documentType+"_"+filename);
+						element.style.display = 'none';
+						document.body.appendChild(element);
+						document.body.removeChild(element);
+					} else {
+						console.log(response);
+						var csvURL = 'data:application/octet-stream;base64,' + response;
+						var element = document.createElement('a');
+						element.setAttribute('href', csvURL);
+						element.setAttribute('download', documentType+"_"+filename);
+						element.style.display = 'none';
+						document.body.appendChild(element);
+						element.click();
+						document.body.removeChild(element);
+					}
+				}
+                $('#page-preloader').css('display', 'none');
+			}
+        });
+    }
+</script>

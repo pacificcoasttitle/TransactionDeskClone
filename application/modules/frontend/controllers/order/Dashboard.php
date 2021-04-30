@@ -764,10 +764,11 @@ class Dashboard extends MX_Controller {
 					$documentName = $order['proposed_insured_document_name'];
 					if (env('AWS_ENABLE_FLAG') == 1) {
                         $documentUrl = env('AWS_PATH')."proposed-insured/".$documentName;
+						$action = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"proposed_insured"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";
                     } else {
                         $documentUrl = FCPATH.'uploads/proposed-insured/'.$documentName;
+						$action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
                     }	
-                	$action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
                 }
                 else
                 {
@@ -1056,11 +1057,14 @@ class Dashboard extends MX_Controller {
 					$documentName = $order['cpl_document_name'];
 					if (env('AWS_ENABLE_FLAG') == 1) {
                         $documentUrl = env('AWS_PATH')."documents/".$documentName;
+						$nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
                     } else {
                         $documentUrl = FCPATH.'uploads/documents/'.$documentName;
-                    }
-					$nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+						$nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
 						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+                    }
+					
 				} else if(!empty($order['westcor_file_id'])) {
 					$file_id = $order['file_id'];
 					$westcorFileId = $order['westcor_file_id'];
@@ -2265,7 +2269,12 @@ class Dashboard extends MX_Controller {
 		$resware_document_id = $this->input->post('resware_document_id');
 		$order_id = $this->input->post('order_id');
 		$document_name = $this->input->post('document_name');
-		$contents = file_get_contents(base_url().'uploads/documents/'.$document_name);
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$contents = file_get_contents(env('AWS_PATH')."documents/".$document_name);
+		} else {
+			$contents = file_get_contents(base_url().'uploads/documents/'.$document_name);
+		}
+		
 		$binaryData   = base64_encode($contents); 
 		echo $binaryData;
 	}
@@ -2284,7 +2293,13 @@ class Dashboard extends MX_Controller {
 			$path = './uploads/plat-map/'.$file_number.'.png';
 
 			file_put_contents($path, base64_decode($imagedata,true));
-			$plat_map_url = base_url().'uploads/plat-map/'.$file_number.'.png';
+			$file_number = 10171986;
+			if (env('AWS_ENABLE_FLAG') == 1) { 
+				$plat_map_url = env('AWS_PATH')."plat-map/".$file_number.'.png';
+			} else {
+				$plat_map_url = base_url().'uploads/plat-map/'.$file_number.'.png';
+			}
+			
 			$this->order->uploadDocumentOnAwsS3($file_number.'.png', 'plat-map');
 			$response = array('status'=>'success','plat_map_url'=>$plat_map_url);
 		}

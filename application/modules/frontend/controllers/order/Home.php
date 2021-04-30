@@ -1325,8 +1325,7 @@ class Home extends MX_Controller {
     function orderSubmit()
     {
     	$fileId = $this->uri->segment(2);
-    	
-		
+		$this->load->library('order/order');
 		if($fileId)
 		{
 			$condition = array(
@@ -1357,59 +1356,44 @@ class Home extends MX_Controller {
 	        $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] :'';
 
 			
+			$lv_file_url = ''; 
 			if (env('AWS_ENABLE_FLAG') == 1) {
-				$lv_file_path = env('AWS_PATH')."legal-vesting/".$file_number.'.pdf';
+				if($this->order->fileExistOrNotOnS3('legal-vesting/'.$file_number.'.pdf')) {
+					$lv_file_url = env('AWS_PATH')."legal-vesting/".$file_number.'.pdf';
+				} 
 			} else {
 				$lv_file_path = FCPATH.'uploads/legal-vesting/'.$file_number.'.pdf';
-			}
-
-	        $lv_file_url = '';
-
-			if (file_exists($lv_file_path)) 
-			{
-				if (env('AWS_ENABLE_FLAG') == 1) {
-					$lv_file_url = env('AWS_PATH')."legal-vesting/".$file_number.'.pdf';
-				} else {
+				if (file_exists($lv_file_path)) {
 					$lv_file_url = base_url().'uploads/legal-vesting/'.$file_number.'.pdf';
-				}	
+				}
 			}
 			$data['lv_file_url'] = $lv_file_url;
 
+			$deed_file_url = ''; 
 			if (env('AWS_ENABLE_FLAG') == 1) {
-				$deed_file_path = env('AWS_PATH')."grant-deed/".$file_number.'.pdf';
+				if($this->order->fileExistOrNotOnS3('grant-deed/'.$file_number.'.pdf')) {
+					$deed_file_url = env('AWS_PATH')."grant-deed/".$file_number.'.pdf';
+				} 
 			} else {
 				$deed_file_path = FCPATH.'uploads/grant-deed/'.$file_number.'.pdf';
-			}
-
-	        $deed_file_url = '';
-
-			if (file_exists($deed_file_path)) 
-			{
-				if (env('AWS_ENABLE_FLAG') == 1) {
-					$deed_file_url = env('AWS_PATH')."grant-deed/".$file_number.'.pdf';
-				} else {
+				if (file_exists($deed_file_path)) {
 					$deed_file_url = base_url().'uploads/grant-deed/'.$file_number.'.pdf';
 				}
 			}
 			$data['deed_file_url'] = $deed_file_url;
 
 			$tax_file_url = '';
-			
 			if (env('AWS_ENABLE_FLAG') == 1) {
-				$tax_file_path = env('AWS_PATH')."tax/".$file_number.'.pdf';
+				if($this->order->fileExistOrNotOnS3('tax/'.$file_number.'.pdf')) {
+					$tax_file_url = env('AWS_PATH')."tax/".$file_number.'.pdf';
+				} 
 			} else {
 				$tax_file_path = FCPATH.'uploads/tax/'.$file_number.'.pdf';
-			}
-
-			if (file_exists($tax_file_path)) 
-			{
-				if (env('AWS_ENABLE_FLAG') == 1) {
-					$tax_file_url = env('AWS_PATH')."tax/".$file_number.'.pdf';
-				} else {
+				if (file_exists($tax_file_path)) {
 					$tax_file_url = base_url().'uploads/tax/'.$file_number.'.pdf';
 				}
 			}
-			$data['tax_file_url'] = $tax_file_url;		
+			$data['tax_file_url'] = $tax_file_url;
 		}
 		
 		$data['tp_data'] = isset($titlePointDetails[0]) && !empty($titlePointDetails[0]) ? $titlePointDetails[0] : array();
@@ -1762,4 +1746,11 @@ class Home extends MX_Controller {
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		$this->order->uploadDocumentOnAwsS3($document_name, 'curative');
 	}	
+
+	public function downloadAwsDocument()
+    {
+        $url = $this->input->post('url');
+        $binaryData   = base64_encode(file_get_contents($url)); 
+		echo $binaryData;exit;
+    }
 }

@@ -104,7 +104,7 @@ function generateImage(requestId,methodId,fileNumber)
             else if (responseStatus == 'Success') 
             {
                 <?php if (env('AWS_ENABLE_FLAG') == 1) { ?>
-                    var url = <?php echo env('AWS_PATH');?>+'legal-vesting/'+fileNumber+'.pdf';
+                    var url = '<?php echo env('AWS_PATH');?>'+'legal-vesting/'+fileNumber+'.pdf';
                 <?php } else { ?>
                     var url = base_url+'uploads/legal-vesting/'+fileNumber+'.pdf';
                 <?php } ?>

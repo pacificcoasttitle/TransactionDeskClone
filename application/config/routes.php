@@ -195,6 +195,7 @@ $route['update-safewire-orders-status'] = 'frontend/order/cron/updateSafewireSta
 $route['update-prelim-action/:num'] = 'frontend/order/dashboard/updatePrelimAction';
 $route['send-mail-escrow-users'] = 'frontend/order/cron/sendMailEscrowUsers';
 $route['transfer-all-files-on-aws'] = 'frontend/order/cron/transferAllFilesOnAws';
+$route['download-aws-document'] = 'frontend/order/home/downloadAwsDocument';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
@@ -268,6 +269,8 @@ $route['order/admin/notifications'] = 'admin/order/home/notifications';
 $route['order/admin/safewire-orders'] = 'admin/order/order/safewireOrders';
 $route['order/admin/get-safewire-orders-list'] = 'admin/order/order/get_safewire_orders_list';
 $route['store-deliverables'] = 'admin/order/home/storeDeliverables';
+$route['download-aws-document-admin'] = 'admin/order/home/downloadAwsDocument';
+
 
 
 $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';

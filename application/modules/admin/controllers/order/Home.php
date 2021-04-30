@@ -640,9 +640,19 @@ class Home extends MX_Controller {
                 $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
 
                 if (env('AWS_ENABLE_FLAG') == 1) {
+                    
                     $documentUrl = env('AWS_PATH')."documents/".$documentName;
+                    
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
                 } else {
                     $documentUrl = base_url()."uploads/documents/".$documentName;
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
                 }
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
@@ -1074,16 +1084,21 @@ class Home extends MX_Controller {
                 } else {
                     $nestedData[] = 'No';
                 }
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH')."grant-deed/".$documentName;
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"grant_deed"'.");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
                 } else {
                     $documentUrl = base_url()."uploads/grant-deed/".$documentName;
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
                 }
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
-                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
-                }
+                
                 $data[] = $nestedData;  
                 $i++;          
             }
@@ -1129,16 +1144,22 @@ class Home extends MX_Controller {
                 } else {
                     $nestedData[] = 'No';
                 }
+                
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH')."legal-vesting/".$documentName;
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"legal_vesting"'.");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
                 } else {
                     $documentUrl = base_url()."uploads/legal-vesting/".$documentName;
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
                 }
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
-                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
-                }
+                
                 $data[] = $nestedData;  
                 $i++;          
             }
@@ -1380,16 +1401,22 @@ class Home extends MX_Controller {
                 } else {
                     $nestedData[] = 'No';
                 }
+                
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH')."tax/".$documentName;
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"tax"'.");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
                 } else {
                     $documentUrl = base_url()."uploads/tax/".$documentName;
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
                 }
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
-                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
-                }
+                
                 $data[] = $nestedData;  
                 $i++;          
             }
@@ -1445,16 +1472,22 @@ class Home extends MX_Controller {
                 } else {
                     $nestedData[] = 'No';
                 }
+                
+                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH')."curative/".$documentName;
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"curative"'.");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
                 } else {
                     $documentUrl = base_url()."uploads/curative/".$documentName;
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
                 }
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
-                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
-                }
+                
                 $data[] = $nestedData;  
                 $i++;          
             }
@@ -2836,5 +2869,12 @@ class Home extends MX_Controller {
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/home/edit_escrow_officer', $data);
         $this->load->view('order/layout/footer', $data);
+    }
+
+    public function downloadAwsDocument()
+    {
+        $url = $this->input->post('url');
+        $binaryData   = base64_encode(file_get_contents($url)); 
+		echo $binaryData;exit;
     }
 }
