@@ -1459,7 +1459,7 @@ function downloadDocumentFromAws(url, documentType)
 	var fileNameIndex = url.lastIndexOf("/") + 1;
 	var filename = url.substr(fileNameIndex);
 	$.ajax({
-		url: base_url + "download-aws-document",
+		url: base_url + "download-aws-document-mail",
 		type: "post",
 		data: {
 			url : url

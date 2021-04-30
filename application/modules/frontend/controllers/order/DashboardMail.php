@@ -3482,4 +3482,11 @@ class DashboardMail extends MX_Controller {
         echo json_encode($response, true);
         exit;
     }
+
+    public function downloadAwsDocument()
+    {
+        $url = $this->input->post('url');
+        $binaryData   = base64_encode(file_get_contents($url)); 
+		echo $binaryData;exit;
+    }
 }
