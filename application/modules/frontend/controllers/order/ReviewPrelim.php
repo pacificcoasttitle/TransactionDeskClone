@@ -929,19 +929,16 @@ class ReviewPrelim extends MX_Controller {
 					$file = array();
 					$prelimfilename = $prelimDocument['document_name'];
 					if (env('AWS_ENABLE_FLAG') == 1) {
-						$prelimFile = env('AWS_PATH')."documents/".$prelimfilename;
+						if ($this->order->fileExistOrNotOnS3('documents/'.$prelimfilename)) {
+							$file[] = env('AWS_PATH')."documents/".$prelimfilename;
+						}
 					} else {
 						$prelimFile = FCPATH.'uploads/documents/'.$prelimfilename;
-					}
-					
-					if (file_exists($prelimFile)) {
-						if (env('AWS_ENABLE_FLAG') == 1) {
-							$file[] = env('AWS_PATH')."documents/".$prelimfilename;
-						} else {
+						if (file_exists($prelimFile)) {
 							$file[] = base_url().'uploads/documents/'.$prelimfilename;
 						}
 					}
-
+					
 					$emailContent['file_number'] = $file_number;
 					$emailContent['tax'] = isset($email_data['tax']) && !empty($email_data['tax']) ? json_encode($email_data['tax']) : '';
 					$emailContent['liens'] = isset($email_data['liens']) && !empty($email_data['liens']) ? json_encode($email_data['liens']) : '';
