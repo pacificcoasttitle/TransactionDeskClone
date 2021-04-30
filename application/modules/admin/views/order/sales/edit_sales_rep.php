@@ -86,14 +86,20 @@
                         <?php
                             if(isset($sales_rep_info['sales_rep_profile_img']) && !empty($sales_rep_info['sales_rep_profile_img']))
                             {
-                                $img = $sales_rep_info['sales_rep_profile_img'];
+                                if (env('AWS_ENABLE_FLAG') == 1) { 
+                                    $sales_rep_info['sales_rep_profile_img'] = str_replace('uploads/', '', $sales_rep_info['sales_rep_profile_img']);
+                                    $img = env('AWS_PATH').$sales_rep_info['sales_rep_profile_img'];
+                                } else {
+                                    $img = base_url().$sales_rep_info['sales_rep_profile_img'];
+                                }
+                                
                             }
                         ?>
                         <?php
                             if(isset($img) && !empty($img))
                             {
                         ?>
-                                <img src="<?php echo base_url().$img; ?>" width="100" height="100">
+                                <img src="<?php echo $img; ?>" width="100" height="100">
                                 <a href="javascript:void(0);" onclick="removeSalesRepProfileImg(<?php echo $sales_rep_info['id'];?>);">Remove img</a>
                         <?php
                             }
@@ -112,16 +118,18 @@
                     </div>
                     <div class="col-sm-4">
                         <?php
-                            if(isset($sales_rep_info['sales_rep_profile_thank_you_img']) && !empty($sales_rep_info['sales_rep_profile_thank_you_img']))
-                            {
-                                $imgThank = $sales_rep_info['sales_rep_profile_thank_you_img'];
+                            if (env('AWS_ENABLE_FLAG') == 1) { 
+                                $sales_rep_info['sales_rep_profile_thank_you_img'] = str_replace('uploads/', '', $sales_rep_info['sales_rep_profile_thank_you_img']);
+                                $imgThank = env('AWS_PATH').$sales_rep_info['sales_rep_profile_thank_you_img'];
+                            } else {
+                                $imgThank = base_url().$sales_rep_info['sales_rep_profile_thank_you_img'];
                             }
                         ?>
                         <?php
                             if(isset($imgThank) && !empty($imgThank))
                             {
                         ?>
-                                <img src="<?php echo base_url().$imgThank; ?>" width="100" height="100">
+                                <img src="<?php echo $imgThank; ?>" width="100" height="100">
                                 <a href="javascript:void(0);" onclick="removeSalesRepThankYouProfileImg(<?php echo $sales_rep_info['id'];?>);">Remove img</a>
                         <?php
                             }
