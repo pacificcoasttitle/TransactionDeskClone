@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 /* Route for PCT static pages*/
-$route['default_controller'] = 'frontend/index/index';
+$route['default_controller'] = 'frontend/order/home/index';
 $route['our-role'] = 'frontend/aboutus/role';
 $route['protecting-you'] = 'frontend/aboutus/protect';
 $route['why-pacific-coast-title'] = 'frontend/aboutus/pacific';
