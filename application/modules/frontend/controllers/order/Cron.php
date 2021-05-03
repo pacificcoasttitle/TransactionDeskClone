@@ -2378,7 +2378,7 @@ class Cron extends MX_Controller {
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'Notification For Thank you';
                     $to = $escrow_email_address;
-                    $cc = array();
+                    $cc = array('ghernandez@pct.com');
                     $this->load->helper('sendemail');
                     send_email($from_mail,$from_name, $to, $subject, $message, $cc);
                     $data = array();
