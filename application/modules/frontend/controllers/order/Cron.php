@@ -2341,7 +2341,7 @@ class Cron extends MX_Controller {
             escrow_details.email_address, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('MONTH(order_details.resware_closed_status_date)', date('m')); 
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', '04'); 
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
@@ -2351,6 +2351,7 @@ class Cron extends MX_Controller {
         $this->db->join('customer_basic_details as escrow_details', 'escrow_details.id = property_details.escrow_lender_id','inner');
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
         $query = $this->db->get();
+
         $result   = $query->result_array();  
 
         if(!empty($result)) {
@@ -2376,7 +2377,7 @@ class Cron extends MX_Controller {
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'Notification For Thank you';
-                    $to = 'ghernandez@pct.com';
+                    $to = $escrow_email_address;
                     $cc = array();
                     $this->load->helper('sendemail');
                     send_email($from_mail,$from_name, $to, $subject, $message, $cc);
@@ -2397,8 +2398,8 @@ class Cron extends MX_Controller {
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Notification For Thank you';
-                $to = 'ghernandez@pct.com';
-                $cc = array();
+                $to = $escrow_email_address;
+                $cc = array('ghernandez@pct.com');
                 $this->load->helper('sendemail');
                 send_email($from_mail,$from_name, $to, $subject, $message, $cc);
             }
