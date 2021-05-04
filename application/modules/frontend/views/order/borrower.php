@@ -998,7 +998,6 @@ a {
 </script>
 
 <!-- Facebook Pixel Code -->
-<script>
 
 
 
@@ -1116,7 +1115,7 @@ a {
                 /*dln:{
                     required: true
                 },*/
-                 buyer_seller :{
+                buyer_seller :{
                      required: true
                  },		
                 // status:{
