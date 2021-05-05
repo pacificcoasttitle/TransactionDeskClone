@@ -1087,22 +1087,22 @@ a {
             onkeyup: false,
             onclick: false,
             rules: {
-                // firstname: {
-                //     required: true
-                // },
+                firstname: {
+                    required: true
+                },
                 /*middlename: {
                     required: true
                 },*/
-                // lastname: {
-                //     required: true
-                // },
-                // email: {
-                //     required: true,
-                //     email: true    
-                // },
-                // mobile: {
-                //     required: true
-                // },			
+                lastname: {
+                     required: true
+                },
+                email: {
+                    required: true,
+                    email: true    
+                },
+                mobile: {
+                    required: true
+                },			
                 // date_of_birth: {
                 //     required: true
                 // },
