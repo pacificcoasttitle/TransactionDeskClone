@@ -1891,6 +1891,7 @@ class DashboardMail extends MX_Controller {
             $orderNumber = isset($order[0]['file_number']) && !empty($order[0]['file_number']) ? $order[0]['file_number'] : '';
             $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
             $data['sellerFlag'] = $sellerFlag;
+            $orderDetails = $this->order->get_order_details($fileId, 1);
             if ($sellerFlag) {
                 $borrower_info_submitted = $order[0]['borrower_info_submitted_for_seller'];
                 $is_code_verified = $order[0]['is_code_verified_for_seller'];
@@ -1901,7 +1902,6 @@ class DashboardMail extends MX_Controller {
                 $borrower_mobile_number = isset($orderDetails['borrower_mobile_number']) && !empty($orderDetails['borrower_mobile_number']) ? $orderDetails['borrower_mobile_number'] : '';
             }
 
-            $orderDetails = $this->order->get_order_details($fileId, 1);
             if(!empty($orderDetails['escrow_officer_id'])) {
                 $escrowOfficerCon = array(
                     'where' => array(
