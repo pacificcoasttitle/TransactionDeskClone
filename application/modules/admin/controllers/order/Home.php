@@ -2882,7 +2882,7 @@ class Home extends MX_Controller {
     {
         $property_id = $this->input->post('property_id');
         $avoidFlag = $this->input->post('avoidFlag');
-        $data['avoid_duplication'] = $avoidFlag;
+        $data['allow_duplication'] = $avoidFlag;
         $data['updated_at'] = date("Y-m-d H:i:s");
         $condition = array(
             'id' => $property_id
