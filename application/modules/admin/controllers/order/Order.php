@@ -62,7 +62,7 @@ class Order extends MX_Controller {
 			$nestedData[] = $value['sales_rep_name'];
 			$nestedData[] = $value['first_name']." ".$value['last_name'];
             $property_id = $value['property_id'];
-            if ($value['avoid_duplication'] == 1) {
+            if ($value['allow_duplication'] == 1) {
                 $checked = 'checked';
             } else {
                 $checked = '';
