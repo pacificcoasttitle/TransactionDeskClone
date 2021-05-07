@@ -2877,4 +2877,18 @@ class Home extends MX_Controller {
         $binaryData   = base64_encode(file_get_contents($url)); 
 		echo $binaryData;exit;
     }
+
+    public function updateAvoidDuplicationFlag()
+    {
+        $property_id = $this->input->post('property_id');
+        $avoidFlag = $this->input->post('avoidFlag');
+        $data['avoid_duplication'] = $avoidFlag;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $property_id
+        );
+        $this->db->update('property_details', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'Avoid duplication flag updated successfully.');
+        echo json_encode($data);
+    }
 }
