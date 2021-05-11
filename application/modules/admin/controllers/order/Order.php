@@ -55,13 +55,19 @@ class Order extends MX_Controller {
         foreach( $ordersList['data'] as $key => $value )
         {
             $nestedData=array();
-                  
             $nestedData[] = $count;
             $nestedData[] = $value['file_number'];
             $nestedData[] = $value['full_address'];
             $nestedData[] = $value['product_type'];
 			$nestedData[] = $value['sales_rep_name'];
 			$nestedData[] = $value['first_name']." ".$value['last_name'];
+            $property_id = $value['property_id'];
+            if ($value['allow_duplication'] == 1) {
+                $checked = 'checked';
+            } else {
+                $checked = '';
+            }
+            $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
             $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
             $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";

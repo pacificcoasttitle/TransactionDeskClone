@@ -578,7 +578,23 @@ class Order
         $this->CI->db->where('apn', $apn);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
-            return true;
+            $count = $query->num_rows();
+            if ($count == 1) {
+                $propertyData = $query->row_array();
+                if ($propertyData['allow_duplication'] == 1) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                $propertyData = $query->result_array();
+                $key = array_search(1, array_column($propertyData, 'allow_duplication'));
+                if (isset($key)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
         } else {
             return false;
         }     
