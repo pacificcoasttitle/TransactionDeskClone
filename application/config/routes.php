@@ -303,6 +303,9 @@ $route['calculator/admin/add_fees'] = 'admin/calc/admin/add_fees';
 $route['calculator/admin/edit_fees/:num'] = 'admin/calc/admin/edit_fees'; 
 $route['calculator/admin_logout'] = 'admin/calc/admin/admin_logout'; 
 
+$route['reports'] = "frontend/report";
+$route['reports/(.+)'] = "frontend/report/$1";
+
 
 
 $route['404_override'] = '';
