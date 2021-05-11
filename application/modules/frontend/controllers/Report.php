@@ -36,7 +36,7 @@ class Report extends MX_Controller {
     function importData()
     {
         
-        $this->load->library('csvreader');
+        $this->load->library('CSVReader');
 
         //check Errors
         $valid = true;
@@ -59,7 +59,7 @@ class Report extends MX_Controller {
         }
         // var_dump($_FILES);
 
-        $csv_records =   $this->csvreader->parse_csv($_FILES['csvFile']['tmp_name']);//path to csv file
+        $csv_records =   $this->CSVReader->parse_csv($_FILES['csvFile']['tmp_name']);//path to csv file
         $valid_keys = ['carrier_route','avg_price','turnover_rate','total_sales','NOO_ratio','avg_yr_owned','total_units','sa_site_zip','sa_site_city'];
 
         if(is_array($csv_records) && isset($csv_records[1])) {
