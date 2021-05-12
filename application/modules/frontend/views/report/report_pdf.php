@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     
-    
+    <link rel="stylesheet" href="<?php echo base_url('assets/frontend/css/report/style.css');?>">
 
 </head>
 <body>
@@ -101,7 +101,7 @@
                     <img src="<?php echo $image_url;?>" alt="Profile-Pic" class="profile_img"/>
                     <?php endif; ?>
 
-                           
+                            
                         <div>
                             <div class="profile_name"><?php echo $salesRep['first_name'].' '.$salesRep['last_name']; ?></div>
                             
