@@ -218,7 +218,7 @@
 												$pdf_url = trim(env('AWS_PATH').'sales-rep/pdf/'.$report['report_url']);
 											?>
 											<tr>
-												<td><?php echo date('d M y',strtotime($report['created_at'])); ?></td>
+												<td><?php echo date('d M y H:i',strtotime($report['created_at'])); ?></td>
 												<td><?php echo $report['first_name'].' '.$report['last_name']; ?></td>
 												<td><?php echo $report['zip_code']; ?></td>
 												<td>
