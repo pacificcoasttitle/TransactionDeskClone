@@ -20,7 +20,7 @@
                     </div>
                     <div class="col-40">
                         <div class="media">
-                            <img src="<?php echo base_url('assets/media/reports/Large-Flat-Symbol.png') ?>" alt="Large-Flat-Symbol" class="img-fluid" width="50">
+                            
                             <div class="media-body">
                                 PACIFIC COAST
                                 <span>TITLE COMPANY</span>
@@ -101,10 +101,10 @@
                     <img src="<?php echo $image_url;?>" alt="Profile-Pic" class="profile_img"/>
                     <?php endif; ?>
 
-                            <!-- <img src="https://i.ibb.co/z7QknKX/Zoe-Noelle.jpg" alt="Zoe-Noelle" class="profile_img"> -->
+                           
                         <div>
                             <div class="profile_name"><?php echo $salesRep['first_name'].' '.$salesRep['last_name']; ?></div>
-                            <!-- <div class="profile_title">Account Executive</div> -->
+                            
                             <a class="tel_number" href="tel:<?php echo $salesRep['telephone_no'];?>"><?php echo $salesRep['telephone_no'];?></a>
                             <a href="mailto:<?php echo $salesRep['email_address'];?>" class="tel_number"><?php echo $salesRep['email_address'];?></a>
                         </div>
