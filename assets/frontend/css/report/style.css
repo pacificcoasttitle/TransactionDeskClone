@@ -150,6 +150,7 @@ page {
   margin: 20px 0 0;
   font-weight: 700;
   line-height: 28px;
+  white-space: nowrap;
 }
 .profile_title {
   font-size: 17px;
