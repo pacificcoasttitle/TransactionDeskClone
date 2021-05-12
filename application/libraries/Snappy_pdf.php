@@ -11,7 +11,8 @@ class Snappy_pdf {
     	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $this->pdf = new Pdf($dir_name.'vendor/bin/wkhtmltopdf.exe.bat');
         } else {
-            $this->pdf = new Pdf($dir_name.'vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
+            // $this->pdf = new Pdf($dir_name.'vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
+            $this->pdf = new Pdf('/usr/local/bin/wkhtmltopdf');
         }
 
         if(!(is_array($options) && count($options))) {
