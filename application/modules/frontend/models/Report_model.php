@@ -36,6 +36,7 @@ class Report_model extends CI_Model
 	        }
         }
         $this->db->join('customer_basic_details', "customer_basic_details.id = $table.sales_rep");
+        $this->db->order_by('id','DESC');
         $query = $this->db->get();
         $result = $query->result_array();
         if(!empty($result)) { 
