@@ -282,7 +282,7 @@ class Report extends MX_Controller {
         
         $this->load->library('snappy_pdf');
         
-        header('Content-Type: application/pdf');
+        // header('Content-Type: application/pdf');
         
         echo $this->snappy_pdf->pdf->getOutputFromHtml($html);
         
