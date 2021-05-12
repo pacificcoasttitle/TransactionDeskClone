@@ -278,6 +278,7 @@ class Report extends MX_Controller {
 
 
         $html = $this->load->view('report/report_pdf',$data,true);
+        $html = '<h1>Test</h1>';
         
         $this->load->library('snappy_pdf');
         
