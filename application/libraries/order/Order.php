@@ -1145,7 +1145,7 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
-        echo $this->CI->db->last_query();exit;
+        //echo $this->CI->db->last_query();exit;
         $result = $query->row_array();
         return $result;
     }
