@@ -197,6 +197,7 @@ $route['send-mail-escrow-users'] = 'frontend/order/cron/sendMailEscrowUsers';
 $route['transfer-all-files-on-aws'] = 'frontend/order/cron/transferAllFilesOnAws';
 $route['download-aws-document'] = 'frontend/order/home/downloadAwsDocument';
 $route['download-aws-document-mail'] = 'frontend/order/dashboardMail/downloadAwsDocument';
+$route['export-data-from-xml-file'] = 'frontend/order/cron/exportDataFromXmlFile';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';

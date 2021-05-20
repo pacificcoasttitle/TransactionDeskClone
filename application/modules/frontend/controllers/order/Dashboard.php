@@ -37,18 +37,33 @@ class Dashboard extends MX_Controller {
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		
-		if($is_sales_rep)
-        {
-        	// $data['mail_dashboard'] = 1;
+		if ($is_sales_rep) {
+        	$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts();
+			$data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+			$openSaleResult = $this->order->getOpenOrdersCountForSaleProducts();
+			$data['sale_open_count'] = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+			$closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts();
+			$data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+			$closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts();
+			$data['sale_close_count'] =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+			$openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+			$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+			$data['refi_total_premium'] = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+			$openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+			$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+			$data['sale_total_premium'] = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+			$data['total_premium'] = $data['sale_total_premium'] + $data['refi_total_premium'];
+			$totalCount = $data['sale_close_count'] + $data['refi_close_count'] + $data['sale_open_count'] + $data['refi_open_count'];
+			$data['refi_close_order_percetage'] = round(($data['refi_close_count']*100)/$totalCount);
+			$data['sale_close_order_percetage'] = round(($data['sale_close_count']*100)/$totalCount);
+			$data['close_order_percetage'] = $data['refi_close_order_percetage'] + $data['sale_close_order_percetage'];
+
         	$this->load->view('layout/head_dashboard',$data);
         	$this->load->view('order/sales_dashboard');
-        }
-        else
-        {
+        } else {
         	$this->load->view('layout/head_dashboard',$data);
 			$this->load->view('order/dashboard');
         }
-		
 	}
 
 
@@ -134,7 +149,6 @@ class Dashboard extends MX_Controller {
         if (isset($recording_lists['data']) && !empty($recording_lists['data'])) {
             foreach ($recording_lists['data'] as $key => $value)  {
 				$nestedData=array();
-				
 				$date = strtotime($value['recording_date']);
 				$recording_date = date('m/d/Y H:i:s', $date);
 				$nestedData[] = $recording_date;
@@ -148,7 +162,6 @@ class Dashboard extends MX_Controller {
         $json_data['recordsFiltered'] = intval( $recording_lists['recordsFiltered'] );
         $json_data['data'] = $data;
         echo json_encode($json_data);
-		
 	}
 	
 	public function get_recordings_from_api($date)
