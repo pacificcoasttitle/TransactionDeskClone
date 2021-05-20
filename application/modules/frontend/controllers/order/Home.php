@@ -776,6 +776,7 @@ class Home extends MX_Controller {
 								'random_number' => $randomString,
 								'underwriter' => $underWriter,
 								'escrow_officer_id' => $this->input->post('escrow_officer'),
+								'prod_type' => $loanFlag == 1 ? 'loan' : 'sale',
 								'status'=> 1
 							);
 

@@ -41,6 +41,39 @@
 		    overflow-y: auto;
 		}
 
+		.square-box{
+			background-color: #ede6e6;
+			width: 23% !important;
+			margin-right: 2%;
+			margin-bottom: 50px;
+		}
+
+		.order-count-cotainer {
+			margin-top: 50px;
+		}
+
+		.title {
+			text-align: center;
+			color: #d35411;
+			width: 23% !important;
+			margin-right: 2%;
+    		text-transform: uppercase;
+			font-size: medium;
+		}
+
+		.sales_loan_count {
+			font-size: xx-large;
+    		color: #d35411;
+    		text-align: center;
+			font-weight: bold;
+		}
+
+		.sales_loan_section {
+			text-align: center;
+    		text-transform: uppercase;
+    		font-size: large;
+		}
+
     </style>
 	<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 		<div class="container">
@@ -52,6 +85,37 @@
 							<div class="ui-decor-1a bg-accent"></div>
 							<h3 class="ui-title-block_light">Below are all your orders.</h3>
 						</div>
+						<div class="order-count-cotainer">
+							<div class="col-md-3 title">Title Openings MTD</div>
+							<div class="col-md-3 title">Title Closings MTD</div>
+							<div class="col-md-3 title">Title Revenue MTD</div>
+							<div class="col-md-3 title">Closings Ratio Avg</div>
+
+							<div class="col-md-3 square-box">
+								<div class="sales_loan_count"><?Php echo $sale_open_count + $refi_open_count; ?></div>
+								<div class="sales_loan_section">Sales = <?Php echo $sale_open_count;?></div>
+								<div class="sales_loan_section">Refi's = <?Php echo $refi_open_count;?></div>
+							</div>
+
+							<div class="col-md-3 square-box">
+								<div class="sales_loan_count"><?Php echo $sale_close_count + $refi_close_count; ?></div>
+								<div class="sales_loan_section">Sales = <?Php echo $sale_close_count;?></div>
+								<div class="sales_loan_section">Refi's = <?Php echo $refi_close_count;?></div>
+							</div>
+
+							<div class="col-md-3 square-box">
+								<div class="sales_loan_count">$<?php echo number_format($total_premium); ?></div>
+								<div class="sales_loan_section">Sales = $<?php echo number_format($sale_total_premium); ?></div>
+								<div class="sales_loan_section">Refi's = $<?php echo number_format($refi_total_premium); ?></div>
+							</div>
+
+							<div class="col-md-3 square-box">
+								<div class="sales_loan_count"><?Php echo $close_order_percetage;?>%</div>
+								<div class="sales_loan_section">Sales = <?Php echo $sale_close_order_percetage;?>%</div>
+								<div class="sales_loan_section">Refi's = <?Php echo $refi_close_order_percetage;?>%</div>
+							</div>
+						</div>	
+						
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">

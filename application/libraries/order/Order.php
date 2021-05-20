@@ -57,7 +57,11 @@ class Order
 
             if(isset($status) && !empty($status))
             {
-                $this->CI->db->where('order_details.resware_status', $status);
+                if ($status == 'open') {
+                    $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+                } else {
+                    $this->CI->db->where('order_details.resware_status', $status); 
+                }
             }
 
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
@@ -97,7 +101,11 @@ class Order
             }
             if(isset($status) && !empty($status))
             {
-                $this->CI->db->where('order_details.resware_status', $status);
+                if ($status == 'open') {
+                    $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+                } else {
+                    $this->CI->db->where('order_details.resware_status', $status); 
+                }
             }
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -148,7 +156,11 @@ class Order
         {
             if(isset($status) && !empty($status))
             {
-                $this->CI->db->where('order_details.resware_status', $status);
+                if ($status == 'open') {
+                    $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+                } else {
+                    $this->CI->db->where('order_details.resware_status', $status); 
+                }
             }
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
             order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
@@ -190,7 +202,11 @@ class Order
 
             if(isset($status) && !empty($status))
             {
-                $this->CI->db->where('order_details.resware_status', $status);
+                if ($status == 'open') {
+                    $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+                } else {
+                    $this->CI->db->where('order_details.resware_status', $status); 
+                }
             }
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name,
             order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
@@ -1048,15 +1064,19 @@ class Order
         return false;
     }
 
-    public function uploadDocumentOnAwsS3($fileName, $folder= '')
+    public function uploadDocumentOnAwsS3($fileName, $folder= '', $xml = 0)
     {
         $bucket = env('AWS_BUCKET');
         if(!empty($folder)) {
             $keyname = $folder."/".basename($fileName);    
-            $filepath = FCPATH."/uploads/".$folder."/".$fileName;             
+            $filepath = FCPATH."uploads/".$folder."/".$fileName;             
         } else {
-            $keyname = basename($fileName); 
-            $filepath = FCPATH."/uploads/".$fileName;                
+            if ($xml == 1) {
+                $keyname = "xml/".basename($fileName); 
+            } else {
+                $keyname = basename($fileName); 
+            }
+            $filepath = FCPATH."uploads/".$fileName;                
         }
         
         try {
@@ -1079,7 +1099,7 @@ class Order
             return false;
         }
         if(!empty($result['ObjectURL'])) {
-            //unlink($filepath);
+            unlink($filepath);
             return true;
         } else {
             return false;
@@ -1103,6 +1123,7 @@ class Order
                 'Bucket' => env('AWS_BUCKET'),
                 'Key' => $key
             ]);
+            
         } catch (Aws\Exception\AwsException $e) {
             return false;
         }
@@ -1112,5 +1133,62 @@ class Order
         } else {
             return false;
         }
+    }
+
+    public function getOpenOrdersCountForRefiProducts()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+        $this->CI->db->where('order_details.prod_type', 'loan');
+        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        $query = $this->CI->db->get();
+        echo $this->CI->db->last_query();exit;
+        $result = $query->row_array();
+        return $result;
+    }
+
+    public function getOpenOrdersCountForSaleProducts()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+        $this->CI->db->where('order_details.prod_type', 'sale');
+        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        return $result;
+    }
+
+    public function getClosedOrdersCountForRefiProducts()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('order_details.resware_status = "closed"');
+        $this->CI->db->where('order_details.prod_type', 'loan');
+        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        return $result;
+    }
+
+    public function getClosedOrdersCountForSaleProducts()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+            $this->CI->db->where('order_details.resware_status = "closed"');
+        $this->CI->db->where('order_details.prod_type', 'sale');
+        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        return $result;
     }
 }
