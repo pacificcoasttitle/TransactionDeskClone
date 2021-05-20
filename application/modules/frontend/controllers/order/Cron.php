@@ -2463,7 +2463,8 @@ class Cron extends MX_Controller {
     public function exportDataFromXmlFile()
     {
         $files = glob(FCPATH."uploads\*xml");
-        if (is_array($files)) {
+        print_r($files);
+        if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
                 $xml = file_get_contents($filePath);
                 $documentName = pathinfo($filePath);
@@ -2673,7 +2674,7 @@ class Cron extends MX_Controller {
                 $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
             }
         } else {
-           echo "No files found";
+           echo "No files found";exit;
         }
         echo "All data exported successfully";exit;
     }
