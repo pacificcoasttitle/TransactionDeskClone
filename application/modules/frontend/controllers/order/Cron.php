@@ -2463,6 +2463,7 @@ class Cron extends MX_Controller {
     public function exportDataFromXmlFile()
     {
         $files = glob(FCPATH."uploads\*xml");
+        print_r($files);exit;
         if (is_array($files)) {
             foreach($files as $filePath) {
                 $xml = file_get_contents($filePath);
