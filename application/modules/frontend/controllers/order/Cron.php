@@ -2672,6 +2672,8 @@ class Cron extends MX_Controller {
                 }
                 $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
             }
+        } else {
+           echo "No files found";
         }
         echo "All data exported successfully";exit;
     }
