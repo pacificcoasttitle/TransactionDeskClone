@@ -2480,7 +2480,7 @@ class Cron extends MX_Controller {
             chmod(FCPATH.'uploads/'.$file,0755);
         }
         
-        $files = glob(FCPATH."uploads\*xml");
+        $files = glob(FCPATH."uploads\*.*");
         echo FCPATH;
         print_r($files);exit;
 
