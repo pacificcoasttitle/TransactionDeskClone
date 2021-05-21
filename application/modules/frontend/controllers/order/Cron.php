@@ -2479,11 +2479,11 @@ class Cron extends MX_Controller {
             $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.$file);
             chmod(FCPATH.'uploads/'.$file,0755);
         }
-        $fileSystemIterator = new FilesystemIterator(FCPATH."/uploads/");
-        print_r($fileSystemIterator);
-        $files = glob(FCPATH."uploads\*.*");
+        
+        $files = glob("uploads/*xml", GLOB_NOSORT);
+                 
         echo FCPATH;
-        print_r($files);exit;
+        print_r($files);
 
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
@@ -2496,8 +2496,8 @@ class Cron extends MX_Controller {
                 $xml = str_replace("//]]>","",$xml);
                 $xml = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA);
                 $ordersData = json_decode(json_encode($xml), true);
-                //echo "<pre>";
-                //print_r($ordersData);
+                echo "<pre>";
+                print_r($ordersData);exit;
                 if(!empty($ordersData['group']['group'])) {
                     foreach ($ordersData['group']['group'] as $orderData) {
                         $orderInfos = $orderData['row'];
