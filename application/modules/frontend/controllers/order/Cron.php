@@ -2482,9 +2482,6 @@ class Cron extends MX_Controller {
         
         $files = glob("uploads/*xml", GLOB_NOSORT);
                  
-        echo FCPATH;
-        print_r($files);
-
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
                 $xml = file_get_contents($filePath);
@@ -2496,8 +2493,6 @@ class Cron extends MX_Controller {
                 $xml = str_replace("//]]>","",$xml);
                 $xml = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA);
                 $ordersData = json_decode(json_encode($xml), true);
-                echo "<pre>";
-                print_r($ordersData);exit;
                 if(!empty($ordersData['group']['group'])) {
                     foreach ($ordersData['group']['group'] as $orderData) {
                         $orderInfos = $orderData['row'];
