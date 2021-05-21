@@ -2481,7 +2481,7 @@ class Cron extends MX_Controller {
         }
         
         $files = glob(FCPATH."uploads\*xml");
-        echo FCPATH;exit;
+        echo FCPATH;
         print_r($files);exit;
 
         if (is_array($files) && count($files) > 0) {
