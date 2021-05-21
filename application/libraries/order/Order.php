@@ -839,7 +839,7 @@ class Order
         $this->CI->db->where('is_buyer', $buyerFlag);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
-            return $query->row_array();
+            return $query->result_array();
         } else {
             return array();
         }
