@@ -2479,7 +2479,8 @@ class Cron extends MX_Controller {
             $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.$file);
             chmod(FCPATH.'uploads/'.$file,0755);
         }
-        
+        $fileSystemIterator = new FilesystemIterator(FCPATH."/uploads/");
+        print_r($fileSystemIterator);
         $files = glob(FCPATH."uploads\*.*");
         echo FCPATH;
         print_r($files);exit;
