@@ -2478,9 +2478,9 @@ class Cron extends MX_Controller {
             echo $file;
             $sftp->get(env('SFTP_FOLDER').'/'.$file, 'uploads/'.$file);
         }
-        exit;
         
         $files = glob(FCPATH."uploads\*xml");
+        print_r($files);
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
                 $xml = file_get_contents($filePath);
