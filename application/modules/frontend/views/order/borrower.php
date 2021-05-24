@@ -1051,7 +1051,7 @@ a {
                                     safeWireFlag = true;
                                 } else {
                                     alert(res.message);
-                                    //$("a[href$='previous']").click();
+                                    $("a[href$='previous']").click();
                                 }
                             },
                             error:function(){
