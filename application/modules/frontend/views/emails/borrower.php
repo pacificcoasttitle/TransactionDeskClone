@@ -607,8 +607,8 @@ else
 <h1 style="text-align: center;"><br>
 <font color="#000000"><strong>Borrower Verification Needed</strong></font><br>
 <span style="color:#d35411"><strong><span style="font-size:19px">Urgent Items that need your attention</span></strong></span><br>
-<span style="color:#000000"><strong><span style="font-size:19px">Order Number: <?php echo $orderNumber; ?></span></strong></span>
-<span style="color:#000000"><strong><span style="font-size:19px">Property Address:  <?php echo $orderNumber; ?></span></strong></span>
+<span style="color:#000000"><strong><span style="font-size:19px">Order Number: <?php echo $orderNumber; ?></span></strong></span><br>
+<span style="color:#000000"><strong><span style="font-size:19px">Property Address:  <?php echo $PropertyAddress; ?></span></strong></span>
 </h1>
 
 <div>

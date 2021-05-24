@@ -986,6 +986,7 @@ class Home extends MX_Controller {
 
 								$email_data = array(
 									'orderNumber'=> $orderNumber,
+									'PropertyAddress'=> $PropertyAddress,
 									'randomString'=> $randomString,
 									'headerImg'=> $sales_rep_img,
 									'currYear'=> CURRENT_YEAR,
