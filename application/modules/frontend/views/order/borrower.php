@@ -14,6 +14,11 @@
     display: none;
 }
 
+iframe {
+    position: absolute;
+    top: 20%;
+}
+
 a {
     color: white;
 }
@@ -1058,6 +1063,7 @@ a {
                         });
                     } else {
                         return form.valid();
+                        
                     }
                     return true;
                 } else {
@@ -1068,6 +1074,8 @@ a {
             onStepChanged: function (event, currentIndex, priorIndex){
             },
             onFinishing: function (event, currentIndex){
+                $('#page-preloader').css('display', 'block');
+                $('#borrower_page').css('opacity', '0.5');
                 var form = $(this);
                 form.validate().settings.ignore = ":disabled";
                 if(form.valid() === true) {

@@ -225,14 +225,14 @@ h4{
 @tip Set the background color and borders for your email's header area.
 */
 #templateHeader{
-/*@editable*/background-color:#FFFFFF;
+/*@editable*/background-color:#c0c0c0;
 /*@editable*/background-image:none;
 /*@editable*/background-repeat:no-repeat;
 /*@editable*/background-position:center;
 /*@editable*/background-size:cover;
 /*@editable*/border-top:0;
 /*@editable*/border-bottom:0;
-/*@editable*/padding-top:9px;
+/*@editable*/padding-top:60px;
 /*@editable*/padding-bottom:0;
 }
 /*
@@ -301,15 +301,13 @@ h4{
 @tip Set the background color and borders for your email's footer area.
 */
 #templateFooter{
-/*@editable*/background-color:#FAFAFA;
 /*@editable*/background-image:none;
 /*@editable*/background-repeat:no-repeat;
 /*@editable*/background-position:center;
 /*@editable*/background-size:cover;
 /*@editable*/border-top:0;
 /*@editable*/border-bottom:0;
-/*@editable*/padding-top:9px;
-/*@editable*/padding-bottom:9px;
+
 }
 /*
 @tab Footer
@@ -317,7 +315,7 @@ h4{
 @tip Set the styling for your email's footer text. Choose a size and color that is easy to read.
 */
 #templateFooter .mcnTextContent,#templateFooter .mcnTextContent p{
-/*@editable*/color:#656565;
+/*@editable*/color:#ffffff;
 /*@editable*/font-family:Helvetica;
 /*@editable*/font-size:12px;
 /*@editable*/line-height:150%;
@@ -607,9 +605,10 @@ else
 <tr>
 <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
 <h1 style="text-align: center;"><br>
-<font color="#000000"><strong>Statement of Information Needed</strong></font><br>
+<font color="#000000"><strong>Borrower Verification Needed</strong></font><br>
 <span style="color:#d35411"><strong><span style="font-size:19px">Urgent Items that need your attention</span></strong></span><br>
-<span style="color:#000000"><strong><span style="font-size:19px">Order Number: <?php echo $orderNumber; ?></span></strong></span>
+<span style="color:#000000"><strong><span style="font-size:19px">Order Number: <?php echo $orderNumber; ?></span></strong></span><br>
+<span style="color:#000000"><strong><span style="font-size:19px">Property Address:  <?php echo $PropertyAddress; ?></span></strong></span>
 </h1>
 
 <div>
@@ -621,8 +620,8 @@ else
 	<span style="line-height:150%;font-family:Helvetica;color:#202020">&nbsp;</span>
 </p>
 </div>
-<h1 style="text-align: left;">&nbsp;</h1>
-<p style="text-align: center;"><span style="font-size:14px">In order to accurately&nbsp;search for any items that can negatively affect your transaction we need to collect what is called a statement of information form. Please click on the secure link below in order to fill out the form on our secure webpage.</span><br>
+<h1 style="text-align: left;"></h1>
+<p style="text-align: center;"><span style="font-size:17px; letter-spacing:-0.20px;">In order to accurately search for any items that can negatively affect your transaction we need to collect what is called a Borrower Verification form. Please click on the secure link below in order to fill out the form on our secure webpage.</span><br>
 &nbsp;
 </p>
 </td>
@@ -648,7 +647,7 @@ else
 <tbody>
 <tr>
 <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 16px; padding: 22px;">
-<a class="mcnButton " title="Statement of Information Form" href="<?php echo base_url().'/borrower-information/'.$randomString; ?>" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Statement of Information Buyer Form</a>
+<a class="mcnButton " title="Borrower Verification Form" href="<?php echo base_url().'/borrower-information/'.$randomString; ?>" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Borrower Verification Buyer Form</a>
 </td>
 </tr>
 </tbody>
@@ -660,7 +659,7 @@ else
             <tbody>
                 <tr>
                     <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 16px; padding: 22px;">
-                        <a class="mcnButton " title="Statement of Information Form" href="<?php echo base_url().'/borrower-information/seller/'.$randomString; ?>" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Statement of Information Seller Form</a>
+                        <a class="mcnButton " title="Borrower Verification Form" href="<?php echo base_url().'/borrower-information/seller/'.$randomString; ?>" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Borrower Verification Seller Form</a>
                     </td>
                 </tr>
             </tbody>
@@ -688,23 +687,25 @@ else
 <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
 <h3 class="null" style="text-align: center;"><br>
 <br>
-<strong>What is a Statement of Information?</strong>
+<strong>What is a Borrower Verification?</strong>
 </h3>
-<p style="font-size:14px; line-height:22px">A Statement of Information is a form routinely requested from the buyer, seller and borrower in a transaction where title insurance is sought. The completed form provides the title company with information needed to adequately examine documents so as to disregard matters which do not affect the property to be insured, matters which actually apply to some other person.</p>
+<p style="font-size:14px; line-height:22px; text-align:center;">A Borrower Verification is a form routinely requested from the buyer, seller and borrower in a transaction where title insurance is sought. The completed form provides the title company with information needed to adequately examine documents so as to disregard matters which do not affect the property to be insured, matters which actually apply to some other person.</p>
 &nbsp;
-<h3 class="null" style="text-align: center;"><strong>What does a Statement of Information do?</strong></h3>
-<p style="font-size:14px;line-height:22px">Every day documents affecting real property--liens, court decrees, bankruptcies--are recorded. Whenever a title company uncovers a recorded document in which the name is the same or similar to that of the buyer, seller or borrower in a title transaction, the title company must ask, "Does this document affect the parties we are insuring?" Because, if it does, it affects title to the property and would, therefore, be listed as an exception from coverage under the title policy.</p>
+<h3 class="null" style="text-align: center;"><strong>What does a Borrower Verification do?</strong></h3>
+<p style="font-size:14px;line-height:22px; text-align:center;">Every day documents affecting real property--liens, court decrees, bankruptcies--are recorded. Whenever a title company uncovers a recorded document in which the name is the same or similar to that of the buyer, seller or borrower in a title transaction, the title company must ask, "Does this document affect the parties we are insuring?" Because, if it does, it affects title to the property and would, therefore, be listed as an exception from coverage under the title policy. A properly completed Borrower Verification will allow the title company to differentiate between parties with the same or similar names when searching documents recorded by name. This protects all parties involved and allows the title company to competently carry out its duties without unnecessary delay.</p>
 &nbsp;
-<p style="font-size:14px;line-height:22px">A properly completed Statement of Information will allow the title company to differentiate between parties with the same or similar names when searching documents recorded by name. This protects all parties involved and allows the title company to competently carry out its duties without unnecessary delay.</p>
-&nbsp;
-<h3 class="null" style="text-align: center;"><strong>What types of information are requested in a<br>
-Statement of Information?</strong>
+<h3 class="null" style="text-align: center;"><strong>What information is requested? </strong>
 </h3>
-<p style="font-size:14px;line-height:22px">The information requested is personal in nature, but not unnecessarily so. The information requested is essential to avoid delays in closing the transaction.</p>
-<p style="font-size:14px;line-height:22px">You, and if applicable, your spouse or registered domestic partner, will be asked to provide full name, social security number, year of birth, birthplace, and information or citizenship. If applicable, you will be asked the date and place of your marriage or registered domestic partnership.</p>
-<p style="font-size:14px;line-height:22px">Residence and employment information will be requested, as will information regarding previous marriages or registered domestic partnerships.</p>
-<div style="text-align: center;"><br>
-<br>
+<p style="font-size:14px;line-height:22px;text-align:center;">The information requested is personal in nature, but not unnecessarily so. The information requested is essential to avoid delays in closing the transaction. You, and if applicable, your spouse or registered domestic partner, will be asked to provide full name, social security number, year of birth, birthplace, and information or citizenship. If applicable, you will be asked the date and place of your marriage or registered domestic partnership. Residence and employment information will be requested, as will information regarding previous marriages or registered domestic partnerships.</p>
+<div style="text-align: center;">
+&nbsp;
+<h3 class="null" style="text-align: center;">Got Questions?</h3>
+<p style="font-size:14px;line-height:22px;text-align:center;">Check out our video center where we explain what Wire Fraud is and also show you <br>a demonstration of the  verification process.</p>
+
+<p style="text-align:center;margin-top:40px;">
+  <a class="" title="Borrower Verification Form" href="http://pct.com/safewire.html" target="_blank" style="font-size:16px; font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF; background-color: #D35411; padding:15px 15px 15px 15px; width:250px; ">Video Training Center</a>
+</p>
+
 &nbsp;
 </div>
 </td>
@@ -744,7 +745,7 @@ Statement of Information?</strong>
         <td class="color-bg" align="center" style="background-color:#002742;">
           <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
             <tr>
-              <td class="sp" height="30" style="font-size:1px;line-height:30px;">
+              <td class="sp" height="45" style="font-size:1px;line-height:30px;">
                  
               </td>
             </tr>
@@ -774,7 +775,7 @@ Statement of Information?</strong>
               </td>
             </tr>
             <tr>
-              <td class="sp" height="30" style="font-size:1px;line-height:30px;">
+              <td class="sp" height="45" style="font-size:1px;line-height:30px;">
                  
               </td>
             </tr>
@@ -791,7 +792,7 @@ Statement of Information?</strong>
 <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
 <tbody class="mcnTextBlockOuter">
 <tr>
-<td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+<td valign="top" class="mcnTextBlockInner" style="padding-top:23px;">
 <!--[if mso]>
 <table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
 <tr>
