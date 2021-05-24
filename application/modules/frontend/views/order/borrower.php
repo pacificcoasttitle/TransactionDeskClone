@@ -1063,6 +1063,7 @@ a {
                         });
                     } else {
                         return form.valid();
+                        
                     }
                     return true;
                 } else {
