@@ -1051,7 +1051,7 @@ a {
                                     safeWireFlag = true;
                                 } else {
                                     alert(res.message);
-                                    $("a[href$='previous']").click();
+                                    //$("a[href$='previous']").click();
                                 }
                             },
                             error:function(){
@@ -1073,6 +1073,8 @@ a {
             onStepChanged: function (event, currentIndex, priorIndex){
             },
             onFinishing: function (event, currentIndex){
+                $('#page-preloader').css('display', 'block');
+                $('#borrower_page').css('opacity', '0.5');
                 var form = $(this);
                 form.validate().settings.ignore = ":disabled";
                 if(form.valid() === true) {
