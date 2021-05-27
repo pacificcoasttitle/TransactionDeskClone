@@ -2459,4 +2459,69 @@ class Cron extends MX_Controller {
         }*/
         
     }
+
+
+    public function sendMailEscrowUsersForBorrowerVerification()
+    {
+        $this->db->select('order_details.file_id, 
+            order_details.file_number, 
+            order_details.id as orderId, 
+            order_details.random_number, 
+            property_details.address,
+            customer_basic_details.first_name,
+            customer_basic_details.last_name,
+            customer_basic_details.email_address,
+            transaction_details.sales_representative');
+        $this->db->from('order_details');
+        $this->db->where('((order_details.resware_status != "closed" AND order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)'); 
+        $this->db->where('transaction_details.purchase_type = 4'); 
+        $this->db->where('order_details.escrow_officer_id IS NOT NULL');
+        $this->db->where('order_details.borrower_information_document_name IS NULL');
+        $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
+        $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
+        $this->db->join('customer_basic_details', 'customer_basic_details.id = order_details.escrow_officer_id','inner');
+        $query = $this->db->get();
+        $result   = $query->result_array(); 
+        
+        if (!empty($result)) {							
+            foreach ($result as $res) {
+                if (!empty($res['sales_representative'])) {
+                    $condition = array(
+                        'id' => $res['sales_representative']	                
+                    );
+                    $salesRepDetails = $this->home_model->getSalesRepDetails($condition);
+                }
+
+                $sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
+                $email_data = array(
+                    'orderNumber'=> $res['file_number'],
+                    'PropertyAddress'=> $res['address'],
+                    'randomString'=> $res['random_number'],
+                    'headerImg'=> $sales_rep_img,
+                    'currYear'=> CURRENT_YEAR,
+                    'productTypeID' => 4 
+                );
+
+                $borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
+                $from_name = 'Pacific Coast Title Company';
+                $from_mail = env('FROM_EMAIL');
+
+                $message_body = $borrower_message_body; 
+                $subject = $res['file_number']. ' - Borrower Verification';
+                $to = $res['email_address'];
+                $to = 'hitesh.p@crestinfosystems.com';
+                $mailParams = array(
+                    'from_mail'=>$from_mail, 
+                    'from_name'=>$from_name, 
+                    'to'=> $to,
+                    'subject'=>$subject,
+                    'message'=>json_encode($email_data)
+                );
+    
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $res['orderId'], 0);
+                $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $res['orderId'], $logid);
+            } 
+        }
+    }
 }
