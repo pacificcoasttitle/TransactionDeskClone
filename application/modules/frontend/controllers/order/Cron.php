@@ -2780,6 +2780,7 @@ class Cron extends MX_Controller {
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
         $this->db->join('pct_order_partner_company_info', 'pct_order_partner_company_info.partner_id = order_details.escrow_officer_id','inner');
         $query = $this->db->get();
+
         $result   = $query->result_array(); 
         
         if (!empty($result)) {							
