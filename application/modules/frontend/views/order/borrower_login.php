@@ -55,7 +55,7 @@
                                 </div>
                             </a>
                         </div>
-						<h2>Generic Landing Page for CPL</h21>
+						<h2>Borrower Verification Page</h21>
                         <h3>Let us know who you are...</h3>
 						<p></p>
 						<p>Title Order#:<?php echo $orderNumber; ?></p>
