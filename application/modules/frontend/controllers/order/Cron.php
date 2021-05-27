@@ -2508,7 +2508,8 @@ class Cron extends MX_Controller {
                 $message_body = $borrower_message_body; 
                 $subject = $res['file_number']. ' - Borrower Verification';
                 $to = $res['email'];
-                $to = 'hitesh.p@crestinfosystems.com';
+                $cc = array('ghernandez@pct.com');
+                //$to = 'hitesh.p@crestinfosystems.com';
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
                     'from_name'=>$from_name, 
@@ -2519,7 +2520,7 @@ class Cron extends MX_Controller {
     
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $res['orderId'], 0);
                 $this->load->helper('sendemail');
-                $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
+                $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $res['orderId'], $logid);
             } 
         }
