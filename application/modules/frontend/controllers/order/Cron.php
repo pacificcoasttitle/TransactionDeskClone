@@ -2701,9 +2701,7 @@ class Cron extends MX_Controller {
             order_details.id as orderId, 
             order_details.random_number, 
             property_details.address,
-            customer_basic_details.first_name,
-            customer_basic_details.last_name,
-            customer_basic_details.email_address,
+            pct_order_partner_company_info.email,
             transaction_details.sales_representative');
         $this->db->from('order_details');
         $this->db->where('((order_details.resware_status != "closed" AND order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)'); 
@@ -2712,8 +2710,9 @@ class Cron extends MX_Controller {
         $this->db->where('order_details.borrower_information_document_name IS NULL');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
-        $this->db->join('customer_basic_details', 'customer_basic_details.id = order_details.escrow_officer_id','inner');
+        $this->db->join('pct_order_partner_company_info', 'pct_order_partner_company_info.partner_id = order_details.escrow_officer_id','inner');
         $query = $this->db->get();
+
         $result   = $query->result_array(); 
         
         if (!empty($result)) {							
@@ -2741,7 +2740,7 @@ class Cron extends MX_Controller {
 
                 $message_body = $borrower_message_body; 
                 $subject = $res['file_number']. ' - Borrower Verification';
-                $to = $res['email_address'];
+                $to = $res['email'];
                 $to = 'hitesh.p@crestinfosystems.com';
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
