@@ -2759,23 +2759,38 @@ class Cron extends MX_Controller {
             order_details.id as orderId, 
             order_details.random_number, 
             property_details.address,
+<<<<<<< HEAD
             pct_order_partner_company_info.email,
+=======
+            customer_basic_details.first_name,
+            customer_basic_details.last_name,
+            customer_basic_details.email_address,
+>>>>>>> c4ab8e59... send email to escrow user changes
             transaction_details.sales_representative');
         $this->db->from('order_details');
         $this->db->where('((order_details.resware_status != "closed" AND order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)'); 
         $this->db->where('transaction_details.purchase_type = 4'); 
         $this->db->where('order_details.escrow_officer_id IS NOT NULL');
         $this->db->where('order_details.borrower_information_document_name IS NULL');
+<<<<<<< HEAD
         $this->db->where('order_details.file_number IN (10231167,10232453,10232646,10230875,10231110,10231114,10231186,10231250,10231659,10231758,10231974,10231981,10231999,10232000,10232286,10232287,10232400,10232448,10232543,10232547,10232595,10232597)');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
         $this->db->join('pct_order_partner_company_info', 'pct_order_partner_company_info.partner_id = order_details.escrow_officer_id','inner');
+=======
+        $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
+        $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
+        $this->db->join('customer_basic_details', 'customer_basic_details.id = order_details.escrow_officer_id','inner');
+>>>>>>> c4ab8e59... send email to escrow user changes
         $query = $this->db->get();
         $result   = $query->result_array(); 
         
         if (!empty($result)) {							
             foreach ($result as $res) {
+<<<<<<< HEAD
                 $salesRepDetails = array();
+=======
+>>>>>>> c4ab8e59... send email to escrow user changes
                 if (!empty($res['sales_representative'])) {
                     $condition = array(
                         'id' => $res['sales_representative']	                
@@ -2799,10 +2814,15 @@ class Cron extends MX_Controller {
 
                 $message_body = $borrower_message_body; 
                 $subject = $res['file_number']. ' - Borrower Verification';
+<<<<<<< HEAD
                 $to = $res['email'];
                 $cc = array('ghernandez@pct.com');
                 //$cc = array();
                 //$to = 'hitesh.p@crestinfosystems.com';
+=======
+                $to = $res['email_address'];
+                $to = 'hitesh.p@crestinfosystems.com';
+>>>>>>> c4ab8e59... send email to escrow user changes
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
                     'from_name'=>$from_name, 
@@ -2812,12 +2832,17 @@ class Cron extends MX_Controller {
                 );
     
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $res['orderId'], 0);
+<<<<<<< HEAD
                 $this->load->helper('sendemail');
                 $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body, array(), $cc);
+=======
+                $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+>>>>>>> c4ab8e59... send email to escrow user changes
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $res['orderId'], $logid);
             } 
         }
     }
+<<<<<<< HEAD
 
     public function importOrdersUsingFileNumber()
     {
@@ -3366,4 +3391,6 @@ class Cron extends MX_Controller {
             echo "No files found";exit;
         }
     }
+=======
+>>>>>>> c4ab8e59... send email to escrow user changes
 }
