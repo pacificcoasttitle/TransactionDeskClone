@@ -2764,7 +2764,6 @@ class Cron extends MX_Controller {
         $this->db->where('transaction_details.purchase_type = 4'); 
         $this->db->where('order_details.escrow_officer_id IS NOT NULL');
         $this->db->where('order_details.borrower_information_document_name IS NULL');
-
         $this->db->where('order_details.file_number IN (10231167,10232453,10232646,10230875,10231110,10231114,10231186,10231250,10231659,10231758,10231974,10231981,10231999,10232000,10232286,10232287,10232400,10232448,10232543,10232547,10232595,10232597)');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
