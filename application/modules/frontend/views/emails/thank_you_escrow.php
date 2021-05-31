@@ -793,25 +793,25 @@
                 <td align="center" valign="top" id="bodyCell">
                     <!-- BEGIN TEMPLATE // -->
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                        <tr>
+                        <!--<tr>
                             <td align="center" valign="top" id="templateHeader" data-template-container>
-                                <!--[if (gte mso 9)|(IE)]>
+                                [if (gte mso 9)|(IE)]>
                                     <table align="center" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;">
                                     <tr>
                                     <td align="center" valign="top" width="600" style="width:600px;">
-                                    <![endif]-->
+                                    <![endif]
                                 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
                                     <tr>
                                         <td valign="top" class="headerContainer"></td>
                                     </tr>
                                 </table>
-                                <!--[if (gte mso 9)|(IE)]>
+                                [if (gte mso 9)|(IE)]>
                                     </td>
                                     </tr>
                                     </table>
-                                    <![endif]-->
+                                    <![endif]
                             </td>
-                        </tr>
+                        </tr>-->
                         <tr>
                             <td align="center" valign="top" id="templateBody" data-template-container>
                                 <!--[if (gte mso 9)|(IE)]>
@@ -871,9 +871,10 @@
                                                                             <p>We have prepared a list of all of the orders that you currently with us for the month of March. You can find their current status. If you have any questions feel free to contact us.&nbsp;<br>
                                                                                 &nbsp;</p>
 
-                                                                            <table style="height: 253px; width: 505px;">
+                                                                            <table>
                                                                             <thead>
 		<tr>
+            <th>Order Number</th>
 			<th>Property Addres</th>
 			<th>Status</th>
 		</tr>
@@ -882,6 +883,7 @@
                                                                                     <?php if(!empty($order_info)) { 
                                                                                         foreach($order_info as $order) {?>
                                                                                             <tr>
+                                                                                            <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $order['order_number'];?></strong></td>
                                                                                                 <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411"><?php echo $order['address'];?></span></td>
                                                                                                 <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $order['resware_status'];?></strong></td>
                                                                                             </tr>
