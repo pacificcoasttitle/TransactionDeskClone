@@ -2336,12 +2336,13 @@ class Cron extends MX_Controller {
             property_details.full_address,
             customer_basic_details.first_name,
             customer_basic_details.last_name,
+            customer_basic_details.email_address as sales_email,
             customer_basic_details.sales_rep_profile_thank_you_img,
             property_details.escrow_lender_id,
             escrow_details.email_address, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('MONTH(order_details.resware_closed_status_date)', '04'); 
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', date('m')); 
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
@@ -2351,7 +2352,6 @@ class Cron extends MX_Controller {
         $this->db->join('customer_basic_details as escrow_details', 'escrow_details.id = property_details.escrow_lender_id','inner');
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
         $query = $this->db->get();
-
         $result   = $query->result_array();  
 
         if(!empty($result)) {
@@ -2366,6 +2366,7 @@ class Cron extends MX_Controller {
                     $checkFlag = 1;
                 }
                 if ($res['sales_representative'] == $sales_rep_user_id && $res['escrow_lender_id'] == $escrow_user_id) {
+                    $data['order_info'][$i]['order_number'] = $res['file_number'];
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     if(!empty($res['sales_rep_profile_thank_you_img'])) {
@@ -2378,13 +2379,16 @@ class Cron extends MX_Controller {
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'Notification For Thank you';
                     $to = $escrow_email_address;
-                    $cc = array('ghernandez@pct.com');
+                    //$to = 'hitesh.p@crestinfosystems.com';
+                    $cc = array('ghernandez@pct.com', $res['sales_email']);
+                   // $cc = array();
                     $this->load->helper('sendemail');
                     send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                     $data = array();
                     $sales_rep_user_id = $res['sales_representative'];
                     $escrow_user_id = $res['escrow_lender_id'];
                     $escrow_email_address = $res['email_address'];
+                    $data['order_info'][$i]['order_number'] = $res['file_number'];
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     if(!empty($res['sales_rep_profile_thank_you_img'])) {
@@ -2392,6 +2396,7 @@ class Cron extends MX_Controller {
                     }
                     $i++;
                 }
+                $sales_email = $res['sales_email'];
             }
             if(!empty($data)){
                 $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
@@ -2399,7 +2404,9 @@ class Cron extends MX_Controller {
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Notification For Thank you';
                 $to = $escrow_email_address;
-                $cc = array('ghernandez@pct.com');               
+                //$to = 'hitesh.p@crestinfosystems.com';
+                $cc = array('ghernandez@pct.com', $sales_email);  
+                //$cc = array();             
                 $this->load->helper('sendemail');
                 send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
             }
