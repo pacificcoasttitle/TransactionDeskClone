@@ -2380,9 +2380,9 @@ class Cron extends MX_Controller {
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'Notification For Thank you';
                     $to = $escrow_email_address;
-                    //$to = 'hitesh.p@crestinfosystems.com';
+                    $to = 'hitesh.p@crestinfosystems.com';
                     $cc = array('ghernandez@pct.com', $res['sales_email']);
-                   // $cc = array();
+                    //$cc = array();
                     $mailParams = array(
                         'from_mail'=>$from_mail, 
                         'from_name'=>$from_name, 
@@ -2419,10 +2419,18 @@ class Cron extends MX_Controller {
                 $cc = array('ghernandez@pct.com', $sales_email);  
                 //$cc = array();             
                 $this->load->helper('sendemail');
+                $mailParams = array(
+                    'from_mail'=>$from_mail, 
+                    'from_name'=>$from_name, 
+                    'to'=> $to,
+                    'subject'=>$subject,
+                    'message'=>json_encode($data)
+                );
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $order_id, $logid);
             }
+            echo "Mails sent successfully to Escow user ";exit;
         }
     }
 
