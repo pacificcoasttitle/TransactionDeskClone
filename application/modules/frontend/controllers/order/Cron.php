@@ -2380,9 +2380,9 @@ class Cron extends MX_Controller {
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'Notification For Thank you';
                     $to = $escrow_email_address;
-                    $to = 'hitesh.p@crestinfosystems.com';
+                    //$to = 'hitesh.p@crestinfosystems.com';
                     $cc = array('ghernandez@pct.com', $res['sales_email']);
-                    //$cc = array();
+                    // $cc = array();
                     $mailParams = array(
                         'from_mail'=>$from_mail, 
                         'from_name'=>$from_name, 
