@@ -2332,6 +2332,7 @@ class Cron extends MX_Controller {
     {
         $this->db->select('order_details.file_id, 
             order_details.file_number, 
+            order_details.id as order_id,
             order_details.resware_status, 
             property_details.full_address,
             customer_basic_details.first_name,
@@ -2342,7 +2343,7 @@ class Cron extends MX_Controller {
             escrow_details.email_address, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('MONTH(order_details.resware_closed_status_date)', date('m')); 
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', '05'); 
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
@@ -2382,8 +2383,17 @@ class Cron extends MX_Controller {
                     //$to = 'hitesh.p@crestinfosystems.com';
                     $cc = array('ghernandez@pct.com', $res['sales_email']);
                    // $cc = array();
+                    $mailParams = array(
+                        'from_mail'=>$from_mail, 
+                        'from_name'=>$from_name, 
+                        'to'=> $to,
+                        'subject'=>$subject,
+                        'message'=>json_encode($data)
+                    );
                     $this->load->helper('sendemail');
-                    send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                    $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
+                    $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                    $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $res['orderId'], $logid);
                     $data = array();
                     $sales_rep_user_id = $res['sales_representative'];
                     $escrow_user_id = $res['escrow_lender_id'];
@@ -2397,6 +2407,7 @@ class Cron extends MX_Controller {
                     $i++;
                 }
                 $sales_email = $res['sales_email'];
+                $order_id = $res['sales_email'];
             }
             if(!empty($data)){
                 $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
@@ -2408,7 +2419,9 @@ class Cron extends MX_Controller {
                 $cc = array('ghernandez@pct.com', $sales_email);  
                 //$cc = array();             
                 $this->load->helper('sendemail');
-                send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
+                $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $order_id, $logid);
             }
         }
     }
