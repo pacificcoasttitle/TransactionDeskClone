@@ -2423,17 +2423,12 @@ class Cron extends MX_Controller {
                     'from_name'=>$from_name, 
                     'to'=> $to,
                     'subject'=>$subject,
-<<<<<<< HEAD
                     'message'=>json_encode($data),
                     'cc' => $sales_email
                 );
                 //$to = 'hitesh.p@crestinfosystems.com';
                 //$cc = array();   
   
-=======
-                    'message'=>json_encode($data)
-                );
->>>>>>> fc945449... thank you email changes
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $order_id, $logid);
