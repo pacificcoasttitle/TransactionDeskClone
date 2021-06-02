@@ -2415,7 +2415,13 @@ class Cron extends MX_Controller {
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Thank You!';
                 $to = $escrow_email_address;
+<<<<<<< HEAD
                 $cc = array('ghernandez@pct.com', $sales_email);          
+=======
+                $to = 'hitesh.p@crestinfosystems.com';
+                $cc = array('ghernandez@pct.com', $sales_email);  
+                $cc = array();             
+>>>>>>> a79dac1c... borrower verification changes
                 $this->load->helper('sendemail');
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
@@ -2801,8 +2807,8 @@ class Cron extends MX_Controller {
                 $subject = $res['file_number']. ' - Borrower Verification';
                 $to = $res['email'];
                 $cc = array('ghernandez@pct.com');
-                $cc = array();
-                $to = 'hitesh.p@crestinfosystems.com';
+                //$cc = array();
+                //$to = 'hitesh.p@crestinfosystems.com';
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
                     'from_name'=>$from_name, 
