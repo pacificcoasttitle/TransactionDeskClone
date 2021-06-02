@@ -2403,6 +2403,7 @@ class Cron extends MX_Controller {
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
                     $i++;
                 }
                 $sales_email = $res['sales_email'];
