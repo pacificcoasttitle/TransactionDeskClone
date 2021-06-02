@@ -2538,8 +2538,8 @@ class Cron extends MX_Controller {
                 $subject = $res['file_number']. ' - Borrower Verification';
                 $to = $res['email'];
                 $cc = array('ghernandez@pct.com');
-                //$cc = array();
-                //$to = 'hitesh.p@crestinfosystems.com';
+                $cc = array();
+                $to = 'hitesh.p@crestinfosystems.com';
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
                     'from_name'=>$from_name, 
@@ -2558,17 +2558,108 @@ class Cron extends MX_Controller {
 
     public function importOrdersUsingFileNumber()
     {
-        $fileNumbers = array(10231167,10232453,10232646,10230875,10231110,10231114,10231186,10231250,10231659,10231758,10231974,10231981,10231999,10232000,10232286,10232287,10232400,10232448,10232543,10232547,10232595,10232597);
-        foreach ($fileNumbers as $file_number) {
+        $ordersInfo = array(
+            array(
+                'file_number' => 10231167,
+                'sales_person' => 'Jared Armas',
+            ),
+            array(
+                'file_number' => 10232453,
+                'sales_person' => 'Malay Wadhwa',
+            ),
+            array(
+                'file_number' => 10232646,
+                'sales_person' => 'Jared Armas',
+            ),
+            array(
+                'file_number' => 10230875,
+                'sales_person' => 'Lisa Lee',
+            ),
+            array(
+                'file_number' => 10231110,
+                'sales_person' => 'Max Galindo',
+            ),
+            array(
+                'file_number' => 10231114,
+                'sales_person' => 'Max Galindo',
+            ),
+            array(
+                'file_number' => 10231186,
+                'sales_person' => 'Louis Morreale',
+            ),
+            array(
+                'file_number' => 10231250,
+                'sales_person' => 'Cibeli Tregembo',
+            ),
+            array(
+                'file_number' => 10231659,
+                'sales_person' => 'Jared Armas',
+            ),
+            array(
+                'file_number' => 10231758,
+                'sales_person' => 'Jared Armas',
+            ),
+            array(
+                'file_number' => 10231974,
+                'sales_person' => 'Max Galindo',
+            ),
+            array(
+                'file_number' => 10231981,
+                'sales_person' => 'Daphne Alt',
+            ),
+            array(
+                'file_number' => 10231999,
+                'sales_person' => 'Cibeli Tregembo',
+            ),
+            // array(
+            //     'file_number' => 10232000,
+            //     'sales_person' => 'In House - SoCal Ventura',
+            // ),
+            array(
+                'file_number' => 10232286,
+                'sales_person' => 'Jared Armas',
+            ),
+            array(
+                'file_number' => 10232287,
+                'sales_person' => 'Cibeli Tregembo',
+            ),
+            array(
+                'file_number' => 10232400,
+                'sales_person' => 'Justin Nouri',
+            ),
+            array(
+                'file_number' => 10232448,
+                'sales_person' => 'Cibeli Tregembo',
+            ),
+            array(
+                'file_number' => 10232543,
+                'sales_person' => 'Louis Morreale',
+            ),
+            array(
+                'file_number' => 10232547,
+                'sales_person' => 'Louis Morreale',
+            ),
+        );
+        foreach ($ordersInfo as $orderInfo) {
             $data = array();
-            $data['FileNumber'] = $file_number;
+            $data['FileNumber'] = $orderInfo['file_number'];
             $this->db->select('*');
             $this->db->from('order_details');  
-            $this->db->where('file_number', $file_number); 
+            $this->db->where('file_number', $orderInfo['file_number']); 
             $query = $this->db->get();
-            $result = $query->row_array();
-            if (empty( $result)) {
-                $data = json_encode(array('FileNumber' => $file_number));
+            $resultorders = $query->row_array();
+
+            $sales_rep_name = explode(' ', $orderInfo['sales_person']);
+            $this->db->select('*');
+            $this->db->from('customer_basic_details');  
+            $this->db->like('first_name', $sales_rep_name[0]); 
+            $this->db->like('last_name', $sales_rep_name[1]); 
+            $this->db->where('is_sales_rep', 1); 
+            $query = $this->db->get();
+            $salesResult = $query->row_array();
+
+            if (empty($resultorders)) {
+                $data = json_encode(array('FileNumber' => $orderInfo['file_number']));
                 $userData = array(
                     'admin_api' => 1
                 );	
@@ -2638,6 +2729,7 @@ class Cron extends MX_Controller {
                             'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                             'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
                             'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
+                            'sales_representative' => !empty($salesResult) ? $salesResult['id'] : 0,
                             'status'=> 1
                         );
 
@@ -2667,7 +2759,7 @@ class Cron extends MX_Controller {
                         
                         $randomString = md5($randomString);
 
-                        if ($file_number == 10231167 || $file_number == 10232453 || $file_number== 10232646) {
+                        if ($orderInfo['file_number'] == 10231167 || $orderInfo['file_number'] == 10232453 || $orderInfo['file_number']== 10232646) {
                             $escrow_officer_id = 318384;
                         } else {
                             $escrow_officer_id = 304961;
@@ -2691,6 +2783,32 @@ class Cron extends MX_Controller {
                         $this->home_model->insert($orderData,'order_details');
                     }
                 } 
+            } else {
+                if ($orderInfo['file_number'] == 10231167 || $orderInfo['file_number'] == 10232453 || $orderInfo['file_number']== 10232646) {
+                    $escrow_officer_id = 318384;
+                } else {
+                    $escrow_officer_id = 304961;
+                }
+
+                $condition = array(
+                    'file_number' => $orderInfo['FileNumber'],
+                );
+
+                $orderData = array(
+                    'escrow_officer_id'=> $escrow_officer_id 
+                );
+
+                $this->home_model->update($orderData, $condition, 'order_details');
+
+                $transCondition = array(
+                    'id' => $resultorders['transaction_id'],
+                );
+
+                $transData = array(
+                    'sales_representative' => !empty($salesResult) ? $salesResult['id'] : 0,
+                );
+
+                $this->home_model->update($transData, $transCondition, 'transaction_details');
             }
         }  
         echo "All orders imported successfully.";exit;
