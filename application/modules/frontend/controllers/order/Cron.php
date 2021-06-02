@@ -2401,9 +2401,7 @@ class Cron extends MX_Controller {
                     $data['order_info'][$i]['order_number'] = $res['file_number'];
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
-                    if(!empty($res['sales_rep_profile_thank_you_img'])) {
-                        $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
-                    }
+                    $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
                     $i++;
                 }
                 $sales_email = $res['sales_email'];
