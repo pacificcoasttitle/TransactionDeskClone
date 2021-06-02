@@ -2801,8 +2801,8 @@ class Cron extends MX_Controller {
                 $subject = $res['file_number']. ' - Borrower Verification';
                 $to = $res['email'];
                 $cc = array('ghernandez@pct.com');
-                //$cc = array();
-                //$to = 'hitesh.p@crestinfosystems.com';
+                $cc = array();
+                $to = 'hitesh.p@crestinfosystems.com';
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
                     'from_name'=>$from_name, 
