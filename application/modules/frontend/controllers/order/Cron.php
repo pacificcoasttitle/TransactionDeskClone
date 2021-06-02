@@ -2415,17 +2415,8 @@ class Cron extends MX_Controller {
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Thank You!';
                 $to = $escrow_email_address;
-<<<<<<< HEAD
-<<<<<<< HEAD
+
                 $cc = array('ghernandez@pct.com', $sales_email);          
-=======
-                $to = 'hitesh.p@crestinfosystems.com';
-                $cc = array('ghernandez@pct.com', $sales_email);  
-                $cc = array();             
->>>>>>> a79dac1c... borrower verification changes
-=======
-                $cc = array('ghernandez@pct.com', $sales_email);          
->>>>>>> 2645f204... thank you changes
                 $this->load->helper('sendemail');
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
@@ -2435,13 +2426,9 @@ class Cron extends MX_Controller {
                     'message'=>json_encode($data),
                     'cc' => $sales_email
                 );
-<<<<<<< HEAD
                 //$to = 'hitesh.p@crestinfosystems.com';
                 //$cc = array();     
-=======
-                $to = 'hitesh.p@crestinfosystems.com';
-                $cc = array();     
->>>>>>> 2645f204... thank you changes
+
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $order_id, $logid);
