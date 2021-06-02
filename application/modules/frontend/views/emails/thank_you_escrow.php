@@ -1185,7 +1185,7 @@
 
                                                                         <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
 
-                                                                            <em>PACIFIC COAST TITLE COMPANY</em>
+                                                                            PACIFIC COAST TITLE COMPANY
                                                                             <br>
                                                                              © <?php echo date('Y'); ?> All rights reserved.
                                                                             <br>
