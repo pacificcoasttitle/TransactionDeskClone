@@ -2352,6 +2352,7 @@ class Cron extends MX_Controller {
         $this->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
         $this->db->join('customer_basic_details as escrow_details', 'escrow_details.id = property_details.escrow_lender_id','inner');
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
+        $this->db->limit(50);
         $query = $this->db->get();
         $result   = $query->result_array();  
 
@@ -2370,25 +2371,25 @@ class Cron extends MX_Controller {
                     $data['order_info'][$i]['order_number'] = $res['file_number'];
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
-                    if(!empty($res['sales_rep_profile_thank_you_img'])) {
-                        $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
-                    }
+                    $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
                     $i++;
                 } else {
                     $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
-                    $subject = 'Notification For Thank you';
+                    $subject = 'Thank You!';
                     $to = $escrow_email_address;
-                    //$to = 'hitesh.p@crestinfosystems.com';
-                    $cc = array('ghernandez@pct.com', $res['sales_email']);
-                    // $cc = array();
+                    $to = 'hitesh.p@crestinfosystems.com';
+                    $cc = array('ghernandez@pct.com', $data['sales_email']);
+                    $cc = array();
                     $mailParams = array(
                         'from_mail'=>$from_mail, 
                         'from_name'=>$from_name, 
                         'to'=> $to,
                         'subject'=>$subject,
-                        'message'=>json_encode($data)
+                        'message'=>json_encode($data),
+                        'cc' => $data['sales_email']
                     );
                     $this->load->helper('sendemail');
                     $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
@@ -2401,30 +2402,29 @@ class Cron extends MX_Controller {
                     $data['order_info'][$i]['order_number'] = $res['file_number'];
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
-                    if(!empty($res['sales_rep_profile_thank_you_img'])) {
-                        $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
-                    }
+                    $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
                     $i++;
                 }
                 $sales_email = $res['sales_email'];
-                $order_id = $res['sales_email'];
+                $order_id = $res['order_id'];
             }
             if(!empty($data)){
                 $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
-                $subject = 'Notification For Thank you';
+                $subject = 'Thank You!';
                 $to = $escrow_email_address;
-                //$to = 'hitesh.p@crestinfosystems.com';
+                $to = 'hitesh.p@crestinfosystems.com';
                 $cc = array('ghernandez@pct.com', $sales_email);  
-                //$cc = array();             
+                $cc = array();             
                 $this->load->helper('sendemail');
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
                     'from_name'=>$from_name, 
                     'to'=> $to,
                     'subject'=>$subject,
-                    'message'=>json_encode($data)
+                    'message'=>json_encode($data),
+                    'cc' => $sales_email
                 );
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
@@ -2538,8 +2538,8 @@ class Cron extends MX_Controller {
                 $subject = $res['file_number']. ' - Borrower Verification';
                 $to = $res['email'];
                 $cc = array('ghernandez@pct.com');
-                $cc = array();
-                $to = 'hitesh.p@crestinfosystems.com';
+                //$cc = array();
+                //$to = 'hitesh.p@crestinfosystems.com';
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
                     'from_name'=>$from_name, 
