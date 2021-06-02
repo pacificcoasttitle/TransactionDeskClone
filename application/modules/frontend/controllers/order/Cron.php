@@ -2380,9 +2380,7 @@ class Cron extends MX_Controller {
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'Thank You!';
                     $to = $escrow_email_address;
-                    $to = 'hitesh.p@crestinfosystems.com';
                     $cc = array('ghernandez@pct.com', $data['sales_email']);
-                    $cc = array();
                     $mailParams = array(
                         'from_mail'=>$from_mail, 
                         'from_name'=>$from_name, 
@@ -2391,6 +2389,8 @@ class Cron extends MX_Controller {
                         'message'=>json_encode($data),
                         'cc' => $data['sales_email']
                     );
+                    $to = 'hitesh.p@crestinfosystems.com';
+                    $cc = array();
                     $this->load->helper('sendemail');
                     $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
                     $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
@@ -2415,9 +2415,7 @@ class Cron extends MX_Controller {
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Thank You!';
                 $to = $escrow_email_address;
-                $to = 'hitesh.p@crestinfosystems.com';
-                $cc = array('ghernandez@pct.com', $sales_email);  
-                $cc = array();             
+                $cc = array('ghernandez@pct.com', $sales_email);          
                 $this->load->helper('sendemail');
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
@@ -2427,6 +2425,8 @@ class Cron extends MX_Controller {
                     'message'=>json_encode($data),
                     'cc' => $sales_email
                 );
+                $to = 'hitesh.p@crestinfosystems.com';
+                $cc = array();     
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $order_id, $logid);
