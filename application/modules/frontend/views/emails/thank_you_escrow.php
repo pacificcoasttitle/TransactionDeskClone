@@ -793,25 +793,25 @@
                 <td align="center" valign="top" id="bodyCell">
                     <!-- BEGIN TEMPLATE // -->
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                        <tr>
+                        <!--<tr>
                             <td align="center" valign="top" id="templateHeader" data-template-container>
-                                <!--[if (gte mso 9)|(IE)]>
+                                [if (gte mso 9)|(IE)]>
                                     <table align="center" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;">
                                     <tr>
                                     <td align="center" valign="top" width="600" style="width:600px;">
-                                    <![endif]-->
+                                    <![endif]
                                 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
                                     <tr>
                                         <td valign="top" class="headerContainer"></td>
                                     </tr>
                                 </table>
-                                <!--[if (gte mso 9)|(IE)]>
+                                [if (gte mso 9)|(IE)]>
                                     </td>
                                     </tr>
                                     </table>
-                                    <![endif]-->
+                                    <![endif]
                             </td>
-                        </tr>
+                        </tr>-->
                         <tr>
                             <td align="center" valign="top" id="templateBody" data-template-container>
                                 <!--[if (gte mso 9)|(IE)]>
@@ -831,7 +831,7 @@
                                                                     <tr>
                                                                         <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
 
-                                                                            <?php if($sales_rep_profile_thank_you_img) { ?>
+                                                                            <?php if(!empty($sales_rep_profile_thank_you_img)) { ?>
                                                                                 <img align="center" alt="" src="<?php echo base_url().$sales_rep_profile_thank_you_img;?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
                                                                             <?php } else { ?>
                                                                                 <img align="center" alt="" src="<?php echo base_url().'uploads/sales-rep/default.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
@@ -871,9 +871,10 @@
                                                                             <p>We have prepared a list of all of the orders that you currently with us for the month of March. You can find their current status. If you have any questions feel free to contact us.&nbsp;<br>
                                                                                 &nbsp;</p>
 
-                                                                            <table style="height: 253px; width: 505px;">
+                                                                            <table>
                                                                             <thead>
 		<tr>
+            <th>Order Number</th>
 			<th>Property Addres</th>
 			<th>Status</th>
 		</tr>
@@ -882,6 +883,7 @@
                                                                                     <?php if(!empty($order_info)) { 
                                                                                         foreach($order_info as $order) {?>
                                                                                             <tr>
+                                                                                            <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $order['order_number'];?></strong></td>
                                                                                                 <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411"><?php echo $order['address'];?></span></td>
                                                                                                 <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $order['resware_status'];?></strong></td>
                                                                                             </tr>
@@ -1183,24 +1185,15 @@
 
                                                                         <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
 
-                                                                            <em>Copyright © *|CURRENT_YEAR|* *|LIST:COMPANY|*, All rights reserved.</em>
+                                                                            PACIFIC COAST TITLE COMPANY
                                                                             <br>
-                                                                            *|IFNOT:ARCHIVE_PAGE|*
-                                                                            *|LIST:DESCRIPTION|*
+                                                                             © <?php echo date('Y'); ?> All rights reserved.
                                                                             <br>
                                                                             <br>
                                                                             <strong>Our mailing address is:</strong>
                                                                             <br>
-                                                                            *|HTML:LIST_ADDRESS_HTML|* *|END:IF|*
-                                                                            <br>
-                                                                            <br>
-                                                                            Want to change how you receive these emails?<br>
-                                                                            You can <a href="*|UPDATE_PROFILE|*">update your preferences</a> or <a href="*|UNSUB|*">unsubscribe from this list</a>.
-                                                                            <br>
-                                                                            <br>
-                                                                            *|IF:REWARDS|* *|HTML:REWARDS|*
-                                                                            *|END:IF|*
-
+                                                                            1111 E. Katella Ave. Ste. 120 Orange, CA 92867
+                                                                            
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>

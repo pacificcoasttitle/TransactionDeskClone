@@ -2332,16 +2332,18 @@ class Cron extends MX_Controller {
     {
         $this->db->select('order_details.file_id, 
             order_details.file_number, 
+            order_details.id as order_id,
             order_details.resware_status, 
             property_details.full_address,
             customer_basic_details.first_name,
             customer_basic_details.last_name,
+            customer_basic_details.email_address as sales_email,
             customer_basic_details.sales_rep_profile_thank_you_img,
             property_details.escrow_lender_id,
             escrow_details.email_address, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('MONTH(order_details.resware_closed_status_date)', '04'); 
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', date('m')); 
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
@@ -2351,7 +2353,6 @@ class Cron extends MX_Controller {
         $this->db->join('customer_basic_details as escrow_details', 'escrow_details.id = property_details.escrow_lender_id','inner');
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
         $query = $this->db->get();
-
         $result   = $query->result_array();  
 
         if(!empty($result)) {
@@ -2366,43 +2367,70 @@ class Cron extends MX_Controller {
                     $checkFlag = 1;
                 }
                 if ($res['sales_representative'] == $sales_rep_user_id && $res['escrow_lender_id'] == $escrow_user_id) {
+                    $data['order_info'][$i]['order_number'] = $res['file_number'];
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
-                    if(!empty($res['sales_rep_profile_thank_you_img'])) {
-                        $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
-                    }
+                    $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
                     $i++;
                 } else {
                     $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
-                    $subject = 'Notification For Thank you';
+                    $subject = 'Thank You!';
                     $to = $escrow_email_address;
-                    $cc = array('ghernandez@pct.com');
+                    $cc = array('ghernandez@pct.com', $data['sales_email']);
+                    $mailParams = array(
+                        'from_mail'=>$from_mail, 
+                        'from_name'=>$from_name, 
+                        'to'=> $to,
+                        'subject'=>$subject,
+                        'message'=>json_encode($data),
+                        'cc' => $data['sales_email']
+                    );
+                    //$to = 'hitesh.p@crestinfosystems.com';
+                    //$cc = array();
                     $this->load->helper('sendemail');
-                    send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                    $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
+                    $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                    $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $res['orderId'], $logid);
                     $data = array();
                     $sales_rep_user_id = $res['sales_representative'];
                     $escrow_user_id = $res['escrow_lender_id'];
                     $escrow_email_address = $res['email_address'];
+                    $data['order_info'][$i]['order_number'] = $res['file_number'];
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
-                    if(!empty($res['sales_rep_profile_thank_you_img'])) {
-                        $data['sales_rep_profile_thank_you_img'] = $res['sales_rep_profile_thank_you_img']; 
-                    }
+                    $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
                     $i++;
                 }
+                $sales_email = $res['sales_email'];
+                $order_id = $res['order_id'];
             }
             if(!empty($data)){
                 $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
-                $subject = 'Notification For Thank you';
+                $subject = 'Thank You!';
                 $to = $escrow_email_address;
-                $cc = array('ghernandez@pct.com');               
+                $cc = array('ghernandez@pct.com', $sales_email);          
                 $this->load->helper('sendemail');
-                send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                $mailParams = array(
+                    'from_mail'=>$from_mail, 
+                    'from_name'=>$from_name, 
+                    'to'=> $to,
+                    'subject'=>$subject,
+                    'message'=>json_encode($data),
+                    'cc' => $sales_email
+                );
+                //$to = 'hitesh.p@crestinfosystems.com';
+                //$cc = array();     
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
+                $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $order_id, $logid);
             }
+            echo "Mails sent successfully to Escow user ";exit;
         }
     }
 
@@ -2701,23 +2729,23 @@ class Cron extends MX_Controller {
             order_details.id as orderId, 
             order_details.random_number, 
             property_details.address,
-            customer_basic_details.first_name,
-            customer_basic_details.last_name,
-            customer_basic_details.email_address,
+            pct_order_partner_company_info.email,
             transaction_details.sales_representative');
         $this->db->from('order_details');
         $this->db->where('((order_details.resware_status != "closed" AND order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)'); 
         $this->db->where('transaction_details.purchase_type = 4'); 
         $this->db->where('order_details.escrow_officer_id IS NOT NULL');
         $this->db->where('order_details.borrower_information_document_name IS NULL');
+        $this->db->where('order_details.file_number IN (10231167,10232453,10232646,10230875,10231110,10231114,10231186,10231250,10231659,10231758,10231974,10231981,10231999,10232000,10232286,10232287,10232400,10232448,10232543,10232547,10232595,10232597)');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
-        $this->db->join('customer_basic_details', 'customer_basic_details.id = order_details.escrow_officer_id','inner');
+        $this->db->join('pct_order_partner_company_info', 'pct_order_partner_company_info.partner_id = order_details.escrow_officer_id','inner');
         $query = $this->db->get();
         $result   = $query->result_array(); 
         
         if (!empty($result)) {							
             foreach ($result as $res) {
+                $salesRepDetails = array();
                 if (!empty($res['sales_representative'])) {
                     $condition = array(
                         'id' => $res['sales_representative']	                
@@ -2741,8 +2769,10 @@ class Cron extends MX_Controller {
 
                 $message_body = $borrower_message_body; 
                 $subject = $res['file_number']. ' - Borrower Verification';
-                $to = $res['email_address'];
-                $to = 'hitesh.p@crestinfosystems.com';
+                $to = $res['email'];
+                $cc = array('ghernandez@pct.com');
+                //$cc = array();
+                //$to = 'hitesh.p@crestinfosystems.com';
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
                     'from_name'=>$from_name, 
@@ -2752,9 +2782,268 @@ class Cron extends MX_Controller {
                 );
     
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $res['orderId'], 0);
-                $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+                $this->load->helper('sendemail');
+                $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $res['orderId'], $logid);
             } 
         }
+    }
+
+    public function importOrdersUsingFileNumber()
+    {
+        $ordersInfo = array(
+            array(
+                'file_number' => 10231167,
+                'sales_person' => 'Jared Armas',
+            ),
+            array(
+                'file_number' => 10232453,
+                'sales_person' => 'Malay Wadhwa',
+            ),
+            array(
+                'file_number' => 10232646,
+                'sales_person' => 'Jared Armas',
+            ),
+            array(
+                'file_number' => 10230875,
+                'sales_person' => 'Lisa Lee',
+            ),
+            array(
+                'file_number' => 10231110,
+                'sales_person' => 'Max Galindo',
+            ),
+            array(
+                'file_number' => 10231114,
+                'sales_person' => 'Max Galindo',
+            ),
+            array(
+                'file_number' => 10231186,
+                'sales_person' => 'Louis Morreale',
+            ),
+            array(
+                'file_number' => 10231250,
+                'sales_person' => 'Cibeli Tregembo',
+            ),
+            array(
+                'file_number' => 10231659,
+                'sales_person' => 'Jared Armas',
+            ),
+            array(
+                'file_number' => 10231758,
+                'sales_person' => 'Jared Armas',
+            ),
+            array(
+                'file_number' => 10231974,
+                'sales_person' => 'Max Galindo',
+            ),
+            array(
+                'file_number' => 10231981,
+                'sales_person' => 'Daphne Alt',
+            ),
+            array(
+                'file_number' => 10231999,
+                'sales_person' => 'Cibeli Tregembo',
+            ),
+            // array(
+            //     'file_number' => 10232000,
+            //     'sales_person' => 'In House - SoCal Ventura',
+            // ),
+            array(
+                'file_number' => 10232286,
+                'sales_person' => 'Jared Armas',
+            ),
+            array(
+                'file_number' => 10232287,
+                'sales_person' => 'Cibeli Tregembo',
+            ),
+            array(
+                'file_number' => 10232400,
+                'sales_person' => 'Justin Nouri',
+            ),
+            array(
+                'file_number' => 10232448,
+                'sales_person' => 'Cibeli Tregembo',
+            ),
+            array(
+                'file_number' => 10232543,
+                'sales_person' => 'Louis Morreale',
+            ),
+            array(
+                'file_number' => 10232547,
+                'sales_person' => 'Louis Morreale',
+            ),
+        );
+        foreach ($ordersInfo as $orderInfo) {
+            $data = array();
+            $data['FileNumber'] = $orderInfo['file_number'];
+            $this->db->select('*');
+            $this->db->from('order_details');  
+            $this->db->where('file_number', $orderInfo['file_number']); 
+            $query = $this->db->get();
+            $resultorders = $query->row_array();
+
+            $sales_rep_name = explode(' ', $orderInfo['sales_person']);
+            $this->db->select('*');
+            $this->db->from('customer_basic_details');  
+            $this->db->like('first_name', $sales_rep_name[0]); 
+            $this->db->like('last_name', $sales_rep_name[1]); 
+            $this->db->where('is_sales_rep', 1); 
+            $query = $this->db->get();
+            $salesResult = $query->row_array();
+
+            if (empty($resultorders)) {
+                $data = json_encode(array('FileNumber' => $orderInfo['file_number']));
+                $userData = array(
+                    'admin_api' => 1
+                );	
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, array(), 0, 0);
+                $res = $this->make_request('POST', 'files/search', $data, $userData);
+                $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, $res, 0, $logid);
+                $result = json_decode($res,TRUE);
+
+                if (isset($result['Files']) && !empty($result['Files'])) {
+                    foreach ($result['Files'] as $res) {
+                        $partner_fname = $res['Partners'][0]['PrimaryEmployee']['FirstName'];
+                        $partner_lname = $res['Partners'][0]['PrimaryEmployee']['LastName'];
+                        $partner_name = $res['Partners'][0]['PartnerName'];
+                        $condition = array(
+                            'first_name' => $partner_fname,
+                            'last_name' => $partner_lname,
+                            'company_name' => $partner_name,
+                            'is_pass' => $partner_name,
+                        );
+                        $user_details =  $this->home_model->get_user_by_name($condition);
+                        $customerId = 0;
+
+                        if(isset($user_details) && !empty($user_details)) {
+                            $customerId = $user_details['id'];
+                        }
+                        
+                        $FullProperty = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
+                        $address = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'];
+                        $locale = $res['Properties'][0]['City'];
+                        
+                        if (($locale)) {
+                            if (!empty($res['Properties'][0]['State'])) {
+                                $locale .= ', '.$res['Properties'][0]['State'];
+                            } else {
+                                $locale .= ', CA';
+                            }
+                        }
+
+                        $property_details = $this->getSearchResult($address, $locale);
+                        
+                        $property_type = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                        $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                        $apn = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
+                        
+                        $propertyData = array(
+                            'customer_id' => $customerId,
+                            'buyer_agent_id' => 0,
+                            'listing_agent_id' => 0,
+                            'escrow_lender_id' => 0,
+                            'parcel_id' => $res['Properties'][0]['ParcelID'],
+                            'address' => $address,
+                            'city' => $res['Properties'][0]['City'],
+                            'state' => $res['Properties'][0]['State'],
+                            'zip' => $res['Properties'][0]['Zip'],
+                            'property_type' => $property_type,
+                            'full_address' => $FullProperty,
+                            'apn' => $apn,
+                            'county' => $res['Properties'][0]['County'],
+                            'legal_description' => $LegalDescription,
+                            'status'=> 1
+                        );
+
+                        $transactionData = array(
+                            'customer_id' => $customerId,
+                            'sales_amount' =>  !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                            'loan_number' => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                            'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                            'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
+                            'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
+                            'sales_representative' => !empty($salesResult) ? $salesResult['id'] : 0,
+                            'status'=> 1
+                        );
+
+                        $primary_owner = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
+                        $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
+                        $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
+                        $secondary_owner = ($res['Buyers'][0]['Secondary']['First'] && $res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
+                        $secondary_owner .= ($res['Buyers'][0]['Secondary']['Middle'] && $res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
+                        $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " ".$res['Buyers'][0]['Secondary']['Last'] : '';
+                        $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
+
+                        if (strpos($ProductTypeTxt, 'Loan') !== false) {
+                            $propertyData['primary_owner'] = $primary_owner;
+                            $propertyData['secondary_owner'] = $secondary_owner; 
+                        } elseif(strpos($ProductTypeTxt, 'Sale') !== false) {
+                            $transactionData['borrower'] = $primary_owner;
+                            $transactionData['secondary_borrower'] = $secondary_owner;
+                            $propertyData['primary_owner'] = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                            $propertyData['secondary_owner'] = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                        }
+                        
+                        $propertyId = $this->home_model->insert($propertyData,'property_details');
+                        $transactionId = $this->home_model->insert($transactionData,'transaction_details');
+                        $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['OpenedDate'])))/1000);
+                        $created_date = date('Y-m-d H:i:s', $time);
+                        $randomString = $this->order->randomPassword();
+                        
+                        $randomString = md5($randomString);
+
+                        if ($orderInfo['file_number'] == 10231167 || $orderInfo['file_number'] == 10232453 || $orderInfo['file_number']== 10232646) {
+                            $escrow_officer_id = 318384;
+                        } else {
+                            $escrow_officer_id = 304961;
+                        }
+
+                        $orderData = array(
+                            'customer_id' => $customerId,
+                            'file_id' => $res['FileID'],
+                            'file_number' => $res['FileNumber'],
+                            'property_id' => $propertyId,
+                            'transaction_id' => $transactionId,
+                            'created_at' => $created_date,
+                            'status'=> 1,
+                            'is_imported'=> 1,
+                            'is_sales_rep_order'=> 0,
+                            'escrow_officer_id'=> $escrow_officer_id,
+                            'random_number' => $randomString,
+                            'resware_status'=> strtolower($res['Status']['Name']),
+                        );
+
+                        $this->home_model->insert($orderData,'order_details');
+                    }
+                } 
+            } else {
+                if ($orderInfo['file_number'] == 10231167 || $orderInfo['file_number'] == 10232453 || $orderInfo['file_number']== 10232646) {
+                    $escrow_officer_id = 318384;
+                } else {
+                    $escrow_officer_id = 304961;
+                }
+
+                $condition = array(
+                    'file_number' => $orderInfo['FileNumber'],
+                );
+
+                $orderData = array(
+                    'escrow_officer_id'=> $escrow_officer_id 
+                );
+
+                $this->home_model->update($orderData, $condition, 'order_details');
+
+                $transCondition = array(
+                    'id' => $resultorders['transaction_id'],
+                );
+
+                $transData = array(
+                    'sales_representative' => !empty($salesResult) ? $salesResult['id'] : 0,
+                );
+
+                $this->home_model->update($transData, $transCondition, 'transaction_details');
+            }
+        }  
+        echo "All orders imported successfully.";exit;
     }
 }
