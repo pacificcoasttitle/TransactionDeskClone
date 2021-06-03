@@ -17,13 +17,22 @@
     		float: right;
     	}
 
-    	select#orders_filter {
+    	select#month_filter {
     		margin-bottom: 0px;
 		    margin-left: 0.5em;
 		    border: 1px solid #cbd2d6;
 		    border-radius: 3px;
 		    padding: 9px 22px 12px;
     	}
+
+		select#orders_filter {
+    		margin-bottom: 0px;
+		    margin-left: 0.5em;
+		    border: 1px solid #cbd2d6;
+		    border-radius: 3px;
+		    padding: 9px 22px 12px;
+    	}
+
     	.button-color {
 		    color: #888888;
 		}
@@ -42,10 +51,12 @@
 		}
 
 		.square-box{
-			background-color: #ede6e6;
+			background-color: #f0f0f0;
 			width: 23% !important;
 			margin-right: 2%;
 			margin-bottom: 50px;
+			padding-bottom: 35px;
+	    	padding-top: 15px;
 		}
 
 		.order-count-cotainer {
@@ -54,24 +65,32 @@
 
 		.title {
 			text-align: center;
-			color: #d35411;
+			color: #a0a0a0;
 			width: 23% !important;
 			margin-right: 2%;
-    		text-transform: uppercase;
-			font-size: medium;
+			text-transform: uppercase;
+			font-size: 14px;
+			letter-spacing: 1px;
 		}
 
 		.sales_loan_count {
-			font-size: xx-large;
-    		color: #d35411;
-    		text-align: center;
-			font-weight: bold;
+			font-size: 40px;
+			color: #0A3B5B;
+			text-align: center;
+			font-weight: 800;
+			letter-spacing: -1.00px;
 		}
 
 		.sales_loan_section {
 			text-align: center;
-    		text-transform: uppercase;
-    		font-size: large;
+			text-transform: uppercase;
+			font-size: large;
+			line-height: 21px;
+			color: #a0a0a0;
+		}
+
+		#orders_listing_filter {
+			margin-bottom: 20px;
 		}
 
     </style>
@@ -92,27 +111,27 @@
 							<div class="col-md-3 title">Closings Ratio Avg</div>
 
 							<div class="col-md-3 square-box">
-								<div class="sales_loan_count"><?Php echo $sale_open_count + $refi_open_count; ?></div>
-								<div class="sales_loan_section">Sales = <?Php echo $sale_open_count;?></div>
-								<div class="sales_loan_section">Refi's = <?Php echo $refi_open_count;?></div>
+								<div class="sales_loan_count" id="open_order_count"><?Php echo $sale_open_count + $refi_open_count; ?></div>
+								<div class="sales_loan_section">Sales = <span id="sale_open_count"><?Php echo $sale_open_count;?></span></div>
+								<div class="sales_loan_section">Refi's = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
-								<div class="sales_loan_count"><?Php echo $sale_close_count + $refi_close_count; ?></div>
-								<div class="sales_loan_section">Sales = <?Php echo $sale_close_count;?></div>
-								<div class="sales_loan_section">Refi's = <?Php echo $refi_close_count;?></div>
+								<div class="sales_loan_count" id="close_order_count"><?Php echo $sale_close_count + $refi_close_count; ?></div>
+								<div class="sales_loan_section">Sales = <span id="sale_close_count"><?Php echo $sale_close_count;?></span></div>
+								<div class="sales_loan_section">Refi's = <span id="refi_close_count"><?Php echo $refi_close_count;?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
-								<div class="sales_loan_count">$<?php echo number_format($total_premium); ?></div>
-								<div class="sales_loan_section">Sales = $<?php echo number_format($sale_total_premium); ?></div>
-								<div class="sales_loan_section">Refi's = $<?php echo number_format($refi_total_premium); ?></div>
+								<div class="sales_loan_count">$<span id="total_premium"><?php echo number_format($total_premium); ?></span></div>
+								<div class="sales_loan_section">Sales = $<span id="sale_total_premium"><?php echo number_format($sale_total_premium); ?></span></div>
+								<div class="sales_loan_section">Refi's = $<span id="refi_total_premium"><?php echo number_format($refi_total_premium); ?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
-								<div class="sales_loan_count"><?Php echo $close_order_percetage;?>%</div>
-								<div class="sales_loan_section">Sales = <?Php echo $sale_close_order_percetage;?>%</div>
-								<div class="sales_loan_section">Refi's = <?Php echo $refi_close_order_percetage;?>%</div>
+								<div class="sales_loan_count" id="close_order_percetage"><?Php echo $close_order_percetage;?>%</div>
+								<div class="sales_loan_section">Sales = <span id="sale_close_order_percetage"><?Php echo $sale_close_order_percetage;?></span>%</div>
+								<div class="sales_loan_section">Refi's = <span id="refi_close_order_percetage"><?Php echo $refi_close_order_percetage;?></span>%</div>
 							</div>
 						</div>	
 						
@@ -226,8 +245,37 @@
 					url: base_url + "get-sales-orders", // json datasource
 					type: "post", // method  , by default get
 					data   : function( d ) {
-	                  d.status= $('#orders_filter').val();
+	                  d.status = $('#orders_filter').val();
+					  d.month = $('#month_filter').val();
 	                },
+					dataFilter: function(data){
+
+						var json = jQuery.parseJSON( data );
+						var countingData = json.count_data;
+						if (countingData) {
+							console.log(countingData.refi_open_count);
+							$('#refi_open_count').html(countingData.refi_open_count);
+							$('#sale_open_count').html(countingData.sale_open_count);
+							$('#open_order_count').html(countingData.open_order_count);
+
+							$('#refi_close_count').html(countingData.refi_close_count);
+							$('#sale_close_count').html(countingData.sale_close_count);
+							$('#close_order_count').html(countingData.close_order_count);
+
+							$('#refi_total_premium').html(countingData.refi_total_premium);
+							$('#sale_total_premium').html(countingData.sale_total_premium);
+							$('#total_premium').html(countingData.total_premium);
+
+							$('#refi_close_order_percetage').html(countingData.refi_close_order_percetage);
+							$('#sale_close_order_percetage').html(countingData.sale_close_order_percetage);
+							$('#close_order_percetage').html(countingData.close_order_percetage);
+							
+						} 
+						json.recordsTotal = json.recordsTotal;
+						json.recordsFiltered = json.recordsFiltered;
+						json.data = json.data;
+						return JSON.stringify( json );
+					},
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
 						if (parseInt(XMLHttpRequest.status) == 419) {
 							alert("You are logged out. Please login.");
@@ -245,10 +293,22 @@
 				}
 			});
 
-			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option></select></label><a href="javascript:void(0);" style="margin-bottom: 5px;"><button class="btn btn-grad-2a" id="btn-refresh" style="background: #d35411;height: 42px;line-height: 28px;" type="button" onClick="importSalesRepOrders();">Refresh</button></a>');
+			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="month_filter" id="month_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="01"> January </option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></label><label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option></select></label><a href="javascript:void(0);" style="margin-bottom: 5px;"><button class="btn btn-grad-2a" id="btn-refresh" style="background: #d35411;height: 42px;line-height: 28px;" type="button" onClick="importSalesRepOrders();">Refresh</button></a>');
+
+    		var d = new Date(),
+
+				m = d.getMonth(),
+
+				y = d.getFullYear();
+
+			$('#month_filter option:eq('+m+')').prop('selected', true);
 		}
 
 		$("#orders_filter").on("change", function(){
+	        order_list.ajax.reload();
+	    });
+
+		$("#month_filter").on("change", function(){
 	        order_list.ajax.reload();
 	    });
 	});
