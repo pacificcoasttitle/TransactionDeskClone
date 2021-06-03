@@ -135,14 +135,21 @@
 										endif;
 										?>
 										<div class="frm-row">
-											<div class="section colm colm12">
+											<div class="section colm colm6">
 												<label class="field prepend-icon file">
 						                            <span class="button"> Choose File </span>
 						                			<input type="file" class="gui-file" name="csvFile" id="csvFile" 
-						                            onChange="document.getElementById('uploader1').value = this.value;">
+						                            onChange="document.getElementById('uploader1').value = this.value;" accept=".csv">
 						                            <input type="text" class="gui-input" id="uploader1" placeholder="no file selected" readonly>
 						                            <span class="field-icon"><i class="fa fa-upload"></i></span>
 						                        </label>
+											</div>
+
+											<div class="section colm colm6">
+												<label class="field prepend-icon">
+													<input type="text" class="gui-input" name="area_name" value="<?php echo (!empty($prev_data['area_name'])) ? $prev_data['area_name'] : '';?>" placeholder="What Area?">
+													<span class="field-icon"><i class="fa fa-map-marker "></i></span>
+												</label>
 											</div>
 											
 													
