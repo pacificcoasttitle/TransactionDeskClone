@@ -43,6 +43,7 @@ class Order
     {
         $userdata = $this->CI->session->userdata('user');
         $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
+        $month = isset($params['month']) && !empty($params['month']) ? $params['month'] : '';
         $result = $this->getUserFromPartners();
 
         if(isset($params['searchvalue']) && !empty($params['searchvalue']))
@@ -62,6 +63,10 @@ class Order
                 } else {
                     $this->CI->db->where('order_details.resware_status', $status); 
                 }
+            }
+
+            if(isset($month) && !empty($month)) {
+                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
             }
 
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
@@ -107,6 +112,11 @@ class Order
                     $this->CI->db->where('order_details.resware_status', $status); 
                 }
             }
+
+            if(isset($month) && !empty($month)) {
+                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+            }
+
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
@@ -162,6 +172,11 @@ class Order
                     $this->CI->db->where('order_details.resware_status', $status); 
                 }
             }
+
+            if(isset($month) && !empty($month)) {
+                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+            }
+
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
             order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
             ->from('order_details')
@@ -208,6 +223,11 @@ class Order
                     $this->CI->db->where('order_details.resware_status', $status); 
                 }
             }
+
+            if(isset($month) && !empty($month)) {
+                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+            }
+            
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name,
             order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
                 ->from('order_details')
@@ -1135,7 +1155,7 @@ class Order
         }
     }
 
-    public function getOpenOrdersCountForRefiProducts()
+    public function getOpenOrdersCountForRefiProducts($month)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders')
@@ -1143,6 +1163,7 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'loan');
+        $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         //echo $this->CI->db->last_query();exit;
@@ -1150,7 +1171,7 @@ class Order
         return $result;
     }
 
-    public function getOpenOrdersCountForSaleProducts()
+    public function getOpenOrdersCountForSaleProducts($month)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders')
@@ -1158,13 +1179,14 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'sale');
+        $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
     }
 
-    public function getClosedOrdersCountForRefiProducts()
+    public function getClosedOrdersCountForRefiProducts($month)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders')
@@ -1172,13 +1194,14 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'loan');
+        $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
     }
 
-    public function getClosedOrdersCountForSaleProducts()
+    public function getClosedOrdersCountForSaleProducts($month)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders')
@@ -1186,6 +1209,7 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
             $this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'sale');
+        $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();

@@ -51,10 +51,12 @@
 		}
 
 		.square-box{
-			background-color: #ede6e6;
+			background-color: #f0f0f0;
 			width: 23% !important;
 			margin-right: 2%;
 			margin-bottom: 50px;
+			padding-bottom: 35px;
+	    	padding-top: 15px;
 		}
 
 		.order-count-cotainer {
@@ -63,24 +65,32 @@
 
 		.title {
 			text-align: center;
-			color: #d35411;
+			color: #a0a0a0;
 			width: 23% !important;
 			margin-right: 2%;
-    		text-transform: uppercase;
-			font-size: medium;
+			text-transform: uppercase;
+			font-size: 14px;
+			letter-spacing: 1px;
 		}
 
 		.sales_loan_count {
-			font-size: xx-large;
-    		color: #d35411;
-    		text-align: center;
-			font-weight: bold;
+			font-size: 40px;
+			color: #0A3B5B;
+			text-align: center;
+			font-weight: 800;
+			letter-spacing: -1.00px;
 		}
 
 		.sales_loan_section {
 			text-align: center;
-    		text-transform: uppercase;
-    		font-size: large;
+			text-transform: uppercase;
+			font-size: large;
+			line-height: 21px;
+			color: #a0a0a0;
+		}
+
+		#orders_listing_filter {
+			margin-bottom: 20px;
 		}
 
     </style>
@@ -101,27 +111,27 @@
 							<div class="col-md-3 title">Closings Ratio Avg</div>
 
 							<div class="col-md-3 square-box">
-								<div class="sales_loan_count"><?Php echo $sale_open_count + $refi_open_count; ?></div>
-								<div class="sales_loan_section">Sales = <?Php echo $sale_open_count;?></div>
-								<div class="sales_loan_section">Refi's = <?Php echo $refi_open_count;?></div>
+								<div class="sales_loan_count" id="open_order_count"><?Php echo $sale_open_count + $refi_open_count; ?></div>
+								<div class="sales_loan_section">Sales = <span id="sale_open_count"><?Php echo $sale_open_count;?></span></div>
+								<div class="sales_loan_section">Refi's = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
-								<div class="sales_loan_count"><?Php echo $sale_close_count + $refi_close_count; ?></div>
-								<div class="sales_loan_section">Sales = <?Php echo $sale_close_count;?></div>
-								<div class="sales_loan_section">Refi's = <?Php echo $refi_close_count;?></div>
+								<div class="sales_loan_count" id="close_order_count"><?Php echo $sale_close_count + $refi_close_count; ?></div>
+								<div class="sales_loan_section">Sales = <span id="sale_close_count"><?Php echo $sale_close_count;?></span></div>
+								<div class="sales_loan_section">Refi's = <span id="refi_close_count"><?Php echo $refi_close_count;?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
-								<div class="sales_loan_count">$<?php echo number_format($total_premium); ?></div>
-								<div class="sales_loan_section">Sales = $<?php echo number_format($sale_total_premium); ?></div>
-								<div class="sales_loan_section">Refi's = $<?php echo number_format($refi_total_premium); ?></div>
+								<div class="sales_loan_count">$<span id="total_premium"><?php echo number_format($total_premium); ?></span></div>
+								<div class="sales_loan_section">Sales = $<span id="sale_total_premium"><?php echo number_format($sale_total_premium); ?></span></div>
+								<div class="sales_loan_section">Refi's = $<span id="refi_total_premium"><?php echo number_format($refi_total_premium); ?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
-								<div class="sales_loan_count"><?Php echo $close_order_percetage;?>%</div>
-								<div class="sales_loan_section">Sales = <?Php echo $sale_close_order_percetage;?>%</div>
-								<div class="sales_loan_section">Refi's = <?Php echo $refi_close_order_percetage;?>%</div>
+								<div class="sales_loan_count" id="close_order_percetage"><?Php echo $close_order_percetage;?>%</div>
+								<div class="sales_loan_section">Sales = <span id="sale_close_order_percetage"><?Php echo $sale_close_order_percetage;?></span>%</div>
+								<div class="sales_loan_section">Refi's = <span id="refi_close_order_percetage"><?Php echo $refi_close_order_percetage;?></span>%</div>
 							</div>
 						</div>	
 						
@@ -235,8 +245,37 @@
 					url: base_url + "get-sales-orders", // json datasource
 					type: "post", // method  , by default get
 					data   : function( d ) {
-	                  d.status= $('#orders_filter').val();
+	                  d.status = $('#orders_filter').val();
+					  d.month = $('#month_filter').val();
 	                },
+					dataFilter: function(data){
+
+						var json = jQuery.parseJSON( data );
+						var countingData = json.count_data;
+						if (countingData) {
+							console.log(countingData.refi_open_count);
+							$('#refi_open_count').html(countingData.refi_open_count);
+							$('#sale_open_count').html(countingData.sale_open_count);
+							$('#open_order_count').html(countingData.open_order_count);
+
+							$('#refi_close_count').html(countingData.refi_close_count);
+							$('#sale_close_count').html(countingData.sale_close_count);
+							$('#close_order_count').html(countingData.close_order_count);
+
+							$('#refi_total_premium').html(countingData.refi_total_premium);
+							$('#sale_total_premium').html(countingData.sale_total_premium);
+							$('#total_premium').html(countingData.total_premium);
+
+							$('#refi_close_order_percetage').html(countingData.refi_close_order_percetage);
+							$('#sale_close_order_percetage').html(countingData.sale_close_order_percetage);
+							$('#close_order_percetage').html(countingData.close_order_percetage);
+							
+						} 
+						json.recordsTotal = json.recordsTotal;
+						json.recordsFiltered = json.recordsFiltered;
+						json.data = json.data;
+						return JSON.stringify( json );
+					},
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
 						if (parseInt(XMLHttpRequest.status) == 419) {
 							alert("You are logged out. Please login.");
@@ -266,6 +305,10 @@
 		}
 
 		$("#orders_filter").on("change", function(){
+	        order_list.ajax.reload();
+	    });
+
+		$("#month_filter").on("change", function(){
 	        order_list.ajax.reload();
 	    });
 	});
