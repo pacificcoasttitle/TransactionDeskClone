@@ -36,7 +36,7 @@
 
 
             <div class="market_update_table">
-                <h4 class="table_title">AREA: | <span>SANTA MONICA, CA</span></h4>
+                <h4 class="table_title">AREA: | <span><?php echo $area_name ?></span></h4>
                 <div class="d-flex text-center my-20">
                     <div class="col-30 border-right border-bottom">
                         <span class="number green_number">13%</span>
@@ -108,7 +108,7 @@
                         <div>
                             <div class="profile_name"><?php echo $salesRep['first_name'].' '.$salesRep['last_name']; ?></div>
                             <!-- <div class="profile_title">Account Executive</div> -->
-                            <a class="tel_number" href="tel:<?php echo $salesRep['telephone_no'];?>"><?php echo $salesRep['telephone_no'];?></a>
+                            <a class="tel_number phone_no" href="tel:<?php echo $salesRep['telephone_no'];?>"><?php echo $salesRep['telephone_no'];?></a>
                             <a href="mailto:<?php echo $salesRep['email_address'];?>" class="tel_number"><?php echo $salesRep['email_address'];?></a>
                         </div>
                     </div>

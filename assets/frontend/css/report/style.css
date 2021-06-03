@@ -73,10 +73,10 @@ page {
   margin: 0 auto;
 }
 .border-right {
-  border-right: 2px dotted rgba(168,169,173,0.70);
+  border-right: 2px inset rgba(168,169,173,0.70);
 }
 .border-bottom {
-  border-bottom: 2px dotted rgba(168,169,173,0.70);
+  border-bottom: 2px inset rgba(168,169,173,0.70);
 }
 .number {
   font-weight: 900;
@@ -164,6 +164,9 @@ page {
   line-height: 20px;
   font-weight: 700;
 }
+.phone_no {
+  margin-top: 20px;
+}
 /* Market Update */
 .sales_activity {
   padding: 0;
@@ -185,6 +188,7 @@ page {
   font-size: 38px;
   font-weight: 300;
   margin: 5px 0;
+  letter-spacing: -2px;
 }
 .orange_line {
   width: 50px;
@@ -192,7 +196,7 @@ page {
   background: #d35400;
 }
 .sales_activity_hero h2 {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 900;
   margin: 5px 0;
 }
@@ -252,7 +256,7 @@ tr:nth-of-type(odd) {
   text-align: center;
   padding: 6px 0;
   font-family: 'Roboto', sans-serif;
-  border-right: 2px dotted rgba(168,169,173,0.70);
+  border-right: 2px solid rgba(168,169,173,0.70);
 }
 .market_update_table table td:last-child {
   border: 0;

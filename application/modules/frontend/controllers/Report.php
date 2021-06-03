@@ -44,6 +44,10 @@ class Report extends MX_Controller {
             $valid = false;
             $this->session->set_flashdata('error','Please select Sales Representative');
         }
+        elseif(empty($this->input->post('area_name'))) {
+            $valid = false;
+            $this->session->set_flashdata('error','Please Enter Area Name');
+        }
         elseif(empty($this->input->post('sort_by'))) {
             $valid = false;
             $this->session->set_flashdata('error','Please select Sorting Order');
@@ -85,6 +89,7 @@ class Report extends MX_Controller {
             $main_record = array();
             $main_record['sales_rep']=$this->input->post('sales_rep');
             $main_record['sort_by']=$this->input->post('sort_by');
+            $main_record['area_name']=$this->input->post('area_name');
             $main_record['added_by']=$this->user['id'];
             $main_record['zip_code']=$zip_code;
 
@@ -124,9 +129,13 @@ class Report extends MX_Controller {
                             'id' => $this->input->post('sales_rep'),
                     );
                 $report_data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
+                $report_data['area_name'] = $this->input->post('area_name');
+
 
 
                 $html = $this->load->view('report/report_pdf',$report_data,true);
+
+                // echo $html;die;
                 
                 $this->load->library('snappy_pdf');
                 
@@ -279,12 +288,12 @@ class Report extends MX_Controller {
 
         $html = $this->load->view('report/report_pdf',$data,true);
         // $html = '<h1>Test</h1>';
-        
+        echo $html;
         $this->load->library('snappy_pdf');
         
-        header('Content-Type: application/pdf');
+        // header('Content-Type: application/pdf');
         
-        echo $this->snappy_pdf->pdf->getOutputFromHtml($html);
+        // echo $this->snappy_pdf->pdf->getOutputFromHtml($html);
         
 
         
