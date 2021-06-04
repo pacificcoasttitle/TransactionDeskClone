@@ -66,7 +66,11 @@ class Order
             }
 
             if(isset($month) && !empty($month)) {
-                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                } 
             }
 
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
@@ -114,7 +118,11 @@ class Order
             }
 
             if(isset($month) && !empty($month)) {
-                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                } 
             }
 
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -174,7 +182,11 @@ class Order
             }
 
             if(isset($month) && !empty($month)) {
-                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                } 
             }
 
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
@@ -225,7 +237,11 @@ class Order
             }
 
             if(isset($month) && !empty($month)) {
-                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                } 
             }
 
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name,
