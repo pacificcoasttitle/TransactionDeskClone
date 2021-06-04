@@ -227,7 +227,7 @@ class Order
             if(isset($month) && !empty($month)) {
                 $this->CI->db->where('MONTH(order_details.created_at)', $month); 
             }
-            
+
             $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name,
             order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
                 ->from('order_details')
@@ -1194,7 +1194,7 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'loan');
-        $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+        $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();
@@ -1209,7 +1209,7 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
             $this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'sale');
-        $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+        $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();
