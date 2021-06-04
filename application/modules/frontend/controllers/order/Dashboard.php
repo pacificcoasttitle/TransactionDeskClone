@@ -3204,13 +3204,15 @@ class Dashboard extends MX_Controller {
 
 				$openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
 				$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-				$count_data['refi_total_premium'] = number_format($openOrderRefiTotalPremium + $closeOrderRefiTotalPremium);
+				$count_data['refi_total_premium'] = ($openOrderRefiTotalPremium + $closeOrderRefiTotalPremium);
 
 				$openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
 				$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-				$count_data['sale_total_premium'] = number_format($openOrderSaleTotalPremium + $closeOrderSaleTotalPremium);
+				$count_data['sale_total_premium'] = ($openOrderSaleTotalPremium + $closeOrderSaleTotalPremium);
 
 				$count_data['total_premium'] = number_format($count_data['sale_total_premium'] + $count_data['refi_total_premium']);
+				$count_data['sale_total_premium'] = number_format($openOrderSaleTotalPremium + $closeOrderSaleTotalPremium);
+				$count_data['refi_total_premium'] = number_format($openOrderRefiTotalPremium + $closeOrderRefiTotalPremium);
 
 				$totalCount = $count_data['sale_close_count'] + $count_data['refi_close_count'] + $count_data['sale_open_count'] + $count_data['refi_open_count'];
 				if($totalCount > 0) {
