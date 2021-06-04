@@ -196,7 +196,7 @@
 							</div>
 							<div>
 								<h2>Recent Sales Activity Reports</h2>
-								<div class="table-container">
+								<div class="table-container1">
 									<table class="table table-type-3 typography-last-elem no-footer" id="cpl_listing">
 										<thead>
 											<tr>
@@ -241,6 +241,22 @@
 	<?php
         $this->load->view('layout/footer');
     ?>
+    <script type="text/javascript">
+    	$(document).ready(function(){
+
+    		$('#cpl_listing').DataTable({
+    			"language": {
+					// searchPlaceholder: "Search File# or Address",
+					paginate: {
+						next: '<span class="fa fa-angle-right"></span>',
+						previous: '<span class="fa fa-angle-left"></span>',
+					},
+					"emptyTable": "Record(s) not found.",
+					// "search": "",
+				},
+    		});
+    	});
+    </script>
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
 </body>
 </html>
