@@ -2480,6 +2480,7 @@ class Cron extends MX_Controller {
         }
         
         $files = glob("uploads/*xml", GLOB_NOSORT);
+      
                  
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
@@ -2488,8 +2489,8 @@ class Cron extends MX_Controller {
                 $fileName = date('YmdHis')."_".$documentName['basename'];
 		        rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
                 //echo $xml;
-                $xml = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_COMPACT | LIBXML_PARSEHUGE);
-                echo ($xml ? 'Valid XML' : 'Parse Error'), PHP_EOL;
+                $xml = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA);
+                echo ($xml ? 'Valid XML' : 'Parse Error'), PHP_EOL;exit;
                 $ordersData = json_decode(json_encode($xml), true);
                 //print_r($ordersData);exit;
                 if(!empty($ordersData['group']['group'])) {
