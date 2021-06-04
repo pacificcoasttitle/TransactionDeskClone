@@ -39,7 +39,7 @@
                 <h4 class="table_title">AREA: | <span><?php echo $area_name ?></span></h4>
                 <div class="d-flex text-center my-20">
                     <div class="col-30 border-right border-bottom">
-                        <span class="number green_number"><?php echo $box_data['turnover_rate']['value'] ?></span>
+                        <span class="number green_number"><?php echo $box_data['turnover_rate']['value'] ?>% </span>
                         <h4 class="table_title"><span>ROUTE: <?php echo $box_data['turnover_rate']['route'] ?> <br>HIGHEST TURNOVER RATIO</span></h4>
                     </div>
                     <div class="col-30  border-right border-bottom">
