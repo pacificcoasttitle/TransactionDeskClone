@@ -2515,12 +2515,12 @@ class Cron extends MX_Controller {
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
 		        rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
-                echo $filePath;
+                $xml = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $xml);
                 $xml = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_COMPACT | LIBXML_PARSEHUGE);
                 echo ($xml ? 'Valid XML' : 'Parse Error'), PHP_EOL;
-                //$ordersData = json_decode(json_encode($xml), true);
+                $ordersData = json_decode(json_encode($xml), true);
                 //print_r($ordersData);exit;
-                /*if(!empty($ordersData['group']['group'])) {
+                if(!empty($ordersData['group']['group'])) {
                     foreach ($ordersData['group']['group'] as $orderData) {
                         $orderInfos = $orderData['row'];
                         foreach($orderInfos as $orderItem) {
@@ -2734,7 +2734,7 @@ class Cron extends MX_Controller {
                             }
                         }
                     }
-                }*/
+                }
                 $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
             }
         } else {
