@@ -166,25 +166,13 @@
 					                                <i class="arrow"></i>
 					                            </label>
 											</div>
-											<?php 
-											$field_names = [
-												'carrier_route'=>'Route',
-												'avg_price' => 'Avg. Price',
-												'total_sales' => '#of Sales',
-												'NOO_ratio' => 'NOO %',
-												'avg_yr_owned' => 'AVG YR',
-												'total_units' => '# of Units',
-												'sa_site_zip' => 'Zipcode'
-
-											];
-
-											?>
+											
 											<div class="section colm colm4">
 												<label class="field select">
 					                                <select id="sort_by" name="sort_by">
 					                                	<option value="">Select Sorting Order</option>
 					                                	<?php
-					                                	foreach($field_names as $key=>$field_name):
+					                                	foreach($sorting_fields as $key=>$field_name):
 					                                	?>
 					                                	<option value="<?php echo $key; ?>" <?php if(!empty($prev_data['sort_by']) && $prev_data['sort_by'] ==  $key) {echo 'selected' ;}?>><?php echo $field_name; ?></option>
 					                                	<?php endforeach; ?>

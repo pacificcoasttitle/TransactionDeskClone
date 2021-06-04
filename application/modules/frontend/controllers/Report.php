@@ -2,6 +2,7 @@
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 class Report extends MX_Controller {
     private $user;
+    private $sorting_fields;
 	function __construct() 
     {
         parent::__construct();
@@ -10,6 +11,15 @@ class Report extends MX_Controller {
             redirect('dashboard');
         }
         $this->user = $userdata;
+        $this->sorting_fields = [
+                        'carrier_route'=>'Route',
+                        'avg_price' => 'Avg. $',
+                        'total_sales' => '#of Sales',
+                        'NOO_ratio' => 'NOO %',
+                        'avg_yr_owned' => 'Avg. Y.O.',
+                        'total_units' => '# of Units',
+                        'turnover_rate' => 'T.O.%'
+                    ];
         $this->load->model('order/home_model');
         $this->load->model('report_model');
         $this->load->library('order/order');
@@ -28,7 +38,8 @@ class Report extends MX_Controller {
             'added_by' => $this->user['id'],
         );
 		$data['reports_data'] = $this->report_model->getData($report_condition);
-        // var_dump($data);die;
+        
+        $data['sorting_fields']=$this->sorting_fields;
 		$this->load->view('layout/head_dashboard',$data);
     	$this->load->view('report/list');
     }
@@ -121,6 +132,9 @@ class Report extends MX_Controller {
                 $limit = 10;
                 $records = $this->report_model->getReportData($condition,$order_by,$limit);
 
+                $this->report_model->delete_records($condition,'pct_sales_rep_report_records');
+
+
                 $report_data['records'] = $records;
 
                 $condition = array(
@@ -130,9 +144,25 @@ class Report extends MX_Controller {
                     );
                 $report_data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
                 $report_data['area_name'] = $this->input->post('area_name');
+                $report_data['sort_by'] = $this->input->post('sort_by');
+                $report_data['sorting_fields']=$this->sorting_fields;
 
+                $box_columns = ['turnover_rate','NOO_ratio','avg_yr_owned','total_units','total_sales','avg_price'];
+                foreach ($records as $key => $record) {
+                    foreach ($box_columns as $box_column){
+                        if(!isset($box_data[$box_column])) {
+                            $box_data[$box_column]['value'] = $record["$box_column"];
+                            $box_data[$box_column]['route'] = $record["carrier_route"];
+                        }
 
-
+                        if($record["$box_column"] > $box_data[$box_column]['value']) {
+                            $box_data[$box_column]['value'] = $record["$box_column"];
+                            $box_data[$box_column]['route'] = $record["carrier_route"];
+                        }
+                    }
+                }
+                $report_data['box_data'] = $box_data;
+                
                 $html = $this->load->view('report/report_pdf',$report_data,true);
 
                 // echo $html;die;
