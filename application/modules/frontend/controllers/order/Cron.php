@@ -2489,7 +2489,7 @@ class Cron extends MX_Controller {
 		        rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
                 //echo $xml;
                 $xml = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_COMPACT | LIBXML_PARSEHUGE);
-                //echo ($xml ? 'Valid XML' : 'Parse Error'), PHP_EOL;exit;
+                echo ($xml ? 'Valid XML' : 'Parse Error'), PHP_EOL;
                 $ordersData = json_decode(json_encode($xml), true);
                 //print_r($ordersData);exit;
                 if(!empty($ordersData['group']['group'])) {
