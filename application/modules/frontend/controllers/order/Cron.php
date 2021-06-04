@@ -2517,7 +2517,7 @@ class Cron extends MX_Controller {
 		        rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
                 $xml = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $xml);
                 $xml = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_COMPACT | LIBXML_PARSEHUGE);
-                echo ($xml ? 'Valid XML' : 'Parse Error'), PHP_EOL;
+                //echo ($xml ? 'Valid XML' : 'Parse Error'), PHP_EOL;
                 $ordersData = json_decode(json_encode($xml), true);
                 //print_r($ordersData);exit;
                 if(!empty($ordersData['group']['group'])) {
@@ -2529,9 +2529,9 @@ class Cron extends MX_Controller {
                             foreach ($orderItems as $orderInfo) {
                                 //print_r($orderInfo);
                                 //print_r($orderInfo['@attributes']);exit;
-                                if ($orderInfo['@attributes']['column'] == 'ledgerEntry_assoc_fileMain_assoc_FileNumber' || $orderInfo['@attributes']['column'] == 'OpenedDate') {
+                                if ($orderInfo['@attributes']['column'] == 'ledgerEntry_assoc_fileMain_assoc_FileNumber' || $orderInfo['@attributes']['column'] == 'FileNumber') {
                                     $file_number = $orderInfo['value'];
-                                    //echo $file_number."<br>";exit;
+                                   // echo $file_number."<br>";exit;
                                 }
     
                                 if ($orderInfo['@attributes']['column'] == 'ledgerEntry_assoc_fileMain_assoc_partnersTypes_assoc_salesRepScalar_assoc_Name' || $orderInfo['@attributes']['column'] == 'partnersTypes_assoc_salesRepScalar_assoc_Name') {
