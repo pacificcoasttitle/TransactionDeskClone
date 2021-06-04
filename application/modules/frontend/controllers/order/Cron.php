@@ -2490,7 +2490,6 @@ class Cron extends MX_Controller {
 
     public function exportDataFromXmlFile()
     {
-        ini_set('allow_url_fopen ','ON');
         $sftp = new SFTP(env('SFTP_HOST'));
         $username = env('SFTP_USERNAME');
         $password = env('SFTP_PASSWORD');
@@ -2509,7 +2508,6 @@ class Cron extends MX_Controller {
         }
         
         $files = glob("uploads/*xml", GLOB_NOSORT);
-      
                  
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
@@ -2517,12 +2515,12 @@ class Cron extends MX_Controller {
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
 		        rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
-                //echo $xml;
-                $xml = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA);
-                echo ($xml ? 'Valid XML' : 'Parse Error'), PHP_EOL;exit;
-                $ordersData = json_decode(json_encode($xml), true);
+                echo $filePath;
+                $xml = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_COMPACT | LIBXML_PARSEHUGE);
+                echo ($xml ? 'Valid XML' : 'Parse Error'), PHP_EOL;
+                //$ordersData = json_decode(json_encode($xml), true);
                 //print_r($ordersData);exit;
-                if(!empty($ordersData['group']['group'])) {
+                /*if(!empty($ordersData['group']['group'])) {
                     foreach ($ordersData['group']['group'] as $orderData) {
                         $orderInfos = $orderData['row'];
                         foreach($orderInfos as $orderItem) {
@@ -2736,7 +2734,7 @@ class Cron extends MX_Controller {
                             }
                         }
                     }
-                }
+                }*/
                 $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
             }
         } else {
