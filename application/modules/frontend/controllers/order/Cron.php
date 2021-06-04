@@ -2490,6 +2490,7 @@ class Cron extends MX_Controller {
 
     public function exportDataFromXmlFile()
     {
+        ini_set('allow_url_fopen ','ON');
         $sftp = new SFTP(env('SFTP_HOST'));
         $username = env('SFTP_USERNAME');
         $password = env('SFTP_PASSWORD');
