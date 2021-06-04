@@ -129,7 +129,7 @@
 							</div>
 
 							<div class="col-md-3 square-box">
-								<div class="sales_loan_count" id="close_order_percetage"><?Php echo $close_order_percetage;?>%</div>
+								<div class="sales_loan_count"><span id="close_order_percetage"><?Php echo $close_order_percetage;?></span>%</div>
 								<div class="sales_loan_section">Sales = <span id="sale_close_order_percetage"><?Php echo $sale_close_order_percetage;?></span>%</div>
 								<div class="sales_loan_section">Refi's = <span id="refi_close_order_percetage"><?Php echo $refi_close_order_percetage;?></span>%</div>
 							</div>
