@@ -39,41 +39,49 @@
                 <h4 class="table_title">AREA: | <span><?php echo $area_name ?></span></h4>
                 <div class="d-flex text-center my-20">
                     <div class="col-30 border-right border-bottom">
-                        <span class="number green_number">13%</span>
-                        <h4 class="table_title"><span>ROUTE: C024 <br>HIGHEST TURNOVER RATIO</span></h4>
+                        <span class="number green_number"><?php echo $box_data['turnover_rate']['value'] ?></span>
+                        <h4 class="table_title"><span>ROUTE: <?php echo $box_data['turnover_rate']['route'] ?> <br>HIGHEST TURNOVER RATIO</span></h4>
                     </div>
                     <div class="col-30  border-right border-bottom">
-                        <span class="number purple_number">12%</span>
-                        <h4 class="table_title"><span>ROUTE: C024 <br>HIGHEST NON-OWNER</span></h4>
+                        <span class="number purple_number"><?php echo $box_data['NOO_ratio']['value'] ?>%</span>
+                        <h4 class="table_title"><span>ROUTE: <?php echo $box_data['turnover_rate']['route'] ?> <br>HIGHEST NON-OWNER</span></h4>
                     </div>
                     <div class="col-30  border-bottom">
-                        <span class="number equa_number">15</span>
-                        <h4 class="table_title"><span>ROUTE: C024 <br>LONG AVG YR OWNED</span></h4>
+                        <span class="number equa_number"><?php echo $box_data['avg_yr_owned']['value'] ?></span>
+                        <h4 class="table_title"><span>ROUTE: <?php echo $box_data['avg_yr_owned']['route'] ?> <br>LONG AVG YR OWNED</span></h4>
                     </div>
                     <div class="col-30  border-right">
-                        <span class="number red_number">207</span>
-                        <h4 class="table_title"><span>ROUTE: C024 <br>MOST UNITS</span></h4>
+                        <span class="number red_number"><?php echo $box_data['total_units']['value'] ?></span>
+                        <h4 class="table_title"><span>ROUTE: <?php echo $box_data['total_units']['route'] ?> <br>MOST UNITS</span></h4>
                     </div>
                     <div class="col-30  border-right">
-                        <span class="number blue_number">18</span>
-                        <h4 class="table_title"><span>ROUTE: C024 <br>MOST SALES</span></h4>
+                        <span class="number blue_number"><?php echo $box_data['total_sales']['value'] ?></span>
+                        <h4 class="table_title"><span>ROUTE: <?php echo $box_data['total_sales']['route'] ?> <br>MOST SALES</span></h4>
                     </div> 
+                    <?php
+                    $num = $avg_price = $box_data['avg_price']['value'];
+                    $units = ['', 'K', 'M', 'B', 'T'];
+                    for ($i = 0; $num >= 1000; $i++) {
+                        $num /= 1000;
+                    }
+                    $avg_price = round($num, 1) . $units[$i];
+                    ?>
                     <div class="col-30">
-                        <span class="number yellow_number">540K</span>
-                        <h4 class="table_title"><span>ROUTE: C024 <br>AVG. SALES PRICE ALL</span></h4>
+                        <span class="number yellow_number"><?php echo $avg_price ?></span>
+                        <h4 class="table_title"><span>ROUTE: <?php echo $box_data['avg_price']['route'] ?> <br>AVG. SALES PRICE ALL</span></h4>
                     </div>
                 </div>
                  
-                <h4 class="table_title">TOP 10 CARRIER ROUTES | <span>BY TURN-OVER %</span></h4>
+                <h4 class="table_title">TOP 10 CARRIER ROUTES | <span>BY <?php echo strtoupper($sorting_fields[$sort_by]); ?></span></h4>
                 <table>
                     <tr>
                         <th>Route</th>
-                        <th>Avg. Price</th>
+                        <th>Avg. $</th>
                         <th>#Of Sales</th>
                         <th>NOO %</th>
-                        <th>AVG YR</th>
+                        <th>Avg. Y.O.</th>
                         <th># of Units</th>
-                        <th>Zipcode</th>
+                        <th>T.O.%</th>
                     </tr>
                     <?php
                     foreach ($records as $key => $record) { ?>
@@ -84,7 +92,7 @@
                             <td><?php echo $record['NOO_ratio'] ?></td>
                             <td><?php echo $record['avg_yr_owned'] ?></td>
                             <td><?php echo $record['total_units'] ?></td>
-                            <td><?php echo $record['sa_site_zip'] ?></td>
+                            <td><?php echo $record['turnover_rate'] ?></td>
                         </tr>
                         
                     <?php 

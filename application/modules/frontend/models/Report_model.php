@@ -113,4 +113,14 @@ class Report_model extends CI_Model
         return false;
     }
 
+    public function delete_records($condition = array(), $table='') {
+
+    	if(empty($table)) {
+            $table = $this->table;
+        }
+
+        $this->db->delete($table, $condition); 
+
+    }
+
 }
