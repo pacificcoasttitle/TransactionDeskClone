@@ -2462,22 +2462,22 @@ class Cron extends MX_Controller {
 
     public function exportDataFromXmlFile()
     {
-        // $sftp = new SFTP(env('SFTP_HOST'));
-        // $username = env('SFTP_USERNAME');
-        // $password = env('SFTP_PASSWORD');
+        $sftp = new SFTP(env('SFTP_HOST'));
+        $username = env('SFTP_USERNAME');
+        $password = env('SFTP_PASSWORD');
 
-        // if (!$sftp->login($username, $password)) {
-        //     exit('Login Failed');
-        // }
+        if (!$sftp->login($username, $password)) {
+            exit('Login Failed');
+        }
     
-        // if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER'), true))) {
-        //     die("Cannot read directory contents");
-        // }
+        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER'), true))) {
+            die("Cannot read directory contents");
+        }
         
-        // foreach ($files as $file) {
-        //     $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.$file);
-        //     chmod(FCPATH.'uploads/'.$file,0755);
-        // }
+        foreach ($files as $file) {
+            $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.$file);
+            chmod(FCPATH.'uploads/'.$file,0755);
+        }
         
         $files = glob("uploads/*xml", GLOB_NOSORT);
                  
