@@ -1180,6 +1180,7 @@ class Order
         $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+        $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         //echo $this->CI->db->last_query();exit;
@@ -1196,6 +1197,7 @@ class Order
         $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+        $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();
@@ -1211,6 +1213,7 @@ class Order
         $this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+        $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();
@@ -1226,6 +1229,7 @@ class Order
             $this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+        $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();
