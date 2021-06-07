@@ -3227,7 +3227,21 @@ class Dashboard extends MX_Controller {
 				$json_data['count_data'] = $count_data;
 			}
 			
-        }
+        } else {
+			$count_data['refi_open_count'] = 0;
+			$count_data['sale_open_count'] = 0;
+			$count_data['open_order_count'] = 0;
+			$count_data['refi_close_count'] = 0;
+			$count_data['sale_close_count'] =  0;
+			$count_data['close_order_count'] = 0;
+			$count_data['total_premium'] = 0;
+			$count_data['sale_total_premium'] = 0;
+			$count_data['refi_total_premium'] = 0;
+			$count_data['refi_close_order_percetage'] = 0;
+			$count_data['sale_close_order_percetage'] = 0;
+			$count_data['close_order_percetage'] = 0;
+			$json_data['count_data'] = $count_data;
+		}
 
         $json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
         $json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
