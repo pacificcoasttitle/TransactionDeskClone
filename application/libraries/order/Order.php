@@ -67,9 +67,11 @@ class Order
 
             if(isset($month) && !empty($month)) {
                 if ($status == 'open') {
-                    $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
                 } else {
                     $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
                 } 
             }
 
@@ -119,9 +121,11 @@ class Order
 
             if(isset($month) && !empty($month)) {
                 if ($status == 'open') {
-                    $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
                 } else {
                     $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
                 } 
             }
 
@@ -183,9 +187,11 @@ class Order
 
             if(isset($month) && !empty($month)) {
                 if ($status == 'open') {
-                    $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
                 } else {
                     $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
                 } 
             }
 
@@ -238,9 +244,11 @@ class Order
 
             if(isset($month) && !empty($month)) {
                 if ($status == 'open') {
-                    $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
                 } else {
                     $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
                 } 
             }
 
