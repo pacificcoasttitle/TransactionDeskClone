@@ -18,7 +18,7 @@ class Order
     public function get_recent_orders()
     {
         $userdata = $this->CI->session->userdata('user');
-        $this->CI->db->select('order_details.file_number, order_details.file_id, property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.created_at, property_details.primary_owner')
+        $this->CI->db->select('order_details.file_number, order_details.file_id, property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.created_at, property_details.primary_owner,order_details.borrower_invited')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
 
