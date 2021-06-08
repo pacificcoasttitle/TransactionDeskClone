@@ -1069,8 +1069,7 @@ class Home extends MX_Controller {
 								}
 							}			
 							/* Send notification to admin based on rules */	
-							var_dump($escrow_details_api);
-							var_dump($lender_details_api);
+
 							/* Call HomeDocs API  */
 							if(count($escrow_details_api) || count($lender_details_api)) {
 								
@@ -1081,11 +1080,9 @@ class Home extends MX_Controller {
 								$api_data['borrwer_details'] = array();
 								$api_data['escrow_officer_details'] = array();;
 								$api_data['property_details'] = array(
-									'address' => $FullProperty
+									'address' => $this->input->post('property-full-address');
 								);
-								var_dump($api_data);
 								$this->load->helper('homedocsapi');
-								die;
 								// $result = true;
 					    	
 					    		$result = call_homedocs_api($api_data);
