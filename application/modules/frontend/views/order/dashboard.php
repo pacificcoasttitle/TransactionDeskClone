@@ -165,6 +165,13 @@
 															<td>
 																<a href="<?php echo base_url()."cpl-dashboard";?>" style="margin-right:10px;"><i class="fa fa-upload" aria-hidden="true"></i></a>
 																<a href="<?php echo base_url()."proposed-insured/";?>"><i class="fa fa-sticky-note-o"></i></a>
+																<?php
+																	if($order['borrower_invited'] == 0) :
+																?>
+																<a title="Send Invite" href="#" data-owner="<?php echo $order['primary_owner'] ?>" data-order="<?php echo $order['id'] ?>"  data-toggle="modal" class="sendInvite" data-address="<?php echo $order['full_address']; ?>" style="margin-left: 10px;"><i class="fa fa-envelope"></i></a>
+																
+																<?php endif; ?>
+
 															</td>
 														</tr>
 													<?php } 
@@ -193,9 +200,93 @@
 		</div>
 
 	</section>
+
+	<div class="modal fade" id="sendInviteModal" tabindex="-1" role="dialog" 
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<form  id="inviteForm" method="post">
+					<div class="modal-header">
+						<button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">Send Invite to Borrower</h4>
+					</div>
+					<div class="modal-body search-result">
+							
+							<div class="error-cotent">
+								
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+					                    <label  class="col-sm-2 control-label" for="borrower_email">Email</label>
+					                    <div class="col-sm-10">
+					                        <input type="email" class="form-control" id="borrower_email" name="borrower_email" placeholder="Email" required="" />
+					                    </div>
+				                  	</div>
+
+				                  	<div class="form-group">
+					                    <label  class="col-sm-2 control-label" for="borrower_name">Name</label>
+					                    <div class="col-sm-10">
+					                        <input type="text" class="form-control" id="borrower_name" name="borrower_name" placeholder="Email"/>
+					                    </div>
+					                    <input type="hidden"  id="invite_order_id" name="invite_order_id">
+					                    <input type="hidden"  id="property_address" name="property_address">
+				                  	</div>		
+								</div>
+							</div>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-danger" id="sendInviteBtn">Send</button>
+					</div>
+				</form>
+			</div> <!-- content-->
+		</div>
+	</div>
 	<?php
            $this->load->view('layout/footer');
         ?>
+
+<script type="text/javascript">
+	$(document).on('click','.sendInvite',function(){
+		var orderId = $(this).data('order');
+		var owner = $(this).data('owner');
+		var address = $(this).data('address');
+		$("#borrower_name").val(owner);
+		$("#invite_order_id").val(orderId);
+		$("#property_address").val(address);
+		$("#sendInviteModal").modal('show');
+
+	});
+
+	$(document).on('click','#sendInviteBtn',function(){
+		$(this).attr('disabled',true);
+		var form_data = $('#inviteForm').serialize();
+		var url = "<?php echo base_url('send_invite')?>";
+		$('.error-cotent').html('');
+		$.ajax({
+	        type:"POST",
+	        url:url,
+	        data:form_data,
+	        dataType : 'json',
+	        success:function (data) {
+	            if(data.status == true) {
+	            	location.reload();
+	            }
+	            else {
+	            	$('.error-cotent').html(`<div class="alert alert-danger" role="alert">`+data.message+`</div>`);
+	            }
+	        },
+	        complete: function() {
+				$('#sendInviteBtn').removeAttr('disabled');
+	        }
+        });   
+	});
+	
+</script>
 </body>
 
 </html>
