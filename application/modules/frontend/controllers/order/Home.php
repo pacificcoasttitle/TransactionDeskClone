@@ -1080,7 +1080,7 @@ class Home extends MX_Controller {
 								$api_data['borrwer_details'] = array();
 								$api_data['escrow_officer_details'] = array();;
 								$api_data['property_details'] = array(
-									'address' => $this->input->post('property-full-address');
+									'address' => $this->input->post('property-full-address'),
 								);
 								$this->load->helper('homedocsapi');
 								// $result = true;
