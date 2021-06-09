@@ -3521,8 +3521,8 @@ class Dashboard extends MX_Controller {
 
 				$actions = "<div style='display:flex;'><a href='".base_url()."cpl-dashboard' style='margin-right:10px;'><i class='fa fa-upload' aria-hidden='true'></i></a><a href='".base_url()."proposed-insured'><i class='fa fa-sticky-note-o'></i></a>";
 											
-				if($order['borrower_invited'] == 0) {
-					$actions .= "<a title='Send Invite' href='#' data-owner='".$order['primary_owner']."' data-order='".$order['id']."'  data-toggle='modal' class='sendInvite' data-address='".$order['full_address']."' style='margin-left: 10px;'><i class='fa fa-envelope'></i></a></div>";
+				if($order['resware_status'] == 'closed' && $order['borrower_invited'] == 0) {
+					$actions .= "<a title='Send Invite' href='javscript:void(0)' data-owner='".$order['primary_owner']."' data-order='".$order['id']."'  data-toggle='modal' class='sendInvite' data-address='".$order['full_address']."' style='margin-left: 10px;'><i class='fa fa-envelope'></i></a></div>";
 				} else {
 					$actions .= "</div>";
 				}
