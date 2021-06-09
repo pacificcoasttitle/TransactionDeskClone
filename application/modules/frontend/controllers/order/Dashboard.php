@@ -3494,6 +3494,7 @@ class Dashboard extends MX_Controller {
 	public function getOrdersDashboard()
 	{
 		$params = array();  $data = array();
+		$params['dashboard_order_by'] = 1;
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
