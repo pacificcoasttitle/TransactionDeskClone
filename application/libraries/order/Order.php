@@ -175,7 +175,6 @@ class Order
             }
 
             $query = $this->CI->db->get();
-            echo $this->CI->db->last_query();exit;
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             }
