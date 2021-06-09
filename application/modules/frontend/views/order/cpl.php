@@ -50,7 +50,7 @@
 								<div class="table-container">
 									<table class="table table-type-3 typography-last-elem no-footer" id="cpl_listing">
 										<thead>
-											<tr>
+											<tr style="text-align: center;">
 												<th>#</th>
 												<th>File Number</th>
 												<th>Property Address</th>

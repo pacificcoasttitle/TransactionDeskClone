@@ -1,3 +1,8 @@
+<style>
+th {
+	text-align: center;
+}
+</style>
 <body>
 	<?php
         $this->load->view('layout/header_dashboard');
@@ -141,9 +146,10 @@
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">
-									<table class="table table-type-3 typography-last-elem">
+									<table class="table table-type-3 typography-last-elem" id="order_listing">
 										<thead>
 											<tr>
+												<th>No</th>
 												<th>#</th>
 												<th>Opened</th>
 												<th>Property Address</th>
@@ -153,7 +159,7 @@
 										</thead>
 										<tbody>
 											<?php 
-												if(!empty($order_lists)) {
+												/*if(!empty($order_lists)) {
 													foreach($order_lists as $order) { ?>
 														<tr>
 															<td><?php echo $order['file_number']; ?></td>
@@ -180,7 +186,7 @@
 														<td colspan="8">No Records Found.</td>
 													</tr>
 												<?php }
-											?>	
+											*/?>	
 										</tbody>
 									</table>
 
@@ -251,6 +257,60 @@
         ?>
 
 <script type="text/javascript">
+	$(document).ready(function () {
+		if ($('#order_listing').length) {
+			order_listing = $('#order_listing').DataTable({
+				"paging": true,
+				"lengthChange": false,
+				"language": {
+					searchPlaceholder: "Search File# or Address",
+					paginate: {
+						next: '<span class="fa fa-angle-right"></span>',
+						previous: '<span class="fa fa-angle-left"></span>',
+					},
+					"emptyTable": "Record(s) not found.",
+					"search": "",
+				},
+				/*"searching": false,*/
+				"bStateSave": true,
+				"fnStateSave": function (oSettings, oData) {
+					localStorage.setItem('offersDataTables', JSON.stringify(oData));
+				},
+				"fnStateLoad": function (oSettings) {
+					return JSON.parse(localStorage.getItem('offersDataTables'));
+				},
+				initComplete: function () {
+
+
+				},
+				dom: 'Bfrtip',
+				buttons: [],
+				"drawCallback": function () {
+
+				},
+				"ordering": false,
+				"serverSide": true,
+				"ajax": {
+					url: base_url + "get-orders-dashboard", // json datasource
+					type: "post", // method  , by default get
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						if (parseInt(XMLHttpRequest.status) == 419) {
+							alert("You are logged out. Please login.");
+						}
+						if (parseInt(XMLHttpRequest.status) == 419) {
+							setTimeout(function () {
+								location.reload();
+							}, 1000);
+						}
+						$("#order_listing tbody").append(
+							'<tr><td colspan="4" class="text-center">No records found</td></tr>');
+						$("#order_listing_processing").css("display", "none");
+					}
+				}
+			});
+		}
+	});
+
 	$(document).on('click','.sendInvite',function(){
 		var orderId = $(this).data('order');
 		var owner = $(this).data('owner');
@@ -259,7 +319,6 @@
 		$("#invite_order_id").val(orderId);
 		$("#property_address").val(address);
 		$("#sendInviteModal").modal('show');
-
 	});
 
 	$(document).on('click','#sendInviteBtn',function(){

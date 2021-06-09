@@ -3490,4 +3490,51 @@ class Dashboard extends MX_Controller {
 		echo $mail_result;exit;
 
 	}
+
+	public function getOrdersDashboard()
+	{
+		$params = array();  $data = array();
+		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+			$params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+			$params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+			$pageno = ($params['start'] / $params['length'])+1;
+			$order_lists = $this->order->get_orders($params);
+			$json_data['draw'] = intval( $params['draw'] );
+		} else {
+			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+			$order_lists = $this->order->get_orders($params);
+		}
+		
+		if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+			$i = $params['start'] + 1;
+			foreach ($order_lists['data'] as $order)  {
+				$nestedData = array();
+				$nestedData[] = $i;
+				$nestedData[] = $order['file_number'];
+				$nestedData[] = !empty($order['opened_date']) ? date("m/d/Y", strtotime($order['opened_date'])) : '';
+				$nestedData[] = $order['full_address'];
+				$nestedData[] = $order['primary_owner'];
+
+				$actions = "<div style='display:flex;'><a href='".base_url()."cpl-dashboard' style='margin-right:10px;'><i class='fa fa-upload' aria-hidden='true'></i></a><a href='".base_url()."proposed-insured'><i class='fa fa-sticky-note-o'></i></a>";
+											
+				if($order['borrower_invited'] == 0) {
+					$actions .= "<a title='Send Invite' href='#' data-owner='".$order['primary_owner']."' data-order='".$order['id']."'  data-toggle='modal' class='sendInvite' data-address='".$order['full_address']."' style='margin-left: 10px;'><i class='fa fa-envelope'></i></a></div>";
+				} else {
+					$actions .= "</div>";
+				}
+				$nestedData[] = $actions;																
+				$data[] = $nestedData; 
+				$i++; 
+			}
+		}
+
+		$json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
+		$json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
+		$json_data['data'] = $data;
+		echo json_encode($json_data);
+	}
 }
