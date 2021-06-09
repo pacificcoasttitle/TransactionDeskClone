@@ -44,6 +44,7 @@ class Order
         $userdata = $this->CI->session->userdata('user');
         $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
         $month = isset($params['month']) && !empty($params['month']) ? $params['month'] : '';
+        $dashboard_order_by = isset($params['dashboard_order_by']) && !empty($params['dashboard_order_by']) ? $params['dashboard_order_by'] : '';
         $result = $this->getUserFromPartners();
 
         if(isset($params['searchvalue']) && !empty($params['searchvalue']))
@@ -162,14 +163,19 @@ class Order
                 }
             }
 
-            $this->CI->db->order_by("order_details.id", "desc");
-
+            if (!empty($dashboard_order_by)) {
+                $this->CI->db->order_by('FIELD(order_details.resware_status, "closed") desc');
+                $this->CI->db->order_by("order_details.id", "desc");
+            } else {
+                $this->CI->db->order_by("order_details.id", "desc");
+            }
+                       
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);
             }
 
             $query = $this->CI->db->get();
-
+            echo $this->CI->db->last_query();exit;
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             }
@@ -281,14 +287,18 @@ class Order
                 }
             }
 
-            $this->CI->db->order_by("order_details.id", "desc");
+            if (!empty($dashboard_order_by)) {
+                $this->CI->db->order_by('FIELD(order_details.resware_status, "closed") desc');
+                $this->CI->db->order_by("order_details.id", "desc");
+            } else {
+                $this->CI->db->order_by("order_details.id", "desc");
+            }
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);
             }
 
             $query = $this->CI->db->get();
-    
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             } 
