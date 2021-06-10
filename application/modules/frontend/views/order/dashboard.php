@@ -53,11 +53,11 @@ th {
 											
 										?>
 										
-										<?php if (isset($user_email) && !empty($user_email) && (trim($user_email) == 'gladys@greenforestescrow.net' || trim($user_email) == 'openorders@empowerescrow.com' || trim($user_email) == 'docs@greenforestescrow.net' || trim($user_email) == 'patricia@greenforestescrow.net' || trim($user_email) == 'ashley@legacyfirstescrow.com')) { ?>
+										<?php //if (isset($user_email) && !empty($user_email) && (trim($user_email) == 'gladys@greenforestescrow.net' || trim($user_email) == 'openorders@empowerescrow.com' || trim($user_email) == 'docs@greenforestescrow.net' || trim($user_email) == 'patricia@greenforestescrow.net' || trim($user_email) == 'ashley@legacyfirstescrow.com')) { ?>
 											<a href="<?php echo base_url().'prelim-files'; ?>">
 												<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
 											</a>
-										<?php } ?>
+										<?php //} ?>
 										
 										
 										<a href="<?php // echo base_url().'attach-files'; ?>">
