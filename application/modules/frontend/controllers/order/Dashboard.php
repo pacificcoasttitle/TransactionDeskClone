@@ -3516,6 +3516,7 @@ class Dashboard extends MX_Controller {
 				$nestedData = array();
 				$nestedData[] = $i;
 				$nestedData[] = $order['file_number'];
+				$nestedData[] = $order['resware_status'];
 				$nestedData[] = !empty($order['opened_date']) ? date("m/d/Y", strtotime($order['opened_date'])) : '';
 				$nestedData[] = $order['full_address'];
 				$nestedData[] = $order['primary_owner'];

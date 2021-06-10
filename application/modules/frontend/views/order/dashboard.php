@@ -151,6 +151,7 @@ th {
 											<tr>
 												<th>No</th>
 												<th>#</th>
+												<th>Status</th>
 												<th>Opened</th>
 												<th>Property Address</th>
 												<th>Buyer/Seller</th>
