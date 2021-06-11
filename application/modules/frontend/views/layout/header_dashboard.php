@@ -33,6 +33,7 @@
                                     {
                                 ?>
                                         <li><a href="<?php echo base_url(); ?>dashboard">Dashboard Home</a></li>
+                                        <li><a href="<?php echo base_url(); ?>sales-production-history">Production History</a></li>
                                 <?php
                                     } 
                                 ?>

@@ -201,6 +201,8 @@ $route['export-data-from-xml-file'] = 'frontend/order/cron/exportDataFromXmlFile
 $route['send-borrower-verification-mail'] = 'frontend/order/cron/sendMailEscrowUsersForBorrowerVerification';
 $route['import-orders-using-file-number'] = 'frontend/order/cron/importOrdersUsingFileNumber';
 $route['get-orders-dashboard'] = 'frontend/order/dashboard/getOrdersDashboard';
+$route['sales-production-history'] = 'frontend/order/dashboard/salesProductionHistory';
+$route['get-sales-production-history'] = 'frontend/order/dashboard/getSalesProductionHistory';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
