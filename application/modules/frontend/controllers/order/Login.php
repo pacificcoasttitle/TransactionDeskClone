@@ -53,7 +53,7 @@ class Login extends MX_Controller {
                 if (!empty($user)) {
                     $session_data = array(
                         "id" => isset($user['id']) && !empty($user['id']) ? $user['id'] : '',
-                        "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name'].$user['last_name'] : '',
+                        "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name']." ".$user['last_name'] : '',
                         "email" => isset($user['email_address']) && !empty($user['email_address']) ? $user['email_address'] : '',
                         "random_password" => isset($user['random_password']) && !empty($user['random_password']) ? $user['random_password'] : '',
                         "is_admin" => 0,

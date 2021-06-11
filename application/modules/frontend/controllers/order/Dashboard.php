@@ -3184,7 +3184,7 @@ class Dashboard extends MX_Controller {
                 $i++; 
             }
 
-			if(!empty($month)) {
+			/*if(!empty($month)) {
 				
 				$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month);
 				$count_data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
@@ -3225,10 +3225,10 @@ class Dashboard extends MX_Controller {
 					$count_data['close_order_percetage'] = 0;
 				}
 				$json_data['count_data'] = $count_data;
-			}
+			}*/
 			
         } else {
-			$count_data['refi_open_count'] = 0;
+			/*$count_data['refi_open_count'] = 0;
 			$count_data['sale_open_count'] = 0;
 			$count_data['open_order_count'] = 0;
 			$count_data['refi_close_count'] = 0;
@@ -3240,7 +3240,7 @@ class Dashboard extends MX_Controller {
 			$count_data['refi_close_order_percetage'] = 0;
 			$count_data['sale_close_order_percetage'] = 0;
 			$count_data['close_order_percetage'] = 0;
-			$json_data['count_data'] = $count_data;
+			$json_data['count_data'] = $count_data;*/
 		}
 
         $json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
@@ -3539,4 +3539,63 @@ class Dashboard extends MX_Controller {
 		$json_data['data'] = $data;
 		echo json_encode($json_data);
 	}
+
+	function salesProductionHistory()
+	{
+		$userdata = $this->session->userdata('user');
+		$data['title'] = 'Sales Production History | Pacific Coast Title Company';
+		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
+		$this->load->view('layout/head_dashboard',$data);
+		$this->load->view('order/sales_production_history');
+	}
+
+	function getSalesProductionHistory()
+    {
+        $params = array();  $data = array();
+		$params['yearFlag'] = 1;
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $order_lists = $this->order->get_orders($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $order_lists = $this->order->get_orders($params);
+        }
+
+        if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($order_lists['data'] as $order)  {
+
+                $nestedData = array();
+				$nestedData[] = $i;
+                $nestedData[] = $order['file_number'];
+                $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
+                $nestedData[] = $order['full_address'];
+				$nestedData[] = $order['premium'] ? $order['premium'] : "$0.00";
+                $nestedData[] = ucfirst($order['resware_status']);
+               
+                if ($order['prelim_summary_id'] != 0) {
+					$action = "<a href='".base_url()."review-file/".$order['file_id']."'><button style='margin-bottom: 10px;' class='btn btn-grad-2a button-color' type='button'>REVIEW FILE</button></a>";
+				} else {
+					$action = "<a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;margin-bottom: 10px;' type='button'>Not Ready</button></a>";
+				}
+				$action .= "<a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>VIEW Partners</button></a>";
+               	$nestedData[] = $action;
+
+                $data[] = $nestedData; 
+                $i++; 
+            }
+        } 
+
+        $json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
 }
