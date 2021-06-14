@@ -311,6 +311,8 @@ $route['calculator/admin_logout'] = 'admin/calc/admin/admin_logout';
 
 $route['reports'] = "frontend/report";
 $route['reports/(.+)'] = "frontend/report/$1";
+$route['pmas'] = "frontend/pma";
+$route['pmas/(.+)'] = "frontend/pma/$1";
 $route['send_invite'] = 'frontend/order/home/send_invite'; 
 
 
