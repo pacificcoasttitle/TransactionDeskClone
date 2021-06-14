@@ -77,7 +77,10 @@
 				<div class="row">
 					<div class="row">
 						<div class="col-md-4">
-							<h2>Representative(s)</h2>
+							<h2>
+								<span>Representative(s)</span>
+
+							</h2>
 							<ul class="u-list">
 					          	<?php
 					          	foreach($salesReps as $key=>$salesRep):
@@ -118,7 +121,10 @@
 						</div>
 
 						<div class="col-md-8">
-							<h2>Create New Report</h2>
+							<h2><span>Create New Report</span>
+								<a href="<?=base_url('pmas')?>" class="pull-right">Create PMA</a>
+
+							</h2>
 							<div class="smart-forms smart-container">
 								<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('reports/importData') ?>">
 									<div class="form-body">
