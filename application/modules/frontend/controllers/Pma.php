@@ -42,15 +42,15 @@ class Pma extends MX_Controller {
         $request = 'http://pct.com/pma/proxy.php?requrl='.urlencode($request);
         // echo $request;die;
 
-        $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
-        echo $file;
-
-        // $request = str_replace('^', '<', $request);
-        // $api_key = env('BLACK_KNIGHT_KEY');        
-
-        // $request .= '&key=' . $api_key;
         // $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
         // echo $file;
+
+        $request = str_replace('^', '<', $request);
+        $api_key = env('BLACK_KNIGHT_KEY');        
+
+        $request .= '&key=' . $api_key;
+        $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
+        echo $file;
     }
 
     function rep_list()
