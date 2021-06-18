@@ -2503,14 +2503,22 @@ class Cron extends MX_Controller {
         }
         
         foreach ($files as $file) {
-            $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.$file);
-            chmod(FCPATH.'uploads/'.$file,0755);
+            $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.$file.".csv");
+            chmod(FCPATH.'uploads/'.$file.".csv",0755);
         }
         
-        $files = glob("uploads/*xml", GLOB_NOSORT);
+        $files = glob("uploads/*csv", GLOB_NOSORT);
                  
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
+                $this->load->library('CSVReader');
+                $csv_records =   $this->csvreader->parse_csv($filePath);
+                if(is_array($csv_records) && isset($csv_records[1])) {
+
+
+                }
+                $row = 1;
+                
                 $xml = file_get_contents($filePath);
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
