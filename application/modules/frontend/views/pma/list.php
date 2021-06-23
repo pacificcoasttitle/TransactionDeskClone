@@ -414,7 +414,7 @@
 	<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.tablesorter.min.js"></script> 
 
-    <script src="<?php echo base_url(); ?>assets/frontend/js/pma.js?v=0.1"></script>
+    <script src="<?php echo base_url(); ?>assets/frontend/js/pma.js?v=0.2"></script>
 
     <script type="text/javascript">
     	/*function autoComplete() {

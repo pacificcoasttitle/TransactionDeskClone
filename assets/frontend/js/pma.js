@@ -629,7 +629,7 @@ function updateRecents(tallyData) {
             date,
             rep,
             address,
-            '<a href="'+link+'" target="_blank">Downlaod</a>'
+            '<a href="'+link+'" target="_blank">Download</a>'
             ]).draw(false);
     });
     // report_table.draw();
