@@ -57,6 +57,16 @@
 	.u-list li:nth-child(2n+1) .no-report-image{
 	    background: #ffffff;
 	}
+	.report_switch_btn {
+		height: 42px;
+	    background: #d35411;
+	    line-height: 1px;
+	    padding: 25px 18px;
+	    vertical-align: top;
+	    display: inline-block;
+	    font-size: 18px;
+	    color: #fff;
+	}
 </style>
 <body>
 	<?php
@@ -67,7 +77,7 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="">
-						<h2 class="ui-title-block ui-title-block_light">Reports</h2>
+						<h2 class="ui-title-block ui-title-block_light">Reports <a href="<?php echo base_url('pmas'); ?>" class="pull-right report_switch_btn">Create Concierge</a></h2>
 						<div class="ui-decor-1a bg-accent"></div>
 						
 					</div>
@@ -122,7 +132,7 @@
 
 						<div class="col-md-8">
 							<h2><span>Create New Report</span>
-								<a href="<?=base_url('pmas')?>" class="pull-right">Create PMA</a>
+								<!-- <a href="<?=base_url('pmas')?>" class="pull-right">Create PMA</a> -->
 
 							</h2>
 							<div class="smart-forms smart-container">

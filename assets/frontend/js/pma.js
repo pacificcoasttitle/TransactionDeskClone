@@ -68,6 +68,19 @@ $(document).ready(function() {
     $(document).on('click', '.js-run-apn-button', apnMultiple);
     $(document).on('click', '.js-search-apn', getAPN);
     $(document).on('click', '.js-find-property', getAddress);
+
+    report_table = $('#cpl_listing').DataTable({
+             "aaSorting": [],
+            "language": {
+                // searchPlaceholder: "Search File# or Address",
+                paginate: {
+                    next: '<span class="fa fa-angle-right"></span>',
+                    previous: '<span class="fa fa-angle-left"></span>',
+                },
+                "emptyTable": "Record(s) not found.",
+                // "search": "",
+            },
+        });
 });
 
 
@@ -80,31 +93,13 @@ function textDropdown(dropArray, id) {
         select: function(e, ui) {
             retrieveFormData(id, e, ui);
         }
-    }).addClass("ui-widget ui-widget-content ui-corner-left");
+    }).addClass("");
 
     if (firstModal) {
-        $("<button type='button'>&nbsp;</button>")
-            .attr("tabIndex", -1)
-            .attr("title", "Show All Items")
-            .insertAfter($input)
-            .button({
-                icons: {
-                    primary: "ui-icon-triangle-1-s"
-                },
-                text: false
-            })
-            .removeClass("ui-corner-all")
-            .addClass("ui-corner-right ui-button-icon lp-drop-button")
-            .click(function() {
-                // close if already visible                         
-                if ($input.autocomplete("widget").is(":visible")) {
+        if ($input.autocomplete("widget").is(":visible")) {
                     $input.autocomplete("close");
                     return;
                 }
-                $(this).blur();
-                $input.autocomplete("search", "");
-                $input.focus();
-            });
     }
 }
 
@@ -164,8 +159,8 @@ function getDropItems() {
             var dropData = $.parseJSON(response);
             //console.log(dropData[0]);
             //console.log(dropData[1]);
-            var realtors = dropData[0];
-            var companies = dropData[1];
+            var realtors = dropData['realtor_name'];
+            var companies = dropData['realtor_company'];
             realtors = realtors.sort();
             companies = companies.sort();
             textDropdown(realtors, '#realtor-name');
@@ -204,6 +199,7 @@ function switchSearch() {
         $('.js-switch-search').text('Switch to APN Search');
         $('.js-search-label1').text('Property Address');
         $('.js-search-label2').text('City');
+        $('.js-pma-city').attr("placeholder", "City");
         $('.js-search-button').text('Find Property');
     } else {
         $('.js-pma-address').hide();
@@ -211,6 +207,8 @@ function switchSearch() {
         $('.js-switch-search').text('Switch to Address Search');
         $('.js-search-label1').text('APN');
         $('.js-search-label2').text('County');
+        $('.js-pma-city').attr("placeholder", "County");
+        
         $('.js-search-button').text('Search APN');
     }
 }
@@ -233,7 +231,8 @@ function listReps() {
 // extracts data from custom info form. 
 function getCustomInfo() {
     event.preventDefault ? event.preventDefault() : event.returnValue = false;
-    reportData.rep = $('#rep-name option:selected').val();
+    reportData.rep = $('#rep-name option:selected').text();
+    reportData.repId = $('#rep-name option:selected').val();
     var formData = $('#run-pma-form').serialize();
     firstModal = false;
     recordFormData(formData);
@@ -266,6 +265,7 @@ function checkXML() {
 
 // gets 187 for client-side parsing
 function get187() {
+    $('body').addClass('loading-screen');
     $.ajax({
         type: "GET",
         url: base_url+"pmas/proxy",
@@ -275,10 +275,12 @@ function get187() {
         dataType: "xml",
         success: function(xml) {
             compsXML = xml;
+            $('body').removeClass('loading-screen');
             parse187(xml)
         },
         error: function() {
             alert("An error occurred while processing XML file.");
+            $('body').removeClass('loading-screen');
         }
     });
 }
@@ -396,7 +398,7 @@ function parseComps() {
 function appendComps(compsData) {
     $('#comps-table').find("tbody").html('');
     for (i = 0; i < compsData.length; i++) {
-        $('#comps-table').find("tbody").append('<tr><td class="comp-address"></td><td></td><td></td><td></td><td></td><td></td><td></td><td><input type="checkbox" class="apn-checkbox" name="apn" value="' + compsData[i][7] + '"/><span class="x-checkbox" unchecked></span><input type="checkbox" class="invisible-checkbox" name="apndelete" value="' + compsData[i][7] + '"/></td></tr>');
+        $('#comps-table').find("tbody").append('<tr><td class="comp-address"></td><td></td><td></td><td></td><td></td><td></td><td></td><td><input type="checkbox" class="apn-checkbox" name="apn" value="' + compsData[i][7] + '"/><span class="x-checkbox" unchecked></span><input type="checkbox" class="invisible-checkbox hide" name="apndelete" value="' + compsData[i][7] + '"/></td></tr>');
         for (var j = 0; j < 7; j++) {
             $('#comps-table').find("tbody").find('tr').eq(i).find('td').eq(j).text(compsData[i][j]);
         }
@@ -518,6 +520,7 @@ function runPMA() {
     compsSkip = false;
     query += '&' + $.param(reportData);
     $('.progress-bar').show();
+    $('body').addClass('loading-screen');
     $.ajax({
         crossDomain: true,
         url: base_url+'pmas/pma',
@@ -527,24 +530,27 @@ function runPMA() {
         .done(function(response) {
             //console.log('success');
             returnReport(response);
+            $('body').removeClass('loading-screen');
         })
         .fail(function(response) {
             $('.pma-error').text('Unsuccessful PDF Generation');
+            $('body').removeClass('loading-screen');
         })
 }
 
 
 // handles response from script that generates PDF
 function returnReport(response) {
-    var pdfID = parseID(response);
-    //console.log(pdfID);
-    event.preventDefault ? event.preventDefault() : event.returnValue = false;
-    $('.js-pma-address').val('');
-    $('.js-pma-city').val('');
-    var res = reportData.address;
-    res = res.replace(" ", "_")
-    var pdfLink = 'http://pct.com/pma/profiles/profileTemps/' + res + ' ' + pdfID + '.pdf';
-    //var pdfLink = 'pma/pdf_server.php?file=pma/' + response;
+    // var pdfID = parseID(response);
+    // //console.log(pdfID);
+    // event.preventDefault ? event.preventDefault() : event.returnValue = false;
+    // $('.js-pma-address').val('');
+    // $('.js-pma-city').val('');
+    // var res = reportData.address;
+    // res = res.replace(" ", "_")
+    // var pdfLink = 'http://pct.com/pma/profiles/profileTemps/' + res + ' ' + pdfID + '.pdf';
+    response= $.parseJSON(response);
+    var pdfLink = response.pdfLink;
     reportData.link = pdfLink;
     $('.progress-bar').hide();
     dataTransfer('yes');
@@ -562,6 +568,7 @@ function parseID(response) {
 function dataTransfer(status) {
     var dataQuery = $.param(reportData);
     dataQuery += '&dataUpdate=' + status;
+    $('body').addClass('loading-screen');
     //console.log(dataQuery);
     $.ajax({
         url: base_url+'pmas/pma_data',
@@ -580,6 +587,7 @@ function dataTransfer(status) {
             reportData.cost111 = 0;
             reportData.cost187 = 0;
             getDropItems();
+            $('body').removeClass('loading-screen');
         })
 }
 
@@ -607,18 +615,24 @@ function updateTally(tallies) {
 // updates list of recently run reports 
 function updateRecents(tallyData) {
     $('.recent-reports tbody').html('');
-    for (var i = 1; i <= 20; i++) {
-        var j = i.toString();
-        if (j in tallyData) {
-            var address = tallyData[j][0];
-            var city = tallyData[j][2];
-            var rep = tallyData[j][3];
-            var link = tallyData[j][4];
-            var date = tallyData[j][5];
-            $('.recent-reports tbody').append('<tr><td>' + date + '</td><td>' + rep + '</td><td></br>' + address + '<p>' + city + '</p></td><td><a class="button blueButton" href="' + link + '" target="_blank">Download</a></td></tr>')
-                .show();
-        }
-    }
+    var recentReports = tallyData.reports;
+    report_table.clear().draw();
+    $.each( recentReports, function( key, value ) {
+        var address = value.address;
+        var city = value.city;
+        var rep = value.sales_rep;
+        var  link = value.link;
+        var date = value.runDate;
+        // $('.recent-reports tbody').append('<tr><td>' + date + '</td><td>' + rep + '</td><td></br>' + address + '<p>' + city + '</p></td><td><a class="button blueButton" href="' + link + '" target="_blank">Download</a></td></tr>')
+        //         .show();
+        report_table.row.add([
+            date,
+            rep,
+            address,
+            '<a href="'+link+'" target="_blank">Downlaod</a>'
+            ]).draw(false);
+    });
+    // report_table.draw();
 }
 
 
@@ -732,6 +746,7 @@ function fetchReports(repNum) {
     reportNum = repNum;
     request = decodeURIComponent(request);
     request = request.replace(/</g, '^');
+    $('body').addClass('loading-screen');
     //console.log(request);
     $.ajax({
         url: base_url+'pmas/proxy',
@@ -772,6 +787,8 @@ function fetchReports(repNum) {
             }
         })
         .always(function() {
+            $('.search-result-div').removeClass('hide');
+            $('body').removeClass('loading-screen');
             if (reportNum !== '110') {
                 $('.progress-bar').hide();
             }
@@ -868,7 +885,7 @@ function multipleResults(response) {
         var zip = $(this).find('ZIP').text();
         apnInfo[apn]['fips'] = $(this).find('FIPS').text();
         //console.log('fips1= ' + apnInfo[apn]['fips']);
-        $('.result-table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-city"></span></td><td><a class="button blueButton js-run-apn-button" href="#">Search APN</a></td></tr>');
+        $('.result-table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-city"></span></td><td><button type="button" class="btn btn-info js-run-apn-button" >Create</button></td></tr>');
         $('.result-table > tbody').find('tr').eq(i).find('.result-apn').text(apn);
         $('.result-table > tbody').find('tr').eq(i).find('.result-address').text(address);
         $('.result-table > tbody').find('tr').eq(i).find('.result-city').text(city);
@@ -902,7 +919,7 @@ function apnMultiple() {
     $('.progress-bar').show();
     $('.result-table > tbody').html('');
     $('.result-table > tbody').hide();
-    $('.result-table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-city"></span></td><td><a class="button blueButton js-run-pma-button" href="#">Run PMA</a></td></tr>');
+    $('.result-table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-city"></span></td><td><button type="button" class="btn btn-info">Create</button></td></tr>');
     apnData();
 }
 

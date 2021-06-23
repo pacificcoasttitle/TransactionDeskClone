@@ -10,6 +10,7 @@ class Pma extends MX_Controller {
             redirect('dashboard');
         }
         $this->user = $userdata;
+        // var_dump($this->user);die;
         
         $this->load->model('order/home_model');
         $this->load->library('order/order');
@@ -25,6 +26,55 @@ class Pma extends MX_Controller {
 
     function task($action='fetchItems')
     {   
+
+        $return_data = array();
+
+        $this->load->model('pma/pct_realtor_data_model','realtors');
+        if($action=='fetchItems') {
+
+            $realtors = $this->realtors->get_many_by('agent !=', '');
+            $realtor_name = $realtor_company = array();
+            foreach ($realtors as $realtor) {
+                $realtor_name[] = $realtor->agent;
+                if(!empty($realtor->company)) {
+                    $realtor_company[] = $realtor->company;
+                }
+            }
+
+            $realtor_name = array_values(array_unique($realtor_name));
+            $realtor_company = array_values(array_unique($realtor_company));
+
+            $return_data['realtor_name'] = $realtor_name;
+            $return_data['realtor_company'] = $realtor_company;
+        }
+
+        if ($action == 'populate') {
+            $type = isset($_GET['type']) ? $_GET['type'] : '';
+            $popData = array();
+            if ($type == 'agent') { 
+                $agent = stripslashes($_GET['agent']);
+                $realtors = $this->realtors->get_by('agent', $agent);
+                if($realtors) {
+                    $popData['company'] = stripslashes($realtors->company);
+                    $popData['address'] = stripslashes($realtors->address);
+                }
+            }
+            else {
+                $company = $_GET['company'];
+                $company = stripslashes($_GET['company']);
+                $realtors = $this->realtors->get_by('company', $company);
+                if($realtors) {
+                    $popData['company'] = $company;
+                    $popData['address'] = stripslashes($realtors->address);
+                }
+                // $entry = mysqli_query($con, "SELECT * FROM pmaformdata WHERE company='$company' ORDER BY id ASC");
+            }
+            $return_data = $popData;
+        }
+
+        echo json_encode($return_data);exit;
+
+
         
     }
 
@@ -39,18 +89,19 @@ class Pma extends MX_Controller {
 
 
         $request = $_GET['requrl'];
+        
         $request = 'http://pct.com/pma/proxy.php?requrl='.urlencode($request);
-        // echo $request;die;
-
-        // $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
-        // echo $file;
-
-        $request = str_replace('^', '<', $request);
-        $api_key = env('BLACK_KNIGHT_KEY');        
-
-        $request .= '&key=' . $api_key;
         $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
         echo $file;
+
+
+
+        // $request = str_replace('^', '<', $request);
+        // $api_key = env('BLACK_KNIGHT_KEY');        
+
+        // $request .= '&key=' . $api_key;
+        // $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
+        // echo $file;
     }
 
     function rep_list()
@@ -65,12 +116,185 @@ class Pma extends MX_Controller {
         $options = '';
         $options .= '<option value="">Select Rep</option>';
         foreach ($salesReps as $salesRep) {
-            $options .= '<option value="'.$salesRep['user_id_pk'].'">'.$salesRep['first_name'].' '.$salesRep['last_name'].'</option>';
+            $options .= '<option value="'.$salesRep['id'].'">'.$salesRep['first_name'].' '.$salesRep['last_name'].'</option>';
         }
         echo $options;
     }
 
     function pma_data(){
+
+        $dataUpdate = $this->input->post('dataUpdate');
+        $this->load->model('pma/pma_data_model','pma');
+        $this->load->model('pma/customer_basic_detail_model','reps');
+
+
+        if ($dataUpdate == 'yes') {
+            $insert_data = array();
+            $insert_data['address'] = $this->input->post('address');
+            $insert_data['apn'] = $this->input->post('apn');
+            $insert_data['city'] = $this->input->post('city');
+            $insert_data['sales_rep'] = $this->input->post('repId');
+            $insert_data['link'] = $this->input->post('link');
+            $insert_data['added_by'] = $this->user['id'];
+            $insert_data['runDate'] = date('Y-m-d H:i:s');
+            $cost110 = $this->input->post('cost110');
+            $cost111 = $this->input->post('cost111');
+            $cost187 = $this->input->post('cost187');
+
+            $insert_data['cost'] = $cost110 + $cost111 + $cost187;
+
+            $this->pma->insert($insert_data);
+        }
+
+        $reports = array();
+
+        $report_data = $this->pma->order_by('id','DESC')->with('sales_rep')->get_many_by('added_by', $this->user['id']);
+        foreach ($report_data as $report_record) {
+            $temp_data = array();
+            $temp_data['id']=$report_record->id;
+            $temp_data['address']=$report_record->address;
+            $temp_data['city']=$report_record->city;
+            $temp_data['link']=base_url($report_record->link);
+            $temp_data['runDate']=strtotime($report_record->runDate) ? date('y/m/d',strtotime($report_record->runDate)) : '';
+            $temp_data['sales_rep']='';
+            if($report_record->sales_rep) {
+                $temp_data['sales_rep'] = $report_record->sales_rep->first_name.' '.$report_record->sales_rep->last_name;
+            }
+            $reports[] = $temp_data;
+
+        }
+        $returnData['reports'] = $reports; 
+
+        $sales_reps = array();
+        $sales_rep_data = $this->reps->with('pma')->get_many_by('is_sales_rep', '1');
+        foreach ($report_data as $report_record) {
+            
+        }
+        // $returnData['pma_data'] = $pma_data; 
+
+
+        
+
+        $total = $this->pma->count_by('added_by', $this->user['id']);
+
+        // $costTotal = mysqli_query($con, "SELECT SUM(cost) AS value_sum FROM pma");
+        // $row = mysqli_fetch_assoc($costTotal); 
+        // $sum = $row['value_sum'];
+        $sum = 0;
+        $sum = '$' . $sum;
+        $returnData['cost'] = $sum;
+        $returnData['total'] = $total; 
+        echo json_encode($returnData);
+        
+    }
+
+    function pma(){
+        $post_data = $this->input->post();
+        $this->load->helper('pma');
+        // var_dump($post_data);
+
+        $report_data = array();
+        /* Start generating pdf */
+        $address = $this->input->post('address');
+        $linkAddress = str_replace(" ", "_", $this->input->post('address'));
+        $propertyCity = $this->input->post('city');
+        $propertyZip = $this->input->post('zip');
+        $propertyState = $this->input->post('state');
+        $report_data['rep_name'] = $this->input->post('rep');
+        $report_data['realtorName'] = $this->input->post('realtor-name');
+        $report_data['realtorCompany'] = $this->input->post('realtor-company');
+        $report_data['realtorAddress'] = $this->input->post('realtor-address');
+        $rep111 = $this->input->post('report111');
+        $rep187 = $this->input->post('report187');
+        
+
+        
+        
+
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        ); 
+
+        /*Report 187*/
+        $rep187 = urldecode($rep187);
+        // $report187 = file_get_contents($rep187,false, stream_context_create($arrContextOptions));
+        $report187 = simplexml_load_file($rep187);
+
+        if (!($report187)) {
+            $report187 = simplexml_load_file(base_url('assets/pma/test187.xml'));
+        }
+        $report_data['main_report'] = $report187;
+        /*Report 187*/
+
+        /*Report 111*/
+        $rep111 = urldecode($rep111);
+        // $report111 = file_get_contents($rep111,false, stream_context_create($arrContextOptions));
+        $report111 = simplexml_load_file($rep111);
+
+        $report_data['report_111'] = $report111;
+        /*Report 111*/
+
+        /* Comparable Data */
+        $comparable_apn = array();
+        for ($apn_i=1; $apn_i <=8 ; $apn_i++) { 
+            $apn_append = 'apn'.$apn_i;
+            if(!empty($this->input->post($apn_append))) {
+                $comparable_apn[] = $this->input->post($apn_append);
+            }
+        }
+        $report_data['comparable_apn'] = $comparable_apn;
+
+        $compare_i = 0;
+        if(count($comparable_apn)) {
+           foreach ($report187->ComparableSalesReport->ComparableSales->ComparableSale as $key=>$comparableSale) {
+                if( in_array($comparableSale->APN, $comparable_apn) ) {
+                    $comparableSales[] = $comparableSale;
+                    $compare_i++;
+                    if($compare_i>=8) {
+                        break;
+                    }
+                }
+            }   
+        }
+        else {
+            foreach ($report187->ComparableSalesReport->ComparableSales->ComparableSale as $key=>$comparableSale) {
+                $comparableSales[] = $comparableSale;
+                $compare_i++;
+                if($compare_i>=8) {
+                    break;
+                }
+            }
+        }
+        $report_data['comparableSales'] = $comparableSales;
+        /* Comparable Data */
+
+        
+       
+        // echo json_encode($returnData);
+        $html = $this->load->view('pma/report/index',$report_data,true);
+
+        // echo $html;die;
+
+        $this->load->library('snappy_pdf');
+                
+        // header('Content-Type: application/pdf');
+        $document_name = $linkAddress.'_'.time().'_'.$this->user['id'].'.pdf';
+        $dir_to_upload = 'uploads/pma';
+        if (!is_dir(FCPATH.$dir_to_upload)) {
+            mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
+        }
+        $dir_name = FCPATH.$dir_to_upload.'/';
+        $dir_name = str_replace('\\', '/', $dir_name);
+        // echo $dir_name.$document_name;die;
+        $this->snappy_pdf->pdf->generateFromHtml($html,$dir_name.$document_name);
+
+        $returnData = array();
+        $returnData['pdfLink'] = $dir_to_upload.'/'.$document_name;
+        echo json_encode($returnData);exit;
+
         
     }
 
