@@ -168,7 +168,7 @@ class Pma extends MX_Controller {
         $sales_reps = array();
         $sales_rep_data = $this->reps->with('pma')->get_many_by('is_sales_rep', '1');
         foreach ($report_data as $report_record) {
-            
+
         }
         // $returnData['pma_data'] = $pma_data; 
 
@@ -282,7 +282,7 @@ class Pma extends MX_Controller {
                 
         // header('Content-Type: application/pdf');
         $document_name = $linkAddress.'_'.time().'_'.$this->user['id'].'.pdf';
-        $dir_to_upload = 'uploads/pma';
+        $dir_to_upload = 'uploads/sales-rep/pma';
         if (!is_dir(FCPATH.$dir_to_upload)) {
             mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
         }
