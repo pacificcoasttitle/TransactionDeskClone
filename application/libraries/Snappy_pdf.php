@@ -26,7 +26,7 @@ class Snappy_pdf {
 	                'zoom'          => 1.285,
 	                'load-error-handling'=>'ignore',
 	                'load-media-error-handling'=>'ignore',
-	                'disable-javascript'=> true
+	                // 'disable-javascript'=> false
 	            ];
         }
 
