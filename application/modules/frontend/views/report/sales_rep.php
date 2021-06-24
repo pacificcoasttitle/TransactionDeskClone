@@ -86,7 +86,7 @@
 					          		<div class="u-pic">
 				          			<?php
 				          			$image_url = trim(env('AWS_PATH').$salesRep['sales_rep_report_image']);
-				          			if (!empty($salesRep['sales_rep_report_image']) && checkRemoteFile($image_url)):
+				          			if (!empty($salesRep['sales_rep_report_image'])):
 				          			?>
 						              <img src="<?php echo $image_url;?>" alt="main-logo" class="retina">
 						              <?php else : ?>

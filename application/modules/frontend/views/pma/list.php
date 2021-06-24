@@ -47,6 +47,7 @@
 		float: right;
 		font-size: 20px;
     	margin-right: 10px;
+    	text-align: right;
 	}
 	.no-report-image {
 	    text-align: center;
@@ -106,6 +107,11 @@
 	#cpl_listing tbody {
 		display: table-row-group !important;
 	}
+	.pma_val {
+		color: #d35400;
+    	font-weight: bold;
+    	text-align: center;
+	}
 </style>
 <body>
 	<?php
@@ -126,55 +132,27 @@
 				<div class="row">
 					<div class="row">
 						<div class="col-md-4">
-							<div>
-								
-								<h4>Total Ran</h4>
-								<div class="pma-total"> 0 </div>
+							<div class="row">
+								<div class="col-sm-8">
+									<h5>Total Ran</h5>
+								</div>
+								<div class="col-sm-4">
+									<h4 class="pma-total pma_val"> 0 </h4>
+								</div>
 							</div>
-							<div>
-								<h4>Accumilated Cost</h4>
-								<div class="accrued-cost"> 0 </div>
+							<div class="row">
+								<div class="col-sm-8">
+									<h5>Accumilated Cost</h5>
+								</div>
+								<div class="col-sm-4">
+									<h4 class="accrued-cost pma_val"> 0 </h4>
+								</div>
 							</div>
-							<ul class="u-list">
-					          	<?php
-					          	/* foreach($salesReps as $key=>$salesRep):
-					          	?>
-					          	<li>
-					          		<div class="u-pic">
-				          			<?php 
-				          			$image_url = trim(env('AWS_PATH').$salesRep['sales_rep_report_image']);
-				          			if (!empty($salesRep['sales_rep_report_image']) && checkRemoteFile($image_url)): ?>
-						              <img src="<?php echo $image_url;?>" alt="main-logo" class="retina">
-						              <?php else : ?>
-						              	<div class="no-report-image"><span><?php echo strtoupper(substr(trim($salesRep['first_name']) , 0,1).substr(trim($salesRep['last_name']) , 0,1)) ?></span></div>
-						              <?php endif; ?>
-						            </div>
-						            <div class="u-info">
-						            	<div class="u-name"><?php echo $salesRep['first_name'].' '.$salesRep['last_name'] ?></div>
-						              <div><?php echo $salesRep['email_address'];?></div>
-						              <div>
-						              	<?php echo $salesRep['telephone_no'];?>
-						              </div>
-						              <div>
-						              	PMA's :<?php echo $salesRep['pma'];?>
-						              </div>
-						            </div>
-						            <div class="u-count">
-						            	<div><?php echo $salesRep['pma_count'];?></div>
-						            </div>
-					          	</li>
-					          	<?php
-					          	if($key == 9) {
-					          		break;
-					          	}
-					          	endforeach; */
-						        ?>
-					        </ul>
-						        <?php /* if(count($salesReps) > 10) : ?>
-						        	<div class="pull-right">
+							<ul class="u-list" id="rep-list-data"></ul>
+						        
+						        	<div class="pull-right hide" id="show_all_rep">
 						        		<a href="<?=base_url('reports/sales_rep')?>" class="btn btn-success">View All</a>
 						        	</div>
-						        <?php endif; */ ?>
 						</div>
 
 						<div class="col-md-8">
@@ -390,6 +368,7 @@
 							<th>Sale Price</th>
 						</tr>
 				  		</thead>
+				  		<tbody></tbody>
 				  		</table>
 				  		<div class="comps-error"></div>
 					</div>
@@ -414,7 +393,7 @@
 	<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.tablesorter.min.js"></script> 
 
-    <script src="<?php echo base_url(); ?>assets/frontend/js/pma.js?v=0.2"></script>
+    <script src="<?php echo base_url(); ?>assets/frontend/js/pma.js?v=0.3"></script>
 
     <script type="text/javascript">
     	/*function autoComplete() {

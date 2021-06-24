@@ -583,6 +583,9 @@ function dataTransfer(status) {
             $('.pma-error').text('Problem updating database');
         })
         .always(function() {
+            if(status == 'yes') {
+                location.reload();
+            }
             reportData.cost110 = 0;
             reportData.cost111 = 0;
             reportData.cost187 = 0;
@@ -598,7 +601,43 @@ function updateTally(tallies) {
     //console.log(tallyData);
     $('.pma-total').text(tallyData.total);
     $('.accrued-cost').text(tallyData.cost);
+    var rep_data = tallyData.sales_reps;
+    list_emement = '';
+    if($('#rep-list-data li').length > 1) {
+        $.each( rep_data, function( key, value ) {
+            var dynamic_li_class = '.rep_list_'+value.rep_id;
+            $(dynamic_li_class+' .report_total').html(value.report_total);
+            $(dynamic_li_class+' .report_cost').html('$'+value.report_cost);
+        });
+    }
+    else {
+
+        $.each( rep_data, function( key, value ) {
+            var img_div = '';
+            if(value.image == '') {
+                img_div = '<div class="no-report-image"><span>'+value.image_alt+'</span></div>';
+            }
+            else {
+                img_div = '<img src="'+value.image+'" alt="'+value.image_alt+'" class="retina">';
+            }
+
+                list_emement += '<li class="rep_list_'+value.rep_id+'"><div class="u-pic">'+img_div+'</div>';
+                list_emement += '<div class="u-info">';
+                list_emement += '<div class="u-name">'+value.name+'</div>';
+                list_emement += '<div>'+value.email+'</div>';
+                list_emement += '<div>'+value.phone+'</div></div>';
+                list_emement += '<div class="u-count">';
+                list_emement += '<div class="report_total">'+value.report_total+'</div>';
+                list_emement += '<div class="report_cost">$'+value.report_cost+'</div></div></li>';
+        });
+        $('#rep-list-data').html(list_emement);
+        $("#show_all_rep").removeClass('hide');
+        
+    }
+    
     //console.log(tallyData);
+
+    
     $('.rep-table tr').each(function() {
         var pctRep = $(this).find('td:nth-child(1)').text();
         if (tallyData[pctRep]) {
@@ -678,7 +717,7 @@ function getAddress() {
     if (isNaN(locale[0])) {
         locale += ', CA' // if locale is city rather than zip, add in state
     }
-    data(address, locale);
+    addressData(address, locale);
 }
 
 
@@ -694,7 +733,7 @@ function searchReset() {
 
 
 // creates data object for AJAX call to API
-function data(address, locale) {
+function addressData(address, locale) {
     dataObj = {};
     dataObj.Address = address;
     dataObj.LastLine = locale.toString();
@@ -919,7 +958,7 @@ function apnMultiple() {
     $('.progress-bar').show();
     $('.result-table > tbody').html('');
     $('.result-table > tbody').hide();
-    $('.result-table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-city"></span></td><td><button type="button" class="btn btn-info">Create</button></td></tr>');
+    $('.result-table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-city"></span></td><td><button type="button" class="btn btn-info js-run-pma-button">Create</button></td></tr>');
     apnData();
 }
 

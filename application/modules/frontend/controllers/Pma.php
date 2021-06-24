@@ -90,18 +90,18 @@ class Pma extends MX_Controller {
 
         $request = $_GET['requrl'];
         
-        $request = 'http://pct.com/pma/proxy.php?requrl='.urlencode($request);
-        $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
-        echo $file;
-
-
-
-        // $request = str_replace('^', '<', $request);
-        // $api_key = env('BLACK_KNIGHT_KEY');        
-
-        // $request .= '&key=' . $api_key;
+        // $request = 'http://pct.com/pma/proxy.php?requrl='.urlencode($request);
         // $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
         // echo $file;
+
+
+
+        $request = str_replace('^', '<', $request);
+        $api_key = env('BLACK_KNIGHT_KEY');        
+
+        $request .= '&key=' . $api_key;
+        $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
+        echo $file;
     }
 
     function rep_list()
@@ -147,6 +147,7 @@ class Pma extends MX_Controller {
         }
 
         $reports = array();
+        $cost = 0;
 
         $report_data = $this->pma->order_by('id','DESC')->with('sales_rep')->get_many_by('added_by', $this->user['id']);
         foreach ($report_data as $report_record) {
@@ -154,23 +155,42 @@ class Pma extends MX_Controller {
             $temp_data['id']=$report_record->id;
             $temp_data['address']=$report_record->address;
             $temp_data['city']=$report_record->city;
-            $temp_data['link']=base_url($report_record->link);
+            $temp_data['link']=env('AWS_PATH').$report_record->link;
             $temp_data['runDate']=strtotime($report_record->runDate) ? date('y/m/d',strtotime($report_record->runDate)) : '';
             $temp_data['sales_rep']='';
             if($report_record->sales_rep) {
                 $temp_data['sales_rep'] = $report_record->sales_rep->first_name.' '.$report_record->sales_rep->last_name;
             }
+            $cost+=$report_record->cost;
             $reports[] = $temp_data;
 
         }
         $returnData['reports'] = $reports; 
 
         $sales_reps = array();
-        $sales_rep_data = $this->reps->with('pma')->get_many_by('is_sales_rep', '1');
-        foreach ($report_data as $report_record) {
+        $sales_rep_data = $this->reps->with('pma')->order_by('first_name','ASC')->limit(10)->get_many_by('is_sales_rep', '1');
+        foreach ($sales_rep_data as $sales_rep_record) {
+
+            $sales_rep_temp =array();
+            $sales_rep_temp['rep_id'] = $sales_rep_record->id;
+            $sales_rep_temp['name'] = $sales_rep_record->first_name.' '.$sales_rep_record->last_name;
+            $sales_rep_temp['image'] = !empty($sales_rep_record->sales_rep_report_image) ? env('AWS_PATH').$sales_rep_record->sales_rep_report_image : '';
+            $sales_rep_temp['image_alt'] = strtoupper(substr(trim($sales_rep_record->first_name) , 0,1).substr(trim($sales_rep_record->last_name) , 0,1));
+            $sales_rep_temp['email'] = $sales_rep_record->email_address;
+            $sales_rep_temp['phone'] = $sales_rep_record->telephone_no;
+            $sales_rep_temp['report_total'] = count($sales_rep_record->pma);
+            $cost_sum = 0;
+            $pma_report = $sales_rep_record->pma;
+            if(is_array($pma_report) && count($pma_report)) {
+                $cost_column = array_column($pma_report, 'cost');
+                $cost_sum = array_sum($cost_column);
+            }
+            $sales_rep_temp['report_cost'] = $cost_sum;
+
+            $sales_reps[] = $sales_rep_temp;
 
         }
-        // $returnData['pma_data'] = $pma_data; 
+        $returnData['sales_reps'] = $sales_reps; 
 
 
         
@@ -180,8 +200,8 @@ class Pma extends MX_Controller {
         // $costTotal = mysqli_query($con, "SELECT SUM(cost) AS value_sum FROM pma");
         // $row = mysqli_fetch_assoc($costTotal); 
         // $sum = $row['value_sum'];
-        $sum = 0;
-        $sum = '$' . $sum;
+        // $sum = 0;
+        $sum = '$' . $cost;
         $returnData['cost'] = $sum;
         $returnData['total'] = $total; 
         echo json_encode($returnData);
@@ -293,6 +313,14 @@ class Pma extends MX_Controller {
 
         $returnData = array();
         $returnData['pdfLink'] = $dir_to_upload.'/'.$document_name;
+        $response = $this->order->uploadDocumentOnAwsS3($document_name, 'sales-rep/pma');
+        if($response) {
+            //report_url
+            $returnData['pdfLink'] = 'sales-rep/pma/'.$document_name;
+            if(is_file($dir_name.$document_name)) {
+                unlink($dir_name.$document_name);
+            }
+        }
         echo json_encode($returnData);exit;
 
         
