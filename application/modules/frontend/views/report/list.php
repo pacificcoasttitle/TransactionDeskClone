@@ -77,7 +77,7 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="">
-						<h2 class="ui-title-block ui-title-block_light">Reports <a href="<?php echo base_url('pmas'); ?>" class="pull-right report_switch_btn">Create Concierge</a></h2>
+						<h2 class="ui-title-block ui-title-block_light">Farm Analysis <a href="<?php echo base_url('pmas'); ?>" class="pull-right report_switch_btn">Create Concierge</a></h2>
 						<div class="ui-decor-1a bg-accent"></div>
 						
 					</div>
@@ -99,7 +99,7 @@
 					          		<div class="u-pic">
 				          			<?php 
 				          			$image_url = trim(env('AWS_PATH').$salesRep['sales_rep_report_image']);
-				          			if (!empty($salesRep['sales_rep_report_image']) && checkRemoteFile($image_url)): ?>
+				          			if (!empty($salesRep['sales_rep_report_image'])): ?>
 						              <img src="<?php echo $image_url;?>" alt="main-logo" class="retina">
 						              <?php else : ?>
 						              	<div class="no-report-image"><span><?php echo strtoupper(substr(trim($salesRep['first_name']) , 0,1).substr(trim($salesRep['last_name']) , 0,1)) ?></span></div>
