@@ -213,7 +213,7 @@
 							<div style="margin-bottom: 50px" class="hide search-result-div">
 								<h2>Search Results</h2>
 								<div class="address-result">
-									<div class="pma-error"></div>
+									<div class="pma-error alert alert-danger"></div>
 									<table class="table table-type-3 typography-last-elem no-footer result-table" id="cpl_listing_1">
 										<thead>
 											<tr>
@@ -271,6 +271,7 @@
 					</div>
 					<div class="modal-body search-result">
 				  		<fieldset>
+				  		<div class="alert alert-danger alert-dismissible pma-alert" role="alert" style="display: none"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button><span class="error_msg"></span></div>
 				  		<div class="custom-pma-field form-group">
 				  			<label class="control-label col-sm-2" for="rep-name" >Rep:</label>
 				  			<div class="col-sm-10">
@@ -393,7 +394,7 @@
 	<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.tablesorter.min.js"></script> 
 
-    <script src="<?php echo base_url(); ?>assets/frontend/js/pma.js?v=0.3"></script>
+    <script src="<?php echo base_url(); ?>assets/frontend/js/pma.js?v=0.4"></script>
 
     <script type="text/javascript">
     	/*function autoComplete() {

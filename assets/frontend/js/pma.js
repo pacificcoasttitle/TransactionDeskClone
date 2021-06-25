@@ -60,9 +60,17 @@ $(document).ready(function() {
 
     // when user selects "Submit" on custom info dialog, close dialog, show progressbar, and extract info from form 
     $('.pma-modal-submit').on('click', function() {
-        $('#run-pma-dialog').modal('hide');
-        $('.progress-bar').show();
-        getCustomInfo();
+        $(".pma-alert").hide();
+        if($("#rep-name").val() == '') {
+            $(".pma-alert .error_msg").html("Please select Rep");
+            $(".pma-alert").show();
+            return false;
+        }
+        else {
+            $('#run-pma-dialog').modal('hide');
+            $('.progress-bar').show();
+            getCustomInfo();
+        }
     });
     dataTransfer(''); // fetch recently ran CPPs and tallies for number of reports run and associated costs
     $(document).on('click', '.js-run-apn-button', apnMultiple);
@@ -82,6 +90,23 @@ $(document).ready(function() {
             },
         });
 });
+
+function setDefaultValues() {
+
+
+    // set default values 
+    request = '';
+    reportNum = '';
+    docsSkip = false;
+    compsArray = [];
+    compsXML = '';
+    compsSkip = false;
+    reportData = {};
+    apnInfo = {};
+    $('.js-pma-apn').hide();
+    $('#comps-form').hide();
+
+}
 
 
 // Get archived company and agent dropdown info for customized info form
@@ -231,11 +256,12 @@ function listReps() {
 // extracts data from custom info form. 
 function getCustomInfo() {
     event.preventDefault ? event.preventDefault() : event.returnValue = false;
+    
     reportData.rep = $('#rep-name option:selected').text();
     reportData.repId = $('#rep-name option:selected').val();
     var formData = $('#run-pma-form').serialize();
     firstModal = false;
-    recordFormData(formData);
+    // recordFormData(formData);
     query = formData;
     var includeComps = $('#include-comps').val();
     var includeDocs = $('#include-docs').val();
@@ -584,7 +610,12 @@ function dataTransfer(status) {
         })
         .always(function() {
             if(status == 'yes') {
-                location.reload();
+                // location.reload();
+                $("#smart-form").trigger("reset");
+                $("#run-pma-form").trigger("reset");
+                $('.search-result-div').addClass('hide');
+                setDefaultValues();
+
             }
             reportData.cost110 = 0;
             reportData.cost111 = 0;
@@ -627,8 +658,8 @@ function updateTally(tallies) {
                 list_emement += '<div>'+value.email+'</div>';
                 list_emement += '<div>'+value.phone+'</div></div>';
                 list_emement += '<div class="u-count">';
-                list_emement += '<div class="report_total">'+value.report_total+'</div>';
-                list_emement += '<div class="report_cost">$'+value.report_cost+'</div></div></li>';
+                list_emement += '<div class="report_total pma_val">'+value.report_total+'</div>';
+                list_emement += '<div class="report_cost pma_val">$'+value.report_cost+'</div></div></li>';
         });
         $('#rep-list-data').html(list_emement);
         $("#show_all_rep").removeClass('hide');
