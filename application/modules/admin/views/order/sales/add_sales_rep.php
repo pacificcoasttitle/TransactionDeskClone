@@ -75,6 +75,36 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="sales_rep_no_of_open_orders" class="col-sm-4 col-form-label">Number of Open Orders<span class="required"> *</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="sales_rep_no_of_open_orders" id="sales_rep_no_of_open_orders"  class="form-control">
+                        <?php if(!empty($sales_rep_no_of_open_orders_error_msg)){ ?>                     
+                            <span class="error"><?php echo $sales_rep_no_of_open_orders_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="sales_rep_no_of_close_orders" class="col-sm-4 col-form-label">Number of Closed Orders<span class="required"> *</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="sales_rep_no_of_close_orders" id="sales_rep_no_of_close_orders"  class="form-control">
+                        <?php if(!empty($sales_rep_no_of_close_orders_error_msg)){ ?>                     
+                            <span class="error"><?php echo $sales_rep_no_of_close_orders_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="sales_rep_premium" class="col-sm-4 col-form-label">Premium<span class="required"> *</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="sales_rep_premium" id="sales_rep_premium" class="form-control">
+                        <?php if(!empty($sales_rep_premium_error_msg)){ ?>                     
+                            <span class="error"><?php echo $sales_rep_premium_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label for="sales_rep_profile_img" class="col-sm-4 col-form-label">Profile Img For Borrower Email</label>
                     <div class="col-sm-8">
                         <input type="file" class="form-control" name="sales_rep_profile_img" id="sales_rep_profile_img" accept=".png,.jpg" class="form-control">
