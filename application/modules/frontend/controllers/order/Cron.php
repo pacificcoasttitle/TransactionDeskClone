@@ -2503,78 +2503,73 @@ class Cron extends MX_Controller {
         }
         
         foreach ($files as $file) {
-            $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.$file);
-            chmod(FCPATH.'uploads/'.$file,0755);
+            if ($file != '.' && $file != '..') {
+                $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.trim($file).".csv");
+                chmod(FCPATH.'uploads/'.$file.".csv",0755);
+            }
         }
-        
-        $files = glob("uploads/*xml", GLOB_NOSORT);
+        $files = glob("uploads/*csv", GLOB_NOSORT);
                  
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
-                $xml = file_get_contents($filePath);
-                $documentName = pathinfo($filePath);
-                $fileName = date('YmdHis')."_".$documentName['basename'];
-		        rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
-                $xml = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $xml);
-                $xml = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_COMPACT | LIBXML_PARSEHUGE);
-                //echo ($xml ? 'Valid XML' : 'Parse Error'), PHP_EOL;
-                $ordersData = json_decode(json_encode($xml), true);
-                //print_r($ordersData);exit;
-                if(!empty($ordersData['group']['group'])) {
-                    foreach ($ordersData['group']['group'] as $orderData) {
-                        $orderInfos = $orderData['row'];
-                        foreach($orderInfos as $orderItem) {
-                            $orderItems = $orderItem['item'];
-                            $premium = 0;
-                            foreach ($orderItems as $orderInfo) {
-                                //print_r($orderInfo);
-                                //print_r($orderInfo['@attributes']);exit;
-                                if ($orderInfo['@attributes']['column'] == 'ledgerEntry_assoc_fileMain_assoc_FileNumber' || $orderInfo['@attributes']['column'] == 'FileNumber') {
-                                    $file_number = $orderInfo['value'];
-                                   // echo $file_number."<br>";exit;
-                                }
-    
-                                if ($orderInfo['@attributes']['column'] == 'ledgerEntry_assoc_fileMain_assoc_partnersTypes_assoc_salesRepScalar_assoc_Name' || $orderInfo['@attributes']['column'] == 'partnersTypes_assoc_salesRepScalar_assoc_Name') {
-                                    $salesRepName = $orderInfo['value'];
-                                    $salesRepName = explode(' ', $salesRepName);
-                                }
-    
-                                if ($orderInfo['@attributes']['column'] == 'prodType') {
-                                    $prodType = $orderInfo['value'];
-                                }
-    
-                                if ($orderInfo['@attributes']['column'] == 'amt') {
-                                    $premium = str_replace('$', '', $orderInfo['value']);
-                                    //echo $premium;exit;
-                                }
+                $row = 1;
+                $headerColumns = array(); 
+                if (($handle = fopen($filePath, "r")) !== FALSE) {
+                    while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
+                        $num = count($data);
+                        if($row == 1) {
+                            for ($c=0; $c < $num; $c++) {
+                                $headerColumns[] = trim($data[$c]);
                             }
-                            
+                        }
+                        
+                        $fileKey = '';
+                        $prodkey = '';
+                        $premiumkey = '';
+                        $saleskey = '';
+                        $closedDate = '';
+
+                        if(in_array('File Number', $headerColumns)) {
+                            $fileKey = array_search("File Number",$headerColumns);
+                            $file_number = $data[$fileKey];
+                        }
+
+                        if(in_array('Prod Type', $headerColumns)) {
+                            $prodkey = array_search("Prod Type",$headerColumns);
+                            $prodType = $data[$prodkey];
+                        }
+
+                        if(in_array('Total Premium', $headerColumns)) {
+                            $premiumkey = array_search("Total Premium",$headerColumns);
+                            $premium = $data[$premiumkey];
+                            $premium = str_replace('$', '', $premium);
+                        }
+
+                        if(in_array('Sales Rep', $headerColumns)) {
+                            $saleskey = array_search("Sales Rep",$headerColumns);
+                            $salesRepName = $data[$saleskey];
+                        }
+
+                        if(in_array('Sent To External Accounting', $headerColumns)) {
+                            $closedDatekey = array_search("Sent To External Accounting",$headerColumns);
+                            $closedDate = $data[$closedDatekey];
+                        }
+
+                        if($row != 1) {
+                            //echo $file_number."---".$prodType."----".$premium."----".$salesRepName."---".$closedDate;exit;
                             $condition = array(
                                 'where' => array(
                                     'file_number' => $file_number,
                                 )
                             );
                             $order = $this->order->get_order($condition);
-
-                            $data = json_encode(array('FileNumber' => $file_number));
-                            $userData = array(
-                                'admin_api' => 1
-                            );	
-
-                            $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, array(), 0, 0);
-                            $res = $this->make_request('POST', 'files/search', $data, $userData);
-                            $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, $res, 0, $logid);
-                            $result = json_decode($res,TRUE);
                             if (!empty($order)) {
                                 $completed_date = null;
-                                if (isset($result['Files']) && !empty($result['Files'])) {
-                                    foreach ($result['Files'] as $res) {
-                                        if (!empty($res['Dates']['FileCompletedDate'])) {
-                                            $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['FileCompletedDate'])))/1000);
-                                            $completed_date = date('Y-m-d H:i:s', $time);
-                                        }
-                                    }
+                                if (!empty($closedDate)) {
+                                    $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
+                                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
                                 }
+    
                                 $this->home_model->update(
                                     array(
                                         'prod_type' => strtolower($prodType),
@@ -2608,8 +2603,15 @@ class Cron extends MX_Controller {
                                     );
                                 }
                             } else {
-                               
-                               
+                                $data = json_encode(array('FileNumber' => $file_number));
+                                $userData = array(
+                                    'admin_api' => 1
+                                );
+                                $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, array(), 0, 0);
+                                $res = $this->make_request('POST', 'files/search', $data, $userData);
+                                $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, $res, 0, $logid);
+                                $result = json_decode($res,TRUE);
+                                
                                 if (isset($result['Files']) && !empty($result['Files'])) {
                                     foreach ($result['Files'] as $res) {
                                         $partner_fname = $res['Partners'][0]['PrimaryEmployee']['FirstName'];
@@ -2705,7 +2707,7 @@ class Cron extends MX_Controller {
                                         $created_date = date('Y-m-d H:i:s', $time);
                                         $randomString = $this->order->randomPassword();
                                         $randomString = md5($randomString);
-
+    
                                         $completed_date = null;
                                         if (!empty($res['Dates']['FileCompletedDate'])) {
                                             $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['FileCompletedDate'])))/1000);
@@ -2733,8 +2735,13 @@ class Cron extends MX_Controller {
                                 }
                             }
                         }
+                        $row++;
                     }
+                    fclose($handle);
                 }
+                $documentName = pathinfo($filePath);
+                $fileName = date('YmdHis')."_".$documentName['basename'];
+		        rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
                 $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
             }
         } else {
