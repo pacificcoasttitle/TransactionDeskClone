@@ -92,7 +92,7 @@ class Pma extends MX_Controller {
         
         // $request = 'http://pct.com/pma/proxy.php?requrl='.urlencode($request);
         // $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
-        // echo $file;
+        // echo $file;die;
 
 
 
@@ -156,7 +156,7 @@ class Pma extends MX_Controller {
             $temp_data['address']=$report_record->address;
             $temp_data['city']=$report_record->city;
             $temp_data['link']=env('AWS_PATH').$report_record->link;
-            $temp_data['runDate']=strtotime($report_record->runDate) ? date('y/m/d',strtotime($report_record->runDate)) : '';
+            $temp_data['runDate']=strtotime($report_record->runDate) ? date('m/d/y',strtotime($report_record->runDate)) : '';
             $temp_data['sales_rep']='';
             if($report_record->sales_rep) {
                 $temp_data['sales_rep'] = $report_record->sales_rep->first_name.' '.$report_record->sales_rep->last_name;
