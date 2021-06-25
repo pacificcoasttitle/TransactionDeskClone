@@ -2508,9 +2508,7 @@ class Cron extends MX_Controller {
                 chmod(FCPATH.'uploads/'.$file.".csv",0755);
             }
         }
-        print_r($files);
         $files = glob("uploads/*csv", GLOB_NOSORT);
-        print_r($files);exit;
                  
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
