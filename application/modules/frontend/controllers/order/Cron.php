@@ -2556,7 +2556,7 @@ class Cron extends MX_Controller {
                         }
 
                         if($row != 1) {
-                            echo $file_number."---".$prodType."----".$premium."----".$salesRepName."---".$closedDate;exit;
+                            //echo $file_number."---".$prodType."----".$premium."----".$salesRepName."---".$closedDate;exit;
                             $condition = array(
                                 'where' => array(
                                     'file_number' => $file_number,
