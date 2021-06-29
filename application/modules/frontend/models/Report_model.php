@@ -46,7 +46,7 @@ class Report_model extends CI_Model
         }
     }
 
-    public function getSalesRepData($condition=null)
+    public function getSalesRepData($condition=null,$added_by = 0)
     {
     	$table = 'customer_basic_details';
         $this->db->select($table.'.*,count('.$this->table.'.id) as report_count');
@@ -57,7 +57,7 @@ class Report_model extends CI_Model
 	            $this->db->where($key, $val);
 	        }
         }
-        $this->db->join($this->table, "$table.id = {$this->table}.sales_rep",'LEFT');
+        $this->db->join($this->table, "$table.id = {$this->table}.sales_rep AND added_by = $added_by ",'LEFT');
         $this->db->group_by("$table.id");
         $this->db->order_by("$table.first_name");
         $query = $this->db->get();

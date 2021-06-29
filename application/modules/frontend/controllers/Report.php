@@ -33,7 +33,7 @@ class Report extends MX_Controller {
                 'is_sales_rep' => 1,
                 'status' => 1,
         );
-        $data['salesReps'] = $this->report_model->getSalesRepData($condition);
+        $data['salesReps'] = $this->report_model->getSalesRepData($condition,$this->user['id']);
         $data['report_total'] = array_sum(array_column($data['salesReps'], 'report_count'));
         $report_condition = array(
             'added_by' => $this->user['id'],
