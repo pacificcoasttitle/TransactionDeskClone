@@ -117,7 +117,7 @@
 	<?php
         $this->load->view('layout/header_dashboard');
     ?>
-    <section class="section-sm section-defaulta" style="padding-bottom:0px;">
+    <section class="section-sm section-defaulta" >
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-12">
