@@ -67,12 +67,17 @@
 	    font-size: 18px;
 	    color: #fff;
 	}
+	.pma_val {
+	    color: #d35400;
+	    font-weight: bold;
+	    text-align: center;
+	}
 </style>
 <body>
 	<?php
         $this->load->view('layout/header_dashboard');
     ?>
-    <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
+    <section class="section-sm section-defaulta" >
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-12">
@@ -87,10 +92,18 @@
 				<div class="row">
 					<div class="row">
 						<div class="col-md-4">
-							<h2>
+							<div class="row">
+								<div class="col-sm-9">
+									<h5>Total Ran</h5>
+								</div>
+								<div class="col-sm-3">
+									<h4 class="pma-total pma_val"> <?php echo $report_total; ?> </h4>
+								</div>
+							</div>
+							<!-- <h2>
 								<span>Representative(s)</span>
 
-							</h2>
+							</h2> -->
 							<ul class="u-list">
 					          	<?php
 					          	foreach($salesReps as $key=>$salesRep):
@@ -113,7 +126,7 @@
 						              </div>
 						            </div>
 						            <div class="u-count">
-						            	<div><?php echo $salesRep['report_count'];?></div>
+						            	<div class="pma_val"><?php echo $salesRep['report_count'];?></div>
 						            </div>
 					          	</li>
 					          	<?php
