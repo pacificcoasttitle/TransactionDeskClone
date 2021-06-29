@@ -94,8 +94,6 @@ class Pma extends MX_Controller {
         // $file = file_get_contents($request, false, stream_context_create($arrContextOptions));
         // echo $file;die;
 
-
-
         $request = str_replace('^', '<', $request);
         $api_key = env('BLACK_KNIGHT_KEY');        
 
@@ -180,17 +178,24 @@ class Pma extends MX_Controller {
             $sales_rep_temp['phone'] = $sales_rep_record->telephone_no;
             $sales_rep_temp['report_total'] = count($sales_rep_record->pma);
             $cost_sum = 0;
+            $report_total_temp = 0;
             $pma_report = $sales_rep_record->pma;
             if(is_array($pma_report) && count($pma_report)) {
-                $cost_column = array_column($pma_report, 'cost');
-                $cost_sum = array_sum($cost_column);
+                foreach ($pma_report as $pma_report_record) {
+                    if($pma_report_record->added_by == $this->user['id']) {
+                        $cost_sum += $pma_report_record->cost;
+                        $report_total_temp ++;
+                    }
+                }
             }
             $sales_rep_temp['report_cost'] = $cost_sum;
+            $sales_rep_temp['report_total'] = $report_total_temp;
 
             $sales_reps[] = $sales_rep_temp;
 
         }
         $returnData['sales_reps'] = $sales_reps; 
+        $returnData['sales_rep_data'] = $sales_rep_data; 
 
 
         
