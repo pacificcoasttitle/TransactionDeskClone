@@ -199,6 +199,7 @@ $route['download-aws-document'] = 'frontend/order/home/downloadAwsDocument';
 $route['download-aws-document-mail'] = 'frontend/order/dashboardMail/downloadAwsDocument';
 $route['send-borrower-verification-mail'] = 'frontend/order/cron/sendMailEscrowUsersForBorrowerVerification';
 $route['import-orders-using-file-number'] = 'frontend/order/cron/importOrdersUsingFileNumber';
+$route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
