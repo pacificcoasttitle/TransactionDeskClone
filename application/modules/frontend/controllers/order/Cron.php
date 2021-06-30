@@ -2960,7 +2960,7 @@ class Cron extends MX_Controller {
                 $newUserData = json_encode($newUserData);
                 $logid = $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, array(), 0, 0);
                 $res = $this->make_request($method, $endPoint, $newUserData, $userdata);
-                $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, $result, 0, $logid);
+                $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, $res, 0, $logid);
 
                 if (isset($res) && !empty($res)) {
                     $response = json_decode($res,true);
