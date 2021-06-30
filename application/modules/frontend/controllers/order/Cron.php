@@ -3093,7 +3093,9 @@ class Cron extends MX_Controller {
         $this->db->from('customer_basic_details');
         $this->db->where('(is_password_updated = 0 and random_password != "")');
         $query = $this->db->get();
+        echo $this->db->last_query();exit;
         $result = $query->result_array();
+
 
         if(!empty($result)) {
             foreach($result as $customerData) {
