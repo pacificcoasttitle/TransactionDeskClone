@@ -3088,7 +3088,9 @@ class Cron extends MX_Controller {
         $this->db->from('customer_basic_details');
         $this->db->where('(is_password_updated = 0 and random_password != "")');
         $query = $this->db->get();
+        echo $this->db->last_query();exit;
         $result = $query->result_array();
+
 
         if(!empty($result)) {
             foreach($result as $customerData) {
@@ -3224,11 +3226,9 @@ class Cron extends MX_Controller {
                 $newUserData = json_encode($newUserData);
                 $logid = $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, array(), 0, 0);
                 $res = $this->make_request($method, $endPoint, $newUserData, $userdata);
-<<<<<<< HEAD
+
                 $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, $res, 0, $logid);
-=======
-                $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, $result, 0, $logid);
->>>>>>> afc84b58... password update changes
+
 
                 if (isset($res) && !empty($res)) {
                     $response = json_decode($res,true);
@@ -3282,7 +3282,6 @@ class Cron extends MX_Controller {
         $result = curl_exec($ch);
         return $result;
     }
-<<<<<<< HEAD
 
     public function updateAllOrderStatus()
     {
@@ -3373,6 +3372,4 @@ class Cron extends MX_Controller {
             echo "No files found";exit;
         }
     }
-=======
->>>>>>> afc84b58... password update changes
 }
