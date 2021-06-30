@@ -21,3 +21,21 @@ if(!function_exists('checkRemoteFile')){
 	    }
 	}
 }
+if(!function_exists('separateZipRoute')) {
+	function separateZipRoute($mixedVal,$zip)
+	{
+		$mixedVal = trim($mixedVal);
+		$zip = trim($zip);
+		$position = strpos($mixedVal, $zip);
+		$returned_str = $mixedVal;
+		if ($position !== false) {
+			$returned_str = substr_replace( $mixedVal, '-', strlen($zip), 0 );
+		}
+		elseif(strlen($mixedVal) > 5) {
+			$returned_str = substr_replace( $mixedVal, '-', -4, 0 );
+		}
+		return $returned_str;
+		
+
+	}
+}

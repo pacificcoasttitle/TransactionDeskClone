@@ -153,12 +153,12 @@ class Report extends MX_Controller {
                     foreach ($box_columns as $box_column){
                         if(!isset($box_data[$box_column])) {
                             $box_data[$box_column]['value'] = $record["$box_column"];
-                            $box_data[$box_column]['route'] = $record["carrier_route"];
+                            $box_data[$box_column]['route'] = separateZipRoute($record["carrier_route"],$record["sa_site_zip"]);
                         }
 
                         if($record["$box_column"] > $box_data[$box_column]['value']) {
                             $box_data[$box_column]['value'] = $record["$box_column"];
-                            $box_data[$box_column]['route'] = $record["carrier_route"];
+                            $box_data[$box_column]['route'] = separateZipRoute($record["carrier_route"],$record["sa_site_zip"]);
                         }
                     }
                 }
