@@ -2,7 +2,7 @@
 
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-
+use phpseclib3\Net\SFTP;
 
 class Cron extends MX_Controller {
 
@@ -2343,7 +2343,7 @@ class Cron extends MX_Controller {
             escrow_details.email_address, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('MONTH(order_details.resware_closed_status_date)', date('m')); 
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', '06'); 
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
@@ -2816,7 +2816,6 @@ class Cron extends MX_Controller {
 
     public function passwordUpdateAll()
     {
-
         $this->load->model('order/apiLogs');
         $this->load->library('order/resware');
         $this->load->library('order/order');
@@ -3013,5 +3012,94 @@ class Cron extends MX_Controller {
         curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
         $result = curl_exec($ch);
         return $result;
+    }
+
+    public function updateAllOrderStatus()
+    {
+        echo date('Y-m-d H:i:s')."<br>";
+        $sftp = new SFTP(env('SFTP_HOST'));
+        $username = env('SFTP_USERNAME');
+        $password = env('SFTP_PASSWORD');
+
+        if (!$sftp->login($username, $password)) {
+            exit('Login Failed');
+        }
+    
+        if (!($files = $sftp->nlist('/status', true))) {
+            die("Cannot read directory contents");
+        }
+        
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..') {
+                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                if(!empty($ext)) {
+                    $sftp->get('status/'.$file, FCPATH.'uploads/'.trim($file));
+                    chmod(FCPATH.'uploads/'.$file,0755);
+                } else {
+                    $sftp->get('status/'.$file, FCPATH.'uploads/'.trim($file).".csv");
+                    chmod(FCPATH.'uploads/'.$file.".csv",0755);
+                }
+            }
+        }
+        
+        $files = glob("uploads/*csv", GLOB_NOSORT);
+                
+        if (is_array($files) && count($files) > 0) {
+            foreach($files as $filePath) {
+                $row = 1;
+                $headerColumns = array(); 
+                $updateArray = array();
+                if (($handle = fopen($filePath, "r")) !== FALSE) {
+                    while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
+                        $num = count($data);
+                        if($row == 1) {
+                            for ($c=0; $c < $num; $c++) {
+                                $headerColumns[] = trim($data[$c]);
+                            }
+                        }
+                    
+                        $file_number = '';
+                        $fileStatus = '';
+
+                        if(in_array('File Number', $headerColumns)) {
+                            $fileKey = array_search("File Number",$headerColumns);
+                            $file_number = $data[$fileKey];
+                        }
+
+                        if(in_array('File Status', $headerColumns)) {
+                            $fileStatusKey = array_search("File Status",$headerColumns);
+                            $fileStatus = $data[$fileStatusKey];
+                        }
+
+                        if($row != 1) {
+                            if(1 === preg_match('~[0-9]~', $file_number)){
+                                $updateArray[] = array(
+                                    'file_number'=> (int)$file_number,
+                                    'resware_status' => strtolower($fileStatus),
+                                    'updated_at' => date('Y-m-d H:i:s')
+                                );  
+                            } 
+                        }
+                        $row++;
+                    }
+                    fclose($handle);
+
+                    if(!empty($updateArray)) {
+                        $chunk1 = array_chunk($updateArray, 100);
+                        for($i=0; $i< count($chunk1); $i++) {
+                            $this->db->update_batch('order_details', $chunk1[$i], 'file_number')."<br>";
+                        }
+                    }
+                }
+                $documentName = pathinfo($filePath);
+                $fileName = date('YmdHis')."_".$documentName['basename'];
+                rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
+                $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
+                echo "All orders status updated successfully"."<br>";;
+                echo date('Y-m-d H:i:s');exit;
+            }
+        } else {
+            echo "No files found";exit;
+        }
     }
 }

@@ -1048,15 +1048,19 @@ class Order
         return false;
     }
 
-    public function uploadDocumentOnAwsS3($fileName, $folder= '')
+    public function uploadDocumentOnAwsS3($fileName, $folder= '', $csv = 0)
     {
         $bucket = env('AWS_BUCKET');
         if(!empty($folder)) {
             $keyname = $folder."/".basename($fileName);    
-            $filepath = FCPATH."/uploads/".$folder."/".$fileName;             
+            $filepath = "uploads/".$folder."/".$fileName;             
         } else {
-            $keyname = basename($fileName); 
-            $filepath = FCPATH."/uploads/".$fileName;                
+            if ($csv == 1) {
+                $keyname = "csv/".basename($fileName); 
+            } else {
+                $keyname = basename($fileName); 
+            }
+            $filepath = "uploads/".$fileName;                
         }
         
         try {
@@ -1079,12 +1083,13 @@ class Order
             return false;
         }
         if(!empty($result['ObjectURL'])) {
-            //unlink($filepath);
+            chmod($filepath, 0644);
+            gc_collect_cycles();
+            unlink($filepath);
             return true;
         } else {
             return false;
-        }
-        
+        } 
     }
 
     public function fileExistOrNotOnS3($key)

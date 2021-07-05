@@ -200,6 +200,7 @@ $route['download-aws-document-mail'] = 'frontend/order/dashboardMail/downloadAws
 $route['send-borrower-verification-mail'] = 'frontend/order/cron/sendMailEscrowUsersForBorrowerVerification';
 $route['import-orders-using-file-number'] = 'frontend/order/cron/importOrdersUsingFileNumber';
 $route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
+$route['update-all-order-status'] = 'frontend/order/cron/updateAllOrderStatus';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
