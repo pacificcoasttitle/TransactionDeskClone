@@ -1176,8 +1176,7 @@ class Order
             return true;
         } else {
             return false;
-        }
-        
+        } 
     }
 
     public function fileExistOrNotOnS3($key)

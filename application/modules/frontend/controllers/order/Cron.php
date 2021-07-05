@@ -2343,7 +2343,7 @@ class Cron extends MX_Controller {
             escrow_details.email_address, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('MONTH(order_details.resware_closed_status_date)', date('m')); 
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', '06'); 
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
@@ -3073,5 +3073,294 @@ class Cron extends MX_Controller {
             }
         }  
         echo "All orders imported successfully.";exit;
+    }
+
+    public function passwordUpdateAll()
+    {
+        $this->load->model('order/apiLogs');
+        $this->load->library('order/resware');
+        $this->load->library('order/order');
+        $this->db->select('*');
+        $this->db->from('customer_basic_details');
+        $this->db->where('(is_password_updated = 0 and random_password != "")');
+        $query = $this->db->get();
+        $result = $query->result_array();
+
+        if(!empty($result)) {
+            foreach($result as $customerData) {
+                $endPoint = 'admin/partners/'.$customerData['partner_id'].'/employees/'.$customerData['resware_user_id'];
+                $method = 'PUT';
+                $apiType = 'update_user';
+        
+                $newUserData = array(			
+                    'Password' => 'Pacific1',
+                    'Enabled' => true,
+                    'Roles' => array (
+                        0 => array (
+                            'RoleID' => 5033,
+                            'Name' => 'Web Services: Access All Files for ResWare-to-ResWare Services',
+                        ),
+                        1 => 
+                        array (
+                            'RoleID' => 6013,
+                            'Name' => 'Web Services: Add Actions',
+                        ),
+                        2 => 
+                        array (
+                            'RoleID' => 6005,
+                            'Name' => 'Web Services: Add Documents',
+                        ),
+                        3 => 
+                        array (
+                            'RoleID' => 6002,
+                            'Name' => 'Web Services: Add Notes',
+                        ),
+                        4 => 
+                        array (
+                            'RoleID' => 6009,
+                            'Name' => 'Web Services: Add Partners',
+                        ),
+                        5 => 
+                        array (
+                            'RoleID' => 6015,
+                            'Name' => 'Web Services: Add WebURL Documents',
+                        ),
+                        6 => 
+                        array (
+                            'RoleID' => 5027,
+                            'Name' => 'Web Services: Bypass Address Validation',
+                        ),
+                        7 => 
+                        array (
+                            'RoleID' => 6003,
+                            'Name' => 'Web Services: Cancel Files',
+                        ),
+                        8 => 
+                        array (
+                            'RoleID' => 5023,
+                            'Name' => 'Web Services: Estimate Costs as 2010 HUD',
+                        ),
+                        9 => 
+                        array (
+                            'RoleID' => 6016,
+                            'Name' => 'Web Services: Expense Reports',
+                        ),
+                        10 => 
+                        array (
+                            'RoleID' => 6012,
+                            'Name' => 'Web Services: Get Actions',
+                        ),
+                        11 => 
+                        array (
+                            'RoleID' => 6007,
+                            'Name' => 'Web Services: Get Custom Fields',
+                        ),
+                        12 => 
+                        array (
+                            'RoleID' => 6006,
+                            'Name' => 'Web Services: Get Documents',
+                        ),
+                        13 => 
+                        array (
+                            'RoleID' => 6001,
+                            'Name' => 'Web Services: Get Notes',
+                        ),
+                        14 => 
+                        array (
+                            'RoleID' => 6010,
+                            'Name' => 'Web Services: Get Partners',
+                        ),
+                        15 => 
+                        array (
+                            'RoleID' => 69,
+                            'Name' => 'Web Services: Order Placement',
+                        ),
+                        16 => 
+                        array (
+                            'RoleID' => 6004,
+                            'Name' => 'Web Services: Override Property Address Validation and Reformatting',
+                        ),
+                        17 => 
+                        array (
+                            'RoleID' => 6011,
+                            'Name' => 'Web Services: Remove Partners',
+                        ),
+                        18 => 
+                        array (
+                            'RoleID' => 6014,
+                            'Name' => 'Web Services: Search Files',
+                        ),
+                        19 => 
+                        array (
+                            'RoleID' => 6019,
+                            'Name' => 'Web Services: Update Partner',
+                        ),
+                        20 => 
+                        array (
+                            'RoleID' => 6008,
+                            'Name' => 'Web Services: Write Custom Fields',
+                        ),
+                        21 => 
+                        array (
+                            'RoleID' => 51,
+                            'Name' => 'Website',
+                        ),
+                    ),
+                    'WebsiteAccess' => true,
+                    'Name' => $customerData['email_address'],
+                    'PasswordExpirationDate' => '/Date(3025656585000-0000)/',
+                    'FirstName' => $customerData['first_name'],
+                    'LastName' => $customerData['last_name'],
+                    'ContactInformation' => array(
+                        'EmailAddress' => $customerData['email_address'],
+                    ),
+                );
+
+                $userdata['admin_api'] = 1;
+                $newUserData = json_encode($newUserData);
+                $logid = $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, array(), 0, 0);
+                $res = $this->make_request($method, $endPoint, $newUserData, $userdata);
+                $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, $res, 0, $logid);
+
+                if (isset($res) && !empty($res)) {
+                    $response = json_decode($res,true);
+                    if (isset($response['Employee']) && !empty($response['Employee'])) {
+                        $res = array(
+                            'resware_user_id' => $response['Employee']['UserID'],
+                            'msg' => !empty($customerData['resware_user_id']) ? 'User created successfully on Resware Side' : 'User updated successfully on Resware Side',
+                            'success' => true
+                        );
+                        $customerDataUpdate = array();
+                        $customerDataUpdate['resware_user_id'] = $response['Employee']['UserID'];
+                        $customerDataUpdate['random_password'] = $this->order->randomPassword();
+                        $reswareUpdatePwdData = array(
+                            'user_name' =>  $customerData['email_address'],
+                            'password' => 'Pacific1',
+                            'new_password' => $customerDataUpdate['random_password'],
+                        );
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+                        $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                        $responsePwd = json_decode($updatePwdResult,true);
+
+                        if (!empty($responsePwd['message'])) {
+                            $customerDataUpdate['resware_error_msg'] = $responsePwd['message'];
+                        } else {
+                            $customerDataUpdate['is_password_updated'] = 1;
+                        }
+                        $updateCondition = array(
+                            'id' => $customerData['id'],
+                        );
+                        $this->home_model->update($customerDataUpdate, $updateCondition, 'customer_basic_details');
+                    } 
+                } 
+            }
+        }
+    }
+
+    public function updatePasswordResware($postData)
+    {
+        $body_params = http_build_query($postData);
+        $ch = curl_init(env('RESWARE_UPDATE_PWD_API'));    
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt( $ch, CURLOPT_MAXREDIRS, 10 );
+        $result = curl_exec($ch);
+        return $result;
+    }
+
+    public function updateAllOrderStatus()
+    {
+        echo date('Y-m-d H:i:s')."<br>";
+        $sftp = new SFTP(env('SFTP_HOST'));
+        $username = env('SFTP_USERNAME');
+        $password = env('SFTP_PASSWORD');
+
+        if (!$sftp->login($username, $password)) {
+            exit('Login Failed');
+        }
+    
+        if (!($files = $sftp->nlist('/status', true))) {
+            die("Cannot read directory contents");
+        }
+        
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..') {
+                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                if(!empty($ext)) {
+                    $sftp->get('status/'.$file, FCPATH.'uploads/'.trim($file));
+                    chmod(FCPATH.'uploads/'.$file,0755);
+                } else {
+                    $sftp->get('status/'.$file, FCPATH.'uploads/'.trim($file).".csv");
+                    chmod(FCPATH.'uploads/'.$file.".csv",0755);
+                }
+            }
+        }
+        
+        $files = glob("uploads/*csv", GLOB_NOSORT);
+                
+        if (is_array($files) && count($files) > 0) {
+            foreach($files as $filePath) {
+                $row = 1;
+                $headerColumns = array(); 
+                $updateArray = array();
+                if (($handle = fopen($filePath, "r")) !== FALSE) {
+                    while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
+                        $num = count($data);
+                        if($row == 1) {
+                            for ($c=0; $c < $num; $c++) {
+                                $headerColumns[] = trim($data[$c]);
+                            }
+                        }
+                    
+                        $file_number = '';
+                        $fileStatus = '';
+
+                        if(in_array('File Number', $headerColumns)) {
+                            $fileKey = array_search("File Number",$headerColumns);
+                            $file_number = $data[$fileKey];
+                        }
+
+                        if(in_array('File Status', $headerColumns)) {
+                            $fileStatusKey = array_search("File Status",$headerColumns);
+                            $fileStatus = $data[$fileStatusKey];
+                        }
+
+                        if($row != 1) {
+                            if(1 === preg_match('~[0-9]~', $file_number)){
+                                $updateArray[] = array(
+                                    'file_number'=> (int)$file_number,
+                                    'resware_status' => strtolower($fileStatus),
+                                    'updated_at' => date('Y-m-d H:i:s')
+                                );  
+                            } 
+                        }
+                        $row++;
+                    }
+                    fclose($handle);
+
+                    if(!empty($updateArray)) {
+                        $chunk1 = array_chunk($updateArray, 100);
+                        for($i=0; $i< count($chunk1); $i++) {
+                            $this->db->update_batch('order_details', $chunk1[$i], 'file_number')."<br>";
+                        }
+                    }
+                }
+                $documentName = pathinfo($filePath);
+                $fileName = date('YmdHis')."_".$documentName['basename'];
+                rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
+                $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
+                echo "All orders status updated successfully"."<br>";;
+                echo date('Y-m-d H:i:s');exit;
+            }
+        } else {
+            echo "No files found";exit;
+        }
     }
 }

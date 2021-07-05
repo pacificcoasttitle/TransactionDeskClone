@@ -203,6 +203,8 @@ $route['import-orders-using-file-number'] = 'frontend/order/cron/importOrdersUsi
 $route['get-orders-dashboard'] = 'frontend/order/dashboard/getOrdersDashboard';
 $route['sales-production-history'] = 'frontend/order/dashboard/salesProductionHistory';
 $route['get-sales-production-history'] = 'frontend/order/dashboard/getSalesProductionHistory';
+$route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
+$route['update-all-order-status'] = 'frontend/order/cron/updateAllOrderStatus';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
