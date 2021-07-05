@@ -10,7 +10,8 @@
 		"gufy/pdftohtml-php": "~2",
 		"twilio/sdk": "^6.13",
 		"sendgrid/sendgrid": "~7",
-		"aws/aws-sdk-php": "^3.178"
+		"aws/aws-sdk-php": "^3.178",
+		"phpseclib/phpseclib": "^3.0"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
