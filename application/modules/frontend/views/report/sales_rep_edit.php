@@ -47,19 +47,28 @@
 												</div>
 											</div>
 											<?php endif; ?>
-											<div class="section colm colm6">
+											<div class="section colm colm4">
 
 												<label class="field prepend-icon">
-													<input type="text" class="gui-input" name="first_name" value="<?=$salesRep['first_name'];?>">
+													<input type="text" class="gui-input" name="first_name" value="<?=$salesRep['first_name'];?>" placeholder="First Name">
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 												</label>
 												
 											</div>
 
-											<div class="section colm colm6">
+											<div class="section colm colm4">
 
 												<label class="field prepend-icon">
-													<input type="text" class="gui-input" name="last_name" value="<?=$salesRep['last_name'];?>">
+													<input type="text" class="gui-input" name="last_name" value="<?=$salesRep['last_name'];?>" placeholder="Last Name">
+													<span class="field-icon"><i class="fa fa-user"></i></span>
+												</label>
+												
+											</div>
+
+											<div class="section colm colm4">
+
+												<label class="field prepend-icon">
+													<input type="text" class="gui-input" name="title" value="<?=$salesRep['title'];?>" placeholder="Title"> 
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 												</label>
 												

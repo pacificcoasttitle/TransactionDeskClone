@@ -155,6 +155,7 @@ page {
 .profile_title {
   font-size: 17px;
   color: #d35400;
+  height: 25px;
 }
 .tel_number {
   display: block;
@@ -165,7 +166,7 @@ page {
   font-weight: 700;
 }
 .phone_no {
-  margin-top: 20px;
+  /*margin-top: 20px;*/
 }
 /* Market Update */
 .sales_activity {

@@ -229,6 +229,7 @@ class Report extends MX_Controller {
                     $update_data = array();
                     $update_data['first_name'] = $this->input->post('first_name');
                     $update_data['last_name'] = $this->input->post('last_name');
+                    $update_data['title'] = $this->input->post('title');
                     $update_data['email_address'] = $this->input->post('email_address');
                     $update_data['telephone_no'] = $this->input->post('telephone_no');
                     if(is_uploaded_file($_FILES['sales_rep_report_image']['tmp_name'])) 
