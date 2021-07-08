@@ -200,12 +200,9 @@ $route['download-aws-document-mail'] = 'frontend/order/dashboardMail/downloadAws
 
 $route['send-borrower-verification-mail'] = 'frontend/order/cron/sendMailEscrowUsersForBorrowerVerification';
 $route['import-orders-using-file-number'] = 'frontend/order/cron/importOrdersUsingFileNumber';
-<<<<<<< HEAD
 $route['get-orders-dashboard'] = 'frontend/order/dashboard/getOrdersDashboard';
 $route['sales-production-history'] = 'frontend/order/dashboard/salesProductionHistory';
 $route['get-sales-production-history'] = 'frontend/order/dashboard/getSalesProductionHistory';
-=======
->>>>>>> 066db0c2c67f544b81f329a7fd78565f752d96b7
 $route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
 $route['update-all-order-status'] = 'frontend/order/cron/updateAllOrderStatus';
 
