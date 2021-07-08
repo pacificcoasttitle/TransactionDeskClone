@@ -10,6 +10,7 @@ class TitlePoint extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
+        $this->load->library('order/order');
         $this->load->model('order/titlePoint_model');
     }
 
@@ -73,29 +74,16 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $value['file_number'];
                     $nestedData[] = $order_details['full_address'];
 
-
-                    if (env('AWS_ENABLE_FLAG') == 1) {
-                        $lv_file_path = env('AWS_PATH')."legal-vesting/".$value['file_number'].'.pdf';
-                    } else {
-                        $lv_file_path = FCPATH.'uploads/legal-vesting/'.$value['file_number'].'.pdf';
-                    }
-
-                    if (file_exists($lv_file_path)) 
-                    {
-                        $nestedData[] = 'success';
-                    }
-                    else if((strtolower($value['lv_file_status']) != 'success') && !empty($value['lv_file_status']))
-                    {
+                    if ($this->order->fileExistOrNotOnS3('legal-vesting/'.$value['file_number'].'.pdf')) {
+                        $nestedData[] = 'Success';
+                    } else if ((strtolower($value['lv_file_status']) != 'success') && !empty($value['lv_file_status'])) {
                         $nestedData[] = $value['lv_file_status'];
-                    }
-                    else if(empty($value['lv_file_status']) && (strtolower($value['cs4_message']) == 'success'))
-                    {
+                    } else if (empty($value['lv_file_status']) && (strtolower($value['cs4_message']) == 'success')) { 
                         $nestedData[] = 'Failed';
-                    }
-                    else
-                    {
+                    } else {
                         $nestedData[] = $value['cs4_message'];
                     }
+
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
 
                     $data[] = $nestedData;
@@ -237,31 +225,17 @@ class TitlePoint extends MX_Controller {
                         }
                         
                     }*/
-                    if (env('AWS_ENABLE_FLAG') == 1) {
-                        $tax_file_path = env('AWS_PATH')."tax/".$value['file_number'].'.pdf';
-                    } else {
-                        $tax_file_path = FCPATH.'uploads/tax/'.$value['file_number'].'.pdf';
-                    }
 
-                    $tax_file_path = FCPATH.'uploads/tax/'.$value['file_number'].'.pdf';
-
-                    if (file_exists($tax_file_path)) 
-                    {
-                        $nestedData[] = 'success';
-                    }
-                    else if((strtolower($value['tax_file_status']) != 'success') && !empty($value['tax_file_status']))
-                    {
+                    if ($this->order->fileExistOrNotOnS3('tax/'.$value['file_number'].'.pdf')) {
+                        $nestedData[] = 'Success';
+                    } else if ((strtolower($value['tax_file_status']) != 'success') && !empty($value['tax_file_status'])) {
                         $nestedData[] = $value['tax_file_status'];
-                    }
-                    else if(empty($value['tax_file_status']) && (strtolower($value['cs3_message']) == 'success'))
-                    {
+                    } else if (empty($value['tax_file_status']) && (strtolower($value['cs3_message']) == 'success')) { 
                         $nestedData[] = 'Failed';
-                    }
-                    else
-                    {
+                    } else {
                         $nestedData[] = $value['cs3_message'];
                     }
-                    // $nestedData[] = $value['cs3_message'];
+
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
                     $data[] = $nestedData;
                     $count++;
@@ -334,26 +308,14 @@ class TitlePoint extends MX_Controller {
                     $nestedData[] = $order_details['full_address'];
                     $nestedData[] = $value['grant_deed_type'];
 
-                    if (env('AWS_ENABLE_FLAG') == 1) {
-                        $deed_file_path = env('AWS_PATH')."grant-deed/".$value['file_number'].'.pdf';
-                    } else {
-                        $deed_file_path = FCPATH.'uploads/grant-deed/'.$value['file_number'].'.pdf';
-                    }
-
-                    if (file_exists($deed_file_path)) 
-                    {
+                    if ($this->order->fileExistOrNotOnS3('grant-deed/'.$value['file_number'].'.pdf')) {
                         $nestedData[] = 'Success';
-                    }
-                    elseif (strtolower($value['grant_deed_message']) != 'success') 
-                    {
+                    } elseif (strtolower($value['grant_deed_message']) != 'success') {
                         $nestedData[] = $value['grant_deed_message'];
-                    }
-                    else
-                    {
+                    } else {
                         $nestedData[] = 'Failed';
                     }
-                    
-                    
+                
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
                     $data[] = $nestedData;
                     $count++;

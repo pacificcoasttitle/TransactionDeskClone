@@ -197,9 +197,11 @@ $route['send-mail-escrow-users'] = 'frontend/order/cron/sendMailEscrowUsers';
 $route['transfer-all-files-on-aws'] = 'frontend/order/cron/transferAllFilesOnAws';
 $route['download-aws-document'] = 'frontend/order/home/downloadAwsDocument';
 $route['download-aws-document-mail'] = 'frontend/order/dashboardMail/downloadAwsDocument';
-$route['export-data-from-xml-file'] = 'frontend/order/cron/exportDataFromXmlFile';
+
 $route['send-borrower-verification-mail'] = 'frontend/order/cron/sendMailEscrowUsersForBorrowerVerification';
 $route['import-orders-using-file-number'] = 'frontend/order/cron/importOrdersUsingFileNumber';
+$route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
+$route['update-all-order-status'] = 'frontend/order/cron/updateAllOrderStatus';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/home/login';
