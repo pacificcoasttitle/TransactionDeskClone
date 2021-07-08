@@ -11,6 +11,9 @@
 		"twilio/sdk": "^6.13",
 		"sendgrid/sendgrid": "~7",
 		"aws/aws-sdk-php": "^3.178",
+		"h4cc/wkhtmltopdf-amd64": "0.12.x",
+		"knplabs/knp-snappy": "^1.2",
+		"wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3",
 		"phpseclib/phpseclib": "^3.0"
 	},
 	"suggest": {

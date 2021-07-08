@@ -21,6 +21,12 @@
                                     <li><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></li>
                                     <li><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed Insured</a></li>
                                     <!-- <li><a href="<?php // echo base_url().'prelim-files'; ?>">Review Prelims</a></li> -->
+
+                                    <?php
+                                    $userdata = $this->session->userdata('user');
+                                    if(!empty($userdata) && isset($userdata['is_master']) && $userdata['is_master'] == 1) { ?>
+                                        <li><a href="<?php echo base_url('reports'); ?>">Reports</a></li>   
+                                    <?php } ?>
                                     <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>    
                                 <?php } else {
                                     if($is_sales_rep == 1)

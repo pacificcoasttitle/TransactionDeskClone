@@ -197,6 +197,7 @@ $route['send-mail-escrow-users'] = 'frontend/order/cron/sendMailEscrowUsers';
 $route['transfer-all-files-on-aws'] = 'frontend/order/cron/transferAllFilesOnAws';
 $route['download-aws-document'] = 'frontend/order/home/downloadAwsDocument';
 $route['download-aws-document-mail'] = 'frontend/order/dashboardMail/downloadAwsDocument';
+
 $route['send-borrower-verification-mail'] = 'frontend/order/cron/sendMailEscrowUsersForBorrowerVerification';
 $route['import-orders-using-file-number'] = 'frontend/order/cron/importOrdersUsingFileNumber';
 $route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
@@ -306,6 +307,9 @@ $route['calculator/admin/fees'] = 'admin/calc/admin/fees';
 $route['calculator/admin/add_fees'] = 'admin/calc/admin/add_fees'; 
 $route['calculator/admin/edit_fees/:num'] = 'admin/calc/admin/edit_fees'; 
 $route['calculator/admin_logout'] = 'admin/calc/admin/admin_logout'; 
+
+$route['reports'] = "frontend/report";
+$route['reports/(.+)'] = "frontend/report/$1";
 
 
 
