@@ -2330,6 +2330,7 @@ class Cron extends MX_Controller {
 
     public function sendMailEscrowUsers()
     {
+        $month = sprintf('%02d',date('m') - 1);
         $this->db->select('order_details.file_id, 
             order_details.file_number, 
             order_details.id as order_id,
@@ -2343,7 +2344,7 @@ class Cron extends MX_Controller {
             escrow_details.email_address, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('MONTH(order_details.resware_closed_status_date)', '06'); 
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', $month);
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
@@ -2487,6 +2488,7 @@ class Cron extends MX_Controller {
         }*/
         
     }
+
 
     public function exportDataFromXmlFile()
     {
@@ -3300,6 +3302,7 @@ class Cron extends MX_Controller {
                     $sftp->get('status/'.$file, FCPATH.'uploads/'.trim($file).".csv");
                     chmod(FCPATH.'uploads/'.$file.".csv",0755);
                 }
+                $sftp->delete('status/'.$file);
             }
         }
         

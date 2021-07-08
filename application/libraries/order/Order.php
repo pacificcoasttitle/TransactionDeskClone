@@ -1147,7 +1147,7 @@ class Order
             } else {
                 $keyname = basename($fileName); 
             }
-            $filepath = "uploads/".$fileName;                
+            $filepath = "uploads/".$fileName;  
         }
         
         try {
