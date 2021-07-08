@@ -133,4 +133,10 @@
 			<span>Safewire Orders</span>
 		</a>
 	</li>
+	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/holidays' || $this->uri->segment(3) == 'add-holiday' || $this->uri->segment(3) == 'edit-holiday') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'order/admin/holidays'; ?>">
+			<i class="fas fa-fw fa-list"></i>
+			<span>Holidays</span>
+		</a>
+	</li>
 </ul>
