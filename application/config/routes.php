@@ -280,6 +280,9 @@ $route['order/admin/get-safewire-orders-list'] = 'admin/order/order/get_safewire
 $route['store-deliverables'] = 'admin/order/home/storeDeliverables';
 $route['download-aws-document-admin'] = 'admin/order/home/downloadAwsDocument';
 $route['update-avoid-duplication-flag'] = 'admin/order/home/updateAvoidDuplicationFlag';
+$route['order/admin/holidays'] = 'admin/order/holidays/index';
+$route['order/admin/add-holiday'] = 'admin/order/holidays/add_holiday';
+$route['order/admin/edit-holiday/:num'] = 'admin/order/holidays/edit_holiday';
 
 
 
