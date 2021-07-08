@@ -187,6 +187,7 @@ class Home extends MX_Controller {
 	        	
 				$EscrowLenderId = $escrowLenderPartnerTypeID ='';
 				$lender_details = $escrow_details = array();
+				$lender_details_api = $escrow_details_api = array();
 
 				if(isset($userdata['is_master']) && !empty($userdata['is_master']))
 				{
@@ -229,6 +230,7 @@ class Home extends MX_Controller {
 	        		$EscrowLenderCompany      = $this->input->post('EscrowCompany');
 
 					$escrow_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
+					$escrow_details_api = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'phone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
 					
 					$partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
 					
@@ -253,6 +255,7 @@ class Home extends MX_Controller {
 	        		$EscrowLenderCompany      = $this->input->post('LenderCompany');
 
 					$lender_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
+					$lender_details_api = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'phone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
 					$escrowLenderPartnerTypeID = '3';
 				}
 
@@ -1065,7 +1068,26 @@ class Home extends MX_Controller {
 									}
 								}
 							}			
-							/* Send notification to admin based on rules */						
+							/* Send notification to admin based on rules */	
+
+							/* Call HomeDocs API  */
+							if(count($escrow_details_api) || count($lender_details_api)) {
+								
+								$api_data = array();
+								$FullProperty = $this->input->post('property_address');
+								$api_data['escrow_details'] = $escrow_details_api;
+								$api_data['lender_details'] = $lender_details_api;
+								$api_data['borrwer_details'] = array();
+								$api_data['escrow_officer_details'] = array();;
+								$api_data['property_details'] = array(
+									'address' => $this->input->post('property-full-address'),
+								);
+								$this->load->helper('homedocsapi');
+								// $result = true;
+					    	
+					    		$result = call_homedocs_api($api_data);
+							}
+				    		/* Call HomeDocs API  */					
 						}
 											
 						$response = array('status'=>'success', 'message'=> 'Data saved successfully.','file_id'=>$file_id);
@@ -1746,4 +1768,54 @@ class Home extends MX_Controller {
         $binaryData   = base64_encode(file_get_contents($url)); 
 		echo $binaryData;exit;
     }
+
+    public function send_invite()
+	{
+
+		$this->form_validation->set_rules('borrower_email', 'Email', 'required|valid_email',array('required'=> 'Enter borrower Email','valid_email'=>'Enter valid Email'));
+		$this->form_validation->set_rules('borrower_name', 'Name', 'required',array('required'=> 'Enter borrower Name'));
+
+		$response_data = array(
+			'status' => false,
+			'message' => 'Something went wrong',
+		);
+
+		if($this->form_validation->run() === true)
+		{
+
+			$borrower_details = array('name'=>$this->input->post('borrower_name'), 'email'=>$this->input->post('borrower_email'));
+
+			/* Call HomeDocs API  */
+			$api_data = array();
+			$FullProperty = $this->input->post('property_address');
+			$api_data['escrow_details'] = array();
+			$api_data['lender_details'] = array();
+			$api_data['borrwer_details'] = $borrower_details;
+			$api_data['escrow_officer_details'] = array();
+			$api_data['property_details'] = array(
+				'address' => $FullProperty
+			);
+
+			$this->load->helper('homedocsapi');
+			// $result = true;
+    	
+    		$result = call_homedocs_api($api_data);
+    		/* Call HomeDocs API  */
+    		if($result) {
+    			$update_data = array();
+    			$update_data['borrower_invited'] = true;
+    			$where['id'] = $this->input->post('invite_order_id');
+    			$this->order->update($update_data, $where);
+    			$response_data['status'] = true;
+    			$response_data['message'] = 'Success';
+    		}
+    		
+			
+		}
+		else {
+			 $response_data['message'] = validation_errors();
+		}
+
+		echo json_encode($response_data);
+	}
 }

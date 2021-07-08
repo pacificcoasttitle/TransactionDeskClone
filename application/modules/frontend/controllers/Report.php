@@ -33,7 +33,8 @@ class Report extends MX_Controller {
                 'is_sales_rep' => 1,
                 'status' => 1,
         );
-        $data['salesReps'] = $this->report_model->getSalesRepData($condition);
+        $data['salesReps'] = $this->report_model->getSalesRepData($condition,$this->user['id']);
+        $data['report_total'] = array_sum(array_column($data['salesReps'], 'report_count'));
         $report_condition = array(
             'added_by' => $this->user['id'],
         );
@@ -152,12 +153,12 @@ class Report extends MX_Controller {
                     foreach ($box_columns as $box_column){
                         if(!isset($box_data[$box_column])) {
                             $box_data[$box_column]['value'] = $record["$box_column"];
-                            $box_data[$box_column]['route'] = $record["carrier_route"];
+                            $box_data[$box_column]['route'] = separateZipRoute($record["carrier_route"],$record["sa_site_zip"]);
                         }
 
                         if($record["$box_column"] > $box_data[$box_column]['value']) {
                             $box_data[$box_column]['value'] = $record["$box_column"];
-                            $box_data[$box_column]['route'] = $record["carrier_route"];
+                            $box_data[$box_column]['route'] = separateZipRoute($record["carrier_route"],$record["sa_site_zip"]);
                         }
                     }
                 }
@@ -228,6 +229,7 @@ class Report extends MX_Controller {
                     $update_data = array();
                     $update_data['first_name'] = $this->input->post('first_name');
                     $update_data['last_name'] = $this->input->post('last_name');
+                    $update_data['title'] = $this->input->post('title');
                     $update_data['email_address'] = $this->input->post('email_address');
                     $update_data['telephone_no'] = $this->input->post('telephone_no');
                     if(is_uploaded_file($_FILES['sales_rep_report_image']['tmp_name'])) 

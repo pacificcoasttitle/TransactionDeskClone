@@ -57,17 +57,32 @@
 	.u-list li:nth-child(2n+1) .no-report-image{
 	    background: #ffffff;
 	}
+	.report_switch_btn {
+		height: 42px;
+	    background: #d35411;
+	    line-height: 1px;
+	    padding: 25px 18px;
+	    vertical-align: top;
+	    display: inline-block;
+	    font-size: 18px;
+	    color: #fff;
+	}
+	.pma_val {
+	    color: #d35400;
+	    font-weight: bold;
+	    text-align: center;
+	}
 </style>
 <body>
 	<?php
         $this->load->view('layout/header_dashboard');
     ?>
-    <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
+    <section class="section-sm section-defaulta" >
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="">
-						<h2 class="ui-title-block ui-title-block_light">Reports</h2>
+						<h2 class="ui-title-block ui-title-block_light">Farm Analysis <a href="<?php echo base_url('pmas'); ?>" class="pull-right report_switch_btn">Create Concierge</a></h2>
 						<div class="ui-decor-1a bg-accent"></div>
 						
 					</div>
@@ -77,7 +92,18 @@
 				<div class="row">
 					<div class="row">
 						<div class="col-md-4">
-							<h2>Representative(s)</h2>
+							<div class="row">
+								<div class="col-sm-9">
+									<h5>Total Ran</h5>
+								</div>
+								<div class="col-sm-3">
+									<h4 class="pma-total pma_val"> <?php echo $report_total; ?> </h4>
+								</div>
+							</div>
+							<!-- <h2>
+								<span>Representative(s)</span>
+
+							</h2> -->
 							<ul class="u-list">
 					          	<?php
 					          	foreach($salesReps as $key=>$salesRep):
@@ -86,7 +112,7 @@
 					          		<div class="u-pic">
 				          			<?php 
 				          			$image_url = trim(env('AWS_PATH').$salesRep['sales_rep_report_image']);
-				          			if (!empty($salesRep['sales_rep_report_image']) && checkRemoteFile($image_url)): ?>
+				          			if (!empty($salesRep['sales_rep_report_image'])): ?>
 						              <img src="<?php echo $image_url;?>" alt="main-logo" class="retina">
 						              <?php else : ?>
 						              	<div class="no-report-image"><span><?php echo strtoupper(substr(trim($salesRep['first_name']) , 0,1).substr(trim($salesRep['last_name']) , 0,1)) ?></span></div>
@@ -100,7 +126,7 @@
 						              </div>
 						            </div>
 						            <div class="u-count">
-						            	<div><?php echo $salesRep['report_count'];?></div>
+						            	<div class="pma_val"><?php echo $salesRep['report_count'];?></div>
 						            </div>
 					          	</li>
 					          	<?php
@@ -118,7 +144,10 @@
 						</div>
 
 						<div class="col-md-8">
-							<h2>Create New Report</h2>
+							<h2><span>Create New Report</span>
+								<!-- <a href="<?=base_url('pmas')?>" class="pull-right">Create PMA</a> -->
+
+							</h2>
 							<div class="smart-forms smart-container">
 								<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('reports/importData') ?>">
 									<div class="form-body">

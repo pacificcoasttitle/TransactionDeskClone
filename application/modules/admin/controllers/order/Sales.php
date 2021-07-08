@@ -85,6 +85,9 @@ class Sales extends MX_Controller {
             $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
             $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
             $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
+            $this->form_validation->set_rules('sales_rep_no_of_open_orders', 'Sales Rep No of Open Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Open Orders'));
+            $this->form_validation->set_rules('sales_rep_no_of_close_orders', 'Sales Rep No of Close Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Close Orders'));
+            $this->form_validation->set_rules('sales_rep_premium', 'Sales Rep Premium', 'trim|required|numeric', array('required'=> 'Sales Rep Premium'));
               
             $config['upload_path'] = 'uploads/sales-rep/';
             $config['allowed_types'] = 'jpg|png';
@@ -155,6 +158,9 @@ class Sales extends MX_Controller {
                         'is_sales_rep' => 1,
                         'sales_rep_profile_img' => $fileuri,
                         'sales_rep_profile_thank_you_img' => $fileUrlThankYou,
+                        'sales_rep_no_of_open_orders' => $_POST['sales_rep_no_of_open_orders'],
+                        'sales_rep_no_of_close_orders' => $_POST['sales_rep_no_of_close_orders'],
+                        'sales_rep_premium' => $_POST['sales_rep_premium'],
                     );
 
                     $insert = $this->sales_model->insert($salesRepData);
@@ -177,6 +183,9 @@ class Sales extends MX_Controller {
                 $data['email_error_msg'] = form_error('email_address');
                 $data['phone_error_msg'] = form_error('telephone');
                 $data['partner_id_error_msg'] = form_error('partner_id');
+                $data['sales_rep_no_of_open_orders_error_msg'] = form_error('sales_rep_no_of_open_orders');
+                $data['sales_rep_no_of_close_orders_error_msg'] = form_error('sales_rep_no_of_close_orders');
+                $data['sales_rep_premium_error_msg'] = form_error('sales_rep_premium');
             }                                       
         }
         $this->load->view('order/layout/header', $data);
@@ -201,6 +210,9 @@ class Sales extends MX_Controller {
                 $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
                 $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
                 $this->form_validation->set_rules('partner_type_id', 'Partner Type Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Type Id'));
+                $this->form_validation->set_rules('sales_rep_no_of_open_orders', 'Sales Rep No of Open Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Open Orders'));
+                $this->form_validation->set_rules('sales_rep_no_of_close_orders', 'Sales Rep No of Close Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Close Orders'));
+                $this->form_validation->set_rules('sales_rep_premium', 'Sales Rep Premium', 'trim|required|numeric', array('required'=> 'Sales Rep Premium'));
 
                 $config['upload_path'] = 'uploads/sales-rep/';
                 $config['allowed_types'] = 'jpg|png';
@@ -278,6 +290,9 @@ class Sales extends MX_Controller {
                             'is_sales_rep' => 1,
                             'sales_rep_profile_img' => $fileuri,
                             'sales_rep_profile_thank_you_img' => $fileUrlThankYou,
+                            'sales_rep_no_of_open_orders' => $_POST['sales_rep_no_of_open_orders'],
+                            'sales_rep_no_of_close_orders' => $_POST['sales_rep_no_of_close_orders'],
+                            'sales_rep_premium' => $_POST['sales_rep_premium'],
                         );
 
                         $condition = array('id' => $id);
@@ -302,6 +317,9 @@ class Sales extends MX_Controller {
                     $data['phone_error_msg'] = form_error('telephone');
                     $data['partner_id_error_msg'] = form_error('partner_id');
                     $data['partner_type_id_error_msg'] = form_error('partner_type_id');
+                    $data['sales_rep_no_of_open_orders_error_msg'] = form_error('sales_rep_no_of_open_orders');
+                    $data['sales_rep_no_of_close_orders_error_msg'] = form_error('sales_rep_no_of_close_orders');
+                    $data['sales_rep_premium_error_msg'] = form_error('sales_rep_premium');
                 }
             }
             $con = array('id' => $id);

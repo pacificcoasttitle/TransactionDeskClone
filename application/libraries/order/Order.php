@@ -18,7 +18,7 @@ class Order
     public function get_recent_orders()
     {
         $userdata = $this->CI->session->userdata('user');
-        $this->CI->db->select('order_details.file_number, order_details.file_id, property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.created_at, property_details.primary_owner')
+        $this->CI->db->select('order_details.file_number, order_details.file_id, property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.created_at, property_details.primary_owner,order_details.borrower_invited,order_details.resware_status')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
 
@@ -44,6 +44,8 @@ class Order
         $userdata = $this->CI->session->userdata('user');
         $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
         $month = isset($params['month']) && !empty($params['month']) ? $params['month'] : '';
+        $yearFlag = isset($params['yearFlag']) && !empty($params['yearFlag']) ? $params['yearFlag'] : '';
+        $dashboard_order_by = isset($params['dashboard_order_by']) && !empty($params['dashboard_order_by']) ? $params['dashboard_order_by'] : '';
         $result = $this->getUserFromPartners();
 
         if(isset($params['searchvalue']) && !empty($params['searchvalue']))
@@ -59,18 +61,28 @@ class Order
             if(isset($status) && !empty($status))
             {
                 if ($status == 'open') {
-                    $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+                    $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
                 } else {
                     $this->CI->db->where('order_details.resware_status', $status); 
                 }
             }
 
             if(isset($month) && !empty($month)) {
-                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+                } 
             }
 
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
+            if (isset($yearFlag) && !empty($yearFlag)) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
+            }
+
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
@@ -107,22 +119,32 @@ class Order
             if(isset($status) && !empty($status))
             {
                 if ($status == 'open') {
-                    $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+                    $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
                 } else {
                     $this->CI->db->where('order_details.resware_status', $status); 
                 }
             }
 
             if(isset($month) && !empty($month)) {
-                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+                } 
+            }
+
+            if (isset($yearFlag) && !empty($yearFlag)) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
             }
 
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
            
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name, 
-                order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
@@ -150,14 +172,18 @@ class Order
                 }
             }
 
-            $this->CI->db->order_by("order_details.id", "desc");
-
+            if (!empty($dashboard_order_by)) {
+                $this->CI->db->order_by('FIELD(order_details.resware_status, "closed") desc');
+                $this->CI->db->order_by("order_details.id", "desc");
+            } else {
+                $this->CI->db->order_by("order_details.id", "desc");
+            }
+                       
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);
             }
 
             $query = $this->CI->db->get();
-
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             }
@@ -167,18 +193,28 @@ class Order
             if(isset($status) && !empty($status))
             {
                 if ($status == 'open') {
-                    $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+                    $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
                 } else {
                     $this->CI->db->where('order_details.resware_status', $status); 
                 }
             }
 
             if(isset($month) && !empty($month)) {
-                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+                } 
             }
 
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
+            if (isset($yearFlag) && !empty($yearFlag)) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
+            }
+
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
@@ -218,18 +254,28 @@ class Order
             if(isset($status) && !empty($status))
             {
                 if ($status == 'open') {
-                    $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+                    $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
                 } else {
                     $this->CI->db->where('order_details.resware_status', $status); 
                 }
             }
 
             if(isset($month) && !empty($month)) {
-                $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+                } 
             }
-            
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.cpl_document_name,
-            order_details.created_at,order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date')
+
+            if (isset($yearFlag) && !empty($yearFlag)) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
+            }
+
+            $this->CI->db->select('order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
@@ -257,14 +303,18 @@ class Order
                 }
             }
 
-            $this->CI->db->order_by("order_details.id", "desc");
+            if (!empty($dashboard_order_by)) {
+                $this->CI->db->order_by('FIELD(order_details.resware_status, "closed") desc');
+                $this->CI->db->order_by("order_details.id", "desc");
+            } else {
+                $this->CI->db->order_by("order_details.id", "desc");
+            }
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);
             }
 
             $query = $this->CI->db->get();
-    
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             } 
@@ -326,6 +376,7 @@ class Order
             order_details.borrower_mobile_number_for_seller,
             order_details.proposed_branch_id,
             order_details.escrow_officer_id,
+            order_details.premium,
             order_details.is_create_order_on_safewire,
             order_details.safewire_action_link,
             property_details.id as property_id, 
@@ -1084,7 +1135,6 @@ class Order
         return false;
     }
 
-
     public function uploadDocumentOnAwsS3($fileName, $folder= '', $csv = 0)
     {
         $bucket = env('AWS_BUCKET');
@@ -1163,9 +1213,10 @@ class Order
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+        $this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+        $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         //echo $this->CI->db->last_query();exit;
@@ -1179,9 +1230,10 @@ class Order
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('(order_details.resware_status != "closed" OR order_details.resware_status IS NULL)');
+        $this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+        $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();
@@ -1196,7 +1248,8 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'loan');
-        $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+        $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+        $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();
@@ -1211,7 +1264,8 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
             $this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'sale');
-        $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+        $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+        $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();

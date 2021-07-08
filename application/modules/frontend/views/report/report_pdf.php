@@ -86,7 +86,7 @@
                     <?php
                     foreach ($records as $key => $record) { ?>
                         <tr>
-                            <td><?php echo $record['carrier_route'] ?></td>
+                            <td><?php echo separateZipRoute($record['carrier_route'],$record["sa_site_zip"]) ?></td>
                             <td>$<?php echo number_format($record['avg_price'])  ?></td>
                             <td><?php echo $record['total_sales'] ?></td>
                             <td><?php echo $record['NOO_ratio'] ?></td>
@@ -115,7 +115,7 @@
                             <!-- <img src="https://i.ibb.co/z7QknKX/Zoe-Noelle.jpg" alt="Zoe-Noelle" class="profile_img"> -->
                         <div>
                             <div class="profile_name"><?php echo $salesRep['first_name'].' '.$salesRep['last_name']; ?></div>
-                            <!-- <div class="profile_title">Account Executive</div> -->
+                            <div class="profile_title"><?php echo $salesRep['title'];?></div>
                             <a class="tel_number phone_no" href="tel:<?php echo $salesRep['telephone_no'];?>"><?php echo $salesRep['telephone_no'];?></a>
                             <a href="mailto:<?php echo $salesRep['email_address'];?>" class="tel_number"><?php echo $salesRep['email_address'];?></a>
                         </div>

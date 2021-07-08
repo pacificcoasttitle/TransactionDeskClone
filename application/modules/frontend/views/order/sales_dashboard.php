@@ -102,7 +102,7 @@
 						<div class="typography-section__inner">
 							<h2 class="ui-title-block ui-title-block_light">Welcome Back <?php echo $name; ?>,</h2>
 							<div class="ui-decor-1a bg-accent"></div>
-							<h3 class="ui-title-block_light">Below are all your orders.</h3>
+							<h4 class="ui-title-block_light">Below is your production figures for the current month of <b><?php echo date('F');?></b></h3>
 						</div>
 						<div class="order-count-cotainer">
 							<div class="col-md-3 title">Title Openings MTD</div>
@@ -129,10 +129,12 @@
 							</div>
 
 							<div class="col-md-3 square-box">
-								<div class="sales_loan_count" id="close_order_percetage"><?Php echo $close_order_percetage;?>%</div>
+								<div class="sales_loan_count"><span id="close_order_percetage"><?Php echo $close_order_percetage;?></span>%</div>
 								<div class="sales_loan_section">Sales = <span id="sale_close_order_percetage"><?Php echo $sale_close_order_percetage;?></span>%</div>
 								<div class="sales_loan_section">Refi's = <span id="refi_close_order_percetage"><?Php echo $refi_close_order_percetage;?></span>%</div>
 							</div>
+
+							<h4 class="ui-title-block_light">Below is list of all your files. You can search for files by month that have a status open, closed, or< cancelled.</h3>
 						</div>	
 						
 						<div class="typography-sectiona">
@@ -252,25 +254,25 @@
 
 						var json = jQuery.parseJSON( data );
 						var countingData = json.count_data;
-						if (countingData) {
-							console.log(countingData.refi_open_count);
-							$('#refi_open_count').html(countingData.refi_open_count);
-							$('#sale_open_count').html(countingData.sale_open_count);
-							$('#open_order_count').html(countingData.open_order_count);
+						// if (countingData) {
+						// 	console.log(countingData.refi_open_count);
+						// 	$('#refi_open_count').html(countingData.refi_open_count);
+						// 	$('#sale_open_count').html(countingData.sale_open_count);
+						// 	$('#open_order_count').html(countingData.open_order_count);
 
-							$('#refi_close_count').html(countingData.refi_close_count);
-							$('#sale_close_count').html(countingData.sale_close_count);
-							$('#close_order_count').html(countingData.close_order_count);
+						// 	$('#refi_close_count').html(countingData.refi_close_count);
+						// 	$('#sale_close_count').html(countingData.sale_close_count);
+						// 	$('#close_order_count').html(countingData.close_order_count);
 
-							$('#refi_total_premium').html(countingData.refi_total_premium);
-							$('#sale_total_premium').html(countingData.sale_total_premium);
-							$('#total_premium').html(countingData.total_premium);
+						// 	$('#refi_total_premium').html(countingData.refi_total_premium);
+						// 	$('#sale_total_premium').html(countingData.sale_total_premium);
+						// 	$('#total_premium').html(countingData.total_premium);
 
-							$('#refi_close_order_percetage').html(countingData.refi_close_order_percetage);
-							$('#sale_close_order_percetage').html(countingData.sale_close_order_percetage);
-							$('#close_order_percetage').html(countingData.close_order_percetage);
+						// 	$('#refi_close_order_percetage').html(countingData.refi_close_order_percetage);
+						// 	$('#sale_close_order_percetage').html(countingData.sale_close_order_percetage);
+						// 	$('#close_order_percetage').html(countingData.close_order_percetage);
 							
-						} 
+						// } 
 						json.recordsTotal = json.recordsTotal;
 						json.recordsFiltered = json.recordsFiltered;
 						json.data = json.data;
@@ -293,7 +295,7 @@
 				}
 			});
 
-			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="month_filter" id="month_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="01"> January </option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></label><label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option></select></label><a href="javascript:void(0);" style="margin-bottom: 5px;"><button class="btn btn-grad-2a" id="btn-refresh" style="background: #d35411;height: 42px;line-height: 28px;" type="button" onClick="importSalesRepOrders();">Refresh</button></a>');
+			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="month_filter" id="month_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="01"> January </option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></label><label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option><option value="cancelled">Cancelled</option></select></label><a href="javascript:void(0);" style="margin-bottom: 5px;"><!-- <button class="btn btn-grad-2a" id="btn-refresh" style="background: #d35411;height: 42px;line-height: 28px;" type="button" onClick="importSalesRepOrders();">Refresh</button></a>-->');
 
     		var d = new Date(),
 

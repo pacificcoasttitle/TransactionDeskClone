@@ -1,4 +1,8 @@
 <?php
+
+$time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",'/Date(1623903733810-0000)/')))/1000);
+$completed_date = date('Y-m-d H:i:s', $time);
+echo $completed_date;exit;
     if ( isset($_GET['skin']) ) $skin=(int)$_GET['skin'];else $skin=1;
     include('easy-protect.php');
     $options = array(
