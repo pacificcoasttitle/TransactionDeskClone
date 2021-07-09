@@ -41,14 +41,38 @@ class Dashboard extends MX_Controller {
 			$con = array('id' => $userdata['id']);
             $sales_rep_info = $this->order->getSalesRep($con);
 			$data['sales_rep_info'] = $sales_rep_info;
+			$workedDays = $this->countWorkedDaysOfMonth();
+			$workingDaysRemaining = $this->countWokingsDaysLeftOfMonth();
+
         	$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'));
 			$data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
 			$openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'));
 			$data['sale_open_count'] = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+			$data['total_open_count'] = $data['sale_open_count'] + $data['refi_open_count'];
+
+			if ($data['total_open_count'] > 0) {
+				$numOfOpenOrderPerWorkedDays = $data['total_open_count']/$workedDays;
+				$data['projected_open_count'] = (round($numOfOpenOrderPerWorkedDays*$workingDaysRemaining))+ $data['total_open_count'];
+			} else {
+				$numOfOpenOrderPerWorkedDays = 0;
+				$data['projected_open_count'] = 0;
+			}
+			
+
 			$closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'));
 			$data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
 			$closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'));
 			$data['sale_close_count'] =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+			$data['total_close_count'] = $data['refi_close_count'] + $data['sale_close_count'];
+
+			if ($data['total_close_count'] > 0) {
+				$numOfCloseOrderPerWorkedDays = $data['total_close_count']/$workedDays;
+				$data['projected_close_count'] = (round($numOfCloseOrderPerWorkedDays*$workingDaysRemaining))+ $data['total_close_count'];
+			} else {
+				$numOfCloseOrderPerWorkedDays = 0;
+				$data['projected_close_count'] = 0;
+			}
+
 			$openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
 			$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
 			$data['refi_total_premium'] = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
@@ -56,6 +80,13 @@ class Dashboard extends MX_Controller {
 			$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
 			$data['sale_total_premium'] = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
 			$data['total_premium'] = $data['sale_total_premium'] + $data['refi_total_premium'];
+			if ($data['total_premium'] > 0) {
+				$premiumWorkedDays = $data['total_premium']/$workedDays;
+				$data['projected_revenue'] = (round($premiumWorkedDays*$workingDaysRemaining))+ $data['total_close_count'];
+			} else {
+				$premiumWorkedDays = 0;
+				$data['projected_revenue'] = 0;
+			}
 			$totalCount = $data['sale_close_count'] + $data['refi_close_count'] + $data['sale_open_count'] + $data['refi_open_count'];
 			if($totalCount > 0) { 
 				$data['refi_close_order_percetage'] = round(($data['refi_close_count']*100)/$totalCount);
@@ -3602,7 +3633,7 @@ class Dashboard extends MX_Controller {
         echo json_encode($json_data);
     }
 
-	public function countWokingsDaysLeftMonth() 
+	public function countWokingsDaysLeftOfMonth() 
 	{
 		$count = 0;
 		$counter = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
@@ -3616,6 +3647,32 @@ class Dashboard extends MX_Controller {
         $this->db->from('pct_holidays');	
 		$this->db->where('holiday_date >', date('Y-m-d'));
 		$this->db->where('holiday_date <=', date("Y-m-t", strtotime(date('Y-m-d'))));
+        $query = $this->db->get();
+		$result = $query->result_array();
+		foreach ($result as $res) {
+			$weekendFlag = (date('N', strtotime($res['holiday_date'])) >= 6);
+			if($weekendFlag != 1) {
+				$count--;
+			}
+		}
+		return $count;
+	}
+
+	public function countWorkedDaysOfMonth() 
+	{
+		$count = 0;
+		$counter = mktime(0, 0, 0, date('m'), date('d')-1, date('Y'));
+		while (date("n", $counter) == date('m')) {
+			if (in_array(date("w", $counter), array(0, 6)) == false) {
+				$count++;
+			}
+			$counter = strtotime("-1 day", $counter);
+		}
+		
+		$this->db->select('*');
+        $this->db->from('pct_holidays');	
+		$this->db->where('holiday_date >=', date('Y-m-01'));
+		$this->db->where('holiday_date <', date('Y-m-d'));
         $query = $this->db->get();
 		$result = $query->result_array();
 		foreach ($result as $res) {
