@@ -47,7 +47,7 @@ class Holidays extends MX_Controller {
             if($this->form_validation->run() == true) {
                 $holidayData = array(
                     'name' => $_POST['holiday_name'],
-                    'holiday_date' => date("Y-m-d h:i:s", strtotime($_POST['holiday_date'])),
+                    'holiday_date' => date("Y-m-d", strtotime($_POST['holiday_date'])),
                     'created_at' =>  date('Y-m-d H:i:s')
                 );
                 $insert = $this->holidays_model->insert($holidayData);
@@ -139,7 +139,7 @@ class Holidays extends MX_Controller {
                 if($this->form_validation->run() == true) {
                     $holidayData = array(
                         'name' => $_POST['holiday_name'],
-                        'holiday_date' => date("Y-m-d h:i:s", strtotime($_POST['holiday_date'])),
+                        'holiday_date' => date("Y-m-d", strtotime($_POST['holiday_date'])),
                         'created_at' =>  date('Y-m-d H:i:s')
                     );
                     $condition = array('id' => $id);

@@ -95,7 +95,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="sales_rep_premium" class="col-sm-4 col-form-label">Premium<span class="required"> *</span></label>
+                    <label for="sales_rep_premium" class="col-sm-4 col-form-label">Revenue<span class="required"> *</span></label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" name="sales_rep_premium" id="sales_rep_premium" value="<?php echo isset($sales_rep_info['sales_rep_premium']) && !empty($sales_rep_info['sales_rep_premium']) ? $sales_rep_info['sales_rep_premium'] : ''?>" class="form-control">
                         <?php if(!empty($sales_rep_premium_error_msg)){ ?>                     
