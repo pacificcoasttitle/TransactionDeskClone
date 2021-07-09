@@ -89,6 +89,15 @@
 			color: #a0a0a0;
 		}
 
+		.projected_goal_section {
+    		color: #d35411;
+    		font-weight: bold;
+			text-align: center;
+			text-transform: uppercase;
+			font-size: large;
+			line-height: 21px;
+		}
+
 		#orders_listing_filter {
 			margin-bottom: 20px;
 		}
@@ -114,24 +123,32 @@
 								<div class="sales_loan_count" id="open_order_count"><?Php echo $sale_open_count + $refi_open_count; ?></div>
 								<div class="sales_loan_section">Sales = <span id="sale_open_count"><?Php echo $sale_open_count;?></span></div>
 								<div class="sales_loan_section">Refi's = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
+								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
+								<div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo $sales_rep_info['sales_rep_no_of_open_orders'];?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
 								<div class="sales_loan_count" id="close_order_count"><?Php echo $sale_close_count + $refi_close_count; ?></div>
 								<div class="sales_loan_section">Sales = <span id="sale_close_count"><?Php echo $sale_close_count;?></span></div>
 								<div class="sales_loan_section">Refi's = <span id="refi_close_count"><?Php echo $refi_close_count;?></span></div>
+								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
+								<div class="projected_goal_section">Goal = <span id="goal_close_section"><?Php echo $sales_rep_info['sales_rep_no_of_close_orders'];?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
 								<div class="sales_loan_count">$<span id="total_premium"><?php echo number_format($total_premium); ?></span></div>
 								<div class="sales_loan_section">Sales = $<span id="sale_total_premium"><?php echo number_format($sale_total_premium); ?></span></div>
 								<div class="sales_loan_section">Refi's = $<span id="refi_total_premium"><?php echo number_format($refi_total_premium); ?></span></div>
+								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
+								<div class="projected_goal_section">Goal = <span id="goal_revenue_section"><?Php echo $sales_rep_info['sales_rep_premium'];?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
 								<div class="sales_loan_count"><span id="close_order_percetage"><?Php echo $close_order_percetage;?></span>%</div>
 								<div class="sales_loan_section">Sales = <span id="sale_close_order_percetage"><?Php echo $sale_close_order_percetage;?></span>%</div>
 								<div class="sales_loan_section">Refi's = <span id="refi_close_order_percetage"><?Php echo $refi_close_order_percetage;?></span>%</div>
+								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
+								<div class="projected_goal_section">Goal = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
 							</div>
 
 							<h4 class="ui-title-block_light">Below is list of all your files. You can search for files by month that have a status open, closed, or< cancelled.</h3>

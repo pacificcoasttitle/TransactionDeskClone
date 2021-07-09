@@ -38,6 +38,9 @@ class Dashboard extends MX_Controller {
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		
 		if ($is_sales_rep) {
+			$con = array('id' => $userdata['id']);
+            $sales_rep_info = $this->order->getSalesRep($con);
+			$data['sales_rep_info'] = $sales_rep_info;
         	$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'));
 			$data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
 			$openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'));
@@ -3598,4 +3601,30 @@ class Dashboard extends MX_Controller {
         $json_data['data'] = $data;
         echo json_encode($json_data);
     }
+
+	public function countWokingsDaysLeftMonth() 
+	{
+		$count = 0;
+		$counter = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+		while (date("n", $counter) == date('m')) {
+			if (in_array(date("w", $counter), array(0, 6)) == false) {
+				$count++;
+			}
+			$counter = strtotime("+1 day", $counter);
+		}
+		$this->db->select('*');
+        $this->db->from('pct_holidays');	
+		$this->db->where('holiday_date >', date('Y-m-d'));
+		$this->db->where('holiday_date <=', date("Y-m-t", strtotime(date('Y-m-d'))));
+        $query = $this->db->get();
+		$result = $query->result_array();
+		foreach ($result as $res) {
+			$weekendFlag = (date('N', strtotime($res['holiday_date'])) >= 6);
+			if($weekendFlag != 1) {
+				$count--;
+			}
+		}
+		return $count;
+	}
+	
 }
