@@ -42,3 +42,9 @@
     </div>
 </div>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#holiday_date').datepicker().datepicker("setDate", new Date());
+    });
+</script>
+

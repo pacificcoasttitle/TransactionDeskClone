@@ -2487,7 +2487,7 @@ $(document).ready(function () {
         });
     }
     /* Fees type listing */
-    jQuery('#holiday_date').datepicker().datepicker("setDate", new Date());
+   
     /* Add fee type validation */
     if(jQuery('#frm-add-fee-type').length || jQuery('#frm-edit-fee-type').length)
     {
