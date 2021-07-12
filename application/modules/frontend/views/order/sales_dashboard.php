@@ -214,7 +214,7 @@
 </html>
 <script>
 	$(document).ready(function () {
-		getSalesRepOrderCount();
+		//getSalesRepOrderCount();
 		var order_list='';
 		if ($('#orders_listing').length) {
 			order_list = $('#orders_listing').DataTable({
