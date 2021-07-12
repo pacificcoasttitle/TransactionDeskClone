@@ -2587,15 +2587,15 @@ class Cron extends MX_Controller {
                                     'order_details'
                                 );
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
-                                if (empty($orderDetails['sales_representative'])) {
-                                    $this->db->select('*');
-                                    $this->db->from('customer_basic_details');
-                                    $this->db->like('first_name', $salesRepName[0]);
-                                    $this->db->like('last_name', $salesRepName[1]);
-                                    $this->db->where('is_sales_rep', 1);
-                                    $query = $this->db->get();
-                                    $resultSales = $query->row_array(); 
-                                }
+                                
+                                $this->db->select('*');
+                                $this->db->from('customer_basic_details');
+                                $this->db->like('first_name', $salesRepName[0]);
+                                $this->db->like('last_name', $salesRepName[1]);
+                                $this->db->where('is_sales_rep', 1);
+                                $query = $this->db->get();
+                                $resultSales = $query->row_array(); 
+                                
                                 if (!empty($resultSales)) {
                                     $this->home_model->update(
                                         array(
