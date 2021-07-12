@@ -313,7 +313,7 @@ class Order
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);
             }
-
+            echo $this->CI->db->last_query();exit;
             $query = $this->CI->db->get();
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
