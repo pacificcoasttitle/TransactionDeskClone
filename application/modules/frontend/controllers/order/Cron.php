@@ -2578,7 +2578,8 @@ class Cron extends MX_Controller {
                                     array(
                                         'prod_type' => strtolower($prodType),
                                         'premium' => (float)$premium,
-                                        'resware_closed_status_date' => $completed_date
+                                        'resware_closed_status_date' => $completed_date,
+                                        'sent_to_accounting_date' => $completed_date
                                     ), 
                                     array(
                                         'id' => $order[0]['id']
