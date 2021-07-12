@@ -2551,7 +2551,7 @@ class Cron extends MX_Controller {
 
                         if(in_array('Sales Rep', $headerColumns)) {
                             $saleskey = array_search("Sales Rep",$headerColumns);
-                            $salesRepName = $data[$saleskey];
+                            $salesRepName = explode(" ",$data[$saleskey]);
                         }
 
                         if(in_array('Sent To External Accounting', $headerColumns)) {
