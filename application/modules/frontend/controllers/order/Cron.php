@@ -2330,6 +2330,7 @@ class Cron extends MX_Controller {
 
     public function sendMailEscrowUsers()
     {
+        $month = sprintf('%02d',date('m') - 1);
         $this->db->select('order_details.file_id, 
             order_details.file_number, 
             order_details.id as order_id,
@@ -2343,7 +2344,7 @@ class Cron extends MX_Controller {
             escrow_details.email_address, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('MONTH(order_details.resware_closed_status_date)', '06'); 
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
@@ -2764,7 +2765,6 @@ class Cron extends MX_Controller {
         $this->db->where('transaction_details.purchase_type = 4'); 
         $this->db->where('order_details.escrow_officer_id IS NOT NULL');
         $this->db->where('order_details.borrower_information_document_name IS NULL');
-
         $this->db->where('order_details.file_number IN (10231167,10232453,10232646,10230875,10231110,10231114,10231186,10231250,10231659,10231758,10231974,10231981,10231999,10232000,10232286,10232287,10232400,10232448,10232543,10232547,10232595,10232597)');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
@@ -3302,6 +3302,7 @@ class Cron extends MX_Controller {
                     $sftp->get('status/'.$file, FCPATH.'uploads/'.trim($file).".csv");
                     chmod(FCPATH.'uploads/'.$file.".csv",0755);
                 }
+                $sftp->delete('status/'.$file);
             }
         }
         
