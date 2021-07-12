@@ -3668,7 +3668,6 @@ class Dashboard extends MX_Controller {
 			}
 			$counter = strtotime("-1 day", $counter);
 		}
-		echo $count;exit;
 		$this->db->select('*');
         $this->db->from('pct_holidays');	
 		$this->db->where('holiday_date >=', date('Y-m-01'));
