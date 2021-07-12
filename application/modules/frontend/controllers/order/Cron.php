@@ -2549,9 +2549,19 @@ class Cron extends MX_Controller {
                             $premium = str_replace('$', '', $premium);
                         }
 
+                        $salesRepFirstName = '';
+                        $salesRepLastName = '';
+
                         if(in_array('Sales Rep', $headerColumns)) {
                             $saleskey = array_search("Sales Rep",$headerColumns);
                             $salesRepName = explode(" ",$data[$saleskey]);
+                            if(isset($salesRepName[0]) && !empty($salesRepName[0])) {
+                                $salesRepFirstName = preg_replace('/[^A-Za-z0-9\-]/', '', $salesRepName[0]);
+                            } 
+
+                            if(isset($salesRepName[1]) && !empty($salesRepName[1])) {
+                                $salesRepLastName = preg_replace('/[^A-Za-z0-9\-]/', '', $salesRepName[1]);
+                            } 
                         }
 
                         if(in_array('Sent To External Accounting', $headerColumns)) {
@@ -2590,7 +2600,12 @@ class Cron extends MX_Controller {
                                 
                                 $this->db->select('*');
                                 $this->db->from('customer_basic_details');
-                                $this->db->like('first_name', $salesRepName[0]);
+                                if(!empty($salesRepFirstName)) {
+                                    $this->db->like('first_name', $salesRepFirstName);
+                                }
+                                if(!empty($salesRepLastName)) {
+                                    $this->db->like('last_name', $salesRepLastName);
+                                }
                                 $this->db->like('last_name', $salesRepName[1]);
                                 $this->db->where('is_sales_rep', 1);
                                 $query = $this->db->get();
