@@ -2489,7 +2489,7 @@ class Cron extends MX_Controller {
         
     }
 
-    public function importDataFromXmlFile()
+    public function importDataFromCsvFile()
     {
         $sftp = new SFTP(env('SFTP_HOST'));
         $username = env('SFTP_USERNAME');
