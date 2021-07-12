@@ -58,7 +58,6 @@ class Dashboard extends MX_Controller {
 				$data['projected_open_count'] = 0;
 			}
 			
-
 			$closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'));
 			$data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
 			$closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'));
@@ -3661,6 +3660,7 @@ class Dashboard extends MX_Controller {
 	public function countWorkedDaysOfMonth() 
 	{
 		$count = 0;
+	
 		$counter = mktime(0, 0, 0, date('m'), date('d')-1, date('Y'));
 		while (date("n", $counter) == date('m')) {
 			if (in_array(date("w", $counter), array(0, 6)) == false) {
@@ -3668,7 +3668,6 @@ class Dashboard extends MX_Controller {
 			}
 			$counter = strtotime("-1 day", $counter);
 		}
-		
 		$this->db->select('*');
         $this->db->from('pct_holidays');	
 		$this->db->where('holiday_date >=', date('Y-m-01'));

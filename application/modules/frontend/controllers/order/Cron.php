@@ -2489,7 +2489,7 @@ class Cron extends MX_Controller {
         
     }
 
-    public function exportDataFromXmlFile()
+    public function importDataFromXmlFile()
     {
         $sftp = new SFTP(env('SFTP_HOST'));
         $username = env('SFTP_USERNAME');
@@ -2507,6 +2507,7 @@ class Cron extends MX_Controller {
             if ($file != '.' && $file != '..') {
                 $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.trim($file).".csv");
                 chmod(FCPATH.'uploads/'.$file.".csv",0755);
+                $sftp->delete(env('SFTP_FOLDER').'/'.$file);
             }
         }
         $files = glob("uploads/*csv", GLOB_NOSORT);
