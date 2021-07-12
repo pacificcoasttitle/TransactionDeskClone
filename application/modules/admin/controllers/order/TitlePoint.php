@@ -235,7 +235,6 @@ class TitlePoint extends MX_Controller {
                     } else {
                         $nestedData[] = $value['cs3_message'];
                     }
-
                     $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
                     $data[] = $nestedData;
                     $count++;
