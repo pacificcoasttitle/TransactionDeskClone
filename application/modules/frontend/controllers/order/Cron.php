@@ -2718,11 +2718,16 @@ class Cron extends MX_Controller {
                                         $randomString = md5($randomString);
     
                                         $completed_date = null;
-                                        if (!empty($res['Dates']['FileCompletedDate'])) {
-                                            $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['FileCompletedDate'])))/1000);
-                                            $completed_date = date('Y-m-d H:i:s', $time);
+                                        if (!empty($closedDate)) {
+                                            $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
+                                            $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                                        } else {
+                                            if (!empty($res['Dates']['FileCompletedDate'])) {
+                                                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['FileCompletedDate'])))/1000);
+                                                $completed_date = date('Y-m-d H:i:s', $time);
+                                            }
                                         }
-            
+                                        
                                         $orderData = array(
                                             'customer_id' => $customerId,
                                             'file_id' => $res['FileID'],
