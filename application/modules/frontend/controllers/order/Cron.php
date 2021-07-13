@@ -2545,6 +2545,7 @@ class Cron extends MX_Controller {
                             $premiumkey = array_search("Total Premium",$headerColumns);
                             $premium = $data[$premiumkey];
                             $premium = str_replace('$', '', $premium);
+                            $premium = str_replace(',', '', $premium);
                         }
 
                         $salesRepName = '';
