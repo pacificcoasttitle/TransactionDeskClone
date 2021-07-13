@@ -2415,7 +2415,6 @@ class Cron extends MX_Controller {
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Thank You!';
                 $to = $escrow_email_address;
-
                 $cc = array('ghernandez@pct.com', $sales_email);          
                 $this->load->helper('sendemail');
                 $mailParams = array(
@@ -2428,7 +2427,6 @@ class Cron extends MX_Controller {
                 );
                 //$to = 'hitesh.p@crestinfosystems.com';
                 //$cc = array();     
-
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $order_id, $logid);
@@ -2547,6 +2545,7 @@ class Cron extends MX_Controller {
                             $premiumkey = array_search("Total Premium",$headerColumns);
                             $premium = $data[$premiumkey];
                             $premium = str_replace('$', '', $premium);
+                            $premium = str_replace(',', '', $premium);
                         }
 
                         $salesRepName = '';
@@ -2720,11 +2719,16 @@ class Cron extends MX_Controller {
                                         $randomString = md5($randomString);
     
                                         $completed_date = null;
-                                        if (!empty($res['Dates']['FileCompletedDate'])) {
-                                            $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['FileCompletedDate'])))/1000);
-                                            $completed_date = date('Y-m-d H:i:s', $time);
+                                        if (!empty($closedDate)) {
+                                            $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
+                                            $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                                        } else {
+                                            if (!empty($res['Dates']['FileCompletedDate'])) {
+                                                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['FileCompletedDate'])))/1000);
+                                                $completed_date = date('Y-m-d H:i:s', $time);
+                                            }
                                         }
-            
+                                        
                                         $orderData = array(
                                             'customer_id' => $customerId,
                                             'file_id' => $res['FileID'],
@@ -2740,6 +2744,7 @@ class Cron extends MX_Controller {
                                             'random_number' => $randomString,
                                             'resware_closed_status_date' => $completed_date,
                                             'resware_status'=> strtolower($res['Status']['Name']),
+                                            'sent_to_accounting_date' => $completed_date
                                         );
                                         $this->home_model->insert($orderData,'order_details');
                                     }
@@ -3095,7 +3100,9 @@ class Cron extends MX_Controller {
         $this->db->from('customer_basic_details');
         $this->db->where('(is_password_updated = 0 and random_password != "")');
         $query = $this->db->get();
+        echo $this->db->last_query();exit;
         $result = $query->result_array();
+
 
         if(!empty($result)) {
             foreach($result as $customerData) {
