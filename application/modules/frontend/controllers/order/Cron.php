@@ -2549,19 +2549,13 @@ class Cron extends MX_Controller {
                             $premium = str_replace('$', '', $premium);
                         }
 
-                        $salesRepFirstName = '';
-                        $salesRepLastName = '';
-
+                        $salesRepName = '';
                         if(in_array('Sales Rep', $headerColumns)) {
                             $saleskey = array_search("Sales Rep",$headerColumns);
-                            $salesRepName = explode(" ",$data[$saleskey]);
-                            if(isset($salesRepName[0]) && !empty($salesRepName[0])) {
-                                $salesRepFirstName = preg_replace('/[^A-Za-z0-9\-]/', '', $salesRepName[0]);
-                            } 
-
-                            if(isset($salesRepName[1]) && !empty($salesRepName[1])) {
-                                $salesRepLastName = preg_replace('/[^A-Za-z0-9\-]/', '', $salesRepName[1]);
-                            } 
+                            $salesRepName = $data[$saleskey];
+                            $salesRepName = str_replace(' ', '-', $salesRepName);
+                            $salesRepName = preg_replace('/[^A-Za-z0-9\-]/', '',  $salesRepName);
+                            $salesRepName = str_replace('-', ' ', $salesRepName);
                         }
 
                         if(in_array('Sent To External Accounting', $headerColumns)) {
@@ -2597,30 +2591,25 @@ class Cron extends MX_Controller {
                                     'order_details'
                                 );
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
-                                
-                                $this->db->select('*');
-                                $this->db->from('customer_basic_details');
-                                if(!empty($salesRepFirstName)) {
-                                    $this->db->like('first_name', $salesRepFirstName);
-                                }
-                                if(!empty($salesRepLastName)) {
-                                    $this->db->like('last_name', $salesRepLastName);
-                                }
-                                $this->db->like('last_name', $salesRepName[1]);
-                                $this->db->where('is_sales_rep', 1);
-                                $query = $this->db->get();
-                                $resultSales = $query->row_array(); 
-                                
-                                if (!empty($resultSales)) {
-                                    $this->home_model->update(
-                                        array(
-                                            'sales_representative' => $resultSales['id'],
-                                        ), 
-                                        array(
-                                            'id' => $orderDetails['transaction_id']
-                                        ), 
-                                        'transaction_details'
-                                    );
+                                $resultSales = array();
+                                if(!empty($salesRepName) && empty($orderDetails['sales_representative'])) {
+                                    $this->db->select('*');
+                                    $this->db->from('customer_basic_details');
+                                    $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
+                                    $this->db->where('is_sales_rep', 1);
+                                    $query = $this->db->get();
+                                    $resultSales = $query->row_array(); 
+                                    if (!empty($resultSales)) {
+                                        $this->home_model->update(
+                                            array(
+                                                'sales_representative' => $resultSales['id'],
+                                            ), 
+                                            array(
+                                                'id' => $orderDetails['transaction_id']
+                                            ), 
+                                            'transaction_details'
+                                        );
+                                    }
                                 }
                             } else {
                                 $data = json_encode(array('FileNumber' => $file_number));
@@ -2684,13 +2673,15 @@ class Cron extends MX_Controller {
                                             'status'=> 1
                                         );
     
-                                        $this->db->select('*');
-                                        $this->db->from('customer_basic_details');
-                                        $this->db->like('first_name', $salesRepName[0]);
-                                        $this->db->like('last_name', $salesRepName[1]);
-                                        $this->db->where('is_sales_rep', 1);
-                                        $query = $this->db->get();
-                                        $result = $query->row_array();
+                                        $resultSales = array();
+                                        if(!empty($salesRepName)) {
+                                            $this->db->select('*');
+                                            $this->db->from('customer_basic_details');
+                                            $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
+                                            $this->db->where('is_sales_rep', 1);
+                                            $query = $this->db->get();
+                                            $resultSales = $query->row_array(); 
+                                        }
             
                                         $transactionData = array(
                                             'customer_id' => $customerId,
@@ -2699,7 +2690,7 @@ class Cron extends MX_Controller {
                                             'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                             'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
                                             'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
-                                            'sales_representative' => !empty($result) ? $result['id'] : 0,
+                                            'sales_representative' => !empty($resultSales) ? $resultSales['id'] : 0,
                                             'status'=> 1
                                         );
             
