@@ -2745,6 +2745,7 @@ class Cron extends MX_Controller {
                                             'random_number' => $randomString,
                                             'resware_closed_status_date' => $completed_date,
                                             'resware_status'=> strtolower($res['Status']['Name']),
+                                            'sent_to_accounting_date' => $completed_date
                                         );
                                         $this->home_model->insert($orderData,'order_details');
                                     }
