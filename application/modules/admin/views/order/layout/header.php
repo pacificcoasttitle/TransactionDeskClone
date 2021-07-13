@@ -22,6 +22,7 @@
   <link href="<?php echo base_url(); ?>assets/backend/css/sb-admin.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>assets/backend/css/custom.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>assets/backend/css/daterangepicker.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>assets/backend/css/jquery-ui.css" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
   <script>

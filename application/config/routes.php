@@ -197,7 +197,7 @@ $route['send-mail-escrow-users'] = 'frontend/order/cron/sendMailEscrowUsers';
 $route['transfer-all-files-on-aws'] = 'frontend/order/cron/transferAllFilesOnAws';
 $route['download-aws-document'] = 'frontend/order/home/downloadAwsDocument';
 $route['download-aws-document-mail'] = 'frontend/order/dashboardMail/downloadAwsDocument';
-
+$route['import-data-from-csv-file'] = 'frontend/order/cron/importDataFromCsvFile';
 $route['send-borrower-verification-mail'] = 'frontend/order/cron/sendMailEscrowUsersForBorrowerVerification';
 $route['import-orders-using-file-number'] = 'frontend/order/cron/importOrdersUsingFileNumber';
 $route['get-orders-dashboard'] = 'frontend/order/dashboard/getOrdersDashboard';
@@ -280,6 +280,9 @@ $route['order/admin/get-safewire-orders-list'] = 'admin/order/order/get_safewire
 $route['store-deliverables'] = 'admin/order/home/storeDeliverables';
 $route['download-aws-document-admin'] = 'admin/order/home/downloadAwsDocument';
 $route['update-avoid-duplication-flag'] = 'admin/order/home/updateAvoidDuplicationFlag';
+$route['order/admin/holidays'] = 'admin/order/holidays/index';
+$route['order/admin/add-holiday'] = 'admin/order/holidays/add_holiday';
+$route['order/admin/edit-holiday/:num'] = 'admin/order/holidays/edit_holiday';
 
 
 

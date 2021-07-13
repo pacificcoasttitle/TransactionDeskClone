@@ -2350,6 +2350,73 @@ $(document).ready(function () {
     }
     /* Fees listing */
 
+     /* Holidays listing */
+     if ($('#tbl-holidays').length) 
+     {
+         holidays_list = $('#tbl-holidays').DataTable({
+             "paging": true,
+             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+             "columnDefs": [
+                 { "searchable": false, "targets": [0,1] }
+             ],
+             "language": {
+                 // searchPlaceholder: "Name",
+                 paginate: {
+                   next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                   previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                 },
+                 "emptyTable": "Record(s) not found.",
+             },
+             initComplete: function() {
+             },
+             "drawCallback": function () {               
+                 $('.dataTables_paginate > .pagination li').addClass('page-item');
+                 $('.dataTables_paginate > .pagination a').addClass('page-link');
+                 $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+             },
+             "ordering": false,            
+             "serverSide": true,
+             "ajax": {                
+                 url: base_url+"admin/order/holidays/get_holidays", // json datasource
+                 type: "post", // method  , by default get
+                 error: function (XMLHttpRequest, textStatus, errorThrown) {
+                     if (parseInt(XMLHttpRequest.status) == 419) {
+                         alert("You are logged out. Please login.");
+                     }
+                     if (parseInt(XMLHttpRequest.status) == 419) {
+                         setTimeout(function () {
+                             location.reload();
+                         }, 1000);
+                     }
+                     $("#tbl-holidays tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                     $("#tbl-holidays_processing").css("display", "none");
+ 
+                 }
+             },
+                         
+         });
+     }
+     /* Holidays listing */
+
+    /* Add Holiday validation */
+    if(jQuery('#frm-add-holiday').length || jQuery('#frm-edit-holiday').length)
+    {
+       jQuery('#frm-add-holiday,#frm-edit-holiday').validate({ 
+            rules: {
+                holiday_name:"required",
+                holiday_date:"required"
+            },
+            messages: {
+                holiday_name:"Please enter Holiday Name",
+                holiday_date:"Please select Holiday Date"
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        }); 
+    }
+    /* Add fee validation */
+
     /* Add fee validation */
     if(jQuery('#frm-add-fee').length || jQuery('#frm-edit-fee').length)
     {
@@ -2420,7 +2487,7 @@ $(document).ready(function () {
         });
     }
     /* Fees type listing */
-
+   
     /* Add fee type validation */
     if(jQuery('#frm-add-fee-type').length || jQuery('#frm-edit-fee-type').length)
     {
@@ -3593,6 +3660,54 @@ function deleteFees(id)
     }
     else
     {
+        return false;
+    }
+}
+
+function deleteHoliday(id)
+{
+    if (id=='') {
+        alert('Holiday ID is required.');
+        return false;
+    }
+
+    var ready = confirm("Are you sure want to delete?");
+    if (ready) {
+        $.ajax({
+            url: base_url+"admin/order/holidays/delete_holiday",
+            type    : "POST",
+            data    : {
+                id : id
+            },
+            success: function(data) {
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#holidays_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#holidays_success_msg").offset().top
+                    }, 1000);
+
+                    holidays_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#holidays_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#holidays_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#holidays_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#holidays_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error   : function( xhr, err ) {
+                alert('Connection Problem !!');
+                return false;
+            }
+        });
+    } else {
         return false;
     }
 }
