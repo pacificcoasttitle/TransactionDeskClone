@@ -2415,6 +2415,7 @@ class Cron extends MX_Controller {
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Thank You!';
                 $to = $escrow_email_address;
+
                 $cc = array('ghernandez@pct.com', $sales_email);          
                 $this->load->helper('sendemail');
                 $mailParams = array(
@@ -2427,6 +2428,7 @@ class Cron extends MX_Controller {
                 );
                 //$to = 'hitesh.p@crestinfosystems.com';
                 //$cc = array();     
+
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $order_id, $logid);
@@ -2547,9 +2549,13 @@ class Cron extends MX_Controller {
                             $premium = str_replace('$', '', $premium);
                         }
 
+                        $salesRepName = '';
                         if(in_array('Sales Rep', $headerColumns)) {
                             $saleskey = array_search("Sales Rep",$headerColumns);
                             $salesRepName = $data[$saleskey];
+                            $salesRepName = str_replace(' ', '-', $salesRepName);
+                            $salesRepName = preg_replace('/[^A-Za-z0-9\-]/', '',  $salesRepName);
+                            $salesRepName = str_replace('-', ' ', $salesRepName);
                         }
 
                         if(in_array('Sent To External Accounting', $headerColumns)) {
@@ -2576,7 +2582,8 @@ class Cron extends MX_Controller {
                                     array(
                                         'prod_type' => strtolower($prodType),
                                         'premium' => (float)$premium,
-                                        'resware_closed_status_date' => $completed_date
+                                        'resware_closed_status_date' => $completed_date,
+                                        'sent_to_accounting_date' => $completed_date
                                     ), 
                                     array(
                                         'id' => $order[0]['id']
@@ -2584,25 +2591,25 @@ class Cron extends MX_Controller {
                                     'order_details'
                                 );
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
-                                if (empty($orderDetails['sales_representative'])) {
+                                $resultSales = array();
+                                if(!empty($salesRepName) && empty($orderDetails['sales_representative'])) {
                                     $this->db->select('*');
                                     $this->db->from('customer_basic_details');
-                                    $this->db->like('first_name', $salesRepName[0]);
-                                    $this->db->like('last_name', $salesRepName[1]);
+                                    $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
                                     $this->db->where('is_sales_rep', 1);
                                     $query = $this->db->get();
                                     $resultSales = $query->row_array(); 
-                                }
-                                if (!empty($resultSales)) {
-                                    $this->home_model->update(
-                                        array(
-                                            'sales_representative' => $resultSales['id'],
-                                        ), 
-                                        array(
-                                            'id' => $orderDetails['transaction_id']
-                                        ), 
-                                        'transaction_details'
-                                    );
+                                    if (!empty($resultSales)) {
+                                        $this->home_model->update(
+                                            array(
+                                                'sales_representative' => $resultSales['id'],
+                                            ), 
+                                            array(
+                                                'id' => $orderDetails['transaction_id']
+                                            ), 
+                                            'transaction_details'
+                                        );
+                                    }
                                 }
                             } else {
                                 $data = json_encode(array('FileNumber' => $file_number));
@@ -2666,13 +2673,15 @@ class Cron extends MX_Controller {
                                             'status'=> 1
                                         );
     
-                                        $this->db->select('*');
-                                        $this->db->from('customer_basic_details');
-                                        $this->db->like('first_name', $salesRepName[0]);
-                                        $this->db->like('last_name', $salesRepName[1]);
-                                        $this->db->where('is_sales_rep', 1);
-                                        $query = $this->db->get();
-                                        $result = $query->row_array();
+                                        $resultSales = array();
+                                        if(!empty($salesRepName)) {
+                                            $this->db->select('*');
+                                            $this->db->from('customer_basic_details');
+                                            $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
+                                            $this->db->where('is_sales_rep', 1);
+                                            $query = $this->db->get();
+                                            $resultSales = $query->row_array(); 
+                                        }
             
                                         $transactionData = array(
                                             'customer_id' => $customerId,
@@ -2681,7 +2690,7 @@ class Cron extends MX_Controller {
                                             'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                             'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
                                             'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
-                                            'sales_representative' => !empty($result) ? $result['id'] : 0,
+                                            'sales_representative' => !empty($resultSales) ? $resultSales['id'] : 0,
                                             'status'=> 1
                                         );
             
@@ -2803,7 +2812,6 @@ class Cron extends MX_Controller {
                 $cc = array('ghernandez@pct.com');
                 //$cc = array();
                 //$to = 'hitesh.p@crestinfosystems.com';
-
                 $mailParams = array(
                     'from_mail'=>$from_mail, 
                     'from_name'=>$from_name, 
@@ -3087,7 +3095,9 @@ class Cron extends MX_Controller {
         $this->db->from('customer_basic_details');
         $this->db->where('(is_password_updated = 0 and random_password != "")');
         $query = $this->db->get();
+        echo $this->db->last_query();exit;
         $result = $query->result_array();
+
 
         if(!empty($result)) {
             foreach($result as $customerData) {
@@ -3223,7 +3233,9 @@ class Cron extends MX_Controller {
                 $newUserData = json_encode($newUserData);
                 $logid = $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, array(), 0, 0);
                 $res = $this->make_request($method, $endPoint, $newUserData, $userdata);
+
                 $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API').$endPoint, $newUserData, $res, 0, $logid);
+
 
                 if (isset($res) && !empty($res)) {
                     $response = json_decode($res,true);
