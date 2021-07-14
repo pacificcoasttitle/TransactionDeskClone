@@ -13,6 +13,8 @@ class Order extends MX_Controller {
         $this->load->model('order/title_model');
         $this->load->model('order/home_model');
         $this->load->model('order/apiLogs');
+        $this->load->library('order/common');
+        $this->common->is_admin();
     }
 
     function orders() {
@@ -87,7 +89,6 @@ class Order extends MX_Controller {
 
     function order_details()
     {    	
-        $this->is_admin();
         $file_id = $this->uri->segment(4);        
         $data = array();
         $data['title'] = 'PCT Order: Order Details';
@@ -109,17 +110,6 @@ class Order extends MX_Controller {
         else
         {
             redirect('order/admin/orders');
-        }
-    }
-
-    public function is_admin()
-    {
-        $userdata = $this->session->userdata('admin');
-
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-
-        } else {
-            redirect(base_url().'order/admin');
         }
     }
 
@@ -233,7 +223,6 @@ class Order extends MX_Controller {
 
     function partnerApiLogs()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Partner Api Log';
 
@@ -363,7 +352,6 @@ class Order extends MX_Controller {
 
     function cplErrorLogs()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: CPL Api Error Logs';
         $this->load->view('order/layout/header', $data);
@@ -410,7 +398,6 @@ class Order extends MX_Controller {
 
     public function safewireOrders()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Safewire Orders';
         $this->load->view('order/layout/header', $data);
