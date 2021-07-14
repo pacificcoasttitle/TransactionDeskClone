@@ -11,11 +11,12 @@ class Customer extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('order/customer_model');
+        $this->load->library('order/common');
+        $this->common->is_admin();
     }
 
 	public function index()
 	{
-        $this->is_admin();
 		$data = array();
         $data['title'] = 'PCT Order: Credentials Check';
         $this->load->view('order/layout/header', $data);
@@ -86,16 +87,6 @@ class Customer extends MX_Controller {
         $json_data['recordsFiltered'] = intval( $customer_lists['recordsFiltered'] );
         $json_data['data'] = $data;
         echo json_encode($json_data);
-    }
-
-    public function is_admin()
-    {
-        $userdata = $this->session->userdata('admin');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-
-        } else {
-            redirect(base_url().'order/admin');
-        }
     }
 
     public function make_request($http_method, $endpoint, $body_params='', $login_details)

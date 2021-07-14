@@ -12,11 +12,12 @@ class TitlePoint extends MX_Controller {
         $this->load->library('form_validation');
         $this->load->library('order/order');
         $this->load->model('order/titlePoint_model');
+        $this->load->library('order/common');
+        $this->common->is_admin();
     }
 
 	public function index()
 	{
-        $this->is_admin();
 		$data = array();
         $data['title'] = 'PCT Order: LV Log';
         $this->load->view('order/layout/header', $data);
@@ -97,16 +98,6 @@ class TitlePoint extends MX_Controller {
         echo json_encode($json_data);
     }
 
-    public function is_admin()
-    {
-        $userdata = $this->session->userdata('admin');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-
-        } else {
-            redirect(base_url().'order/admin');
-        }
-    }
-
     public function make_request($http_method, $endpoint, $body_params='', $login_details)
     {
         $details = json_decode($login_details,TRUE);
@@ -137,7 +128,6 @@ class TitlePoint extends MX_Controller {
 
     public function taxLog()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Tax Log';
         $this->load->view('order/layout/header', $data);
@@ -249,7 +239,6 @@ class TitlePoint extends MX_Controller {
 
     public function grantDeedLog()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Grant Deed Log';
         $this->load->view('order/layout/header', $data);
