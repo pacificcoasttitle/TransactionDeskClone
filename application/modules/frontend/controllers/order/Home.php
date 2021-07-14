@@ -401,7 +401,7 @@ class Home extends MX_Controller {
 
 							$escrowOfficerFlag =  $this->input->post('add-escrow-officer-details');
 							$escrowOfficer =  $this->input->post('escrow_officer');
-							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5)) {
+							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5 || $ProductTypeID == 26)) {
 								if (!empty($escrowOfficer)) {
 									$partners[] = array(
 										'PartnerTypeID' => 10010,
