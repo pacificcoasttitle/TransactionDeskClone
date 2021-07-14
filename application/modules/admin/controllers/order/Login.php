@@ -1,0 +1,66 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Login extends MX_Controller {
+
+	public function __construct()
+    {
+        parent::__construct();
+        $this->load->helper(
+            array('file', 'url','form')
+        );
+        $this->load->library('form_validation');
+        $this->load->model('order/home_model'); 
+    }
+
+    public function login()
+	{
+        $data = array();
+        $userdata = $this->session->userdata('admin');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
+            redirect(base_url().'order/admin/dashboard');
+        } else {
+            $data['msg'] = $this->session->userdata('msg');
+            $this->session->unset_userdata('msg');
+            $this->load->view('order/layout/login_header', $data);
+            $this->load->view('order/home/login', $data);
+            $this->load->view('order/layout/login_footer', $data);
+        }		
+	}
+
+    public function do_login()
+    {
+    	if($this->input->post()) {
+    		$email_address = $this->input->post('email_address');
+        	$password      = $this->input->post('password');
+            $admin = $this->home_model->get_admin_user($email_address, $password);
+
+        	if ($admin) {
+        		$session_data = array(
+                    "id" => isset($admin['id']) && !empty($admin['id']) ? $admin['id'] : '',
+                    "name" => isset($admin['user_name']) && !empty($admin['user_name']) ? $admin['user_name'] : '',
+                    "email_address" => isset($admin['email_id']) && !empty($admin['email_id']) ? $admin['email_id'] : '',
+                    "is_admin" => 1
+                );
+
+                $this->session->set_userdata('admin', $session_data);
+                if ($this->input->is_ajax_request())  {
+                    $result = array('status'=>'success');
+                    echo json_encode($result); exit;
+                } else {
+                    // redirect('home/dashboard');
+                    redirect(base_url().'order/admin/dashboard');
+                }
+        	} else  {
+                if ($this->input->is_ajax_request())  {
+                    $result = array('status'=>'error','msg'=>'Incorrect email or password');
+                    echo json_encode($result); exit;
+                } else {
+                    $this->session->set_userdata('msg', 'Incorrect email or password');
+                    // $result['msg'] = "Incorrect email or password";
+                    redirect(base_url().'order/admin');
+                }
+            }
+    	}
+    }
+}

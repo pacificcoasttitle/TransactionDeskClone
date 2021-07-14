@@ -189,6 +189,7 @@ class CI_Loader {
 	 */
 	public function library($library, $params = NULL, $object_name = NULL)
 	{
+		echo "here";exit;
 		if (empty($library))
 		{
 			return $this;

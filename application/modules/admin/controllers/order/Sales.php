@@ -12,12 +12,12 @@ class Sales extends MX_Controller {
         $this->load->library('form_validation');
         $this->load->library('order/order');
         $this->load->model('order/sales_model');
+        $this->load->library('order/common');
+        $this->common->is_admin();
     }
 
     public function index()
     {
-        
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Sales Rep.';
         $this->load->view('order/layout/header', $data);
@@ -73,7 +73,6 @@ class Sales extends MX_Controller {
 
     public function add_sales_rep()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Add Sales Rep.';
         $salesRepData = array();
@@ -195,7 +194,6 @@ class Sales extends MX_Controller {
 
     public function edit_sales_rep()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Edit Sales Rep.';
         $id = $this->uri->segment('4');
@@ -336,7 +334,6 @@ class Sales extends MX_Controller {
 
     public function delete_sales_rep()
     {
-        $this->is_admin();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
             $salesRepData = array('status' => 0);
@@ -351,16 +348,6 @@ class Sales extends MX_Controller {
             $response = array('status' => 'error', 'message' => $msg);
         }
         echo json_encode($response);
-    }
-
-    public function is_admin()
-    {
-        $userdata = $this->session->userdata('admin');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-
-        } else {
-            redirect(base_url().'order/admin');
-        }
     }
 
     public function sales_rep_profile_img_check($str)
@@ -382,7 +369,6 @@ class Sales extends MX_Controller {
 
     public function remove_sales_rep()
     {
-        $this->is_admin();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
             $con = array('id' => $id);
@@ -405,7 +391,6 @@ class Sales extends MX_Controller {
 
     public function remove_sales_rep_thank_you()
     {
-        $this->is_admin();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
             $con = array('id' => $id);

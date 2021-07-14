@@ -11,11 +11,12 @@ class FeesTypes extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('order/feesTypes_model');
+        $this->load->library('order/common');
+        $this->common->is_admin();
     }
 
     public function index()
 	{
-        $this->is_admin();
 		$data = array();
         $data['title'] = 'PCT Order: Fees Types';
         $this->load->view('order/layout/header', $data);
@@ -23,19 +24,8 @@ class FeesTypes extends MX_Controller {
         $this->load->view('order/layout/footer', $data);
 	}
 
-	public function is_admin()
-    {
-        $userdata = $this->session->userdata('admin');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-
-        } else {
-            redirect(base_url().'order/admin');
-        }
-    }
-
     public function add_fee_type()
     {
-        $this->is_admin();
         $data = array();
 
         $data['title'] = 'PCT Order: Add Fee Type';

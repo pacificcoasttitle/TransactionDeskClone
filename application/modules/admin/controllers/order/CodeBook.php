@@ -11,26 +11,17 @@ class CodeBook extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('order/codeBook_model');
+        $this->load->library('order/common');
+        $this->common->is_admin();
     }
 
     public function index()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Code Book';
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/home/code_book', $data);
         $this->load->view('order/layout/footer', $data);
-    }
-
-    public function is_admin()
-    {
-        $userdata = $this->session->userdata('admin');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-
-        } else {
-            redirect(base_url().'order/admin');
-        }
     }
 
     public function get_code_book()
@@ -106,7 +97,6 @@ class CodeBook extends MX_Controller {
 
     public function add_code_book()
     {
-        $this->is_admin();
         $data = array();
 
         $data['title'] = 'PCT Order: Add Code Book';
@@ -166,7 +156,6 @@ class CodeBook extends MX_Controller {
 
     public function import_code_book()
     {
-        $this->is_admin();  
         $data = array();
         $data['title'] = 'PCT Order: Import';
         if($this->input->post())
@@ -299,7 +288,6 @@ class CodeBook extends MX_Controller {
 
     public function editCodeBook()
     {
-        $this->is_admin();
         $data = array();
         $id = $this->uri->segment(4);      
         $data['title'] = 'Edit Code Book';

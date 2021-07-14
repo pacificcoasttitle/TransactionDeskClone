@@ -11,11 +11,12 @@ class Agent extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('order/agent_model');
+        $this->load->library('order/common');
+        $this->common->is_admin();
     }
 
 	public function index()
 	{
-        $this->is_admin();
 		$data = array();
         $data['title'] = 'PCT Order: Agents';
         $this->load->view('order/layout/header', $data);
@@ -27,7 +28,6 @@ class Agent extends MX_Controller {
     {
         ini_set('max_execution_time', 0); 
         ini_set('memory_limit','2048M');
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Import Agents';
         if($this->input->post())
@@ -225,7 +225,6 @@ class Agent extends MX_Controller {
 
     public function delete_agent()
     {
-        $this->is_admin();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
         if($id)
@@ -253,7 +252,6 @@ class Agent extends MX_Controller {
 
     public function edit()
     {
-        $this->is_admin();
         $id = $this->uri->segment(4);        
         $data = array();
         $data['title'] = 'PCT Order: Edit Agent';
@@ -330,15 +328,5 @@ class Agent extends MX_Controller {
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/agent/edit-agent', $data);
         $this->load->view('order/layout/footer', $data);
-    }
-
-    public function is_admin()
-    {
-        $userdata = $this->session->userdata('admin');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-
-        } else {
-            redirect(base_url().'order/admin');
-        }
     }
 }

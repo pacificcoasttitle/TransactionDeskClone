@@ -28,11 +28,12 @@ class Home extends MX_Controller {
         $this->load->library('form_validation');
         $this->load->model('order/home_model'); 
         $this->load->model('order/order_model'); 
+        $this->load->library('order/common');
+        $this->common->is_admin();
     }
     
     public function index()
     {
-        $this->is_admin();
         $data = array();
         // $data['title'] = 'PCT Order: Dashboard';
         $orderData = $this->order_model->get_order_count();
@@ -83,70 +84,8 @@ class Home extends MX_Controller {
         $this->load->view('order/layout/footer', $data);
     }
 
-	public function login()
-	{
-        $data = array();
-        $userdata = $this->session->userdata('admin');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-            redirect(base_url().'order/admin/dashboard');
-        } else {
-            $data['msg'] = $this->session->userdata('msg');
-            $this->session->unset_userdata('msg');
-            $this->load->view('order/layout/login_header', $data);
-            $this->load->view('order/home/login', $data);
-            $this->load->view('order/layout/login_footer', $data);
-        }		
-	}
-
-	public function do_login()
-    {
-    	if($this->input->post())
-    	{
-    		$email_address = $this->input->post('email_address');
-        	$password      = $this->input->post('password');
-
-            $admin = $this->home_model->get_admin_user($email_address, $password);
-        	if ($admin) 
-        	{
-        		$session_data = array(
-                    "id" => isset($admin['id']) && !empty($admin['id']) ? $admin['id'] : '',
-                    "name" => isset($admin['user_name']) && !empty($admin['user_name']) ? $admin['user_name'] : '',
-                    "email_address" => isset($admin['email_id']) && !empty($admin['email_id']) ? $admin['email_id'] : '',
-                    "is_admin" => 1
-                );
-
-                $this->session->set_userdata('admin', $session_data);
-                if ($this->input->is_ajax_request()) 
-                {
-                    $result = array('status'=>'success');
-                    echo json_encode($result); exit;
-                } 
-                else 
-                {
-                    // redirect('home/dashboard');
-                    redirect(base_url().'order/admin/dashboard');
-                }
-        	}
-        	else 
-        	{
-                if ($this->input->is_ajax_request()) 
-                {
-                    $result = array('status'=>'error','msg'=>'Incorrect email or password');
-                    echo json_encode($result); exit;
-                } 
-                else 
-                {
-                    $this->session->set_userdata('msg', 'Incorrect email or password');
-                    // $result['msg'] = "Incorrect email or password";
-                    redirect(base_url().'order/admin');
-                }
-            }
-    	}
-    }
-
     public function dashboard()
     {
-        $this->is_admin();
     	$data = array();
         $data['title'] = 'PCT Order: Escrow';
 		$this->load->view('order/layout/header', $data);
@@ -219,7 +158,6 @@ class Home extends MX_Controller {
 
     public function import()
     {    
-        $this->is_admin();  
         $data = array();
         $data['title'] = 'PCT Order: Import';
     	if($this->input->post())
@@ -353,7 +291,6 @@ class Home extends MX_Controller {
 
     public function delete_customer()
     {
-        $this->is_admin();
     	$id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
     	if($id)
@@ -379,16 +316,6 @@ class Home extends MX_Controller {
     	echo json_encode($response);
     }
 
-    public function is_admin()
-    {
-        $userdata = $this->session->userdata('admin');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-            
-        } else {
-            redirect(base_url().'order/admin');
-        }
-    }
-
     public function logout()
     {
         $this->session->unset_userdata('admin');
@@ -397,7 +324,6 @@ class Home extends MX_Controller {
 
     public function import_lenders()
     {    
-        $this->is_admin();  
         $data = array();
         $successMsg = '';
         $data['title'] = 'PCT Order: Import';
@@ -517,7 +443,6 @@ class Home extends MX_Controller {
 
     public function lenders()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Lenders';
         $this->load->view('order/layout/header', $data);
@@ -594,7 +519,6 @@ class Home extends MX_Controller {
 
     public function cpl_document()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: CPL Documents';
         $this->load->view('order/layout/header', $data);
@@ -670,7 +594,6 @@ class Home extends MX_Controller {
 
     public function newUsers()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: New Users';
         $this->load->view('order/layout/header', $data);
@@ -726,7 +649,6 @@ class Home extends MX_Controller {
     {
         $this->load->model('order/apiLogs');
         $userdata = $this->session->userdata('admin');
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Add New User';
         $salesRepData = array();
@@ -1031,7 +953,6 @@ class Home extends MX_Controller {
 
     public function grant_deed_document()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Grant Deed Documents';
         $this->load->view('order/layout/header', $data);
@@ -1041,7 +962,6 @@ class Home extends MX_Controller {
 
     public function lv_document()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Legal & Vesting Documents';
         $this->load->view('order/layout/header', $data);
@@ -1172,7 +1092,6 @@ class Home extends MX_Controller {
 
     public function masterUsers()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Master Users';
         $this->load->view('order/layout/header', $data);
@@ -1222,7 +1141,6 @@ class Home extends MX_Controller {
 
     public function addNewMasterUser()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Add New Master User';
         $salesRepData = array();
@@ -1286,7 +1204,6 @@ class Home extends MX_Controller {
 
     public function editMasterUser()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Edit Master User';
         $id = $this->uri->segment(4);     
@@ -1358,7 +1275,6 @@ class Home extends MX_Controller {
 
     public function tax_document()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Tax Documents';
         $this->load->view('order/layout/header', $data);
@@ -1429,7 +1345,6 @@ class Home extends MX_Controller {
 
     public function curative_document()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Curative Documents';
         $this->load->view('order/layout/header', $data);
@@ -1515,7 +1430,6 @@ class Home extends MX_Controller {
 
     public function companies()
     {
-        $this->is_admin();
         $data = array();
         $data['errors'] = '';
 		$data['success'] = '';
@@ -1613,7 +1527,6 @@ class Home extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->library('order/order');
         $this->load->library('order/resware');
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Add Company';
         $userdata = $this->session->userdata('admin');
@@ -1676,7 +1589,6 @@ class Home extends MX_Controller {
 
     public function primaryCheck()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Primary Account';
         $params = array();
@@ -1709,7 +1621,6 @@ class Home extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->library('order/order');
         $this->load->library('order/resware');
-        $this->is_admin();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         $email = isset($_POST['email']) && !empty($_POST['email']) ? $_POST['email'] : '';
         $userdata = $this->session->userdata('admin');
@@ -1970,7 +1881,6 @@ class Home extends MX_Controller {
 
     public function incorrect_users()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Incorrect Users';
         $this->load->view('order/layout/header', $data);
@@ -2041,7 +1951,6 @@ class Home extends MX_Controller {
     public function reset_user_password()
     {
         $this->load->model('order/apiLogs');
-        $this->is_admin();
         $id = $this->input->post('id');
         $params = array(
             'id' => $id
@@ -2078,7 +1987,6 @@ class Home extends MX_Controller {
     
     public function updatePasswordResware($postData)
     {
-        $this->is_admin();
         $body_params = http_build_query($postData);
         $ch = curl_init(env('RESWARE_UPDATE_PWD_API'));    
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -2096,7 +2004,6 @@ class Home extends MX_Controller {
 
     public function import_underwriters()
     {    
-        $this->is_admin();  
         $data = array();
         $successMsg = '';
         $data['title'] = 'PCT Order: Import Underwriters';
@@ -2190,7 +2097,6 @@ class Home extends MX_Controller {
 
     public function cplProposedUsers()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: CPL/Proposed Users';
         $this->load->view('order/layout/header', $data);
@@ -2248,7 +2154,6 @@ class Home extends MX_Controller {
 
     public function editCplProposedUser()
     {
-        $this->is_admin();
         $data = array();
         $id = $this->uri->segment(4);      
         $data['title'] = 'PCT Order: Edit CPL/Proposed User';
@@ -2342,7 +2247,6 @@ class Home extends MX_Controller {
 
     public function rejectCplProposedUser()
     {
-        $this->is_admin();
         $data = array();
         $id = $this->uri->segment(4);      
         $updateCondition = array(
@@ -2357,7 +2261,6 @@ class Home extends MX_Controller {
     
 	public function sendPassword()
 	{
-        $this->is_admin();
 		$data = array();
         $data['title'] = 'PCT Order: Send Password Listing';
         $this->load->view('order/layout/header', $data);
@@ -2411,7 +2314,6 @@ class Home extends MX_Controller {
 
     public function sendPasswordMail()
     {
-        $this->is_admin();
         $id =  $this->input->post('id');
         
     	if ($id) {
@@ -2449,7 +2351,6 @@ class Home extends MX_Controller {
 
     public function reswareAdminCredential()
     {
-        $this->is_admin();
         $this->load->library('order/order');
         $data = array();
         $data['title'] = 'PCT Order: Resware Admin Credential';
@@ -2475,7 +2376,6 @@ class Home extends MX_Controller {
 
     public function importOrders($value='')
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Import Orders';
         $this->load->view('order/layout/header', $data);
@@ -2550,7 +2450,6 @@ class Home extends MX_Controller {
 
     public function notifications()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Notification';
         //$data['notifications'] = $this->home_model->getNotifications();
@@ -2652,7 +2551,6 @@ class Home extends MX_Controller {
 
     public function escrow_officers()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Escrow Officers';
         $this->load->view('order/layout/header', $data);
@@ -2720,7 +2618,6 @@ class Home extends MX_Controller {
 
     public function add_escrow_officer()
     {
-        $this->is_admin();
         $data = array();
         $data['title'] = 'PCT Order: Add Escrow Officer';
         $escrowData = array();
@@ -2778,7 +2675,6 @@ class Home extends MX_Controller {
 
     public function delete_escrow_officer()
     {
-        $this->is_admin();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
         if($id)
@@ -2806,7 +2702,6 @@ class Home extends MX_Controller {
 
     public function edit_escrow_officer()
     {
-        $this->is_admin();
         $data = array();
         $id = $this->uri->segment(4);
         $data['title'] = 'PCT Order: Add Escrow Officer';
