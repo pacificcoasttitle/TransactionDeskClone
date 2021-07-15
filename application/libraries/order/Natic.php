@@ -39,6 +39,115 @@ class Natic
         }
     }
 
+    public function getBranchesFromApi()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        if (!isset($userdata)) {
+            $userdata = array();
+            $userdata['id'] = 0;
+        }
+
+        $xmlData = "<?xml version='1.0' encoding='utf-8'?>
+                        <RequestWrapper>
+                            <UserName>".getenv('NATIC_USERNAME')."</UserName>
+                            <Password>".getenv('NATIC_PASSWORD')."#</Password>
+                            <TransactionId>".rand(10000,99999)."</TransactionId>
+                            <CompanyName>".getenv('NATIC_COMPANY')."</CompanyName>
+                            <AuthorizationRequest>
+                                <PropertyState>CA</PropertyState>
+                                <RequestType>ClosingProtectionLetter</RequestType>
+                            </AuthorizationRequest>
+                        </RequestWrapper>";
+
+        $endPoint = 'Authorize';
+        $this->CI->load->model('order/apiLogs');
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_branches', getenv('NATIC_URL').$endPoint, $xmlData, array(), 0, 0);                
+        $resultAuthorize = $this->make_request($xmlData, $endPoint);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_branches', getenv('NATIC_URL').$endPoint, $xmlData, $resultAuthorize, 0, $logid);
+        $responseData = $this->xml2array($resultAuthorize, 0);
+        if(!empty($responseData['ResponseWrapper']['AuthorizationResponse']['DocumentCollection']['ApprovedSettlementOfficeList'])) {
+           
+            foreach($responseData['ResponseWrapper']['AuthorizationResponse']['DocumentCollection']['ApprovedSettlementOfficeList']['ApprovedSettlementOffice'] as $branches) {
+                if (strpos($branches['Name'], 'Pacific Coast Title Company') !== false) {
+                    $addressInfo = explode(',',$branches['Name']);
+                    if(count($addressInfo) == 5) {
+                        $address = $addressInfo[1];
+                        $address1 = $addressInfo[2];
+                        $city = $addressInfo[3];
+                        $zipcode = str_replace('CA ', '', $addressInfo[4]);
+                    } else if (count($addressInfo) == 4) {
+                        $address = $addressInfo[1];
+                        $address1 = null;
+                        $city = $addressInfo[2];
+                        $zipcode = str_replace('CA ', '', $addressInfo[3]);
+                    } else {
+                        $address = null;
+                        $address1 = null;
+                        $city = null;
+                        $zipcode = null;
+                    }
+
+                    if(!empty($address) && !empty($city) && !empty($zipcode)) {
+                        $this->CI->db->select('*');
+                        $this->CI->db->from('pct_order_natic_branches');
+                        $this->CI->db->like('city', $city);
+                        $query = $this->CI->db->get();
+                        $result = $query->row_array();
+                        if(!empty($result)) {
+                            $condition = array(
+                                'city' => $result['city']
+                            ); 
+                            $branchData = array(
+                                'unique_id' => $branches['UniqueId'], 
+                                'address' =>  $address,
+                                'address1' =>  $address1,
+                                'state' => 'CA', 
+                                'zip' => $zipcode,
+                                'updated_at' => date('Y-m-d H:i:s')
+                            );
+                            $this->CI->db->update('pct_order_natic_branches', $branchData, $condition);
+                        } else {
+                            $branchData = array(
+                                'unique_id' => $branches['UniqueId'], 
+                                'address' =>  $address,
+                                'address1' =>  $address1,
+                                'city' => $city,
+                                'state' => 'CA', 
+                                'zip' => $zipcode,
+                                'created_at' => date('Y-m-d H:i:s')
+                            );
+                            $branchesData[] = $branchData;
+                            $this->CI->db->insert('pct_order_natic_branches', $branchData); 
+                        }
+                    }  
+                }
+            }
+            return $branchesData;
+		} else {
+			return false;
+		}
+    }
+
+    public function getBranches($id=0)
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_order_natic_branches');
+        if (!empty($id)) {
+            $this->CI->db->where('id', $id);
+        }
+        $query = $this->CI->db->get();
+        if($id == 0) {
+            $result = $query->result_array();
+        } else {
+            $result = $query->row_array();
+        }
+        if (!empty($result)) { 
+            return $result;
+        } else {
+           return false;
+        }
+    }
+
     public function getDocumentContentForCpl($fileId, $orderDetails)
     {
         $this->CI->load->library('order/order');

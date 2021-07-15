@@ -139,4 +139,15 @@
 			<span>Holidays</span>
 		</a>
 	</li>
+	<li class="nav-item">
+		<a class="nav-link dropdown-toggle" href="#" id=cpl_branches" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fas fa-fw fa-file"></i>
+			<span>CPL Branches</span>
+        </a>
+		<div class="dropdown-menu" aria-labelledby="cpl_branches" id="cpl_branches_section">
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/north-american-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/north-american-branches'; ?>">North American</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/westcor-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/westcor-branches'; ?>">Westcor</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/commonwealth-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/commonwealth-branches'; ?>">Commonwealth</a>
+        </div>
+	</li>
 </ul>
