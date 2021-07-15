@@ -87,13 +87,13 @@ class Natic
                             'state' => 'CA',
                             'zipcode' => '93036'
                         ),
-                        1880 => 
+                        4093 => 
                         array(
-                            'address1' => '200 West Glenoaks Boulevard',
-                            'address2' => 'Suite 100',
+                            'address1' => '516 Burchett St.',
+                            'address2' => '',
                             'city' => 'Glendale',
                             'state' => 'CA',
-                            'zipcode' => '91202'
+                            'zipcode' => '91203'
                         )
                     );
 
