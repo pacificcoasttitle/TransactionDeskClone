@@ -207,8 +207,8 @@ $route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
 $route['update-all-order-status'] = 'frontend/order/cron/updateAllOrderStatus';
 
 /* Route for PCT-Order backend*/
-$route['order/admin'] = 'admin/order/home/login';
-$route['order/admin/home/do_login'] = 'admin/order/home/do_login';
+$route['order/admin'] = 'admin/order/login/login';
+$route['order/admin/login/do_login'] = 'admin/order/login/do_login';
 $route['order/admin/dashboard'] = 'admin/order/home/index';
 $route['order/admin/escrow'] = 'admin/order/home/dashboard';
 $route['order/admin/import'] = 'admin/order/home/import';

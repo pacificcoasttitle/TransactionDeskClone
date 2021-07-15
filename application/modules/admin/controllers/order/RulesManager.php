@@ -12,27 +12,18 @@ class RulesManager extends MX_Controller {
         $this->load->library('form_validation');
         $this->load->model('order/rulesManager_model');
         $this->load->model('order/counties_model');
+        $this->load->library('order/common');
+        $this->common->is_admin();
     }
 
     public function index()
 	{
-        $this->is_admin();
 		$data = array();
         $data['title'] = 'PCT Order: Rules Manager';
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/home/rules_manager', $data);
         $this->load->view('order/layout/footer', $data);
 	}
-
-	public function is_admin()
-    {
-        $userdata = $this->session->userdata('admin');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-
-        } else {
-            redirect(base_url().'order/admin');
-        }
-    }
 
     public function get_rules()
     {

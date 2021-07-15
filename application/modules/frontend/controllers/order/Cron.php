@@ -2414,7 +2414,7 @@ class Cron extends MX_Controller {
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Thank You!';
-                $to = $escrow_email_address;
+                $to = $escrow_email_address;  
 
                 $cc = array('ghernandez@pct.com', $sales_email);          
                 $this->load->helper('sendemail');
@@ -2427,8 +2427,8 @@ class Cron extends MX_Controller {
                     'cc' => $sales_email
                 );
                 //$to = 'hitesh.p@crestinfosystems.com';
-                //$cc = array();     
-
+                //$cc = array();   
+  
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $order_id, $logid);
