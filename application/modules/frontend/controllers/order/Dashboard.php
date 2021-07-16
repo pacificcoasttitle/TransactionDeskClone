@@ -1152,7 +1152,8 @@ class Dashboard extends MX_Controller {
 		$orderDetails = $this->order->get_order_details($fileId);
 		$res = array();
 
-		$resToken = $this->westcor->get_token($orderDetails['fnf_agent_id'], $orderDetails['order_id']);
+		$resToken = $this->westcor->get_token($orderDetails['order_id']);
+		$branchData = $this->westcor->getBranches($orderDetails['fnf_agent_id']);
 		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 
 		$propertyDetail = explode(",", $orderDetails['full_address']);
@@ -1395,11 +1396,11 @@ class Dashboard extends MX_Controller {
 			$resCPL['CPL']['FileInformation'] = null;
 			$resCPL['CPL']['CPLID'] = -1;
 			$resCPL['CPL']['LenderID'] = !empty($orderDetails['westcor_lender_id']) ? $orderDetails['westcor_lender_id'] : 0;
-			$resCPL['CPL']['PolicyProducingAgentAddressID'] = $resToken['agent_number'];
-			$resCPL['CPL']['PolicyProducingAgentAddress'] = $resToken['address'];
-			$resCPL['CPL']['PolicyProducingAgentCity'] = $resToken['city'];
-			$resCPL['CPL']['PolicyProducingAgentState'] = $resToken['state'];
-			$resCPL['CPL']['PolicyProducingAgentZip'] = $resToken['zip'];
+			$resCPL['CPL']['PolicyProducingAgentAddressID'] = $branchData['agent_number'];
+			$resCPL['CPL']['PolicyProducingAgentAddress'] = $branchData['address'];
+			$resCPL['CPL']['PolicyProducingAgentCity'] = $branchData['city'];
+			$resCPL['CPL']['PolicyProducingAgentState'] = $branchData['state'];
+			$resCPL['CPL']['PolicyProducingAgentZip'] = $branchData['zip'];
 			$resCPL['CPL']['ProtectLender'] = true;
 			
 			$res['cpl'][] = $resCPL['CPL'];
@@ -2896,11 +2897,11 @@ class Dashboard extends MX_Controller {
 			} else {
 				$orderDetails['cpl_api'] = 'westcor';
 				$this->load->library('order/westcor');
-				$agentsData = $this->westcor->getBranches();
-				if ($agentsData === false) {
-					$agentsData = $this->fnf->getBranchesFromApi();
+				$branchesData = $this->westcor->getBranches();
+				if ($branchesData === false) {
+					$branchesData = $this->westcor->getBranchesFromApi();
 				}
-				$orderDetails['agents_data'] = $agentsData;
+				$orderDetails['agents_data'] = $branchesData;
 			}
 		} 
 		if(!empty($orderDetails['borrowers_vesting'])) {

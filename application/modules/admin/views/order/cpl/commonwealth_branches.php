@@ -55,7 +55,7 @@
         $('#refresh_commonwealth_branches').click(function(e){
             $('body').animate({ opacity: 0.5 }, "slow");
             $.ajax({
-                url: base_url+"/get-commonwealth-branches",
+                url: base_url+"get-commonwealth-branches",
                 method: "POST",
                 success: function(data){
                     var result = jQuery.parseJSON(data);

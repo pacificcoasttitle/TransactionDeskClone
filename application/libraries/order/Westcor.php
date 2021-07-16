@@ -65,17 +65,18 @@ class Westcor
             );
             $this->CI->db->replace('pct_order_westcore_token', $records); 
         }
+
         if($is_branch_update == 1) {
-            $allRecords = array();
+            $branchesData = array();
             foreach ($groups as $group) {
                 $this->CI->db->select('*');
-                $this->CI->db->from('pct_order_fnf_agents');
-                $this->CI->db->like('location_city', $group['city'] != '.' ? $group['city'] : 'Other');
+                $this->CI->db->from('pct_order_westcore_branches');
+                $this->CI->db->like('city', $group['city'] != '.' ? $group['city'] : 'Other');
                 $query = $this->CI->db->get();
                 $result = $query->row_array();
                 if(!empty($result)) {
                     $condition = array(
-                        'city' => $result['location_city']
+                        'city' => $result['city']
                     ); 
                     $branchData = array(
                         'agency_name' => $group['agencyName'],
@@ -104,15 +105,19 @@ class Westcor
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s')
                     ); 
-                    $this->CI->db->insert('pct_order_westcore_token', $records); 
+                    $insert_id = $this->CI->db->insert('pct_order_westcore_branches', $branchData); 
+                    $branchData['id'] =  $insert_id;
                 }
                 $branchesData[] = $branchData;
             }
-            return 
+            return $branchesData;
         } else {
-
+            if(!empty($resToken['access_token'])) {
+                return array('token' => $resToken['access_token']);
+            } else {
+                return array('token' => '');
+            }
         }
-        return $allRecords;
     }
 
     public function get_token($orderNumber)
@@ -128,19 +133,26 @@ class Westcor
             if($diff < $result['expires_in']) {
                 return $result;
             } else {
-                $allRecords = $this->createToken($orderNumber, 0);
-                $key = array_search($id, array_column($allRecords, 'id'));
-                return $allRecords[$key];
+                $resToken = $this->createToken($orderNumber, 0);
+                return $resToken;
             }
         } 
     }
 
-    public function getBranches()
+    public function getBranches($id = 0)
     {
         $this->CI->db->select('*');
         $this->CI->db->from('pct_order_westcore_branches');
+        if (!empty($id)) {
+            $this->CI->db->where('id', $id);
+        }
         $query = $this->CI->db->get();
-        $result = $query->result_array();
+        if($id == 0) {
+            $result = $query->result_array();
+        } else {
+            $result = $query->row_array();
+        }
+        
         if(!empty($result)) {
             return $result;
         } else {
