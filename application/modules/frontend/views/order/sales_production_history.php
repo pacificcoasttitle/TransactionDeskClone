@@ -37,7 +37,7 @@
 														<td><?php echo $salesData['month'];?></td>
 														<td><?php echo $salesData['total_open_count'];?></td>
 														<td><?php echo $salesData['total_close_count'];?></td>
-														<td><?php echo $salesData['total_premium'];?></td>
+														<td><?php echo "$".number_format($salesData['total_premium']);?></td>
 														<td><?php echo $salesData['close_order_percetage']."%";?></td>
 													</tr> 
 												<?php } ?> 
