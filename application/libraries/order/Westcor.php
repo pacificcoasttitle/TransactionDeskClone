@@ -34,9 +34,14 @@ class Westcor
         return $result;
     }
 
-    public function createToken($orderNumber) 
+    public function createToken($orderNumber, $is_branch_update = 0) 
     {
         $userdata = $this->CI->session->userdata('user');
+        $this->CI->load->model('order/apiLogs');
+        if (!isset($userdata)) {
+            $userdata = array();
+            $userdata['id'] = 0;
+        }
         $endPoint = 'Token';
         $postData = 'grant_type='.getenv('WESTCORE_GRANT_TYPE').'&username='.getenv('WESTCORE_USERNAME').'&password='.getenv('WESTCORE_PASSWORD').'&integrationpartner='.getenv('WESTCORE_INTEGRATION_PARTNER');
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', getenv('WESTCORE_URL').$endPoint, $postData, array(), $orderNumber, 0);
@@ -44,44 +49,76 @@ class Westcor
         $this->CI->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', getenv('WESTCORE_URL').$endPoint, $postData, $result, $orderNumber, $logid);
         $resToken = json_decode($result, true);
         $groups = json_decode($resToken['groups'],true);
-        $allRecords = array();
-        foreach ($groups as $group) {
+        if (!empty($resToken)) {
             $records = array(
                 'token' => $resToken['access_token'], 
                 'first_name' => $resToken['firstName'], 
                 'last_name' => $resToken['lastName'], 
                 'email' => $resToken['email'],
-                'agency_name' => $group['agencyName'],
-                'address' => $group['address'],
-                'city' => $group['city'] != '.' ? $group['city'] : 'Other',
-                'state' => $group['state'], 
-                'zip' => $group['zip'], 
                 'role' => $resToken['role'],
                 'servername' =>$resToken['servername'],
-                'phone' => $group['phone'], 
                 'create_token_time' => date('Y-m-d H:i:s'), 
                 'expires_in' => $resToken['expires_in'],
-                'agent_number' => $group['agentNumber'],
-                'is_proposed_branch' => ($group['city'] == 'Glendale' || $group['city'] == 'Orange' || $group['city'] == 'Oxnard' || $group['city'] == 'San Diego') ? 1 : 0,
                 'original_agent_number' => $resToken['agentNumber'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             );
-            
             $this->CI->db->replace('pct_order_westcore_token', $records); 
         }
-        $this->CI->db->select('*');
-        $this->CI->db->from('pct_order_westcore_token');
-        $query = $this->CI->db->get();
-        $allRecords = $query->result_array();
+        if($is_branch_update == 1) {
+            $allRecords = array();
+            foreach ($groups as $group) {
+                $this->CI->db->select('*');
+                $this->CI->db->from('pct_order_fnf_agents');
+                $this->CI->db->like('location_city', $group['city'] != '.' ? $group['city'] : 'Other');
+                $query = $this->CI->db->get();
+                $result = $query->row_array();
+                if(!empty($result)) {
+                    $condition = array(
+                        'city' => $result['location_city']
+                    ); 
+                    $branchData = array(
+                        'agency_name' => $group['agencyName'],
+                        'address' => $group['address'],
+                        'state' => $group['state'], 
+                        'zip' => $group['zip'], 
+                        'phone' => $group['phone'], 
+                        'agent_number' => $group['agentNumber'],
+                        'is_proposed_branch' => ($group['city'] == 'Glendale' || $group['city'] == 'Orange' || $group['city'] == 'Oxnard' || $group['city'] == 'San Diego') ? 1 : 0,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ); 
+                    $this->CI->db->update('pct_order_westcore_branches', $branchData, $condition);
+                    $branchData['city'] =  $group['city'] != '.' ? $group['city'] : 'Other';
+                    $branchData['id'] =  $result['id'] != '.' ? $group['city'] : 'Other';
+                } else {
+                    $branchData = array(
+                        'agency_name' => $group['agencyName'],
+                        'address' => $group['address'],
+                        'city' => $group['city'] != '.' ? $group['city'] : 'Other',
+                        'state' => $group['state'], 
+                        'zip' => $group['zip'], 
+                        'phone' => $group['phone'], 
+                        'agent_number' => $group['agentNumber'],
+                        'is_proposed_branch' => ($group['city'] == 'Glendale' || $group['city'] == 'Orange' || $group['city'] == 'Oxnard' || $group['city'] == 'San Diego') ? 1 : 0,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ); 
+                    $this->CI->db->insert('pct_order_westcore_token', $records); 
+                }
+                $branchesData[] = $branchData;
+            }
+            return 
+        } else {
+
+        }
         return $allRecords;
     }
 
-    public function get_token($id, $orderNumber)
+    public function get_token($orderNumber)
     {
         $this->CI->db->select('*');
         $this->CI->db->from('pct_order_westcore_token');
-        $this->CI->db->where('id', $id);
         $query = $this->CI->db->get();
         $result = $query->row_array();
         if(!empty($result)) {
@@ -91,23 +128,30 @@ class Westcor
             if($diff < $result['expires_in']) {
                 return $result;
             } else {
-                $allRecords = $this->createToken($orderNumber);
+                $allRecords = $this->createToken($orderNumber, 0);
                 $key = array_search($id, array_column($allRecords, 'id'));
                 return $allRecords[$key];
             }
         } 
     }
 
-    public function getBranches($orderNumber)
+    public function getBranches()
     {
         $this->CI->db->select('*');
-        $this->CI->db->from('pct_order_westcore_token');
+        $this->CI->db->from('pct_order_westcore_branches');
         $query = $this->CI->db->get();
         $result = $query->result_array();
         if(!empty($result)) {
             return $result;
         } else {
-            return $this->createToken($orderNumber);
+            return false;
         }
     }
+
+    public function getBranchesFromApi()
+    {
+        $branchData = $this->createToken(0, 1);
+        return $branchData;
+    }
 }
+ 

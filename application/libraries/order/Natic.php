@@ -106,6 +106,7 @@ class Natic
                                 'updated_at' => date('Y-m-d H:i:s')
                             );
                             $this->CI->db->update('pct_order_natic_branches', $branchData, $condition);
+                            $branchData['city'] =  $result['city'];
                         } else {
                             $branchData = array(
                                 'unique_id' => $branches['UniqueId'], 
@@ -116,9 +117,9 @@ class Natic
                                 'zip' => $zipcode,
                                 'created_at' => date('Y-m-d H:i:s')
                             );
-                            $branchesData[] = $branchData;
                             $this->CI->db->insert('pct_order_natic_branches', $branchData); 
                         }
+                        $branchesData[] = $branchData;
                     }  
                 }
             }
@@ -180,33 +181,7 @@ class Natic
         
         $borrower = $orderDetails['borrowers_vesting'];
 
-        $branchData = array(303 => 
-                        array(
-                            'address1' => '1111 East Katella Avenue',
-                            'address2' => 'Suite 120',
-                            'city' => 'Orange',
-                            'state' => 'CA',
-                            'zipcode' => '92867'
-                        ),
-                        1879 => 
-                        array(
-                            'address1' => '1000 Town Center Drive',
-                            'address2' => 'Suite 300-7',
-                            'city' => 'Oxnard',
-                            'state' => 'CA',
-                            'zipcode' => '93036'
-                        ),
-                        4093 => 
-                        array(
-                            'address1' => '516 Burchett St.',
-                            'address2' => '',
-                            'city' => 'Glendale',
-                            'state' => 'CA',
-                            'zipcode' => '91203'
-                        )
-                    );
-
-        $branchId = $orderDetails['fnf_agent_id'];
+        $branchData = $this->getBranches($orderDetails['fnf_agent_id']);
 
         $xmlData = "<Field>
                     <FieldId>FileNumber</FieldId>
@@ -333,35 +308,35 @@ class Natic
                     <Name>Title Company Address 1</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".htmlspecialchars($branchData[$branchId]['address1'], ENT_XML1)."</Value>
+                    <Value>".htmlspecialchars($branchData['address'], ENT_XML1)."</Value>
                 </Field>
                 <Field>
                     <FieldId>TitleCompanyAddress2</FieldId>
                     <Name>Title Company Address 2</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".$branchData[$branchId]['address2']."</Value>
+                    <Value>".$branchData['address1']."</Value>
                 </Field>
                 <Field>
                     <FieldId>TitleCompanyCity</FieldId>
                     <Name>Title Company City</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".$branchData[$branchId]['city']."</Value>
+                    <Value>".$branchData['city']."</Value>
                 </Field>
                 <Field>
                     <FieldId>TitleCompanyState</FieldId>
                     <Name>Title Company State</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".$branchData[$branchId]['state']."</Value>
+                    <Value>".$branchData['state']."</Value>
                 </Field>
                 <Field>
                     <FieldId>TitleCompanyPostalCode</FieldId>
                     <Name>Title Company Postal Code</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".$branchData[$branchId]['zipcode']."</Value>
+                    <Value>".$branchData['zip']."</Value>
                 </Field>
                 <Field>
                     <FieldId>Buyer</FieldId>

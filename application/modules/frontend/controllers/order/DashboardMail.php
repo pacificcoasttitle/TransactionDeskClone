@@ -1115,21 +1115,11 @@ class DashboardMail extends MX_Controller {
 			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
  			if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
                 $orderDetails['cpl_api'] = 'natic';
-                $agentsData = array(
-					array(
-						'id' => 303,
-						'location_city' => 'Orange'
-					),
-					array(
-						'id' => 1879,
-						'location_city' => 'Oxnard',
-					),
-					array(
-						'id' => 4093,
-						'location_city' => 'Glendale',
-					)
-				);
-                $orderDetails['agents_data'] = $agentsData;
+				$branchesData = $this->natic->getBranches();
+				if ($branchesData === false) {
+					$branchesData = $this->natic->getBranchesFromApi();
+				}
+				$orderDetails['agents_data'] = $branchesData;
 			} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
                 $orderDetails['cpl_api'] = 'westcor';
 				$this->load->library('order/westcor');

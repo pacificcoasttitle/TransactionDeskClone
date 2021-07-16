@@ -198,28 +198,56 @@ class Fnf
             $userTokenData = $this->generateUserToken($orderDetails);
         }
         $endPoint = 'agents/CPL/CA';
+        $postData = array();
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'fnf', 'get_agent_list', getenv('FNF_USER_URL').$endPoint, $postData, array(), $orderDetails['order_id'], 0);                
         $resultAgentList = $this->make_request('GET', $endPoint, 'user', '', $userTokenData['token']);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'fnf', 'get_agent_list', getenv('FNF_USER_URL').$endPoint, $postData, $resultAgentList, $orderDetails['order_id'], $logid);
         $agents = json_decode($resultAgentList, true);
         foreach ($agents as $agent) {
-            $agentData = array(
-                'agent_number' => $agent['agentNumber'], 
-                'agent_status' => $agent['agentStatus'],
-                'agent_account_type' => $agent['agentAccountType'],
-                'is_dba_name' => $agent['isDbaName'] ? 1 : 0,
-                'location_city' => $agent['locationCity'], 
-                'underwriter_code' => $agent['underwriterCode'],
-                'underwriter' => $agent['underwriter'],
-                'address' => $agent['locationAddress1'],
-                'state' => $agent['locationStateCode'], 
-                'zip' => $agent['locationZipCode'],
-                'phone_number' => $agent['locationPhoneNumber'],
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            );
+            $this->CI->db->select('*');
+            $this->CI->db->from('pct_order_fnf_agents');
+            $this->CI->db->like('location_city', $agent['locationCity']);
+            $query = $this->CI->db->get();
+            $result = $query->row_array();
+            if(!empty($result)) {
+                $condition = array(
+                    'location_city' => $agent['locationCity']
+                ); 
+                $agentData = array(
+                    'agent_number' => $agent['agentNumber'], 
+                    'agent_status' => $agent['agentStatus'],
+                    'agent_account_type' => $agent['agentAccountType'],
+                    'is_dba_name' => $agent['isDbaName'] ? 1 : 0,
+                    'underwriter_code' => $agent['underwriterCode'],
+                    'underwriter' => $agent['underwriter'],
+                    'address' => $agent['locationAddress1'],
+                    'state' => $agent['locationStateCode'], 
+                    'zip' => $agent['locationZipCode'],
+                    'phone_number' => $agent['locationPhoneNumber'],
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
+                $this->CI->db->update('pct_order_fnf_agents', $agentData, $condition);
+                $agentData['location_city'] =  $agent['locationCity'];
+            } else {
+                $agentData = array(
+                    'agent_number' => $agent['agentNumber'], 
+                    'agent_status' => $agent['agentStatus'],
+                    'agent_account_type' => $agent['agentAccountType'],
+                    'is_dba_name' => $agent['isDbaName'] ? 1 : 0,
+                    'location_city' => $agent['locationCity'], 
+                    'underwriter_code' => $agent['underwriterCode'],
+                    'underwriter' => $agent['underwriter'],
+                    'address' => $agent['locationAddress1'],
+                    'state' => $agent['locationStateCode'], 
+                    'zip' => $agent['locationZipCode'],
+                    'phone_number' => $agent['locationPhoneNumber'],
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
+                $this->CI->db->insert('pct_order_fnf_agents', $agentData); 
+            }
             $agentsData[] = $agentData;
-            $this->CI->db->insert('pct_order_fnf_agents', $agentData); 
         }
         return $agentsData;
     }

@@ -287,6 +287,8 @@ $route['order/admin/north-american-branches'] = 'admin/order/cpl/northAmericanBr
 $route['order/admin/westcor-branches'] = 'admin/order/cpl/westcorBranches';
 $route['order/admin/commonwealth-branches'] = 'admin/order/cpl/commonwealthBranches';
 $route['get-north-american-branches'] = 'admin/order/cpl/getNorthAmericanBranches';
+$route['get-westcor-branches'] = 'admin/order/cpl/getWestcorBranches';
+$route['get-commonwealth-branches'] = 'admin/order/cpl/getCommonwealthBranches';
 
 
 
