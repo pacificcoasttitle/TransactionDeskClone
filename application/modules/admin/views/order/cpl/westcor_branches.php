@@ -55,7 +55,7 @@
         $('#refresh_westcor_branches').click(function(e){
             $('body').animate({ opacity: 0.5 }, "slow");
             $.ajax({
-                url: base_url+"/get-westcor-branches",
+                url: base_url+"get-westcor-branches",
                 method: "POST",
                 success: function(data){
                     var result = jQuery.parseJSON(data);

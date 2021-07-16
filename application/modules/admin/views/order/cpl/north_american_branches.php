@@ -57,7 +57,7 @@
         $('#refresh_north_american_branches').click(function(e){
             $('body').animate({ opacity: 0.5 }, "slow");
             $.ajax({
-                url: base_url+"/get-north-american-branches",
+                url: base_url+"get-north-american-branches",
                 method: "POST",
                 success: function(data){
                     var result = jQuery.parseJSON(data);

@@ -43,7 +43,7 @@ class Cpl extends MX_Controller {
 		$data = array();
         $data['title'] = 'Westcor Branches';
         $this->load->library('order/westcor');
-        $data['branchesData'] = $this->westcor->getBranches(0);
+        $data['branchesData'] = $this->westcor->getBranches();
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/cpl/westcor_branches', $data);
         $this->load->view('order/layout/footer', $data);
@@ -52,7 +52,7 @@ class Cpl extends MX_Controller {
     public function getWestcorBranches()
 	{
         $this->load->library('order/westcor');
-        $branchesData = $this->westcor->createToken(0);
+        $branchesData = $this->westcor->getBranchesFromApi();
         if(!empty($branchesData)) {
             $data = array('status' => 'success','msg' => '');
         } else {
@@ -75,7 +75,7 @@ class Cpl extends MX_Controller {
     public function getCommonwealthBranches()
 	{
         $this->load->library('order/fnf');
-        $branchesData = $this->fnf->getAgentsFromApi();
+        $branchesData = $this->fnf->getAgentsFromApi(array('order_id' => 0));
         if(!empty($branchesData)) {
             $data = array('status' => 'success','msg' => '');
         } else {

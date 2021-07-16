@@ -24,7 +24,7 @@ final class WestcorBranchTable extends AbstractMigration
             ->addColumn('city', 'string')
             ->addColumn('state', 'string')
             ->addColumn('zip', 'integer')
-            ->addColumn('phone', 'string')
+            ->addColumn('phone', 'string', ['null' => true])
             ->addColumn('agent_number', 'string')
             ->addColumn('is_proposed_branch', 'boolean', ['default' => 0])
             ->addColumn('created_at', 'datetime')
