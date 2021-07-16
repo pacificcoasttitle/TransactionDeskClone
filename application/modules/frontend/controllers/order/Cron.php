@@ -2344,7 +2344,7 @@ class Cron extends MX_Controller {
             escrow_details.email_address, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', $month);
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
