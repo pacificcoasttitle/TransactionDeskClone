@@ -2874,14 +2874,17 @@ class Dashboard extends MX_Controller {
 				$orderDetails['cpl_api'] = 'natic';
 				$branchesData = $this->natic->getBranches();
 				if ($branchesData === false) {
-					$agentsData = $this->natic->getBranchesFromApi();
+					$branchesData = $this->natic->getBranchesFromApi();
 				}
-				$orderDetails['agents_data'] = $agentsData;
+				$orderDetails['agents_data'] = $branchesData;
 			} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
 				$orderDetails['cpl_api'] = 'westcor';
 				$this->load->library('order/westcor');
-				$agentsData = $this->westcor->getBranches($orderDetails['order_id']);
-				$orderDetails['agents_data'] = $agentsData;
+				$branchesData = $this->westcor->getBranches();
+				if ($branchesData === false) {
+					$branchesData = $this->westcor->getBranchesFromApi();
+				}
+				$orderDetails['agents_data'] = $branchesData;
 			} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
 				$orderDetails['cpl_api'] = 'fnf';
 				$agentsData = $this->fnf->getAgents();
@@ -2893,7 +2896,10 @@ class Dashboard extends MX_Controller {
 			} else {
 				$orderDetails['cpl_api'] = 'westcor';
 				$this->load->library('order/westcor');
-				$agentsData = $this->westcor->getBranches($orderDetails['order_id']);
+				$agentsData = $this->westcor->getBranches();
+				if ($agentsData === false) {
+					$agentsData = $this->fnf->getBranchesFromApi();
+				}
 				$orderDetails['agents_data'] = $agentsData;
 			}
 		} 

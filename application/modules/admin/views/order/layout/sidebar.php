@@ -139,7 +139,7 @@
 			<span>Holidays</span>
 		</a>
 	</li>
-	<li class="nav-item">
+	<li class="nav-item dropdown">
 		<a class="nav-link dropdown-toggle" href="#" id=cpl_branches" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-file"></i>
 			<span>CPL Branches</span>

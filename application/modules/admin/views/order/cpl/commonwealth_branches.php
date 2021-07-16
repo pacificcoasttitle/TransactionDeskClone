@@ -4,12 +4,12 @@
             <i class="fas fa-table"></i>
             North American Branches
             <div class="float-right">
-                <a href="javascript:void(0);" id="refresh_north_american_branches" class="btn btn-secondary">Refresh</a>
+                <a href="javascript:void(0);" id="refresh_commonwealth_branches" class="btn btn-secondary">Refresh</a>
             </div>
         </div>
         <div class="card-body">
-            <div id="north_american_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-            <div id="north_american_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+            <div id="commonwealth_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+            <div id="commonwealth_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-north-american" width="100%" cellspacing="0">
                     <thead>
@@ -17,7 +17,6 @@
                             <th>Sr No</th>
                             <th>Unique Id</th>
                             <th>Address</th>
-                            <th>Address1</th>
                             <th>City</th>
                             <th>State</th>
                             <th>Zipcode</th>
@@ -29,10 +28,9 @@
                                 foreach($branchesData as $branchData) { ?>
                                 <tr>
                                     <td><?php echo $i?></td>
-                                    <td><?php echo $branchData['unique_id'];?></td>
+                                    <td><?php echo $branchData['agent_number'];?></td>
                                     <td><?php echo $branchData['address'];?></td>
-                                    <td><?php echo $branchData['address1'];?></td>
-                                    <td><?php echo $branchData['city'];?></td>
+                                    <td><?php echo $branchData['location_city'];?></td>
                                     <td><?php echo $branchData['state'];?></td>
                                     <td><?php echo $branchData['zip'];?></td>
                                 </tr> 
@@ -54,34 +52,34 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#refresh_north_american_branches').click(function(e){
+        $('#refresh_commonwealth_branches').click(function(e){
             $('body').animate({ opacity: 0.5 }, "slow");
             $.ajax({
-                url: base_url+"/get-north-american-branches",
+                url: base_url+"/get-commonwealth-branches",
                 method: "POST",
                 success: function(data){
                     var result = jQuery.parseJSON(data);
                     if (result.status == 'success') {
                         location.reload();
                     } else {
-                        $('#north_american_error_msg').html(result.message).show();
+                        $('#commonwealth_error_msg').html(result.message).show();
                         $([document.documentElement, document.body]).animate({
-                            scrollTop: $("#north_american_error_msg").offset().top
+                            scrollTop: $("#commonwealth_error_msg").offset().top
                         }, 1000);
 
                         setTimeout(function () {
-                            $('#north_american_error_msg').html('').hide();
+                            $('#commonwealth_error_msg').html('').hide();
                         }, 4000);
                     }
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    $('#north_american_error_msg').html('Something went wrong. Please try it again.').show();
+                    $('#commonwealth_error_msg').html('Something went wrong. Please try it again.').show();
                     $([document.documentElement, document.body]).animate({
-                        scrollTop: $("#north_american_error_msg").offset().top
+                        scrollTop: $("#commonwealth_error_msg").offset().top
                     }, 1000);
 
                     setTimeout(function () {
-                        $('#north_american_error_msg').html('').hide();
+                        $('#commonwealth_error_msg').html('').hide();
                     }, 4000);
                 }
             })
