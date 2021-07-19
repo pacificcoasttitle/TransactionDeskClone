@@ -64,7 +64,6 @@ class Fnf
         } else {
             $userdata = array();
             $userdata['id'] = 0;
-            $userdata['is_master'] = 1;
         }
         
         $this->CI->load->model('order/apiLogs');
@@ -204,7 +203,6 @@ class Fnf
         } else {
             $userdata = array();
             $userdata['id'] = 0;
-            $userdata['is_master'] = 1;
         }
 
         $userTokenData = $this->get_user_token();
@@ -276,7 +274,6 @@ class Fnf
         } else {
             $userdata = array();
             $userdata['id'] = 0;
-            $userdata['is_master'] = 1;
         }
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $state = $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]);
@@ -315,7 +312,6 @@ class Fnf
         } else {
             $userdata = array();
             $userdata['id'] = 0;
-            $userdata['is_master'] = 1;
         }
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $agentsInfo = $this->getAgents($orderDetails['fnf_agent_id']);
@@ -492,7 +488,6 @@ class Fnf
         } else {
             $userdata = array();
             $userdata['id'] = 0;
-            $userdata['is_master'] = 1;
         }
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $agentsInfo = $this->getAgents($orderDetails['fnf_agent_id']);

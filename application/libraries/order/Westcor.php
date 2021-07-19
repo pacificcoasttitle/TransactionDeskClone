@@ -42,9 +42,8 @@ class Westcor
         } else {
             $userdata = array();
             $userdata['id'] = 0;
-            $userdata['is_master'] = 1;
         }
-        
+
         $endPoint = 'Token';
         $postData = 'grant_type='.getenv('WESTCORE_GRANT_TYPE').'&username='.getenv('WESTCORE_USERNAME').'&password='.getenv('WESTCORE_PASSWORD').'&integrationpartner='.getenv('WESTCORE_INTEGRATION_PARTNER');
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', getenv('WESTCORE_URL').$endPoint, $postData, array(), $orderNumber, 0);
