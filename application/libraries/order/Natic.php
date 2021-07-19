@@ -41,9 +41,9 @@ class Natic
 
     public function getBranchesFromApi()
     {
-        if (isset($this->CI->session->userdata('user'))) {
+        if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(isset($this->CI->session->userdata('admin'))) {
+        } else if(!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();
@@ -155,9 +155,9 @@ class Natic
     public function getDocumentContentForCpl($fileId, $orderDetails)
     {
         $this->CI->load->library('order/order');
-        if (isset($this->CI->session->userdata('user'))) {
+        if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(isset($this->CI->session->userdata('admin'))) {
+        } else if(!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();
