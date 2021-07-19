@@ -52,6 +52,7 @@ class Westcor
         $resToken = json_decode($result, true);
         $groups = json_decode($resToken['groups'],true);
         if (!empty($resToken)) {
+            $this->CI->db->empty_table('pct_order_westcore_token');
             $records = array(
                 'token' => $resToken['access_token'], 
                 'first_name' => $resToken['firstName'], 
@@ -65,7 +66,7 @@ class Westcor
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             );
-            $this->CI->db->replace('pct_order_westcore_token', $records); 
+            $this->CI->db->insert('pct_order_westcore_token', $records); 
         }
 
         if($is_branch_update == 1) {
@@ -115,7 +116,7 @@ class Westcor
             return $branchesData;
         } else {
             if(!empty($resToken['access_token'])) {
-                return array('token' => $resToken['access_token']);
+                return array('token' => $resToken['access_token'], 'original_agent_number' => $resToken['agentNumber']);
             } else {
                 return array('token' => '');
             }
