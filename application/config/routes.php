@@ -205,6 +205,8 @@ $route['sales-production-history'] = 'frontend/order/dashboard/salesProductionHi
 $route['get-sales-production-history'] = 'frontend/order/dashboard/getSalesProductionHistory';
 $route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
 $route['update-all-order-status'] = 'frontend/order/cron/updateAllOrderStatus';
+$route['policy/:any'] = 'frontend/order/dashboardMail/policy';
+$route['download-policy-doc'] = 'frontend/order/dashboardMail/downloadPolicyDoc';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';

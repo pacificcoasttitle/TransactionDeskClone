@@ -15,7 +15,6 @@
                 <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-secondary"> Export </a>
             </div>
         </div>
-
                 
         <div class="card-body">
             <div id="customer_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>

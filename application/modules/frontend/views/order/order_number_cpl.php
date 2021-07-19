@@ -101,6 +101,7 @@
                                             <input class="radio" type="radio" name="actions" id="get_fees" value="get_fees" checked="checked">Get Fees  
                                             <input class="radio" type="radio" name="actions" id="get_cpl" value="get_cpl">Get CPL
                                             <input class="radio" type="radio" name="actions" id="get_proposed" value="get_proposed">Get Proposed
+                                            <input class="radio" type="radio" name="actions" id="get_policy" value="get_policy">Get Policy
                                         </label>
                                     </div>
                                 </div>
@@ -200,6 +201,10 @@
                                 else if(action == 'get_proposed')
                                 {
                                     window.location.replace(base_url+'proposed-insured/'+res.random_number);
+                                }
+                                else if(action == 'get_policy')
+                                {
+                                    window.location.replace(base_url+'policy/'+res.random_number);
                                 }
                                 else
                                 {

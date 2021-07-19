@@ -3489,4 +3489,74 @@ class DashboardMail extends MX_Controller {
         $binaryData   = base64_encode(file_get_contents($url)); 
 		echo $binaryData;exit;
     }
+
+    public function policy()
+    {
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $random_number = $this->uri->segment(2); 
+        $order = $this->getOrderInfo($random_number);
+        $fileId = $order[0]['file_id'];  
+        $data['title'] = 'Get Policy | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $data['file_number'] = $orderDetails['file_number'];
+        $data['full_address'] = $orderDetails['full_address'];
+        $data['file_id'] = $orderDetails['file_id'];
+        $data['order_id'] = $orderDetails['order_id'];
+        $data['created'] = !empty($orderDetails['opened_date']) ? date("m/d/Y", strtotime($orderDetails['opened_date'])) : '';
+        $user_data['admin_api'] = 1;
+        $user_data['from_mail'] = 1; 
+        $endPoint = 'files/'.$fileId.'/documents';
+					
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+        $result = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), $result,  $orderDetails['order_id'], $logid);
+        $res = json_decode($result, true);
+        
+        $policyDocuments = array();
+        $i = 0;
+        foreach($res['Documents'] as $document) {
+            if ($document['DocumentType']['DocumentTypeID'] == 103) {
+                $policyDocuments[$i]['no'] = $i + 1;
+                $policyDocuments[$i]['api_document_id'] = $document['DocumentID'];
+                $policyDocuments[$i]['document_name'] = $document['DocumentName'];
+                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $document['CreateDate'])))/1000);
+                $created_date = date('m/d/Y', $time);
+                $policyDocuments[$i]['created_at'] = $created_date;
+                $i++;
+            }
+        }
+
+        $data['policyDocuments'] = $policyDocuments;
+        $this->load->view('layout/head_dashboard', $data);
+        $this->load->view('order/mail_policy_package', $data);
+    }
+
+    public function downloadPolicyDoc()
+	{
+		$documentId = $this->input->post('documentId');
+        $order_id = $this->input->post('order_id');
+        $endPoint = 'documents/'.$documentId.'?format=json';
+        $user_data['admin_api'] = 1;
+        $user_data['from_mail'] = 1; 
+        			
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order_id, 0);
+        $result = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), $result,  $order_id, $logid);
+        $res = json_decode($result, true);
+        //echo "<pre>";
+        //print_r($res);exit;
+		if (isset($res['Document']) && !empty($res['Document'])) {
+			echo $res['Document']['DocumentBody'];exit;
+		}	
+	}
 }
