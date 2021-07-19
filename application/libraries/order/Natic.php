@@ -41,10 +41,14 @@ class Natic
 
     public function getBranchesFromApi()
     {
-        $userdata = $this->CI->session->userdata('user');
-        if (!isset($userdata)) {
+        if (isset($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(isset($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
+            $userdata['is_master'] = 1;
         }
 
         $xmlData = "<?xml version='1.0' encoding='utf-8'?>
@@ -152,11 +156,16 @@ class Natic
     public function getDocumentContentForCpl($fileId, $orderDetails)
     {
         $this->CI->load->library('order/order');
-        $userdata = $this->CI->session->userdata('user');
-        if (!isset($userdata)) {
+        if (isset($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(isset($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
+            $userdata['is_master'] = 1;
         }
+        
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $xmlData = '';
         $address = $orderDetails['cpl_proposed_property_address'];
