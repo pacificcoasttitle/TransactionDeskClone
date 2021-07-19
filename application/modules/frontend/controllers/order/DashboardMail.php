@@ -490,7 +490,8 @@ class DashboardMail extends MX_Controller {
         $orderDetails = $this->order->get_order_details($fileId, 1);
         $res = array();
 
-        $resToken = $this->westcor->get_token($orderDetails['fnf_agent_id'], $orderDetails['order_id']);
+        $resToken = $this->westcor->get_token($orderDetails['order_id']);
+		$branchData = $this->westcor->getBranches($orderDetails['fnf_agent_id']);
         $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 
         $propertyDetail = explode(",", $orderDetails['full_address']);
@@ -731,11 +732,11 @@ class DashboardMail extends MX_Controller {
             $resCPL['CPL']['FileInformation'] = null;
             $resCPL['CPL']['CPLID'] = -1;
             $resCPL['CPL']['LenderID'] = $orderDetails['westcor_lender_id'];
-            $resCPL['CPL']['PolicyProducingAgentAddressID'] = $resToken['agent_number'];
-            $resCPL['CPL']['PolicyProducingAgentAddress'] = $resToken['address'];
-            $resCPL['CPL']['PolicyProducingAgentCity'] = $resToken['city'];
-            $resCPL['CPL']['PolicyProducingAgentState'] = $resToken['state'];
-            $resCPL['CPL']['PolicyProducingAgentZip'] = $resToken['zip'];
+            $resCPL['CPL']['PolicyProducingAgentAddressID'] = $branchData['agent_number'];
+            $resCPL['CPL']['PolicyProducingAgentAddress'] = $branchData['address'];
+            $resCPL['CPL']['PolicyProducingAgentCity'] = $branchData['city'];
+            $resCPL['CPL']['PolicyProducingAgentState'] = $branchData['state'];
+            $resCPL['CPL']['PolicyProducingAgentZip'] = $branchData['zip'];
             $resCPL['CPL']['ProtectLender'] = true;
             
                         
@@ -1115,26 +1116,19 @@ class DashboardMail extends MX_Controller {
 			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
  			if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
                 $orderDetails['cpl_api'] = 'natic';
-                $agentsData = array(
-					array(
-						'id' => 303,
-						'location_city' => 'Orange'
-					),
-					array(
-						'id' => 1879,
-						'location_city' => 'Oxnard',
-					),
-					array(
-						'id' => 4093,
-						'location_city' => 'Glendale',
-					)
-				);
-                $orderDetails['agents_data'] = $agentsData;
+				$branchesData = $this->natic->getBranches();
+				if ($branchesData === false) {
+					$branchesData = $this->natic->getBranchesFromApi();
+				}
+				$orderDetails['agents_data'] = $branchesData;
 			} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
                 $orderDetails['cpl_api'] = 'westcor';
 				$this->load->library('order/westcor');
-				$agentsData = $this->westcor->getBranches($orderDetails['order_id']);
-				$orderDetails['agents_data'] = $agentsData;
+				$branchesData = $this->westcor->getBranches();
+				if ($branchesData === false) {
+					$branchesData = $this->westcor->getBranchesFromApi();
+				}
+				$orderDetails['agents_data'] = $branchesData;
 			} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
 				$orderDetails['cpl_api'] = 'fnf';
 				$agentsData = $this->fnf->getAgents();
@@ -1146,8 +1140,11 @@ class DashboardMail extends MX_Controller {
 			} else {
                 $orderDetails['cpl_api'] = 'westcor';
 				$this->load->library('order/westcor');
-				$agentsData = $this->westcor->getBranches($orderDetails['order_id']);
-				$orderDetails['agents_data'] = $agentsData;
+				$branchesData = $this->westcor->getBranches();
+				if ($branchesData === false) {
+					$branchesData = $this->westcor->getBranchesFromApi();
+				}
+				$orderDetails['agents_data'] = $branchesData;
 			}
         }
         if(!empty($orderDetails['borrowers_vesting'])) {

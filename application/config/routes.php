@@ -283,6 +283,12 @@ $route['update-avoid-duplication-flag'] = 'admin/order/home/updateAvoidDuplicati
 $route['order/admin/holidays'] = 'admin/order/holidays/index';
 $route['order/admin/add-holiday'] = 'admin/order/holidays/add_holiday';
 $route['order/admin/edit-holiday/:num'] = 'admin/order/holidays/edit_holiday';
+$route['order/admin/north-american-branches'] = 'admin/order/cpl/northAmericanBranches';
+$route['order/admin/westcor-branches'] = 'admin/order/cpl/westcorBranches';
+$route['order/admin/commonwealth-branches'] = 'admin/order/cpl/commonwealthBranches';
+$route['get-north-american-branches'] = 'admin/order/cpl/getNorthAmericanBranches';
+$route['get-westcor-branches'] = 'admin/order/cpl/getWestcorBranches';
+$route['get-commonwealth-branches'] = 'admin/order/cpl/getCommonwealthBranches';
 
 
 
