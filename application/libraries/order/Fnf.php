@@ -57,11 +57,16 @@ class Fnf
 
     public function generateVendorToken($orderDetails)
     {
-        $userdata = $this->CI->session->userdata('user'); 
-        if (!isset($userdata)) {
+        if (isset($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(isset($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
+            $userdata['is_master'] = 1;
         }
+        
         $this->CI->load->model('order/apiLogs');
         $postData = json_encode(array(
             'clientId' => getenv('FNF_CLIENT_ID'),
@@ -88,17 +93,21 @@ class Fnf
 
     public function generateUserToken($orderDetails)
     {
+        if (isset($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(isset($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
+            $userdata = array();
+            $userdata['id'] = 0;
+            $userdata['is_master'] = 1;
+        }
+
         $vendorTokenData = $this->get_vendor_token();
         if ($vendorTokenData === false) {
             $vendorTokenData = $this->generateVendorToken($orderDetails);
         }
 
-        $userdata = $this->CI->session->userdata('user');
-        if (!isset($userdata)) {
-            $userdata = array();
-            $userdata['id'] = 0;
-            $userdata['is_master'] = 1;
-        } 
         $this->CI->load->model('order/apiLogs');
         $postData = json_encode(array(
             'accessToken' => $vendorTokenData['token'],
@@ -188,11 +197,16 @@ class Fnf
 
     public function getAgentsFromApi($orderDetails)
     {
-        $userdata = $this->CI->session->userdata('user'); 
-        if (!isset($userdata)) {
+        if (isset($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(isset($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
+            $userdata['is_master'] = 1;
         }
+
         $userTokenData = $this->get_user_token();
         if ($userTokenData === false) {
             $userTokenData = $this->generateUserToken($orderDetails);
@@ -255,10 +269,14 @@ class Fnf
     public function getCPLForm($orderDetails, $vendorTokenData, $userTokenData)
     {
         $this->CI->load->library('order/natic');
-        $userdata = $this->CI->session->userdata('user'); 
-        if (!isset($userdata)) {
+         if (isset($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(isset($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
+            $userdata['is_master'] = 1;
         }
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $state = $orderDetails['property_state'] ? $orderDetails['property_state'] : trim($propertyDetail[3]);
@@ -290,10 +308,14 @@ class Fnf
     public function generateCpl($orderDetails, $vendorTokenData, $userTokenData)
     {
         $this->CI->load->library('order/natic');
-        $userdata = $this->CI->session->userdata('user'); 
-        if (!isset($userdata)) {
+        if (isset($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(isset($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
+            $userdata['is_master'] = 1;
         }
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $agentsInfo = $this->getAgents($orderDetails['fnf_agent_id']);
@@ -463,10 +485,14 @@ class Fnf
     public function editCpl($orderDetails, $vendorTokenData, $userTokenData)
     {
         $this->CI->load->library('order/natic');
-        $userdata = $this->CI->session->userdata('user'); 
-        if (!isset($userdata)) {
+        if (isset($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(isset($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
+            $userdata['is_master'] = 1;
         }
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $agentsInfo = $this->getAgents($orderDetails['fnf_agent_id']);

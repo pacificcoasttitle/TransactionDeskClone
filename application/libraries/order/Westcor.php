@@ -17,7 +17,6 @@ class Westcor
 
     public function make_request($http_method, $endpoint, $body_params, $is_token_call = 0, $bearerToken = '')
     {
-        $userdata = $this->CI->session->userdata('user');
         $ch = curl_init(getenv('WESTCORE_URL').$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
@@ -36,12 +35,16 @@ class Westcor
 
     public function createToken($orderNumber, $is_branch_update = 0) 
     {
-        $userdata = $this->CI->session->userdata('user');
-        $this->CI->load->model('order/apiLogs');
-        if (!isset($userdata)) {
+        if (isset($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(isset($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
+            $userdata['is_master'] = 1;
         }
+        
         $endPoint = 'Token';
         $postData = 'grant_type='.getenv('WESTCORE_GRANT_TYPE').'&username='.getenv('WESTCORE_USERNAME').'&password='.getenv('WESTCORE_PASSWORD').'&integrationpartner='.getenv('WESTCORE_INTEGRATION_PARTNER');
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'westcor', 'create_token', getenv('WESTCORE_URL').$endPoint, $postData, array(), $orderNumber, 0);
