@@ -48,7 +48,6 @@ class Natic
         } else {
             $userdata = array();
             $userdata['id'] = 0;
-            $userdata['is_master'] = 1;
         }
 
         $xmlData = "<?xml version='1.0' encoding='utf-8'?>
@@ -163,9 +162,8 @@ class Natic
         } else {
             $userdata = array();
             $userdata['id'] = 0;
-            $userdata['is_master'] = 1;
         }
-        
+
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $xmlData = '';
         $address = $orderDetails['cpl_proposed_property_address'];
