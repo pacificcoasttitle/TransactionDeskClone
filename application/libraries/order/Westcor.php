@@ -35,9 +35,9 @@ class Westcor
 
     public function createToken($orderNumber, $is_branch_update = 0) 
     {
-        if (isset($this->CI->session->userdata('user'))) {
+        if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(isset($this->CI->session->userdata('admin'))) {
+        } else if(!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();

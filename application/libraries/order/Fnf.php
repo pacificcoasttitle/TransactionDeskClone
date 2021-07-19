@@ -57,9 +57,9 @@ class Fnf
 
     public function generateVendorToken($orderDetails)
     {
-        if (isset($this->CI->session->userdata('user'))) {
+        if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(isset($this->CI->session->userdata('admin'))) {
+        } else if(!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();
@@ -92,9 +92,9 @@ class Fnf
 
     public function generateUserToken($orderDetails)
     {
-        if (isset($this->CI->session->userdata('user'))) {
+        if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(isset($this->CI->session->userdata('admin'))) {
+        } else if(!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();
@@ -196,9 +196,9 @@ class Fnf
 
     public function getAgentsFromApi($orderDetails)
     {
-        if (isset($this->CI->session->userdata('user'))) {
+        if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(isset($this->CI->session->userdata('admin'))) {
+        } else if(!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();
@@ -267,9 +267,9 @@ class Fnf
     public function getCPLForm($orderDetails, $vendorTokenData, $userTokenData)
     {
         $this->CI->load->library('order/natic');
-         if (isset($this->CI->session->userdata('user'))) {
+         if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(isset($this->CI->session->userdata('admin'))) {
+        } else if(!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();
@@ -305,9 +305,9 @@ class Fnf
     public function generateCpl($orderDetails, $vendorTokenData, $userTokenData)
     {
         $this->CI->load->library('order/natic');
-        if (isset($this->CI->session->userdata('user'))) {
+        if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(isset($this->CI->session->userdata('admin'))) {
+        } else if(!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();
@@ -481,9 +481,9 @@ class Fnf
     public function editCpl($orderDetails, $vendorTokenData, $userTokenData)
     {
         $this->CI->load->library('order/natic');
-        if (isset($this->CI->session->userdata('user'))) {
+        if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(isset($this->CI->session->userdata('admin'))) {
+        } else if(!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();
