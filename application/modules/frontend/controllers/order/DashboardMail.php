@@ -1008,6 +1008,7 @@ class DashboardMail extends MX_Controller {
 	public function getOrderDetailsCpl()
 	{
 		$this->load->library('order/fnf');
+        $this->load->library('order/natic');
 		$this->load->model('order/home_model');
 		$this->load->library('order/resware');
 		$fileId = $this->input->post('fileId');	 
