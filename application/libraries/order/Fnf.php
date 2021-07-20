@@ -57,11 +57,15 @@ class Fnf
 
     public function generateVendorToken($orderDetails)
     {
-        $userdata = $this->CI->session->userdata('user'); 
-        if (!isset($userdata)) {
+        if (!empty($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(!empty($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
         }
+        
         $this->CI->load->model('order/apiLogs');
         $postData = json_encode(array(
             'clientId' => getenv('FNF_CLIENT_ID'),
@@ -88,17 +92,21 @@ class Fnf
 
     public function generateUserToken($orderDetails)
     {
+        if (!empty($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(!empty($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
+            $userdata = array();
+            $userdata['id'] = 0;
+            $userdata['is_master'] = 1;
+        }
+
         $vendorTokenData = $this->get_vendor_token();
         if ($vendorTokenData === false) {
             $vendorTokenData = $this->generateVendorToken($orderDetails);
         }
 
-        $userdata = $this->CI->session->userdata('user');
-        if (!isset($userdata)) {
-            $userdata = array();
-            $userdata['id'] = 0;
-            $userdata['is_master'] = 1;
-        } 
         $this->CI->load->model('order/apiLogs');
         $postData = json_encode(array(
             'accessToken' => $vendorTokenData['token'],
@@ -188,38 +196,70 @@ class Fnf
 
     public function getAgentsFromApi($orderDetails)
     {
-        $userdata = $this->CI->session->userdata('user'); 
-        if (!isset($userdata)) {
+        if (!empty($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(!empty($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
         }
+
         $userTokenData = $this->get_user_token();
         if ($userTokenData === false) {
             $userTokenData = $this->generateUserToken($orderDetails);
         }
         $endPoint = 'agents/CPL/CA';
+        $postData = array();
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'fnf', 'get_agent_list', getenv('FNF_USER_URL').$endPoint, $postData, array(), $orderDetails['order_id'], 0);                
         $resultAgentList = $this->make_request('GET', $endPoint, 'user', '', $userTokenData['token']);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'fnf', 'get_agent_list', getenv('FNF_USER_URL').$endPoint, $postData, $resultAgentList, $orderDetails['order_id'], $logid);
         $agents = json_decode($resultAgentList, true);
         foreach ($agents as $agent) {
-            $agentData = array(
-                'agent_number' => $agent['agentNumber'], 
-                'agent_status' => $agent['agentStatus'],
-                'agent_account_type' => $agent['agentAccountType'],
-                'is_dba_name' => $agent['isDbaName'] ? 1 : 0,
-                'location_city' => $agent['locationCity'], 
-                'underwriter_code' => $agent['underwriterCode'],
-                'underwriter' => $agent['underwriter'],
-                'address' => $agent['locationAddress1'],
-                'state' => $agent['locationStateCode'], 
-                'zip' => $agent['locationZipCode'],
-                'phone_number' => $agent['locationPhoneNumber'],
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            );
+            $this->CI->db->select('*');
+            $this->CI->db->from('pct_order_fnf_agents');
+            $this->CI->db->like('location_city', $agent['locationCity']);
+            $query = $this->CI->db->get();
+            $result = $query->row_array();
+            if(!empty($result)) {
+                $condition = array(
+                    'location_city' => $agent['locationCity']
+                ); 
+                $agentData = array(
+                    'agent_number' => $agent['agentNumber'], 
+                    'agent_status' => $agent['agentStatus'],
+                    'agent_account_type' => $agent['agentAccountType'],
+                    'is_dba_name' => $agent['isDbaName'] ? 1 : 0,
+                    'underwriter_code' => $agent['underwriterCode'],
+                    'underwriter' => $agent['underwriter'],
+                    'address' => $agent['locationAddress1'],
+                    'state' => $agent['locationStateCode'], 
+                    'zip' => $agent['locationZipCode'],
+                    'phone_number' => $agent['locationPhoneNumber'],
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
+                $this->CI->db->update('pct_order_fnf_agents', $agentData, $condition);
+                $agentData['location_city'] =  $agent['locationCity'];
+            } else {
+                $agentData = array(
+                    'agent_number' => $agent['agentNumber'], 
+                    'agent_status' => $agent['agentStatus'],
+                    'agent_account_type' => $agent['agentAccountType'],
+                    'is_dba_name' => $agent['isDbaName'] ? 1 : 0,
+                    'location_city' => $agent['locationCity'], 
+                    'underwriter_code' => $agent['underwriterCode'],
+                    'underwriter' => $agent['underwriter'],
+                    'address' => $agent['locationAddress1'],
+                    'state' => $agent['locationStateCode'], 
+                    'zip' => $agent['locationZipCode'],
+                    'phone_number' => $agent['locationPhoneNumber'],
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
+                $this->CI->db->insert('pct_order_fnf_agents', $agentData); 
+            }
             $agentsData[] = $agentData;
-            $this->CI->db->insert('pct_order_fnf_agents', $agentData); 
         }
         return $agentsData;
     }
@@ -227,8 +267,11 @@ class Fnf
     public function getCPLForm($orderDetails, $vendorTokenData, $userTokenData)
     {
         $this->CI->load->library('order/natic');
-        $userdata = $this->CI->session->userdata('user'); 
-        if (!isset($userdata)) {
+         if (!empty($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(!empty($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
         }
@@ -262,8 +305,11 @@ class Fnf
     public function generateCpl($orderDetails, $vendorTokenData, $userTokenData)
     {
         $this->CI->load->library('order/natic');
-        $userdata = $this->CI->session->userdata('user'); 
-        if (!isset($userdata)) {
+        if (!empty($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(!empty($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
         }
@@ -435,8 +481,11 @@ class Fnf
     public function editCpl($orderDetails, $vendorTokenData, $userTokenData)
     {
         $this->CI->load->library('order/natic');
-        $userdata = $this->CI->session->userdata('user'); 
-        if (!isset($userdata)) {
+        if (!empty($this->CI->session->userdata('user'))) {
+            $userdata = $this->CI->session->userdata('user');
+        } else if(!empty($this->CI->session->userdata('admin'))) {
+            $userdata = $this->CI->session->userdata('admin');
+        } else {
             $userdata = array();
             $userdata['id'] = 0;
         }
