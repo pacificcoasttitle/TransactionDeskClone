@@ -3412,8 +3412,7 @@ class Cron extends MX_Controller {
                 }
             }
         }
-        echo "<pre>";
-        print_r($folders);exit;
+        
         foreach ($folders as $folder) {
             $fileSystemIterator = new FilesystemIterator("uploads/".$folder."/");
             foreach ($fileSystemIterator as $fileInfo) {
