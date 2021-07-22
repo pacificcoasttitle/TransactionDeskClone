@@ -3392,6 +3392,8 @@ class Cron extends MX_Controller {
         $path = FCPATH."/uploads/";
         $sub_folder = scandir($path);
         $num = count($sub_folder);
+        $countSyncFiles = 0;
+        $countUnlinkFiles = 0;
         for ($i = 2; $i < $num; $i++) {
             if (is_file($path.'\\'.$sub_folder[$i])) {
                 $fileExist = $this->order->fileExistOrNotOnS3($sub_folder[$i]);
@@ -3399,8 +3401,10 @@ class Cron extends MX_Controller {
                     chmod($path.'\\'.$sub_folder[$i], 0644);
                     gc_collect_cycles();
                     unlink($path.'\\'.$sub_folder[$i]); 
+                    $countUnlinkFiles++;
                 } else {
                     $this->order->uploadDocumentOnAwsS3($sub_folder[$i]); 
+                    $countSyncFiles++;
                 }
             } else {
                 if($sub_folder[$i] != 'orders') {
@@ -3419,11 +3423,15 @@ class Cron extends MX_Controller {
                     chmod($path.'\\'.$folder."/".$fileInfo->getFilename(), 0644);
                     gc_collect_cycles();
                     unlink($path.'\\'.$folder."/".$fileInfo->getFilename()); 
+                    $countUnlinkFiles++;
                 } else {
                     $this->order->uploadDocumentOnAwsS3($fileInfo->getFilename(), $folder);
+                    $countSyncFiles++;
                 }
             }
         }
-        echo "All files synced successfully on S3";exit;
+        echo $countSyncFiles." files synced successfully on S3 <br/>";
+        echo $countUnlinkFiles." files unlinked successfully from server <br/>";
+        exit;
     }
 }
