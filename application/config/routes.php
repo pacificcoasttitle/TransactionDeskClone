@@ -207,6 +207,7 @@ $route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
 $route['update-all-order-status'] = 'frontend/order/cron/updateAllOrderStatus';
 $route['policy/:any'] = 'frontend/order/dashboardMail/policy';
 $route['download-policy-doc'] = 'frontend/order/dashboardMail/downloadPolicyDoc';
+$route['remove-doc-from-server'] = 'frontend/order/cron/removeDocServer';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';
