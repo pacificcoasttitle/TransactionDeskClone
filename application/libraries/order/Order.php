@@ -1190,17 +1190,11 @@ class Order
                     'secret' => env('AWS_SECRET_ACCESS_KEY')
                 ],
             ]);
-            
-            $result = $s3Client->getObject([
-                'Bucket' => env('AWS_BUCKET'),
-                'Key' => $key
-            ]);
-            
+            $result = $s3Client->doesObjectExist(env('AWS_BUCKET'), $key);
         } catch (Aws\Exception\AwsException $e) {
             return false;
         }
-
-        if (!empty($result)) {
+        if ($result) {
             return true;
         } else {
             return false;
