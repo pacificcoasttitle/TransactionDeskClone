@@ -3395,12 +3395,12 @@ class Cron extends MX_Controller {
         $countSyncFiles = 0;
         $countUnlinkFiles = 0;
         for ($i = 2; $i < $num; $i++) {
-            if (is_file($path.'\\'.$sub_folder[$i])) {
+            if (is_file($path.$sub_folder[$i])) {
                 $fileExist = $this->order->fileExistOrNotOnS3($sub_folder[$i]);
                 if($fileExist) {
-                    chmod($path.'\\'.$sub_folder[$i], 0644);
+                    chmod($path.$sub_folder[$i], 0644);
                     gc_collect_cycles();
-                    unlink($path.'\\'.$sub_folder[$i]); 
+                    unlink($path.$sub_folder[$i]); 
                     $countUnlinkFiles++;
                 } else {
                     $this->order->uploadDocumentOnAwsS3($sub_folder[$i]); 
@@ -3413,7 +3413,7 @@ class Cron extends MX_Controller {
             }
         }
         echo "<pre>";
-        print_r($folders);
+        print_r($folders);exit;
         foreach ($folders as $folder) {
             $fileSystemIterator = new FilesystemIterator("uploads/".$folder."/");
             foreach ($fileSystemIterator as $fileInfo) {
@@ -3422,9 +3422,9 @@ class Cron extends MX_Controller {
                 }
                 $fileExist = $this->order->fileExistOrNotOnS3($folder."/".$fileInfo->getFilename());
                 if($fileExist) {
-                    chmod($path.'\\'.$folder."/".$fileInfo->getFilename(), 0644);
+                    chmod($path.$folder."/".$fileInfo->getFilename(), 0644);
                     gc_collect_cycles();
-                    unlink($path.'\\'.$folder."/".$fileInfo->getFilename()); 
+                    unlink($path.$folder."/".$fileInfo->getFilename()); 
                     $countUnlinkFiles++;
                 } else {
                     $this->order->uploadDocumentOnAwsS3($fileInfo->getFilename(), $folder);
