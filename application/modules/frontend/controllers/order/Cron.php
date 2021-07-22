@@ -3389,7 +3389,7 @@ class Cron extends MX_Controller {
     {
         $this->load->library('order/order');
         $folders = array();
-        $path = FCPATH."/uploads/";
+        $path = "uploads/";
         $sub_folder = scandir($path);
         $num = count($sub_folder);
         $countSyncFiles = 0;
@@ -3413,9 +3413,9 @@ class Cron extends MX_Controller {
             }
         }
         echo "<pre>";
-        print_r($folders);
+        print_r($folders);exit;
         foreach ($folders as $folder) {
-            $fileSystemIterator = new FilesystemIterator("./uploads/".$folder."/");
+            $fileSystemIterator = new FilesystemIterator("uploads/".$folder."/");
             foreach ($fileSystemIterator as $fileInfo) {
                 if ($folder == 'sales-rep' && $fileInfo->getFilename() == 'default.jpg') {
                     continue;
