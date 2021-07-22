@@ -3412,8 +3412,10 @@ class Cron extends MX_Controller {
                 }
             }
         }
+        echo "<pre>";
+        print_r($folders);
         foreach ($folders as $folder) {
-            $fileSystemIterator = new FilesystemIterator(FCPATH."/uploads/".$folder."/");
+            $fileSystemIterator = new FilesystemIterator("./uploads/".$folder."/");
             foreach ($fileSystemIterator as $fileInfo) {
                 if ($folder == 'sales-rep' && $fileInfo->getFilename() == 'default.jpg') {
                     continue;
