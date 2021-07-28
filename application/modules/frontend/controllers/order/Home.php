@@ -1551,8 +1551,13 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
-		$fileSize = filesize(FCPATH.'uploads/legal-vesting/'.$document_name);
-		$contents = file_get_contents(base_url().'uploads/legal-vesting/'.$document_name);
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$fileSize = filesize(env('AWS_PATH')."legal-vesting/".$document_name);
+			$contents = file_get_contents(env('AWS_PATH')."legal-vesting/".$document_name);
+		} else {
+			$fileSize = filesize(FCPATH.'uploads/legal-vesting/'.$document_name);
+			$contents = file_get_contents(base_url().'uploads/legal-vesting/'.$document_name);
+		}
 		$binaryData   = base64_encode($contents); 
 
 		$documentData = array(
@@ -1602,8 +1607,13 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
-		$fileSize = filesize(FCPATH.'uploads/grant-deed/'.$document_name);
-		$contents = file_get_contents(base_url().'uploads/grant-deed/'.$document_name);
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$fileSize = filesize(env('AWS_PATH')."grant-deed/".$document_name);
+			$contents = file_get_contents(env('AWS_PATH')."grant-deed/".$document_name);
+		} else {
+			$fileSize = filesize(FCPATH.'uploads/grant-deed/'.$document_name);
+			$contents = file_get_contents(base_url().'uploads/grant-deed/'.$document_name);
+		}
 		$binaryData   = base64_encode($contents); 
 
 		$documentData = array(
@@ -1652,8 +1662,15 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
-		$fileSize = filesize(FCPATH.'uploads/tax/'.$document_name);
-		$contents = file_get_contents(base_url().'uploads/tax/'.$document_name);
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$fileSize = filesize(env('AWS_PATH')."tax/".$document_name);
+			$contents = file_get_contents(env('AWS_PATH')."tax/".$document_name);
+		} else {
+			$fileSize = filesize(FCPATH.'uploads/tax/'.$document_name);
+			$contents = file_get_contents(base_url().'uploads/tax/'.$document_name);
+		}
+		
+		
 		$binaryData   = base64_encode($contents); 
 
 		$documentData = array(
