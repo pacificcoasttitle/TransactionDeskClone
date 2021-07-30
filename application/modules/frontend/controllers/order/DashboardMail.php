@@ -2054,10 +2054,11 @@ class DashboardMail extends MX_Controller {
             $sid = env('TWILIO_SID');
             $token = env('TWILIO_TOKEN');
             $from = env('TWILIO_FROM');
-            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>'', 'from'=>$from), array(), 0, 0);
+            $message = "Your Pacific Coast Safe Wire code is: ".$code;
+            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=>'', 'from'=>$from), array(), 0, 0);
 
             try {
-                $result = $this->twilio->message($phoneNumber, $code,'',array('from'=>$from));
+                $result = $this->twilio->message($phoneNumber, $message,'',array('from'=>$from));
                 $response = $result->toArray();
                 $response['msg_status'] = 'success';
                 $response['code'] = $code;

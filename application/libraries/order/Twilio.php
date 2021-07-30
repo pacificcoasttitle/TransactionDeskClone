@@ -57,7 +57,7 @@ class Twilio
 
     public function message($to, $message, $mediaUrls = null, array $params = [])
     {
-        $params['body'] = "Your Pacific Coast Safe Wire code is: ".$message;
+        $params['body'] = $message;
 
         if (!isset($params['from'])) {
             $params['from'] = $this->from;
