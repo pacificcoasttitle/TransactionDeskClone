@@ -2501,18 +2501,21 @@ class Cron extends MX_Controller {
             exit('Login Failed');
         }
     
-        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER'), true))) {
+        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER').'/open-closed-orders/', true))) {
             die("Cannot read directory contents");
         }
         
         foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
-                $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.trim($file).".csv");
-                chmod(FCPATH.'uploads/'.$file.".csv",0755);
-                $sftp->delete(env('SFTP_FOLDER').'/'.$file);
+            if ($file != '.' && $file != '..' && $file != '.protected') {
+                if (!is_dir('uploads/open-closed-orders')) {
+                    mkdir('./uploads/open-closed-orders', 0777, TRUE);
+                }
+                $sftp->get(env('SFTP_FOLDER').'/open-closed-orders/'.$file, FCPATH.'uploads/open-closed-orders/'.trim($file).".csv");
+                chmod(FCPATH.'uploads/open-closed-orders/'.$file.".csv",0755);
+                $sftp->delete(env('SFTP_FOLDER').'/open-closed-orders/'.$file);
             }
         }
-        $files = glob("uploads/*csv", GLOB_NOSORT);
+        $files = glob("uploads/open-closed-orders/*csv", GLOB_NOSORT);
                  
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
@@ -2759,8 +2762,8 @@ class Cron extends MX_Controller {
                 }
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
-		        rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
-                $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
+		        rename(FCPATH."/uploads/open-closed-orders/".$documentName['basename'], FCPATH."/uploads/open-closed-orders/".$fileName);
+                $this->order->uploadDocumentOnAwsS3($fileName, 'open-closed-orders', 1);  
             }
         } else {
            echo "No files found";exit;
@@ -3306,25 +3309,28 @@ class Cron extends MX_Controller {
             exit('Login Failed');
         }
     
-        if (!($files = $sftp->nlist('/status', true))) {
+        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER').'/order-status/', true))) {
             die("Cannot read directory contents");
         }
         
         foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
+            if ($file != '.' && $file != '..' && $file != '.protected') {
+                if (!is_dir('uploads/order-status')) {
+                    mkdir('./uploads/order-status', 0777, TRUE);
+                }
                 $ext = pathinfo($file, PATHINFO_EXTENSION);
                 if(!empty($ext)) {
-                    $sftp->get('status/'.$file, FCPATH.'uploads/'.trim($file));
-                    chmod(FCPATH.'uploads/'.$file,0755);
+                    $sftp->get(env("SFTP_FOLDER").'/order-status/'.$file, FCPATH.'uploads/order-status/'.trim($file));
+                    chmod(FCPATH.'uploads/order-status/'.$file,0755);
                 } else {
-                    $sftp->get('status/'.$file, FCPATH.'uploads/'.trim($file).".csv");
-                    chmod(FCPATH.'uploads/'.$file.".csv",0755);
+                    $sftp->get(env("SFTP_FOLDER").'/order-status/'.$file, FCPATH.'uploads/order-status/'.trim($file).'.csv');
+                    chmod(FCPATH.'uploads/order-status/'.trim($file).'.csv',0755);
                 }
-                $sftp->delete('status/'.$file);
+                $sftp->delete(env("SFTP_FOLDER").'/order-status/'.$file);
             }
         }
         
-        $files = glob("uploads/*csv", GLOB_NOSORT);
+        $files = glob("uploads/order-status/*csv", GLOB_NOSORT);
                 
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
@@ -3375,8 +3381,8 @@ class Cron extends MX_Controller {
                 }
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
-                rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
-                $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
+                rename(FCPATH."/uploads/order-status/".$documentName['basename'], FCPATH."/uploads/order-status/".$fileName);
+                $this->order->uploadDocumentOnAwsS3($fileName, 'order-status', 1);  
                 echo "All orders status updated successfully"."<br>";;
                 echo date('Y-m-d H:i:s');exit;
             }
