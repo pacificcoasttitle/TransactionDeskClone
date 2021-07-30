@@ -699,7 +699,7 @@ class Titlepoint
                 
             }
             else
-            {
+            { 
                 return $response;
             }
         }
