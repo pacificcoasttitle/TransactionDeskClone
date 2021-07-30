@@ -3448,12 +3448,12 @@ class Cron extends MX_Controller {
             exit('Login Failed');
         }
     
-        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER'), true))) {
+        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER').'/recording-confirmation/', true))) {
             die("Cannot read directory contents");
         }
         
         foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
+            if ($file != '.' && $file != '..' && $file != '.protected') {
                 if (!is_dir('uploads/recording-confirmation')) {
                     mkdir('./uploads/recording-confirmation', 0777, TRUE);
                 }
@@ -3501,6 +3501,7 @@ class Cron extends MX_Controller {
                         }
 
                         if($row != 1) {
+                           // echo $file_number."---".$salesRepName."--------".$salesRepName."---";exit;
                             $condition = array(
                                 'where' => array(
                                     'file_number' => $file_number,
@@ -3517,58 +3518,65 @@ class Cron extends MX_Controller {
                                     $this->db->where('is_sales_rep', 1);
                                     $query = $this->db->get();
                                     $resultSales = $query->row_array(); 
-                                    if (!empty($resultSales)) {
-                                        if(isset($resultSales['telephone_no']) && !empty($resultSales['telephone_no'])) {
-                                            $phoneNumber = $resultSales['telephone_no'];
-                                            $sid = env('TWILIO_SID');
-                                            $token = env('TWILIO_TOKEN');
-                                            $from = env('TWILIO_FROM');
+                                } else {
+                                    $this->db->select('*');
+                                    $this->db->from('customer_basic_details');
+                                    $this->db->where("id", $orderDetails['sales_representative']);
+                                    $this->db->where('is_sales_rep', 1);
+                                    $query = $this->db->get();
+                                    $resultSales = $query->row_array(); 
+                                }
+                                if (!empty($resultSales)) {
+                                    if(isset($resultSales['telephone_no']) && !empty($resultSales['telephone_no'])) {
+                                        $phoneNumber = $resultSales['telephone_no'];
+                                        $sid = env('TWILIO_SID');
+                                        $token = env('TWILIO_TOKEN');
+                                        $from = env('TWILIO_FROM');
+                                        $data = array(
+                                            'message' => $message,
+                                            'account_sid' => $sid, 
+                                            'token' => $token, 
+                                            'to' => $phoneNumber, 
+                                            'from' => $from 
+                                        );
+
+                                        $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, array(), 0, 0);
+
+                                        try {
+                                            $result = $this->twilio->message($phoneNumber, $message, '', array('from' => $from));
+                                            $response = $result->toArray();
+                                            $response['msg_status'] = 'success';
+                                        } catch (Exception $e) {
+                                            $response['sid'] = '';
+                                            $response['to'] = $phoneNumber;
+                                            $response['msg_status'] = 'error';
+                                            $response['errorCode'] = $e->getCode();
+                                            $response['errorMessage'] = $e->getMessage();
+                                        } catch (\Twilio\Exceptions\RestException $e) {
+                                            $response['sid'] = '';
+                                            $response['to'] = $phoneNumber;
+                                            $response['msg_status'] = 'error';
+                                            $response['errorCode'] = $e->getCode();
+                                            $response['errorMessage'] = $e->getMessage();
+                                        }
+                                        $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, $response, 0, $logid);
+                            
+                                        if($response['msg_status'] == 'success') {
+                            
+                                            $this->home_model->update(array('is_sent_recording_msg_sales_user' => 1), array('file_number' => $file_number), 'order_details');
+                                            
                                             $data = array(
-                                                'message' => $message,
-                                                'account_sid' => $sid, 
-                                                'token' => $token, 
-                                                'to' => $phoneNumber, 
-                                                'from' => $from 
+                                                'message' => $response['body'],
+                                                'sent_from' => $response['from'],
+                                                'sent_to' => $response['to'],
+                                                'status' => $response['status'],
+                                                'message_sid' => $response['sid'],
+                                                'error_code' => $response['errorCode'],
+                                                'error_message' => $response['errorMessage'],
                                             );
-
-                                            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, array(), 0, 0);
-
-                                            try {
-                                                $result = $this->twilio->message($phoneNumber, $message, '', array('from' => $from));
-                                                $response = $result->toArray();
-                                                $response['msg_status'] = 'success';
-                                            } catch (Exception $e) {
-                                                $response['sid'] = '';
-                                                $response['to'] = $phoneNumber;
-                                                $response['msg_status'] = 'error';
-                                                $response['errorCode'] = $e->getCode();
-                                                $response['errorMessage'] = $e->getMessage();
-                                            } catch (\Twilio\Exceptions\RestException $e) {
-                                                $response['sid'] = '';
-                                                $response['to'] = $phoneNumber;
-                                                $response['msg_status'] = 'error';
-                                                $response['errorCode'] = $e->getCode();
-                                                $response['errorMessage'] = $e->getMessage();
-                                            }
-                                            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, $response, 0, $logid);
-                                
-                                            if($response['msg_status'] == 'success') {
-                                
-                                                $this->home_model->update(array('is_sent_recording_msg_sales_user' => 1), array('file_number' => $file_number), 'order_details');
-                                                
-                                                $data = array(
-                                                    'message' => $response['body'],
-                                                    'sent_from' => $response['from'],
-                                                    'sent_to' => $response['to'],
-                                                    'status' => $response['status'],
-                                                    'message_sid' => $response['sid'],
-                                                    'error_code' => $response['errorCode'],
-                                                    'error_message' => $response['errorMessage'],
-                                                );
-                                                $this->twilioMessage->insert($data);
-                                            } 
+                                            $this->twilioMessage->insert($data);
                                         } 
-                                    }
+                                    } 
                                 }
                             } else {
                                 $data = json_encode(array('FileNumber' => $file_number));
@@ -3770,12 +3778,12 @@ class Cron extends MX_Controller {
                 }
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
-		        rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
-                $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
+		        rename(FCPATH."/uploads/recording-confirmation/".$documentName['basename'], FCPATH."/uploads/recording-confirmation/".$fileName);
+                $this->order->uploadDocumentOnAwsS3($fileName, 'recording-confirmation', 1);  
             }
         } else {
            echo "No files found";exit;
         }
-        echo "All data exported successfully";exit;
+        echo "All messages sent to sales users successfully";exit;
     }
 }
