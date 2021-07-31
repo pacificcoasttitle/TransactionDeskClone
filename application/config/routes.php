@@ -293,7 +293,9 @@ $route['order/admin/commonwealth-branches'] = 'admin/order/cpl/commonwealthBranc
 $route['get-north-american-branches'] = 'admin/order/cpl/getNorthAmericanBranches';
 $route['get-westcor-branches'] = 'admin/order/cpl/getWestcorBranches';
 $route['get-commonwealth-branches'] = 'admin/order/cpl/getCommonwealthBranches';
-
+$route['update-mortgage-user'] = 'admin/order/home/updateMortgageUser';
+$route['order/admin/mortgage-brokers'] = 'admin/order/home/mortgageBrokers';
+$route['is-mortgage-primary-user'] = 'admin/order/home/isMortgagePrimaryUser';
 
 
 $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';
