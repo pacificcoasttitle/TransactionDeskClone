@@ -984,27 +984,34 @@
 				
 
 	            var is_escrow = ui.item.is_escrow;
+				var is_mortgage_broker = ui.item.is_primary_mortgage_user;
 
-	            if(is_escrow == 1)
-	            {
-	            	$('#add-lender-section').show();
-					$('#add-escrow-section').hide();
-					$('#escrow-details-fields').hide();
-					$("#add-escrow-details").prop( "checked", false );
-					$('#upload_lender').hide();
-					$('#upload_escrow').show();
-					$('#email-notification-section').hide();
-	            }
-	            else
-	            {
-	            	$('#add-lender-section').hide();
-	            	$('#lender-details-fields').hide();
-	            	$("#add-lender-details").prop( "checked", false );
+				if(is_mortgage_broker == 1) {
+					$('#add-lender-section').show();
 					$('#add-escrow-section').show();
 					$('#email-notification-section').show();
 					$('#upload_lender').show();
-					$('#upload_escrow').hide();
-	            }
+					$('#upload_escrow').show();
+				} else {
+					if(is_escrow == 1) {
+						$('#add-lender-section').show();
+						$('#add-escrow-section').hide();
+						$('#escrow-details-fields').hide();
+						$("#add-escrow-details").prop( "checked", false );
+						$('#upload_lender').hide();
+						$('#upload_escrow').show();
+						$('#email-notification-section').hide();
+					} else {
+						$('#add-lender-section').hide();
+						$('#lender-details-fields').hide();
+						$("#add-lender-details").prop( "checked", false );
+						$('#add-escrow-section').show();
+						$('#email-notification-section').show();
+						$('#upload_lender').show();
+						$('#upload_escrow').hide();
+					}
+				}
+	            
 	            getProductTypes();
 				getDeliverables(ui.item.partner_id);
 	        },
