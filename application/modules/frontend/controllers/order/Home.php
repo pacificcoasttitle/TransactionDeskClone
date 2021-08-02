@@ -291,12 +291,12 @@ class Home extends MX_Controller {
 					$lender_partner_id = isset($lender_user_details['partner_id']) && !empty($lender_user_details['partner_id']) ? $lender_user_details['partner_id'] : '';
 					$secondaryEmp[] = array('UserID'=> $lender_resware_user_id);
 					$secondaryLenderPartners = array(
-							'SecondaryEmployees'=> $secondaryEmp,
-							'PartnerTypeID' => $lenderPartnerTypeID,
-							'PartnerID' => $lender_partner_id,
-							'PartnerType' => array(
-								'PartnerTypeID' => $lenderPartnerTypeID
-							)
+						'SecondaryEmployees'=> $secondaryEmp,
+						'PartnerTypeID' => $lenderPartnerTypeID,
+						'PartnerID' => $lender_partner_id,
+						'PartnerType' => array(
+							'PartnerTypeID' => $lenderPartnerTypeID
+						)
 					);
 				}
 				/* Partners API */
@@ -381,10 +381,7 @@ class Home extends MX_Controller {
 				}				
 				
 				$order_data = json_encode($place_order);
-				
-				
-				
-				
+			
 				$this->load->library('order/resware');
 				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, array(), 0, 0);
 				$result = $this->resware->make_request('POST', 'orders', $order_data,$user_data);
@@ -413,82 +410,16 @@ class Home extends MX_Controller {
 						if($orderNumber)
 						{
 							$partners = array();
+							$endPoint = 'files/'. $file_id .'/partners';
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $file_id, 0);
+							$user_data['admin_api'] = 1; 
 							
-							if(isset($secondaryEscrowPartners) && !empty($secondaryEscrowPartners)) {
-								$partners[] = $secondaryEscrowPartners;
-							}
+							$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $file_id, $logid);
+							$resPartners = json_decode($resultPartners, true);
 
-							if(isset($secondaryLenderPartners) && !empty($secondaryLenderPartners)) {
-								$partners[] = $secondaryLenderPartners;
-							}
-
-							$escrowOfficerFlag =  $this->input->post('add-escrow-officer-details');
-							$escrowOfficer =  $this->input->post('escrow_officer');
-							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5 || $ProductTypeID == 26)) {
-								if (!empty($escrowOfficer)) {
-									$partners[] = array(
-										'PartnerTypeID' => 10010,
-										'PartnerID' => $escrowOfficer,
-										'PartnerType' => array(
-											'PartnerTypeID' => 10010
-										)
-									);
-								}
-							}
-
-							if(isset($BuyerAgentId) && !empty($BuyerAgentId)) {
-								$partners[] = array(
-									'PartnerTypeID' => 14,
-									'PartnerID' => $this->input->post('buyer_agent_partner_id'),
-									'PartnerType' => array(
-										'PartnerTypeID' => 14
-									)
-								);
-							}
-
-							if(isset($ListingAgentId) && !empty($ListingAgentId)) {
-								$partners[] = array(
-									'PartnerTypeID' => 15,
-									'PartnerID' => $this->input->post('listing_agent_partner_id'),
-									'PartnerType' => array(
-										'PartnerTypeID' => 15
-									)
-								);
-							}
-
-							if (!empty($salesRepDetails)) {
-								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
-									$partners[] = array(
-										'PartnerTypeID' => $salesRepDetails['partner_type_id'],
-										'PartnerID' => $salesRepDetails['partner_id'],
-										'PartnerType' => array(
-											'PartnerTypeID' => $salesRepDetails['partner_type_id']
-										)
-									);
-								}
-							}
-
-							if (!empty($titleOfficerDetails)) {
-								if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
-									$partners[] = array(
-										'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
-										'PartnerID' => $titleOfficerDetails['partner_id'],
-										'PartnerType' => array(
-											'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
-										)
-									);
-								}
-							}
 							$removePartnerFlag = 0;
-
 							if (!empty($companyData)) {
-								$endPoint = 'files/'. $file_id .'/partners';
-								$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $file_id, 0);
-                                $user_data['admin_api'] = 1; 
-								
-								$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
-								$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
-                                $resPartners = json_decode($resultPartners, true);
                                 $underWriter = '';
 								if(!empty($resPartners)) {
 									$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
@@ -506,7 +437,6 @@ class Home extends MX_Controller {
 										}
 									}
                                 } 
-                                
 								if($loanFlag == 1) {
 									if (!empty($underWriter)) {
 										if ($companyData[0]['loan_underwriter'] == 'north_american') {
@@ -641,10 +571,6 @@ class Home extends MX_Controller {
                                 }
 							}
 
-							$partnerUserData = array(
-								'admin_api' => 1
-							);
-
 							if ($removePartnerFlag == 1) {
 								$removeExistingPartner = array(
 									'PartnerTypeID' => 7,
@@ -654,6 +580,178 @@ class Home extends MX_Controller {
 									)
 								);
 								$removePartners[] = $removeExistingPartner;
+							}
+
+							if(isset($secondaryEscrowPartners) && !empty($secondaryEscrowPartners)) {
+								$escrowKey = array_search(9997, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								$escrowKey1 = array_search(10006, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								$escrowKey2 = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								if(isset($escrowKey)) {
+									$removeEscrowExistingPartner = array(
+										'PartnerTypeID' => 7,
+										'PartnerID' => $resPartners['Partners'][$escrowKey]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 7
+										)
+									);
+									$removePartners[] = $removeEscrowExistingPartner;
+								}
+								if(isset($escrowKey1)) {
+									$removeEscrowExistingPartner = array(
+										'PartnerTypeID' => 10006,
+										'PartnerID' => $resPartners['Partners'][$escrowKey1]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 10006
+										)
+									);
+									$removePartners[] = $removeEscrowExistingPartner;
+								}
+								if(isset($escrowKey2)) {
+									$removeEscrowExistingPartner = array(
+										'PartnerTypeID' => 10010,
+										'PartnerID' => $resPartners['Partners'][$escrowKey2]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 10010
+										)
+									);
+									$removePartners[] = $removeEscrowExistingPartner;
+								}
+								$partners[] = $secondaryEscrowPartners;
+							}
+
+							if(isset($secondaryLenderPartners) && !empty($secondaryLenderPartners)) {
+								$lenderKey = array_search(3, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								if(isset($lenderKey)) {
+									$removeLenderExistingPartner = array(
+										'PartnerTypeID' => 3,
+										'PartnerID' => $resPartners['Partners'][$lenderKey]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 3
+										)
+									);
+									$removePartners[] = $removeLenderExistingPartner;
+								}
+								$partners[] = $secondaryLenderPartners;
+							}
+
+							$escrowOfficerFlag =  $this->input->post('add-escrow-officer-details');
+							$escrowOfficer =  $this->input->post('escrow_officer');
+							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5 || $ProductTypeID == 26)) {
+								if (!empty($escrowOfficer)) {
+									$escrowOfficerKey = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
+									if(isset($escrowOfficerKey)) {
+										$removeEscrowOfcExistingPartner = array(
+											'PartnerTypeID' => 10010,
+											'PartnerID' => $resPartners['Partners'][$escrowOfficerKey]['PartnerID'],
+											'PartnerType' => array(
+												'PartnerTypeID' => 10010
+											)
+										);
+										$removePartners[] = $removeEscrowOfcExistingPartner;
+									}
+									$partners[] = array(
+										'PartnerTypeID' => 10010,
+										'PartnerID' => $escrowOfficer,
+										'PartnerType' => array(
+											'PartnerTypeID' => 10010
+										)
+									);
+								}
+							}
+
+							if(isset($BuyerAgentId) && !empty($BuyerAgentId)) {
+								$buyerAgentKey = array_search(14, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								if(isset($buyerAgentKey)) {
+									$removeBuyerAgentExistingPartner = array(
+										'PartnerTypeID' => 14,
+										'PartnerID' => $resPartners['Partners'][$buyerAgentKey]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 14
+										)
+									);
+									$removePartners[] = $removeBuyerAgentExistingPartner;
+								}
+								$partners[] = array(
+									'PartnerTypeID' => 14,
+									'PartnerID' => $this->input->post('buyer_agent_partner_id'),
+									'PartnerType' => array(
+										'PartnerTypeID' => 14
+									)
+								);
+							}
+
+							if(isset($ListingAgentId) && !empty($ListingAgentId)) {
+								$listingAgentKey = array_search(15, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								if(isset($listingAgentKey)) {
+									$removelistingAgentExistingPartner = array(
+										'PartnerTypeID' => 15,
+										'PartnerID' => $resPartners['Partners'][$listingAgentKey]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 15
+										)
+									);
+									$removePartners[] = $removelistingAgentExistingPartner;
+								}
+								$partners[] = array(
+									'PartnerTypeID' => 15,
+									'PartnerID' => $this->input->post('listing_agent_partner_id'),
+									'PartnerType' => array(
+										'PartnerTypeID' => 15
+									)
+								);
+							}
+
+							if (!empty($salesRepDetails)) {
+								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
+									$salesRepKey = array_search($salesRepDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
+									if(isset($salesRepKey)) {
+										$removeSalesRepExistingPartner = array(
+											'PartnerTypeID' => $salesRepDetails['partner_type_id'],
+											'PartnerID' => $resPartners['Partners'][$salesRepKey]['PartnerID'],
+											'PartnerType' => array(
+												'PartnerTypeID' => $salesRepDetails['partner_type_id']
+											)
+										);
+										$removePartners[] = $removeSalesRepExistingPartner;
+									}
+									$partners[] = array(
+										'PartnerTypeID' => $salesRepDetails['partner_type_id'],
+										'PartnerID' => $salesRepDetails['partner_id'],
+										'PartnerType' => array(
+											'PartnerTypeID' => $salesRepDetails['partner_type_id']
+										)
+									);
+								}
+							}
+
+							if (!empty($titleOfficerDetails)) {
+								if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
+									$titleOfficerKey = array_search($titleOfficerDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
+									if(isset($titleOfficerKey)) {
+										$removeTitleOfficerExistingPartner = array(
+											'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
+											'PartnerID' => $resPartners['Partners'][$titleOfficerKey]['PartnerID'],
+											'PartnerType' => array(
+												'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
+											)
+										);
+										$removePartners[] = $removeTitleOfficerExistingPartner;
+									}
+									$partners[] = array(
+										'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
+										'PartnerID' => $titleOfficerDetails['partner_id'],
+										'PartnerType' => array(
+											'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
+										)
+									);
+								}
+							}
+						
+							$partnerUserData = array(
+								'admin_api' => 1
+							);
+
+							if (!empty($removePartners)) {
 								$removePartnerData = json_encode(array('Partners' => $removePartners));
 								$endPoint = 'files/'.$file_id.'/partners';
 								$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
