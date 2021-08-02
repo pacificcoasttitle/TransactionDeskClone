@@ -586,17 +586,17 @@ class Home extends MX_Controller {
 								$escrowKey = array_search(9997, array_column($resPartners['Partners'], 'PartnerTypeID'));
 								$escrowKey1 = array_search(10006, array_column($resPartners['Partners'], 'PartnerTypeID'));
 								$escrowKey2 = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
-								if(isset($escrowKey)) {
+								if(!empty($escrowKey)) {
 									$removeEscrowExistingPartner = array(
-										'PartnerTypeID' => 7,
+										'PartnerTypeID' => 9997,
 										'PartnerID' => $resPartners['Partners'][$escrowKey]['PartnerID'],
 										'PartnerType' => array(
-											'PartnerTypeID' => 7
+											'PartnerTypeID' => 9997
 										)
 									);
 									$removePartners[] = $removeEscrowExistingPartner;
 								}
-								if(isset($escrowKey1)) {
+								if(!empty($escrowKey1)) {
 									$removeEscrowExistingPartner = array(
 										'PartnerTypeID' => 10006,
 										'PartnerID' => $resPartners['Partners'][$escrowKey1]['PartnerID'],
@@ -606,7 +606,7 @@ class Home extends MX_Controller {
 									);
 									$removePartners[] = $removeEscrowExistingPartner;
 								}
-								if(isset($escrowKey2)) {
+								if(!empty($escrowKey2)) {
 									$removeEscrowExistingPartner = array(
 										'PartnerTypeID' => 10010,
 										'PartnerID' => $resPartners['Partners'][$escrowKey2]['PartnerID'],
@@ -621,7 +621,7 @@ class Home extends MX_Controller {
 
 							if(isset($secondaryLenderPartners) && !empty($secondaryLenderPartners)) {
 								$lenderKey = array_search(3, array_column($resPartners['Partners'], 'PartnerTypeID'));
-								if(isset($lenderKey)) {
+								if(!empty($lenderKey)) {
 									$removeLenderExistingPartner = array(
 										'PartnerTypeID' => 3,
 										'PartnerID' => $resPartners['Partners'][$lenderKey]['PartnerID'],
@@ -661,7 +661,7 @@ class Home extends MX_Controller {
 
 							if(isset($BuyerAgentId) && !empty($BuyerAgentId)) {
 								$buyerAgentKey = array_search(14, array_column($resPartners['Partners'], 'PartnerTypeID'));
-								if(isset($buyerAgentKey)) {
+								if(!empty($buyerAgentKey)) {
 									$removeBuyerAgentExistingPartner = array(
 										'PartnerTypeID' => 14,
 										'PartnerID' => $resPartners['Partners'][$buyerAgentKey]['PartnerID'],
@@ -682,7 +682,7 @@ class Home extends MX_Controller {
 
 							if(isset($ListingAgentId) && !empty($ListingAgentId)) {
 								$listingAgentKey = array_search(15, array_column($resPartners['Partners'], 'PartnerTypeID'));
-								if(isset($listingAgentKey)) {
+								if(!empty($listingAgentKey)) {
 									$removelistingAgentExistingPartner = array(
 										'PartnerTypeID' => 15,
 										'PartnerID' => $resPartners['Partners'][$listingAgentKey]['PartnerID'],
@@ -704,7 +704,7 @@ class Home extends MX_Controller {
 							if (!empty($salesRepDetails)) {
 								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
 									$salesRepKey = array_search($salesRepDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
-									if(isset($salesRepKey)) {
+									if(!empty($salesRepKey)) {
 										$removeSalesRepExistingPartner = array(
 											'PartnerTypeID' => $salesRepDetails['partner_type_id'],
 											'PartnerID' => $resPartners['Partners'][$salesRepKey]['PartnerID'],
@@ -727,7 +727,7 @@ class Home extends MX_Controller {
 							if (!empty($titleOfficerDetails)) {
 								if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
 									$titleOfficerKey = array_search($titleOfficerDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
-									if(isset($titleOfficerKey)) {
+									if(!empty($titleOfficerKey)) {
 										$removeTitleOfficerExistingPartner = array(
 											'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
 											'PartnerID' => $resPartners['Partners'][$titleOfficerKey]['PartnerID'],
