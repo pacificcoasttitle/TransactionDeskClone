@@ -185,7 +185,7 @@ class Home extends MX_Controller {
 					$listing_agent_details = array('name'=>$ListingAgentName, 'email'=>$ListingAgentEmailAddress, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
 	        	}
 	        	
-				$EscrowLenderId = $escrowLenderPartnerTypeID ='';
+				$escrowId = $lenderId = $lenderPartnerTypeID = $escrowPartnerTypeID ='';
 				$lender_details = $escrow_details = array();
 				$lender_details_api = $escrow_details_api = array();
 
@@ -211,71 +211,91 @@ class Home extends MX_Controller {
 					$companyData = $this->home_model->get_company_rows($con);
 				}
 
-
 				$cplLenderId = 0;
-				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
-				{
+				$EscrowLenderId = 0;
+				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId'])) {
+					$escrowId = $_POST['EscrowId'];
 					$EscrowLenderId = $_POST['EscrowId'];
-					$escrow_lender_user_details = $this->home_model->get_user(array('id' => $EscrowLenderId));
+					$escrow_user_details = $this->home_model->get_user(array('id' => $escrowId));
 					$escrowCon = array(
 						'where' => array(
-							'partner_id' => $escrow_lender_user_details['partner_id'],
+							'partner_id' => $escrow_user_details['partner_id'],
 						)
 					);
 					$escrowCompanyData = $this->home_model->get_company_rows($escrowCon);
 
-					$EscrowLenderName = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
-					$EscrowLenderEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
-					$EscrowLenderTelephone      = $this->input->post('EscrowTelephone');
-	        		$EscrowLenderCompany      = $this->input->post('EscrowCompany');
+					$escrowName = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
+					$escrowEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
+					$escrowTelephone      = $this->input->post('EscrowTelephone');
+	        		$escrowCompany      = $this->input->post('EscrowCompany');
 
-					$escrow_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
-					$escrow_details_api = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'phone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
+					$escrow_details = array('name'=>$escrowName, 'email'=>$escrowEmail, 'telephone'=> $escrowName,'company'=>$escrowCompany);
+					$escrow_details_api = array('name'=>$escrowName, 'email'=>$escrowEmail, 'phone'=> $escrowTelephone,'company'=>$escrowCompany);
 					
 					$partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
 					
 					if(in_array("10006", $partner_type_ids)) {
-						$escrowLenderPartnerTypeID = '10006';
+						$escrowPartnerTypeID = '10006';
 					}
 					if(in_array("9997", $partner_type_ids)) {
-						$escrowLenderPartnerTypeID = '9997';
+						$escrowPartnerTypeID = '9997';
 					}
 					if(in_array("10010", $partner_type_ids)) {
-						$escrowLenderPartnerTypeID = '10010';
+						$escrowPartnerTypeID = '10010';
 					}
-					$cplLenderId = $orderUser['id'];
-				}
-				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
-				{
-					$EscrowLenderId = $_POST['LenderId'];
-					$escrow_lender_user_details = $this->home_model->get_user(array('id' => $EscrowLenderId));
-					$EscrowLenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
-					$EscrowLenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
-					$EscrowLenderTelephone      = $this->input->post('LenderTelephone');
-	        		$EscrowLenderCompany      = $this->input->post('LenderCompany');
-
-					$lender_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
-					$lender_details_api = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'phone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
-					$escrowLenderPartnerTypeID = '3';
+					if($orderUser['is_primary_mortgage_user'] == 1) {
+						$cplLenderId = 0;
+					} else {
+						$cplLenderId = $orderUser['id'];
+					}
 				}
 
 				/* Partners API */
-				$secondaryPartners = array();
-				if(isset($EscrowLenderId) && !empty($EscrowLenderId))
-				{
-					
-					$escrow_lender_resware_user_id = isset($escrow_lender_user_details['resware_user_id']) && !empty($escrow_lender_user_details['resware_user_id']) ? $escrow_lender_user_details['resware_user_id'] : '';
-
-					$escrow_lender_partner_id = isset($escrow_lender_user_details['partner_id']) && !empty($escrow_lender_user_details['partner_id']) ? $escrow_lender_user_details['partner_id'] : '';
-
-					$secondaryEmp[] = array('UserID'=> $escrow_lender_resware_user_id);
-
-					$secondaryPartners = array(
+				$secondaryEscrowPartners = array();
+				if(isset($escrowId) && !empty($escrowId)) {
+					$escrow_resware_user_id = isset($escrow_user_details['resware_user_id']) && !empty($escrow_user_details['resware_user_id']) ? $escrow_user_details['resware_user_id'] : '';
+					$escrow_partner_id = isset($escrow_user_details['partner_id']) && !empty($escrow_user_details['partner_id']) ? $escrow_user_details['partner_id'] : '';
+					$secondaryEmp[] = array('UserID'=> $escrow_resware_user_id);
+					$secondaryEscrowPartners = array(
 							'SecondaryEmployees'=> $secondaryEmp,
-							'PartnerTypeID' => $escrowLenderPartnerTypeID,
-							'PartnerID' => $escrow_lender_partner_id,
+							'PartnerTypeID' => $escrowPartnerTypeID,
+							'PartnerID' => $escrow_partner_id,
 							'PartnerType' => array(
-								'PartnerTypeID' => $escrowLenderPartnerTypeID
+								'PartnerTypeID' => $escrowPartnerTypeID
+							)
+					);
+				}
+				/* Partners API */
+				
+				if (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) {
+					$lenderId = $_POST['LenderId'];
+					$lender_user_details = $this->home_model->get_user(array('id' => $lenderId));
+					$lenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
+					$lenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
+					$lenderTelephone      = $this->input->post('LenderTelephone');
+	        		$lenderCompany      = $this->input->post('LenderCompany');
+					$lender_details = array('name'=>$lenderName, 'email'=>$lenderEmail, 'telephone'=> $lenderTelephone,'company'=>$lenderCompany);
+					$lender_details_api = array('name'=>$lenderName, 'email'=>$lenderEmail, 'phone'=> $lenderTelephone,'company'=>$lenderCompany);
+					$lenderPartnerTypeID = '3';
+					if($orderUser['is_primary_mortgage_user'] == 1) {
+						$cplLenderId = $lenderId;
+					} else {
+						$EscrowLenderId = $lenderId;
+					}
+				}
+
+				/* Partners API */
+				$secondaryLenderPartners = array();
+				if(isset($lenderId) && !empty($lenderId)) {
+					$lender_resware_user_id = isset($lender_user_details['resware_user_id']) && !empty($lender_user_details['resware_user_id']) ? $lender_user_details['resware_user_id'] : '';
+					$lender_partner_id = isset($lender_user_details['partner_id']) && !empty($lender_user_details['partner_id']) ? $lender_user_details['partner_id'] : '';
+					$secondaryEmp[] = array('UserID'=> $lender_resware_user_id);
+					$secondaryLenderPartners = array(
+							'SecondaryEmployees'=> $secondaryEmp,
+							'PartnerTypeID' => $lenderPartnerTypeID,
+							'PartnerID' => $lender_partner_id,
+							'PartnerType' => array(
+								'PartnerTypeID' => $lenderPartnerTypeID
 							)
 					);
 				}
@@ -394,9 +414,12 @@ class Home extends MX_Controller {
 						{
 							$partners = array();
 							
-							if(isset($secondaryPartners) && !empty($secondaryPartners))
-							{
-								$partners[] = $secondaryPartners;
+							if(isset($secondaryEscrowPartners) && !empty($secondaryEscrowPartners)) {
+								$partners[] = $secondaryEscrowPartners;
+							}
+
+							if(isset($secondaryLenderPartners) && !empty($secondaryLenderPartners)) {
+								$partners[] = $secondaryLenderPartners;
 							}
 
 							$escrowOfficerFlag =  $this->input->post('add-escrow-officer-details');
@@ -785,27 +808,46 @@ class Home extends MX_Controller {
 
 							$orderId = $this->home_model->insert($orderData,'order_details');
 
-							/* Escrow Lender Details */					
-							if(isset($EscrowLenderId) && !empty($EscrowLenderId))
-				        	{
-				        		$name = explode(' ', $EscrowLenderName);
+							/* Escrow Details */					
+							if(isset($escrowId) && !empty($escrowId)) {
+				        		$name = explode(' ', $escrowName);
 				        		$first_name = $name[0];
 				        		$last_name = $name[1];
-				        		$EscrowLenderData = array(
+				        		$escrowData = array(
 									'first_name' => $first_name,
 									'last_name' => $last_name,
-									'email_address' => $EscrowLenderEmail,
-									'company_name' => $EscrowLenderCompany,
-									'telephone_no' => $EscrowLenderTelephone,
+									'email_address' => $escrowEmail,
+									'company_name' => $escrowCompany,
+									'telephone_no' => $escrowTelephone,
 									'status'=> 1
 								);
 								$condition = array(
-									'id' => $EscrowLenderId
+									'id' => $escrowId
+								);
+								$this->home_model->update($escrowData, $condition);
+							}
+							/* Escrow Details */
+
+							/* Lender Details */					
+							if(isset($lenderId) && !empty($lenderId)) {
+				        		$name = explode(' ', $lenderName);
+				        		$first_name = $name[0];
+				        		$last_name = $name[1];
+				        		$lenderData = array(
+									'first_name' => $first_name,
+									'last_name' => $last_name,
+									'email_address' => $lenderEmail,
+									'company_name' => $lenderCompany,
+									'telephone_no' => $lenderTelephone,
+									'status'=> 1
+								);
+								$condition = array(
+									'id' => $lenderId
 								);
 								
-								$lenderId = $this->home_model->update($EscrowLenderData,$condition);
+								$lenderId = $this->home_model->update($lenderData, $condition);
 							}
-							/* Escrow Lender Details */
+							/*Lender Details */
 
 							
 							if($this->session->has_userdata('tp_api_id_'.$random_number))
