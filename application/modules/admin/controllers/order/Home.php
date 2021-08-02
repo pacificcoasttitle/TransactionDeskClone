@@ -484,14 +484,19 @@ class Home extends MX_Controller {
             foreach ($lender_lists['data'] as $key => $value) 
             {
                 $nestedData=array();
+                $user_id = $value['id'];
                 $nestedData[] = $value['first_name'];
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
                 // $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['street_address'];
-                $nestedData[] = $value['city'];
-                $nestedData[] = $value['zip_code'];
+                $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
+                if ($value['is_mortgage_user'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='isMortgageUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
                 $specialSel = $value['is_special_lender'] == 1 ? 'selected' : '';
                 $normalSel = $value['is_special_lender'] == 0 ? 'selected' : '';
                 $id = $value['id'];
@@ -2784,6 +2789,91 @@ class Home extends MX_Controller {
         );
         $this->db->update('property_details', $data, $condition);
         $data = array('status'=>'success', 'msg'=> 'Avoid duplication flag updated successfully.');
+        echo json_encode($data);
+    }
+
+    public function updateMortgageUser()
+    {
+        $user_id = $this->input->post('user_id');
+        $mortgageUserFlag = $this->input->post('mortgageUserFlag');
+        $data['is_mortgage_user'] = $mortgageUserFlag;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $user_id
+        );
+        $this->db->update('customer_basic_details', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'Mortgage user updated successfully.');
+        echo json_encode($data);
+    }
+
+    public function mortgageBrokers()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Mortgage Brokers';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/mortgage_brokers', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_mortgage_brokers_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $mortgage_lists = $this->home_model->get_mortgage_users($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $mortgage_lists = $this->home_model->get_cget_mortgage_usersustomers($params);            
+        }
+
+        $data = array(); 
+        if(isset($mortgage_lists['data']) && !empty($mortgage_lists['data'])) {
+            foreach ($mortgage_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $user_id = $value['id'];
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['company_name'];
+                $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
+                if ($value['is_primary_mortgage_user'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='isMortgagePrimaryUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $nestedData[] = $action;
+                }
+                $data[] = $nestedData;            
+            }
+        }
+        $json_data['recordsTotal'] = intval( $mortgage_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $mortgage_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function isMortgagePrimaryUser()
+    {
+        $user_id = $this->input->post('user_id');
+        $primaryMortgageUserFlag = $this->input->post('primaryMortgageUserFlag');
+        $data['is_primary_mortgage_user'] = $primaryMortgageUserFlag;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $user_id
+        );
+        $this->db->update('customer_basic_details', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'Mortgage user updated successfully.');
         echo json_encode($data);
     }
 }
