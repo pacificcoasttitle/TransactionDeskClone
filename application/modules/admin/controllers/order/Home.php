@@ -672,7 +672,7 @@ class Home extends MX_Controller {
 
             if ($this->form_validation->run() == true) {
                 $userType = $this->input->post('user_type');
-                if($userType == 'realtors') {
+                if($userType == 'realtor') {
                     $this->load->model('order/agent_model');
                     $agentData = array(
                         'name' => $this->input->post('first_name')." ".$this->input->post('last_name'),
@@ -707,7 +707,6 @@ class Home extends MX_Controller {
                         $insert = $this->agent_model->insert($agentData);
                     }
                 } else {
-                    
                     if($userType == 'escrow') {
                         $userTypeFlag = 1;
                     } else if ($userType == 'lender') {
