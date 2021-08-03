@@ -639,7 +639,7 @@ class Home extends MX_Controller {
 							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5 || $ProductTypeID == 26)) {
 								if (!empty($escrowOfficer)) {
 									$escrowOfficerKey = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
-									if(isset($escrowOfficerKey)) {
+									if(!empty($escrowOfficerKey)) {
 										$removeEscrowOfcExistingPartner = array(
 											'PartnerTypeID' => 10010,
 											'PartnerID' => $resPartners['Partners'][$escrowOfficerKey]['PartnerID'],
