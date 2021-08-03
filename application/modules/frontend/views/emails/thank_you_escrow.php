@@ -781,10 +781,7 @@
         }
     </style>
 </head>
-<?php
-$currentMonth = date('F');
-$previousMonth = Date('F', strtotime($currentMonth . " last month"));
-?>
+
 <body>
     <!--*|IF:MC_PREVIEW_TEXT|*-->
     <!--[if !gte mso 9]><!----><span class="mcnPreviewText" style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">*|MC_PREVIEW_TEXT|*</span>
@@ -871,7 +868,7 @@ $previousMonth = Date('F', strtotime($currentMonth . " last month"));
                                                                                 <span style="font-size:28px">Thank you for your Trust.</span>
                                                                             </h3>
 
-                                                                            <p>We have prepared a list of all of the orders that you currently with us for the month of <?php echo $previousMonth;?>. You can find their current status. If you have any questions feel free to contact us.&nbsp;<br>
+                                                                            <p>We have prepared a list of all of the orders that you currently with us for the month of March. You can find their current status. If you have any questions feel free to contact us.&nbsp;<br>
                                                                                 &nbsp;</p>
 
                                                                             <table>
