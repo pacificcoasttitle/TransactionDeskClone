@@ -983,7 +983,6 @@ class Cron extends MX_Controller {
                                             'city' => trim($response['AdminPartner']['MailingAddress']['City']),
                                             'state' => trim($response['AdminPartner']['MailingAddress']['State']),
                                             'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
-                                            'underwriter' => 'westcor',
                                             'partner_type_id' => implode(",", $partnerTyepIds)
                                         );
                                         $insert = $this->home_model->insert($customerData, 'pct_order_partner_company_info');
@@ -1060,7 +1059,6 @@ class Cron extends MX_Controller {
                                             'city' => trim($response['AdminPartner']['MailingAddress']['City']),
                                             'state' => trim($response['AdminPartner']['MailingAddress']['State']),
                                             'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
-                                            'underwriter' => 'westcor',
                                             'partner_type_id' => implode(",", $partnerTyepIds)
                                         );
                                         $insert = $this->home_model->insert($customerData, 'pct_order_partner_company_info');
@@ -1075,7 +1073,7 @@ class Cron extends MX_Controller {
                             } else {
                                 $notInsertedPartnerInfo++;
                             }
-                            $successMsg = 'Partner Information updated successfully. Inserted ('.$insertedPartnerInfo.') | Updated ('.$updatedPartnerInfo.') | Not Inserted ('.$notInsertedPartnerInfo.')';
+                            $successMsg = 'Partner Information updated successfully. Inserted ('.$insertedPartnerInfo.') | Updated ('.$updatedPartnerInfo.') | Not Inserted ('.$notInsertedPartnerInfo.')';exit;
                         }
                     }
                 }
