@@ -1073,7 +1073,7 @@ class Cron extends MX_Controller {
                             } else {
                                 $notInsertedPartnerInfo++;
                             }
-                            $successMsg = 'Partner Information updated successfully. Inserted ('.$insertedPartnerInfo.') | Updated ('.$updatedPartnerInfo.') | Not Inserted ('.$notInsertedPartnerInfo.')';exit;
+                            $successMsg = 'Partner Information updated successfully. Inserted ('.$insertedPartnerInfo.') | Updated ('.$updatedPartnerInfo.') | Not Inserted ('.$notInsertedPartnerInfo.')';
                         }
                     }
                 }
