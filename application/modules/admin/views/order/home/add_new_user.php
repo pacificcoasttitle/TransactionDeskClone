@@ -86,6 +86,8 @@
                             <option value="">Select User Type</option>
                             <option <?php echo set_value('user_type') == 'lender' ? 'selected' : ''; ?> value="lender">Lender</option>
                             <option <?php echo set_value('user_type') == 'escrow' ? 'selected' : ''; ?> value="escrow">Escrow</option>
+                            <option <?php echo set_value('user_type') == 'mortgage_broker' ? 'selected' : ''; ?> value="mortgage_broker">Mortgage Broker</option>
+                            <option <?php echo set_value('user_type') == 'realtor' ? 'selected' : ''; ?> value="realtor">Realtor</option>
                         </select>
                         <?php if(!empty($user_type_error_msg)){ ?>                     
                             <span class="error"><?php echo $user_type_error_msg; ?></span>
