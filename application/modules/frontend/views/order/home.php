@@ -447,42 +447,31 @@
 											</div><!-- end .option-group section -->
 										</div><!-- end .colm section -->
 										<?php 
-                                                    $is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ?  $customer_data['is_escrow'] : 0;
-                                                ?>
-										<?php 
-                                                    if($is_escrow == 1)
-                                                    {
-                                                ?>
-										<div class="section colm colm4" id="add-lender-section">
-											<div class="option-group field">
-												<label class="option block spacer-t10">
-													<input type="checkbox" name="add-lender-details"
-														id="add-lender-details">
-													<span class="checkbox"></span> Add Lender
-												</label>
-											</div><!-- end .option-group section -->
-										</div>
+                                            $is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ?  $customer_data['is_escrow'] : 0;
+                                            $is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ?  $customer_data['is_primary_mortgage_user'] : 0;
+                                         
+                                            if($is_escrow == 1 || $is_primary_mortgage_user == 1) { ?>
+                                                <div class="section colm colm4" id="add-lender-section">
+                                                    <div class="option-group field">
+                                                        <label class="option block spacer-t10">
+                                                            <input type="checkbox" name="add-lender-details"
+                                                                id="add-lender-details">
+                                                            <span class="checkbox"></span> Add Lender
+                                                        </label>
+                                                    </div>
+                                                </div>
 
-										<?php
-                                                    }
-                                                ?>
-										<?php 
-                                                    if($is_escrow == 0)
-                                                    {
-                                                ?>
-										<div class="section colm colm4" id="add-escrow-section">
-											<div class="option-group field">
-												<label class="option block spacer-t10">
-													<input type="checkbox" name="add-escrow-details"
-														id="add-escrow-details">
-													<span class="checkbox"></span> Add Escrow
-												</label>
-											</div><!-- end .option-group section -->
-										</div>
-
-										<?php
-                                                    }
-                                                ?>
+										    <?php } if($is_escrow == 0 || $is_primary_mortgage_user == 1) { ?>
+                                                <div class="section colm colm4" id="add-escrow-section">
+                                                    <div class="option-group field">
+                                                        <label class="option block spacer-t10">
+                                                            <input type="checkbox" name="add-escrow-details"
+                                                                id="add-escrow-details">
+                                                            <span class="checkbox"></span> Add Escrow
+                                                        </label>
+                                                    </div>
+                                                </div>
+										<?php } ?>
 
 										<div class="section colm colm4" id="add-escrow-officer-section" style="display:none;">
 											<div class="option-group field">

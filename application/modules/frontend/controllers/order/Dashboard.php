@@ -2801,16 +2801,29 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
 				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {
-				$orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
-				$orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
-				$orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
-				$orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
-				$orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
-				$orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
-				$orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
-				$orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
-				$orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
-				$orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
+				if ($orderUser['is_primary_mortgage_user'] == 1) {
+					$orderDetails['lender_first_name'] = '';
+					$orderDetails['lender_last_name'] = '';
+					$orderDetails['lender_email'] = '';
+					$orderDetails['lender_state'] = '';
+					$orderDetails['lender_company_name'] = '';
+					$orderDetails['lender_address'] = '';
+					$orderDetails['lender_city'] = '';
+					$orderDetails['lender_zipcode'] = '';
+					$orderDetails['lender_assignment_clause'] = '';
+					$orderDetails['lender_id'] = '';
+				} else {
+					$orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
+					$orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
+					$orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
+					$orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
+					$orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
+					$orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
+					$orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
+					$orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
+					$orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
+					$orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
+				}
 			}
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 		}
