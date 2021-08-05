@@ -928,13 +928,9 @@ class Cron extends MX_Controller {
         $insertedPartnerInfo = $updatedPartnerInfo = $notInsertedPartnerInfo = 0;
 
         if (isset($customer_lists) && !empty($customer_lists)) {
-
             foreach (array_chunk($customer_lists,50) as $key => $value) {
-                
                 if (isset($value) && !empty($value)) {
-
                     foreach ($value as $k => $v)  {
-
                         if (!empty($v['company_name']) && !empty($v['partner_id'])) {
                             $endPoint = 'admin/partners/'.$v['partner_id'];
                             $userdata['email'] = $userdata['email_address'];
@@ -987,7 +983,82 @@ class Cron extends MX_Controller {
                                             'city' => trim($response['AdminPartner']['MailingAddress']['City']),
                                             'state' => trim($response['AdminPartner']['MailingAddress']['State']),
                                             'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
-                                            'underwriter' => 'westcor',
+                                            'partner_type_id' => implode(",", $partnerTyepIds)
+                                        );
+                                        $insert = $this->home_model->insert($customerData, 'pct_order_partner_company_info');
+    
+                                        if($insert) {
+                                            $insertedPartnerInfo++;                          
+                                        }
+                                    }
+                                } else {
+                                    $notInsertedPartnerInfo++;
+                                }
+                            } else {
+                                $notInsertedPartnerInfo++;
+                            }
+                            $successMsg = 'Partner Information updated successfully. Inserted ('.$insertedPartnerInfo.') | Updated ('.$updatedPartnerInfo.') | Not Inserted ('.$notInsertedPartnerInfo.')';
+                        }
+                    }
+                }
+            }
+        }
+
+        $agents_lists = $this->db->get('agents')->result_array();
+        if (isset($agents_lists) && !empty($agents_lists)) {
+            foreach (array_chunk($agents_lists,50) as $key => $value) {
+                if (isset($value) && !empty($value)) {
+                    foreach ($value as $k => $v)  {
+                        if (!empty($v['company']) && !empty($v['partner_id'])) {
+                            $endPoint = 'admin/partners/'.$v['partner_id'];
+                            $userdata['email'] = $userdata['email_address'];
+                            $logid = $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+                            $result = $this->make_request('GET', $endPoint, array(), $userdata);
+                            $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), $result, 0, $logid);
+
+                            if (isset($result) && !empty($result)) {
+                                $response = json_decode($result,true);
+                                if (isset($response['AdminPartner']) && !empty($response['AdminPartner'])) {
+                                    $con = array(
+                                        'where' => array(
+                                            'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                                        ),
+                                        'returnType' => 'count'
+                                    );
+                                    $prevCount = $this->home_model->get_company_rows($con);
+
+                                    $partnerTyepIds = array();
+                                    if(!empty($response['AdminPartner']['PartnerTypes'])) {
+                                        foreach($response['AdminPartner']['PartnerTypes'] as $partnerType) {
+                                            $partnerTyepIds[] = $partnerType['PartnerTypeID'];
+                                        }
+                                    }
+                                  
+                                    if ($prevCount > 0) {
+                                        $customerData = array(
+                                            'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                                            'email' => !empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
+                                            'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
+                                            'city' => trim($response['AdminPartner']['MailingAddress']['City']),
+                                            'state' => trim($response['AdminPartner']['MailingAddress']['State']),
+                                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
+                                            'partner_type_id' => implode(",", $partnerTyepIds)
+                                        );
+                                        $condition = array('partner_id' => trim($response['AdminPartner']['PartnerCompanyID']));
+                                        $update = $this->home_model->update($customerData, $condition, 'pct_order_partner_company_info');
+                                        
+                                        if ($update) {
+                                            $updatedPartnerInfo++;
+                                        }
+                                    } else {
+                                        $customerData = array(
+                                            'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                                            'email' => !empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
+                                            'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                                            'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
+                                            'city' => trim($response['AdminPartner']['MailingAddress']['City']),
+                                            'state' => trim($response['AdminPartner']['MailingAddress']['State']),
+                                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
                                             'partner_type_id' => implode(",", $partnerTyepIds)
                                         );
                                         $insert = $this->home_model->insert($customerData, 'pct_order_partner_company_info');
