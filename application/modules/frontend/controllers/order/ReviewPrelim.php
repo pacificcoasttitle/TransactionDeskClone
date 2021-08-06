@@ -23,7 +23,7 @@ class ReviewPrelim extends MX_Controller {
 		ini_set('memory_limit','2048M');
 		
 		$json = file_get_contents('php://input');
-		
+	
 		if ($json) 
 		{
 			$logId = $this->apiLogs->syncLogs(0,'resware WCF', 'get_prelim','https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array('ReceiveSearchDataService'=>true), array());
@@ -627,9 +627,9 @@ class ReviewPrelim extends MX_Controller {
 					$this->apiLogs->syncLogs($customer_id, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $orderDetails['order_id'], $logid);
 					$resDocuments = json_decode($resultDocuments, true);
 					$documentCount  = count($documents);
+					$apiDocumentIds = array_column($documents, 'api_document_id');
 
 					if (!empty($documents)) {
-						$apiDocumentIds = array_column($documents, 'api_document_id');
 						if (!empty($resDocuments['Documents'])) {
 							foreach($resDocuments['Documents'] as $resDocument) {
 								$ext = end(explode('.', $resDocument['DocumentName']));
@@ -681,9 +681,8 @@ class ReviewPrelim extends MX_Controller {
 												mkdir(FCPATH.'/uploads/documents', 0777, TRUE);
 											}
 											file_put_contents(FCPATH.'/uploads/documents/'.$document_name, $documentContent);
-											$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+											$prelimDocumentName = $document_name;
 											$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
-
 											$source_pdf = FCPATH.'/uploads/documents/'.$document_name;
 											\Gufy\PdfToHtml\Config::set('pdftohtml.bin', getenv('PDFTOHTML_PATH'));
 											\Gufy\PdfToHtml\Config::set('pdfinfo.bin', getenv('PDFTOINFO_PATH'));
@@ -751,6 +750,7 @@ class ReviewPrelim extends MX_Controller {
 													}
 												}
 											}
+											$this->order->uploadDocumentOnAwsS3($prelimDocumentName, 'documents');
 										}	
 									} else {
 										$documents[$documentCount]['original_document_name'] = $resDocument['DocumentName'];
@@ -834,9 +834,8 @@ class ReviewPrelim extends MX_Controller {
 												mkdir(FCPATH.'/uploads/documents', 0777, TRUE);
 											}
 											file_put_contents(FCPATH.'/uploads/documents/'.$document_name, $documentContent);
-											$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+											$prelimDocumentName = $document_name;
 											$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
-
 											$source_pdf = FCPATH.'/uploads/documents/'.$document_name;
 											chmod($source_pdf, 0755);
 											\Gufy\PdfToHtml\Config::set('pdftohtml.bin', getenv('PDFTOHTML_PATH'));
@@ -911,6 +910,7 @@ class ReviewPrelim extends MX_Controller {
 												}
 												
 											}
+											$this->order->uploadDocumentOnAwsS3($prelimDocumentName, 'documents');
 										}
 									} else {
 										$documents[$documentCount]['original_document_name'] = $resDocument['DocumentName'];
