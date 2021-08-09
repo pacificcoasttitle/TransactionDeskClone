@@ -2346,7 +2346,6 @@ class Dashboard extends MX_Controller {
 			$path = './uploads/plat-map/'.$file_number.'.png';
 
 			file_put_contents($path, base64_decode($imagedata,true));
-			$file_number = 10171986;
 			if (env('AWS_ENABLE_FLAG') == 1) { 
 				$plat_map_url = env('AWS_PATH')."plat-map/".$file_number.'.png';
 			} else {
