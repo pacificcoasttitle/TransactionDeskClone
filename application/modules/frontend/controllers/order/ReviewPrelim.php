@@ -759,8 +759,9 @@ class ReviewPrelim extends MX_Controller {
 
 					$orderUser =  $this->home_model->get_user(array('id' => $customer_id));
 					$user_data = array();
-					$user_data['email'] = $orderUser['email_address'];
-					$user_data['password'] = $orderUser['random_password'];
+					$user_data = array(
+						'admin_api' => 1
+					);
 					$user_data['from_mail'] = 1;
 
 					$endPoint = 'files/'. $file_id .'/documents';
