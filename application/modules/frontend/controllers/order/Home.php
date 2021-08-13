@@ -301,9 +301,14 @@ class Home extends MX_Controller {
 				}
 				/* Partners API */
 
-				if(isset($EscrowLenderEmail) && !empty($EscrowLenderEmail))
+				if(isset($escrowEmail) && !empty($escrowEmail))
 				{
-					$parties_email[] = $EscrowLenderEmail;
+					$parties_email[] = $escrowEmail;
+				}
+
+				if(isset($lenderEmail) && !empty($lenderEmail))
+				{
+					$parties_email[] = $lenderEmail;
 				}
 
 				$AdditionalEmails = $this->input->post('AdditionalEmail');
