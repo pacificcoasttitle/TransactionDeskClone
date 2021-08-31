@@ -302,6 +302,11 @@ $route['order/admin/add-escrow-officer'] = 'admin/order/home/add_escrow_officer'
 $route['order/admin/edit-escrow-officer/:num'] = 'admin/order/home/edit_escrow_officer';
 /* Route for PCT-Order backend*/
 
+/* Start Route for HR-Center frontend */
+$route['hr'] = 'frontend/hr/login/index';
+$route['hr/login'] = 'frontend/hr/login/login';
+$route['hr/change-password/:any'] = 'frontend/hr/login/change_password';
+/* End Route for HR-Center frontend */
 
 /* Start Route for HR-Center backend*/
 $route['hr/admin'] = 'admin/hr/login/login';
@@ -312,8 +317,13 @@ $route['hr/admin/add-admin-user'] = 'admin/hr/adminUsers/addAdminUser';
 $route['hr/admin/get-admin-users'] = 'admin/hr/adminUsers/getAdminUsers';
 $route['hr/admin/edit-admin-user/:num'] = 'admin/hr/adminUsers/editAdminUser';
 $route['hr/admin/delete-admin-user'] = 'admin/hr/adminUsers/deleteAdminUser';
+$route['hr/admin/users'] = 'admin/hr/users/index';
+$route['hr/admin/add-user'] = 'admin/hr/users/addUser';
+$route['hr/admin/get-users'] = 'admin/hr/users/getUsers';
+$route['hr/admin/edit-user/:num'] = 'admin/hr/users/editUser';
+$route['hr/admin/delete-user'] = 'admin/hr/users/deleteUser';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
-/* Start Route for HR-Center backend */
+/* End Route for HR-Center backend */
 
 $route['calculator'] = 'frontend/calc/welcome/index';  
 $route['calculator/signup'] = 'frontend/calc/welcome/signup';  

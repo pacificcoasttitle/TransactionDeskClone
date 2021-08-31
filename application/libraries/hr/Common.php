@@ -24,4 +24,24 @@ class Common
             redirect(base_url().'hr/admin');
         }
     }
+
+    public function randomPassword() 
+    {
+        $len = 8;
+        $sets = array();
+        $sets[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $sets[] = 'abcdefghijkmnopqrstuvwxyz';
+        $sets[] = '0123456789';
+        $password = '';
+        
+        foreach ($sets as $set) {
+            $password .= $set[array_rand(str_split($set))];
+        }
+    
+        while(strlen($password) < $len) {
+            $randomSet = $sets[array_rand($sets)];
+            $password .= $randomSet[array_rand(str_split($randomSet))]; 
+        }
+        return str_shuffle($password);
+    }
 }

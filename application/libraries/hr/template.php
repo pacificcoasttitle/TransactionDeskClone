@@ -14,8 +14,9 @@ class Template
         $this->CI->load->helper('url');
         // default CSS and JS that they must be load in any pages
         $this->addJS( base_url('assets/backend/hr/js/core/jquery.3.2.1.min.js') );
+        $this->addJS( base_url('assets/backend/js/jquery-ui.min.js') );
         $this->addJS( base_url('assets/backend/hr/js/core/popper.min.js') );
-        $this->addJS( base_url('assets/backend/hr/js/core/bootstrap.min.js') );
+        $this->addJS( base_url('assets/backend/hr/js/core/bootstrap.min.js') );       
         $this->addJS( base_url('assets/backend/hr/js/plugins/bootstrap-switch.js') );
         $this->addJS( base_url('assets/backend/hr/js/plugins/chartist.min.js') );
         $this->addJS( base_url('assets/backend/hr/js/plugins/bootstrap-notify.js') );
@@ -27,6 +28,7 @@ class Template
         $this->addCSS( base_url('assets/backend/vendor/datatables/dataTables.bootstrap4.css') );
         $this->addCSS( base_url('assets/backend/hr/css/bootstrap.min.css') );
         $this->addCSS( base_url('assets/backend/hr/css/light-bootstrap-dashboard.css') );
+        $this->addCSS( base_url('assets/backend/css/jquery-ui.css') );
     }
 
     public function show($folder, $page, $data=null)

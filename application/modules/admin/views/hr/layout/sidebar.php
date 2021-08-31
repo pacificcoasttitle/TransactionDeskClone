@@ -12,10 +12,10 @@
 					<p>Dashboard</p>
 				</a>
 			</li>
-			<li class="<?php if($this->uri->uri_string() == 'hr/admin/employee' || $this->uri->uri_string() == 'hr/admin/add-employee' || $this->uri->segment(3) == 'edit-employee') { echo 'active'; } ?>">
-				<a class="nav-link" href="<?php echo base_url().'hr/admin/employee'; ?>">
+			<li class="<?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user') { echo 'active'; } ?>">
+				<a class="nav-link" href="<?php echo base_url().'hr/admin/users'; ?>">
 					<i class="nc-icon nc-notes"></i>
-					<p>Employee</p>
+					<p>Users</p>
 				</a>
 			</li>
 			<li class="<?php if($this->uri->uri_string() == 'hr/admin/admin-users' || $this->uri->uri_string() == 'hr/admin/add-admin-user' || $this->uri->segment(3) == 'edit-admin-user') { echo 'active'; } ?>">

@@ -174,7 +174,7 @@ class AdminUsers extends MX_Controller {
                 $response = array('status'=>'success', 'message' => $successMsg);
             }
         } else {
-            $msg = 'Escrow Officer ID is required.';
+            $msg = 'Admin User ID is required.';
             $response = array('status' => 'error','message'=>$msg);
         }
         echo json_encode($response);
