@@ -1,0 +1,31 @@
+<?php
+
+
+use Phinx\Seed\AbstractSeed;
+
+class HrUserTypes extends AbstractSeed
+{
+    /**
+     * Run Method.
+     *
+     * Write your database seeder using this method.
+     *
+     * More information on writing seeders is available here:
+     * https://book.cakephp.org/phinx/0/en/seeding.html
+     */
+    public function run()
+    {
+        $data = [
+            [
+                'name'    => 'Employee',
+                'created_at' => date('Y-m-d H:i:s'),
+            ],[
+                'name'    => 'Manager',
+                'created_at' => date('Y-m-d H:i:s'),
+            ]
+        ];
+        $posts = $this->table('pct_hr_user_types');
+        $posts->insert($data)
+              ->save();
+    }
+}
