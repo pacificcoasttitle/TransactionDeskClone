@@ -2425,6 +2425,7 @@ class Cron extends MX_Controller {
         $this->db->join('customer_basic_details as escrow_details', 'escrow_details.id = property_details.escrow_lender_id','inner');
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
         $query = $this->db->get();
+        echo $this->db->last_query();exit;
         $result   = $query->result_array();  
 
         if(!empty($result)) {

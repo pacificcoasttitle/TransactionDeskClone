@@ -1,7 +1,7 @@
 <?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Template
+class AdminTemplate
 {
     private $data;
     private $js_file;
@@ -12,30 +12,36 @@ class Template
     {
         $this->CI =& get_instance();
         $this->CI->load->helper('url');
+        // default CSS and JS that they must be load in any pages
         $this->addJS( base_url('assets/js/core/jquery.3.2.1.min.js') );
-        $this->addJS( base_url('assets/libs/bootstrap/bootstrap.min.js') );
-        $this->addJS( base_url('assets/plugins/headers/slidebar.js') );
-        $this->addJS( base_url('assets/plugins/headers/header.js') );
+        $this->addJS( base_url('assets/backend/js/jquery-ui.min.js') );
+        $this->addJS( base_url('assets/js/core/popper.min.js') );
+        $this->addJS( base_url('assets/js/core/bootstrap.min.js') );       
+        $this->addJS( base_url('assets/backend/hr/js/plugins/bootstrap-switch.js') );
+        $this->addJS( base_url('assets/backend/hr/js/plugins/chartist.min.js') );
+        $this->addJS( base_url('assets/backend/hr/js/plugins/bootstrap-notify.js') );
+        $this->addJS( base_url('assets/backend/hr/js/light-bootstrap-dashboard.js?v=2.0.0') );
         $this->addJS( base_url('assets/vendor/datatables/jquery.dataTables.js') );
         $this->addJS( base_url('assets/vendor/datatables/dataTables.bootstrap4.js') );
         $this->addJS( base_url('assets/vendor/datatables/dataTables.buttons.min.js') );
-        $this->addJS( base_url('assets/frontend/hr/js/custom.js') );
-        $this->addCSS( base_url('assets/css/master.css') );
-        $this->addCSS( base_url('assets/frontend/hr/css/master.css') );
-        $this->addCSS( base_url('assets/frontend/hr/css/theme-form.css') );
+        $this->addJS( base_url('assets/backend/hr/js/custom.js') );
         $this->addCSS( base_url('assets/vendor/datatables/dataTables.bootstrap4.css') );
+        $this->addCSS( base_url('assets/backend/hr/css/bootstrap.min.css') );
+        $this->addCSS( base_url('assets/backend/hr/css/light-bootstrap-dashboard.css') );
+        $this->addCSS( base_url('assets/backend/css/jquery-ui.css') );
     }
 
     public function show($folder, $page, $data=null)
     {
-        if ( ! file_exists('application/modules/frontend/views/'.$folder.'/'.$page.'.php' ) ) {
+        if ( ! file_exists('application/modules/admin/views/'.$folder.'/'.$page.'.php' ) ) {
             show_404();
         } else {
             $this->load_JS_and_css();
             $this->data['header'] = $this->CI->load->view('hr/layout/header.php', $data, true);
+            $this->data['sidebar'] = $this->CI->load->view('hr/layout/sidebar.php', $data, true);
             $this->data['content'] = $this->CI->load->view($folder.'/'.$page.'.php', $data, true);
             $this->data['footer'] = $this->CI->load->view('hr/layout/footer.php', $data, true);
-            $this->CI->load->view('hr/template.php', $this->data);
+            $this->CI->load->view('template.php', $this->data);
         }
     }
 

@@ -17,7 +17,7 @@ class Login extends MX_Controller {
     function index() 
     {
         $userdata = $this->session->userdata('hr_user');
-        if (!empty($userdata['id']) && $userdata['is_hr_admin'] == 0) {
+        if (!empty($userdata['id'])) {
             redirect(base_url().'hr/dashboard');
         } else {
             redirect(base_url().'hr/login');
@@ -63,11 +63,9 @@ class Login extends MX_Controller {
                                 "user_type_id" => isset($user['user_type_id']) && !empty($user['user_type_id']) ? $user['user_type_id'] : '',
                             );
                             $this->session->set_userdata('hr_user', $session_data);
-                            $response = array('status'=>'success', 'message'=> '', 'url' => 'dashboard');
-                            echo json_encode($response); exit;
+                            redirect(base_url().'hr/dashboard');
                         } else {
-                            $response = array('status'=>'error', 'email_err_msg' => '', 'password_err_msg'=> '<p>Please enter the correct login details.</p>');
-					        echo json_encode($response); exit;
+                            $data['password_error_msg'] = 'Please enter the correct login details.';
                         }
                     }
                 } else {
