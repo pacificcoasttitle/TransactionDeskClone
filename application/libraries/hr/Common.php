@@ -44,4 +44,32 @@ class Common
         }
         return str_shuffle($password);
     }
+
+    public function is_user()
+    {
+        $userdata = $this->CI->session->userdata('hr_user');
+        if (empty($userdata)) {
+            redirect(base_url().'hr/login');
+        } 
+    }
+
+    public function is_manager_user()
+    {
+        $userdata = $this->CI->session->userdata('hr_user');
+        if (!empty($userdata['id']) && $userdata['user_type_id'] == 2) {
+            return true;
+        } else {
+            redirect(base_url().'hr/dashboard');
+        }
+    }
+
+    public function is_employee_user()
+    {
+        $userdata = $this->CI->session->userdata('hr_user');
+        if (!empty($userdata['id']) && $userdata['user_type_id'] == 1) {
+            return true;
+        } else {
+            redirect(base_url().'hr/dashboard');
+        }
+    }
 }

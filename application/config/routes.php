@@ -319,6 +319,8 @@ $route['order/admin/edit-escrow-officer/:num'] = 'admin/order/home/edit_escrow_o
 $route['hr'] = 'frontend/hr/login/index';
 $route['hr/login'] = 'frontend/hr/login/login';
 $route['hr/change-password/:any'] = 'frontend/hr/login/change_password';
+$route['hr/dashboard'] = 'frontend/hr/dashboard/index';
+$route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 
 /* Start Route for HR-Center backend*/

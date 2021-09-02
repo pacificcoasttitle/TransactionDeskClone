@@ -26,7 +26,7 @@ class Users extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
-        $this->load->library('hr/template');
+        $this->load->library('hr/AdminTemplate');
         $this->load->model('hr/hr'); 
         $this->load->library('hr/common');
         $this->common->is_hr_admin();
@@ -46,7 +46,7 @@ class Users extends MX_Controller {
 			$data['success'] = $this->session->userdata('success');
 			$this->session->unset_userdata('success');
 		}
-        $this->template->show("hr", "users", $data);
+        $this->admintemplate->show("hr", "users", $data);
     }
 
     public function getUsers()
@@ -148,7 +148,7 @@ class Users extends MX_Controller {
                 $data['user_type_error_msg'] = form_error('user_type');
             }                                       
         }
-        $this->template->show("hr", "add_user", $data);
+        $this->admintemplate->show("hr", "add_user", $data);
     }
 
     public function editUser()
@@ -194,7 +194,7 @@ class Users extends MX_Controller {
         } else {
             redirect(base_url().'hr/admin/users');
         }
-        $this->template->show("hr", "edit_user", $data);
+        $this->admintemplate->show("hr", "edit_user", $data);
     }
 
     public function deleteUser()

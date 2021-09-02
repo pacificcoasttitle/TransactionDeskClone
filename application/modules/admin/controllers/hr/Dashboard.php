@@ -26,7 +26,7 @@ class Dashboard extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
-        $this->load->library('hr/template');
+        $this->load->library('hr/AdminTemplate');
         $this->load->library('hr/common');
         $this->common->is_hr_admin();
     }
@@ -35,7 +35,7 @@ class Dashboard extends MX_Controller {
     {
         $data['title'] = 'HR-Center Admin Dashboard';
         $data['page_title'] = 'Dashboard';
-        $this->template->show("hr", "dashboard", $data);
+        $this->admintemplate->show("hr", "dashboard", $data);
     }
 
     public function logout()
