@@ -3419,6 +3419,7 @@ class Cron extends MX_Controller {
                     
                         $file_number = '';
                         $fileStatus = '';
+                        $closedDate = '';
 
                         if(in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number",$headerColumns);
@@ -3430,11 +3431,17 @@ class Cron extends MX_Controller {
                             $fileStatus = $data[$fileStatusKey];
                         }
 
+                        if(in_array('Closed Date', $headerColumns)) {
+                            $closedDateKey = array_search("Closed Date",$headerColumns);
+                            $closedDate = $data[$closedDateKey];
+                        }
+
                         if($row != 1) {
                             if(1 === preg_match('~[0-9]~', $file_number)){
                                 $updateArray[] = array(
                                     'file_number'=> (int)$file_number,
                                     'resware_status' => strtolower($fileStatus),
+                                    'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $closedDate : null,
                                     'updated_at' => date('Y-m-d H:i:s')
                                 );  
                             } 
