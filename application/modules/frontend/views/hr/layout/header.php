@@ -11,8 +11,8 @@
                 </div>
                 <div class="header-navibox-2">
                     <ul class="yamm nav navbar-nav">                                   
-                        <li><a href="employee-home.html">Home</a></li>
-                        <li><a href="my-documents.html">My Documents</a></li>
+                        <li><a href="<?php echo base_url(); ?>hr/dashboard">Dashboard</a></li>
+                        <li><a href="">My Documents</a></li>
                         <li><a href="<?php echo base_url(); ?>hr/logout">Logout</a></li>    
                     </ul>
                 </div>

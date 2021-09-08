@@ -1,5 +1,7 @@
 var adminList ='';
 var users ='';
+var time_cards = '';
+var vacation_requests = '';
 
 $(document).ready(function () {
     if ($('#admin_users').length)  {
@@ -79,6 +81,88 @@ $(document).ready(function () {
                     }
                     $("#users tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
                     $("#users_processing").css("display", "none");
+                }
+            }            
+        });
+    } 
+
+    if ($('#time_cards').length)  {
+        time_cards = $('#time_cards').DataTable({
+           "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "dom": 'lf<"FilterOrderListing">rtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"hr/admin/get-time-cards", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#time_cards tbody").append('<tr><td colspan="8" class="text-center">No records found</td></tr>');
+                    $("#time_cards_processing").css("display", "none");
+                }
+            }            
+        });
+    } 
+
+    if ($('#vacation_requests').length)  {
+        vacation_requests = $('#vacation_requests').DataTable({
+           "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "dom": 'lf<"FilterOrderListing">rtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"hr/admin/get-vacation-requests", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#vacation_requests tbody").append('<tr><td colspan="7" class="text-center">No records found</td></tr>');
+                    $("#vacation_requests_processing").css("display", "none");
                 }
             }            
         });

@@ -5807,6 +5807,13 @@ label.pic {
 	color:#666666;
 }
 
+.parsley-errors-list {
+  padding-left: 0px !important;
+  margin-top: 5px;
+  list-style: none;
+  color:red;
+}
+
 
 
 
