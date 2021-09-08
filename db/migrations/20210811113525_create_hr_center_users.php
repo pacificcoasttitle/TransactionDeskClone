@@ -33,6 +33,8 @@ final class CreateHrCenterUsers extends AbstractMigration
             ->addColumn('created_at', 'datetime')
             ->addColumn('updated_at', 'datetime', ['null' => true])
             ->addIndex(['email'], ['unique' => true])
+            ->addIndex(['user_type_id'])
+            ->addIndex(['position_id'])  
             ->create();
     }
 }

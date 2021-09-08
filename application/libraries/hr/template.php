@@ -13,17 +13,25 @@ class Template
         $this->CI =& get_instance();
         $this->CI->load->helper('url');
         $this->addJS( base_url('assets/js/core/jquery.3.2.1.min.js') );
+        $this->addJS( base_url('assets/frontend/hr/js/jquery-ui-custom.min.js') );
         $this->addJS( base_url('assets/libs/bootstrap/bootstrap.min.js') );
+        $this->addJS( base_url('assets/frontend/js/jquery.steps.min.js') );
+        $this->addJS( base_url('assets/frontend/js/smart-form.js') );
+        $this->addJS( base_url('assets/frontend/js/jquery.validate.min.js') );
         $this->addJS( base_url('assets/plugins/headers/slidebar.js') );
         $this->addJS( base_url('assets/plugins/headers/header.js') );
         $this->addJS( base_url('assets/vendor/datatables/jquery.dataTables.js') );
         $this->addJS( base_url('assets/vendor/datatables/dataTables.bootstrap4.js') );
         $this->addJS( base_url('assets/vendor/datatables/dataTables.buttons.min.js') );
+        $this->addJS( base_url('assets/frontend/js/custom.js') );
         $this->addJS( base_url('assets/frontend/hr/js/custom.js') );
+        $this->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
+        $this->addJS( base_url('assets/frontend/js/parsley.min.js') );
         $this->addCSS( base_url('assets/css/master.css') );
-        $this->addCSS( base_url('assets/frontend/hr/css/master.css') );
         $this->addCSS( base_url('assets/frontend/hr/css/theme-form.css') );
         $this->addCSS( base_url('assets/vendor/datatables/dataTables.bootstrap4.css') );
+        $this->addCSS( base_url('assets/frontend/hr/css/smart-forms.css') );
+        $this->addCSS( base_url('assets/frontend/hr/css/smart-addons.css') );
     }
 
     public function show($folder, $page, $data=null)

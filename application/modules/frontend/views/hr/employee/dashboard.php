@@ -31,7 +31,7 @@
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <a href="timecard-request.html">
+                                <a href="<?php echo base_url(); ?>hr/time-cards">
                                     <div class="buttonOuter">
                                         <button class="btn2 btn-type-6a btn-lg2" type="button">
                                             <img src="<?php echo base_url(); ?>assets/media/hr/timecard.png" class="buttImg">
@@ -45,7 +45,7 @@
                     <div class="typography-sectionButton-2">
                         <div class="col-md-12">
                             <div class="col-md-4">
-                                <a href="vacation-request.html">
+                                <a href="<?php echo base_url(); ?>hr/vacation-requests">
                                     <div class="buttonOuter">
                                         <button class="btn2 btn-type-6a btn-lg2" type="button">
                                             <img src="<?php echo base_url(); ?>assets/media/hr/vacation.png" class="buttImg">
@@ -65,7 +65,7 @@
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <a href="incident-report.html">
+                                <a href="<?php echo base_url(); ?>hr/incident-reports">
                                     <div class="buttonOuter">
                                         <button class="btn2 btn-type-6a btn-lg2" type="button">
                                             <img src="<?php echo base_url(); ?>assets/media/hr/incident.png" class="buttImg">

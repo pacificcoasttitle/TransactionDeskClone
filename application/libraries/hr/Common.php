@@ -72,4 +72,219 @@ class Common
             redirect(base_url().'hr/dashboard');
         }
     }
+
+    public function getTimeCards($params)
+    { 
+        $this->CI->db->from('pct_hr_time_cards')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
+
+        if(!empty($this->CI->session->userdata('hr_user'))) {
+            $userdata = $this->CI->session->userdata('hr_user');
+            $this->CI->db->where('pct_hr_time_cards.user_id', $userdata['id']);
+        }
+
+        $total_records =  $this->CI->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $timeCardsList = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->or_like('pct_hr_time_cards.exception_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_time_cards.reg_hours', $keyword)
+                        ->or_like('pct_hr_time_cards.ot_hours', $keyword)
+                        ->or_like('pct_hr_time_cards.double_ot', $keyword)
+                        ->or_like('pct_hr_time_cards.total_hours', $keyword)
+                        ->group_end();
+            }
+            
+            $this->CI->db->from('pct_hr_time_cards')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_time_cards.user_id', $userdata['id']);
+            }
+			$filter_total_records =  $this->CI->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->or_like('pct_hr_time_cards.exception_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_time_cards.reg_hours', $keyword)
+                        ->or_like('pct_hr_time_cards.ot_hours', $keyword)
+                        ->or_like('pct_hr_time_cards.double_ot', $keyword)
+                        ->or_like('pct_hr_time_cards.total_hours', $keyword)
+                        ->group_end();
+            }
+
+            $this->CI->db->select('pct_hr_time_cards.*, pct_hr_users.first_name,  pct_hr_users.last_name');
+            $this->CI->db->from('pct_hr_time_cards')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_time_cards.user_id', $userdata['id']);
+            }
+            $this->CI->db->order_by('pct_hr_time_cards.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }	
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $timeCardsList = $query->result_array();
+	        }
+    	} else {    		
+    		$this->CI->db->from('pct_hr_time_cards')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_time_cards.user_id', $userdata['id']);
+            }
+            $filter_total_records =  $this->CI->db->count_all_results();
+
+            $this->CI->db->select('pct_hr_time_cards.*, pct_hr_users.first_name,  pct_hr_users.last_name');
+            $this->CI->db->from('pct_hr_time_cards')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_time_cards.user_id', $userdata['id']);
+            }
+            $this->CI->db->order_by('pct_hr_time_cards.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                
+                $this->CI->db->limit($limit, $offset);
+            }
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $timeCardsList = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $timeCardsList
+        );
+    }
+
+    public function getVacationRequests($params)
+    { 
+        $this->CI->db->from('pct_hr_vacation_requests')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
+
+        if(!empty($this->CI->session->userdata('hr_user'))) {
+            $userdata = $this->CI->session->userdata('hr_user');
+            $this->CI->db->where('pct_hr_vacation_requests.user_id', $userdata['id']);
+        }
+
+        $total_records =  $this->CI->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $vacationRequestsList = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->or_like('pct_hr_vacation_requests.comment', $keyword)
+                        ->or_like('pct_hr_vacation_requests.from_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_vacation_requests.to_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_vacation_requests.is_salary_deduction', strtolower($keyword) == 'yes' ? 1 : 0)
+                        ->or_like('pct_hr_vacation_requests.is_time_charged_vacation', strtolower($keyword) == 'yes' ? 1 : 0)
+                        ->group_end();
+            }
+            
+            $this->CI->db->from('pct_hr_vacation_requests')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_vacation_requests.user_id', $userdata['id']);
+            }
+			$filter_total_records =  $this->CI->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->or_like('pct_hr_vacation_requests.comment', $keyword)
+                        ->or_like('pct_hr_vacation_requests.from_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_vacation_requests.to_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_vacation_requests.is_salary_deduction', strtolower($keyword) == 'yes' ? 1 : 0)
+                        ->or_like('pct_hr_vacation_requests.is_time_charged_vacation', strtolower($keyword) == 'yes' ? 1 : 0)
+                        ->group_end();
+            }
+
+            $this->CI->db->select('pct_hr_vacation_requests.*, pct_hr_users.first_name,  pct_hr_users.last_name');
+            $this->CI->db->from('pct_hr_vacation_requests')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_vacation_requests.user_id', $userdata['id']);
+            }
+            $this->CI->db->order_by('pct_hr_vacation_requests.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }	
+
+			$query = $this->CI->db->get();
+           
+			if ($query->num_rows() > 0) {
+	            $vacationRequestsList = $query->result_array();
+	        }
+    	} else {    		
+    		$this->CI->db->from('pct_hr_vacation_requests')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_vacation_requests.user_id', $userdata['id']);
+            }
+            $filter_total_records =  $this->CI->db->count_all_results();
+
+            $this->CI->db->select('pct_hr_vacation_requests.*, pct_hr_users.first_name,  pct_hr_users.last_name');
+            $this->CI->db->from('pct_hr_vacation_requests')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_vacation_requests.user_id', $userdata['id']);
+            }
+            $this->CI->db->order_by('pct_hr_vacation_requests.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                
+                $this->CI->db->limit($limit, $offset);
+            }
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $vacationRequestsList = $query->result_array();
+	        } 
+    	}
+        
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $vacationRequestsList
+        );
+    }
 }

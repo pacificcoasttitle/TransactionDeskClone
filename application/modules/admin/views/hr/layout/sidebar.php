@@ -12,6 +12,18 @@
 					<p>Dashboard</p>
 				</a>
 			</li>
+			<li class="<?php if($this->uri->uri_string() == 'hr/admin/time-cards' || $this->uri->uri_string() == 'hr/admin/add-time-card' || $this->uri->segment(3) == 'edit-time-card') { echo 'active'; } ?>">
+				<a class="nav-link" href="<?php echo base_url().'hr/admin/time-cards'; ?>">
+					<img style="height:30px;margin-right:10px;" src="<?php echo base_url(); ?>assets/media/hr/timecard.png" class="buttImg">
+					<p>Time Cards</p>
+				</a>
+			</li>
+			<li class="<?php if($this->uri->uri_string() == 'hr/admin/vacation-requests' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user') { echo 'active'; } ?>">
+				<a class="nav-link" href="<?php echo base_url().'hr/admin/vacation-requests'; ?>">
+					<img style="height:30px;margin-right:10px;" src="<?php echo base_url(); ?>assets/media/hr/vacation.png" class="buttImg">
+					<p>Vacation Requests</p>
+				</a>
+			</li>
 			<li class="<?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user') { echo 'active'; } ?>">
 				<a class="nav-link" href="<?php echo base_url().'hr/admin/users'; ?>">
 					<i class="nc-icon nc-notes"></i>
