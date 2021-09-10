@@ -26,7 +26,7 @@ class Dashboard extends MX_Controller {
             array('file', 'url','form')
         );
         $this->load->library('form_validation');
-        $this->load->library('hr/adminTemplate');
+        $this->load->library('hr/AdminTemplate');
         $this->load->library('hr/common');
         $this->common->is_hr_admin();
     }
