@@ -8,7 +8,7 @@ var fees_type_list = '';
 var code_book_list = '';
 $(document).ready(function () {
 
-    // // Add active class to menu
+    // Add active class to menu
     // if(jQuery('#users').children().hasClass('active')) {
     //     jQuery('#users').parent('li').addClass('active');
     //     jQuery('#users').addClass('show');
@@ -44,20 +44,11 @@ $(document).ready(function () {
     //     jQuery('#cpl_branches_section').parent('li').removeClass('active');
     // }
 
-    $('.sidebar .nav-item.dropdown .dropdown-menu a.dropdown-item').each(function() {
-        if ($(this).hasClass('active')) {
+    $('.sidebar .nav-item.dropdown .dropdown-menu a.dropdown-item').each(function(){
+        if($(this).hasClass('active')) {
             $(this).parent().parent().find('.dropdown-toggle').trigger('click');
         }
     });
-
-    // Add active class to cpl menu
-    if(jQuery('#cpl_branches_section').children().hasClass('active')) {
-        jQuery('#cpl_branches_section').parent('li').addClass('active');
-        jQuery('#cpl_branches_section').addClass('show');
-    } else {
-        jQuery('#cpl_branches_section').removeClass('show');
-        jQuery('#cpl_branches_section').parent('li').removeClass('active');
-    }
 
     $('select').selectpicker();
 
