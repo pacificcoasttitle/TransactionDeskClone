@@ -59,11 +59,20 @@ class Login extends MX_Controller {
                         "is_admin" => 0,
                         "is_master" =>  $user['is_master'],
                         "is_sales_rep" =>  $user['is_sales_rep'],
+                        "is_title_officer" =>  $user['is_title_officer'],
                         "partner_companies" =>  $user['partner_companies'],
                         "is_special_lender" =>  isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                     );
                     $this->session->set_userdata('user', $session_data);
-                    $response = array('status'=>'success', 'message'=> '', 'url' => 'dashboard');
+                    if ($user['is_title_officer'] == 1) {
+                        $response = array('status'=>'success', 'message'=> '', 'url' => 'title-officer-dashboard');
+                    } else if ($user['is_sales_rep'] == 1) {
+                        $response = array('status'=>'success', 'message'=> '', 'url' => 'sales-dashboard');
+                    } else if ($user['is_special_lender'] == 1) {
+                        $response = array('status'=>'success', 'message'=> '', 'url' => 'special-lender-dashboard');
+                    } else {
+                        $response = array('status'=>'success', 'message'=> '', 'url' => 'dashboard');
+                    }
 					echo json_encode($response); exit;
                 } else {
                     $response = array('status'=>'error', 'email_err_msg'=> 'Please enter the correct email address.');

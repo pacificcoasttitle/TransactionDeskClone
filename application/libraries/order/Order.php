@@ -89,7 +89,7 @@ class Order
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
             
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0  && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -99,7 +99,10 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
-
+            if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
+            }
             if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if(!empty($result)) {
                     $this->CI->db->group_start()
@@ -152,7 +155,7 @@ class Order
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0  && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -162,7 +165,10 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
-
+            if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
+            }
             if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if(!empty($result)) {
                     $this->CI->db->group_start()
@@ -221,7 +227,7 @@ class Order
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -231,7 +237,10 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
-
+            if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
+            }
             if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if(!empty($result)) {
                     $this->CI->db->group_start()
@@ -283,7 +292,7 @@ class Order
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -293,7 +302,10 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
-
+            if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
+            }
             if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if(!empty($result)) {
                     $this->CI->db->group_start()
@@ -407,7 +419,6 @@ class Order
             transaction_details.loan_amount,
             transaction_details.loan_number,
             transaction_details.transaction_type, 
-            transaction_details.title_officer,
             transaction_details.purchase_type,
             transaction_details.supplemental_report_date,
             transaction_details.preliminary_report_date,
@@ -448,7 +459,7 @@ class Order
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->CI->db->where('file_id', $fileId);
          
-        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0) {
+        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
             $this->CI->db->group_start()
                 ->where('order_details.customer_id', $userdata['id'])
                 ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -462,11 +473,15 @@ class Order
     public function is_user()
     {
         $userdata = $this->CI->session->userdata('user');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 0 && $userdata['is_special_lender'] == 1 ) {
-            redirect(base_url().'special-lender-dashboard');
-        } else if (!empty($userdata['id']) && $userdata['is_admin'] == 0 && $userdata['is_special_lender'] == 0 ) {
-            
-        }  else {
+        if (!empty($userdata['id'])) {
+            if ($userdata['is_title_officer'] ==  1) {
+                redirect(base_url().'title-officer-dashboard');
+            } else if ($userdata['is_sales_rep'] ==  1) {
+                redirect(base_url().'sales-dashboard');
+            } else if ($userdata['is_special_lender'] ==  1) {
+                redirect(base_url().'special-lender-dashboard');
+            }
+        } else {
             redirect(base_url().'order/login');
         }
     }
@@ -1201,7 +1216,7 @@ class Order
         }
     }
 
-    public function getOpenOrdersCountForRefiProducts($month)
+    public function getOpenOrdersCountForRefiProducts($month, $is_sales_rep = 1)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders')
@@ -1211,14 +1226,18 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
-        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        if ($is_sales_rep == 1) {
+            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+        } else {
+            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
+        }
+        
         $query = $this->CI->db->get();
-        //echo $this->CI->db->last_query();exit;
         $result = $query->row_array();
         return $result;
     }
 
-    public function getOpenOrdersCountForSaleProducts($month)
+    public function getOpenOrdersCountForSaleProducts($month, $is_sales_rep = 1)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders')
@@ -1228,13 +1247,17 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
-        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        if ($is_sales_rep == 1) {
+            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+        } else {
+            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
+        }
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
     }
 
-    public function getClosedOrdersCountForRefiProducts($month)
+    public function getClosedOrdersCountForRefiProducts($month, $is_sales_rep = 1)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders')
@@ -1242,15 +1265,19 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
        // $this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'loan');
-        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
-        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
-        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+        $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+        if ($is_sales_rep == 1) {
+            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+        } else {
+            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
+        }
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
     }
 
-    public function getClosedOrdersCountForSaleProducts($month)
+    public function getClosedOrdersCountForSaleProducts($month, $is_sales_rep = 1)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders')
@@ -1258,9 +1285,13 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
             //$this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'sale');
-        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
-        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
-        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
+        $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+        if ($is_sales_rep == 1) {
+            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+        } else {
+            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
+        }
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
@@ -1298,4 +1329,54 @@ class Order
         }
         return $result;
     }
+
+    public function countWokingsDaysLeftOfMonth() 
+	{
+		$count = 0;
+		$counter = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+		while (date("n", $counter) == date('m')) {
+			if (in_array(date("w", $counter), array(0, 6)) == false) {
+				$count++;
+			}
+			$counter = strtotime("+1 day", $counter);
+		}
+		$this->CI->db->select('*');
+        $this->CI->db->from('pct_holidays');	
+		$this->CI->db->where('holiday_date >', date('Y-m-d'));
+		$this->CI->db->where('holiday_date <=', date("Y-m-t", strtotime(date('Y-m-d'))));
+        $query = $this->CI->db->get();
+		$result = $query->result_array();
+		foreach ($result as $res) {
+			$weekendFlag = (date('N', strtotime($res['holiday_date'])) >= 6);
+			if($weekendFlag != 1) {
+				$count--;
+			}
+		}
+		return $count;
+	}
+
+	public function countWorkedDaysOfMonth() 
+	{
+		$count = 0;
+		$counter = mktime(0, 0, 0, date('m'), date('d')-1, date('Y'));
+		while (date("n", $counter) == date('m')) {
+			if (in_array(date("w", $counter), array(0, 6)) == false) {
+				$count++;
+			}
+			$counter = strtotime("-1 day", $counter);
+		}
+		$this->CI->db->select('*');
+        $this->CI->db->from('pct_holidays');	
+		$this->CI->db->where('holiday_date >=', date('Y-m-01'));
+		$this->CI->db->where('holiday_date <', date('Y-m-d'));
+        $query = $this->CI->db->get();
+		$result = $query->result_array();
+		foreach ($result as $res) {
+			$weekendFlag = (date('N', strtotime($res['holiday_date'])) >= 6);
+			if($weekendFlag != 1) {
+				$count--;
+			}
+		}
+		return $count;
+	}
 }

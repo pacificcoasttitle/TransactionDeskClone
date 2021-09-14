@@ -1309,46 +1309,6 @@ class Home extends MX_Controller {
     	}
     }
 
-
-    function getSearchResults()
-    {
-    	$userdata = $this->session->userdata('user');
-    	
-    	ini_set('max_execution_time', 300);
-    	$request = $_GET['requrl'];
-    	$api_key = env('BLACK_KNIGHT_KEY');        
-		$request .= '&key=' . $api_key;
-
-		$query_string = parse_url($request,PHP_URL_QUERY);
-        parse_str($query_string, $requestParams);
-        
-        $getsortedresults = isset($_GET['getsortedresults'])?$_GET['getsortedresults']:'false';
-        
-        $opts = array(
-        	'http'=>array(
-        		'header' => "User-Agent:MyAgent/1.0\r\n"
-        	),
-        	"ssl"=>array(
-		        "verify_peer"=>false,
-		        "verify_peer_name"=>false,
-		    )
-        );
-        $context = stream_context_create($opts);
-        $this->load->model('order/apiLogs');
-
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, $requestParams, array(), 0, 0);
-
-        $file = file_get_contents($request,false,$context);
-        $xmlData = simplexml_load_string($file);
-		$response = json_encode($xmlData);
-		$result = json_decode($response,TRUE);
-
-		$this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, array(), $result, 0, $logid);
-
-        
-        echo trim($file);
-    }
-
     function checkEmail()
     {
     	$email = isset($_POST['CustomerEmail']) && !empty($_POST['CustomerEmail']) ? $_POST['CustomerEmail'] : '';

@@ -1,14 +1,12 @@
+<style type="text/css">
+    th {
+        text-align: center;
+    }
+</style>
 <body>
 	<?php
         $this->load->view('layout/header_dashboard');
     ?>
-    <style type="text/css">
-
-		th {
-			text-align: center;
-		}
-
-    </style>
 	<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 		<div class="container">
 			<div class="row">
@@ -30,15 +28,15 @@
 												<th>Closing %</th>
 											</tr>
 										</thead>
-										<?php if(!empty($salesHistory)) {?>
+										<?php if(!empty($titleOfficerHistory)) {?>
 											<tbody>
-												<?php foreach($salesHistory as $salesData) { ?>
+												<?php foreach($titleOfficerHistory as $titleOfficerData) { ?>
 													<tr>
-														<td><?php echo $salesData['month'];?></td>
-														<td><?php echo $salesData['total_open_count'];?></td>
-														<td><?php echo $salesData['total_close_count'];?></td>
-														<td><?php echo "$".number_format($salesData['total_premium']);?></td>
-														<td><?php echo $salesData['close_order_percetage']."%";?></td>
+														<td><?php echo $titleOfficerData['month'];?></td>
+														<td><?php echo $titleOfficerData['total_open_count'];?></td>
+														<td><?php echo $titleOfficerData['total_close_count'];?></td>
+														<td><?php echo "$".number_format($titleOfficerData['total_premium']);?></td>
+														<td><?php echo $titleOfficerData['close_order_percetage']."%";?></td>
 													</tr> 
 												<?php } ?> 
 											</tbody>
@@ -59,10 +57,7 @@
 				</div>
 			</div>
 		</div>
-
 	</section>
-	
-    <!-- Partners Modal -->
 	<?php
         $this->load->view('layout/footer');
     ?>

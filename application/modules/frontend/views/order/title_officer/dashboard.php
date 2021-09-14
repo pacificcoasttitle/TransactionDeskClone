@@ -85,8 +85,8 @@
 		.sales_loan_section {
 			text-align: center;
 			text-transform: uppercase;
-			font-size: 21px;
-			line-height: 27px;
+			font-size: 20px;
+			line-height: 23px;
 			color: #a0a0a0;
 		}
 		
@@ -94,15 +94,6 @@
 			border-bottom: 1px solid #fff;
             padding-top: 20px;
             padding-bottom: 20px;
-		}
-
-		.projected_goal_section {
-    		color: #d35411;
-    		/* font-weight: bold;*/
-			text-align: center;
-			text-transform: uppercase;
-			font-size: large;
-			line-height: 21px;
 		}
 
 		.projected_goal_section {
@@ -142,11 +133,7 @@
 								<div class="sales_loan_section">Refi's = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
 								</div>
 								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="projected_open_section"><?Php echo $projected_open_count;?></span></div>
-								<?php if($sales_rep_info['sales_rep_no_of_open_orders'] > 0) { ?>
-									<div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div>
-								<?php } else { ?>
-									<div class="projected_goal_section">&nbsp;</div>
-								<?php } ?>
+								<div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
@@ -156,11 +143,7 @@
 								<div class="sales_loan_section">Refi's = <span id="refi_close_count"><?Php echo $refi_close_count;?></span></div>
 								</div>
 								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="projected_close_section"><?Php echo $projected_close_count;?></span></div>
-								<?php if($sales_rep_info['sales_rep_no_of_close_orders'] > 0) { ?>
-									<div class="projected_goal_section">Goal = <span id="goal_close_section"><?Php echo round($sales_rep_info['sales_rep_no_of_close_orders']/12);?></span></div>
-								<?php } else { ?>
-									<div class="projected_goal_section">&nbsp;</div>
-								<?php } ?>
+								<div class="projected_goal_section">Goal = <span id="goal_close_section"><?Php echo round($sales_rep_info['sales_rep_no_of_close_orders']/12);?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
@@ -169,12 +152,8 @@
 								<div class="sales_loan_section">Sales = $<span id="sale_total_premium"><?php echo number_format($sale_total_premium); ?></span></div>
 								<div class="sales_loan_section">Refi's = $<span id="refi_total_premium"><?php echo number_format($refi_total_premium); ?></span></div>
 								</div>
-								<div style="margin-top: 20px;" class="projected_goal_section">Projected = $<span id="projected_revenue_section"><?Php echo number_format($projected_revenue);?></span></div>
-								<?php if($sales_rep_info['sales_rep_premium'] > 0) { ?>
-									<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo number_format(round($sales_rep_info['sales_rep_premium']/12));?></span></div>
-								<?php } else { ?>
-									<div class="projected_goal_section">&nbsp;</div>
-								<?php } ?>
+								<div style="margin-top: 20px;" class="projected_goal_section">Projected = $<span id="projected_revenue_section"><?Php echo $projected_revenue;?></span></div>
+								<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo round($sales_rep_info['sales_rep_premium']/12);?></span></div>
 							</div>
 
 							<div class="col-md-3 square-box">
@@ -184,7 +163,7 @@
 								<div class="sales_loan_section">Refi's = <span id="refi_close_order_percetage"><?Php echo $refi_close_order_percetage;?></span>%</div>
 								</div>
 								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="refi_open_count">0%</span></div>
-								<div class="projected_goal_section">&nbsp;</div>
+								<div class="projected_goal_section">Goal = <span id="refi_open_count">0%</span></div>
 							</div>
 
 							<h4 class="ui-title-block_light">Below is list of all your files. You can search for files by month that have a status open, closed, or cancelled.</h3>
@@ -197,80 +176,58 @@
 										<thead>
 											<tr>
 												<th>#</th>
-												<!-- <th>Opened</th> -->
 												<th>Property Address</th>
-												<!-- <th>Buyer/Seller</th> -->
 												<th>Status</th>
 												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody></tbody>
 									</table>
-
-									<div class="typography-sectionab">	
-									</div>
-
+									<div class="typography-sectionab"></div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
 		</div>
-		</div>
-
 	</section>
-	<!-- Partners Modal -->
     <div class="modal" id="partnersModal">
 	  <div class="modal-dialog modal-lg">
 	    <div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Partners</h4>
+			</div>
 
-	      <!-- Modal Header -->
-	      <div class="modal-header">
-	        <h4 class="modal-title">Partners</h4>
-	        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-	      </div>
-
-	      	<!-- Modal body -->
 	      	<div class="modal-body">
 	            <table class="table table-striped" id="tbl-partners-data">
 				    <thead>
-				      <tr>
-				        <th>PartnerID</th>
-				        <th>PartnerTypeID</th>
-				        <th>PartnerTypeName</th>
-				        <th>PartnerName</th>
-				        <!-- <th>EmailAddress</th> -->
-				      </tr>
+						<tr>
+							<th>PartnerID</th>
+							<th>PartnerTypeID</th>
+							<th>PartnerTypeName</th>
+							<th>PartnerName</th>
+						</tr>
 				    </thead>
 				    <tbody></tbody>
 			    </table>
 			</div>
 
-	      <!-- Modal footer -->
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-danger" data-dismiss="modal" style="background: #d35411;">Close</button>
-	      </div>
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-danger" data-dismiss="modal" style="background: #d35411;">Close</button>
+	      	</div>
 
 	    </div>
 	  </div>
 	</div>
-    <!-- Partners Modal -->
-	<?php
-           $this->load->view('layout/footer');
-        ?>
-
-
+	<?php $this->load->view('layout/footer'); ?>
 </body>
-
 </html>
 <script>
 	$(document).ready(function () {
 		var order_list='';
 		if ($('#orders_listing').length) {
 			order_list = $('#orders_listing').DataTable({
-				// "pageLength": 2,
 				"paging": true,
 				"lengthChange": false,
 				"language": {
@@ -282,12 +239,10 @@
 					"emptyTable": "Record(s) not found.",
 					"search": "",
                 },
-                /*"searching": false,*/
 				initComplete: function () {
 					
 					
                 },
-				// dom: 'Bfrtip',
 				"dom": 'lf<"orders_listing_filter">rtip',
 				buttons: [],
 				"drawCallback": function () {
@@ -296,35 +251,15 @@
 				"ordering": false,
 				"serverSide": true,
 				"ajax": {
-					url: base_url + "get-sales-orders", // json datasource
-					type: "post", // method  , by default get
+					url: base_url + "get-title-officer-orders", 
+					type: "post", 
 					data   : function( d ) {
 	                  d.status = $('#orders_filter').val();
 					  d.month = $('#month_filter').val();
 	                },
-					dataFilter: function(data){
-
+					dataFilter: function(data) {
 						var json = jQuery.parseJSON( data );
 						var countingData = json.count_data;
-						// if (countingData) {
-						// 	console.log(countingData.refi_open_count);
-						// 	$('#refi_open_count').html(countingData.refi_open_count);
-						// 	$('#sale_open_count').html(countingData.sale_open_count);
-						// 	$('#open_order_count').html(countingData.open_order_count);
-
-						// 	$('#refi_close_count').html(countingData.refi_close_count);
-						// 	$('#sale_close_count').html(countingData.sale_close_count);
-						// 	$('#close_order_count').html(countingData.close_order_count);
-
-						// 	$('#refi_total_premium').html(countingData.refi_total_premium);
-						// 	$('#sale_total_premium').html(countingData.sale_total_premium);
-						// 	$('#total_premium').html(countingData.total_premium);
-
-						// 	$('#refi_close_order_percetage').html(countingData.refi_close_order_percetage);
-						// 	$('#sale_close_order_percetage').html(countingData.sale_close_order_percetage);
-						// 	$('#close_order_percetage').html(countingData.close_order_percetage);
-							
-						// } 
 						json.recordsTotal = json.recordsTotal;
 						json.recordsFiltered = json.recordsFiltered;
 						json.data = json.data;
@@ -342,7 +277,6 @@
 						$("#orders_listing tbody").append(
 							'<tr><td colspan="4" class="text-center">No records found</td></tr>');
 						$("#orders_listing_processing").css("display", "none");
-
 					}
 				}
 			});
@@ -366,44 +300,4 @@
 	        order_list.ajax.reload();
 	    });
 	});
-
-	function getPartners(fileId) 
-	{
-		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
-		$('#page-preloader').css('display', 'block');
-		$.ajax({
-			url: base_url + "get-partners",
-			type: "post",
-			data: {
-				fileId: fileId
-			},
-			dataType: "html",
-			success: function (response) {
-
-				var results = JSON.parse(response);
-				
-				var table_data = '';
-				if(results.status == 'success')
-				{
-					if(!jQuery.isEmptyObject(results.partners))
-					{
-						$.each(results.partners, function( key, value ) {
-			              	table_data += '<tr><td>'+value.PartnerID+'</td><td>'+value.PartnerTypeID+'</td><td>'+value.PartnerType.PartnerTypeName+'</td><td>'+value.PartnerName+'</td></tr>';
-			            });
-					}
-					else
-					{
-						table_data += '<tr><td colspan="4" style="text-align: center;">No records found.</td></tr>';
-					}
-					$('#tbl-partners-data tbody').html(table_data);
-					$('#partnersModal').modal('show');
-				}
-				else if(results.status == 'error')
-				{
-					alert(results.msg);
-				}
-				$('#page-preloader').css('display', 'none');
-			}
-		});
-	}
 </script>

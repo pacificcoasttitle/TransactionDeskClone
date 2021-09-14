@@ -1695,21 +1695,9 @@ class DashboardMail extends MX_Controller {
                         );
                         $titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition); 
                     }
-                    else
-                    {
-                        $condition = array(
-                            'where' => array(
-                                'name' => $orderDetails['title_officer'],
-                                'status' => 1
-                            )
-                        );
-                        $officerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
-                        $titleOfficerDetails = isset($officerDetails[0]) && !empty($officerDetails[0]) ? $officerDetails[0] : array();
-                    }
-                
                     $pdfData['title_officer'] = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';;
                     $pdfData['title_officer_email'] = isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address']) ? $titleOfficerDetails['email_address'] : '';
-                    $pdfData['title_officer_phone'] = isset($titleOfficerDetails['phone']) && !empty($titleOfficerDetails['phone']) ? $titleOfficerDetails['phone'] : '';
+                    $pdfData['title_officer_phone'] = isset($titleOfficerDetails['telephone_no']) && !empty($titleOfficerDetails['telephone_no']) ? $titleOfficerDetails['telephone_no'] : '';
                 }
 
                 /*if ($orderDetails['sales_amount'] > 0) 
