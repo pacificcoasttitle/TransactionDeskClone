@@ -220,14 +220,13 @@ class Order_model extends CI_Model
             transaction_details.sales_representative,
             CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,
             transaction_details.title_officer,
-            pct_order_title_officer.name as title_officer_name,
+            CONCAT(to.first_name, " ", to.last_name) as title_officer_name,
             transaction_details.sales_amount,
             transaction_details.loan_amount,
             transaction_details.loan_number,
             transaction_details.escrow_number,
             transaction_details.notes,
             transaction_details.transaction_type, 
-            transaction_details.title_officer,
             transaction_details.purchase_type,
             pct_order_product_types.product_type,
             transaction_details.supplemental_report_date,
@@ -262,7 +261,7 @@ class Order_model extends CI_Model
             ->join('agents a', 'property_details.listing_agent_id = a.id', 'left')
             ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
             ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-            ->join('pct_order_title_officer', 'transaction_details.title_officer = pct_order_title_officer.id')
+            ->join('customer_basic_details as to', 'transaction_details.title_officer = to.id')
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->db->where('file_id', $fileId);
          

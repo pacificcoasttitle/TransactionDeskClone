@@ -26,7 +26,7 @@ final class AddTitleOfficerDataInUser extends AbstractMigration
                 [
                     'resware_user_id'  => 0,
                     'partner_id'  => $res['partner_id'],
-                    'partner_type_id'  => $res['partner_id'],
+                    'partner_type_id'  => $res['partner_type_id'],
                     'first_name'  => $name[0],
                     'last_name'  => $name[1],
                     'password'  => 'Pacific1',

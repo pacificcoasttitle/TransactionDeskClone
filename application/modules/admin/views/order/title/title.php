@@ -22,7 +22,8 @@
                 <table class="table table-bordered" id="tbl-title-officer-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Email Address</th>
                             <th>Telephone</th>
                             <th>Partner Id</th>

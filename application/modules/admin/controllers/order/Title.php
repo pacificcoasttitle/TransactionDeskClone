@@ -45,9 +45,10 @@ class Title extends MX_Controller {
         if (isset($title_officer_lists['data']) && !empty($title_officer_lists['data'])) {
             foreach ($title_officer_lists['data'] as $key => $value) {
                 $nestedData=array();
-                $nestedData[] = $value['name'];
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
-                $nestedData[] = $value['phone'];
+                $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['partner_id'];
                 $nestedData[] = $value['partner_type_id'];
                 
@@ -74,7 +75,8 @@ class Title extends MX_Controller {
         $titleOfficerData = array();
 
         if ($this->input->post()) {
-            $this->form_validation->set_rules('title_officer_name', 'Title Officer Name', 'required', array('required'=> 'Please Enter Title Officer Name'));
+            $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
+            $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
             $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
             $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
@@ -82,11 +84,14 @@ class Title extends MX_Controller {
 
             if ($this->form_validation->run() == true) {
                 $titleOfficerData = array(
-                    'name' => $_POST['title_officer_name'],
+                    'first_name' => $_POST['first_name'],
+                    'last_name' => $_POST['last_name'],
                     'email_address' => $_POST['email_address'],
-                    'phone' =>  $_POST['telephone'],
+                    'telephone_no' =>  $_POST['telephone'],
                     'partner_id' => $_POST['partner_id'],
                     'partner_type_id' =>  $_POST['partner_type_id'],
+                    'is_password_updated' =>  1,
+                    'is_title_officer' =>  1,
                     'status' => 1
                 );
                 $insert = $this->title_model->insert($titleOfficerData);
@@ -98,7 +103,8 @@ class Title extends MX_Controller {
                 } 
                 
             } else {
-                $data['name_error_msg'] = form_error('title_officer_name');
+                $data['first_name_error_msg'] = form_error('first_name');
+                $data['last_name_error_msg'] = form_error('last_name');
                 $data['email_error_msg'] = form_error('email_address');
                 $data['phone_error_msg'] = form_error('telephone');
                 $data['partner_id_error_msg'] = form_error('partner_id');
@@ -119,7 +125,8 @@ class Title extends MX_Controller {
         if (isset($id) && !empty($id)) {
             if (isset($_POST) && !empty($_POST)) {
                 
-                $this->form_validation->set_rules('title_officer_name', 'Title Officer Name', 'required', array('required'=> 'Please Enter Title Officer Name'));
+                $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
+                $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
                 $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
                 $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
                 $this->form_validation->set_rules('partner_id', 'Partner Id', 'trim|required|numeric', array('required'=> 'Please Enter Partner Id'));
@@ -127,11 +134,14 @@ class Title extends MX_Controller {
 
                 if($this->form_validation->run() == true) {
                     $titleOfficerData = array(
-                        'name' => $_POST['title_officer_name'],
+                        'first_name' => $_POST['first_name'],
+                        'last_name' => $_POST['last_name'],
                         'email_address' => $_POST['email_address'],
-                        'phone' =>  $_POST['telephone'],
+                        'telephone_no' =>  $_POST['telephone'],
                         'partner_id' => $_POST['partner_id'],
                         'partner_type_id' =>  $_POST['partner_type_id'],
+                        'is_password_updated' =>  1,
+                        'is_title_officer' =>  1,
                         'status' => 1
                     );
                     $condition = array('id' => $id);
@@ -143,7 +153,8 @@ class Title extends MX_Controller {
                         $data['error_msg'] = 'Error occurred while updating Title Officer';
                     }
                 } else {
-                    $data['name_error_msg'] = form_error('title_officer_name');
+                    $data['first_name_error_msg'] = form_error('first_name');
+                    $data['last_name_error_msg'] = form_error('last_name');
                     $data['email_error_msg'] = form_error('email_address');
                     $data['phone_error_msg'] = form_error('telephone');
                     $data['partner_id_error_msg'] = form_error('partner_id');
