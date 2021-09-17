@@ -1379,4 +1379,18 @@ class Order
 		}
 		return $count;
 	}
+
+    public function get_order_notes($orderId)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_notes');
+            
+        $this->CI->db->where('order_id', $orderId);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
 }

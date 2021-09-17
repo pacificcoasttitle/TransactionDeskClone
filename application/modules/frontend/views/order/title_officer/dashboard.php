@@ -133,14 +133,14 @@
 
 							<div class="typography-sectionc">
 								<div class="col-md-12">
-									<a href="<?php echo base_url().'fees'; ?>">
+									<a href="<?php echo base_url().'notes'; ?>">
 										<button class="btn1 btn-type-1g btn-lg" type="button">Add Notes</button>
 									</a>
 									
 									<a href="<?php echo base_url().'prelim-files'; ?>">
 										<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
 									</a>
-									<a href="<?php echo base_url().'attach-files'; ?>">
+									<a href="<?php echo base_url().'upload-doc-orders'; ?>">
 										<button class="btn1 btn-type-1d btn-lg" type="button">Upload Doc</button>
 									</a>
 								</div>

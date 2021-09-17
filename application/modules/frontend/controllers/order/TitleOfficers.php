@@ -184,4 +184,130 @@ class TitleOfficers extends MX_Controller {
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/title_officer/production_history');
 	}
+
+	function notes()
+    {
+        $data['title'] = 'Notes | Pacific Coast Title Company';
+        $this->load->view('layout/head_dashboard',$data);
+        $this->load->view('order/title_officer/notes');
+    }
+
+    function get_notes_orders()
+    {
+        $params = array();  $data = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $order_lists = $this->order->get_orders($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $order_lists = $this->order->get_orders($params);
+        }
+
+        if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($order_lists['data'] as $order)  {
+                $nestedData = array();
+                $nestedData[] = $i;
+                $nestedData[] = $order['file_number'];
+                $nestedData[] = $order['full_address'];
+                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'"><button class="btn btn-grad-2a button-color button-color" type="button">View / Add Notes</button></a>';
+                $data[] = $nestedData; 
+                $i++; 
+            }
+        }
+        $json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    function get_notes()
+    {        
+		$data['errors'] = array();
+		$data['success'] = array();
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $fileId = $this->uri->segment(2);
+        $orderDetails = $this->order->get_order_details($fileId);
+		$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+		$data['orderDetails'] = $orderDetails;
+		$data['notes'] = $this->order->get_order_notes($orderId);
+        $this->load->view('layout/head_dashboard',$data);
+        $this->load->view('order/title_officer/get_notes');
+    }
+
+    public function create_note()
+    {
+    	$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
+		$errors = array();
+		$success = array();
+    	if (isset($fileId) && !empty($fileId)) {
+    		$userdata = $this->session->userdata('user');
+    		$subject = isset($_POST['subject']) && !empty($_POST['subject']) ? $_POST['subject'] : '';
+    		$body = isset($_POST['body']) && !empty($_POST['body']) ? $_POST['body'] : '';
+    		$orderDetails = $this->order->get_order_details($fileId);
+			$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+    		$this->load->library('order/resware');
+	        $request = array();
+	        $endPoint = 'files/'.$fileId.'/notes';
+	        $request['Subject'] = $subject;
+	        $request['Body'] = $body;
+	        $request['FileID'] = $fileId;
+	        $notes_data = json_encode($request);
+			$user_data = array();
+
+			if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+				$user_data['admin_api'] = 1; 
+			}
+			
+	        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
+	        $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+	        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
+			
+	        if (isset($result) && !empty($result)) {
+	            $response = json_decode($result, TRUE);
+
+	            if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+					$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+					$errors[] = $message;
+				} else {
+					$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+					$this->load->model('order/note');
+			        $notesData = array(
+			            'resware_note_id' => $noteId,
+						'subject' => $subject,
+						'note' => $body,
+			            'user_id' => $userdata['id'],
+			            'order_id' => $orderId
+			        );
+			        $id = $this->note->insert($notesData);
+			        if ($noteId && $id) {
+						$success[] = 'Note created successfully.';
+			        } else {
+						$errors[] = 'Something went wrong. Please try again.';
+			        }
+				}
+	    	}
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+			$this->session->set_userdata($data);
+			redirect(base_url().'get-notes/'.$fileId);
+	    }
+    }
 }

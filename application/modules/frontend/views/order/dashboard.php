@@ -60,7 +60,7 @@ th {
 										<?php //} ?>
 										
 										
-										<a href="<?php // echo base_url().'attach-files'; ?>">
+										<a href="<?php echo base_url().'upload-doc-orders'; ?>">
 											<button class="btn1 btn-type-1d btn-lg" type="button">Upload Doc</button>
 										</a>
 									
