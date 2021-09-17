@@ -19,6 +19,17 @@
         </div>
 
         <div class="card-body">
+            <?php
+                if($this->session->flashdata('error')) :
+                ?>
+                <div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error');?></div>
+                <?php
+                elseif($this->session->flashdata('success')):
+                ?>
+                <div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success');?></div>
+                <?php
+                endif;
+            ?>
             <div id="curative_document_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="curative_document_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
