@@ -119,7 +119,7 @@
 							<div class="ui-decor-1a bg-accent"></div>
 							<div class="typography-sectiona">
 								<div class="col-md-12">
-									<a href="">
+									<a href="<?php echo base_url('uplod-file-document') ?>">
 										<button class="btn1 btn-type-1a btn-lg" type="button">Blank Forms</button>
 									</a>
 									<a href="<?php echo base_url().'cpl-dashboard'; ?>">

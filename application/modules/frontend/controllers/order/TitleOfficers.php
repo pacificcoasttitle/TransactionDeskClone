@@ -310,4 +310,48 @@ class TitleOfficers extends MX_Controller {
 			redirect(base_url().'get-notes/'.$fileId);
 	    }
     }
+
+    function uploadFileDocument() {
+		
+		$data['title'] = 'Smart Dashboard | Upload FIle';
+		$this->load->view('layout/head_dashboard',$data);
+		$this->load->view('order/title_officer/attach_files');
+	}
+	function getFileDocument() {
+		$this->load->model('order/fileDocument_model');
+		$userdata = $this->session->userdata('user');
+		// $where = array('added_by'=>$userdata['id']);
+		$files_data = $this->fileDocument_model->get_all();
+
+		$tableData = array();
+		foreach ($files_data as $key=>$file_data) {
+			$tmp_array = array();
+			$tmp_array[] = ($key + 1);
+			$tmp_array[] = $file_data->name;
+			$tmp_array[] = $file_data->description;
+			$tmp_array[] = date('m/d/Y',strtotime($file_data->created_at));
+			$documentName = $file_data->file_path;
+			if (env('AWS_ENABLE_FLAG') == 1) {
+                        $documentUrl = env('AWS_PATH')."file_document/".$documentName;
+						$action = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";
+                    } else {
+                        $documentUrl = FCPATH.'uploads/file_document/'.$documentName;
+						$action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
+                    }
+            $tmp_array[] = $action;
+            $tableData[] = $tmp_array;
+		}
+
+		$json_data['recordsTotal'] = count($tableData);
+        $json_data['recordsFiltered'] = count($tableData);
+        $json_data['data'] = $tableData;
+        echo json_encode($json_data);
+	}
+
+	public function downloadAwsDocument()
+    {
+        $url = $this->input->post('url');
+        $binaryData   = base64_encode(file_get_contents($url)); 
+		echo $binaryData;exit;
+    }
 }
