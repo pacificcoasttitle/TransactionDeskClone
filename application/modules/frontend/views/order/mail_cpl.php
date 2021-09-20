@@ -85,7 +85,7 @@
 		aria-labelledby="Lender Infromation" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 			<div class="modal-content">
-				<form method="POST" action="<?php echo base_url();?>add-lender-order-mail" enctype="multipart/form-data">
+				<form method="POST" action="<?php echo base_url();?>add-lender-order" enctype="multipart/form-data">
 					<div class="smart-forms smart-container wrap-2" style="margin:30px">
 						<div class="modal-body search-result">
 							<div id="lender-details-fields" style="">
@@ -488,7 +488,7 @@
 			$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 			$('#page-preloader').css('display', 'block');
 			$.ajax({
-				url: base_url + "get-order-details-cpl-mail",
+				url: base_url + "get-order-details-cpl",
 				type: "post",
 				data: {
 					fileId: fileId
@@ -619,7 +619,7 @@
         var fileNameIndex = url.lastIndexOf("/") + 1;
         var filename = url.substr(fileNameIndex);
         $.ajax({
-			url: base_url + "download-aws-document-mail",
+			url: base_url + "download-aws-document",
 			type: "post",
 			data: {
 				url : url

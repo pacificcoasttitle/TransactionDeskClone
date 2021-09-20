@@ -358,7 +358,7 @@ class Order
         return $result;
     }
 
-    public function get_order_details($fileId,$from_mail=0)
+    public function get_order_details($fileId, $from_mail=0)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number, 
@@ -576,6 +576,23 @@ class Order
         $this->CI->db->where('order_id', $order_id);
         $this->CI->db->where('is_linked_doc', 1);
         $this->CI->db->order_by('index_number', 'asc');
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
+
+    public function get_user_documents($order_id)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('*')
+            ->from('pct_order_documents');
+            
+        $this->CI->db->where('user_id', $userdata['id']);
+        $this->CI->db->where('order_id', $order_id);
+        $this->CI->db->order_by('id', 'desc');
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();
@@ -1392,5 +1409,132 @@ class Order
         } else {
             return array();
         }
+    }
+
+    public function uploadCPLDocumentToResware($document_name, $orderDetails, $binaryData)
+	{
+		$this->CI->load->model('order/document');
+		$this->CI->load->library('order/resware');
+		$this->CI->load->model('order/apiLogs');
+		$userdata = $this->CI->session->userdata('user');
+        if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$fileSize = filesize('./uploads/documents/'.$document_name);
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1051,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'CPL Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_cpl_doc' => 1
+		);
+		$documentId = $this->CI->document->insert($documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1051,
+			),
+			'Description' => 'CPL Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+        $user_data = array();
+		if (!empty($userdata['id'])) {
+			if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+				$user_data['admin_api'] = 1; 
+			} else {
+				$user_data = array();
+			}
+		} else {
+			$user_data['admin_api'] = 1; 
+		}
+		
+		$logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+
+		/*$from_name = 'Pacific Coast Title Company';
+		$from_mail = env('FROM_EMAIL');
+		$order_message_body = 'Please check attachment for CPL document.';
+		$message = $order_message_body; 
+		$subject = 'CPL Document';
+		$to = $orderDetails['lender_email'];
+		$cc = array();
+		if (!empty($orderDetails['sales_representative'])) {
+			$this->CI->db->select('*')
+            	->from('pct_order_sales_rep');
+			$this->CI->db->where('id', $orderDetails['sales_representative']);
+			$query = $this->CI->db->get();
+			$salesResult = $query->row_array();
+			if (!empty($salesResult)) {
+				$cc = array($salesResult['email_address']);
+			}
+		}
+		$bcc = array();
+		$file = array(base_url().'uploads/documents/'.$document_name);
+		$this->CI->load->helper('sendemail');
+		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
+	}
+
+    public function uploadProposedDocumentToResware($document_name, $orderDetails, $binaryData)
+    {
+    	$this->CI->load->model('order/document');
+		$this->CI->load->library('order/resware');
+		$this->CI->load->model('order/apiLogs');
+        $userdata = $this->CI->session->userdata('user');
+        if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$fileSize = filesize('./uploads/proposed-insured/'.$document_name);
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Proposed Insured Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_proposed_insured_doc' => 1
+		);
+		$documentId = $this->CI->document->insert($documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1037,
+			),
+			'Description' => 'Proposed Insured Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		$user_data = array();
+		if (!empty($userdata['id'])) {
+			if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+				$user_data['admin_api'] = 1; 
+			} else {
+				$user_data = array();
+			}
+		} else {
+			$user_data['admin_api'] = 1; 
+		}
+		$logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
 }

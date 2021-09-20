@@ -147,14 +147,13 @@ class Common extends MX_Controller {
 		$order_id = $this->input->post('order_id');
 		$documentDetail = $this->order->get_document_detail($resware_document_id, $order_id);
 		$is_sync = $this->input->post('is_sync');
-		if ($userdata['is_master'] == 1) {
-			$orderDetails = $this->order->get_rows(array('id' => $order_id));
-			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-			$user_data['email'] = $orderUser['email_address'];
-			$user_data['password'] = $orderUser['random_password'];
+
+		if ($userdata['is_title_officer'] == 1 || $userdata['is_sales_rep'] == 1 || $userdata['is_master'] == 1) {
+			$user_data['admin_api'] = 1; 
 		} else {
 			$user_data = array();
 		}
+
 		if ($is_sync == 0) {
 			$endPoint = 'documents/'.$resware_document_id.'?format=json';
 			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order_id, 0);
@@ -462,10 +461,8 @@ class Common extends MX_Controller {
     		$endPoint = 'files/'. $fileId .'/partners';
 			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
 
-			if ($userdata['is_master'] == 1) {
-				$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-				$user_data['email'] = $orderUser['email_address'];
-				$user_data['password'] = $orderUser['random_password'];
+			if ($userdata['is_title_officer'] == 1 || $userdata['is_sales_rep'] == 1 || $userdata['is_master'] == 1) {
+				$user_data['admin_api'] = 1; 
 			} else {
 				$user_data = array();
 			}
@@ -540,7 +537,7 @@ class Common extends MX_Controller {
 		$fileId = $this->uri->segment(2);     
 		$data['documentTypes'] = $this->order->get_document_types();
 		$data['orderDetails'] = $this->order->get_order_details($fileId);
-
+		$data['documents'] = $this->order->get_user_documents($data['orderDetails']['order_id']);
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/common/upload_documents');
 	}
@@ -626,4 +623,1212 @@ class Common extends MX_Controller {
 		$this->session->set_userdata($data);
 		redirect(base_url().'upload-documents/'.$fileId);
 	}
+
+	function cpl()
+    {
+		$data['errors'] = array();
+		$data['success'] = array();
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+		$this->load->view('layout/head_dashboard',$data);
+		$this->load->view('order/cpl');
+	}
+
+	public function get_orders_cpl()
+	{
+		$params = array();  $data = array();
+		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+			$params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+			$params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+			$pageno = ($params['start'] / $params['length'])+1;
+			$order_lists = $this->order->get_orders($params);
+			$json_data['draw'] = intval( $params['draw'] );
+		} else {
+			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+			$order_lists = $this->order->get_orders($params);
+		}
+		
+		if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+			$i = $params['start'] + 1;
+			foreach ($order_lists['data'] as $order)  {
+				$nestedData = array();
+				$nestedData[] = $i;
+				$nestedData[] = $order['file_number'];
+				$nestedData[] = $order['full_address'];
+				$nestedData[] = !empty($order['document_created_date']) ? date("m/d/Y", strtotime($order['document_created_date'])) : '';
+				if (!empty($order['cpl_document_name'])) {
+					$file_id = $order['file_id'];
+					$documentName = $order['cpl_document_name'];
+					if (env('AWS_ENABLE_FLAG') == 1) {
+                        $documentUrl = env('AWS_PATH')."documents/".$documentName;
+						$nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+                    } else {
+                        $documentUrl = FCPATH.'uploads/documents/'.$documentName;
+						$nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+                    }
+					
+				} else if(!empty($order['westcor_file_id'])) {
+					$file_id = $order['file_id'];
+					$westcorFileId = $order['westcor_file_id'];
+					$westcorOrderId = $order['westcor_order_id'];
+					$nestedData[] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+							<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+				} else {
+					$file_id = $order['file_id'];
+					$nestedData[] = "<div style='display:flex;'><form onclick='return lender_pop_up(0, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form>
+					<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+				}
+				$data[] = $nestedData; 
+				$i++; 
+			}
+		}
+
+		$json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
+		$json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
+		$json_data['data'] = $data;
+		echo json_encode($json_data);
+	}
+
+	public function create_cpl()
+	{
+		$userdata = $this->session->userdata('user');
+		$this->load->library('order/westcor');
+		$fileId = $this->uri->segment(2);    
+		$orderDetails = $this->order->get_order_details($fileId);
+		$data = $this->westcor->generateCplDocument($fileId, $orderDetails);
+		$this->session->set_userdata($data);
+		if(!empty($userdata)) {
+			redirect(base_url().'cpl-dashboard');
+		} else {
+			redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
+		}
+	}
+
+	public function donloadCplPdf()
+	{
+		$userdata = $this->session->userdata('user');
+		if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$this->load->library('order/westcor');
+		$this->load->model('order/apiLogs');
+		$westcor_file_id = $this->input->post('westcor_file_id');
+		$westcor_order_id = $this->input->post('westcor_order_id');
+		$data = array(
+			'fileIDs' => [$westcor_file_id], 
+			'dvid' => $westcor_order_id , 
+			'toZip' => false
+		);
+		$data = json_encode($data, true);
+		$resToken = $this->order->get_token();
+		if ($resToken === false) {
+			$resToken = $this->westcor->createToken($westcor_order_id);
+		} 
+		$endPoint = 'VendorApi/Attachments/Download/'.getenv('WESTCORE_INTEGRATION_PARTNER');
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', getenv('WESTCORE_URL').$endPoint, $data, array(), $westcor_order_id, 0);
+		$result = $this->westcor->make_request('POST', $endPoint, $data, 0, $resToken['token']);
+		$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', getenv('WESTCORE_URL').$endPoint, $data, $result, $westcor_order_id, $logid);
+		if (isset($result) && !empty($result)) {
+			echo base64_encode($result);
+		}	
+	}
+
+	public function addLenderOnOrder()
+	{
+		$this->load->model('order/home_model');
+		$this->load->library('order/resware');
+		$userdata = $this->session->userdata('user');
+		if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$file_id = $this->input->post('file_id');
+		$LenderId = $this->input->post('LenderId');
+		$loan_number = $this->input->post('loan_number');
+		$first_name = $this->input->post('first_name');
+		$last_name = $this->input->post('last_name');
+		$vesting = $this->input->post('vesting');
+		$new_existing_lender = $this->input->post('new_existing_lender');
+		$borrowers_vesting = $this->input->post('borrowers_vesting');
+		$name = explode(" ",$this->input->post('LenderName'));	
+		$editFlag = $this->input->post('editFlag');
+		$orderDetails = $this->order->get_order_details($file_id);
+		$cplApi = $this->input->post('cpl_api');
+
+		$lender_details = array(
+			'first_name'	=> $name[0],
+			'last_name'  => !empty($name[1]) ? $name[1] : '',
+			'state'  => !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "",
+			'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
+			'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
+			'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
+			'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
+			'assignment_clause'  => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : ""
+		);
+
+		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+		if($new_existing_lender == 'add_lender') {
+			$lender_details['partner_id'] = $this->input->post('partner_id');
+			$lender_details['is_added_lender_by_cpl_proposed'] = 1;
+			$lender_details['is_escrow'] = 0;
+			$lender_details['status'] = 0;
+			$LenderId = $this->home_model->insert($lender_details, 'customer_basic_details');		
+		} else {
+			$condition = array(
+				'id' => $LenderId
+			);
+			$this->home_model->update($lender_details, $condition, 'customer_basic_details');
+		}
+
+		$partners = array();
+		$lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
+		$secondaryEmp[] = array('UserID'=> $lenderUserDetails['resware_user_id']);
+		$secondaryPartners = array(
+			'SecondaryEmployees'=> $secondaryEmp,
+			'PartnerTypeID' => 3,
+			'PartnerID' => $lenderUserDetails['partner_id'],
+			'PartnerType' => array(
+				'PartnerTypeID' => 3
+			)
+		);
+		$endPoint = 'files/'.$file_id.'/partners';
+		$partnerUserData = array(
+			'admin_api' => 1
+		);
+
+		// if(!empty($lenderUserDetails['resware_user_id'])) {
+		// 	if ($orderUser['is_escrow'] == 1) {
+		// 		if(empty($orderDetails['escrow_lender_id'])) {
+		// 			$partners[] = $secondaryPartners;
+		// 		} else if (!empty($orderDetails['escrow_lender_id']) && $orderDetails['escrow_lender_id'] != $LenderId) {
+		// 			$partners[] = $secondaryPartners;
+		// 			$removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['escrow_lender_id']));
+		// 			$removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
+		// 			$removeSecondaryPartners = array(
+		// 				'SecondaryEmployees'=> $removeSecondaryEmp,
+		// 				'PartnerTypeID' => 3,
+		// 				'PartnerID' => $removeLenderUserDetails['partner_id'],
+		// 				'PartnerType' => array(
+		// 					'PartnerTypeID' => 3
+		// 				)
+		// 			);
+		// 			$removePartners[] = $removeSecondaryPartners;
+		// 			$removePartnerData = json_encode(array('Partners' => $removePartners));
+		// 			$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
+		// 			$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+		// 			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+		// 		}
+		// 	} else {
+		// 		if(empty($orderDetails['cpl_lender_id'])) {
+		// 			$partners[] = $secondaryPartners;
+		// 		} else if (!empty($orderDetails['cpl_lender_id']) && $orderDetails['cpl_lender_id'] != $LenderId) {
+		// 			$partners[] = $secondaryPartners;
+		// 			$removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+		// 			$removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
+		// 			$removeSecondaryPartners = array(
+		// 				'SecondaryEmployees'=> $removeSecondaryEmp,
+		// 				'PartnerTypeID' => 3,
+		// 				'PartnerID' => $removeLenderUserDetails['partner_id'],
+		// 				'PartnerType' => array(
+		// 					'PartnerTypeID' => 3
+		// 				)
+		// 			);
+		// 			$removePartners[] = $removeSecondaryPartners;
+		// 			$removePartnerData = json_encode(array('Partners' => $removePartners));
+		// 			$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
+		// 			$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+		// 			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+		// 		}
+		// 	}
+	
+		// 	if(!empty($partners)) {
+		// 		$partnerData = json_encode(array('Partners' => $partners));
+		// 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
+		// 		$resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
+		// 		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
+		// 	}
+		// }
+		
+		$propertyDetails = array(
+			'cpl_lender_id' => $LenderId, 
+			'borrowers_vesting' => trim($borrowers_vesting),
+			'cpl_proposed_property_address' => $this->input->post('property_address'),
+			'cpl_proposed_property_city' => $this->input->post('property_city'),
+			'cpl_proposed_property_state' => $this->input->post('property_state'),
+			'cpl_proposed_property_zip' => $this->input->post('property_zipcode'),
+		);
+		$this->home_model->update(array('loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+		$this->home_model->update(array('fnf_agent_id' => $this->input->post('branch')), array('id' => $orderDetails['order_id']), 'order_details');
+		$this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
+		
+		$this->home_model->update(array('is_regenerate_cpl' => $editFlag), array('id' => $orderDetails['order_id']), 'order_details');
+		if ($cplApi == 'fnf') {
+			redirect(base_url()."create-cpl-for-fnf/".$file_id);
+		} else if ($cplApi == 'westcor') {
+			redirect(base_url()."create-cpl/".$file_id);
+		} else {
+			redirect(base_url()."create-cpl-for-natic/".$file_id);
+		}
+	}
+
+	public function getOrderDetailsCpl()
+	{
+		$this->load->library('order/fnf');
+		$this->load->library('order/natic');
+		$this->load->model('order/home_model');
+		$this->load->library('order/resware');
+		$fileId = $this->input->post('fileId');
+		$userdata = $this->session->userdata('user');
+		if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$orderDetails = $this->order->get_order_details($fileId);
+		$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			
+		if ($orderUser['is_escrow'] == 1) {
+			if (!empty($orderDetails['cpl_lender_id'])) {
+				$lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+				$orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+				$orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+				$orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+				$orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
+				$orderDetails['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+				$orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+				$orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+				$orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+				$orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+			} else {			
+				$orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
+				$orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
+				$orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
+				$orderDetails['lender_state'] = $orderDetails['lender_state'] ? $orderDetails['lender_state'] : '';
+				$orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
+				$orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
+				$orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
+				$orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+				$orderDetails['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
+				$orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
+			}
+		} else {
+			if (!empty($orderDetails['cpl_lender_id'])) {
+				$lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+				$orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+				$orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+				$orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+				$orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
+				$orderDetails['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+				$orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+				$orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+				$orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+				$orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+			} else {
+				if ($orderUser['is_primary_mortgage_user'] == 1) {
+					$orderDetails['lender_first_name'] = '';
+					$orderDetails['lender_last_name'] = '';
+					$orderDetails['lender_email'] = '';
+					$orderDetails['lender_state'] = '';
+					$orderDetails['lender_company_name'] = '';
+					$orderDetails['lender_address'] = '';
+					$orderDetails['lender_city'] = '';
+					$orderDetails['lender_zipcode'] = '';
+					$orderDetails['lender_assignment_clause'] = '';
+					$orderDetails['lender_id'] = '';
+				} else {
+					$orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
+					$orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
+					$orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
+					$orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
+					$orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
+					$orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
+					$orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
+					$orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
+					$orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
+					$orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
+				}
+			}
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+		}
+
+		if(empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = '';
+		} else if(empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = $orderDetails['lender_last_name'];
+		} else if(!empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = $orderDetails['lender_first_name'];
+		} else if(!empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+			$orderDetails['lender_name'] = $orderDetails['lender_first_name']." ".$orderDetails['lender_last_name'];
+		}
+
+		if ($orderDetails['sales_amount'] > 0) {
+			if (!empty($orderDetails['borrower'])) {
+				$orderDetails['primary_owner_name'] = $orderDetails['borrower'];
+			} else {
+				$orderDetails['primary_owner_name'] = '';
+			}
+	
+			if (!empty($orderDetails['secondary_borrower'])) {
+				$orderDetails['secondary_owner_name'] = $orderDetails['secondary_borrower'];
+			} else {
+				$orderDetails['secondary_owner_name'] = '';
+			}
+		} else {
+			if (!empty($orderDetails['primary_owner'])) {
+				$orderDetails['primary_owner_name'] = $orderDetails['primary_owner'];
+			} else {
+				$orderDetails['primary_owner_name'] = '';
+			}
+	
+			if (!empty($orderDetails['secondary_owner'])) {
+                $orderDetails['secondary_owner_name'] =  $orderDetails['secondary_owner'];
+			} else {
+				$orderDetails['secondary_owner_name'] = '';
+			}
+		}
+		
+		$endPoint = 'files/'. $fileId .'/partners';
+		$user_data = array();
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+		if (!empty($userdata['id'])) {
+			if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+				$user_data['admin_api'] = 1; 
+			} else {
+				$user_data = array();
+			}
+		} else {
+			$user_data['admin_api'] = 1; 
+		}
+		
+		$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+		$resPartners = json_decode($resultPartners, true);
+		if(!empty($resPartners)) {
+			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+ 			if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+				$orderDetails['cpl_api'] = 'natic';
+				$branchesData = $this->natic->getBranches();
+				if ($branchesData === false) {
+					$branchesData = $this->natic->getBranchesFromApi();
+				}
+				$orderDetails['agents_data'] = $branchesData;
+			} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
+				$orderDetails['cpl_api'] = 'westcor';
+				$this->load->library('order/westcor');
+				$branchesData = $this->westcor->getBranches();
+				if ($branchesData === false) {
+					$branchesData = $this->westcor->getBranchesFromApi();
+				}
+				$orderDetails['agents_data'] = $branchesData;
+			} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+				$orderDetails['cpl_api'] = 'fnf';
+				$agentsData = $this->fnf->getAgents();
+				if ($agentsData === false) {
+					$orderDetails['email'] = $orderUser['email_address'];
+					$agentsData = $this->fnf->getAgentsFromApi($orderDetails);
+				}
+				$orderDetails['agents_data'] = $agentsData;
+			} else {
+				$orderDetails['cpl_api'] = 'westcor';
+				$this->load->library('order/westcor');
+				$branchesData = $this->westcor->getBranches();
+				if ($branchesData === false) {
+					$branchesData = $this->westcor->getBranchesFromApi();
+				}
+				$orderDetails['agents_data'] = $branchesData;
+			}
+		} 
+		if(!empty($orderDetails['borrowers_vesting'])) {
+			$orderDetails['borrowers_vesting'] = $orderDetails['borrowers_vesting'];
+		} else {
+			if (!empty($orderDetails['primary_owner_name'])) {
+				$orderDetails['borrowers_vesting'] = $orderDetails['primary_owner_name'];
+			} 
+	
+			if (!empty($orderDetails['secondary_owner_name'])) {
+                $orderDetails['borrowers_vesting'] .=  " ".$orderDetails['secondary_owner_name'];
+			} 
+
+			if (!empty($orderDetails['vesting'])) {
+                $orderDetails['borrowers_vesting'] .=  " ".$orderDetails['vesting'];
+			} 
+		}
+		if(!empty($orderDetails['cpl_proposed_property_address'])) {
+			$orderDetails['property_address'] = $orderDetails['cpl_proposed_property_address'];
+			$orderDetails['property_city'] = $orderDetails['cpl_proposed_property_city'];
+			$orderDetails['property_state'] = $orderDetails['cpl_proposed_property_state'];
+			$orderDetails['property_zipcode'] = $orderDetails['cpl_proposed_property_zip'];
+			$orderDetails['unit_number'] = '';
+		} else {
+			$orderDetails['property_address'] = $orderDetails['address'];
+			$orderDetails['property_city'] = $orderDetails['property_city'];
+			$orderDetails['property_state'] = $orderDetails['property_state'];
+			$orderDetails['property_zipcode'] = $orderDetails['property_zip'];
+		}
+		$orderDetails['loan_amount'] = $orderDetails['loan_amount'] ? $orderDetails['loan_amount'] : '';
+		$orderDetails['loan_number'] = $orderDetails['loan_number'] ? $orderDetails['loan_number'] : '';
+		$response = array('status'=>'success', 'orderDetails' => $orderDetails);
+		echo json_encode($response); exit;
+	}
+
+	public function createCPlForFnf()
+	{
+		$this->load->library('order/fnf');
+		$this->load->model('order/home_model');
+		$this->load->model('order/document');
+		$errors = array();
+		$success = array();
+		$userdata = $this->session->userdata('user');
+		if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$fileId = $this->uri->segment(2);    
+		$orderDetails = $this->order->get_order_details($fileId);
+		$vendorTokenData = $this->fnf->get_vendor_token();
+
+        if ($vendorTokenData === false) {
+            $vendorTokenData = $this->fnf->generateVendorToken($orderDetails);
+		}
+		$userTokenData = $this->fnf->get_user_token();
+
+        if ($userTokenData === false) {
+            $userTokenData = $this->fnf->generateUserToken($orderDetails);
+		}
+		$oldOrderFlag = 0;
+
+        if (!empty($orderDetails['created'])) {
+            $date = new DateTime($orderDetails['created']);
+            $date2 = new DateTime('2021-01-29 00:00:00');
+            $diff = $date2->getTimestamp() - $date->getTimestamp();
+            if ($diff > 0) {
+                $oldOrderFlag = 1;
+            }
+        }
+
+		if (!empty($orderDetails['fnf_document_id']) && $oldOrderFlag == 0) {
+			$editCplResponse = $this->fnf->editCpl($orderDetails, $vendorTokenData, $userTokenData);
+			if ($editCplResponse['success']) {
+				$cplCount = $this->document->countCplDocument($orderDetails['order_id']);
+				$document_name = "fnf_".$cplCount."_".$fileId.".pdf";
+				if (!is_dir('uploads/documents')) {
+					mkdir('./uploads/documents', 0777, TRUE);
+				}
+				file_put_contents('./uploads/documents/'.$document_name, base64_decode($editCplResponse['response']['a:Content']));
+				$this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $editCplResponse['response']['a:DocumentId']), array('file_id' => $fileId), 'order_details');
+				$success[] = "CPL document edited successfully for file number - ".$orderDetails['file_number'];
+				$this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $editCplResponse['response']['a:Content']);
+				$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+			} else {
+				$errors[] = $editCplResponse['error']."<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
+				$cplErrorData = array(
+                    'order_id' => $orderDetails['order_id'],
+                    'file_number' => $orderDetails['file_number'],
+                    'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
+					'error' => $editCplResponse['error'],
+					'customer_id' => $orderDetails['customer_id'],
+					'property_address' => $orderDetails['full_address']
+                );
+                $this->order->storeCplError($cplErrorData);
+			}
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+		}
+
+		$getCPLFormNameResponse = $this->fnf->getCPLForm($orderDetails, $vendorTokenData, $userTokenData);
+		if ($getCPLFormNameResponse['success'])  {
+			$key = array_search('Lender', array_column($getCPLFormNameResponse['response'], 'a:RecipientType'));
+			//$orderDetails['formname'] = $getCPLFormNameResponse['response'][$key]['a:FormName'];
+			$orderDetails['formname'] = 'Standard CPL_'.$orderDetails['property_state'];
+			$generateCplResponse = $this->fnf->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
+			
+			if ($generateCplResponse['success']) {
+				$cplCount = $this->document->countCplDocument($orderDetails['order_id']);
+				$document_name = "fnf_".$cplCount."_".$fileId.".pdf";
+				if (!is_dir('uploads/documents')) {
+					mkdir('./uploads/documents', 0777, TRUE);
+				}
+				file_put_contents('./uploads/documents/'.$document_name, base64_decode($generateCplResponse['response']['a:Content']));
+				$this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('file_id' => $fileId), 'order_details');
+				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
+				$this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
+				$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+			} else {
+				$errors[] = $generateCplResponse['error']."<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
+				$cplErrorData = array(
+                    'order_id' => $orderDetails['order_id'],
+                    'file_number' => $orderDetails['file_number'],
+					'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
+					'error' => $generateCplResponse['error'],
+					'customer_id' => $orderDetails['customer_id'],
+					'property_address' => $orderDetails['full_address']
+                );
+                $this->order->storeCplError($cplErrorData);
+			}
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+		} else {
+			$errors[] = $getCPLFormNameResponse['error']."<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
+			$cplErrorData = array(
+				'order_id' => $orderDetails['order_id'],
+				'file_number' => $orderDetails['file_number'],
+				'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
+				'error' => $getCPLFormNameResponse['error'],
+				'customer_id' => $orderDetails['customer_id'],
+				'property_address' => $orderDetails['full_address']
+			);
+			$this->order->storeCplError($cplErrorData);
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+		}
+		$this->session->set_userdata($data);
+		if(!empty($userdata)) {
+			redirect(base_url().'cpl-dashboard');
+		} else {
+			redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
+		}
+	}
+
+	public function createCPlForNatic()
+	{
+		$this->load->library('order/natic');
+		$this->load->model('order/home_model');
+		$this->load->model('order/document');
+		$errors = array();
+		$success = array();
+		$userdata = $this->session->userdata('user');
+		if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$fileId = $this->uri->segment(2);    
+		$orderDetails = $this->order->get_order_details($fileId);
+		$responseArr = $this->natic->getDocumentContentForCpl($fileId, $orderDetails);
+		if ($responseArr['success']) {
+			$cplCount = $this->document->countCplDocument($orderDetails['order_id']);
+			$document_name = "natic_".$cplCount."_".$fileId.".pdf";
+			if (!is_dir('uploads/documents')) {
+				mkdir('./uploads/documents', 0777, TRUE);
+			}
+			file_put_contents('./uploads/documents/'.$document_name, base64_decode($responseArr['content']));
+			$this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+			$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
+			$this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $responseArr['content']);
+			$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+		} else {
+			$errors[] = $responseArr['error']."<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
+			$cplErrorData = array(
+                'order_id' => $orderDetails['order_id'],
+                'file_number' => $orderDetails['file_number'],
+                'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
+				'error' => $responseArr['error'],
+				'customer_id' => $orderDetails['customer_id'],
+				'property_address' => $orderDetails['full_address']
+            );
+            $this->order->storeCplError($cplErrorData);
+		}
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		if(!empty($userdata)) {
+			redirect(base_url().'cpl-dashboard');
+		} else {
+			redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
+		}
+	}
+
+	function getDetailsByName()
+    {
+    	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
+		$is_master_search = isset($_POST['is_master_search']) && !empty($_POST['is_master_search']) ? $_POST['is_master_search'] : 0;
+    	$condition = array(
+            'company_name' => $searchTerm
+        );
+
+    	if(isset($_POST['is_escrow'])) {
+    		$isEscrow = $_POST['is_escrow'];
+    		$condition['is_escrow'] = $isEscrow;
+    	}
+
+    	$condition['where']['is_sales_rep'] = 0;
+    	$is_from_order_form = $this->input->post('is_from_order_form');
+    	$condition['is_from_order_form'] = isset($is_from_order_form) && !empty($is_from_order_form) ? $is_from_order_form : 0;
+    	$userDetails = $this->home_model->get_customers($condition, $is_master_search);
+    	$userInfo = array();
+
+    	if(isset($userDetails) && !empty($userDetails)) {
+    		foreach ($userDetails as $key => $value) {
+    			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
+	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
+				$data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
+	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
+	            $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
+	            $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
+	            $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
+	            $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
+				$data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
+				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
+				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+				$data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
+				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
+				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
+				$data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
+				$data['is_primary_mortgage_user'] = isset($value['is_primary_mortgage_user']) && !empty($value['is_primary_mortgage_user']) ? $value['is_primary_mortgage_user'] : '';
+	            // array_push($userInfo, $data); 
+	            $userInfo[] =$data;
+    		}
+    	}
+    	echo json_encode($userInfo);
+    }
+
+	public function downloadAwsDocument()
+    {
+        $url = $this->input->post('url');
+        $binaryData   = base64_encode(file_get_contents($url)); 
+		echo $binaryData;exit;
+    }
+
+	public function generate_proposed_insured()
+    {
+    	$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
+    	$data['fileId'] = $fileId;
+		$orderDetails = $this->order->get_order_details($fileId);
+	    $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+	    $data['orderId'] = $orderId;
+	    $transaction_id = isset($orderDetails['transaction_id']) && !empty($orderDetails['transaction_id']) ? $orderDetails['transaction_id'] : '';
+	    $data['transaction_id'] = $transaction_id;
+	    $vesting = isset($orderDetails['vesting']) && !empty($orderDetails['vesting']) ? $orderDetails['vesting'] : '';
+	    $data['vesting'] = $vesting;
+	    $property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] : '';
+	    $data['property_id'] = $property_id;
+	    $customer_id = isset($orderDetails['customer_id']) && !empty($orderDetails['customer_id']) ? $orderDetails['customer_id'] : '';
+	    $this->load->model('order/home_model');
+		$customer_data =  $this->home_model->get_user(array('id' => $customer_id));
+		$data['company'] = isset($customer_data['company_name']) && !empty($customer_data['company_name']) ? $customer_data['company_name'] : '';
+		$address = array();
+		$street_address = isset($customer_data['street_address']) && !empty($customer_data['street_address']) ? $customer_data['street_address'] : '';
+		if($street_address)
+		{
+			$address[] = $street_address;
+		}
+		$city = isset($customer_data['city']) && !empty($customer_data['city']) ? $customer_data['city'] : '';
+		if($city)
+		{
+			$address[] = $city;
+		}
+
+		$zip_code = isset($customer_data['zip_code']) && !empty($customer_data['zip_code']) ? $customer_data['zip_code'] : '';
+		if($zip_code)
+		{
+			$address[] = $zip_code;
+		}
+		$data['address'] = implode(', ', $address);
+		$data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+		$data['property_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+		$data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+		$data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+		$data['loan_number'] = isset($orderDetails['loan_number']) && !empty($orderDetails['loan_number']) ? $orderDetails['loan_number'] : '';
+		$data['title_officer']= isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer']) ? $orderDetails['title_officer'] : '';
+
+		if ($orderDetails['sales_amount'] > 0) 
+        {
+            if (!empty($orderDetails['borrower'])) {
+                $orderDetails['primary_owner_name'] = $orderDetails['borrower'];
+            } else {
+                $orderDetails['primary_owner_name'] = '';
+            }
+    
+            if (!empty($orderDetails['secondary_borrower'])) {
+                $orderDetails['secondary_owner_name'] = $orderDetails['secondary_borrower'];
+            } else {
+                $orderDetails['secondary_owner_name'] = '';
+            }
+        } 
+        else 
+        {
+            if (!empty($orderDetails['primary_owner'])) {
+                $orderDetails['primary_owner_name'] = $orderDetails['primary_owner'];
+            } else {
+                $orderDetails['primary_owner_name'] = '';
+            }
+    
+            if (!empty($orderDetails['secondary_owner'])) {
+                $orderDetails['secondary_owner_name'] =  $orderDetails['secondary_owner'];
+            } else {
+                $orderDetails['secondary_owner_name'] = '';
+            }
+        }
+
+        if(!empty($orderDetails['borrowers_vesting'])) {
+            $orderDetails['borrowers_vesting'] = $orderDetails['borrowers_vesting'];
+        } else {
+            if (!empty($orderDetails['primary_owner_name'])) {
+                $orderDetails['borrowers_vesting'] = $orderDetails['primary_owner_name'];
+            } 
+    
+            if (!empty($orderDetails['secondary_owner_name'])) {
+                $orderDetails['borrowers_vesting'] .=  " ".$orderDetails['secondary_owner_name'];
+            } 
+
+            if (!empty($orderDetails['vesting'])) {
+                $orderDetails['borrowers_vesting'] .=  " ".$orderDetails['vesting'];
+            } 
+        }
+        $data['borrowers_vesting'] = $orderDetails['borrowers_vesting'];
+
+        /* property address */
+        if(!empty($orderDetails['cpl_proposed_property_address'])) 
+        {
+            $data['street_address'] = isset($orderDetails['cpl_proposed_property_address']) && !empty($orderDetails['cpl_proposed_property_address']) ? $orderDetails['cpl_proposed_property_address'] : '';
+        } 
+        else 
+        {
+            $data['street_address'] = isset($orderDetails['address']) && !empty($orderDetails['address']) ? $orderDetails['address'] : '';
+        }
+
+        if(!empty($orderDetails['cpl_proposed_property_city'])) 
+        {
+            $data['property_city'] = isset($orderDetails['cpl_proposed_property_city']) && !empty($orderDetails['cpl_proposed_property_city']) ? $orderDetails['cpl_proposed_property_city'] : '';
+        } 
+        else 
+        {
+            $data['property_city'] = isset($orderDetails['property_city']) && !empty($orderDetails['property_city']) ? $orderDetails['property_city'] : '';
+        }
+
+        if(!empty($orderDetails['cpl_proposed_property_state'])) 
+        {
+            $data['property_state'] = isset($orderDetails['cpl_proposed_property_state']) && !empty($orderDetails['cpl_proposed_property_state']) ? $orderDetails['cpl_proposed_property_state'] : '';
+        } 
+        else 
+        {
+            $data['property_state'] = isset($orderDetails['property_state']) && !empty($orderDetails['property_state']) ? $orderDetails['property_state'] : '';
+        }
+
+
+        if(!empty($orderDetails['cpl_proposed_property_zip'])) 
+        {
+            $data['property_zip'] = isset($orderDetails['cpl_proposed_property_zip']) && !empty($orderDetails['cpl_proposed_property_zip']) ? $orderDetails['cpl_proposed_property_zip'] : '';
+        } 
+        else 
+        {
+            $data['property_zip'] = isset($orderDetails['property_zip']) && !empty($orderDetails['property_zip']) ? $orderDetails['property_zip'] : '';
+        }
+        /* property address */
+
+		if(!empty($orderDetails['supplemental_report_date']) && $orderDetails['supplemental_report_date'] != '0000-00-00')
+        {
+            $s_report_date = date("m/d/Y",strtotime($orderDetails['supplemental_report_date']));
+        }
+
+		$data['supplemental_report_date']= isset($s_report_date) && !empty($s_report_date) ? $s_report_date : '';
+
+		if(!empty($orderDetails['preliminary_report_date']) && $orderDetails['preliminary_report_date'] != '0000-00-00')
+        {
+            $p_report_date = date("m/d/Y",strtotime($orderDetails['preliminary_report_date']));
+        }
+		$data['preliminary_report_date'] = isset($p_report_date) && !empty($p_report_date) ? $p_report_date : '';
+
+		$data['is_escrow'] = $customer_data['is_escrow'];
+		$data['proposed_branch_id'] = $orderDetails['proposed_branch_id'];
+
+		if ($customer_data['is_escrow'] == 1) {
+			if (!empty($orderDetails['cpl_lender_id'])) {
+				$lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+				$data['lender_first_name'] =  $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+				$data['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+				$data['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+				$data['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
+				$data['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+				$data['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+				$data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+				$data['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+				$data['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+				$data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+				// $data['escrow_lender_id'] = '';
+			} else {
+				// $data['escrow_lender_id'] = $orderDetails['escrow_lender_id'] ? $orderDetails['escrow_lender_id'] : '';		
+				$data['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
+				$data['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
+				$data['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
+				$data['lender_state'] = $orderDetails['lender_state'] ? $orderDetails['lender_state'] : '';
+				$data['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
+				$data['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
+				$data['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
+				$data['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+				$data['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
+				$data['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
+			}
+		} else {
+			if (!empty($orderDetails['cpl_lender_id'])) {
+				$lenderDetails =  $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+
+				$data['cpl_lender_id'] = $orderDetails['cpl_lender_id'];
+				$data['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+				$data['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+				$data['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+				$data['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
+				$data['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+				$data['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+				$data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+				$data['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+				$data['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
+				$data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+			} else {
+				// $data['cpl_lender_id'] = $customer_data['id']; 
+				$data['lender_first_name'] = $customer_data['first_name'] ? $customer_data['first_name'] : '';
+				$data['lender_last_name'] = $customer_data['last_name'] ? $customer_data['last_name'] : '';
+				$data['lender_email'] = $customer_data['email_address'] ? $customer_data['email_address'] : '';
+				$data['lender_state'] = $customer_data['state'] ? $customer_data['state'] : '';
+				$data['lender_company_name'] = $customer_data['company_name'] ? $customer_data['company_name'] : '';
+				$data['lender_address'] = $customer_data['street_address'] ? $customer_data['street_address'] : '';
+				$data['lender_city'] = $customer_data['city'] ? $customer_data['city'] : '';
+				$data['lender_zipcode'] = $customer_data['zip_code'] ? $customer_data['zip_code'] : '';
+				$data['lender_assignment_clause'] = $customer_data['assignment_clause'] ? $customer_data['assignment_clause'] : '';
+				$data['lender_id'] = $customer_data['id'] ? $customer_data['id'] : '';
+			}
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+		}
+
+		if(empty($data['lender_first_name']) && empty($data['lender_last_name'])) {
+			$data['lender_name'] = '';
+		} else if(empty($data['lender_first_name']) && !empty($data['lender_last_name'])) {
+			$data['lender_name'] = $data['lender_last_name'];
+		} else if(!empty($data['lender_first_name']) && empty($data['lender_last_name'])) {
+			$data['lender_name'] = $data['lender_first_name'];
+		} else if(!empty($data['lender_first_name']) && !empty($data['lender_last_name'])) {
+			$data['lender_name'] = $data['lender_first_name']." ".$data['lender_last_name'];
+		}
+		
+		$response = array('status'=>'success', 'orderDetails' => $data);
+		echo json_encode($response); exit;
+    }
+
+	public function add_order_details()
+	{
+		$userdata = $this->session->userdata('user');
+		if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$orderId = $this->input->post('orderId');
+		$this->load->library('order/resware');
+
+		if ($orderId) {
+			$this->load->model('order/home_model');
+			$TitleOfficer = $this->input->post('TitleOfficer');
+			$loan_amount = $this->input->post('loan_amount');
+			$loan_number = $this->input->post('loan_number');
+			$name = explode(" ",$this->input->post('LenderName'));
+			$new_existing_lender = $this->input->post('new_existing_lender');
+			$LenderId = $this->input->post('LenderId');
+			$transaction_id = $this->input->post('transaction_id');
+			$property_id = $this->input->post('property_id');
+			$property_address = $this->input->post('property_address');
+            $property_city = $this->input->post('property_city');
+            $property_state = $this->input->post('property_state');
+            $property_zipcode = $this->input->post('property_zipcode');
+			$borrowers_vesting = $this->input->post('borrowers_vesting');
+			$branch = $this->input->post('branch');
+			$fileId = $this->input->post('fileId');
+			$s_report_date = $this->input->post('s_report_date');
+			$p_report_date = $this->input->post('p_report_date');
+			$s_report_date = date("Y-m-d",strtotime($s_report_date));
+			$p_report_date = date("Y-m-d",strtotime($p_report_date));
+			$orderDetails = $this->order->get_order_details($fileId);
+			$lender_details = array(
+				'first_name'	=> $name[0],
+				'last_name'  => !empty($name[1]) ? $name[1] : '',
+				'state'  => !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "",
+				'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
+				'company_name'  => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
+				'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
+				'city'  => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
+				'zip_code'  => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
+				'assignment_clause'  => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : ""
+			);
+
+			if($new_existing_lender == 'add_lender')  {
+				$lender_details['partner_id'] = $this->input->post('partner_id');
+				$lender_details['state'] = empty($this->input->post('state')) ? $this->input->post('state') : 'CA';
+				$lender_details['is_added_lender_by_cpl_proposed'] = 1;
+				$lender_details['is_escrow'] = 0;
+				$lender_details['status'] = 0;
+				$LenderId = $this->home_model->insert($lender_details, 'customer_basic_details');		
+			} else {
+				$condition = array(
+					'id' => $LenderId
+				);
+				$this->home_model->update($lender_details, $condition, 'customer_basic_details');
+			}	
+			$this->home_model->update(array('proposed_branch_id' => $branch), array('file_id' => $fileId), 'order_details');
+
+			if (empty($lender_details['first_name']) && empty($lender_details['lender_last_name'])) {
+				$lender_details['lender_name'] = '';
+			} else if (empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
+				$lender_details['lender_name'] = $lender_details['last_name'];
+			} else if (!empty($lender_details['first_name']) && empty($lender_details['last_name'])) {
+				$lender_details['lender_name'] = $lender_details['first_name'];
+			} else if (!empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
+				$lender_details['lender_name'] = $lender_details['first_name']." ".$lender_details['last_name'];
+			}
+			$lender_address = array();
+            $street_address = $this->input->post('LenderAddress');
+
+            if ($street_address) {
+                $lender_address[] = $street_address;
+            }
+            $city = $this->input->post('LenderCity');
+
+            if ($city) {
+                $lender_address[] = $city;
+            }
+            $lendeUser =  $this->home_model->get_user(array('id' => $LenderId));
+            $state = isset($lendeUser['state']) && !empty($lendeUser['state']) ? $lendeUser['state'] : '';
+
+            if ($state) {
+                $lender_address[] = $state;
+            }
+            $zip_code = $this->input->post('LenderZipcode');
+
+            if ($zip_code) {
+                $lender_address[] = $zip_code;
+            }
+            $pdfData['lender'] = array(
+                'lender_name'=> $lender_details['lender_name'],
+                'address'=> implode(', ', $lender_address),
+                'company_name'=> $lender_details['company_name'],
+                'assignment_clause'=> $lender_details['assignment_clause']
+			);
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$propertyDetails = array('cpl_lender_id' => $LenderId,'cpl_proposed_property_address'=> trim($property_address),'cpl_proposed_property_city'=> trim($property_city), 'cpl_proposed_property_state' => trim($property_state),'cpl_proposed_property_zip'=> trim($property_zipcode),'borrowers_vesting' => trim($borrowers_vesting));
+			$property_update_flag = $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
+			$transaction_update_flag = $this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number,'title_officer'=>$TitleOfficer,'preliminary_report_date'=>$p_report_date,'supplemental_report_date'=>$s_report_date), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+
+			if ($property_update_flag || $transaction_update_flag) 	{
+				$orderDetails = $this->order->get_order_details($fileId);
+				$pdfData['company'] = isset($orderUser['company_name']) && !empty($orderUser['company_name']) ? $orderUser['company_name'] : '';
+                $address = array();
+                $street_address = isset($orderUser['street_address']) && !empty($orderUser['street_address']) ? $orderUser['street_address'] : '';
+
+                if ($street_address) {
+                    $address[] = $street_address;
+                }
+                $city = isset($orderUser['city']) && !empty($orderUser['city']) ? $orderUser['city'] : '';
+
+                if ($city) {
+                    $address[] = $city;
+                }
+                $zip_code = isset($orderUser['zip_code']) && !empty($orderUser['zip_code']) ? $orderUser['zip_code'] : '';
+
+                if ($zip_code) {
+                    $address[] = $zip_code;
+                }
+				$pdfData['address'] = implode(', ', $address);
+				$pdfData['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+				$new_property_address = array();
+                
+                if (isset($property_address) && !empty($property_address)) {
+                    $new_property_address[] = $property_address;
+                }
+                
+                if (isset($property_city) && !empty($property_city)) {
+                    $new_property_address[] = $property_city;
+                }
+
+                if (isset($property_state) && !empty($property_state)) {
+                    $new_property_address[] = $property_state;
+                }
+
+                if (isset($property_zipcode) && !empty($property_zipcode)) {
+                    $new_property_address[] = $property_zipcode;
+                }
+                $pdfData['property_address'] = implode(', ', $new_property_address);
+				$pdfData['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+				$pdfData['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+				$pdfData['loan_number'] = isset($orderDetails['loan_number']) && !empty($orderDetails['loan_number']) ? $orderDetails['loan_number'] : '';
+				
+				if (isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer'])) {
+					if(preg_match('/\\d/', $orderDetails['title_officer']) > 0) {
+						$condition = array(
+			                'id' => $orderDetails['title_officer'],
+			                'status' => 1
+			            );
+			            $titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition); 
+					}
+					$pdfData['title_officer'] = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';;
+					$pdfData['title_officer_email'] = isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address']) ? $titleOfficerDetails['email_address'] : '';
+					$pdfData['title_officer_phone'] = isset($titleOfficerDetails['telephone_no']) && !empty($titleOfficerDetails['telephone_no']) ? $titleOfficerDetails['telephone_no'] : '';
+				}
+				$pdfData['vesting'] = isset($borrowers_vesting) && !empty($borrowers_vesting) ? $borrowers_vesting : '';
+				$pdfData['supplemental_report_date']= isset($orderDetails['supplemental_report_date']) && !empty($orderDetails['supplemental_report_date']) ? date("m/d/Y h:i:s A", strtotime($orderDetails['supplemental_report_date'])) : '';
+				$pdfData['preliminary_report_date'] = isset($orderDetails['preliminary_report_date']) && !empty($orderDetails['preliminary_report_date']) ? date("m/d/Y h:i:s A", strtotime($orderDetails['preliminary_report_date'])) : '';
+				$pdfData['underwriter'] = '';
+				$endPoint = 'files/'. $fileId .'/partners';
+				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+
+				if (!empty($userdata['id'])) {
+					if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+						$user_data['admin_api'] = 1; 
+					} else {
+						$user_data = array();
+					}
+				} else {
+					$user_data['admin_api'] = 1; 
+				}
+
+				$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+				$resPartners = json_decode($resultPartners, true);
+
+				if(!empty($resPartners)) {
+					$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+					if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company' || $resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company' || $resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+						$pdfData['underwriter'] = $resPartners['Partners'][$key]['PartnerName'];
+					} else {
+						$pdfData['underwriter'] = 'Westcor Land Title Insurance Company';
+					}
+				}
+				$pdfData['proposed_branch_id'] = $orderDetails['proposed_branch_id'];
+
+				if (!empty($orderDetails['proposed_branch_id'])) {
+					$branchDetails = $this->order->getProposedBranchDetail($orderDetails['proposed_branch_id']);
+					$pdfData['branch_address'] = $branchDetails['address'];
+					$pdfData['branch_city'] = $branchDetails['city'];
+					$pdfData['branch_state'] = $branchDetails['state'];
+					$pdfData['branch_zip'] = $branchDetails['zip'];
+				} 
+
+				$html=$this->load->view('order/proposed_insured_pdf',$pdfData, true);
+		        $this->load->library('m_pdf');
+		        $this->m_pdf->pdf->WriteHTML($html);
+		        $this->load->model('order/document');
+		        $proposedDocumentCount = $this->document->countProposedInsuredDocument($orderDetails['order_id']);
+				$document_name = "proposed_".$proposedDocumentCount."_".$fileId.".pdf";
+
+		        if (!is_dir('uploads/proposed-insured')) {
+				    mkdir('./uploads/proposed-insured', 0777, TRUE);
+				}
+
+				$pdfFilePath = './uploads/proposed-insured/'.$document_name;
+		        $this->m_pdf->pdf->Output($pdfFilePath,'F');
+		        $contents = file_get_contents($pdfFilePath);
+				$binaryData   = base64_encode($contents);		
+				$this->home_model->update(array('proposed_insured_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+
+				$this->order->uploadProposedDocumentToResware($document_name, $orderDetails, $binaryData);
+				$this->order->uploadDocumentOnAwsS3($document_name, 'proposed-insured');
+				/*$fileSize = filesize('./uploads/proposed-insured/'.$document_name);
+				$documentData = array(
+					'document_name' => $document_name,
+					'original_document_name' => $document_name,
+					'document_type_id' => 1031,
+					'document_size' => $fileSize,
+					'user_id' => $userdata['id'],
+					'order_id' => $orderDetails['order_id'],
+					'description' => 'Proposed Insured Document',
+					'is_sync' => 0,
+					'is_prelim_document' => 0,
+					'is_proposed_insured_doc' => 1
+				);
+				$documentId = $this->document->insert($documentData);*/
+				$data = array('status'=>'success','data'=>$binaryData);
+			} else {
+				$data = array('status'=>'error');
+			}
+		} else {
+			$data = array('status'=>'error');
+		}
+		echo json_encode($data); exit;
+	}
+
+	public function proposed_insured()
+    {
+    	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+    	$condition = array(
+            'where' => array(
+                'status' => 1
+            )
+        );
+		
+		$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
+		$data['proposedBranches'] = $this->order->getProposedBranches();
+
+    	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $this->load->view('layout/head_dashboard',$data);
+        $this->load->view('order/proposed_insured');
+    }
+
+    function get_proposed_orders()
+    {
+        $params = array();  $data = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $order_lists = $this->order->get_orders($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $order_lists = $this->order->get_orders($params);
+        }
+
+        if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($order_lists['data'] as $order)  {
+                $nestedData = array();
+                $nestedData[] = $i;
+                $nestedData[] = $order['file_number'];
+                $nestedData[] = $order['full_address'];
+               	$nestedData[] = !empty($order['proposed_document_created_date']) ? date("m/d/Y", strtotime($order['proposed_document_created_date'])) : '';
+                if (!empty($order['proposed_insured_document_name'])) 
+                {
+                	$file_id = $order['file_id'];
+					$documentName = $order['proposed_insured_document_name'];
+					if (env('AWS_ENABLE_FLAG') == 1) {
+                        $documentUrl = env('AWS_PATH')."proposed-insured/".$documentName;
+						$action = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"proposed_insured"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";
+                    } else {
+                        $documentUrl = FCPATH.'uploads/proposed-insured/'.$documentName;
+						$action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
+                    }	
+                }
+                else
+                {
+                	$action = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+                }
+                $action .= '<a href="javascript:void(0);" onclick="editInformation('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
+
+                $nestedData[] = $action;
+
+                $data[] = $nestedData; 
+                $i++; 
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
 }

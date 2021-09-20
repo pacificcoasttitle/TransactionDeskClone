@@ -1,3 +1,8 @@
+<style type="text/css">
+    th {
+        text-align: center;
+    }
+</style>
 <body>
 	<?php
         $this->load->view('layout/header_dashboard');
@@ -38,7 +43,7 @@
 												<form id="files_upload" action="<?php echo base_url();?>files-upload" method="POST" enctype="multipart/form-data">
 													<div class="col-md-12">
 														<a href="">
-															<button style="color: #c7c7c7;width: 220px;" class="btn btn-grad-2a" type="submit">Upload Documents</button>
+															<button id="up_btn" style="color: #c7c7c7;width: 220px;" class="btn btn-grad-2a" type="submit">Upload Documents</button>
 														</a>
 													</div>
 													<input type="hidden" id="file_id" name="file_id" value="<?php echo $orderDetails['file_id'];?>">
@@ -293,26 +298,70 @@
 													</div>
 													<div class="col-md-12">
 														<a href="">
-															<button style="color: #c7c7c7;width: 220px;" class="btn btn-grad-2a" type="submit">Upload Documents</button>
+															<button id="down_btn" style="color: #c7c7c7;width: 220px;" class="btn btn-grad-2a" type="submit">Upload Documents</button>
 														</a>
 													</div>
 												</form>
 											</div>
+											<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
+												<div class="container">
+													<div class="row">
+														<div class="row">
+															<div class="col-xs-12">
+																<div class="typography-section__inner">
+																	<h2 class="ui-title-block ui-title-block_light">Documents</h2>
+																	<div class="ui-decor-1a bg-accent"></div>
+																	<h3 class="ui-title-block_light">Below is list of all your documents.</h3>
+																</div>
+																<div class="typography-sectiona">
+																	<div class="col-md-12">
+																		<div class="table-container">
+																			<table class="table table_primary" id="orders_listing">
+																				<thead>
+																					<tr>
+																						<th>#</th>
+																						<th>Document Name</th>
+																						<th>Created</th>
+																						<th>Action</th>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					<?php if(!empty($documents)) {
+																						$i = 1;
+																						foreach($documents as $document) { ?>
+																						<tr>
+																							<td><?php echo $i;?></td>
+																							<td><?php echo $document['original_document_name'];?></td>
+																							<td><?php echo date("m/d/Y", strtotime($document['created']));?></td>
+																							<?php $documentUrl = env('AWS_PATH')."documents/".$document['document_name'];?>
+																							<td><a href='#' onclick='downloadDocumentFromAws("<?php echo $documentUrl;?>", "documents");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a></td>
+																						</tr>
+																						<?php $i++; } 
+																					} else { ?>
+																						<tr>
+																							<td colspan="4">No Records Found.</td>
+																						</tr>
+																					<?php }?>
+																				</tbody>
+																			</table>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</section>
 										</div>
 									</div>
-
-
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
-		</div>
 		</div>
 	</section>
-
 	<?php
            $this->load->view('layout/footer');
         ?>
@@ -324,30 +373,87 @@
 			$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 			$('#page-preloader').css('display', 'block');
 		});
+
+		$("#document_1").change(function(){
+			$('#up_btn').css({"background": "#d35411", "color": "white"});
+			$('#down_btn').css({"background": "#d35411", "color": "white"});
+		});
+
         $("#document_2").change(function(){
 			$("#document_type_2").prop('required',true);
 			$("#description_2").prop('required',true);
+			$('#up_btn').css({"background": "#d35411", "color": "white"});
+			$('#down_btn').css({"background": "#d35411", "color": "white"});
 		});
 		
 		$("#document_3").change(function(){
 			$("#document_type_3").prop('required',true);
 			$("#description_3").prop('required',true);
+			$('#up_btn').css({"background": "#d35411", "color": "white"});
+			$('#down_btn').css({"background": "#d35411", "color": "white"});
 		});
 		
 		$("#document_4").change(function(){
 			$("#document_type_4").prop('required',true);
 			$("#description_4").prop('required',true);
+			$('#up_btn').css({"background": "#d35411", "color": "white"});
+			$('#down_btn').css({"background": "#d35411", "color": "white"});
 		});
 		
 		$("#document_5").change(function(){
 			$("#document_type_5").prop('required',true);
 			$("#description_5").prop('required',true);
+			$('#up_btn').css({"background": "#d35411", "color": "white"});
+			$('#down_btn').css({"background": "#d35411", "color": "white"});
 		});
 		
 		$("#document_6").change(function(){
 			$("#document_type_6").prop('required',true);
 			$("#description_6").prop('required',true);
-        });
+			$('#up_btn').css({"background": "#d35411", "color": "white"});
+			$('#down_btn').css({"background": "#d35411", "color": "white"});
+        });		
     });
+
+	function downloadDocumentFromAws(url, documentType)
+	{
+		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+		var fileNameIndex = url.lastIndexOf("/") + 1;
+		var filename = url.substr(fileNameIndex);
+		$.ajax({
+			url: base_url + "download-aws-document",
+			type: "post",
+			data: {
+				url : url
+			},
+			async: false,
+			success: function (response) {
+				if (response) {
+					if (navigator.msSaveBlob) {
+						var csvData = base64toBlob(response, 'application/octet-stream');
+						var csvURL = navigator.msSaveBlob(csvData, filename);
+						var element = document.createElement('a');
+						element.setAttribute('href', csvURL);
+						element.setAttribute('download', documentType+"_"+filename);
+						element.style.display = 'none';
+						document.body.appendChild(element);
+						document.body.removeChild(element);
+					} else {
+						console.log(response);
+						var csvURL = 'data:application/octet-stream;base64,' + response;
+						var element = document.createElement('a');
+						element.setAttribute('href', csvURL);
+						element.setAttribute('download', documentType+"_"+filename);
+						element.style.display = 'none';
+						document.body.appendChild(element);
+						element.click();
+						document.body.removeChild(element);
+					}
+				}
+				$('#page-preloader').css('display', 'none');
+			}
+		});
+	}
 </script>
 </html>

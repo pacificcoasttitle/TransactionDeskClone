@@ -786,7 +786,7 @@ $(document).ready(function () {
 					var new_existing_lender = $('input[name="new_existing_lender"]:checked').val();
 					var branch = $('#branch').val();
 	                $.ajax({
-	                url: base_url + "add-mail-order-details",
+	                url: base_url + "add-order-details",
 	                type: "post",
 	                data:{
 	                    TitleOfficer: TitleOfficer,
@@ -1121,7 +1121,7 @@ $(document).ready(function () {
 					var new_existing_lender = $('input[name="edit_new_existing_lender"]:checked').val();
 					var branch = $('#edit_branch').val();
 		            $.ajax({
-		            url: base_url + "add-mail-order-details",
+		            url: base_url + "add-order-details",
 		            type: "post",
 		            data:{
 		                TitleOfficer: TitleOfficer,
@@ -1214,7 +1214,7 @@ function generateProposedInsured(fileId)
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
 		$.ajax({
-            url: base_url + "generate-mail-proposed-insured",
+            url: base_url + "generate-proposed-insured",
             type: "post",
             data:{
                 fileId: fileId,
@@ -1330,7 +1330,7 @@ function editInformation(fileId)
 		
 		$.ajax({
             // url: base_url + "get-order-details",
-            url: base_url + "generate-mail-proposed-insured",
+            url: base_url + "generate-proposed-insured",
             type: "post",
             data:{
                 fileId: fileId,
@@ -1459,7 +1459,7 @@ function downloadDocumentFromAws(url, documentType)
 	var fileNameIndex = url.lastIndexOf("/") + 1;
 	var filename = url.substr(fileNameIndex);
 	$.ajax({
-		url: base_url + "download-aws-document-mail",
+		url: base_url + "download-aws-document",
 		type: "post",
 		data: {
 			url : url

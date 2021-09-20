@@ -950,7 +950,7 @@
 		$("#CompanyName").autocomplete({
 	        source: function(request, response) {
 	            $.ajax({
-	                url: base_url+'home/getDetailsByName',
+	                url: base_url+'getDetailsByName',
 	                data: {
 						term : request.term,
 						is_master_search: 1           
