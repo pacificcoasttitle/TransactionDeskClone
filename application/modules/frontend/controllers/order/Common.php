@@ -21,9 +21,6 @@ class Common extends MX_Controller {
 		$this->load->model('order/fees_model');
 		$this->load->library('order/resware');
 		$this->load->library('order/common');
-        if (empty($this->session->userdata('user'))) {
-            redirect(base_url().'order');
-        }
 	}
 
     function prelimFiles()
