@@ -19,7 +19,7 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="typography-section__inner">
-							<h2 class="ui-title-block ui-title-block_light"><span>Files</span>
+							<h2 class="ui-title-block ui-title-block_light"><span>Forms</span>
 								<!-- <span class="pull-right"><button type="button" class="btn btn-warning" data-toggle="modal" data-target="#fileUploadModal">Upload New</button></span> -->
 							</h2>
 							<div class="ui-decor-1a bg-primary"></div>

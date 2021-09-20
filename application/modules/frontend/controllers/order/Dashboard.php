@@ -391,54 +391,6 @@ class Dashboard extends MX_Controller {
         }
     }
 
-	public function get_orders_prelim()
-	{
-		$params = array();  $data = array();
-
-		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
-			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
-			$params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
-			$params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
-			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
-			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
-			$pageno = ($params['start'] / $params['length'])+1;
-			$order_lists = $this->order->get_orders($params);
-			$json_data['draw'] = intval( $params['draw'] );
-		} else {
-			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-			$order_lists = $this->order->get_orders($params);
-		}
-		
-		if (isset($order_lists['data']) && !empty($order_lists['data'])) {
-			$i = $params['start'] + 1;
-			foreach ($order_lists['data'] as $order)  {
-
-				$nestedData = array();
-				$nestedData[] = $i;
-				$nestedData[] = $order['file_number'];
-				$nestedData[] = $order['full_address'];
-				
-				if ($order['prelim_summary_id'] != 0) {
-					
-					$class = isset($order['is_updated']) && !empty($order['is_updated']) ? 'button-color-green' : 'button-color';
-					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a ".$class."' type='button'>REVIEW FILE</button></a>";
-				} else {
-					$nestedData[] = "<a href='javascript:void(0)'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a>";
-				}
-				
-				
-				$data[] = $nestedData; 
-				$i++; 
-			}
-		}
-
-		$json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
-		$json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
-		$json_data['data'] = $data;
-		echo json_encode($json_data);
-	}
-
 	function multiexplode ($delimiters,$string) 
 	{
 
