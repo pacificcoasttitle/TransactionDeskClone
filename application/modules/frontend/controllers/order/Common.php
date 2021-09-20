@@ -25,6 +25,9 @@ class Common extends MX_Controller {
 
     function prelimFiles()
     {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/review_files');
@@ -32,6 +35,9 @@ class Common extends MX_Controller {
 
     public function review_file()
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$userdata = $this->session->userdata('user');
 		$prelimDocument = array();
 		$linked_doc = array();
@@ -79,6 +85,9 @@ class Common extends MX_Controller {
 
 	public function summary()
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$fileId = $this->input->post('fileId');
 		$orderDetails = $this->order->get_order_details($fileId);
 		$policy_type = '';
@@ -136,6 +145,9 @@ class Common extends MX_Controller {
 
     public function load_doc() 
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$this->load->model('order/document');
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
@@ -196,6 +208,9 @@ class Common extends MX_Controller {
 
     function logout()
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$this->session->sess_destroy();
 		$this->session->unset_userdata('user');
 		redirect(base_url().'order');
@@ -203,6 +218,9 @@ class Common extends MX_Controller {
 
     public function legal_vesting() 
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
         $fileId = $this->input->post('fileId');
         $orderDetails = $this->order->get_order_details($fileId);
         
@@ -249,6 +267,9 @@ class Common extends MX_Controller {
 
 	public function plat_map() 
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
         $fileId = $this->input->post('fileId');
         $orderDetails = $this->order->get_order_details($fileId);
 
@@ -305,6 +326,9 @@ class Common extends MX_Controller {
 
 	public function download_document()
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$resware_document_id = $this->input->post('resware_document_id');
 		$order_id = $this->input->post('order_id');
 		$document_name = $this->input->post('document_name');
@@ -320,6 +344,9 @@ class Common extends MX_Controller {
 
 	public function generate_plat_map()
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$response = array();
 		$imagedata = isset($_POST['imagedata']) && !empty($_POST['imagedata']) ? $_POST['imagedata'] : '';
 		$file_number = isset($_POST['file_number']) && !empty($_POST['file_number']) ? $_POST['file_number'] : '';
@@ -380,6 +407,9 @@ class Common extends MX_Controller {
 
     public function updatePrelimAction()
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$fileId = $this->uri->segment(2);
 		$endPoint = 'files/'. $fileId.'/actions';
         $user_data['admin_api'] = 1; 
@@ -451,6 +481,9 @@ class Common extends MX_Controller {
 
     function get_partners()
     {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
     	$fileId = $this->input->post('fileId');
     	if ($fileId) {
     		$userdata = $this->session->userdata('user');
@@ -477,6 +510,9 @@ class Common extends MX_Controller {
 
 	function uploadDocOrders()
     {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/common/upload_doc_orders');
@@ -484,6 +520,9 @@ class Common extends MX_Controller {
 
 	function getOrdersUploadDoc()
     {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$params = array();  $data = array();
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -520,6 +559,9 @@ class Common extends MX_Controller {
 
 	public function upload_documents()
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$data['errors'] = array();
 		$data['success'] = array();
 		if ($this->session->userdata('errors')) {
@@ -541,6 +583,9 @@ class Common extends MX_Controller {
 
 	public function files_upload() 
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$this->load->model('order/document');
 		$this->load->model('order/apiLogs');
 		$this->load->library('order/resware');
@@ -623,6 +668,9 @@ class Common extends MX_Controller {
 
 	function cpl()
     {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$data['errors'] = array();
 		$data['success'] = array();
 		if ($this->session->userdata('errors')) {
@@ -640,6 +688,9 @@ class Common extends MX_Controller {
 
 	public function get_orders_cpl()
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$params = array();  $data = array();
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -712,35 +763,6 @@ class Common extends MX_Controller {
 		} else {
 			redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
 		}
-	}
-
-	public function donloadCplPdf()
-	{
-		$userdata = $this->session->userdata('user');
-		if(empty($userdata)) {
-			$userdata['id'] = 0;
-		}
-		$this->load->library('order/westcor');
-		$this->load->model('order/apiLogs');
-		$westcor_file_id = $this->input->post('westcor_file_id');
-		$westcor_order_id = $this->input->post('westcor_order_id');
-		$data = array(
-			'fileIDs' => [$westcor_file_id], 
-			'dvid' => $westcor_order_id , 
-			'toZip' => false
-		);
-		$data = json_encode($data, true);
-		$resToken = $this->order->get_token();
-		if ($resToken === false) {
-			$resToken = $this->westcor->createToken($westcor_order_id);
-		} 
-		$endPoint = 'VendorApi/Attachments/Download/'.getenv('WESTCORE_INTEGRATION_PARTNER');
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', getenv('WESTCORE_URL').$endPoint, $data, array(), $westcor_order_id, 0);
-		$result = $this->westcor->make_request('POST', $endPoint, $data, 0, $resToken['token']);
-		$this->apiLogs->syncLogs($userdata['id'], 'westcor', 'get_pdf_content_cpl', getenv('WESTCORE_URL').$endPoint, $data, $result, $westcor_order_id, $logid);
-		if (isset($result) && !empty($result)) {
-			echo base64_encode($result);
-		}	
 	}
 
 	public function addLenderOnOrder()
@@ -1757,6 +1779,9 @@ class Common extends MX_Controller {
 
 	public function proposed_insured()
     {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
     	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
     	$condition = array(
             'where' => array(
@@ -1774,6 +1799,9 @@ class Common extends MX_Controller {
 
     function get_proposed_orders()
     {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
         $params = array();  $data = array();
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -1831,6 +1859,9 @@ class Common extends MX_Controller {
 
 	public function get_orders_prelim()
 	{
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
 		$params = array();  $data = array();
 
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {

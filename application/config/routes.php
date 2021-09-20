@@ -135,7 +135,6 @@ $route['generate-proposed-insured'] = 'frontend/order/common/generate_proposed_i
 $route['cpl-dashboard'] = 'frontend/order/common/cpl';
 $route['get-orders-cpl'] = 'frontend/order/common/get_orders_cpl';
 $route['create-cpl/:num'] = 'frontend/order/common/create_cpl';
-$route['download-cpl-pdf'] = 'frontend/order/common/donloadCplPdf';
 $route['add-lender-order'] = 'frontend/order/common/addLenderOnOrder';
 $route['add-order-details'] = 'frontend/order/common/add_order_details';
 $route['get-orders-prelim'] = 'frontend/order/common/get_orders_prelim';

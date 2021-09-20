@@ -361,5 +361,44 @@
 			order_list.ajax.reload();
 		});
 	});
+	
+	function getPartners(fileId) 
+	{
+		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+		$.ajax({
+			url: base_url + "get-partners",
+			type: "post",
+			data: {
+				fileId: fileId
+			},
+			dataType: "html",
+			success: function (response) {
 
+				var results = JSON.parse(response);
+				
+				var table_data = '';
+				if(results.status == 'success')
+				{
+					if(!jQuery.isEmptyObject(results.partners))
+					{
+						$.each(results.partners, function( key, value ) {
+			              	table_data += '<tr><td>'+value.PartnerID+'</td><td>'+value.PartnerTypeID+'</td><td>'+value.PartnerType.PartnerTypeName+'</td><td>'+value.PartnerName+'</td></tr>';
+			            });
+					}
+					else
+					{
+						table_data += '<tr><td colspan="4" style="text-align: center;">No records found.</td></tr>';
+					}
+					$('#tbl-partners-data tbody').html(table_data);
+					$('#partnersModal').modal('show');
+				}
+				else if(results.status == 'error')
+				{
+					alert(results.msg);
+				}
+				$('#page-preloader').css('display', 'none');
+			}
+		});
+	}
 </script>
