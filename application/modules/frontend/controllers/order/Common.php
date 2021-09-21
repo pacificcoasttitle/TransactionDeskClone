@@ -758,7 +758,7 @@ class Common extends MX_Controller {
 		$orderDetails = $this->order->get_order_details($fileId);
 		$data = $this->westcor->generateCplDocument($fileId, $orderDetails);
 		$this->session->set_userdata($data);
-		if(!empty($userdata)) {
+		if(!empty($userdata['id'])) {
 			redirect(base_url().'cpl-dashboard');
 		} else {
 			redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
@@ -1218,7 +1218,7 @@ class Common extends MX_Controller {
 			);
 		}
 		$this->session->set_userdata($data);
-		if(!empty($userdata)) {
+		if(!empty($userdata['id'])) {
 			redirect(base_url().'cpl-dashboard');
 		} else {
 			redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);
@@ -1267,7 +1267,7 @@ class Common extends MX_Controller {
 			"success" => $success
 		);
 		$this->session->set_userdata($data);
-		if(!empty($userdata) && $userdata['id'] > 0) {
+		if(!empty($userdata['id'])) {
 			redirect(base_url().'cpl-dashboard');
 		} else {
 			redirect(base_url().'generate-cpl/'.$orderDetails['random_number']);

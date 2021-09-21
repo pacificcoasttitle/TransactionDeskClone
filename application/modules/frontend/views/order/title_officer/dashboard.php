@@ -148,7 +148,7 @@
 							<h4 class="ui-title-block_light">Below is your production figures for the current month of
 								<b><?php echo date('F');?></b></h3>
 						</div>
-						<div class="order-count-cotainer">
+						<!-- <div class="order-count-cotainer">
 							<div class="col-md-3 title">Title Openings MTD</div>
 							<div class="col-md-3 title">Title Closings MTD</div>
 							<div class="col-md-3 title">Title Revenue MTD</div>
@@ -224,7 +224,7 @@
 
 							<h4 class="ui-title-block_light">Below is list of all your files. You can search for files
 								by month that have a status open, closed, or cancelled.</h3>
-						</div>
+						</div> -->
 
 						<div class="typography-sectiona">
 							<div class="col-md-12">

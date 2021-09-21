@@ -9,7 +9,6 @@ class ReviewPrelim extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
         $this->load->library('order/order');
-        // $this->load->library("phpmailer_library");
         $this->load->model('order/document');
         $this->load->library('order/resware');
         $this->load->model('order/home_model');

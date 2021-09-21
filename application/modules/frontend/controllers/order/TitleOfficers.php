@@ -32,7 +32,7 @@ class TitleOfficers extends MX_Controller {
 		$con = array('id' => $userdata['id']);
 		$user_info = $this->order->getSalesRep($con);
 		$data['user_info'] = $user_info;
-		$workedDays = $this->order->countWorkedDaysOfMonth();
+		/*$workedDays = $this->order->countWorkedDaysOfMonth();
 		$workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
 		$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'), 0);
 
@@ -86,7 +86,7 @@ class TitleOfficers extends MX_Controller {
 			$data['refi_close_order_percetage'] = 0;
 			$data['sale_close_order_percetage'] = 0;
 			$data['close_order_percetage'] = 0;
-		}
+		}*/
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/title_officer/dashboard');
 	}
