@@ -2657,7 +2657,6 @@ class Cron extends MX_Controller {
                                     array(
                                         'prod_type' => strtolower($prodType),
                                         'premium' => (float)$premium,
-                                        'resware_closed_status_date' => $completed_date,
                                         'sent_to_accounting_date' => $completed_date
                                     ), 
                                     array(
@@ -3438,10 +3437,15 @@ class Cron extends MX_Controller {
 
                         if($row != 1) {
                             if(1 === preg_match('~[0-9]~', $file_number)){
+                                $completed_date = null;
+                                if (!empty($closedDate)) {
+                                    $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
+                                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                                }
                                 $updateArray[] = array(
                                     'file_number'=> (int)$file_number,
                                     'resware_status' => strtolower($fileStatus),
-                                    'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $closedDate : null,
+                                    'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                                     'updated_at' => date('Y-m-d H:i:s')
                                 );  
                             } 
