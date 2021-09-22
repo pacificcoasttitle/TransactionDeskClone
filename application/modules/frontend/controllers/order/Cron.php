@@ -2710,28 +2710,36 @@ class Cron extends MX_Controller {
                                     );
                                 }
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
-                                if (!empty($salesRepId)) {
-                                    $this->home_model->update(
-                                        array(
-                                            'sales_representative' => $salesRepId,
-                                        ), 
-                                        array(
-                                            'id' => $orderDetails['transaction_id']
-                                        ), 
-                                        'transaction_details'
-                                    );
-                                    $file_numbers[] = $file_number;
-                                } else {
-                                    $this->home_model->update(
-                                        array(
-                                            'sales_representative' => 0,
-                                        ), 
-                                        array(
-                                            'id' => $orderDetails['transaction_id']
-                                        ), 
-                                        'transaction_details'
-                                    );
-                                }
+                                $resultSales = array();
+                                if(!empty($salesRepName)) {
+                                    $this->db->select('*');
+                                    $this->db->from('customer_basic_details');
+                                    $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
+                                    $this->db->where('is_sales_rep', 1);
+                                    $query = $this->db->get();
+                                    $resultSales = $query->row_array(); 
+                                    if (!empty($resultSales)) {
+                                        $this->home_model->update(
+                                            array(
+                                                'sales_representative' => $resultSales['id'],
+                                            ), 
+                                            array(
+                                                'id' => $orderDetails['transaction_id']
+                                            ), 
+                                            'transaction_details'
+                                        );
+                                    } else {
+                                        $this->home_model->update(
+                                            array(
+                                                'sales_representative' => $resultSales['id'],
+                                            ), 
+                                            array(
+                                                'id' => $orderDetails['transaction_id']
+                                            ), 
+                                            'transaction_details'
+                                        );
+                                    }
+                                } 
                             } else {
                                 $data = json_encode(array('FileNumber' => $file_number));
                                 $userData = array(

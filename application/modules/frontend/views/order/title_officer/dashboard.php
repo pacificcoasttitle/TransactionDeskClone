@@ -145,8 +145,8 @@
 									</a>
 								</div>
 							</div>
-							<h4 class="ui-title-block_light">Below is your production figures for the current month of
-								<b><?php echo date('F');?></b></h3>
+							<!-- <h4 class="ui-title-block_light">Below is your production figures for the current month of
+								<b><?php echo date('F');?></b></h3> -->
 						</div>
 						<!-- <div class="order-count-cotainer">
 							<div class="col-md-3 title">Title Openings MTD</div>

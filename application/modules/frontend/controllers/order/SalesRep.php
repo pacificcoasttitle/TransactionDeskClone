@@ -67,10 +67,12 @@ class SalesRep extends MX_Controller
 
         $openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
         $closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-        $data['refi_total_premium'] = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+        //$data['refi_total_premium'] = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+		$data['refi_total_premium'] = $closeOrderRefiTotalPremium;
         $openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
         $closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-        $data['sale_total_premium'] = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+        //$data['sale_total_premium'] = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+		$data['sale_total_premium'] = $closeOrderSaleTotalPremium;
         $data['total_premium'] = $data['sale_total_premium'] + $data['refi_total_premium'];
         if ($data['total_premium'] > 0) {
             $premiumWorkedDays = $data['total_premium']/$workedDays;

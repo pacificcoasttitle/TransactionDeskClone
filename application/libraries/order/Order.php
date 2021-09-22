@@ -1280,10 +1280,10 @@ class Order
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-       // $this->CI->db->where('order_details.resware_status = "closed"');
+        //$this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'loan');
-        $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
-        $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
         if ($is_sales_rep == 1) {
             $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
         } else {
@@ -1300,10 +1300,10 @@ class Order
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-            //$this->CI->db->where('order_details.resware_status = "closed"');
+        //$this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'sale');
-        $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
-        $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
         if ($is_sales_rep == 1) {
             $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
         } else {
