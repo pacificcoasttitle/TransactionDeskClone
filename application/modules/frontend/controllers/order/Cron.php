@@ -2666,7 +2666,7 @@ class Cron extends MX_Controller {
                                 );
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
                                 $resultSales = array();
-                                if(!empty($salesRepName) && empty($orderDetails['sales_representative'])) {
+                                if(!empty($salesRepName)) {
                                     $this->db->select('*');
                                     $this->db->from('customer_basic_details');
                                     $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
@@ -2677,6 +2677,16 @@ class Cron extends MX_Controller {
                                         $this->home_model->update(
                                             array(
                                                 'sales_representative' => $resultSales['id'],
+                                            ), 
+                                            array(
+                                                'id' => $orderDetails['transaction_id']
+                                            ), 
+                                            'transaction_details'
+                                        );
+                                    } else {
+                                        $this->home_model->update(
+                                            array(
+                                                'sales_representative' => 0,
                                             ), 
                                             array(
                                                 'id' => $orderDetails['transaction_id']
