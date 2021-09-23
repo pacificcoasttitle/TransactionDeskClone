@@ -3830,7 +3830,7 @@ class Cron extends MX_Controller {
     
                                                 $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, array(), 0, 0);
     
-                                                try {
+                                                /*try {
                                                     $result = $this->twilio->message($phoneNumber, $message, '', array('from' => $from));
                                                     $response = $result->toArray();
                                                     $response['msg_status'] = 'success';
@@ -3863,7 +3863,7 @@ class Cron extends MX_Controller {
                                                         'error_message' => $response['errorMessage'],
                                                     );
                                                     $this->twilioMessage->insert($data);
-                                                } 
+                                                } */
                                             } 
                                         }
                                     }
