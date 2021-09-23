@@ -1465,7 +1465,7 @@ class Home extends MX_Controller {
 
     public function file_document()
     {
-        if($this->input->server('REQUEST_METHOD') === 'POST') {
+        if ($this->input->server('REQUEST_METHOD') === 'POST') {
             if (!is_dir('uploads/file_document')) {
                 mkdir('./uploads/file_document', 0777, TRUE);
             }
@@ -1492,6 +1492,18 @@ class Home extends MX_Controller {
                         'description' => $this->input->post('description'),
                         'created_at' => date('Y-m-d H:i:s')
                     );
+
+                    $titleOfficers = $this->input->post('titleOfficers');
+                    foreach ($titleOfficers as $titleOfficer) {
+                        if ($titleOfficer == 'all') {
+                            $titleOfficers = $this->title_model->getTitleOfficers();
+                            foreach($titleOfficers as $titleOfficers) {
+                                
+                            }
+                        } else {
+
+                        }
+                    }
 
                     $this->load->library('order/order');
 
@@ -1521,6 +1533,8 @@ class Home extends MX_Controller {
         }
         $data = array();
         $data['title'] = 'PCT Order: Files';
+        $this->load->model('order/title_model');
+        $data['titleOfficers'] = $this->title_model->getTitleOfficers();
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/home/file_document', $data);
         $this->load->view('order/layout/footer', $data);
@@ -1541,15 +1555,10 @@ class Home extends MX_Controller {
             $tmp_array[] = $file_data->description;
             $tmp_array[] = date('m/d/Y',strtotime($file_data->created_at));
             $documentName = $file_data->file_path;
-            if (env('AWS_ENABLE_FLAG') == 1) {
-                        $documentUrl = env('AWS_PATH')."file_document/".$documentName;
-                        $action = "<div style='display:flex;'><a href='javascript::void();' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");'><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
-                    } else {
-                        $documentUrl = FCPATH.'uploads/file_document/'.$documentName;
-                        $action = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
-                    }
+            $formId = $file_data->id;
+            $documentUrl = env('AWS_PATH')."file_document/".$documentName;
+            $action = "<div style='display:flex;'><a href='javascript::void();' onclick='editFormInfo($formId);'><i class='fas fa-fw fa-download'></i></a><a href='javascript::void();' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");'><i class='fas fa-fw fa-download'></i></a>
+                <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
             $tmp_array[] = $action;
             $tableData[] = $tmp_array;
         }
@@ -3017,5 +3026,14 @@ class Home extends MX_Controller {
         $this->db->update('customer_basic_details', $data, $condition);
         $data = array('status'=>'success', 'msg'=> 'Mortgage user updated successfully.');
         echo json_encode($data);
+    }
+
+    public function getFormDetails()
+    {
+        $this->load->model('order/FileDocument_model'); 
+		$formId = $this->input->post('formId');
+		$formDetails = $this->fileDocument_model->get_rows(array('id' => $formId));
+		$response = array('status'=>'success', 'formDetails' => $formDetails);
+		echo json_encode($response); exit; 
     }
 }

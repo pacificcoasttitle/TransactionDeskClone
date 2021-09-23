@@ -244,6 +244,7 @@ $route['order/admin/tax-documents'] = 'admin/order/home/tax_document';
 $route['order/admin/grant-deed-log'] = 'admin/order/TitlePoint/grantDeedLog';
 $route['order/admin/curative-documents'] = 'admin/order/home/curative_document';
 $route['order/admin/file-documents'] = 'admin/order/home/file_document';
+$route['order/admin/get-form-details'] = 'admin/order/home/getFormDetails';
 $route['order/admin/companies'] = 'admin/order/home/companies';
 $route['order/admin/add-company'] = 'admin/order/home/addCompany';
 $route['order/admin/incorrect-users'] = 'admin/order/home/incorrect_users';

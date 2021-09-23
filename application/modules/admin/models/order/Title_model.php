@@ -80,7 +80,9 @@ class Title_model extends CI_Model
     	$table = $this->table;
         $this->db->select('*');
         $this->db->from($table);
-
+        $this->db->where('status', 1);	
+        $this->db->where('is_title_officer', 1);	
+        
         if (array_key_exists("where", $params)){
             foreach($params['where'] as $key => $val){
                 $this->db->where($key, $val);
