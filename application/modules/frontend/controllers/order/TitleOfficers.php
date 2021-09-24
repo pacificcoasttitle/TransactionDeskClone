@@ -138,53 +138,6 @@ class TitleOfficers extends MX_Controller {
         echo json_encode($json_data);
     }
 
-	function titleOfficerProductionHistory()
-	{
-		$userdata = $this->session->userdata('user');
-		$data['title'] = 'Sales Production History | Pacific Coast Title Company';
-		$titleOfficerHistory = array();
-		for ($iM = 1; $iM <= (int)date('m'); $iM++) {
-			$month = date("m", strtotime("$iM/12/10"));
-			$dateObj   = DateTime::createFromFormat('!m', $iM);
-			$monthName = $dateObj->format('F'); 
-			$titleOfficerHistory[$iM-1]['month'] = $monthName;
-
-			$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, 0);
-			$refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-			$openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, 0);
-			$sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
-			$titleOfficerHistory[$iM-1]['total_open_count'] = $sale_open_count + $refi_open_count;
-
-			$closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, 0);
-			$refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-			$closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, 0);
-			$sale_close_count =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
-			$titleOfficerHistory[$iM-1]['total_close_count'] = $refi_close_count + $sale_close_count;
-
-			$openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
-			$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-			$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
-			$openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
-			$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-			$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
-			$titleOfficerHistory[$iM-1]['total_premium'] = $sale_total_premium + $refi_total_premium;
-
-			$totalCount = $sale_close_count + $refi_close_count + $sale_open_count + $refi_open_count;
-			if($totalCount > 0) { 
-				$refi_close_order_percetage = round(($refi_close_count*100)/$totalCount);
-				$sale_close_order_percetage = round(($sale_close_count*100)/$totalCount);
-				$titleOfficerHistory[$iM-1]['close_order_percetage'] = $refi_close_order_percetage + $sale_close_order_percetage;
-			} else {
-				$refi_close_order_percetage = 0;
-				$sale_close_order_percetage = 0;
-				$titleOfficerHistory[$iM-1]['close_order_percetage'] = 0;
-			}
-		}
-		$data['titleOfficerHistory'] = $titleOfficerHistory;
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/title_officer/production_history');
-	}
-
 	function notes()
     {
         $data['title'] = 'Notes | Pacific Coast Title Company';
@@ -311,17 +264,18 @@ class TitleOfficers extends MX_Controller {
 	    }
     }
 
-    function uploadFileDocument() {
-		
+    function uploadFileDocument() 
+	{
 		$data['title'] = 'Smart Dashboard | Upload FIle';
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/title_officer/attach_files');
 	}
-	function getFileDocument() {
+
+	function getFileDocument() 
+	{
 		$this->load->model('order/fileDocument_model');
 		$userdata = $this->session->userdata('user');
-		// $where = array('added_by'=>$userdata['id']);
-		$files_data = $this->fileDocument_model->get_all();
+		$files_data = $this->fileDocument_model->get_forms();
 
 		$tableData = array();
 		foreach ($files_data as $key=>$file_data) {

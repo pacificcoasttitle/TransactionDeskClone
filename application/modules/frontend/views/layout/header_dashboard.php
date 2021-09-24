@@ -31,7 +31,9 @@
                                         <li><a href="<?php echo base_url(); ?>sales-production-history">Production History</a></li>
                                     <?php } else if($userdata['is_title_officer'] == 1)  { ?>
                                         <li><a href="<?php echo base_url(); ?>title-officer-dashboard">Dashboard Home</a></li>
-                                        <li><a href="<?php echo base_url(); ?>title-officer-production-history">Production History</a></li>
+                                        <li><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></li>
+                                        <li><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed Insured</a></li>
+                                        <li><a href="<?php echo base_url().'prelim-files'; ?>">Review Prelims</a></li>
                                     <?php } ?>
                                 <?php } ?>
                                 <li><a href="<?php echo base_url().'logout'; ?>">Logout</a></li>   

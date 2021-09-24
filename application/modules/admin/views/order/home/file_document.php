@@ -16,7 +16,7 @@
 	<div class="card mb-3">
 		<div class="card-header">
 			<i class="fas fa-table"></i>
-			Files
+			Forms
 			<div class="float-right">
 				<a href="javascript:void(0);" class="btn btn-secondary" data-toggle="modal"
 					data-target="#fileUploadModal"> Upload </a>
@@ -35,9 +35,9 @@
 			<?php
                 endif;
             ?>
-			<div id="curative_document_success_msg" class="w-100 alert alert-success alert-dismissible"
+			<div id="forms_success_msg" class="w-100 alert alert-success alert-dismissible"
 				style="display:none;"></div>
-			<div id="curative_document_error_msg" class="w-100 alert alert-danger alert-dismissible"
+			<div id="forms_error_msg" class="w-100 alert alert-danger alert-dismissible"
 				style="display:none;"></div>
 			<div class="table-responsive">
 				<table class="table table-bordered" id="tbl-file-documents-listing" width="100%" cellspacing="0">
@@ -78,7 +78,7 @@
 					<div class="form-group">
 						<label for="title-officer" class="col-form-label">Select Title Officer</label>
 						<div class="">
-							<select name="titleOfficers[]" class="selectpicker" multiple data-live-search="true">
+							<select required="" name="titleOfficers[]" class="selectpicker" multiple data-live-search="true">
                                 <option value="all">All</option>
 								<?php foreach($titleOfficers as $titleOfficer) {?>
                                     <option value="<?php echo $titleOfficer['id'];?>"> <?php echo $titleOfficer['first_name']." ".$titleOfficer['last_name'];?></option>
@@ -145,6 +145,7 @@
 
     function editFormInfo(formId) 
     {
+		$('#formId').val(formId);
         $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
         $('#page-preloader').css('display', 'block');
         $.ajax({
@@ -155,13 +156,22 @@
             },
             success: function (response) {
                 var res = jQuery.parseJSON(response);
+				$("#file-upload").prop('required', false);
                 if(res.status == 'success') {
-                    $("#LenderName").val(res.formDetails['lender_name']);
-                    $("#LenderState").val(res.formDetails['lender_state']);
+                    $("#file-name").val(res.formDetails['name']);
+                    $("#file-description").val(res.formDetails['description']);
+					var selected = [];
+					for (var i = 0; i < res.titleOfficers.length; i++) {
+						selected.push(res.titleOfficers[i]['user_id']);
+					}
+					console.log(selected);
+					$('select[name=titleOfficers]').val(selected);
+					$('.selectpicker').selectpicker('refresh');
+					
+					
                 }  
                 $('#page-preloader').css('display', 'none');
                 $('#fileUploadModal').modal('show');
-                $('#formId').val(formId);
             }
         });
         return false;

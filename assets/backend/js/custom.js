@@ -6,6 +6,8 @@ var escrow_officers_list = '';
 var fees_list = '';
 var fees_type_list = '';
 var code_book_list = '';
+var forms_list = '';
+
 $(document).ready(function () {
 
     // Add active class to menu
@@ -2136,7 +2138,7 @@ $(document).ready(function () {
 
     if ($('#tbl-file-documents-listing').length) 
     {
-        cpl_document_list = $('#tbl-file-documents-listing').DataTable({
+        forms_list = $('#tbl-file-documents-listing').DataTable({
             "paging": true,
             "info" : false,
              "bLengthChange": false,
@@ -4334,6 +4336,59 @@ function deleteEscrowOfficer(id)
 
                 setTimeout(function () {
                     $('#escrow_officer_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}
+
+function deleteForm(id)
+{
+    if (id=='') {
+        alert('Form ID is required.');
+        return false;
+    }
+    var ready = confirm("Are you sure want to delete?");
+    if (ready) {
+        $.ajax({
+            url: base_url+"delete-form",
+            method: "POST",
+            data : {
+                id: id
+            },
+            success: function(data){
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#forms_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#forms_success_msg").offset().top
+                    }, 1000);
+
+                    forms_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#forms_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#forms_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#forms_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#forms_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#forms_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#forms_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#forms_error_msg').html('').hide();
                 }, 4000);
             }
         })

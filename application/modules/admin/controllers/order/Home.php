@@ -1493,38 +1493,40 @@ class Home extends MX_Controller {
                         'created_at' => date('Y-m-d H:i:s')
                     );
 
-                    $titleOfficers = $this->input->post('titleOfficers');
-                    foreach ($titleOfficers as $titleOfficer) {
-                        if ($titleOfficer == 'all') {
-                            $titleOfficers = $this->title_model->getTitleOfficers();
-                            foreach($titleOfficers as $titleOfficers) {
-                                
-                            }
-                        } else {
-
-                        }
-                    }
-
                     $this->load->library('order/order');
-
-
                     $this->order->uploadDocumentOnAwsS3($document_name, 'file_document');
-
                     $this->load->model('order/fileDocument_model');
                     $inserted = $this->fileDocument_model->insert($fileData);
                     if($inserted) {
+                        $titleOfficers = $this->input->post('titleOfficers');
+                        foreach ($titleOfficers as $titleOfficer) {
+                            if ($titleOfficer == 'all') {
+                                $this->load->model('order/title_model');
+                                $titleOfficersInfo = $this->title_model->getTitleOfficers();
+                                foreach($titleOfficersInfo as $titleOfficerInfo) {
+                                    $data = array(
+                                        'form_id' => $inserted,
+                                        'user_id' => $titleOfficerInfo['id'],
+                                        'created_at' => date("Y-m-d H:i:s")
+                                    );
+                                    $this->db->insert('pct_order_title_officers_forms', $data);
+                                }
+                            } else {
+                                $data = array(
+                                    'form_id' => $inserted,
+                                    'user_id' => $titleOfficer,
+                                    'created_at' => date("Y-m-d H:i:s")
+                                );
+                                $this->db->insert('pct_order_title_officers_forms', $data);
+                            }
+                        }
                         $this->session->set_flashdata('success','File uploaded.');
                         redirect('order/admin/file-documents');
                     }
-                    
                 } 
-                
-            }
-            else 
-            {
+            } else {
                 $error = 'Please slect file to uplaod';
             }
-
             if($error == '') {
                 $error = 'Something went wrong. Please try again';
             }
@@ -1557,8 +1559,8 @@ class Home extends MX_Controller {
             $documentName = $file_data->file_path;
             $formId = $file_data->id;
             $documentUrl = env('AWS_PATH')."file_document/".$documentName;
-            $action = "<div style='display:flex;'><a href='javascript::void();' onclick='editFormInfo($formId);'><i class='fas fa-fw fa-download'></i></a><a href='javascript::void();' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");'><i class='fas fa-fw fa-download'></i></a>
-                <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+            $action = "<div style='display:flex;'><!-- <a href='javascript::void();' onclick='editFormInfo($formId);'><i class='fas fa-fw fa-edit'></i></a>--><a href='javascript::void();' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");'><i class='fas fa-fw fa-download'></i></a>
+                <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a><a style='margin-left:10px;' href='javascript::void();' onclick='deleteForm($formId);'><i class='fas fa-fw fa-trash'></i></a></div>";
             $tmp_array[] = $action;
             $tableData[] = $tmp_array;
         }
@@ -3030,10 +3032,28 @@ class Home extends MX_Controller {
 
     public function getFormDetails()
     {
-        $this->load->model('order/FileDocument_model'); 
+        $this->load->model('order/fileDocument_model'); 
+        $this->load->model('order/titleOfficerForms'); 
 		$formId = $this->input->post('formId');
 		$formDetails = $this->fileDocument_model->get_rows(array('id' => $formId));
-		$response = array('status'=>'success', 'formDetails' => $formDetails);
+        $titleOfficers = $this->titleOfficerForms->getTitleOfficersForForm($formId);
+        //print_r($titleOfficers);exit;
+		$response = array('status'=>'success', 'formDetails' => $formDetails, 'titleOfficers' => $titleOfficers);
 		echo json_encode($response); exit; 
+    }
+
+    public function deleteForm()
+    {
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+        if ($id) {
+            $this->db->delete('pct_file_documents', array('id' => $id));
+            $this->db->delete('pct_order_title_officers_forms', array('form_id' => $id));
+            $successMsg = 'Form deleted successfully.';
+            $response = array('status'=>'success', 'message'=>$successMsg);
+        } else {
+            $msg = 'Form ID is required.';
+            $response = array('status' => 'error','message'=>$msg);
+        }
+        echo json_encode($response);
     }
 }
