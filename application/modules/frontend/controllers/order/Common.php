@@ -202,6 +202,14 @@ class Common extends MX_Controller {
 				$data['url'] = base_url().'uploads/documents/'.$documentDetail['document_name'];
 			}
 		}
+		if ($documentDetail['is_prelim_document'] == 1) {
+			$data['prelim_flag'] = 1;
+			$data['doc_document_name'] = str_replace("pdf", "docx",$documentDetail['document_name']);
+		} else {
+			$data['prelim_flag'] = 0;
+			$data['doc_document_name'] = '';
+		}
+
         $results = $this->load->view('order/review_file_load_doc', $data, TRUE);
         echo json_encode($results, true);
 	}
@@ -329,11 +337,44 @@ class Common extends MX_Controller {
 		if (empty($this->session->userdata('user'))) {
             redirect(base_url().'order');
         }
+		$userdata = $this->session->userdata('user');
 		$resware_document_id = $this->input->post('resware_document_id');
 		$order_id = $this->input->post('order_id');
 		$document_name = $this->input->post('document_name');
 		if (env('AWS_ENABLE_FLAG') == 1) {
 			$contents = file_get_contents(env('AWS_PATH')."documents/".$document_name);
+			if(empty($contents)) {
+				$prelim_doc_name = str_replace("docx", "pdf", $document_name);
+				$user_data = array(
+					'admin_api' => 1
+				);
+				$endPoint = 'documents/'.$resware_document_id.'?format=json';
+				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+				$resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
+				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, 0, $logid);
+				$resDocument = json_decode($resultDocument, true);
+
+				if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+					$documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+					if (!is_dir('uploads/documents')) {
+						mkdir(FCPATH.'/uploads/documents', 0777, TRUE);
+					}
+					file_put_contents(FCPATH.'/uploads/documents/'.$prelim_doc_name, $documentContent);
+				}
+				
+				$source_pdf = FCPATH.'/uploads/documents/'.$prelim_doc_name;
+				$wordsApi = new \Aspose\Words\WordsApi(getenv('PDF_TO_DOC_CLIENT_ID'), getenv('PDF_TO_DOC_SECRET_KEY'));
+				$format = "docx";
+				$file = $source_pdf;
+				$doc_file_name =  str_replace('pdf', 'docx', $document_name);
+				$dest_doc = FCPATH.'/uploads/documents/'.$document_name;
+				$request = new Aspose\Words\Model\Requests\ConvertDocumentRequest($file, $format, null);
+				$result = $wordsApi->ConvertDocument($request); 
+				copy($result->getPathName(), $dest_doc);
+				$contents = file_get_contents(base_url().'uploads/documents/'.$document_name);
+				$this->order->uploadDocumentOnAwsS3($doc_file_name, 'documents');
+				$this->order->uploadDocumentOnAwsS3($prelim_doc_name, 'documents');
+			}
 		} else {
 			$contents = file_get_contents(base_url().'uploads/documents/'.$document_name);
 		}

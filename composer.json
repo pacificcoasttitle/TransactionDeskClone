@@ -14,7 +14,8 @@
 		"h4cc/wkhtmltopdf-amd64": "0.12.x",
 		"knplabs/knp-snappy": "^1.2",
 		"wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3",
-		"phpseclib/phpseclib": "^3.0"
+		"phpseclib/phpseclib": "^3.0",
+		"aspose-cloud/aspose-words-cloud": "^21.9"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
