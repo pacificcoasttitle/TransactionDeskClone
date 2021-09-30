@@ -2593,6 +2593,7 @@ class Cron extends MX_Controller {
                 $row = 1;
                 $headerColumns = array(); 
                 if (($handle = fopen($filePath, "r")) !== FALSE) {
+                    $file_numbers = array();
                     while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
                         $num = count($data);
                         if($row == 1) {
@@ -2647,6 +2648,12 @@ class Cron extends MX_Controller {
                             );
                             $order = $this->order->get_order($condition);
                             if (!empty($order)) {
+                                if (in_array($file_number, $file_numbers)) {
+                                    if (!empty($premium)) {
+                                        $premium = (float)$premium +  $order[0]['premium'];
+                                    }
+                                }
+                                $file_numbers[] = $file_number;
                                 $completed_date = null;
                                 if (!empty($closedDate)) {
                                     $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
