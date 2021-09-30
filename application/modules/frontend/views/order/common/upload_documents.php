@@ -2,6 +2,9 @@
     th {
         text-align: center;
     }
+	.table-container {
+		overflow-y: initial !important;
+	}
 </style>
 <body>
 	<?php
@@ -303,57 +306,43 @@
 													</div>
 												</form>
 											</div>
-											<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-												<div class="container">
-													<div class="row">
-														<div class="row">
-															<div class="col-xs-12">
-																<div class="typography-section__inner">
-																	<h2 class="ui-title-block ui-title-block_light">Documents</h2>
-																	<div class="ui-decor-1a bg-accent"></div>
-																	<h3 class="ui-title-block_light">Below is list of all your documents.</h3>
-																</div>
-																<div class="typography-sectiona">
-																	<div class="col-md-12">
-																		<div class="table-container">
-																			<table class="table table_primary" id="orders_listing">
-																				<thead>
-																					<tr>
-																						<th>#</th>
-																						<th>Document Name</th>
-																						<th>Created</th>
-																						<th>Action</th>
-																					</tr>
-																				</thead>
-																				<tbody>
-																					<?php if(!empty($documents)) {
-																						$i = 1;
-																						foreach($documents as $document) { ?>
-																						<tr>
-																							<td><?php echo $i;?></td>
-																							<td><?php echo $document['original_document_name'];?></td>
-																							<td><?php echo date("m/d/Y", strtotime($document['created']));?></td>
-																							<?php $documentUrl = env('AWS_PATH')."documents/".$document['document_name'];?>
-																							<td><a href='#' onclick='downloadDocumentFromAws("<?php echo $documentUrl;?>", "documents");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a></td>
-																						</tr>
-																						<?php $i++; } 
-																					} else { ?>
-																						<tr>
-																							<td colspan="4">No Records Found.</td>
-																						</tr>
-																					<?php }?>
-																				</tbody>
-																			</table>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</section>
+											
 										</div>
 									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
+		<div class="container">
+			<div class="row">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="typography-section__inner">
+							<h2 class="ui-title-block ui-title-block_light">Documents</h2>
+							<div class="ui-decor-1a bg-accent"></div>
+							<h3 class="ui-title-block_light">Below is list of all your documents.</h3>
+						</div>
+						<div class="typography-sectiona">
+							<div class="col-md-12">
+								<div class="table-container">
+									<table class="table table_primary" id="document_listing">
+										<thead>
+											<tr>
+												<th>#</th>
+												<th>Document Name</th>
+												<th>Created</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>
@@ -368,6 +357,7 @@
 </body>
 
 <script>
+	var documents_list = '';
     $(document).ready(function(){
 		$("#files_upload").submit(function( event ) {
 			$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
@@ -412,7 +402,53 @@
 			$("#description_6").prop('required',true);
 			$('#up_btn').css({"background": "#d35411", "color": "white"});
 			$('#down_btn').css({"background": "#d35411", "color": "white"});
-        });		
+        });	
+		
+		if ($('#document_listing').length) {
+			documents_list = $('#document_listing').DataTable({
+				"paging": true,
+				"lengthChange": false,
+				"language": {
+					paginate: {
+						next: '<span class="fa fa-angle-right"></span>',
+						previous: '<span class="fa fa-angle-left"></span>',
+					},
+					"emptyTable": "Record(s) not found.",
+					"search": "",
+                },
+				initComplete: function () {
+					
+					
+                },
+				dom: 'Bfrtip',
+				buttons: [],
+				"drawCallback": function () {
+					
+				},
+				"ordering": false,
+				"serverSide": true,
+				"ajax": {
+					url: base_url + "get-order-documents", 
+					type: "post", 
+					data: {
+						order_id: $('#order_id').val()
+					},
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						if (parseInt(XMLHttpRequest.status) == 419) {
+							alert("You are logged out. Please login.");
+						}
+						if (parseInt(XMLHttpRequest.status) == 419) {
+							setTimeout(function () {
+								location.reload();
+							}, 1000);
+						}
+						$("#document_listing tbody").append(
+							'<tr><td colspan="4" class="text-center">No records found</td></tr>');
+						$("#document_listing_processing").css("display", "none");
+					}
+				}
+			});
+		}
     });
 
 	function downloadDocumentFromAws(url, documentType)

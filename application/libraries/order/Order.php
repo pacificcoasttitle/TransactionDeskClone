@@ -589,8 +589,11 @@ class Order
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('*')
             ->from('pct_order_documents');
-            
-        $this->CI->db->where('user_id', $userdata['id']);
+         
+        if ($userdata['is_title_officer'] == 0) {
+            $this->CI->db->where('user_id', $userdata['id']);
+        }
+        
         $this->CI->db->where('order_id', $order_id);
         $this->CI->db->order_by('id', 'desc');
         $query = $this->CI->db->get();
@@ -599,6 +602,90 @@ class Order
         } else {
             return array();
         }         
+    }
+
+    public function getOrderdocuments($params)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('*')
+            ->from('pct_order_documents');
+         
+        if ($userdata['is_title_officer'] == 0) {
+            $this->CI->db->where('user_id', $userdata['id']);
+        }
+        $this->CI->db->where('order_id', $params['order_id']);
+        $total_records =  $this->CI->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $document_lists = array();
+
+        if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->like('original_document_name', $keyword);
+            }
+
+            if ($userdata['is_title_officer'] == 0) {
+                $this->CI->db->where('user_id', $userdata['id']);
+            }
+
+            $this->CI->db->where('order_id', $params['order_id']);
+            $this->CI->db->select('*')
+                ->from('pct_order_documents');
+            $total_records =  $this->CI->db->count_all_results();
+
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->like('original_document_name', $keyword);
+            }
+
+            if ($userdata['is_title_officer'] == 0) {
+                $this->CI->db->where('user_id', $userdata['id']);
+            }
+
+            $this->CI->db->where('order_id', $params['order_id']);
+            $this->CI->db->select('*')
+                ->from('pct_order_documents');
+
+            $this->CI->db->order_by('id', 'desc');  
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            } 
+
+            $query = $this->CI->db->get();
+            if ($query->num_rows() > 0) {
+                $document_lists = $query->result_array();
+            }
+        } else {
+            if ($userdata['is_title_officer'] == 0) {
+                $this->CI->db->where('user_id', $userdata['id']);
+            }
+
+            $this->CI->db->where('order_id', $params['order_id']);
+            $this->CI->db->select('*')
+                ->from('pct_order_documents');
+
+            $this->CI->db->order_by('id', 'desc');    
+
+            
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+            if ($query->num_rows() > 0) {
+                $document_lists = $query->result_array();
+            }
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $total_records,
+            'data' => $document_lists
+        );
     }
 
     public function get_prelim_document($order_id)

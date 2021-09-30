@@ -617,9 +617,48 @@ class Common extends MX_Controller {
 		$fileId = $this->uri->segment(2);     
 		$data['documentTypes'] = $this->order->get_document_types();
 		$data['orderDetails'] = $this->order->get_order_details($fileId);
-		$data['documents'] = $this->order->get_user_documents($data['orderDetails']['order_id']);
+		
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/common/upload_documents');
+	}
+
+	function getOrderDocumentS() 
+	{
+		$params = array();  $data = array();
+		$params['order_id'] = $this->input->post('order_id');
+		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+			$params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+			$params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+			$pageno = ($params['start'] / $params['length'])+1;
+			$documents_lists = $this->order->getOrderdocuments($params);
+			$json_data['draw'] = intval( $params['draw'] );
+		} else {
+			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+			$documents_lists = $this->order->getOrderdocuments($params);
+		}
+
+		if (isset($documents_lists['data']) && !empty($documents_lists['data'])) {
+			$i = $params['start'] + 1;
+			foreach ($documents_lists['data'] as $document)  {
+				$nestedData = array();
+				$nestedData[] = $i;
+				$nestedData[] = $document['original_document_name'];
+				$nestedData[] = date('m/d/Y',strtotime($document['created']));
+				$documentName = $document['document_name'];
+				$documentUrl = env('AWS_PATH')."documents/".$documentName;
+				$nestedData[] = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";   
+				$data[] = $nestedData; 
+				$i++; 
+			}
+		}
+		$json_data['recordsTotal'] = intval( $documents_lists['recordsTotal'] );
+		$json_data['recordsFiltered'] = intval( $documents_lists['recordsFiltered'] );
+		$json_data['data'] = $data;
+		echo json_encode($json_data);	
 	}
 
 	public function files_upload() 

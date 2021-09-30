@@ -116,6 +116,7 @@ $route['instrumentService'] = 'frontend/order/TitlePoint/instrumentService';
 $route['upload-doc-orders'] = 'frontend/order/common/uploadDocOrders';
 $route['get-orders-upload-doc'] = 'frontend/order/common/getOrdersUploadDoc';
 $route['upload-documents/:num'] = 'frontend/order/common/upload_documents';
+$route['get-order-documents'] = 'frontend/order/common/getOrderDocuments';
 $route['files-upload'] = 'frontend/order/common/files_upload';
 $route['fees'] = 'frontend/order/dashboard/fees';
 $route['get-transaction-orders'] = 'frontend/order/dashboard/get_transaction_orders';
