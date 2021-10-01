@@ -2593,6 +2593,8 @@ class Cron extends MX_Controller {
                 $row = 1;
                 $headerColumns = array(); 
                 if (($handle = fopen($filePath, "r")) !== FALSE) {
+                    $documentName = pathinfo($filePath);
+                   
                     $file_numbers = array();
                     while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
                         $num = count($data);
@@ -2659,18 +2661,31 @@ class Cron extends MX_Controller {
                                     $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
                                     $completed_date = $myDateTime->format('Y-m-d H:i:s');
                                 }
-    
-                                $this->home_model->update(
-                                    array(
-                                        'prod_type' => strtolower($prodType),
-                                        'premium' => (float)$premium,
-                                        'sent_to_accounting_date' => $completed_date
-                                    ), 
-                                    array(
-                                        'id' => $order[0]['id']
-                                    ), 
-                                    'order_details'
-                                );
+                                
+                                if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
+                                    $this->home_model->update(
+                                        array(
+                                            'prod_type' => strtolower($prodType)
+                                        ), 
+                                        array(
+                                            'id' => $order[0]['id']
+                                        ), 
+                                        'order_details'
+                                    );
+                                } else {
+                                    $this->home_model->update(
+                                        array(
+                                            'prod_type' => strtolower($prodType),
+                                            'premium' => (float)$premium,
+                                            'sent_to_accounting_date' => $completed_date
+                                        ), 
+                                        array(
+                                            'id' => $order[0]['id']
+                                        ), 
+                                        'order_details'
+                                    );
+                                }
+                                
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
                                 $resultSales = array();
                                 if(!empty($salesRepName)) {
@@ -2821,23 +2836,41 @@ class Cron extends MX_Controller {
                                             }
                                         }
                                         
-                                        $orderData = array(
-                                            'customer_id' => $customerId,
-                                            'file_id' => $res['FileID'],
-                                            'file_number' => $res['FileNumber'],
-                                            'property_id' => $propertyId,
-                                            'transaction_id' => $transactionId,
-                                            'created_at' => $created_date,
-                                            'prod_type' => strtolower($prodType),
-                                            'premium' => $premium,
-                                            'status'=> 1,
-                                            'is_imported'=> 1,
-                                            'is_sales_rep_order'=> 1,
-                                            'random_number' => $randomString,
-                                            'resware_closed_status_date' => $completed_date,
-                                            'resware_status'=> strtolower($res['Status']['Name']),
-                                            'sent_to_accounting_date' => $completed_date
-                                        );
+                                        if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
+                                            $orderData = array(
+                                                'customer_id' => $customerId,
+                                                'file_id' => $res['FileID'],
+                                                'file_number' => $res['FileNumber'],
+                                                'property_id' => $propertyId,
+                                                'transaction_id' => $transactionId,
+                                                'created_at' => $created_date,
+                                                'prod_type' => strtolower($prodType),
+                                                'status'=> 1,
+                                                'is_imported'=> 1,
+                                                'is_sales_rep_order'=> 1,
+                                                'random_number' => $randomString,
+                                                'resware_closed_status_date' => $completed_date,
+                                                'resware_status'=> strtolower($res['Status']['Name'])
+                                            );
+                                        } else {
+                                            $orderData = array(
+                                                'customer_id' => $customerId,
+                                                'file_id' => $res['FileID'],
+                                                'file_number' => $res['FileNumber'],
+                                                'property_id' => $propertyId,
+                                                'transaction_id' => $transactionId,
+                                                'created_at' => $created_date,
+                                                'prod_type' => strtolower($prodType),
+                                                'premium' => $premium,
+                                                'status'=> 1,
+                                                'is_imported'=> 1,
+                                                'is_sales_rep_order'=> 1,
+                                                'random_number' => $randomString,
+                                                'resware_closed_status_date' => $completed_date,
+                                                'resware_status'=> strtolower($res['Status']['Name']),
+                                                'sent_to_accounting_date' => $completed_date
+                                            );
+                                        }
                                         $this->home_model->insert($orderData,'order_details');
                                     }
                                 }
