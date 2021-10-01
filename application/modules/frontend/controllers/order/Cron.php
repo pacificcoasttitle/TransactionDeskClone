@@ -2586,7 +2586,7 @@ class Cron extends MX_Controller {
                 $sftp->delete(env('SFTP_FOLDER').'/open-closed-orders/'.$file);
             }
         }
-        $files = glob("uploads/open-closed-orders/*csv", GLOB_NOSORT);
+        $files = glob("uploads/open-closed-orders/*csv");
                  
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
