@@ -3614,7 +3614,8 @@ class Dashboard extends MX_Controller {
 			$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
 			$openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
 			$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-			$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+			//$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+			$sale_total_premium = $closeOrderSaleTotalPremium;
 			$salesHistory[$iM-1]['total_premium'] = $sale_total_premium + $refi_total_premium;
 
 			$totalCount = $sale_close_count + $refi_close_count + $sale_open_count + $refi_open_count;
