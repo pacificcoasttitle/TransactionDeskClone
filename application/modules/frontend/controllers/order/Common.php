@@ -672,8 +672,6 @@ class Common extends MX_Controller {
 						);
 						$this->document->insert($documentData);
 					}
-					echo "jhjee";
-					print_r($resDocument);
 				}	
 			}
         }   
