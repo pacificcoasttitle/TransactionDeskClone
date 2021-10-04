@@ -311,6 +311,9 @@ class Pma extends MX_Controller {
         if (!is_dir(FCPATH.$dir_to_upload)) {
             mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
         }
+        if (!(is_writable(FCPATH.$dir_to_upload))) {
+            chmod(FCPATH.$dir_to_upload, 0777);
+        }
         $dir_name = FCPATH.$dir_to_upload.'/';
         $dir_name = str_replace('\\', '/', $dir_name);
         // echo $dir_name.$document_name;die;
