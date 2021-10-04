@@ -39,7 +39,6 @@
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">
-
 									<div class="typography-sectione typography-section-border">
 										<div class="container">
 											<div class="row">
@@ -86,11 +85,8 @@
 																	</div>
 																	<span style="color:red;float:left;">*</span>
 																</div>
-
 															</div>
-
 														</blockquote>
-														<!-- end .b-blockquote-->
 													</div>
 													<div class="col-md-6">
 														<blockquote class="b-blockquote b-blockquote-3">
@@ -127,177 +123,82 @@
 																	</div>
 																	
 																</div>
-
 															</div>
-
 														</blockquote>
-														<!-- end .b-blockquote-->
 													</div>
 													<div class="col-md-12">
-													<div class="col-md-6">
-														<blockquote class="b-blockquote b-blockquote-3">
-															<footer class="b-blockquote-3__footer">
-																<cite class="b-blockquote-3__cite"
-																	title="Blockquote Title"><span
-																		class="b-blockquote-3__author">Document
-																		#3</span></cite>
-															</footer>
-															<div class="b-blockquote-3__content">
-																<div class="header-language-nav dropdown">
-																	<select name="document_type_3" id="document_type_3" class="dropdown-toggle">
-																		<option value="">DOCUMENT TYPE:</option>
-																		<?php foreach($documentTypes as $documentType) { ?>
-																		<option
-																			value="<?php echo $documentType['api_id'];?>">
-																			<?php echo $documentType['name'];?></option>
-																		<?php } ?>
-																	</select>
-																	
-																</div>
-																<div class="input-group" style="width: 100%;margin-left: 14%;">
-																	<div class="custom-file"  style="float:left;">
-																		<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
-																			id="document_3" name="document_3">
+														<div class="col-md-6">
+															<blockquote class="b-blockquote b-blockquote-3">
+																<footer class="b-blockquote-3__footer">
+																	<cite class="b-blockquote-3__cite"
+																		title="Blockquote Title"><span
+																			class="b-blockquote-3__author">Document
+																			#3</span></cite>
+																</footer>
+																<div class="b-blockquote-3__content">
+																	<div class="header-language-nav dropdown">
+																		<select name="document_type_3" id="document_type_3" class="dropdown-toggle">
+																			<option value="">DOCUMENT TYPE:</option>
+																			<?php foreach($documentTypes as $documentType) { ?>
+																			<option
+																				value="<?php echo $documentType['api_id'];?>">
+																				<?php echo $documentType['name'];?></option>
+																			<?php } ?>
+																		</select>
+																		
 																	</div>
-																	
-																</div>
-																<div class="header-language-nav dropdown">
-																	<div class="" style="margin-top: 10px;float:left;">
-																		<textarea name="description_3" id="description_3" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
-																			class="custom-file-input dropdown-toggle" id="inputGroupFile01"
-																			style="border: 1px solid rgba(238,238,238);"></textarea>
+																	<div class="input-group" style="width: 100%;margin-left: 14%;">
+																		<div class="custom-file"  style="float:left;">
+																			<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
+																				id="document_3" name="document_3">
+																		</div>
+																		
 																	</div>
-																	
-																</div>
-
-															</div>
-
-														</blockquote>
-														<!-- end .b-blockquote-->
-													</div>
-													<div class="col-md-6">
-														<blockquote class="b-blockquote b-blockquote-3">
-															<footer class="b-blockquote-3__footer">
-																<cite class="b-blockquote-3__cite"
-																	title="Blockquote Title"><span
-																		class="b-blockquote-3__author">Document
-																		#4</span></cite>
-															</footer>
-															<div class="b-blockquote-3__content">
-																<div class="header-language-nav dropdown">
-																	<select name="document_type_4" id="document_type_4" class="dropdown-toggle">
-																		<option value="">DOCUMENT TYPE:</option>
-																		<?php foreach($documentTypes as $documentType) { ?>
-																		<option
-																			value="<?php echo $documentType['api_id'];?>">
-																			<?php echo $documentType['name'];?></option>
-																		<?php } ?>
-																	</select>
-																	
-																</div>
-																<div class="input-group" style="width: 100%;margin-left: 14%;">
-																	<div class="custom-file"  style="float:left;">
-																		<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
-																			id="document_4" name="document_4">
+																	<div class="header-language-nav dropdown">
+																		<div class="" style="margin-top: 10px;float:left;">
+																			<textarea name="description_3" id="description_3" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
+																				class="custom-file-input dropdown-toggle" id="inputGroupFile01"
+																				style="border: 1px solid rgba(238,238,238);"></textarea>
+																		</div>
 																	</div>
-																	
 																</div>
-																<div class="header-language-nav dropdown">
-																	<div class="" style="margin-top: 10px;float:left;">
-																		<textarea name="description_4" id="description_4" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
-																			class="custom-file-input dropdown-toggle" id="inputGroupFile01"
-																			style="border: 1px solid rgba(238,238,238);"></textarea>
+															</blockquote>
+														</div>
+														<div class="col-md-6">
+															<blockquote class="b-blockquote b-blockquote-3">
+																<footer class="b-blockquote-3__footer">
+																	<cite class="b-blockquote-3__cite"
+																		title="Blockquote Title"><span
+																			class="b-blockquote-3__author">Document
+																			#4</span></cite>
+																</footer>
+																<div class="b-blockquote-3__content">
+																	<div class="header-language-nav dropdown">
+																		<select name="document_type_4" id="document_type_4" class="dropdown-toggle">
+																			<option value="">DOCUMENT TYPE:</option>
+																			<?php foreach($documentTypes as $documentType) { ?>
+																			<option
+																				value="<?php echo $documentType['api_id'];?>">
+																				<?php echo $documentType['name'];?></option>
+																			<?php } ?>
+																		</select>
 																	</div>
-																	
-																</div>
-
-															</div>
-
-														</blockquote>
-														<!-- end .b-blockquote-->
-													</div>
-												</div>
-													<div class="col-md-6">
-														<blockquote class="b-blockquote b-blockquote-3">
-															<footer class="b-blockquote-3__footer">
-																<cite class="b-blockquote-3__cite"
-																	title="Blockquote Title"><span
-																		class="b-blockquote-3__author">Document
-																		#5</span></cite>
-															</footer>
-															<div class="b-blockquote-3__content">
-																<div class="header-language-nav dropdown">
-																	<select name="document_type_5" id="document_type_5" class="dropdown-toggle">
-																		<option value="">DOCUMENT TYPE:</option>
-																		<?php foreach($documentTypes as $documentType) { ?>
-																		<option
-																			value="<?php echo $documentType['api_id'];?>">
-																			<?php echo $documentType['name'];?></option>
-																		<?php } ?>
-																	</select>
-																	
-																</div>
-																<div class="input-group" style="width: 100%;margin-left: 15%;">
-																	<div class="custom-file"  style="float:left;">
-																		<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
-																			id="document_5" name="document_5">
+																	<div class="input-group" style="width: 100%;margin-left: 14%;">
+																		<div class="custom-file"  style="float:left;">
+																			<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
+																				id="document_4" name="document_4">
+																		</div>
 																	</div>
-																	
-																</div>
-																<div class="header-language-nav dropdown">
-																	<div class="" style="margin-top: 10px;float:left;">
-																		<textarea name="description_5" id="description_5" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
-																			class="custom-file-input dropdown-toggle" id="inputGroupFile01"
-																			style="border: 1px solid rgba(238,238,238);"></textarea>
+																	<div class="header-language-nav dropdown">
+																		<div class="" style="margin-top: 10px;float:left;">
+																			<textarea name="description_4" id="description_4" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
+																				class="custom-file-input dropdown-toggle" id="inputGroupFile01"
+																				style="border: 1px solid rgba(238,238,238);"></textarea>
+																		</div>
 																	</div>
-																	
 																</div>
-
-															</div>
-
-														</blockquote>
-														<!-- end .b-blockquote-->
-													</div>
-													<div class="col-md-6">
-														<blockquote class="b-blockquote b-blockquote-3">
-															<footer class="b-blockquote-3__footer">
-																<cite class="b-blockquote-3__cite"
-																	title="Blockquote Title"><span
-																		class="b-blockquote-3__author">Document
-																		#6</span></cite>
-															</footer>
-															<div class="b-blockquote-3__content">
-																<div class="header-language-nav dropdown">
-																	<select name="document_type_6" id="document_type_6" class="dropdown-toggle">
-																		<option value="">DOCUMENT TYPE:</option>
-																		<?php foreach($documentTypes as $documentType) { ?>
-																		<option
-																			value="<?php echo $documentType['api_id'];?>">
-																			<?php echo $documentType['name'];?></option>
-																		<?php } ?>
-																	</select>
-																	
-																</div>
-																<div class="input-group" style="width: 100%;margin-left: 15%;">
-																	<div class="custom-file"  style="float:left;">
-																		<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
-																			id="document_6" name="document_6">
-																	</div>
-																	
-																</div>
-																<div class="header-language-nav dropdown">
-																	<div class="" style="margin-top: 10px;float:left;">
-																		<textarea name="description_6" id="description_6" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
-																			class="custom-file-input dropdown-toggle" id="inputGroupFile01"
-																			style="border: 1px solid rgba(238,238,238);"></textarea>
-																	</div>
-																	
-																</div>
-
-															</div>
-
-														</blockquote>
-														<!-- end .b-blockquote-->
+															</blockquote>
+														</div>
 													</div>
 													<div class="col-md-12">
 														<a href="">
@@ -306,7 +207,6 @@
 													</div>
 												</form>
 											</div>
-											
 										</div>
 									</div>
 								</div>
@@ -352,8 +252,8 @@
 		</div>
 	</section>
 	<?php
-           $this->load->view('layout/footer');
-        ?>
+		$this->load->view('layout/footer');
+	?>
 </body>
 
 <script>
@@ -390,20 +290,6 @@
 			$('#down_btn').css({"background": "#d35411", "color": "white"});
 		});
 		
-		$("#document_5").change(function(){
-			$("#document_type_5").prop('required',true);
-			$("#description_5").prop('required',true);
-			$('#up_btn').css({"background": "#d35411", "color": "white"});
-			$('#down_btn').css({"background": "#d35411", "color": "white"});
-		});
-		
-		$("#document_6").change(function(){
-			$("#document_type_6").prop('required',true);
-			$("#description_6").prop('required',true);
-			$('#up_btn').css({"background": "#d35411", "color": "white"});
-			$('#down_btn').css({"background": "#d35411", "color": "white"});
-        });	
-		
 		if ($('#document_listing').length) {
 			documents_list = $('#document_listing').DataTable({
 				"paging": true,
@@ -431,7 +317,8 @@
 					url: base_url + "get-order-documents", 
 					type: "post", 
 					data: {
-						order_id: $('#order_id').val()
+						order_id: $('#order_id').val(),
+						file_id: $('#file_id').val()
 					},
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
 						if (parseInt(XMLHttpRequest.status) == 419) {
@@ -451,7 +338,7 @@
 		}
     });
 
-	function downloadDocumentFromAws(url, documentType)
+	function downloadDocumentFromAws(url, api_document_id)
 	{
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
@@ -461,7 +348,8 @@
 			url: base_url + "download-aws-document",
 			type: "post",
 			data: {
-				url : url
+				url: url,
+				api_document_id: api_document_id
 			},
 			async: false,
 			success: function (response) {
@@ -471,7 +359,7 @@
 						var csvURL = navigator.msSaveBlob(csvData, filename);
 						var element = document.createElement('a');
 						element.setAttribute('href', csvURL);
-						element.setAttribute('download', documentType+"_"+filename);
+						element.setAttribute('download', api_document_id+"_"+filename);
 						element.style.display = 'none';
 						document.body.appendChild(element);
 						document.body.removeChild(element);
@@ -480,7 +368,7 @@
 						var csvURL = 'data:application/octet-stream;base64,' + response;
 						var element = document.createElement('a');
 						element.setAttribute('href', csvURL);
-						element.setAttribute('download', documentType+"_"+filename);
+						element.setAttribute('download', api_document_id+"_"+filename);
 						element.style.display = 'none';
 						document.body.appendChild(element);
 						element.click();

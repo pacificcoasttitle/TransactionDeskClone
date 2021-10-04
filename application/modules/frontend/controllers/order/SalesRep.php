@@ -229,10 +229,12 @@ class SalesRep extends MX_Controller
 
 			$openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
 			$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-			$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+			//$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+			$refi_total_premium =  $closeOrderRefiTotalPremium;
 			$openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
 			$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-			$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+			//$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+			$sale_total_premium = $closeOrderSaleTotalPremium;
 			$salesHistory[$iM-1]['total_premium'] = $sale_total_premium + $refi_total_premium;
 
 			$totalCount = $sale_close_count + $refi_close_count + $sale_open_count + $refi_open_count;

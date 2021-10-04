@@ -607,6 +607,7 @@ class Order
     public function getOrderdocuments($params)
     {
         $userdata = $this->CI->session->userdata('user');
+
         $this->CI->db->select('*')
             ->from('pct_order_documents');
          

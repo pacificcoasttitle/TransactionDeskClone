@@ -603,8 +603,10 @@ class Common extends MX_Controller {
 		if (empty($this->session->userdata('user'))) {
             redirect(base_url().'order');
         }
+		$this->load->model('order/document');
 		$data['errors'] = array();
 		$data['success'] = array();
+		$userdata = $this->session->userdata('user');
 		if ($this->session->userdata('errors')) {
 			$data['errors'] = $this->session->userdata('errors');
 			$this->session->unset_userdata('errors');
@@ -614,10 +616,65 @@ class Common extends MX_Controller {
 			$this->session->unset_userdata('success');
 		}
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$fileId = $this->uri->segment(2);     
-		$data['documentTypes'] = $this->order->get_document_types();
+		$fileId = $this->uri->segment(2);  
 		$data['orderDetails'] = $this->order->get_order_details($fileId);
-		
+		$data['documentTypes'] = $this->order->get_document_types();
+		$documents = $this->order->get_user_documents($data['orderDetails']['order_id']);
+
+		if ($userdata['is_title_officer'] == 1) {
+            $user_data = array();
+            $user_data = array(
+                'admin_api' => 1
+            );
+            $user_data['from_mail'] = 1;
+            $endPoint = 'files/'. $fileId .'/documents';
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $data['orderDetails']['order_id'], 0);
+            $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
+            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $data['orderDetails']['order_id'], $logid);
+            $resDocuments = json_decode($resultDocuments, true);
+			$apiDocumentIds = array_column($documents, 'api_document_id');
+
+			if (!empty($resDocuments['Documents'])) {
+				foreach($resDocuments['Documents'] as $resDocument) {
+					$ext = end(explode('.', $resDocument['DocumentName']));
+					$time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
+					$created_date = date('Y-m-d H:i:s', $time);
+					$document_name = date('YmdHis')."_".$resDocument['DocumentName'];
+					if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
+						$document_name = str_replace($ext, 'pdf', $document_name);
+					}
+					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
+						$documentData = array(
+							'document_name' => $document_name,
+							'original_document_name' => $resDocument['DocumentName'],
+							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
+							'api_document_id' => $resDocument['DocumentID'],
+							'document_size' => $resDocument['Size'],
+							'user_id' => 0,
+							'order_id' => $data['orderDetails']['order_id'],
+							'description' => $resDocument['DocumentName'],
+							'created' => $created_date,
+							'is_sync' => 0,
+							'is_prelim_document' => 0
+						);
+						$this->document->insert($documentData);
+					} else {
+						$documentData = array(
+							'original_document_name' => $resDocument['DocumentName'],
+							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
+							'document_size' => $resDocument['Size'],
+							'order_id' => $data['orderDetails']['order_id'],
+							'description' => $resDocument['DocumentName'],
+							'created' => $created_date
+						);
+						$condition = array(
+							'api_document_id' => $resDocument['DocumentID']
+						);
+						$this->document->update($documentData, $condition);
+					}
+				}	
+			}
+        }   
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/common/upload_documents');
 	}
@@ -626,6 +683,7 @@ class Common extends MX_Controller {
 	{
 		$params = array();  $data = array();
 		$params['order_id'] = $this->input->post('order_id');
+		$params['file_id'] = $this->input->post('file_id');
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -648,9 +706,10 @@ class Common extends MX_Controller {
 				$nestedData[] = $i;
 				$nestedData[] = $document['original_document_name'];
 				$nestedData[] = date('m/d/Y',strtotime($document['created']));
+				$apiDocumentId = $document['api_document_id'];
 				$documentName = $document['document_name'];
 				$documentUrl = env('AWS_PATH')."documents/".$documentName;
-				$nestedData[] = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";   
+				$nestedData[] = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$apiDocumentId.'"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";   
 				$data[] = $nestedData; 
 				$i++; 
 			}
@@ -1400,8 +1459,30 @@ class Common extends MX_Controller {
 
 	public function downloadAwsDocument()
     {
+		$userdata = $this->session->userdata('user');
         $url = $this->input->post('url');
+		$user_data['admin_api'] = 1; 
+		$api_document_id = $this->input->post('api_document_id');
         $binaryData   = base64_encode(file_get_contents($url)); 
+		$this->load->model('order/document');
+		if (empty($binaryData) && !empty($api_document_id)) {
+			$endPoint = 'documents/'.$api_document_id.'?format=json';
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+			$resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
+			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, 0, $logid);
+			$resDocument = json_decode($resultDocument, true);
+			if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+				$binaryData  = $resDocument['Document']['DocumentBody'];
+				$documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+				$document_name = str_replace(env('AWS_PATH')."documents/", '', $url);
+				if (!is_dir('uploads/documents')) {
+					mkdir('./uploads/documents', 0777, TRUE);
+				}
+				file_put_contents('./uploads/documents/'.$document_name, $documentContent);
+				$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+				$this->document->update(array('is_sync' => 1), array('api_document_id' => $api_document_id));
+			}	
+		}
 		echo $binaryData;exit;
     }
 

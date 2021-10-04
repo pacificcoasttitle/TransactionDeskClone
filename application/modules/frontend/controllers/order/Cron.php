@@ -2686,6 +2686,17 @@ class Cron extends MX_Controller {
                             );
                             $order = $this->order->get_order($condition);
                             if (!empty($order)) {
+                                if (in_array($file_number, $file_numbers)) {
+                                    if (!empty($premium)) {
+                                        $premium = (float)$premium +  $order[0]['premium'];
+                                    }
+                                }
+                                $file_numbers[] = $file_number;
+                                $completed_date = null;
+                                if (!empty($closedDate)) {
+                                    $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
+                                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                                }
                                 if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
                                     $this->home_model->update(
                                         array(
@@ -2848,7 +2859,6 @@ class Cron extends MX_Controller {
                                                 $completed_date = date('Y-m-d H:i:s', $time);
                                             }
                                         }
-                                        
                                         if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
                                             $orderData = array(
                                                 'customer_id' => $customerId,
