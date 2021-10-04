@@ -643,7 +643,20 @@ class Common extends MX_Controller {
 					if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
 						$document_name = str_replace($ext, 'pdf', $document_name);
 					}
-					if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
+					if (in_array($resDocument['DocumentID'], $apiDocumentIds)) {
+						$documentData = array(
+							'original_document_name' => $resDocument['DocumentName'],
+							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
+							'document_size' => $resDocument['Size'],
+							'order_id' => $data['orderDetails']['order_id'],
+							'description' => $resDocument['DocumentName'],
+							'created' => $created_date
+						);
+						$condition = array(
+							'api_document_id' => $resDocument['DocumentID']
+						);
+						$this->document->update($documentData, $condition);
+					} else {
 						$documentData = array(
 							'document_name' => $document_name,
 							'original_document_name' => $resDocument['DocumentName'],
@@ -658,20 +671,9 @@ class Common extends MX_Controller {
 							'is_prelim_document' => 0
 						);
 						$this->document->insert($documentData);
-					} else {
-						$documentData = array(
-							'original_document_name' => $resDocument['DocumentName'],
-							'document_type_id' => $resDocument['DocumentType']['DocumentTypeID'],
-							'document_size' => $resDocument['Size'],
-							'order_id' => $data['orderDetails']['order_id'],
-							'description' => $resDocument['DocumentName'],
-							'created' => $created_date
-						);
-						$condition = array(
-							'api_document_id' => $resDocument['DocumentID']
-						);
-						$this->document->update($documentData, $condition);
 					}
+					echo "jhjee";
+					print_r($resDocument);
 				}	
 			}
         }   
