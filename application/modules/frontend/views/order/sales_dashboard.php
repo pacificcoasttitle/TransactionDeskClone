@@ -135,6 +135,8 @@
 								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="projected_open_section"><?Php echo $projected_open_count;?></span></div>
 								<?php if($sales_rep_info['sales_rep_no_of_open_orders'] > 0) { ?>
 									<div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div>
+								<?php } else { ?>
+									<div class="projected_goal_section">&nbsp;</div>
 								<?php } ?>
 							</div>
 
@@ -147,6 +149,8 @@
 								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="projected_close_section"><?Php echo $projected_close_count;?></span></div>
 								<?php if($sales_rep_info['sales_rep_no_of_close_orders'] > 0) { ?>
 									<div class="projected_goal_section">Goal = <span id="goal_close_section"><?Php echo round($sales_rep_info['sales_rep_no_of_close_orders']/12);?></span></div>
+								<?php } else { ?>
+									<div class="projected_goal_section">&nbsp;</div>
 								<?php } ?>
 							</div>
 
@@ -159,6 +163,8 @@
 								<div style="margin-top: 20px;" class="projected_goal_section">Projected = $<span id="projected_revenue_section"><?Php echo $projected_revenue;?></span></div>
 								<?php if($sales_rep_info['sales_rep_premium'] > 0) { ?>
 									<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo round($sales_rep_info['sales_rep_premium']/12);?></span></div>
+								<?php } else { ?>
+									<div class="projected_goal_section">&nbsp;</div>
 								<?php } ?>
 							</div>
 
@@ -169,7 +175,7 @@
 								<div class="sales_loan_section">Refi's = <span id="refi_close_order_percetage"><?Php echo $refi_close_order_percetage;?></span>%</div>
 								</div>
 								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="refi_open_count">0%</span></div>
-								<!-- <div class="projected_goal_section">Goal = <span id="refi_open_count">0%</span></div> -->
+								<div class="projected_goal_section">&nbsp;</div>
 							</div>
 
 							<h4 class="ui-title-block_light">Below is list of all your files. You can search for files by month that have a status open, closed, or cancelled.</h3>
