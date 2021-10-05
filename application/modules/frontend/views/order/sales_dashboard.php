@@ -105,15 +105,6 @@
 			line-height: 21px;
 		}
 
-		.projected_goal_section {
-    		color: #d35411;
-    		font-weight: bold;
-			text-align: center;
-			text-transform: uppercase;
-			font-size: large;
-			line-height: 21px;
-		}
-
 		#orders_listing_filter {
 			margin-bottom: 20px;
 		}
