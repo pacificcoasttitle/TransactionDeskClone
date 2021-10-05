@@ -8,41 +8,47 @@ var fees_type_list = '';
 var code_book_list = '';
 $(document).ready(function () {
 
-    // Add active class to menu
-    if(jQuery('#users').children().hasClass('active')) {
-        jQuery('#users').parent('li').addClass('active');
-        jQuery('#users').addClass('show');
-    } else {
-        jQuery('#users').removeClass('show');
-        jQuery('#users').parent('li').removeClass('active');
-    }
+    // // Add active class to menu
+    // if(jQuery('#users').children().hasClass('active')) {
+    //     jQuery('#users').parent('li').addClass('active');
+    //     jQuery('#users').addClass('show');
+    // } else {
+    //     jQuery('#users').removeClass('show');
+    //     jQuery('#users').parent('li').removeClass('active');
+    // }
 
-    // Add active class to menu
-    if(jQuery('#documents').children().hasClass('active')) {
-        jQuery('#documents').parent('li').addClass('active');
-        jQuery('#documents').addClass('show');
-    } else {
-        jQuery('#documents').removeClass('show');
-        jQuery('#documents').parent('li').removeClass('active');
-    }
+    // // Add active class to menu
+    // if(jQuery('#documents').children().hasClass('active')) {
+    //     jQuery('#documents').parent('li').addClass('active');
+    //     jQuery('#documents').addClass('show');
+    // } else {
+    //     jQuery('#documents').removeClass('show');
+    //     jQuery('#documents').parent('li').removeClass('active');
+    // }
 
-    // Add active class to logs menu
-    if(jQuery('#logs').children().hasClass('active')) {
-        jQuery('#logs').parent('li').addClass('active');
-        jQuery('#logs').addClass('show');
-    } else {
-        jQuery('#logs').removeClass('show');
-        jQuery('#logs').parent('li').removeClass('active');
-    }
+    // // Add active class to logs menu
+    // if(jQuery('#logs').children().hasClass('active')) {
+    //     jQuery('#logs').parent('li').addClass('active');
+    //     jQuery('#logs').addClass('show');
+    // } else {
+    //     jQuery('#logs').removeClass('show');
+    //     jQuery('#logs').parent('li').removeClass('active');
+    // }
 
-    // Add active class to cpl menu
-    if(jQuery('#cpl_branches_section').children().hasClass('active')) {
-        jQuery('#cpl_branches_section').parent('li').addClass('active');
-        jQuery('#cpl_branches_section').addClass('show');
-    } else {
-        jQuery('#cpl_branches_section').removeClass('show');
-        jQuery('#cpl_branches_section').parent('li').removeClass('active');
-    }
+    // // Add active class to cpl menu
+    // if(jQuery('#cpl_branches_section').children().hasClass('active')) {
+    //     jQuery('#cpl_branches_section').parent('li').addClass('active');
+    //     jQuery('#cpl_branches_section').addClass('show');
+    // } else {
+    //     jQuery('#cpl_branches_section').removeClass('show');
+    //     jQuery('#cpl_branches_section').parent('li').removeClass('active');
+    // }
+
+    $('.sidebar .nav-item.dropdown .dropdown-menu a.dropdown-item').each(function() {
+        if ($(this).hasClass('active')) {
+            $(this).parent().parent().find('.dropdown-toggle').trigger('click');
+        }
+    });
 
     $('select').selectpicker();
 
