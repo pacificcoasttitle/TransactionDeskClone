@@ -160,9 +160,9 @@
 								<div class="sales_loan_section">Sales = $<span id="sale_total_premium"><?php echo number_format($sale_total_premium); ?></span></div>
 								<div class="sales_loan_section">Refi's = $<span id="refi_total_premium"><?php echo number_format($refi_total_premium); ?></span></div>
 								</div>
-								<div style="margin-top: 20px;" class="projected_goal_section">Projected = $<span id="projected_revenue_section"><?Php echo $projected_revenue;?></span></div>
+								<div style="margin-top: 20px;" class="projected_goal_section">Projected = $<span id="projected_revenue_section"><?Php echo number_format($projected_revenue);?></span></div>
 								<?php if($sales_rep_info['sales_rep_premium'] > 0) { ?>
-									<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo round($sales_rep_info['sales_rep_premium']/12);?></span></div>
+									<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo number_format(round($sales_rep_info['sales_rep_premium']/12));?></span></div>
 								<?php } else { ?>
 									<div class="projected_goal_section">&nbsp;</div>
 								<?php } ?>
