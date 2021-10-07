@@ -2751,6 +2751,9 @@ class Cron extends MX_Controller {
                                 
                                 if (isset($result['Files']) && !empty($result['Files'])) {
                                     foreach ($result['Files'] as $res) {
+                                        if (count($result['Files']) > 1 && strtolower($res['Status']['Name']) == 'cancelled') {
+                                            continue;
+                                        }
                                         $partner_fname = $res['Partners'][0]['PrimaryEmployee']['FirstName'];
                                         $partner_lname = $res['Partners'][0]['PrimaryEmployee']['LastName'];
                                         $partner_name = $res['Partners'][0]['PartnerName'];
