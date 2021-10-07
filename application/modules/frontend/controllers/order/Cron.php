@@ -2821,7 +2821,7 @@ class Cron extends MX_Controller {
                                             'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                             'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
                                             'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
-                                            'sales_representative' => $salesRepId,
+                                            'sales_representative' => !empty($resultSales) ? $resultSales['id'] : 0,
                                             'status'=> 1
                                         );
             
