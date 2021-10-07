@@ -175,9 +175,9 @@ class Report extends MX_Controller {
                 if (!is_dir(FCPATH.'uploads/sales-rep/pdf')) {
                     mkdir(FCPATH.'uploads/sales-rep/pdf', 0777, TRUE);
                 }
-                if (!(is_writable(FCPATH.'uploads/sales-rep/pdf'))) {
+                // if (!(is_writable(FCPATH.'uploads/sales-rep/pdf'))) {
                     chmod(FCPATH.'uploads/sales-rep/pdf', 0777);
-                }
+                // }
                 $dir_name = FCPATH.'uploads/sales-rep/pdf/';
                 $dir_name = str_replace('\\', '/', $dir_name);
                 // echo $dir_name.$document_name;die;
