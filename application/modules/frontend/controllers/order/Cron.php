@@ -2594,8 +2594,9 @@ class Cron extends MX_Controller {
                 $headerColumns = array(); 
                 if (($handle = fopen($filePath, "r")) !== FALSE) {
                     $documentName = pathinfo($filePath);
-                   
                     $file_numbers = array();
+                    $salesRepNameArr = array();
+                    $i = 0;
                     while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
                         $num = count($data);
                         if($row == 1) {
@@ -2609,6 +2610,7 @@ class Cron extends MX_Controller {
                         $premiumkey = '';
                         $saleskey = '';
                         $closedDate = '';
+                        $salesRepId = 0;
 
                         if(in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number",$headerColumns);
@@ -2634,6 +2636,12 @@ class Cron extends MX_Controller {
                             $salesRepName = str_replace(' ', '-', $salesRepName);
                             $salesRepName = preg_replace('/[^A-Za-z0-9\-]/', '',  $salesRepName);
                             $salesRepName = str_replace('-', ' ', $salesRepName);
+                            $key = array_search($salesRepName, array_column($salesRepNameArr, 'name'));
+                            if (isset($key) && !empty($key)) {
+                               $salesRepId =  $salesRepNameArr[$key]['id'];
+                            } else {
+                                $salesRepNameArr[$i]['name'] =  $salesRepName;
+                            }
                         }
 
                         if(in_array('Sent To External Accounting', $headerColumns)) {
@@ -2658,6 +2666,7 @@ class Cron extends MX_Controller {
                                 $file_numbers[] = $file_number;
                                 $completed_date = null;
                                 if (!empty($closedDate)) {
+                                    //$myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
                                     $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
                                     $completed_date = $myDateTime->format('Y-m-d H:i:s');
                                 }
@@ -2689,22 +2698,35 @@ class Cron extends MX_Controller {
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
                                 $resultSales = array();
                                 if(!empty($salesRepName)) {
-                                    $this->db->select('*');
-                                    $this->db->from('customer_basic_details');
-                                    $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
-                                    $this->db->where('is_sales_rep', 1);
-                                    $query = $this->db->get();
-                                    $resultSales = $query->row_array(); 
-                                    if (!empty($resultSales)) {
+                                    if ($salesRepId == 0) {
+                                        $this->db->select('*');
+                                        $this->db->from('customer_basic_details');
+                                        $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
+                                        $this->db->where('is_sales_rep', 1);
+                                        $query = $this->db->get();
+                                        $resultSales = $query->row_array(); 
+                                        if (!empty($resultSales)) {
+                                            $salesRepId =  $resultSales['id'];
+                                            $salesRepNameArr[$i]['id'] = $salesRepId;
+                                            $i++;
+                                        } else {
+                                            if (!empty(trim($salesRepNameArr[$i]['name']))) {
+                                                $salesRepNameArr[$i]['id'] = 0;
+                                                $i++;
+                                            }
+                                        }
+                                    }
+                                    if (!empty($salesRepId)) {
                                         $this->home_model->update(
                                             array(
-                                                'sales_representative' => $resultSales['id'],
+                                                'sales_representative' => $salesRepId,
                                             ), 
                                             array(
                                                 'id' => $orderDetails['transaction_id']
                                             ), 
                                             'transaction_details'
                                         );
+                                        $file_numbers[] = $file_number;
                                     } else {
                                         $this->home_model->update(
                                             array(
