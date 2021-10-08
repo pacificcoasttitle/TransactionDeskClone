@@ -1207,7 +1207,7 @@ class Order
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
+        //$this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
@@ -1224,7 +1224,7 @@ class Order
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
+        //$this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
