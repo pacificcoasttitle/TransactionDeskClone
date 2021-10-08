@@ -2651,6 +2651,34 @@ class Cron extends MX_Controller {
 
                         if($row != 1) {
                             //echo $file_number."---".$prodType."----".$premium."----".$salesRepName."---".$closedDate;exit;
+                            $resultSales = array();
+                            if(!empty($salesRepName)) {
+                                if ($salesRepId == 0) {
+                                    $this->db->select('*');
+                                    $this->db->from('customer_basic_details');
+                                    $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
+                                    $this->db->where('is_sales_rep', 1);
+                                    $query = $this->db->get();
+                                    $resultSales = $query->row_array(); 
+                                    if (!empty($resultSales)) {
+                                        $salesRepId =  $resultSales['id'];
+                                        $salesRepNameArr[$i]['id'] = $salesRepId;
+                                        $i++;
+                                    } else {
+                                        if (!empty(trim($salesRepNameArr[$i]['name']))) {
+                                            $salesRepNameArr[$i]['id'] = 0;
+                                            $i++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            $completed_date = null;
+                            if (!empty($closedDate)) {
+                                $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
+                                $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                            }
+
                             $condition = array(
                                 'where' => array(
                                     'file_number' => $file_number,
@@ -2658,19 +2686,6 @@ class Cron extends MX_Controller {
                             );
                             $order = $this->order->get_order($condition);
                             if (!empty($order)) {
-                                if (in_array($file_number, $file_numbers)) {
-                                    if (!empty($premium)) {
-                                        $premium = (float)$premium +  $order[0]['premium'];
-                                    }
-                                }
-                                $file_numbers[] = $file_number;
-                                $completed_date = null;
-                                if (!empty($closedDate)) {
-                                    //$myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
-                                    $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
-                                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
-                                }
-                                
                                 if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
                                     $this->home_model->update(
                                         array(
@@ -2694,50 +2709,28 @@ class Cron extends MX_Controller {
                                         'order_details'
                                     );
                                 }
-                                
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
-                                $resultSales = array();
-                                if(!empty($salesRepName)) {
-                                    if ($salesRepId == 0) {
-                                        $this->db->select('*');
-                                        $this->db->from('customer_basic_details');
-                                        $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
-                                        $this->db->where('is_sales_rep', 1);
-                                        $query = $this->db->get();
-                                        $resultSales = $query->row_array(); 
-                                        if (!empty($resultSales)) {
-                                            $salesRepId =  $resultSales['id'];
-                                            $salesRepNameArr[$i]['id'] = $salesRepId;
-                                            $i++;
-                                        } else {
-                                            if (!empty(trim($salesRepNameArr[$i]['name']))) {
-                                                $salesRepNameArr[$i]['id'] = 0;
-                                                $i++;
-                                            }
-                                        }
-                                    }
-                                    if (!empty($salesRepId)) {
-                                        $this->home_model->update(
-                                            array(
-                                                'sales_representative' => $salesRepId,
-                                            ), 
-                                            array(
-                                                'id' => $orderDetails['transaction_id']
-                                            ), 
-                                            'transaction_details'
-                                        );
-                                        $file_numbers[] = $file_number;
-                                    } else {
-                                        $this->home_model->update(
-                                            array(
-                                                'sales_representative' => 0,
-                                            ), 
-                                            array(
-                                                'id' => $orderDetails['transaction_id']
-                                            ), 
-                                            'transaction_details'
-                                        );
-                                    }
+                                if (!empty($salesRepId)) {
+                                    $this->home_model->update(
+                                        array(
+                                            'sales_representative' => $salesRepId,
+                                        ), 
+                                        array(
+                                            'id' => $orderDetails['transaction_id']
+                                        ), 
+                                        'transaction_details'
+                                    );
+                                    $file_numbers[] = $file_number;
+                                } else {
+                                    $this->home_model->update(
+                                        array(
+                                            'sales_representative' => 0,
+                                        ), 
+                                        array(
+                                            'id' => $orderDetails['transaction_id']
+                                        ), 
+                                        'transaction_details'
+                                    );
                                 }
                             } else {
                                 $data = json_encode(array('FileNumber' => $file_number));
@@ -2804,16 +2797,6 @@ class Cron extends MX_Controller {
                                             'status'=> 1
                                         );
     
-                                        $resultSales = array();
-                                        if(!empty($salesRepName)) {
-                                            $this->db->select('*');
-                                            $this->db->from('customer_basic_details');
-                                            $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
-                                            $this->db->where('is_sales_rep', 1);
-                                            $query = $this->db->get();
-                                            $resultSales = $query->row_array(); 
-                                        }
-            
                                         $transactionData = array(
                                             'customer_id' => $customerId,
                                             'sales_amount' =>  !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
@@ -2821,7 +2804,7 @@ class Cron extends MX_Controller {
                                             'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                             'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
                                             'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
-                                            'sales_representative' => !empty($resultSales) ? $resultSales['id'] : 0,
+                                            'sales_representative' => $salesRepId,
                                             'status'=> 1
                                         );
             
@@ -2851,10 +2834,7 @@ class Cron extends MX_Controller {
                                         $randomString = md5($randomString);
     
                                         $completed_date = null;
-                                        if (!empty($closedDate)) {
-                                            $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
-                                            $completed_date = $myDateTime->format('Y-m-d H:i:s');
-                                        } else {
+                                        if (empty($closedDate)) {
                                             if (!empty($res['Dates']['FileCompletedDate'])) {
                                                 $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['FileCompletedDate'])))/1000);
                                                 $completed_date = date('Y-m-d H:i:s', $time);
