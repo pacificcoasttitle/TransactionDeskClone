@@ -86,6 +86,7 @@ $route['order'] = 'frontend/order/home/index';
 $route['dashboard'] = 'frontend/order/dashboard/index';
 $route['sales-dashboard'] = 'frontend/order/salesRep/index';
 $route['title-officer-dashboard'] = 'frontend/order/titleOfficers/index';
+$route['home/getSearchResults'] = 'frontend/order/common/getSearchResults';
 $route['special-dashboard'] = 'frontend/order/dashboard/index';
 $route['order/login'] = 'frontend/order/login/index';
 $route['order/login_test'] = 'frontend/order/login/loginTest';
