@@ -1309,46 +1309,6 @@ class Home extends MX_Controller {
     	}
     }
 
-
-    function getSearchResults()
-    {
-    	$userdata = $this->session->userdata('user');
-    	
-    	ini_set('max_execution_time', 300);
-    	$request = $_GET['requrl'];
-    	$api_key = env('BLACK_KNIGHT_KEY');        
-		$request .= '&key=' . $api_key;
-
-		$query_string = parse_url($request,PHP_URL_QUERY);
-        parse_str($query_string, $requestParams);
-        
-        $getsortedresults = isset($_GET['getsortedresults'])?$_GET['getsortedresults']:'false';
-        
-        $opts = array(
-        	'http'=>array(
-        		'header' => "User-Agent:MyAgent/1.0\r\n"
-        	),
-        	"ssl"=>array(
-		        "verify_peer"=>false,
-		        "verify_peer_name"=>false,
-		    )
-        );
-        $context = stream_context_create($opts);
-        $this->load->model('order/apiLogs');
-
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, $requestParams, array(), 0, 0);
-
-        $file = file_get_contents($request,false,$context);
-        $xmlData = simplexml_load_string($file);
-		$response = json_encode($xmlData);
-		$result = json_decode($response,TRUE);
-
-		$this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, array(), $result, 0, $logid);
-
-        
-        echo trim($file);
-    }
-
     function checkEmail()
     {
     	$email = isset($_POST['CustomerEmail']) && !empty($_POST['CustomerEmail']) ? $_POST['CustomerEmail'] : '';
@@ -1423,64 +1383,6 @@ class Home extends MX_Controller {
         }
 
         echo json_encode($data); 
-    }
-
-    function getDetailsByName()
-    {
-    	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
-
-		$is_master_search = isset($_POST['is_master_search']) && !empty($_POST['is_master_search']) ? $_POST['is_master_search'] : 0;
-
-    	$condition = array(
-            'company_name' => $searchTerm
-        );
-
-    	if(isset($_POST['is_escrow']))
-    	{
-    		$isEscrow = $_POST['is_escrow'];
-    		$condition['is_escrow'] = $isEscrow;
-    	}
-    	
-
-    	if(isset($_POST['is_escrow']))
-    	{
-    		$isEscrow = $_POST['is_escrow'];
-    		$condition['is_escrow'] = $isEscrow;
-    	}
-    	$condition['where']['is_sales_rep'] = 0;
-
-    	$is_from_order_form = $this->input->post('is_from_order_form');
-    	$condition['is_from_order_form'] = isset($is_from_order_form) && !empty($is_from_order_form) ? $is_from_order_form : 0;
-
-    	$userDetails = $this->home_model->get_customers($condition, $is_master_search);
-    	$userInfo = array();
-    	if(isset($userDetails) && !empty($userDetails))
-    	{
-    		foreach ($userDetails as $key => $value) 
-    		{
-    			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
-    			
-	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
-				$data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
-
-	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
-	            $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
-	            $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
-	            $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
-	            $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
-				$data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
-				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
-				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
-				$data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
-				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
-				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
-				$data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
-				$data['is_primary_mortgage_user'] = isset($value['is_primary_mortgage_user']) && !empty($value['is_primary_mortgage_user']) ? $value['is_primary_mortgage_user'] : '';
-	            // array_push($userInfo, $data); 
-	            $userInfo[] =$data;
-    		}
-    	}
-    	echo json_encode($userInfo);
     }
 
     function orderSubmit()
@@ -1924,13 +1826,6 @@ class Home extends MX_Controller {
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		$this->order->uploadDocumentOnAwsS3($document_name, 'curative');
 	}	
-
-	public function downloadAwsDocument()
-    {
-        $url = $this->input->post('url');
-        $binaryData   = base64_encode(file_get_contents($url)); 
-		echo $binaryData;exit;
-    }
 
     public function send_invite()
 	{

@@ -285,7 +285,7 @@
 			$("#LenderCompany").autocomplete({
 				source: function(request, response) {
 					$.ajax({
-						url: base_url+'home/getDetailsByName',
+						url: base_url+'getDetailsByName',
 						data: {
 							term : request.term,//the value of the input is here
 							is_escrow : 0                    
@@ -633,43 +633,7 @@
 		$('#page-preloader').css('display', 'block');
 	});
 
-	function download_for_pdf(westcor_file_id, westcor_order_id) {
-		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
-		$('#page-preloader').css('display', 'block');
-		$.ajax({
-			url: base_url + "download-cpl-pdf",
-			type: "post",
-			data: {
-				westcor_file_id: westcor_file_id,
-				westcor_order_id: westcor_order_id,
-			},
-			success: function (response) {
-				$('#page-preloader').css('display', 'none');
-				if (response) {
-					if (navigator.msSaveBlob) {
-						var csvData = base64toBlob(response, 'application/octet-stream');
-						var csvURL = navigator.msSaveBlob(csvData, 'FeeEstimation.pdf');
-						var element = document.createElement('a');
-						element.setAttribute('href', csvURL);
-						element.setAttribute('download', 'cpl_'+westcor_file_id+'.pdf');
-						element.style.display = 'none';
-						document.body.appendChild(element);
-						document.body.removeChild(element);
-					} else {
-						var csvURL = 'data:application/octet-stream;base64,' + response;
-						var element = document.createElement('a');
-						element.setAttribute('href', csvURL);
-						element.setAttribute('download', 'cpl_'+westcor_file_id+'.pdf');
-						element.style.display = 'none';
-						document.body.appendChild(element);
-						element.click();
-						document.body.removeChild(element);
-					}
-				}
-			}
-		});
-	}
-
+	
 	function base64toBlob(base64Data, contentType) {
 		contentType = contentType || '';
 		var sliceSize = 1024;

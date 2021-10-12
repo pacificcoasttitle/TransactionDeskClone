@@ -40,7 +40,7 @@ function getPlat(address,zip,locale) {
 
     request += $.param(dataObj);
     $.ajax({
-        url: base_url+'home/getSearchResults?',
+        url: base_url+'getSearchResults?',
         // url: 'http://cardbanana.net/demo/jerry/lp/lp/lp/proxy.php',
         data: {
             requrl: request + '?&reportType=111'
@@ -67,7 +67,7 @@ function get111() {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 	$('#page-preloader').css('display', 'block');
     $.ajax({
-        url: base_url+'home/getSearchResults?',
+        url: base_url+'getSearchResults?',
         data: {
             requrl: reportData.report111,
         },

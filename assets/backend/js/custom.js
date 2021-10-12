@@ -6,9 +6,11 @@ var escrow_officers_list = '';
 var fees_list = '';
 var fees_type_list = '';
 var code_book_list = '';
+var forms_list = '';
+
 $(document).ready(function () {
 
-    // // Add active class to menu
+    // Add active class to menu
     // if(jQuery('#users').children().hasClass('active')) {
     //     jQuery('#users').parent('li').addClass('active');
     //     jQuery('#users').addClass('show');
@@ -44,20 +46,11 @@ $(document).ready(function () {
     //     jQuery('#cpl_branches_section').parent('li').removeClass('active');
     // }
 
-    $('.sidebar .nav-item.dropdown .dropdown-menu a.dropdown-item').each(function() {
-        if ($(this).hasClass('active')) {
+    $('.sidebar .nav-item.dropdown .dropdown-menu a.dropdown-item').each(function(){
+        if($(this).hasClass('active')) {
             $(this).parent().parent().find('.dropdown-toggle').trigger('click');
         }
     });
-
-    // Add active class to cpl menu
-    if(jQuery('#cpl_branches_section').children().hasClass('active')) {
-        jQuery('#cpl_branches_section').parent('li').addClass('active');
-        jQuery('#cpl_branches_section').addClass('show');
-    } else {
-        jQuery('#cpl_branches_section').removeClass('show');
-        jQuery('#cpl_branches_section').parent('li').removeClass('active');
-    }
 
     $('select').selectpicker();
 
@@ -2138,6 +2131,79 @@ $(document).ready(function () {
                     }
                     $("#tbl-curative-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-curative-documents-listing_processing").css("display", "none");
+                }
+            }            
+        });
+    }
+
+    if ($('#tbl-file-documents-listing').length) 
+    {
+        forms_list = $('#tbl-file-documents-listing').DataTable({
+            "paging": true,
+            "info" : false,
+             "bLengthChange": false,
+            // "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "searching": false,
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_curative_documents').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Curative Documents',
+                    exportOptions: {
+                        columns: [0, 1, 2],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                return (column === 0 || column === 1|| column === 2) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/home/get_file_document_list", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-file-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-file-documents-listing_processing").css("display", "none");
                 }
             }            
         });
@@ -4270,6 +4336,59 @@ function deleteEscrowOfficer(id)
 
                 setTimeout(function () {
                     $('#escrow_officer_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}
+
+function deleteForm(id)
+{
+    if (id=='') {
+        alert('Form ID is required.');
+        return false;
+    }
+    var ready = confirm("Are you sure want to delete?");
+    if (ready) {
+        $.ajax({
+            url: base_url+"delete-form",
+            method: "POST",
+            data : {
+                id: id
+            },
+            success: function(data){
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#forms_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#forms_success_msg").offset().top
+                    }, 1000);
+
+                    forms_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#forms_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#forms_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#forms_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#forms_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#forms_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#forms_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#forms_error_msg').html('').hide();
                 }, 4000);
             }
         })

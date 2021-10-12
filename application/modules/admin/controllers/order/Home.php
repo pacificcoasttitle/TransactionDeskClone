@@ -1463,6 +1463,114 @@ class Home extends MX_Controller {
         echo json_encode($json_data);
     }
 
+    public function file_document()
+    {
+        if ($this->input->server('REQUEST_METHOD') === 'POST') {
+            if (!is_dir('uploads/file_document')) {
+                mkdir('./uploads/file_document', 0777, TRUE);
+            }
+            $error = '';
+            if (!empty($_FILES['file']['name'])) {
+                $document_name = date('YmdHis')."_".$_FILES['file']['name'];
+                $config['upload_path'] = './uploads/file_document/';
+                $config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';   
+                $config['max_size'] = 12000;
+                // $userdata = $this->session->userdata('user');
+                $config['file_name'] = $document_name;
+                $this->load->library('upload', $config);
+                if (! $this->upload->do_upload('file')) {
+                    $error = $this->upload->display_errors();
+                } else { 
+                    $data = $this->upload->data();
+                    $contents = file_get_contents($data['full_path']);
+                    $binaryData   = base64_encode($contents); 
+                    $document_name = $data['file_name'];
+                    
+                    $fileData = array(
+                        'name' => $this->input->post('name'),
+                        'file_path' => $document_name,
+                        'description' => $this->input->post('description'),
+                        'created_at' => date('Y-m-d H:i:s')
+                    );
+
+                    $this->load->library('order/order');
+                    $this->order->uploadDocumentOnAwsS3($document_name, 'file_document');
+                    $this->load->model('order/fileDocument_model');
+                    $inserted = $this->fileDocument_model->insert($fileData);
+                    if($inserted) {
+                        $titleOfficers = $this->input->post('titleOfficers');
+                        foreach ($titleOfficers as $titleOfficer) {
+                            if ($titleOfficer == 'all') {
+                                $this->load->model('order/title_model');
+                                $titleOfficersInfo = $this->title_model->getTitleOfficers();
+                                foreach($titleOfficersInfo as $titleOfficerInfo) {
+                                    $data = array(
+                                        'form_id' => $inserted,
+                                        'user_id' => $titleOfficerInfo['id'],
+                                        'created_at' => date("Y-m-d H:i:s")
+                                    );
+                                    $this->db->insert('pct_order_title_officers_forms', $data);
+                                }
+                            } else {
+                                $data = array(
+                                    'form_id' => $inserted,
+                                    'user_id' => $titleOfficer,
+                                    'created_at' => date("Y-m-d H:i:s")
+                                );
+                                $this->db->insert('pct_order_title_officers_forms', $data);
+                            }
+                        }
+                        $this->session->set_flashdata('success','File uploaded.');
+                        redirect('order/admin/file-documents');
+                    }
+                } 
+            } else {
+                $error = 'Please slect file to uplaod';
+            }
+            if($error == '') {
+                $error = 'Something went wrong. Please try again';
+            }
+            $this->session->set_flashdata('error',$error);
+            redirect('order/admin/file-documents');
+        }
+        $data = array();
+        $data['title'] = 'PCT Order: Files';
+        $this->load->model('order/title_model');
+        $data['titleOfficers'] = $this->title_model->getTitleOfficers();
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/file_document', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_file_document_list()
+    {
+        $this->load->model('order/fileDocument_model');
+        $userdata = $this->session->userdata('user');
+        // $where = array('added_by'=>$userdata['id']);
+        $files_data = $this->fileDocument_model->get_all();
+
+        $tableData = array();
+        foreach ($files_data as $key=>$file_data) {
+            $tmp_array = array();
+            $tmp_array[] = ($key + 1);
+            $tmp_array[] = $file_data->name;
+            $tmp_array[] = $file_data->description;
+            $tmp_array[] = date('m/d/Y',strtotime($file_data->created_at));
+            $documentName = $file_data->file_path;
+            $formId = $file_data->id;
+            $documentUrl = env('AWS_PATH')."file_document/".$documentName;
+            $action = "<div style='display:flex;'><!-- <a href='javascript::void();' onclick='editFormInfo($formId);'><i class='fas fa-fw fa-edit'></i></a>--><a href='javascript::void();' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");'><i class='fas fa-fw fa-download'></i></a>
+                <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a><a style='margin-left:10px;' href='javascript::void();' onclick='deleteForm($formId);'><i class='fas fa-fw fa-trash'></i></a></div>";
+            $tmp_array[] = $action;
+            $tableData[] = $tmp_array;
+        }
+
+        $json_data['recordsTotal'] = count($tableData);
+        $json_data['recordsFiltered'] = count($tableData);
+        $json_data['data'] = $tableData;
+        echo json_encode($json_data);
+    }
+
     public function changeLenderUserType()
     {
         $selectValue = $this->input->post('selectValue');
@@ -2920,5 +3028,32 @@ class Home extends MX_Controller {
         $this->db->update('customer_basic_details', $data, $condition);
         $data = array('status'=>'success', 'msg'=> 'Mortgage user updated successfully.');
         echo json_encode($data);
+    }
+
+    public function getFormDetails()
+    {
+        $this->load->model('order/fileDocument_model'); 
+        $this->load->model('order/titleOfficerForms'); 
+		$formId = $this->input->post('formId');
+		$formDetails = $this->fileDocument_model->get_rows(array('id' => $formId));
+        $titleOfficers = $this->titleOfficerForms->getTitleOfficersForForm($formId);
+        //print_r($titleOfficers);exit;
+		$response = array('status'=>'success', 'formDetails' => $formDetails, 'titleOfficers' => $titleOfficers);
+		echo json_encode($response); exit; 
+    }
+
+    public function deleteForm()
+    {
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+        if ($id) {
+            $this->db->delete('pct_file_documents', array('id' => $id));
+            $this->db->delete('pct_order_title_officers_forms', array('form_id' => $id));
+            $successMsg = 'Form deleted successfully.';
+            $response = array('status'=>'success', 'message'=>$successMsg);
+        } else {
+            $msg = 'Form ID is required.';
+            $response = array('status' => 'error','message'=>$msg);
+        }
+        echo json_encode($response);
     }
 }

@@ -15,11 +15,21 @@
             <form id="frm-add-title-officer-rep" method="POST">
         
                 <div class="form-group row">
-                    <label for="title_officer_name" class="col-sm-2 col-form-label">Name<span class="required"> *</span></label>
+                    <label for="title_officer_name" class="col-sm-2 col-form-label">First Name<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="title_officer_name" id="title_officer_name" class="form-control" placeholder="Title Officer Name" value="<?php echo isset($title_officer_info['name']) && !empty($title_officer_info['name']) ? $title_officer_info['name'] : ''?>">
-                        <?php if(!empty($name_error_msg)){ ?>                     
-                            <span class="error"><?php echo $name_error_msg; ?></span>
+                        <input type="text" class="form-control" name="first_name" id="first_name" class="form-control" value="<?php echo $title_officer_info['first_name'];?>" placeholder="First Name">
+                        <?php if(!empty($first_name_error_msg)){ ?>                     
+                            <span class="error"><?php echo $first_name_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="title_officer_name" class="col-sm-2 col-form-label">Last Name<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="last_name" id="last_name" class="form-control" value="<?php echo $title_officer_info['last_name'];?>" placeholder="Last Name">
+                        <?php if(!empty($last_name_error_msg)){ ?>                     
+                            <span class="error"><?php echo $last_name_error_msg; ?></span>
                         <?php } ?>
                     </div>
                 </div>
@@ -37,7 +47,7 @@
                 <div class="form-group row">
                     <label for="telephone" class="col-sm-2 col-form-label">Phone Number<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="telephone" id="telephone" class="form-control" placeholder="Phone Number" value="<?php echo isset($title_officer_info['phone']) && !empty($title_officer_info['phone']) ? $title_officer_info['phone'] : ''?>">
+                        <input type="text" class="form-control" name="telephone" id="telephone" class="form-control" placeholder="Phone Number" value="<?php echo isset($title_officer_info['telephone_no']) && !empty($title_officer_info['telephone_no']) ? $title_officer_info['telephone_no'] : ''?>">
                         <?php if(!empty($phone_error_msg)){ ?>                     
                             <span class="error"><?php echo $phone_error_msg; ?></span>
                         <?php } ?>

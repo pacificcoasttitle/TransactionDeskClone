@@ -3,7 +3,7 @@ class Note extends CI_Model
 {
 	function __construct() {
         // Set table name
-        $this->table = 'order_notes';
+        $this->table = 'pct_order_notes';
     }
 
     public function update($data, $condition) 

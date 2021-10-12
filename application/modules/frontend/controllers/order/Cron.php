@@ -2611,6 +2611,8 @@ class Cron extends MX_Controller {
                         $saleskey = '';
                         $closedDate = '';
                         $salesRepId = 0;
+                        $sales_rep_img = '';
+                        $escrow_email = '';
 
                         if(in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number",$headerColumns);
@@ -2639,6 +2641,7 @@ class Cron extends MX_Controller {
                             $key = array_search($salesRepName, array_column($salesRepNameArr, 'name'));
                             if (isset($key) && !empty($key)) {
                                $salesRepId =  $salesRepNameArr[$key]['id'];
+                               $sales_rep_img = $salesRepNameArr[$key]['sales_rep_img'];
                             } else {
                                 $salesRepNameArr[$i]['name'] =  $salesRepName;
                             }
@@ -2662,7 +2665,9 @@ class Cron extends MX_Controller {
                                     $resultSales = $query->row_array(); 
                                     if (!empty($resultSales)) {
                                         $salesRepId =  $resultSales['id'];
+                                        $sales_rep_img = isset($resultSales["sales_rep_profile_img"]) && !empty($resultSales["sales_rep_profile_img"]) ? $resultSales["sales_rep_profile_img"] : '';
                                         $salesRepNameArr[$i]['id'] = $salesRepId;
+                                        $salesRepNameArr[$i]['sales_rep_img'] = $sales_rep_img;
                                         $i++;
                                     } else {
                                         if (!empty(trim($salesRepNameArr[$i]['name']))) {
@@ -2710,6 +2715,9 @@ class Cron extends MX_Controller {
                                     );
                                 }
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
+                                $propertyAddress = $orderDetails['address'];
+                                $productTypeID = $orderDetails['purchase_type'];
+                                $orderId = $order[0]['id'];
                                 if (!empty($salesRepId)) {
                                     $this->home_model->update(
                                         array(
@@ -2808,6 +2816,8 @@ class Cron extends MX_Controller {
                                             'status'=> 1
                                         );
             
+                                        $propertyAddress = $address;
+                                        $productTypeID = $res['TransactionProductType']['ProductTypeID'];
                                         $primary_owner = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
                                         $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
                                         $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
@@ -2876,10 +2886,36 @@ class Cron extends MX_Controller {
                                                 'sent_to_accounting_date' => $completed_date
                                             );
                                         }
-                                        $this->home_model->insert($orderData,'order_details');
+                                        $orderId = $this->home_model->insert($orderData,'order_details');
                                     }
                                 }
                             }
+                            if (!empty($escrow_email)) {
+                                $from_name = 'Pacific Coast Title Company';
+							    $from_mail = env('FROM_EMAIL');							
+								$email_data = array(
+									'orderNumber'=> $file_number,
+									'PropertyAddress'=> $propertyAddress,
+									'randomString'=> $randomString,
+									'headerImg'=> $sales_rep_img,
+									'currYear'=> CURRENT_YEAR,
+									'productTypeID' => $productTypeID 
+								);
+								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
+								$message_body = $borrower_message_body; 
+								$subject = $file_number. ' - Borrower Verification';
+								//$escrow_email = 'hitesh.p@crestinfosystems.com';
+								$mailParams = array(
+									'from_mail'=>$from_mail, 
+									'from_name'=>$from_name, 
+									'to'=> $escrow_email,
+									'subject'=>$subject,
+									'message'=>json_encode($email_data)
+								);
+								$logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
+								$escrow_mail_result = send_email($from_mail,$from_name, $escrow_email, $subject, $message_body);
+								$this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status' => $escrow_mail_result), $orderId, $logid);
+							}
                         }
                         $row++;
                     }

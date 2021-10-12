@@ -89,7 +89,7 @@ class Order
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
             
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0  && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -99,7 +99,10 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
-
+            if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
+            }
             if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if(!empty($result)) {
                     $this->CI->db->group_start()
@@ -152,7 +155,7 @@ class Order
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0  && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -162,7 +165,10 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
-
+            if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
+            }
             if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if(!empty($result)) {
                     $this->CI->db->group_start()
@@ -221,7 +227,7 @@ class Order
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -231,7 +237,10 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
-
+            if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
+            }
             if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if(!empty($result)) {
                     $this->CI->db->group_start()
@@ -283,7 +292,7 @@ class Order
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
 
             
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -293,7 +302,10 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
-
+            if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
+            }
             if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if(!empty($result)) {
                     $this->CI->db->group_start()
@@ -346,7 +358,7 @@ class Order
         return $result;
     }
 
-    public function get_order_details($fileId,$from_mail=0)
+    public function get_order_details($fileId, $from_mail=0)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number, 
@@ -407,7 +419,6 @@ class Order
             transaction_details.loan_amount,
             transaction_details.loan_number,
             transaction_details.transaction_type, 
-            transaction_details.title_officer,
             transaction_details.purchase_type,
             transaction_details.supplemental_report_date,
             transaction_details.preliminary_report_date,
@@ -448,7 +459,7 @@ class Order
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->CI->db->where('file_id', $fileId);
          
-        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0) {
+        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
             $this->CI->db->group_start()
                 ->where('order_details.customer_id', $userdata['id'])
                 ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -462,11 +473,15 @@ class Order
     public function is_user()
     {
         $userdata = $this->CI->session->userdata('user');
-        if (!empty($userdata['id']) && $userdata['is_admin'] == 0 && $userdata['is_special_lender'] == 1 ) {
-            redirect(base_url().'special-lender-dashboard');
-        } else if (!empty($userdata['id']) && $userdata['is_admin'] == 0 && $userdata['is_special_lender'] == 0 ) {
-            
-        }  else {
+        if (!empty($userdata['id'])) {
+            if ($userdata['is_title_officer'] ==  1) {
+                redirect(base_url().'title-officer-dashboard');
+            } else if ($userdata['is_sales_rep'] ==  1) {
+                redirect(base_url().'sales-dashboard');
+            } else if ($userdata['is_special_lender'] ==  1) {
+                redirect(base_url().'special-lender-dashboard');
+            }
+        } else {
             redirect(base_url().'order/login');
         }
     }
@@ -567,6 +582,111 @@ class Order
         } else {
             return array();
         }         
+    }
+
+    public function get_user_documents($order_id)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('*')
+            ->from('pct_order_documents');
+         
+        if ($userdata['is_title_officer'] == 0) {
+            $this->CI->db->where('user_id', $userdata['id']);
+        }
+        
+        $this->CI->db->where('order_id', $order_id);
+        $this->CI->db->order_by('id', 'desc');
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
+
+    public function getOrderdocuments($params)
+    {
+        $userdata = $this->CI->session->userdata('user');
+
+        $this->CI->db->select('*')
+            ->from('pct_order_documents');
+         
+        if ($userdata['is_title_officer'] == 0) {
+            $this->CI->db->where('user_id', $userdata['id']);
+        }
+        $this->CI->db->where('order_id', $params['order_id']);
+        $total_records =  $this->CI->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $document_lists = array();
+
+        if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->like('original_document_name', $keyword);
+            }
+
+            if ($userdata['is_title_officer'] == 0) {
+                $this->CI->db->where('user_id', $userdata['id']);
+            }
+
+            $this->CI->db->where('order_id', $params['order_id']);
+            $this->CI->db->select('*')
+                ->from('pct_order_documents');
+            $total_records =  $this->CI->db->count_all_results();
+
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->like('original_document_name', $keyword);
+            }
+
+            if ($userdata['is_title_officer'] == 0) {
+                $this->CI->db->where('user_id', $userdata['id']);
+            }
+
+            $this->CI->db->where('order_id', $params['order_id']);
+            $this->CI->db->select('*')
+                ->from('pct_order_documents');
+
+            $this->CI->db->order_by('id', 'desc');  
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            } 
+
+            $query = $this->CI->db->get();
+            if ($query->num_rows() > 0) {
+                $document_lists = $query->result_array();
+            }
+        } else {
+            if ($userdata['is_title_officer'] == 0) {
+                $this->CI->db->where('user_id', $userdata['id']);
+            }
+
+            $this->CI->db->where('order_id', $params['order_id']);
+            $this->CI->db->select('*')
+                ->from('pct_order_documents');
+
+            $this->CI->db->order_by('id', 'desc');    
+
+            
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+            if ($query->num_rows() > 0) {
+                $document_lists = $query->result_array();
+            }
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $total_records,
+            'data' => $document_lists
+        );
     }
 
     public function get_prelim_document($order_id)
@@ -1201,7 +1321,7 @@ class Order
         }
     }
 
-    public function getOpenOrdersCountForRefiProducts($month)
+    public function getOpenOrdersCountForRefiProducts($month, $is_sales_rep = 1)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders')
@@ -1211,14 +1331,18 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
-        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        if ($is_sales_rep == 1) {
+            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+        } else {
+            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
+        }
+        
         $query = $this->CI->db->get();
-        //echo $this->CI->db->last_query();exit;
         $result = $query->row_array();
         return $result;
     }
 
-    public function getOpenOrdersCountForSaleProducts($month)
+    public function getOpenOrdersCountForSaleProducts($month, $is_sales_rep = 1)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders')
@@ -1228,39 +1352,51 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
-        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        if ($is_sales_rep == 1) {
+            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+        } else {
+            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
+        }
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
     }
 
-    public function getClosedOrdersCountForRefiProducts($month)
+    public function getClosedOrdersCountForRefiProducts($month, $is_sales_rep = 1)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-       // $this->CI->db->where('order_details.resware_status = "closed"');
+        //$this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
-        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        if ($is_sales_rep == 1) {
+            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+        } else {
+            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
+        }
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
     }
 
-    public function getClosedOrdersCountForSaleProducts($month)
+    public function getClosedOrdersCountForSaleProducts($month, $is_sales_rep = 1)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-            //$this->CI->db->where('order_details.resware_status = "closed"');
+        //$this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
-        $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+        if ($is_sales_rep == 1) {
+            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+        } else {
+            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
+        }
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
@@ -1297,5 +1433,196 @@ class Order
             }
         }
         return $result;
+    }
+
+    public function countWokingsDaysLeftOfMonth() 
+	{
+		$count = 0;
+		$counter = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+		while (date("n", $counter) == date('m')) {
+			if (in_array(date("w", $counter), array(0, 6)) == false) {
+				$count++;
+			}
+			$counter = strtotime("+1 day", $counter);
+		}
+		$this->CI->db->select('*');
+        $this->CI->db->from('pct_holidays');	
+		$this->CI->db->where('holiday_date >', date('Y-m-d'));
+		$this->CI->db->where('holiday_date <=', date("Y-m-t", strtotime(date('Y-m-d'))));
+        $query = $this->CI->db->get();
+		$result = $query->result_array();
+		foreach ($result as $res) {
+			$weekendFlag = (date('N', strtotime($res['holiday_date'])) >= 6);
+			if($weekendFlag != 1) {
+				$count--;
+			}
+		}
+		return $count;
+	}
+
+	public function countWorkedDaysOfMonth() 
+	{
+		$count = 0;
+		$counter = mktime(0, 0, 0, date('m'), date('d')-1, date('Y'));
+		while (date("n", $counter) == date('m')) {
+			if (in_array(date("w", $counter), array(0, 6)) == false) {
+				$count++;
+			}
+			$counter = strtotime("-1 day", $counter);
+		}
+		$this->CI->db->select('*');
+        $this->CI->db->from('pct_holidays');	
+		$this->CI->db->where('holiday_date >=', date('Y-m-01'));
+		$this->CI->db->where('holiday_date <', date('Y-m-d'));
+        $query = $this->CI->db->get();
+		$result = $query->result_array();
+		foreach ($result as $res) {
+			$weekendFlag = (date('N', strtotime($res['holiday_date'])) >= 6);
+			if($weekendFlag != 1) {
+				$count--;
+			}
+		}
+		return $count;
+	}
+
+    public function get_order_notes($orderId)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_notes');
+            
+        $this->CI->db->where('order_id', $orderId);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function uploadCPLDocumentToResware($document_name, $orderDetails, $binaryData)
+	{
+		$this->CI->load->model('order/document');
+		$this->CI->load->library('order/resware');
+		$this->CI->load->model('order/apiLogs');
+		$userdata = $this->CI->session->userdata('user');
+        if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$fileSize = filesize('./uploads/documents/'.$document_name);
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1051,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'CPL Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_cpl_doc' => 1
+		);
+		$documentId = $this->CI->document->insert($documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1051,
+			),
+			'Description' => 'CPL Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+        $user_data = array();
+		if (!empty($userdata['id'])) {
+			if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+				$user_data['admin_api'] = 1; 
+			} else {
+				$user_data = array();
+			}
+		} else {
+			$user_data['admin_api'] = 1; 
+		}
+		
+		$logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+
+		/*$from_name = 'Pacific Coast Title Company';
+		$from_mail = env('FROM_EMAIL');
+		$order_message_body = 'Please check attachment for CPL document.';
+		$message = $order_message_body; 
+		$subject = 'CPL Document';
+		$to = $orderDetails['lender_email'];
+		$cc = array();
+		if (!empty($orderDetails['sales_representative'])) {
+			$this->CI->db->select('*')
+            	->from('pct_order_sales_rep');
+			$this->CI->db->where('id', $orderDetails['sales_representative']);
+			$query = $this->CI->db->get();
+			$salesResult = $query->row_array();
+			if (!empty($salesResult)) {
+				$cc = array($salesResult['email_address']);
+			}
+		}
+		$bcc = array();
+		$file = array(base_url().'uploads/documents/'.$document_name);
+		$this->CI->load->helper('sendemail');
+		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
+	}
+
+    public function uploadProposedDocumentToResware($document_name, $orderDetails, $binaryData)
+    {
+    	$this->CI->load->model('order/document');
+		$this->CI->load->library('order/resware');
+		$this->CI->load->model('order/apiLogs');
+        $userdata = $this->CI->session->userdata('user');
+        if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$fileSize = filesize('./uploads/proposed-insured/'.$document_name);
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Proposed Insured Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_proposed_insured_doc' => 1
+		);
+		$documentId = $this->CI->document->insert($documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1037,
+			),
+			'Description' => 'Proposed Insured Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		$user_data = array();
+		if (!empty($userdata['id'])) {
+			if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+				$user_data['admin_api'] = 1; 
+			} else {
+				$user_data = array();
+			}
+		} else {
+			$user_data['admin_api'] = 1; 
+		}
+		$logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
 }

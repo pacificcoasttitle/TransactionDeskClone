@@ -812,7 +812,7 @@
 	    		$("#LenderCompany").autocomplete({
 			        source: function(request, response) {
 			            $.ajax({
-			                url: base_url+'home/getDetailsByName',
+			                url: base_url+'getDetailsByName',
 			                data: {
 			                    term : request.term,//the value of the input is here
 			                    is_escrow : 0                    
@@ -968,7 +968,7 @@
 	    		$("#edit_LenderCompany").autocomplete({
 			        source: function(request, response) {
 			            $.ajax({
-			                url: base_url+'home/getDetailsByName',
+			                url: base_url+'getDetailsByName',
 			                data: {
 			                    term : request.term,//the value of the input is here
 			                    is_escrow : 0                    

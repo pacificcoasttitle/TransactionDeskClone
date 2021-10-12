@@ -24,4 +24,52 @@ class Common
             redirect(base_url().'order/admin');
         }
     }
+
+    public function is_title_officer_user()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        if (!empty($userdata['id'])) {
+            if ($userdata['is_sales_rep'] ==  1) {
+                redirect(base_url().'sales-dashboard');
+            } else if ($userdata['is_special_lender'] ==  1) {
+                redirect(base_url().'special-lender-dashboard');
+            } else if ($userdata['is_title_officer'] ==  0) {
+                redirect(base_url().'dashboard');
+            }
+        } else {
+            redirect(base_url().'order/login');
+        }
+    }
+
+    public function is_sales_user()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        if (!empty($userdata['id'])) {
+            if ($userdata['is_title_officer'] ==  1) {
+                redirect(base_url().'title-officer-dashboard');
+            } else if ($userdata['is_special_lender'] ==  1) {
+                redirect(base_url().'special-lender-dashboard');
+            } else if ($userdata['is_sales_rep'] ==  0) {
+                redirect(base_url().'dashboard');
+            }
+        } else {
+            redirect(base_url().'order/login');
+        }
+    }
+
+    public function is_special_lender_user()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        if (!empty($userdata['id'])) {
+            if ($userdata['is_title_officer'] ==  1) {
+                redirect(base_url().'title-officer-dashboard');
+            } else if ($userdata['is_sales_rep'] ==  1) {
+                redirect(base_url().'sales-dashboard');
+            } else if ($userdata['is_special_lender'] ==  0) {
+                redirect(base_url().'dashboard');
+            }
+        } else {
+            redirect(base_url().'order/login');
+        }
+    }
 }

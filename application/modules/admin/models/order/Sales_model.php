@@ -10,7 +10,7 @@ class Sales_model extends CI_Model
     {
         $this->db->where('status', 1);
         $this->db->where('is_sales_rep', 1);
-    	$this->db->from('customer_basic_details');
+        $this->db->from('customer_basic_details');
 		$total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -63,7 +63,7 @@ class Sales_model extends CI_Model
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-            $this->db->order_by('first_name','ASC');
+    	    $this->db->order_by('first_name','ASC');
 			$query = $this->db->get('customer_basic_details');
             
 			if ($query->num_rows() > 0) {

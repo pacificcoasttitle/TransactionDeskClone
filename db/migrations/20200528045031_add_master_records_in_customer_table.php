@@ -32,7 +32,7 @@ class AddMasterRecordsInCustomerTable extends AbstractMigration
     public function change()
     {
         $data = [
-            ['first_name' => 'Master', 'last_name' => 'User', 'telephone_no' => '(714) 516-6700', 'email_address' => 'cs@pct.com', 'password' => '82e23cb4cb797d12ebbbc47690622b5d', 'company_name' => 'Master Company', 'street_address' => '1111 E. Katella Ave Ste.120', 'city' => 'Orange', 'zip_code' => '92867' , 'is_escrow' => 0 , 'lender_type' => null, 'status' => 1, 'is_master' => 1, 'created_at' => date('Y-m-d H:i:s')]
+            ['first_name' => 'Master', 'last_name' => 'User', 'telephone_no' => '(714) 516-6700', 'email_address' => 'cs@pct.com', 'password' => '82e23cb4cb797d12ebbbc47690622b5d', 'company_name' => 'Master Company', 'street_address' => '1111 E. Katella Ave Ste.120', 'city' => 'Orange', 'zip_code' => '92867' , 'is_escrow' => 0 , 'lender_type' => null, 'status' => 1, 'is_master' => 1, 'sales_rep_report_image' => '', 'created_at' => date('Y-m-d H:i:s')]
         ];
         $table = $this->table('customer_basic_details');
         $table->insert($data);

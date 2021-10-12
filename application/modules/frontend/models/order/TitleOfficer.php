@@ -3,15 +3,16 @@ class TitleOfficer extends CI_Model
 {
 	function __construct() {
         // Set table name
-        $this->table = 'pct_order_title_officer';
+        $this->table = 'customer_basic_details';
     }
 
     public function getTitleOfficerDetails($params)
     {
         $table = $this->table;
 
-        $this->db->select('*');
+        $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
         $this->db->from($table);
+        $this->db->where('is_title_officer', 1);
         
         if(array_key_exists("where", $params)){
             foreach($params['where'] as $key => $val){

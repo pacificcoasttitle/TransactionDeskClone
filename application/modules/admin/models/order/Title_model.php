@@ -3,13 +3,14 @@ class Title_model extends CI_Model
 {
 
 	function __construct() {
-        $this->table = 'pct_order_title_officer';
+        $this->table = 'customer_basic_details';
     }
 	
     public function get_title_officers($params)
     {
         $this->db->where('status', 1);
-    	$this->db->from('pct_order_title_officer');
+        $this->db->where('is_title_officer', 1);
+    	$this->db->from('customer_basic_details');
 		$total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -18,39 +19,49 @@ class Title_model extends CI_Model
     	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
     		$keyword = $params['searchvalue'];
     		if (isset($keyword) && !empty($keyword)) {
-				$this->db->like('name', $keyword);
+				$this->db->like('first_name', $keyword);
+                $this->db->or_like('last_name', $keyword);
                 $this->db->or_like('email_address', $keyword);
-                $this->db->or_like('phone', $keyword);
+                $this->db->or_like('telephone_no', $keyword);
+                $this->db->or_like('partner_id', $keyword);
+                $this->db->or_like('partner_type_id', $keyword);
             }
             $this->db->where('status', 1);
-	    	$this->db->from('pct_order_title_officer');
+            $this->db->where('is_title_officer', 1);
+	    	$this->db->from('customer_basic_details');
 			$filter_total_records =  $this->db->count_all_results();
 
 			if (isset($keyword) && !empty($keyword)) {
-				$this->db->like('name', $keyword);
+				$this->db->like('first_name', $keyword);
+                $this->db->or_like('last_name', $keyword);
                 $this->db->or_like('email_address', $keyword);
-                $this->db->or_like('phone', $keyword);
+                $this->db->or_like('telephone_no', $keyword);
+                $this->db->or_like('partner_id', $keyword);
+                $this->db->or_like('partner_type_id', $keyword);
 			}
 
             $this->db->where('status', 1);
+            $this->db->where('is_title_officer', 1);
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('pct_order_title_officer');
+			$query = $this->db->get('customer_basic_details');
 			
 			if ($query->num_rows() > 0) {
                 $title_officers_lists = $query->result_array();
 	        }
     	} else {    
-            $this->db->where('status', 1);		
-	    	$this->db->from('pct_order_title_officer');
+            $this->db->where('status', 1);	
+            $this->db->where('is_title_officer', 1);	
+	    	$this->db->from('customer_basic_details');
 			$filter_total_records =  $this->db->count_all_results();
 
             $this->db->where('status', 1);
+            $this->db->where('is_title_officer', 1);
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('pct_order_title_officer');
+			$query = $this->db->get('customer_basic_details');
 
 			if ($query->num_rows() > 0) {
 	            $title_officers_lists = $query->result_array();
@@ -69,7 +80,9 @@ class Title_model extends CI_Model
     	$table = $this->table;
         $this->db->select('*');
         $this->db->from($table);
-
+        $this->db->where('status', 1);	
+        $this->db->where('is_title_officer', 1);	
+        
         if (array_key_exists("where", $params)){
             foreach($params['where'] as $key => $val){
                 $this->db->where($key, $val);

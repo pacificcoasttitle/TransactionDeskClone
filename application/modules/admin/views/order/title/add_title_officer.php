@@ -15,11 +15,21 @@
             <form id="frm-add-title-officer-rep" method="POST">
         
                 <div class="form-group row">
-                    <label for="title_officer_name" class="col-sm-2 col-form-label">Name<span class="required"> *</span></label>
+                    <label for="title_officer_name" class="col-sm-2 col-form-label">First Name<span class="required"> *</span></label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="title_officer_name" id="title_officer_name" class="form-control" placeholder="Title Officer Name">
-                        <?php if(!empty($name_error_msg)){ ?>                     
-                            <span class="error"><?php echo $name_error_msg; ?></span>
+                        <input type="text" class="form-control" name="first_name" id="first_name" class="form-control" placeholder="First Name">
+                        <?php if(!empty($first_name_error_msg)){ ?>                     
+                            <span class="error"><?php echo $first_name_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="title_officer_name" class="col-sm-2 col-form-label">Last Name<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="last_name" id="last_name" class="form-control" placeholder="Last Name">
+                        <?php if(!empty($last_name_error_msg)){ ?>                     
+                            <span class="error"><?php echo $last_name_error_msg; ?></span>
                         <?php } ?>
                     </div>
                 </div>

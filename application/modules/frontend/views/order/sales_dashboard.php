@@ -105,15 +105,6 @@
 			line-height: 21px;
 		}
 
-		.projected_goal_section {
-    		color: #d35411;
-    		font-weight: bold;
-			text-align: center;
-			text-transform: uppercase;
-			font-size: large;
-			line-height: 21px;
-		}
-
 		#orders_listing_filter {
 			margin-bottom: 20px;
 		}
@@ -267,7 +258,6 @@
 </html>
 <script>
 	$(document).ready(function () {
-		//getSalesRepOrderCount();
 		var order_list='';
 		if ($('#orders_listing').length) {
 			order_list = $('#orders_listing').DataTable({
@@ -348,7 +338,7 @@
 				}
 			});
 
-			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="month_filter" id="month_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="01"> January </option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></label><label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option><option value="cancelled">Cancelled</option></select></label><a href="javascript:void(0);" style="margin-bottom: 5px;"><!-- <button class="btn btn-grad-2a" id="btn-refresh" style="background: #d35411;height: 42px;line-height: 28px;" type="button" onClick="importSalesRepOrders();">Refresh</button></a>-->');
+			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="month_filter" id="month_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="01"> January </option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></label><label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option><option value="cancelled">Cancelled</option></select></label>');
 
     		var d = new Date(),
 
@@ -403,59 +393,6 @@
 				{
 					alert(results.msg);
 				}
-				$('#page-preloader').css('display', 'none');
-			}
-		});
-	}
-
-	function importSalesRepOrders()
-	{
-		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
-		$('#page-preloader').css('display', 'block');
-
-		$.ajax({
-			url: base_url + "import-sales-rep-orders",
-			type: "post",
-			success: function (response) {
-
-				var results = JSON.parse(response);
-				
-				if(results.status == 'success')
-				{
-					$('#btn-refresh').css('background','#d35411');
-					order_list.ajax.reload();
-				}
-				else if(results.status == 'error')
-				{
-					alert(results.msg);
-				}
-				$('#page-preloader').css('display', 'none');
-			}
-		});
-	}
-
-	function getSalesRepOrderCount()
-	{
-		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
-		$('#page-preloader').css('display', 'block');
-
-		$.ajax({
-			url: base_url + "get-sales-rep-orders-count",
-			type: "post",
-			success: function (response) {
-
-				var results = JSON.parse(response);
-				
-				if((results.resware_open_count > results.open_count) || (results.resware_closed_count > results.closed_count))
-				{
-					// $('#btn-refresh').css('background','#469a47f2');
-					$('#btn-refresh').css('background','rgb(0, 102, 68)');
-				}
-				else
-				{
-					$('#btn-refresh').css('background','#d35411');
-				}
-				
 				$('#page-preloader').css('display', 'none');
 			}
 		});

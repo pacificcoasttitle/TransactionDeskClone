@@ -85,7 +85,7 @@
 		aria-labelledby="Lender Infromation" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 			<div class="modal-content">
-				<form method="POST" action="<?php echo base_url();?>add-lender-order-mail" enctype="multipart/form-data">
+				<form method="POST" action="<?php echo base_url();?>add-lender-order" enctype="multipart/form-data">
 					<div class="smart-forms smart-container wrap-2" style="margin:30px">
 						<div class="modal-body search-result">
 							<div id="lender-details-fields" style="">
@@ -488,7 +488,7 @@
 			$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 			$('#page-preloader').css('display', 'block');
 			$.ajax({
-				url: base_url + "get-order-details-cpl-mail",
+				url: base_url + "get-order-details-cpl",
 				type: "post",
 				data: {
 					fileId: fileId
@@ -552,43 +552,6 @@
 		$('#page-preloader').css('display', 'block');
 	});
 
-	function download_for_pdf(westcor_file_id, westcor_order_id) {
-		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
-		$('#page-preloader').css('display', 'block');
-		$.ajax({
-			url: base_url + "download-cpl-pdf",
-			type: "post",
-			data: {
-				westcor_file_id: westcor_file_id,
-				westcor_order_id: westcor_order_id,
-			},
-			success: function (response) {
-				$('#page-preloader').css('display', 'none');
-				if (response) {
-					if (navigator.msSaveBlob) {
-						var csvData = base64toBlob(response, 'application/octet-stream');
-						var csvURL = navigator.msSaveBlob(csvData, 'FeeEstimation.pdf');
-						var element = document.createElement('a');
-						element.setAttribute('href', csvURL);
-						element.setAttribute('download', 'cpl_'+westcor_file_id+'.pdf');
-						element.style.display = 'none';
-						document.body.appendChild(element);
-						document.body.removeChild(element);
-					} else {
-						var csvURL = 'data:application/octet-stream;base64,' + response;
-						var element = document.createElement('a');
-						element.setAttribute('href', csvURL);
-						element.setAttribute('download', 'cpl_'+westcor_file_id+'.pdf');
-						element.style.display = 'none';
-						document.body.appendChild(element);
-						element.click();
-						document.body.removeChild(element);
-					}
-				}
-			}
-		});
-	}
-
 	function base64toBlob(base64Data, contentType) {
 		contentType = contentType || '';
 		var sliceSize = 1024;
@@ -619,7 +582,7 @@
         var fileNameIndex = url.lastIndexOf("/") + 1;
         var filename = url.substr(fileNameIndex);
         $.ajax({
-			url: base_url + "download-aws-document-mail",
+			url: base_url + "download-aws-document",
 			type: "post",
 			data: {
 				url : url

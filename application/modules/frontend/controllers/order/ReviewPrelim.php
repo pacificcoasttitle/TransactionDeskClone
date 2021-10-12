@@ -9,7 +9,6 @@ class ReviewPrelim extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
         $this->load->library('order/order');
-        // $this->load->library("phpmailer_library");
         $this->load->model('order/document');
         $this->load->library('order/resware');
         $this->load->model('order/home_model');
@@ -692,6 +691,18 @@ class ReviewPrelim extends MX_Controller {
 											$prelimDocumentName = $document_name;
 											$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 											$source_pdf = FCPATH.'/uploads/documents/'.$document_name;
+									
+											$wordsApi = new \Aspose\Words\WordsApi(getenv('PDF_TO_DOC_CLIENT_ID'), getenv('PDF_TO_DOC_SECRET_KEY'));
+											$format = "docx";
+											$file = ($source_pdf);
+											$doc_file_name =  str_replace('pdf', 'docx', $document_name);
+											$dest_doc = FCPATH.'/uploads/documents/'.$doc_file_name;
+											
+											$request = new Aspose\Words\Model\Requests\ConvertDocumentRequest($file, $format, null);
+											$result = $wordsApi->ConvertDocument($request); 
+											copy($result->getPathName(), $dest_doc);
+											$this->order->uploadDocumentOnAwsS3($doc_file_name, 'documents');
+													
 											\Gufy\PdfToHtml\Config::set('pdftohtml.bin', getenv('PDFTOHTML_PATH'));
 											\Gufy\PdfToHtml\Config::set('pdfinfo.bin', getenv('PDFTOINFO_PATH'));
 											$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
@@ -845,6 +856,18 @@ class ReviewPrelim extends MX_Controller {
 											$prelimDocumentName = $document_name;
 											$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 											$source_pdf = FCPATH.'/uploads/documents/'.$document_name;
+
+											$wordsApi = new \Aspose\Words\WordsApi(getenv('PDF_TO_DOC_CLIENT_ID'), getenv('PDF_TO_DOC_SECRET_KEY'));
+											$format = "docx";
+											$file = ($source_pdf);
+											$doc_file_name =  str_replace('pdf', 'docx', $document_name);
+											$dest_doc = FCPATH.'/uploads/documents/'.$doc_file_name;
+											
+											$request = new Aspose\Words\Model\Requests\ConvertDocumentRequest($file, $format, null);
+											$result = $wordsApi->ConvertDocument($request); 
+											copy($result->getPathName(), $dest_doc);
+											$this->order->uploadDocumentOnAwsS3($doc_file_name, 'documents');
+											
 											chmod($source_pdf, 0755);
 											\Gufy\PdfToHtml\Config::set('pdftohtml.bin', getenv('PDFTOHTML_PATH'));
 											\Gufy\PdfToHtml\Config::set('pdfinfo.bin', getenv('PDFTOINFO_PATH'));
@@ -956,8 +979,8 @@ class ReviewPrelim extends MX_Controller {
 					$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
 					$message = $prelim_message_body; 
 					$subject = 'The Prelim Hot Sheet';
-					$to = $customer_email;
-					//$to = 'hitesh.p@crestinfosystems.com';
+					//$to = $customer_email;
+					$to = 'hitesh.p@crestinfosystems.com';
 					
 					$this->load->helper('sendemail');
 					
