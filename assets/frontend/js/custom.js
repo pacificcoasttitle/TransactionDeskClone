@@ -678,7 +678,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
 {
     reportNum = repNum;
     $.ajax({
-        url: base_url+'home/getSearchResults?',
+        url: base_url+'getSearchResults?',
         data: {
             requrl: request + '&reportType=' + reportNum
         },
@@ -755,7 +755,7 @@ function compileXmlUrls(response, report) {
 
 function get187() {
     $.ajax({
-        url: base_url+'home/getSearchResults?',
+        url: base_url+'getSearchResults?',
         data: {
             requrl: reportData.report187,
         },
