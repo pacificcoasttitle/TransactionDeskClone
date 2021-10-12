@@ -74,10 +74,12 @@ class Dashboard extends MX_Controller {
 
 			$openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
 			$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-			$data['refi_total_premium'] = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+			//$data['refi_total_premium'] = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+			$data['refi_total_premium'] = $closeOrderRefiTotalPremium;
 			$openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
 			$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-			$data['sale_total_premium'] = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+			//$data['sale_total_premium'] = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+			$data['sale_total_premium'] = $closeOrderSaleTotalPremium;
 			$data['total_premium'] = $data['sale_total_premium'] + $data['refi_total_premium'];
 			if ($data['total_premium'] > 0) {
 				$premiumWorkedDays = $data['total_premium']/$workedDays;
@@ -2346,7 +2348,6 @@ class Dashboard extends MX_Controller {
 			$path = './uploads/plat-map/'.$file_number.'.png';
 
 			file_put_contents($path, base64_decode($imagedata,true));
-			$file_number = 10171986;
 			if (env('AWS_ENABLE_FLAG') == 1) { 
 				$plat_map_url = env('AWS_PATH')."plat-map/".$file_number.'.png';
 			} else {
@@ -2801,16 +2802,29 @@ class Dashboard extends MX_Controller {
 				$orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
 				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {
-				$orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
-				$orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
-				$orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
-				$orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
-				$orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
-				$orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
-				$orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
-				$orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
-				$orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
-				$orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
+				if ($orderUser['is_primary_mortgage_user'] == 1) {
+					$orderDetails['lender_first_name'] = '';
+					$orderDetails['lender_last_name'] = '';
+					$orderDetails['lender_email'] = '';
+					$orderDetails['lender_state'] = '';
+					$orderDetails['lender_company_name'] = '';
+					$orderDetails['lender_address'] = '';
+					$orderDetails['lender_city'] = '';
+					$orderDetails['lender_zipcode'] = '';
+					$orderDetails['lender_assignment_clause'] = '';
+					$orderDetails['lender_id'] = '';
+				} else {
+					$orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
+					$orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
+					$orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
+					$orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
+					$orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
+					$orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
+					$orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
+					$orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
+					$orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
+					$orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
+				}
 			}
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 		}
@@ -3597,10 +3611,12 @@ class Dashboard extends MX_Controller {
 
 			$openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
 			$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-			$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+			//$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+			$refi_total_premium =  $closeOrderRefiTotalPremium;
 			$openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
 			$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-			$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+			//$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+			$sale_total_premium = $closeOrderSaleTotalPremium;
 			$salesHistory[$iM-1]['total_premium'] = $sale_total_premium + $refi_total_premium;
 
 			$totalCount = $sale_close_count + $refi_close_count + $sale_open_count + $refi_open_count;

@@ -46,6 +46,7 @@ class Sales_model extends CI_Model
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
+            $this->db->order_by('first_name','ASC');
 			$query = $this->db->get('customer_basic_details');
 			
 			if ($query->num_rows() > 0) {
@@ -62,8 +63,9 @@ class Sales_model extends CI_Model
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
+            $this->db->order_by('first_name','ASC');
 			$query = $this->db->get('customer_basic_details');
-
+            
 			if ($query->num_rows() > 0) {
 	            $sales_rep_lists = $query->result_array();
 	        } 

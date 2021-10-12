@@ -205,6 +205,10 @@ $route['sales-production-history'] = 'frontend/order/dashboard/salesProductionHi
 $route['get-sales-production-history'] = 'frontend/order/dashboard/getSalesProductionHistory';
 $route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
 $route['update-all-order-status'] = 'frontend/order/cron/updateAllOrderStatus';
+$route['policy/:any'] = 'frontend/order/dashboardMail/policy';
+$route['download-policy-doc'] = 'frontend/order/dashboardMail/downloadPolicyDoc';
+$route['remove-doc-from-server'] = 'frontend/order/cron/removeDocServer';
+$route['send-message-recording-confirmation'] = 'frontend/order/cron/sendMessageRecordingConfirmation';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';
@@ -289,7 +293,9 @@ $route['order/admin/commonwealth-branches'] = 'admin/order/cpl/commonwealthBranc
 $route['get-north-american-branches'] = 'admin/order/cpl/getNorthAmericanBranches';
 $route['get-westcor-branches'] = 'admin/order/cpl/getWestcorBranches';
 $route['get-commonwealth-branches'] = 'admin/order/cpl/getCommonwealthBranches';
-
+$route['update-mortgage-user'] = 'admin/order/home/updateMortgageUser';
+$route['order/admin/mortgage-brokers'] = 'admin/order/home/mortgageBrokers';
+$route['is-mortgage-primary-user'] = 'admin/order/home/isMortgagePrimaryUser';
 
 
 $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';

@@ -5,12 +5,22 @@
 			<span>Dashboard</span>
 		</a>
 	</li>
-
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/orders' || $this->uri->segment(3) == 'order-details' || $this->uri->segment(4) == 'loan' || $this->uri->segment(4) == 'sale') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/orders'; ?>">
+	<li class="nav-item dropdown">
+		<a class="nav-link dropdown-toggle" href="#" id="ordersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-list"></i>
 			<span>Orders</span>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="ordersDropdown" id="ordersDropdown_list">
+        	<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/orders' || $this->uri->segment(3) == 'order-details' || $this->uri->segment(4) == 'loan' || $this->uri->segment(4) == 'sale') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/orders'; ?>">
+				Orders
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/safewire-orders') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/safewire-orders'; ?>">
+				Safewire Orders
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/import-orders') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/import-orders'; ?>">
+			Import Orders
 		</a>
+        </div>
 	</li>
 
 	<li class="nav-item dropdown">
@@ -22,6 +32,7 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/escrow' || $this->uri->uri_string() == 'order/admin/import') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/escrow'; ?>">Escrow</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/agents' || $this->uri->uri_string() == 'order/admin/import-agents' || $this->uri->segment(3) == 'edit-agent') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/agents'; ?>">Agents</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/lenders' || $this->uri->uri_string() == 'order/admin/import-lenders' || $this->uri->segment(3) == 'edit-lender') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lenders'; ?>">Lenders</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/mortgage-brokers') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/mortgage-brokers'; ?>">Mortgage Brokers</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/sales-rep'; ?>">Sales Rep.</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/title-officers' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/title-officers'; ?>">Title Officer</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/new-users'; ?>">New Users</a>
@@ -32,34 +43,13 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/escrow-officers' || $this->uri->segment(3) == 'edit-escrow-officer' || $this->uri->segment(3) == 'add-escrow-officer') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/escrow-officers'; ?>">Escrow Officers</a>
         </div>
 	</li>
-	
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/credentials-check') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/credentials-check'; ?>">
-			<i class="fas fa-fw fa-check"></i>
-			<span>Credentials Check</span>
-		</a>
-	</li>
-
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/resware-admin-credential') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/resware-admin-credential'; ?>">
-			<i class="fas fa-fw fa-check"></i>
-			<span>Resware Admin Credential</span>
-		</a>
-	</li>
-
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/send-password') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/send-password'; ?>">
-			<i class="fas fa-fw fa-envelope"></i>
-			<span>Send Password</span>
-		</a>
-	</li>
 
 	<li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id=logsDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			<i class="fas fa-fw fa-file"></i>
+        <a class="nav-link dropdown-toggle" href="#" id="logsDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fas fa-fw fa-book"></i>
 			<span>Logs</span>
         </a>
-		<div class="dropdown-menu" aria-labelledby=logsDropDown" id="logs">
+		<div class="dropdown-menu" aria-labelledby="logsDropDown" id="logs">
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/lv-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lv-log'; ?>">Legal Vesting</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/grant-deed-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/grant-deed-log'; ?>">Grant Deed</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/tax-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-log'; ?>">Tax</a>
@@ -82,66 +72,9 @@
         </div>
 	</li>
 
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/primary-check') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/primary-check'; ?>">
-			<i class="fas fa-fw fa-list"></i>
-			<span>Primary Accounts</span>
-		</a>
-	</li>
-
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/fees' || $this->uri->segment(3) == 'add-fee' || $this->uri->segment(3) == 'edit-fee') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/fees'; ?>">
-			<i class="fa fa-money"></i>
-			<span>Fees</span>
-		</a>
-	</li>
-
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/fees-types' || $this->uri->segment(3) == 'add-fee-type' || $this->uri->segment(3) == 'edit-fee-type') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/fees-types'; ?>">
-			<i class="fa fa-money"></i>
-			<span>Fees Types</span>
-		</a>
-	</li>
-	
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/code-book' || $this->uri->uri_string() == 'order/admin/import-code-book') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/code-book'; ?>">
-			<i class="fa fa-code"></i>
-			<span>Code Book</span>
-		</a>
-	</li>
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/import-orders') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/import-orders'; ?>">
-			<i class="fas fa-fw fa-list"></i>
-			<span>Import Orders</span>
-		</a>
-	</li>
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/rules-manager') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/rules-manager'; ?>">
-			<i class="fas fa-fw fa-list"></i>
-			<span>Rules Manager</span>
-		</a>
-	</li>
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/notifications') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/notifications'; ?>">
-			<i class="fas fa-fw fa-list"></i>
-			<span>Notifications</span>
-		</a>
-	</li>
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/safewire-orders') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/safewire-orders'; ?>">
-			<i class="fas fa-fw fa-list"></i>
-			<span>Safewire Orders</span>
-		</a>
-	</li>
-	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/holidays' || $this->uri->segment(3) == 'add-holiday' || $this->uri->segment(3) == 'edit-holiday') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'order/admin/holidays'; ?>">
-			<i class="fas fa-fw fa-list"></i>
-			<span>Holidays</span>
-		</a>
-	</li>
 	<li class="nav-item dropdown">
-		<a class="nav-link dropdown-toggle" href="#" id=cpl_branches" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			<i class="fas fa-fw fa-file"></i>
+		<a class="nav-link dropdown-toggle" href="#" id="cpl_branches" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fas fa-fw fa-sitemap"></i>
 			<span>CPL Branches</span>
         </a>
 		<div class="dropdown-menu" aria-labelledby="cpl_branches" id="cpl_branches_section">
@@ -150,4 +83,44 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/commonwealth-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/commonwealth-branches'; ?>">Commonwealth</a>
         </div>
 	</li>
+
+	<li class="nav-item dropdown">
+		<a class="nav-link dropdown-toggle" href="#" id="li_settings" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fas fa-fw fa-gear"></i>
+			<span>Settings</span>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="li_settings" id="li_settings_list">
+        	<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/credentials-check') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/credentials-check'; ?>">
+        		Credentials Check
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/resware-admin-credential') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/resware-admin-credential'; ?>">
+				Resware Admin
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/send-password') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/send-password'; ?>">
+				Send Password
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/primary-check') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/primary-check'; ?>">
+				Primary Accounts
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/fees-types' || $this->uri->segment(3) == 'add-fee-type' || $this->uri->segment(3) == 'edit-fee-type') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/fees-types'; ?>">
+				Fees Types
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/fees' || $this->uri->segment(3) == 'add-fee' || $this->uri->segment(3) == 'edit-fee') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/fees'; ?>">
+				Fees
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/import-orders') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/code-book'; ?>">
+				Code Book
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/rules-manager') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/rules-manager'; ?>">
+				Rules Manager
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/notifications') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/notifications'; ?>">
+				Notifications
+			</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/holidays' || $this->uri->segment(3) == 'add-holiday' || $this->uri->segment(3) == 'edit-holiday') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/holidays'; ?>">
+				Holidays
+			</a>
+        </div>
+	</li>
+
 </ul>

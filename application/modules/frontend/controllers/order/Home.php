@@ -185,7 +185,7 @@ class Home extends MX_Controller {
 					$listing_agent_details = array('name'=>$ListingAgentName, 'email'=>$ListingAgentEmailAddress, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
 	        	}
 	        	
-				$EscrowLenderId = $escrowLenderPartnerTypeID ='';
+				$escrowId = $lenderId = $lenderPartnerTypeID = $escrowPartnerTypeID ='';
 				$lender_details = $escrow_details = array();
 				$lender_details_api = $escrow_details_api = array();
 
@@ -211,79 +211,104 @@ class Home extends MX_Controller {
 					$companyData = $this->home_model->get_company_rows($con);
 				}
 
-
 				$cplLenderId = 0;
-				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId']))
-				{
+				$EscrowLenderId = 0;
+				if(isset($_POST['EscrowId']) && !empty($_POST['EscrowId'])) {
+					$escrowId = $_POST['EscrowId'];
 					$EscrowLenderId = $_POST['EscrowId'];
-					$escrow_lender_user_details = $this->home_model->get_user(array('id' => $EscrowLenderId));
+					$escrow_user_details = $this->home_model->get_user(array('id' => $escrowId));
 					$escrowCon = array(
 						'where' => array(
-							'partner_id' => $escrow_lender_user_details['partner_id'],
+							'partner_id' => $escrow_user_details['partner_id'],
 						)
 					);
 					$escrowCompanyData = $this->home_model->get_company_rows($escrowCon);
 
-					$EscrowLenderName = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
-					$EscrowLenderEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
-					$EscrowLenderTelephone      = $this->input->post('EscrowTelephone');
-	        		$EscrowLenderCompany      = $this->input->post('EscrowCompany');
+					$escrowName = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
+					$escrowEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
+					$escrowTelephone      = $this->input->post('EscrowTelephone');
+	        		$escrowCompany      = $this->input->post('EscrowCompany');
 
-					$escrow_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $ListingAgentTelephone,'company'=>$ListingAgentCompany);
-					$escrow_details_api = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'phone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
+					$escrow_details = array('name'=>$escrowName, 'email'=>$escrowEmail, 'telephone'=> $escrowName,'company'=>$escrowCompany);
+					$escrow_details_api = array('name'=>$escrowName, 'email'=>$escrowEmail, 'phone'=> $escrowTelephone,'company'=>$escrowCompany);
 					
 					$partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
 					
 					if(in_array("10006", $partner_type_ids)) {
-						$escrowLenderPartnerTypeID = '10006';
+						$escrowPartnerTypeID = '10006';
 					}
 					if(in_array("9997", $partner_type_ids)) {
-						$escrowLenderPartnerTypeID = '9997';
+						$escrowPartnerTypeID = '9997';
 					}
 					if(in_array("10010", $partner_type_ids)) {
-						$escrowLenderPartnerTypeID = '10010';
+						$escrowPartnerTypeID = '10010';
 					}
-					$cplLenderId = $orderUser['id'];
-				}
-				elseif (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) 
-				{
-					$EscrowLenderId = $_POST['LenderId'];
-					$escrow_lender_user_details = $this->home_model->get_user(array('id' => $EscrowLenderId));
-					$EscrowLenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
-					$EscrowLenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
-					$EscrowLenderTelephone      = $this->input->post('LenderTelephone');
-	        		$EscrowLenderCompany      = $this->input->post('LenderCompany');
-
-					$lender_details = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'telephone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
-					$lender_details_api = array('name'=>$EscrowLenderName, 'email'=>$EscrowLenderEmail, 'phone'=> $EscrowLenderTelephone,'company'=>$EscrowLenderCompany);
-					$escrowLenderPartnerTypeID = '3';
+					if($orderUser['is_primary_mortgage_user'] == 1) {
+						$cplLenderId = 0;
+					} else {
+						$cplLenderId = $orderUser['id'];
+					}
 				}
 
 				/* Partners API */
-				$secondaryPartners = array();
-				if(isset($EscrowLenderId) && !empty($EscrowLenderId))
-				{
-					
-					$escrow_lender_resware_user_id = isset($escrow_lender_user_details['resware_user_id']) && !empty($escrow_lender_user_details['resware_user_id']) ? $escrow_lender_user_details['resware_user_id'] : '';
-
-					$escrow_lender_partner_id = isset($escrow_lender_user_details['partner_id']) && !empty($escrow_lender_user_details['partner_id']) ? $escrow_lender_user_details['partner_id'] : '';
-
-					$secondaryEmp[] = array('UserID'=> $escrow_lender_resware_user_id);
-
-					$secondaryPartners = array(
+				$secondaryEscrowPartners = array();
+				if(isset($escrowId) && !empty($escrowId)) {
+					$escrow_resware_user_id = isset($escrow_user_details['resware_user_id']) && !empty($escrow_user_details['resware_user_id']) ? $escrow_user_details['resware_user_id'] : '';
+					$escrow_partner_id = isset($escrow_user_details['partner_id']) && !empty($escrow_user_details['partner_id']) ? $escrow_user_details['partner_id'] : '';
+					$secondaryEmp[] = array('UserID'=> $escrow_resware_user_id);
+					$secondaryEscrowPartners = array(
 							'SecondaryEmployees'=> $secondaryEmp,
-							'PartnerTypeID' => $escrowLenderPartnerTypeID,
-							'PartnerID' => $escrow_lender_partner_id,
+							'PartnerTypeID' => $escrowPartnerTypeID,
+							'PartnerID' => $escrow_partner_id,
 							'PartnerType' => array(
-								'PartnerTypeID' => $escrowLenderPartnerTypeID
+								'PartnerTypeID' => $escrowPartnerTypeID
 							)
 					);
 				}
 				/* Partners API */
+				
+				if (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) {
+					$lenderId = $_POST['LenderId'];
+					$lender_user_details = $this->home_model->get_user(array('id' => $lenderId));
+					$lenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
+					$lenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
+					$lenderTelephone      = $this->input->post('LenderTelephone');
+	        		$lenderCompany      = $this->input->post('LenderCompany');
+					$lender_details = array('name'=>$lenderName, 'email'=>$lenderEmail, 'telephone'=> $lenderTelephone,'company'=>$lenderCompany);
+					$lender_details_api = array('name'=>$lenderName, 'email'=>$lenderEmail, 'phone'=> $lenderTelephone,'company'=>$lenderCompany);
+					$lenderPartnerTypeID = '3';
+					if($orderUser['is_primary_mortgage_user'] == 1) {
+						$cplLenderId = $lenderId;
+					} else {
+						$EscrowLenderId = $lenderId;
+					}
+				}
 
-				if(isset($EscrowLenderEmail) && !empty($EscrowLenderEmail))
+				/* Partners API */
+				$secondaryLenderPartners = array();
+				if(isset($lenderId) && !empty($lenderId)) {
+					$lender_resware_user_id = isset($lender_user_details['resware_user_id']) && !empty($lender_user_details['resware_user_id']) ? $lender_user_details['resware_user_id'] : '';
+					$lender_partner_id = isset($lender_user_details['partner_id']) && !empty($lender_user_details['partner_id']) ? $lender_user_details['partner_id'] : '';
+					$secondaryEmp[] = array('UserID'=> $lender_resware_user_id);
+					$secondaryLenderPartners = array(
+						'SecondaryEmployees'=> $secondaryEmp,
+						'PartnerTypeID' => $lenderPartnerTypeID,
+						'PartnerID' => $lender_partner_id,
+						'PartnerType' => array(
+							'PartnerTypeID' => $lenderPartnerTypeID
+						)
+					);
+				}
+				/* Partners API */
+
+				if(isset($escrowEmail) && !empty($escrowEmail))
 				{
-					$parties_email[] = $EscrowLenderEmail;
+					$parties_email[] = $escrowEmail;
+				}
+
+				if(isset($lenderEmail) && !empty($lenderEmail))
+				{
+					$parties_email[] = $lenderEmail;
 				}
 
 				$AdditionalEmails = $this->input->post('AdditionalEmail');
@@ -361,10 +386,7 @@ class Home extends MX_Controller {
 				}				
 				
 				$order_data = json_encode($place_order);
-				
-				
-				
-				
+			
 				$this->load->library('order/resware');
 				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, array(), 0, 0);
 				$result = $this->resware->make_request('POST', 'orders', $order_data,$user_data);
@@ -393,79 +415,16 @@ class Home extends MX_Controller {
 						if($orderNumber)
 						{
 							$partners = array();
+							$endPoint = 'files/'. $file_id .'/partners';
+							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $file_id, 0);
+							$user_data['admin_api'] = 1; 
 							
-							if(isset($secondaryPartners) && !empty($secondaryPartners))
-							{
-								$partners[] = $secondaryPartners;
-							}
+							$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+							$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $file_id, $logid);
+							$resPartners = json_decode($resultPartners, true);
 
-							$escrowOfficerFlag =  $this->input->post('add-escrow-officer-details');
-							$escrowOfficer =  $this->input->post('escrow_officer');
-							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5 || $ProductTypeID == 26)) {
-								if (!empty($escrowOfficer)) {
-									$partners[] = array(
-										'PartnerTypeID' => 10010,
-										'PartnerID' => $escrowOfficer,
-										'PartnerType' => array(
-											'PartnerTypeID' => 10010
-										)
-									);
-								}
-							}
-
-							if(isset($BuyerAgentId) && !empty($BuyerAgentId)) {
-								$partners[] = array(
-									'PartnerTypeID' => 14,
-									'PartnerID' => $this->input->post('buyer_agent_partner_id'),
-									'PartnerType' => array(
-										'PartnerTypeID' => 14
-									)
-								);
-							}
-
-							if(isset($ListingAgentId) && !empty($ListingAgentId)) {
-								$partners[] = array(
-									'PartnerTypeID' => 15,
-									'PartnerID' => $this->input->post('listing_agent_partner_id'),
-									'PartnerType' => array(
-										'PartnerTypeID' => 15
-									)
-								);
-							}
-
-							if (!empty($salesRepDetails)) {
-								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
-									$partners[] = array(
-										'PartnerTypeID' => $salesRepDetails['partner_type_id'],
-										'PartnerID' => $salesRepDetails['partner_id'],
-										'PartnerType' => array(
-											'PartnerTypeID' => $salesRepDetails['partner_type_id']
-										)
-									);
-								}
-							}
-
-							if (!empty($titleOfficerDetails)) {
-								if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
-									$partners[] = array(
-										'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
-										'PartnerID' => $titleOfficerDetails['partner_id'],
-										'PartnerType' => array(
-											'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
-										)
-									);
-								}
-							}
 							$removePartnerFlag = 0;
-
 							if (!empty($companyData)) {
-								$endPoint = 'files/'. $file_id .'/partners';
-								$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $file_id, 0);
-                                $user_data['admin_api'] = 1; 
-								
-								$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
-								$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
-                                $resPartners = json_decode($resultPartners, true);
                                 $underWriter = '';
 								if(!empty($resPartners)) {
 									$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
@@ -483,7 +442,6 @@ class Home extends MX_Controller {
 										}
 									}
                                 } 
-                                
 								if($loanFlag == 1) {
 									if (!empty($underWriter)) {
 										if ($companyData[0]['loan_underwriter'] == 'north_american') {
@@ -618,10 +576,6 @@ class Home extends MX_Controller {
                                 }
 							}
 
-							$partnerUserData = array(
-								'admin_api' => 1
-							);
-
 							if ($removePartnerFlag == 1) {
 								$removeExistingPartner = array(
 									'PartnerTypeID' => 7,
@@ -631,6 +585,178 @@ class Home extends MX_Controller {
 									)
 								);
 								$removePartners[] = $removeExistingPartner;
+							}
+
+							if(isset($secondaryEscrowPartners) && !empty($secondaryEscrowPartners)) {
+								$escrowKey = array_search(9997, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								$escrowKey1 = array_search(10006, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								$escrowKey2 = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								if(!empty($escrowKey)) {
+									$removeEscrowExistingPartner = array(
+										'PartnerTypeID' => 9997,
+										'PartnerID' => $resPartners['Partners'][$escrowKey]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 9997
+										)
+									);
+									$removePartners[] = $removeEscrowExistingPartner;
+								}
+								if(!empty($escrowKey1)) {
+									$removeEscrowExistingPartner = array(
+										'PartnerTypeID' => 10006,
+										'PartnerID' => $resPartners['Partners'][$escrowKey1]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 10006
+										)
+									);
+									$removePartners[] = $removeEscrowExistingPartner;
+								}
+								if(!empty($escrowKey2)) {
+									$removeEscrowExistingPartner = array(
+										'PartnerTypeID' => 10010,
+										'PartnerID' => $resPartners['Partners'][$escrowKey2]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 10010
+										)
+									);
+									$removePartners[] = $removeEscrowExistingPartner;
+								}
+								$partners[] = $secondaryEscrowPartners;
+							}
+
+							if(isset($secondaryLenderPartners) && !empty($secondaryLenderPartners)) {
+								$lenderKey = array_search(3, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								if(!empty($lenderKey)) {
+									$removeLenderExistingPartner = array(
+										'PartnerTypeID' => 3,
+										'PartnerID' => $resPartners['Partners'][$lenderKey]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 3
+										)
+									);
+									$removePartners[] = $removeLenderExistingPartner;
+								}
+								$partners[] = $secondaryLenderPartners;
+							}
+
+							$escrowOfficerFlag =  $this->input->post('add-escrow-officer-details');
+							$escrowOfficer =  $this->input->post('escrow_officer');
+							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5 || $ProductTypeID == 26)) {
+								if (!empty($escrowOfficer)) {
+									$escrowOfficerKey = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
+									if(!empty($escrowOfficerKey)) {
+										$removeEscrowOfcExistingPartner = array(
+											'PartnerTypeID' => 10010,
+											'PartnerID' => $resPartners['Partners'][$escrowOfficerKey]['PartnerID'],
+											'PartnerType' => array(
+												'PartnerTypeID' => 10010
+											)
+										);
+										$removePartners[] = $removeEscrowOfcExistingPartner;
+									}
+									$partners[] = array(
+										'PartnerTypeID' => 10010,
+										'PartnerID' => $escrowOfficer,
+										'PartnerType' => array(
+											'PartnerTypeID' => 10010
+										)
+									);
+								}
+							}
+
+							if(isset($BuyerAgentId) && !empty($BuyerAgentId)) {
+								$buyerAgentKey = array_search(14, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								if(!empty($buyerAgentKey)) {
+									$removeBuyerAgentExistingPartner = array(
+										'PartnerTypeID' => 14,
+										'PartnerID' => $resPartners['Partners'][$buyerAgentKey]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 14
+										)
+									);
+									$removePartners[] = $removeBuyerAgentExistingPartner;
+								}
+								$partners[] = array(
+									'PartnerTypeID' => 14,
+									'PartnerID' => $this->input->post('buyer_agent_partner_id'),
+									'PartnerType' => array(
+										'PartnerTypeID' => 14
+									)
+								);
+							}
+
+							if(isset($ListingAgentId) && !empty($ListingAgentId)) {
+								$listingAgentKey = array_search(15, array_column($resPartners['Partners'], 'PartnerTypeID'));
+								if(!empty($listingAgentKey)) {
+									$removelistingAgentExistingPartner = array(
+										'PartnerTypeID' => 15,
+										'PartnerID' => $resPartners['Partners'][$listingAgentKey]['PartnerID'],
+										'PartnerType' => array(
+											'PartnerTypeID' => 15
+										)
+									);
+									$removePartners[] = $removelistingAgentExistingPartner;
+								}
+								$partners[] = array(
+									'PartnerTypeID' => 15,
+									'PartnerID' => $this->input->post('listing_agent_partner_id'),
+									'PartnerType' => array(
+										'PartnerTypeID' => 15
+									)
+								);
+							}
+
+							if (!empty($salesRepDetails)) {
+								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
+									$salesRepKey = array_search($salesRepDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
+									if(!empty($salesRepKey)) {
+										$removeSalesRepExistingPartner = array(
+											'PartnerTypeID' => $salesRepDetails['partner_type_id'],
+											'PartnerID' => $resPartners['Partners'][$salesRepKey]['PartnerID'],
+											'PartnerType' => array(
+												'PartnerTypeID' => $salesRepDetails['partner_type_id']
+											)
+										);
+										$removePartners[] = $removeSalesRepExistingPartner;
+									}
+									$partners[] = array(
+										'PartnerTypeID' => $salesRepDetails['partner_type_id'],
+										'PartnerID' => $salesRepDetails['partner_id'],
+										'PartnerType' => array(
+											'PartnerTypeID' => $salesRepDetails['partner_type_id']
+										)
+									);
+								}
+							}
+
+							if (!empty($titleOfficerDetails)) {
+								if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
+									$titleOfficerKey = array_search($titleOfficerDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
+									if(!empty($titleOfficerKey)) {
+										$removeTitleOfficerExistingPartner = array(
+											'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
+											'PartnerID' => $resPartners['Partners'][$titleOfficerKey]['PartnerID'],
+											'PartnerType' => array(
+												'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
+											)
+										);
+										$removePartners[] = $removeTitleOfficerExistingPartner;
+									}
+									$partners[] = array(
+										'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
+										'PartnerID' => $titleOfficerDetails['partner_id'],
+										'PartnerType' => array(
+											'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
+										)
+									);
+								}
+							}
+						
+							$partnerUserData = array(
+								'admin_api' => 1
+							);
+
+							if (!empty($removePartners)) {
 								$removePartnerData = json_encode(array('Partners' => $removePartners));
 								$endPoint = 'files/'.$file_id.'/partners';
 								$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
@@ -785,27 +911,46 @@ class Home extends MX_Controller {
 
 							$orderId = $this->home_model->insert($orderData,'order_details');
 
-							/* Escrow Lender Details */					
-							if(isset($EscrowLenderId) && !empty($EscrowLenderId))
-				        	{
-				        		$name = explode(' ', $EscrowLenderName);
+							/* Escrow Details */					
+							if(isset($escrowId) && !empty($escrowId)) {
+				        		$name = explode(' ', $escrowName);
 				        		$first_name = $name[0];
 				        		$last_name = $name[1];
-				        		$EscrowLenderData = array(
+				        		$escrowData = array(
 									'first_name' => $first_name,
 									'last_name' => $last_name,
-									'email_address' => $EscrowLenderEmail,
-									'company_name' => $EscrowLenderCompany,
-									'telephone_no' => $EscrowLenderTelephone,
+									'email_address' => $escrowEmail,
+									'company_name' => $escrowCompany,
+									'telephone_no' => $escrowTelephone,
 									'status'=> 1
 								);
 								$condition = array(
-									'id' => $EscrowLenderId
+									'id' => $escrowId
+								);
+								$this->home_model->update($escrowData, $condition);
+							}
+							/* Escrow Details */
+
+							/* Lender Details */					
+							if(isset($lenderId) && !empty($lenderId)) {
+				        		$name = explode(' ', $lenderName);
+				        		$first_name = $name[0];
+				        		$last_name = $name[1];
+				        		$lenderData = array(
+									'first_name' => $first_name,
+									'last_name' => $last_name,
+									'email_address' => $lenderEmail,
+									'company_name' => $lenderCompany,
+									'telephone_no' => $lenderTelephone,
+									'status'=> 1
+								);
+								$condition = array(
+									'id' => $lenderId
 								);
 								
-								$lenderId = $this->home_model->update($EscrowLenderData,$condition);
+								$lenderId = $this->home_model->update($lenderData, $condition);
 							}
-							/* Escrow Lender Details */
+							/*Lender Details */
 
 							
 							if($this->session->has_userdata('tp_api_id_'.$random_number))
@@ -1330,6 +1475,7 @@ class Home extends MX_Controller {
 				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
 				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
 				$data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
+				$data['is_primary_mortgage_user'] = isset($value['is_primary_mortgage_user']) && !empty($value['is_primary_mortgage_user']) ? $value['is_primary_mortgage_user'] : '';
 	            // array_push($userInfo, $data); 
 	            $userInfo[] =$data;
     		}
@@ -1551,8 +1697,13 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
-		$fileSize = filesize(FCPATH.'uploads/legal-vesting/'.$document_name);
-		$contents = file_get_contents(base_url().'uploads/legal-vesting/'.$document_name);
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$fileSize = filesize(env('AWS_PATH')."legal-vesting/".$document_name);
+			$contents = file_get_contents(env('AWS_PATH')."legal-vesting/".$document_name);
+		} else {
+			$fileSize = filesize(FCPATH.'uploads/legal-vesting/'.$document_name);
+			$contents = file_get_contents(base_url().'uploads/legal-vesting/'.$document_name);
+		}
 		$binaryData   = base64_encode($contents); 
 
 		$documentData = array(
@@ -1602,8 +1753,13 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
-		$fileSize = filesize(FCPATH.'uploads/grant-deed/'.$document_name);
-		$contents = file_get_contents(base_url().'uploads/grant-deed/'.$document_name);
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$fileSize = filesize(env('AWS_PATH')."grant-deed/".$document_name);
+			$contents = file_get_contents(env('AWS_PATH')."grant-deed/".$document_name);
+		} else {
+			$fileSize = filesize(FCPATH.'uploads/grant-deed/'.$document_name);
+			$contents = file_get_contents(base_url().'uploads/grant-deed/'.$document_name);
+		}
 		$binaryData   = base64_encode($contents); 
 
 		$documentData = array(
@@ -1652,8 +1808,15 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
-		$fileSize = filesize(FCPATH.'uploads/tax/'.$document_name);
-		$contents = file_get_contents(base_url().'uploads/tax/'.$document_name);
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$fileSize = filesize(env('AWS_PATH')."tax/".$document_name);
+			$contents = file_get_contents(env('AWS_PATH')."tax/".$document_name);
+		} else {
+			$fileSize = filesize(FCPATH.'uploads/tax/'.$document_name);
+			$contents = file_get_contents(base_url().'uploads/tax/'.$document_name);
+		}
+		
+		
 		$binaryData   = base64_encode($contents); 
 
 		$documentData = array(

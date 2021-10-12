@@ -1008,6 +1008,7 @@ class DashboardMail extends MX_Controller {
 	public function getOrderDetailsCpl()
 	{
 		$this->load->library('order/fnf');
+        $this->load->library('order/natic');
 		$this->load->model('order/home_model');
 		$this->load->library('order/resware');
 		$fileId = $this->input->post('fileId');	 
@@ -1053,16 +1054,29 @@ class DashboardMail extends MX_Controller {
                 $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
 				$orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
 			} else {
-				$orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
-				$orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
-				$orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
-				$orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
-				$orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
-				$orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
-				$orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
-				$orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
-				$orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
-				$orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
+				if ($orderUser['is_primary_mortgage_user'] == 1) {
+					$orderDetails['lender_first_name'] = '';
+					$orderDetails['lender_last_name'] = '';
+					$orderDetails['lender_email'] = '';
+					$orderDetails['lender_state'] = '';
+					$orderDetails['lender_company_name'] = '';
+					$orderDetails['lender_address'] = '';
+					$orderDetails['lender_city'] = '';
+					$orderDetails['lender_zipcode'] = '';
+					$orderDetails['lender_assignment_clause'] = '';
+					$orderDetails['lender_id'] = '';
+				} else {
+					$orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
+					$orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
+					$orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
+					$orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
+					$orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
+					$orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
+					$orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
+					$orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
+					$orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
+					$orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
+				}
 			}
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 		}
@@ -2053,10 +2067,11 @@ class DashboardMail extends MX_Controller {
             $sid = env('TWILIO_SID');
             $token = env('TWILIO_TOKEN');
             $from = env('TWILIO_FROM');
-            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>'', 'from'=>$from), array(), 0, 0);
+            $message = "Your Pacific Coast Safe Wire code is: ".$code;
+            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=>'', 'from'=>$from), array(), 0, 0);
 
             try {
-                $result = $this->twilio->message($phoneNumber, $code,'',array('from'=>$from));
+                $result = $this->twilio->message($phoneNumber, $message,'',array('from'=>$from));
                 $response = $result->toArray();
                 $response['msg_status'] = 'success';
                 $response['code'] = $code;
@@ -3486,4 +3501,74 @@ class DashboardMail extends MX_Controller {
         $binaryData   = base64_encode(file_get_contents($url)); 
 		echo $binaryData;exit;
     }
+
+    public function policy()
+    {
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $random_number = $this->uri->segment(2); 
+        $order = $this->getOrderInfo($random_number);
+        $fileId = $order[0]['file_id'];  
+        $data['title'] = 'Get Policy | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $data['file_number'] = $orderDetails['file_number'];
+        $data['full_address'] = $orderDetails['full_address'];
+        $data['file_id'] = $orderDetails['file_id'];
+        $data['order_id'] = $orderDetails['order_id'];
+        $data['created'] = !empty($orderDetails['opened_date']) ? date("m/d/Y", strtotime($orderDetails['opened_date'])) : '';
+        $user_data['admin_api'] = 1;
+        $user_data['from_mail'] = 1; 
+        $endPoint = 'files/'.$fileId.'/documents';
+					
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+        $result = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), $result,  $orderDetails['order_id'], $logid);
+        $res = json_decode($result, true);
+        
+        $policyDocuments = array();
+        $i = 0;
+        foreach($res['Documents'] as $document) {
+            if ($document['DocumentType']['DocumentTypeID'] == 103) {
+                $policyDocuments[$i]['no'] = $i + 1;
+                $policyDocuments[$i]['api_document_id'] = $document['DocumentID'];
+                $policyDocuments[$i]['document_name'] = $document['DocumentName'];
+                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $document['CreateDate'])))/1000);
+                $created_date = date('m/d/Y', $time);
+                $policyDocuments[$i]['created_at'] = $created_date;
+                $i++;
+            }
+        }
+
+        $data['policyDocuments'] = $policyDocuments;
+        $this->load->view('layout/head_dashboard', $data);
+        $this->load->view('order/mail_policy_package', $data);
+    }
+
+    public function downloadPolicyDoc()
+	{
+		$documentId = $this->input->post('documentId');
+        $order_id = $this->input->post('order_id');
+        $endPoint = 'documents/'.$documentId.'?format=json';
+        $user_data['admin_api'] = 1;
+        $user_data['from_mail'] = 1; 
+        			
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order_id, 0);
+        $result = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), $result,  $order_id, $logid);
+        $res = json_decode($result, true);
+        //echo "<pre>";
+        //print_r($res);exit;
+		if (isset($res['Document']) && !empty($res['Document'])) {
+			echo $res['Document']['DocumentBody'];exit;
+		}	
+	}
 }

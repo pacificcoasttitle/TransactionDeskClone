@@ -928,13 +928,9 @@ class Cron extends MX_Controller {
         $insertedPartnerInfo = $updatedPartnerInfo = $notInsertedPartnerInfo = 0;
 
         if (isset($customer_lists) && !empty($customer_lists)) {
-
             foreach (array_chunk($customer_lists,50) as $key => $value) {
-                
                 if (isset($value) && !empty($value)) {
-
                     foreach ($value as $k => $v)  {
-
                         if (!empty($v['company_name']) && !empty($v['partner_id'])) {
                             $endPoint = 'admin/partners/'.$v['partner_id'];
                             $userdata['email'] = $userdata['email_address'];
@@ -987,7 +983,82 @@ class Cron extends MX_Controller {
                                             'city' => trim($response['AdminPartner']['MailingAddress']['City']),
                                             'state' => trim($response['AdminPartner']['MailingAddress']['State']),
                                             'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
-                                            'underwriter' => 'westcor',
+                                            'partner_type_id' => implode(",", $partnerTyepIds)
+                                        );
+                                        $insert = $this->home_model->insert($customerData, 'pct_order_partner_company_info');
+    
+                                        if($insert) {
+                                            $insertedPartnerInfo++;                          
+                                        }
+                                    }
+                                } else {
+                                    $notInsertedPartnerInfo++;
+                                }
+                            } else {
+                                $notInsertedPartnerInfo++;
+                            }
+                            $successMsg = 'Partner Information updated successfully. Inserted ('.$insertedPartnerInfo.') | Updated ('.$updatedPartnerInfo.') | Not Inserted ('.$notInsertedPartnerInfo.')';
+                        }
+                    }
+                }
+            }
+        }
+
+        $agents_lists = $this->db->get('agents')->result_array();
+        if (isset($agents_lists) && !empty($agents_lists)) {
+            foreach (array_chunk($agents_lists,50) as $key => $value) {
+                if (isset($value) && !empty($value)) {
+                    foreach ($value as $k => $v)  {
+                        if (!empty($v['company']) && !empty($v['partner_id'])) {
+                            $endPoint = 'admin/partners/'.$v['partner_id'];
+                            $userdata['email'] = $userdata['email_address'];
+                            $logid = $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+                            $result = $this->make_request('GET', $endPoint, array(), $userdata);
+                            $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), $result, 0, $logid);
+
+                            if (isset($result) && !empty($result)) {
+                                $response = json_decode($result,true);
+                                if (isset($response['AdminPartner']) && !empty($response['AdminPartner'])) {
+                                    $con = array(
+                                        'where' => array(
+                                            'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                                        ),
+                                        'returnType' => 'count'
+                                    );
+                                    $prevCount = $this->home_model->get_company_rows($con);
+
+                                    $partnerTyepIds = array();
+                                    if(!empty($response['AdminPartner']['PartnerTypes'])) {
+                                        foreach($response['AdminPartner']['PartnerTypes'] as $partnerType) {
+                                            $partnerTyepIds[] = $partnerType['PartnerTypeID'];
+                                        }
+                                    }
+                                  
+                                    if ($prevCount > 0) {
+                                        $customerData = array(
+                                            'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                                            'email' => !empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
+                                            'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
+                                            'city' => trim($response['AdminPartner']['MailingAddress']['City']),
+                                            'state' => trim($response['AdminPartner']['MailingAddress']['State']),
+                                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
+                                            'partner_type_id' => implode(",", $partnerTyepIds)
+                                        );
+                                        $condition = array('partner_id' => trim($response['AdminPartner']['PartnerCompanyID']));
+                                        $update = $this->home_model->update($customerData, $condition, 'pct_order_partner_company_info');
+                                        
+                                        if ($update) {
+                                            $updatedPartnerInfo++;
+                                        }
+                                    } else {
+                                        $customerData = array(
+                                            'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                                            'email' => !empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
+                                            'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                                            'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
+                                            'city' => trim($response['AdminPartner']['MailingAddress']['City']),
+                                            'state' => trim($response['AdminPartner']['MailingAddress']['State']),
+                                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
                                             'partner_type_id' => implode(",", $partnerTyepIds)
                                         );
                                         $insert = $this->home_model->insert($customerData, 'pct_order_partner_company_info');
@@ -2501,24 +2572,31 @@ class Cron extends MX_Controller {
             exit('Login Failed');
         }
     
-        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER'), true))) {
+        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER').'/open-closed-orders/', true))) {
             die("Cannot read directory contents");
         }
         
         foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
-                $sftp->get(env('SFTP_FOLDER').'/'.$file, FCPATH.'uploads/'.trim($file).".csv");
-                chmod(FCPATH.'uploads/'.$file.".csv",0755);
-                $sftp->delete(env('SFTP_FOLDER').'/'.$file);
+            if ($file != '.' && $file != '..' && $file != '.protected') {
+                if (!is_dir('uploads/open-closed-orders')) {
+                    mkdir('./uploads/open-closed-orders', 0777, TRUE);
+                }
+                $sftp->get(env('SFTP_FOLDER').'/open-closed-orders/'.$file, FCPATH.'uploads/open-closed-orders/'.trim($file).".csv");
+                chmod(FCPATH.'uploads/open-closed-orders/'.$file.".csv",0755);
+                $sftp->delete(env('SFTP_FOLDER').'/open-closed-orders/'.$file);
             }
         }
-        $files = glob("uploads/*csv", GLOB_NOSORT);
+        $files = glob("uploads/open-closed-orders/*csv");
                  
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
                 $row = 1;
                 $headerColumns = array(); 
                 if (($handle = fopen($filePath, "r")) !== FALSE) {
+                    $documentName = pathinfo($filePath);
+                    $file_numbers = array();
+                    $salesRepNameArr = array();
+                    $i = 0;
                     while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
                         $num = count($data);
                         if($row == 1) {
@@ -2532,6 +2610,7 @@ class Cron extends MX_Controller {
                         $premiumkey = '';
                         $saleskey = '';
                         $closedDate = '';
+                        $salesRepId = 0;
 
                         if(in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number",$headerColumns);
@@ -2557,6 +2636,12 @@ class Cron extends MX_Controller {
                             $salesRepName = str_replace(' ', '-', $salesRepName);
                             $salesRepName = preg_replace('/[^A-Za-z0-9\-]/', '',  $salesRepName);
                             $salesRepName = str_replace('-', ' ', $salesRepName);
+                            $key = array_search($salesRepName, array_column($salesRepNameArr, 'name'));
+                            if (isset($key) && !empty($key)) {
+                               $salesRepId =  $salesRepNameArr[$key]['id'];
+                            } else {
+                                $salesRepNameArr[$i]['name'] =  $salesRepName;
+                            }
                         }
 
                         if(in_array('Sent To External Accounting', $headerColumns)) {
@@ -2566,34 +2651,9 @@ class Cron extends MX_Controller {
 
                         if($row != 1) {
                             //echo $file_number."---".$prodType."----".$premium."----".$salesRepName."---".$closedDate;exit;
-                            $condition = array(
-                                'where' => array(
-                                    'file_number' => $file_number,
-                                )
-                            );
-                            $order = $this->order->get_order($condition);
-                            if (!empty($order)) {
-                                $completed_date = null;
-                                if (!empty($closedDate)) {
-                                    $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
-                                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
-                                }
-    
-                                $this->home_model->update(
-                                    array(
-                                        'prod_type' => strtolower($prodType),
-                                        'premium' => (float)$premium,
-                                        'resware_closed_status_date' => $completed_date,
-                                        'sent_to_accounting_date' => $completed_date
-                                    ), 
-                                    array(
-                                        'id' => $order[0]['id']
-                                    ), 
-                                    'order_details'
-                                );
-                                $orderDetails = $this->order->get_order_details($order[0]['file_id']);
-                                $resultSales = array();
-                                if(!empty($salesRepName) && empty($orderDetails['sales_representative'])) {
+                            $resultSales = array();
+                            if(!empty($salesRepName)) {
+                                if ($salesRepId == 0) {
                                     $this->db->select('*');
                                     $this->db->from('customer_basic_details');
                                     $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
@@ -2601,16 +2661,76 @@ class Cron extends MX_Controller {
                                     $query = $this->db->get();
                                     $resultSales = $query->row_array(); 
                                     if (!empty($resultSales)) {
-                                        $this->home_model->update(
-                                            array(
-                                                'sales_representative' => $resultSales['id'],
-                                            ), 
-                                            array(
-                                                'id' => $orderDetails['transaction_id']
-                                            ), 
-                                            'transaction_details'
-                                        );
+                                        $salesRepId =  $resultSales['id'];
+                                        $salesRepNameArr[$i]['id'] = $salesRepId;
+                                        $i++;
+                                    } else {
+                                        if (!empty(trim($salesRepNameArr[$i]['name']))) {
+                                            $salesRepNameArr[$i]['id'] = 0;
+                                            $i++;
+                                        }
                                     }
+                                }
+                            }
+
+                            $completed_date = null;
+                            if (!empty($closedDate)) {
+                                $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
+                                $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                            }
+
+                            $condition = array(
+                                'where' => array(
+                                    'file_number' => $file_number,
+                                )
+                            );
+                            $order = $this->order->get_order($condition);
+                            if (!empty($order)) {
+                                if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
+                                    $this->home_model->update(
+                                        array(
+                                            'prod_type' => strtolower($prodType)
+                                        ), 
+                                        array(
+                                            'id' => $order[0]['id']
+                                        ), 
+                                        'order_details'
+                                    );
+                                } else {
+                                    $this->home_model->update(
+                                        array(
+                                            'prod_type' => strtolower($prodType),
+                                            'premium' => (float)$premium,
+                                            'sent_to_accounting_date' => $completed_date
+                                        ), 
+                                        array(
+                                            'id' => $order[0]['id']
+                                        ), 
+                                        'order_details'
+                                    );
+                                }
+                                $orderDetails = $this->order->get_order_details($order[0]['file_id']);
+                                if (!empty($salesRepId)) {
+                                    $this->home_model->update(
+                                        array(
+                                            'sales_representative' => $salesRepId,
+                                        ), 
+                                        array(
+                                            'id' => $orderDetails['transaction_id']
+                                        ), 
+                                        'transaction_details'
+                                    );
+                                    $file_numbers[] = $file_number;
+                                } else {
+                                    $this->home_model->update(
+                                        array(
+                                            'sales_representative' => 0,
+                                        ), 
+                                        array(
+                                            'id' => $orderDetails['transaction_id']
+                                        ), 
+                                        'transaction_details'
+                                    );
                                 }
                             } else {
                                 $data = json_encode(array('FileNumber' => $file_number));
@@ -2624,6 +2744,9 @@ class Cron extends MX_Controller {
                                 
                                 if (isset($result['Files']) && !empty($result['Files'])) {
                                     foreach ($result['Files'] as $res) {
+                                        if (count($result['Files']) > 1 && strtolower($res['Status']['Name']) == 'cancelled') {
+                                            continue;
+                                        }
                                         $partner_fname = $res['Partners'][0]['PrimaryEmployee']['FirstName'];
                                         $partner_lname = $res['Partners'][0]['PrimaryEmployee']['LastName'];
                                         $partner_name = $res['Partners'][0]['PartnerName'];
@@ -2674,16 +2797,6 @@ class Cron extends MX_Controller {
                                             'status'=> 1
                                         );
     
-                                        $resultSales = array();
-                                        if(!empty($salesRepName)) {
-                                            $this->db->select('*');
-                                            $this->db->from('customer_basic_details');
-                                            $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
-                                            $this->db->where('is_sales_rep', 1);
-                                            $query = $this->db->get();
-                                            $resultSales = $query->row_array(); 
-                                        }
-            
                                         $transactionData = array(
                                             'customer_id' => $customerId,
                                             'sales_amount' =>  !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
@@ -2691,7 +2804,7 @@ class Cron extends MX_Controller {
                                             'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                             'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
                                             'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
-                                            'sales_representative' => !empty($resultSales) ? $resultSales['id'] : 0,
+                                            'sales_representative' => $salesRepId,
                                             'status'=> 1
                                         );
             
@@ -2721,33 +2834,48 @@ class Cron extends MX_Controller {
                                         $randomString = md5($randomString);
     
                                         $completed_date = null;
-                                        if (!empty($closedDate)) {
-                                            $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
-                                            $completed_date = $myDateTime->format('Y-m-d H:i:s');
-                                        } else {
+                                        if (empty($closedDate)) {
                                             if (!empty($res['Dates']['FileCompletedDate'])) {
                                                 $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['FileCompletedDate'])))/1000);
                                                 $completed_date = date('Y-m-d H:i:s', $time);
                                             }
                                         }
                                         
-                                        $orderData = array(
-                                            'customer_id' => $customerId,
-                                            'file_id' => $res['FileID'],
-                                            'file_number' => $res['FileNumber'],
-                                            'property_id' => $propertyId,
-                                            'transaction_id' => $transactionId,
-                                            'created_at' => $created_date,
-                                            'prod_type' => strtolower($prodType),
-                                            'premium' => $premium,
-                                            'status'=> 1,
-                                            'is_imported'=> 1,
-                                            'is_sales_rep_order'=> 1,
-                                            'random_number' => $randomString,
-                                            'resware_closed_status_date' => $completed_date,
-                                            'resware_status'=> strtolower($res['Status']['Name']),
-                                            'sent_to_accounting_date' => $completed_date
-                                        );
+                                        if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
+                                            $orderData = array(
+                                                'customer_id' => $customerId,
+                                                'file_id' => $res['FileID'],
+                                                'file_number' => $res['FileNumber'],
+                                                'property_id' => $propertyId,
+                                                'transaction_id' => $transactionId,
+                                                'created_at' => $created_date,
+                                                'prod_type' => strtolower($prodType),
+                                                'status'=> 1,
+                                                'is_imported'=> 1,
+                                                'is_sales_rep_order'=> 1,
+                                                'random_number' => $randomString,
+                                                'resware_closed_status_date' => $completed_date,
+                                                'resware_status'=> strtolower($res['Status']['Name'])
+                                            );
+                                        } else {
+                                            $orderData = array(
+                                                'customer_id' => $customerId,
+                                                'file_id' => $res['FileID'],
+                                                'file_number' => $res['FileNumber'],
+                                                'property_id' => $propertyId,
+                                                'transaction_id' => $transactionId,
+                                                'created_at' => $created_date,
+                                                'prod_type' => strtolower($prodType),
+                                                'premium' => $premium,
+                                                'status'=> 1,
+                                                'is_imported'=> 1,
+                                                'is_sales_rep_order'=> 1,
+                                                'random_number' => $randomString,
+                                                'resware_closed_status_date' => $completed_date,
+                                                'resware_status'=> strtolower($res['Status']['Name']),
+                                                'sent_to_accounting_date' => $completed_date
+                                            );
+                                        }
                                         $this->home_model->insert($orderData,'order_details');
                                     }
                                 }
@@ -2759,8 +2887,8 @@ class Cron extends MX_Controller {
                 }
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
-		        rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
-                $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
+		        rename(FCPATH."/uploads/open-closed-orders/".$documentName['basename'], FCPATH."/uploads/open-closed-orders/".$fileName);
+                $this->order->uploadDocumentOnAwsS3($fileName, 'open-closed-orders', 1);  
             }
         } else {
            echo "No files found";exit;
@@ -3306,25 +3434,28 @@ class Cron extends MX_Controller {
             exit('Login Failed');
         }
     
-        if (!($files = $sftp->nlist('/status', true))) {
+        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER').'/order-status/', true))) {
             die("Cannot read directory contents");
         }
         
         foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
+            if ($file != '.' && $file != '..' && $file != '.protected') {
+                if (!is_dir('uploads/order-status')) {
+                    mkdir('./uploads/order-status', 0777, TRUE);
+                }
                 $ext = pathinfo($file, PATHINFO_EXTENSION);
                 if(!empty($ext)) {
-                    $sftp->get('status/'.$file, FCPATH.'uploads/'.trim($file));
-                    chmod(FCPATH.'uploads/'.$file,0755);
+                    $sftp->get(env("SFTP_FOLDER").'/order-status/'.$file, FCPATH.'uploads/order-status/'.trim($file));
+                    chmod(FCPATH.'uploads/order-status/'.$file,0755);
                 } else {
-                    $sftp->get('status/'.$file, FCPATH.'uploads/'.trim($file).".csv");
-                    chmod(FCPATH.'uploads/'.$file.".csv",0755);
+                    $sftp->get(env("SFTP_FOLDER").'/order-status/'.$file, FCPATH.'uploads/order-status/'.trim($file).'.csv');
+                    chmod(FCPATH.'uploads/order-status/'.trim($file).'.csv',0755);
                 }
-                $sftp->delete('status/'.$file);
+                $sftp->delete(env("SFTP_FOLDER").'/order-status/'.$file);
             }
         }
         
-        $files = glob("uploads/*csv", GLOB_NOSORT);
+        $files = glob("uploads/order-status/*csv", GLOB_NOSORT);
                 
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
@@ -3342,6 +3473,7 @@ class Cron extends MX_Controller {
                     
                         $file_number = '';
                         $fileStatus = '';
+                        $closedDate = '';
 
                         if(in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number",$headerColumns);
@@ -3353,11 +3485,22 @@ class Cron extends MX_Controller {
                             $fileStatus = $data[$fileStatusKey];
                         }
 
+                        if(in_array('Closed Date', $headerColumns)) {
+                            $closedDateKey = array_search("Closed Date",$headerColumns);
+                            $closedDate = $data[$closedDateKey];
+                        }
+
                         if($row != 1) {
                             if(1 === preg_match('~[0-9]~', $file_number)){
+                                $completed_date = null;
+                                if (!empty($closedDate)) {
+                                    $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
+                                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                                }
                                 $updateArray[] = array(
                                     'file_number'=> (int)$file_number,
                                     'resware_status' => strtolower($fileStatus),
+                                    'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                                     'updated_at' => date('Y-m-d H:i:s')
                                 );  
                             } 
@@ -3375,13 +3518,415 @@ class Cron extends MX_Controller {
                 }
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
-                rename(FCPATH."/uploads/".$documentName['basename'], FCPATH."/uploads/".$fileName);
-                $this->order->uploadDocumentOnAwsS3($fileName, '', 1);  
+                rename(FCPATH."/uploads/order-status/".$documentName['basename'], FCPATH."/uploads/order-status/".$fileName);
+                $this->order->uploadDocumentOnAwsS3($fileName, 'order-status', 1);  
                 echo "All orders status updated successfully"."<br>";;
                 echo date('Y-m-d H:i:s');exit;
             }
         } else {
             echo "No files found";exit;
         }
+    }
+
+    public function removeDocServer()
+    {
+        $this->load->library('order/order');
+        $folders = array();
+        $path = "uploads/";
+        $sub_folder = scandir($path);
+        $num = count($sub_folder);
+        $countSyncFiles = 0;
+        $countUnlinkFiles = 0;
+        for ($i = 2; $i < $num; $i++) {
+            if (is_file($path.$sub_folder[$i])) {
+                $fileExist = $this->order->fileExistOrNotOnS3($sub_folder[$i]);
+                if($fileExist) {
+                    chmod($path.$sub_folder[$i], 0644);
+                    gc_collect_cycles();
+                    unlink($path.$sub_folder[$i]); 
+                    $countUnlinkFiles++;
+                } else {
+                    $this->order->uploadDocumentOnAwsS3($sub_folder[$i]); 
+                    $countSyncFiles++;
+                }
+            } else {
+                if($sub_folder[$i] != 'orders') {
+                    $folders[] = $sub_folder[$i];
+                }
+            }
+        }
+        
+        foreach ($folders as $folder) {
+            $fileSystemIterator = new FilesystemIterator("uploads/".$folder."/");
+            foreach ($fileSystemIterator as $fileInfo) {
+                if ($folder == 'sales-rep' && $fileInfo->getFilename() == 'default.jpg') {
+                    continue;
+                }
+                $fileExist = $this->order->fileExistOrNotOnS3($folder."/".$fileInfo->getFilename());
+                if($fileExist) {
+                    chmod($path.$folder."/".$fileInfo->getFilename(), 0644);
+                    gc_collect_cycles();
+                    unlink($path.$folder."/".$fileInfo->getFilename()); 
+                    $countUnlinkFiles++;
+                } else {
+                    $this->order->uploadDocumentOnAwsS3($fileInfo->getFilename(), $folder);
+                    $countSyncFiles++;
+                }
+            }
+        }
+        echo $countSyncFiles." files synced successfully on S3 <br/>";
+        echo $countUnlinkFiles." files unlinked successfully from server <br/>";
+        exit;
+    }
+
+    public function sendMessageRecordingConfirmation()
+    {
+        $this->load->model('order/twilioMessage');
+        $this->load->library('order/twilio');
+        $sftp = new SFTP(env('SFTP_HOST'));
+        $username = env('SFTP_USERNAME');
+        $password = env('SFTP_PASSWORD');
+
+        if (!$sftp->login($username, $password)) {
+            exit('Login Failed');
+        }
+    
+        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER').'/recording-confirmation/', true))) {
+            die("Cannot read directory contents");
+        }
+        
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..' && $file != '.protected') {
+                if (!is_dir('uploads/recording-confirmation')) {
+                    mkdir('./uploads/recording-confirmation', 0777, TRUE);
+                }
+                $sftp->get(env("SFTP_FOLDER").'/recording-confirmation/'.$file, FCPATH.'uploads/recording-confirmation/'.trim($file).'.csv');
+                chmod(FCPATH.'uploads/recording-confirmation/'.$file.'.csv',0755);
+                $sftp->delete(env("SFTP_FOLDER").'/recording-confirmation/'.$file);
+            }
+        }
+        $files = glob("uploads/recording-confirmation/*csv", GLOB_NOSORT);
+                 
+        if (is_array($files) && count($files) > 0) {
+            foreach($files as $filePath) {
+                $row = 1;
+                $headerColumns = array(); 
+                if (($handle = fopen($filePath, "r")) !== FALSE) {
+                    while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
+                        $num = count($data);
+                        if($row == 1) {
+                            for ($c=0; $c < $num; $c++) {
+                                $headerColumns[] = trim($data[$c]);
+                            }
+                        }
+                        
+                        $file_number = '';
+                        $salesRepName = '';
+                        $message = '';
+
+                        if(in_array('File Number', $headerColumns)) {
+                            $fileKey = array_search("File Number",$headerColumns);
+                            $file_number = $data[$fileKey];
+                        }
+
+                        $salesRepName = '';
+                        if(in_array('Sales Rep', $headerColumns)) {
+                            $saleskey = array_search("Sales Rep",$headerColumns);
+                            $salesRepName = $data[$saleskey];
+                            $salesRepName = str_replace(' ', '-', $salesRepName);
+                            $salesRepName = preg_replace('/[^A-Za-z0-9\-]/', '',  $salesRepName);
+                            $salesRepName = str_replace('-', ' ', $salesRepName);
+                        }
+
+                        if(in_array('Body', $headerColumns)) {
+                            $messageKey = array_search("Body",$headerColumns);
+                            $message = $data[$messageKey];
+                        }
+
+                        if($row != 1) {
+                           // echo $file_number."---".$salesRepName."--------".$salesRepName."---";exit;
+                            $condition = array(
+                                'where' => array(
+                                    'file_number' => $file_number,
+                                )
+                            );
+                            $order = $this->order->get_order($condition);
+                            if (!empty($order)) {
+                                $orderDetails = $this->order->get_order_details($order[0]['file_id']);
+                                $resultSales = array();
+                                if(!empty($salesRepName) && empty($orderDetails['sales_representative'])) {
+                                    $this->db->select('*');
+                                    $this->db->from('customer_basic_details');
+                                    $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
+                                    $this->db->where('is_sales_rep', 1);
+                                    $query = $this->db->get();
+                                    $resultSales = $query->row_array(); 
+                                } else {
+                                    $this->db->select('*');
+                                    $this->db->from('customer_basic_details');
+                                    $this->db->where("id", $orderDetails['sales_representative']);
+                                    $this->db->where('is_sales_rep', 1);
+                                    $query = $this->db->get();
+                                    $resultSales = $query->row_array(); 
+                                }
+                                if (!empty($resultSales)) {
+                                    if(isset($resultSales['telephone_no']) && !empty($resultSales['telephone_no'])) {
+                                        $phoneNumber = $resultSales['telephone_no'];
+                                        $sid = env('TWILIO_SID');
+                                        $token = env('TWILIO_TOKEN');
+                                        $from = env('TWILIO_FROM');
+                                        $data = array(
+                                            'message' => $message,
+                                            'account_sid' => $sid, 
+                                            'token' => $token, 
+                                            'to' => $phoneNumber, 
+                                            'from' => $from 
+                                        );
+
+                                        $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, array(), 0, 0);
+
+                                        /*try {
+                                            $result = $this->twilio->message($phoneNumber, $message, '', array('from' => $from));
+                                            $response = $result->toArray();
+                                            $response['msg_status'] = 'success';
+                                        } catch (Exception $e) {
+                                            $response['sid'] = '';
+                                            $response['to'] = $phoneNumber;
+                                            $response['msg_status'] = 'error';
+                                            $response['errorCode'] = $e->getCode();
+                                            $response['errorMessage'] = $e->getMessage();
+                                        } catch (\Twilio\Exceptions\RestException $e) {
+                                            $response['sid'] = '';
+                                            $response['to'] = $phoneNumber;
+                                            $response['msg_status'] = 'error';
+                                            $response['errorCode'] = $e->getCode();
+                                            $response['errorMessage'] = $e->getMessage();
+                                        }
+                                        $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, $response, 0, $logid);
+                            
+                                        if($response['msg_status'] == 'success') {
+                            
+                                            $this->home_model->update(array('is_sent_recording_msg_sales_user' => 1), array('file_number' => $file_number), 'order_details');
+                                            
+                                            $data = array(
+                                                'message' => $response['body'],
+                                                'sent_from' => $response['from'],
+                                                'sent_to' => $response['to'],
+                                                'status' => $response['status'],
+                                                'message_sid' => $response['sid'],
+                                                'error_code' => $response['errorCode'],
+                                                'error_message' => $response['errorMessage'],
+                                            );
+                                            $this->twilioMessage->insert($data);
+                                        } */
+                                    } 
+                                }
+                            } else {
+                                $data = json_encode(array('FileNumber' => $file_number));
+                                $userData = array(
+                                    'admin_api' => 1
+                                );
+                                $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, array(), 0, 0);
+                                $res = $this->make_request('POST', 'files/search', $data, $userData);
+                                $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, $res, 0, $logid);
+                                $result = json_decode($res,TRUE);
+                                
+                                if (isset($result['Files']) && !empty($result['Files'])) {
+                                    foreach ($result['Files'] as $res) {
+                                        $partner_fname = $res['Partners'][0]['PrimaryEmployee']['FirstName'];
+                                        $partner_lname = $res['Partners'][0]['PrimaryEmployee']['LastName'];
+                                        $partner_name = $res['Partners'][0]['PartnerName'];
+                                        $condition = array(
+                                            'first_name' => $partner_fname,
+                                            'last_name' => $partner_lname,
+                                            'company_name' => $partner_name,
+                                            'is_pass' => $partner_name,
+                                        );
+                                        $user_details =  $this->home_model->get_user_by_name($condition);
+                                        $customerId = 0;
+    
+                                        if (isset($user_details) && !empty($user_details)) {
+                                            $customerId = $user_details['id'];
+                                        }
+                                        
+                                        $FullProperty = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
+                                        $address = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'];
+                                        $locale = $res['Properties'][0]['City'];
+                                        
+                                        if (($locale)) {
+                                            if (!empty($res['Properties'][0]['State'])) {
+                                                $locale .= ', '.$res['Properties'][0]['State'];
+                                            } else {
+                                                $locale .= ', CA';
+                                            }
+                                        }
+    
+                                        $property_details = $this->getSearchResult($address, $locale);
+                                        $property_type = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                                        $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                                        $apn = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
+                                        $propertyData = array(
+                                            'customer_id' => $customerId,
+                                            'buyer_agent_id' => 0,
+                                            'listing_agent_id' => 0,
+                                            'escrow_lender_id' => 0,
+                                            'parcel_id' => $res['Properties'][0]['ParcelID'],
+                                            'address' => $address,
+                                            'city' => $res['Properties'][0]['City'],
+                                            'state' => $res['Properties'][0]['State'],
+                                            'zip' => $res['Properties'][0]['Zip'],
+                                            'property_type' => $property_type,
+                                            'full_address' => $FullProperty,
+                                            'apn' => $apn,
+                                            'county' => $res['Properties'][0]['County'],
+                                            'legal_description' => $LegalDescription,
+                                            'status'=> 1
+                                        );
+    
+                                        $resultSales = array();
+                                        if(!empty($salesRepName)) {
+                                            $this->db->select('*');
+                                            $this->db->from('customer_basic_details');
+                                            $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
+                                            $this->db->where('is_sales_rep', 1);
+                                            $query = $this->db->get();
+                                            $resultSales = $query->row_array(); 
+                                        }
+            
+                                        $transactionData = array(
+                                            'customer_id' => $customerId,
+                                            'sales_amount' =>  !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                                            'loan_number' => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                                            'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                                            'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
+                                            'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
+                                            'sales_representative' => !empty($resultSales) ? $resultSales['id'] : 0,
+                                            'status'=> 1
+                                        );
+            
+                                        $primary_owner = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
+                                        $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
+                                        $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
+                                        $secondary_owner = ($res['Buyers'][0]['Secondary']['First'] && $res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
+                                        $secondary_owner .= ($res['Buyers'][0]['Secondary']['Middle'] && $res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
+                                        $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " ".$res['Buyers'][0]['Secondary']['Last'] : '';
+                                        $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
+            
+                                        if (strpos($ProductTypeTxt, 'Loan') !== false) {
+                                            $propertyData['primary_owner'] = $primary_owner;
+                                            $propertyData['secondary_owner'] = $secondary_owner;
+                                            $loanFlag = 1;
+                                        } elseif(strpos($ProductTypeTxt, 'Sale') !== false) {
+                                            $transactionData['borrower'] = $primary_owner;
+                                            $transactionData['secondary_borrower'] = $secondary_owner;
+                                            $propertyData['primary_owner'] = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                                            $propertyData['secondary_owner'] = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                                            $loanFlag = 0;
+                                        }
+                                        
+                                        $propertyId = $this->home_model->insert($propertyData,'property_details');
+                                        $transactionId = $this->home_model->insert($transactionData,'transaction_details');
+                                        $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['OpenedDate'])))/1000);
+                                        $created_date = date('Y-m-d H:i:s', $time);
+                                        $randomString = $this->order->randomPassword();
+                                        $randomString = md5($randomString);
+    
+                                        $completed_date = null;
+                                        if (!empty($closedDate)) {
+                                            $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
+                                            $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                                        } else {
+                                            if (!empty($res['Dates']['FileCompletedDate'])) {
+                                                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['FileCompletedDate'])))/1000);
+                                                $completed_date = date('Y-m-d H:i:s', $time);
+                                            }
+                                        }
+                                        
+                                        $orderData = array(
+                                            'customer_id' => $customerId,
+                                            'file_id' => $res['FileID'],
+                                            'file_number' => $res['FileNumber'],
+                                            'property_id' => $propertyId,
+                                            'transaction_id' => $transactionId,
+                                            'created_at' => $created_date,
+                                            'prod_type' => $loanFlag == 1 ? 'loan' : 'sale',
+                                            'status'=> 1,
+                                            'is_imported'=> 1,
+                                            'is_sales_rep_order'=> 1,
+                                            'random_number' => $randomString,
+                                            'resware_closed_status_date' => $completed_date,
+                                            'resware_status'=> strtolower($res['Status']['Name']),
+                                            'sent_to_accounting_date' => $completed_date
+                                        );
+                                        $this->home_model->insert($orderData,'order_details');
+                                        if (!empty($resultSales)) {
+                                            if(isset($resultSales['telephone_no']) && !empty($resultSales['telephone_no'])) {
+                                                $phoneNumber = $resultSales['telephone_no'];
+                                                $sid = env('TWILIO_SID');
+                                                $token = env('TWILIO_TOKEN');
+                                                $from = env('TWILIO_FROM');
+                                                $data = array(
+                                                    'message' => $message,
+                                                    'account_sid' => $sid, 
+                                                    'token' => $token, 
+                                                    'to' => $phoneNumber, 
+                                                    'from' => $from 
+                                                );
+    
+                                                $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, array(), 0, 0);
+    
+                                                /*try {
+                                                    $result = $this->twilio->message($phoneNumber, $message, '', array('from' => $from));
+                                                    $response = $result->toArray();
+                                                    $response['msg_status'] = 'success';
+                                                } catch (Exception $e) {
+                                                    $response['sid'] = '';
+                                                    $response['to'] = $phoneNumber;
+                                                    $response['msg_status'] = 'error';
+                                                    $response['errorCode'] = $e->getCode();
+                                                    $response['errorMessage'] = $e->getMessage();
+                                                } catch (\Twilio\Exceptions\RestException $e) {
+                                                    $response['sid'] = '';
+                                                    $response['to'] = $phoneNumber;
+                                                    $response['msg_status'] = 'error';
+                                                    $response['errorCode'] = $e->getCode();
+                                                    $response['errorMessage'] = $e->getMessage();
+                                                }
+                                                $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, $response, 0, $logid);
+                                    
+                                                if($response['msg_status'] == 'success') {
+                                    
+                                                    $this->home_model->update(array('is_sent_recording_msg_sales_user' => 1), array('file_number' => $file_number), 'order_details');
+                                                    
+                                                    $data = array(
+                                                        'message' => $response['body'],
+                                                        'sent_from' => $response['from'],
+                                                        'sent_to' => $response['to'],
+                                                        'status' => $response['status'],
+                                                        'message_sid' => $response['sid'],
+                                                        'error_code' => $response['errorCode'],
+                                                        'error_message' => $response['errorMessage'],
+                                                    );
+                                                    $this->twilioMessage->insert($data);
+                                                } */
+                                            } 
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        $row++;
+                    }
+                    fclose($handle);
+                }
+                $documentName = pathinfo($filePath);
+                $fileName = date('YmdHis')."_".$documentName['basename'];
+		        rename(FCPATH."/uploads/recording-confirmation/".$documentName['basename'], FCPATH."/uploads/recording-confirmation/".$fileName);
+                $this->order->uploadDocumentOnAwsS3($fileName, 'recording-confirmation', 1);  
+            }
+        } else {
+           echo "No files found";exit;
+        }
+        echo "All messages sent to sales users successfully";exit;
     }
 }

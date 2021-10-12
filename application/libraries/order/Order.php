@@ -1190,17 +1190,11 @@ class Order
                     'secret' => env('AWS_SECRET_ACCESS_KEY')
                 ],
             ]);
-            
-            $result = $s3Client->getObject([
-                'Bucket' => env('AWS_BUCKET'),
-                'Key' => $key
-            ]);
-            
+            $result = $s3Client->doesObjectExist(env('AWS_BUCKET'), $key);
         } catch (Aws\Exception\AwsException $e) {
             return false;
         }
-
-        if (!empty($result)) {
+        if ($result) {
             return true;
         } else {
             return false;
@@ -1213,7 +1207,7 @@ class Order
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
+        //$this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
@@ -1230,7 +1224,7 @@ class Order
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
+        //$this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
@@ -1246,10 +1240,10 @@ class Order
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('order_details.resware_status = "closed"');
+       // $this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'loan');
-        $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
-        $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();
@@ -1262,10 +1256,10 @@ class Order
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-            $this->CI->db->where('order_details.resware_status = "closed"');
+            //$this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'sale');
-        $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month); 
-        $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
         $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
         $query = $this->CI->db->get();
         $result = $query->row_array();

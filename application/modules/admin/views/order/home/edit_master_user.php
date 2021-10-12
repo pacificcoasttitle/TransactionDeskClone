@@ -2,6 +2,14 @@
 .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
     width: -webkit-fill-available;
 }
+.bootstrap-select.show-tick .dropdown-menu li a span.text {
+    margin-left: 20px;
+}
+.bootstrap-select.show-tick .dropdown-menu .selected span.check-mark {
+    right: initial;
+    left: 15px;
+    top: 10px;
+}
 </style>
 <div class="container">
     <?php if(!empty($success_msg)){ ?>
@@ -122,7 +130,7 @@
                                         }
                                     }
                                 ?> 
-                                <option <?php echo $selected;?> value="<?php echo $company['partner_id'];?>"><?php echo $company['partner_name'];?></option>
+                                <option data-subtext="<?php echo $company['address1'];?> <?php echo $company['city'];?>" <?php echo $selected;?> value="<?php echo $company['partner_id'];?>"><?php echo $company['partner_name'];?></option>
                             <?php }?>
                         </select>
                     </div>

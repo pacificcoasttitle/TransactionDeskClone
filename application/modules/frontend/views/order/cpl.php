@@ -1,7 +1,5 @@
 <style>
-	.smart-forms .prepend-icon .field-icon {
-		top: 14px !important;
-	}
+	
 	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}  
 	.ui-autocomplete {
 		max-height: 300px !important;
@@ -583,7 +581,7 @@
 							if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
 								selected = 'selected';
 							}
-							if (res.orderDetails['cpl_api'] == 'westcor') {
+							if (res.orderDetails['cpl_api'] == 'westcor' || res.orderDetails['cpl_api'] == 'natic') {
 								optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
 							} else if (res.orderDetails['cpl_api'] == 'natic') {
 								optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";

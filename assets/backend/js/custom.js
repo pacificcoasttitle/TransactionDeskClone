@@ -8,32 +8,47 @@ var fees_type_list = '';
 var code_book_list = '';
 $(document).ready(function () {
 
-    // Add active class to menu
-    if(jQuery('#users').children().hasClass('active')) {
-        jQuery('#users').parent('li').addClass('active');
-        jQuery('#users').addClass('show');
-    } else {
-        jQuery('#users').removeClass('show');
-        jQuery('#users').parent('li').removeClass('active');
-    }
+    // // Add active class to menu
+    // if(jQuery('#users').children().hasClass('active')) {
+    //     jQuery('#users').parent('li').addClass('active');
+    //     jQuery('#users').addClass('show');
+    // } else {
+    //     jQuery('#users').removeClass('show');
+    //     jQuery('#users').parent('li').removeClass('active');
+    // }
 
-    // Add active class to menu
-    if(jQuery('#documents').children().hasClass('active')) {
-        jQuery('#documents').parent('li').addClass('active');
-        jQuery('#documents').addClass('show');
-    } else {
-        jQuery('#documents').removeClass('show');
-        jQuery('#documents').parent('li').removeClass('active');
-    }
+    // // Add active class to menu
+    // if(jQuery('#documents').children().hasClass('active')) {
+    //     jQuery('#documents').parent('li').addClass('active');
+    //     jQuery('#documents').addClass('show');
+    // } else {
+    //     jQuery('#documents').removeClass('show');
+    //     jQuery('#documents').parent('li').removeClass('active');
+    // }
 
-    // Add active class to logs menu
-    if(jQuery('#logs').children().hasClass('active')) {
-        jQuery('#logs').parent('li').addClass('active');
-        jQuery('#logs').addClass('show');
-    } else {
-        jQuery('#logs').removeClass('show');
-        jQuery('#logs').parent('li').removeClass('active');
-    }
+    // // Add active class to logs menu
+    // if(jQuery('#logs').children().hasClass('active')) {
+    //     jQuery('#logs').parent('li').addClass('active');
+    //     jQuery('#logs').addClass('show');
+    // } else {
+    //     jQuery('#logs').removeClass('show');
+    //     jQuery('#logs').parent('li').removeClass('active');
+    // }
+
+    // // Add active class to cpl menu
+    // if(jQuery('#cpl_branches_section').children().hasClass('active')) {
+    //     jQuery('#cpl_branches_section').parent('li').addClass('active');
+    //     jQuery('#cpl_branches_section').addClass('show');
+    // } else {
+    //     jQuery('#cpl_branches_section').removeClass('show');
+    //     jQuery('#cpl_branches_section').parent('li').removeClass('active');
+    // }
+
+    $('.sidebar .nav-item.dropdown .dropdown-menu a.dropdown-item').each(function() {
+        if ($(this).hasClass('active')) {
+            $(this).parent().parent().find('.dropdown-toggle').trigger('click');
+        }
+    });
 
     // Add active class to cpl menu
     if(jQuery('#cpl_branches_section').children().hasClass('active')) {
@@ -666,6 +681,77 @@ $(document).ready(function () {
                     }
                     $("#tbl-lenders-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-lenders-listing_processing").css("display", "none");
+
+                }
+            }            
+        });
+    }
+
+    /* Mortgage Brokers listing table */
+    if ($('#tbl-mortgage-listing').length) {
+        mortgage_list = $('#tbl-mortgage-listing').DataTable({
+           "paging": true,
+           "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-csv').on('click', function() {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if(export_type)
+                    {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Lenders',
+                    exportOptions: {
+                        columns: [0,1, 2, 3, 4, 5, 6, 7,8],
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                return (column === 0 || column === 1|| column === 2 || column === 3 || column === 4|| column === 5|| column === 6) ?
+                                    data.replace( /[$,]/g, '' ) :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/home/get_mortgage_brokers_list", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-mortgage-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-mortgage-listing_processing").css("display", "none");
 
                 }
             }            

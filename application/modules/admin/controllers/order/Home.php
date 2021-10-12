@@ -484,14 +484,19 @@ class Home extends MX_Controller {
             foreach ($lender_lists['data'] as $key => $value) 
             {
                 $nestedData=array();
+                $user_id = $value['id'];
                 $nestedData[] = $value['first_name'];
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
                 // $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['street_address'];
-                $nestedData[] = $value['city'];
-                $nestedData[] = $value['zip_code'];
+                $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
+                if ($value['is_mortgage_user'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='isMortgageUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
                 $specialSel = $value['is_special_lender'] == 1 ? 'selected' : '';
                 $normalSel = $value['is_special_lender'] == 0 ? 'selected' : '';
                 $id = $value['id'];
@@ -666,72 +671,117 @@ class Home extends MX_Controller {
             $this->form_validation->set_rules('partner_id', 'Company', 'required', array('required'=> 'Please select company based on search'));
 
             if ($this->form_validation->run() == true) {
-                $customerData = array(
-                    'partner_id' =>  $this->input->post('partner_id'),
-                    'resware_user_id' =>  !empty($this->input->post('resware_client_id')) ? $this->input->post('resware_client_id') : 0,
-                    'first_name' => $this->input->post('first_name'),
-                    'last_name' => $this->input->post('last_name'),
-                    'telephone_no' => $this->input->post('telephone_no'),
-                    'email_address' => $this->input->post('email_address'),
-                    'password' => 'Pacific1',    
-                    'company_name' => $this->input->post('company'),
-                    'street_address' => $this->input->post('address'),
-                    'city' => $this->input->post('city'),
-                    'state' => $this->input->post('state'),
-                    'zip_code' => $this->input->post('zipcode'),
-                    'is_escrow' => $this->input->post('user_type') == 'escrow' ? 1 : 0,
-                    'is_master' => 0,
-                    'is_password_updated' => 0,
-                    'is_new_user' => 1,
-                    'status'=> 1,
-                );
-                $response = $this->addNewUserToResware($customerData);
-
-                if ($response['success']) {
-                    $customerData['resware_user_id'] = $response['resware_user_id'];
-                    $customerData['random_password'] = $this->order->randomPassword();
-                    $reswareUpdatePwdData = array(
-                        'user_name' =>  $this->input->post('email_address'),
-                        'password' => 'Pacific1',
-                        'new_password' => $customerData['random_password'],
+                $userType = $this->input->post('user_type');
+                if($userType == 'realtor') {
+                    $this->load->model('order/agent_model');
+                    $agentData = array(
+                        'name' => $this->input->post('first_name')." ".$this->input->post('last_name'),
+                        'email_address' =>  $this->input->post('email_address'),
+                        'telephone_no' => $this->input->post('telephone_no'),
+                        'company' => $this->input->post('company'),
+                        'address' => $this->input->post('address'),
+                        'city' => $this->input->post('city'),
+                        'zipcode' => $this->input->post('zipcode'),
+                        'is_listing_agent' => 0,
+                        'status' => 1
                     );
-                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
-                    $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
-                    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
-                    $responsePwd = json_decode($updatePwdResult,true);
 
-                    if(!empty($responsePwd['message'])) {
-                        $customerData['resware_error_msg'] = $responsePwd['message'];
-                        $data['error_msg'] = 'Password update failed due to: '.$responsePwd['message'];
-                        
+                    $condition = array(
+                        'where' => array(
+                            'partner_id' => $this->input->post('partner_id'),
+                            'partner_employee_id' => $this->input->post('resware_client_id'),
+                        ),
+                        'returnType' => 'count'
+                    );
+                    $prevCount = $this->agent_model->get_rows($condition);
+
+                    if ($prevCount > 0) {
+                        $updateCondition = array(
+                            'partner_id' => $this->input->post('partner_id'),
+                            'partner_employee_id' => $this->input->post('resware_client_id')
+                        );
+                        $update = $this->agent_model->update($agentData, $updateCondition);
                     } else {
-                        $customerData['is_password_updated'] = 1;
-                        $data['success_msg'] = 'Password updated successfully for email user: '. $userInfo['email_address'];
+                        $agentData['partner_id'] = $this->input->post('partner_id');
+                        $agentData['partner_employee_id'] = $this->input->post('resware_client_id');
+                        $insert = $this->agent_model->insert($agentData);
+                    }
+                } else {
+                    if($userType == 'escrow') {
+                        $userTypeFlag = 1;
+                    } else if ($userType == 'lender') {
+                        $userTypeFlag = 0;
+                    } else if ($userType == 'mortgage_broker') {
+                        $userTypeFlag = 2;
                     }
 
-                    if (!empty($this->input->post('resware_client_id'))) {
-                        $condition = array(
-                            'where' => array(
-                                'partner_id' => $this->input->post('partner_id'),
-                                'resware_user_id' => $this->input->post('resware_client_id'),
-                            ),
-                            'returnType' => 'count'
+                    $customerData = array(
+                        'partner_id' =>  $this->input->post('partner_id'),
+                        'resware_user_id' =>  !empty($this->input->post('resware_client_id')) ? $this->input->post('resware_client_id') : 0,
+                        'first_name' => $this->input->post('first_name'),
+                        'last_name' => $this->input->post('last_name'),
+                        'telephone_no' => $this->input->post('telephone_no'),
+                        'email_address' => $this->input->post('email_address'),
+                        'password' => 'Pacific1',    
+                        'company_name' => $this->input->post('company'),
+                        'street_address' => $this->input->post('address'),
+                        'city' => $this->input->post('city'),
+                        'state' => $this->input->post('state'),
+                        'zip_code' => $this->input->post('zipcode'),
+                        'is_escrow' => $userTypeFlag,
+                        'is_master' => 0,
+                        'is_password_updated' => 0,
+                        'is_new_user' => 1,
+                        'status'=> 1,
+                    );
+                    $response = $this->addNewUserToResware($customerData);
+    
+                    if ($response['success']) {
+                        $customerData['resware_user_id'] = $response['resware_user_id'];
+                        $customerData['random_password'] = $this->order->randomPassword();
+                        $reswareUpdatePwdData = array(
+                            'user_name' =>  $this->input->post('email_address'),
+                            'password' => 'Pacific1',
+                            'new_password' => $customerData['random_password'],
                         );
-                        $prevCount = $this->home_model->get_rows($condition);
-                        if ($prevCount > 0) {
-                            $updateCondition = array(
-                                'partner_id' => $this->input->post('partner_id'),
-                                'resware_user_id' => $this->input->post('resware_client_id')
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+                        $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                        $responsePwd = json_decode($updatePwdResult,true);
+    
+                        if(!empty($responsePwd['message'])) {
+                            $customerData['resware_error_msg'] = $responsePwd['message'];
+                            $data['error_msg'] = 'Password update failed due to: '.$responsePwd['message'];
+                            
+                        } else {
+                            $customerData['is_password_updated'] = 1;
+                            $data['success_msg'] = 'Password updated successfully for email user: '. $this->input->post('email_address');
+                        }
+    
+                        if (!empty($this->input->post('resware_client_id'))) {
+                            $condition = array(
+                                'where' => array(
+                                    'partner_id' => $this->input->post('partner_id'),
+                                    'resware_user_id' => $this->input->post('resware_client_id'),
+                                ),
+                                'returnType' => 'count'
                             );
-                            $update = $this->home_model->update($customerData, $updateCondition);
+                            $prevCount = $this->home_model->get_rows($condition);
+                            if ($prevCount > 0) {
+                                $updateCondition = array(
+                                    'partner_id' => $this->input->post('partner_id'),
+                                    'resware_user_id' => $this->input->post('resware_client_id')
+                                );
+                                $update = $this->home_model->update($customerData, $updateCondition);
+                            } else {
+                                $insert = $this->home_model->insert($customerData);
+                            }
                         } else {
                             $insert = $this->home_model->insert($customerData);
                         }
                     } else {
-                        $insert = $this->home_model->insert($customerData);
+                        $data['error_msg'] = $response['msg'];
                     }
-                } else {
-                    $data['error_msg'] = $response['msg'];
                 }
             } else {
                 $data['first_name_error_msg'] = form_error('first_name');
@@ -2784,6 +2834,91 @@ class Home extends MX_Controller {
         );
         $this->db->update('property_details', $data, $condition);
         $data = array('status'=>'success', 'msg'=> 'Avoid duplication flag updated successfully.');
+        echo json_encode($data);
+    }
+
+    public function updateMortgageUser()
+    {
+        $user_id = $this->input->post('user_id');
+        $mortgageUserFlag = $this->input->post('mortgageUserFlag');
+        $data['is_mortgage_user'] = $mortgageUserFlag;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $user_id
+        );
+        $this->db->update('customer_basic_details', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'Mortgage user updated successfully.');
+        echo json_encode($data);
+    }
+
+    public function mortgageBrokers()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Mortgage Brokers';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/mortgage_brokers', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_mortgage_brokers_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $mortgage_lists = $this->home_model->get_mortgage_users($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $mortgage_lists = $this->home_model->get_cget_mortgage_usersustomers($params);            
+        }
+
+        $data = array(); 
+        if(isset($mortgage_lists['data']) && !empty($mortgage_lists['data'])) {
+            foreach ($mortgage_lists['data'] as $key => $value) {
+                $nestedData=array();
+                $user_id = $value['id'];
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['company_name'];
+                $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
+                if ($value['is_primary_mortgage_user'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='isMortgagePrimaryUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $nestedData[] = $action;
+                }
+                $data[] = $nestedData;            
+            }
+        }
+        $json_data['recordsTotal'] = intval( $mortgage_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $mortgage_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function isMortgagePrimaryUser()
+    {
+        $user_id = $this->input->post('user_id');
+        $primaryMortgageUserFlag = $this->input->post('primaryMortgageUserFlag');
+        $data['is_primary_mortgage_user'] = $primaryMortgageUserFlag;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $user_id
+        );
+        $this->db->update('customer_basic_details', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'Mortgage user updated successfully.');
         echo json_encode($data);
     }
 }

@@ -69,24 +69,40 @@
 			width: 23% !important;
 			margin-right: 2%;
 			text-transform: uppercase;
-			font-size: 14px;
-			letter-spacing: 1px;
+			font-size: 15px;
+			letter-spacing: 0px;
 		}
 
 		.sales_loan_count {
-			font-size: 40px;
-			color: #0A3B5B;
+			font-size: 48px;
+			color: #0D5772;
 			text-align: center;
 			font-weight: 800;
 			letter-spacing: -1.00px;
+			border-bottom: 1px solid #fff;
 		}
 
 		.sales_loan_section {
 			text-align: center;
 			text-transform: uppercase;
+			font-size: 21px;
+			line-height: 27px;
+			color: #a0a0a0;
+		}
+		
+		.salesdivider {
+			border-bottom: 1px solid #fff;
+            padding-top: 20px;
+            padding-bottom: 20px;
+		}
+
+		.projected_goal_section {
+    		color: #d35411;
+    		/* font-weight: bold;*/
+			text-align: center;
+			text-transform: uppercase;
 			font-size: large;
 			line-height: 21px;
-			color: #a0a0a0;
 		}
 
 		.projected_goal_section {
@@ -121,34 +137,54 @@
 
 							<div class="col-md-3 square-box">
 								<div class="sales_loan_count" id="open_order_count"><?Php echo $total_open_count; ?></div>
+								<div class="salesdivider">
 								<div class="sales_loan_section">Sales = <span id="sale_open_count"><?Php echo $sale_open_count;?></span></div>
 								<div class="sales_loan_section">Refi's = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
+								</div>
 								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="projected_open_section"><?Php echo $projected_open_count;?></span></div>
-								<div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div>
+								<?php if($sales_rep_info['sales_rep_no_of_open_orders'] > 0) { ?>
+									<div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div>
+								<?php } else { ?>
+									<div class="projected_goal_section">&nbsp;</div>
+								<?php } ?>
 							</div>
 
 							<div class="col-md-3 square-box">
 								<div class="sales_loan_count" id="close_order_count"><?Php echo $total_close_count; ?></div>
+								<div class="salesdivider">
 								<div class="sales_loan_section">Sales = <span id="sale_close_count"><?Php echo $sale_close_count;?></span></div>
 								<div class="sales_loan_section">Refi's = <span id="refi_close_count"><?Php echo $refi_close_count;?></span></div>
+								</div>
 								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="projected_close_section"><?Php echo $projected_close_count;?></span></div>
-								<div class="projected_goal_section">Goal = <span id="goal_close_section"><?Php echo round($sales_rep_info['sales_rep_no_of_close_orders']/12);?></span></div>
+								<?php if($sales_rep_info['sales_rep_no_of_close_orders'] > 0) { ?>
+									<div class="projected_goal_section">Goal = <span id="goal_close_section"><?Php echo round($sales_rep_info['sales_rep_no_of_close_orders']/12);?></span></div>
+								<?php } else { ?>
+									<div class="projected_goal_section">&nbsp;</div>
+								<?php } ?>
 							</div>
 
 							<div class="col-md-3 square-box">
 								<div class="sales_loan_count">$<span id="total_premium"><?php echo number_format($total_premium); ?></span></div>
+								<div class="salesdivider">
 								<div class="sales_loan_section">Sales = $<span id="sale_total_premium"><?php echo number_format($sale_total_premium); ?></span></div>
 								<div class="sales_loan_section">Refi's = $<span id="refi_total_premium"><?php echo number_format($refi_total_premium); ?></span></div>
-								<div style="margin-top: 20px;" class="projected_goal_section">Projected = $<span id="projected_revenue_section"><?Php echo $projected_revenue;?></span></div>
-								<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo round($sales_rep_info['sales_rep_premium']/12);?></span></div>
+								</div>
+								<div style="margin-top: 20px;" class="projected_goal_section">Projected = $<span id="projected_revenue_section"><?Php echo number_format($projected_revenue);?></span></div>
+								<?php if($sales_rep_info['sales_rep_premium'] > 0) { ?>
+									<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo number_format(round($sales_rep_info['sales_rep_premium']/12));?></span></div>
+								<?php } else { ?>
+									<div class="projected_goal_section">&nbsp;</div>
+								<?php } ?>
 							</div>
 
 							<div class="col-md-3 square-box">
 								<div class="sales_loan_count"><span id="close_order_percetage"><?Php echo $close_order_percetage;?></span>%</div>
+								<div class="salesdivider">
 								<div class="sales_loan_section">Sales = <span id="sale_close_order_percetage"><?Php echo $sale_close_order_percetage;?></span>%</div>
 								<div class="sales_loan_section">Refi's = <span id="refi_close_order_percetage"><?Php echo $refi_close_order_percetage;?></span>%</div>
+								</div>
 								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="refi_open_count">0%</span></div>
-								<div class="projected_goal_section">Goal = <span id="refi_open_count">0%</span></div>
+								<div class="projected_goal_section">&nbsp;</div>
 							</div>
 
 							<h4 class="ui-title-block_light">Below is list of all your files. You can search for files by month that have a status open, closed, or cancelled.</h3>
