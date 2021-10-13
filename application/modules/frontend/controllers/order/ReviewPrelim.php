@@ -20,11 +20,25 @@ class ReviewPrelim extends MX_Controller {
     {
     	ini_set('max_execution_time', 0); 
 		ini_set('memory_limit','2048M');
-		
 		$json = file_get_contents('php://input');
-	
-		if ($json) 
-		{
+
+		if ($_SERVER['SERVER_NAME'] == 'sandbox.pacificcoasttitle.com') {
+			$logSyncId = $this->apiLogs->syncLogs(0, 'local', 'sync_prelim_data','https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array('ReceiveSearchDataService'=>true), array());
+			$url = "http://app.pacificcoasttitle.com/resware-fetch-data";    
+			$curl = curl_init($url);
+			curl_setopt($curl, CURLOPT_HEADER, false);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_HTTPHEADER,
+					array("Content-type: application/json"));
+			curl_setopt($curl, CURLOPT_POST, true);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+			$json_response = curl_exec($curl);
+			$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+			$this->apiLogs->syncLogs(0, 'local', 'sync_prelim_data', 'https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array(), $json_response, 0, $logSyncId);
+			curl_close($curl);
+		}
+		
+		if ($json) {
 			$logId = $this->apiLogs->syncLogs(0,'resware WCF', 'get_prelim','https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array('ReceiveSearchDataService'=>true), array());
 			$this->apiLogs->syncLogs(0, 'resware WCF', 'get_prelim', 'https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array(), $json, 0, $logId);
 			$dir_name = APPPATH.'logs/prelim';
@@ -596,7 +610,6 @@ class ReviewPrelim extends MX_Controller {
 					else
 					{
 						$id = $this->reviewPrelimData->insert($summaryData);
-
 						$condition = array(
 								'file_number' => $file_number
 						);
@@ -692,16 +705,16 @@ class ReviewPrelim extends MX_Controller {
 											$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 											$source_pdf = FCPATH.'/uploads/documents/'.$document_name;
 									
-											$wordsApi = new \Aspose\Words\WordsApi(getenv('PDF_TO_DOC_CLIENT_ID'), getenv('PDF_TO_DOC_SECRET_KEY'));
-											$format = "docx";
-											$file = ($source_pdf);
-											$doc_file_name =  str_replace('pdf', 'docx', $document_name);
-											$dest_doc = FCPATH.'/uploads/documents/'.$doc_file_name;
+											// $wordsApi = new \Aspose\Words\WordsApi(getenv('PDF_TO_DOC_CLIENT_ID'), getenv('PDF_TO_DOC_SECRET_KEY'));
+											// $format = "docx";
+											// $file = ($source_pdf);
+											// $doc_file_name =  str_replace('pdf', 'docx', $document_name);
+											// $dest_doc = FCPATH.'/uploads/documents/'.$doc_file_name;
 											
-											$request = new Aspose\Words\Model\Requests\ConvertDocumentRequest($file, $format, null);
-											$result = $wordsApi->ConvertDocument($request); 
-											copy($result->getPathName(), $dest_doc);
-											$this->order->uploadDocumentOnAwsS3($doc_file_name, 'documents');
+											// $request = new Aspose\Words\Model\Requests\ConvertDocumentRequest($file, $format, null);
+											// $result = $wordsApi->ConvertDocument($request); 
+											// copy($result->getPathName(), $dest_doc);
+											// $this->order->uploadDocumentOnAwsS3($doc_file_name, 'documents');
 													
 											\Gufy\PdfToHtml\Config::set('pdftohtml.bin', getenv('PDFTOHTML_PATH'));
 											\Gufy\PdfToHtml\Config::set('pdfinfo.bin', getenv('PDFTOINFO_PATH'));
@@ -857,16 +870,16 @@ class ReviewPrelim extends MX_Controller {
 											$this->document->update(array('is_sync' => 1), array('api_document_id' => $resDocument['DocumentID']));
 											$source_pdf = FCPATH.'/uploads/documents/'.$document_name;
 
-											$wordsApi = new \Aspose\Words\WordsApi(getenv('PDF_TO_DOC_CLIENT_ID'), getenv('PDF_TO_DOC_SECRET_KEY'));
-											$format = "docx";
-											$file = ($source_pdf);
-											$doc_file_name =  str_replace('pdf', 'docx', $document_name);
-											$dest_doc = FCPATH.'/uploads/documents/'.$doc_file_name;
+											// $wordsApi = new \Aspose\Words\WordsApi(getenv('PDF_TO_DOC_CLIENT_ID'), getenv('PDF_TO_DOC_SECRET_KEY'));
+											// $format = "docx";
+											// $file = ($source_pdf);
+											// $doc_file_name =  str_replace('pdf', 'docx', $document_name);
+											// $dest_doc = FCPATH.'/uploads/documents/'.$doc_file_name;
 											
-											$request = new Aspose\Words\Model\Requests\ConvertDocumentRequest($file, $format, null);
-											$result = $wordsApi->ConvertDocument($request); 
-											copy($result->getPathName(), $dest_doc);
-											$this->order->uploadDocumentOnAwsS3($doc_file_name, 'documents');
+											// $request = new Aspose\Words\Model\Requests\ConvertDocumentRequest($file, $format, null);
+											// $result = $wordsApi->ConvertDocument($request); 
+											// copy($result->getPathName(), $dest_doc);
+											// $this->order->uploadDocumentOnAwsS3($doc_file_name, 'documents');
 											
 											chmod($source_pdf, 0755);
 											\Gufy\PdfToHtml\Config::set('pdftohtml.bin', getenv('PDFTOHTML_PATH'));

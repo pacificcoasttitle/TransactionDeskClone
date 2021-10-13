@@ -3965,4 +3965,29 @@ class Cron extends MX_Controller {
         }
         echo "All messages sent to sales users successfully";exit;
     }
+    
+    public function syncPrelimData()
+    {
+        $this->db->select('*');
+        $this->db->from('pct_order_api_logs');  
+        $this->db->where('request_type', 'get_prelim'); 
+        $query = $this->db->get();
+        $result = $query->result_array();
+        foreach($result as $res) {
+            $logSyncId = $this->apiLogs->syncLogs(0, 'local', 'sync_prelim_data','https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array('ReceiveSearchDataService'=>true), array());
+			$url = "http://app.pacificcoasttitle.com/resware-fetch-data";    
+			$curl = curl_init($url);
+			curl_setopt($curl, CURLOPT_HEADER, false);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_HTTPHEADER,
+					array("Content-type: application/json"));
+			curl_setopt($curl, CURLOPT_POST, true);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $res['response_data']);
+			$json_response = curl_exec($curl);
+			$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+			$this->apiLogs->syncLogs(0, 'local', 'sync_prelim_data', 'https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array(), $json_response, 0, $logSyncId);
+			curl_close($curl);
+        }
+        echo "All prelim data synced successfully";
+    }
 }
