@@ -1128,7 +1128,7 @@ class Home extends MX_Controller {
 								//$escrow_email = 'ghernandez@pct.com';
 							}
 
-							if (!empty($escrow_email)) {							
+							if (!empty($escrow_email) && $loanFlag == 1) {							
 
 								$sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
 
