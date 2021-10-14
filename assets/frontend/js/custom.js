@@ -527,29 +527,20 @@ $(document).ready(function() {
 
     $('#ProductTypeID').change(function() {
         var selectedText = $(this).find('option:selected').text();
-        if ($(this).val() == '4' || $(this).val() == '5' || $(this).val() == '26') {
-            $('#add-escrow-officer-section').show();
-        } else {
-            $('#add-escrow-officer-section').hide();
-            $('#escrow-officer-field').hide();
-            $('#add-escrow-officer-details').prop('checked', false); 
-        }
-       
         $('#sales-loan-amount-fields').show();
-        if(selectedText.includes("Loan"))
-        {
+        if (selectedText.includes("Loan")) {
+            $('#add-escrow-officer-section').show();
             $('#sales-loan-amount-fields #salesAmount').hide();
             $('#sales-loan-amount-fields #primaryBorrower').hide();
             $('#sales-loan-amount-fields #secondaryBorrower').hide();
-        }
-        else if(selectedText.includes("Sale"))
-        {
+        } else if(selectedText.includes("Sale")) {
+            $('#add-escrow-officer-section').hide();
+            $('#escrow-officer-field').hide();
+            $('#add-escrow-officer-details').prop('checked', false); 
             $('#sales-loan-amount-fields #salesAmount').show();
             $('#sales-loan-amount-fields #primaryBorrower').show();
             $('#sales-loan-amount-fields #secondaryBorrower').show();
-        }
-        else
-        {
+        } else {
             $('#sales-loan-amount-fields').hide();
         }
         $('#ProductType').val(selectedText);
