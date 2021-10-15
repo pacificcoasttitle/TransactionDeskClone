@@ -641,7 +641,7 @@ class Home extends MX_Controller {
 
 							$escrowOfficerFlag =  $this->input->post('add-escrow-officer-details');
 							$escrowOfficer =  $this->input->post('escrow_officer');
-							if(!empty($escrowOfficerFlag) && ($ProductTypeID == 4 || $ProductTypeID == 5 || $ProductTypeID == 26)) {
+							if(!empty($escrowOfficerFlag)) {
 								if (!empty($escrowOfficer)) {
 									$escrowOfficerKey = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
 									if(!empty($escrowOfficerKey)) {
@@ -1057,43 +1057,21 @@ class Home extends MX_Controller {
 								$this->uploadCurativeDocsToResware($orderDetails); 
 							}
 
-							
-							if (env('AWS_ENABLE_FLAG') == 1) {
-								if ($this->order->fileExistOrNotOnS3('legal-vesting/'.$lvfilename)) {
-									$file[] = env('AWS_PATH')."legal-vesting/".$lvfilename;
-									$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
-								}
-
-								if ($this->order->fileExistOrNotOnS3('grant-deed/'.$deedfilename)) {
-									$file[] = env('AWS_PATH')."grant-deed/".$deedfilename;
-									$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
-								}
-
-								if ($this->order->fileExistOrNotOnS3('tax/'.$taxfilename)) {
-									$file[] = env('AWS_PATH')."tax/".$taxfilename;
-									$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
-								}
-								
-							} else {
-								$lv_url = FCPATH.'uploads/legal-vesting/'.$lvfilename;
-								if (file_exists($lv_url)) {
-									$file[] = base_url().'uploads/legal-vesting/'.$lvfilename;
-									$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
-								}
-
-								$grant_url = FCPATH.'uploads/grant-deed/'.$deedfilename;
-								if (file_exists($grant_url)) {
-									$file[] = base_url().'uploads/grant-deed/'.$deedfilename;
-									$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
-								}
-
-								$tax_url = FCPATH.'uploads/tax/'.$taxfilename;
-								if (file_exists($tax_url)) {
-									$file[] = base_url().'uploads/tax/'.$taxfilename;
-									$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
-								}
+							if ($this->order->fileExistOrNotOnS3('legal-vesting/'.$lvfilename)) {
+								$file[] = env('AWS_PATH')."legal-vesting/".$lvfilename;
+								$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
 							}
-							
+
+							if ($this->order->fileExistOrNotOnS3('grant-deed/'.$deedfilename)) {
+								$file[] = env('AWS_PATH')."grant-deed/".$deedfilename;
+								$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
+							}
+
+							if ($this->order->fileExistOrNotOnS3('tax/'.$taxfilename)) {
+								$file[] = env('AWS_PATH')."tax/".$taxfilename;
+								$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
+							}
+								
 							/*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
 							$parties_email[] = env('ORDER_ADMIN_EMAIL');
 							$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
@@ -1125,10 +1103,10 @@ class Home extends MX_Controller {
 								);
 								$escrowCompanyData = $this->home_model->get_company_rows($con);
 								$escrow_email = $escrowCompanyData[0]['email'];
-								//$escrow_email = 'ghernandez@pct.com';
+								//$escrow_email = 'hitesh.p@crestinfosystems.com';
 							}
 
-							if (!empty($escrow_email) && $loanFlag == 1) {							
+							if (!empty($escrowEmail) && $loanFlag == 1) {							
 
 								$sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
 
@@ -1144,7 +1122,7 @@ class Home extends MX_Controller {
 								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
 								$message_body = $borrower_message_body; 
 								$subject = $orderNumber. ' - Borrower Verification';
-								$to = $escrow_email;
+								$to = $escrowEmail;
 								//$to = 'hitesh.p@crestinfosystems.com';
 								$mailParams = array(
 									'from_mail'=>$from_mail, 
