@@ -1109,7 +1109,10 @@ class Home extends MX_Controller {
 							if (!empty($escrowEmail) && $loanFlag == 1) {							
 
 								$sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
-
+								if(!empty($sales_rep_img)) {
+									$sales_rep_img = env('AWS_PATH').str_replace('uploads/', '', $sales_rep_img);
+								}
+								
 								$email_data = array(
 									'orderNumber'=> $orderNumber,
 									'PropertyAddress'=> $PropertyAddress,

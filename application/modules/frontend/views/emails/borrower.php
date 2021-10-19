@@ -562,7 +562,7 @@ h4{
 if(isset($headerImg) && !empty($headerImg))
 {
 ?>
-<img width="100%" src="<?php echo base_url().$headerImg; ?>"alt="" style="border: none; display: block;">
+<img width="100%" src="<?php echo $headerImg; ?>"alt="" style="border: none; display: block;">
 
 
 <?php
