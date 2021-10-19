@@ -2443,6 +2443,9 @@ class Cron extends MX_Controller {
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    if(!empty($data['sales_rep_profile_thank_you_img'])) {
+                        $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH').str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
+                    }
                     $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
                     $i++;
                 } else {
@@ -2474,6 +2477,9 @@ class Cron extends MX_Controller {
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    if(!empty($data['sales_rep_profile_thank_you_img'])) {
+                        $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH').str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
+                    }
                     $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
                     $i++;
                 }
@@ -2666,6 +2672,9 @@ class Cron extends MX_Controller {
                                     if (!empty($resultSales)) {
                                         $salesRepId =  $resultSales['id'];
                                         $sales_rep_img = isset($resultSales["sales_rep_profile_img"]) && !empty($resultSales["sales_rep_profile_img"]) ? $resultSales["sales_rep_profile_img"] : '';
+                                        if(!empty($sales_rep_img)) {
+                                            $sales_rep_img = env('AWS_PATH').str_replace('uploads/', '', $sales_rep_img);
+                                        }
                                         $salesRepNameArr[$i]['id'] = $salesRepId;
                                         $salesRepNameArr[$i]['sales_rep_img'] = $sales_rep_img;
                                         $i++;
@@ -2964,6 +2973,9 @@ class Cron extends MX_Controller {
                 }
 
                 $sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
+                if(!empty($sales_rep_img)) {
+                    $sales_rep_img = env('AWS_PATH').str_replace('uploads/', '', $sales_rep_img);
+                }
                 $email_data = array(
                     'orderNumber'=> $res['file_number'],
                     'PropertyAddress'=> $res['address'],
