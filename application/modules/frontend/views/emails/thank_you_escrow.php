@@ -835,7 +835,7 @@ $previousMonth = Date('F', strtotime($currentMonth . " last month"));
                                                                         <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
 
                                                                             <?php if(!empty($sales_rep_profile_thank_you_img)) { ?>
-                                                                                <img align="center" alt="" src="<?php echo base_url().$sales_rep_profile_thank_you_img;?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+                                                                                <img align="center" alt="" src="<?php echo $sales_rep_profile_thank_you_img;?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
                                                                             <?php } else { ?>
                                                                                 <img align="center" alt="" src="<?php echo base_url().'uploads/sales-rep/default.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
                                                                             <?php }  ?>
