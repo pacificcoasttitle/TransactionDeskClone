@@ -12,6 +12,7 @@ class Customer extends MX_Controller {
         $this->load->library('form_validation');
         $this->load->model('order/customer_model');
         $this->load->library('order/common');
+        $this->load->library('order/order');
         $this->common->is_admin();
     }
 
@@ -63,7 +64,6 @@ class Customer extends MX_Controller {
                 $nestedData[] = $value['first_name'];
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
-                $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['company_name'];
                 $nestedData[] = $value['street_address'].", ".$value['city'].", ". $value['zip_code'];
                 $nestedData[] = $value['random_password'];
@@ -77,7 +77,8 @@ class Customer extends MX_Controller {
                 } else {
                     $nestedData[] = 'Duplicate Email'; 
                 } 
-                $nestedData[] = $value['resware_error_msg'];      
+                $nestedData[] = $value['resware_error_msg']; 
+                $nestedData[] = "<a href='javascript:void(0);' onclick='changePassword(".$value['id'].")' class='btn btn-action'  title='Reset Password'><span class='fa fa-key' aria-hidden='true'></span></a>";     
                           
                 $data[] = $nestedData;            
                 // $cnt++;
