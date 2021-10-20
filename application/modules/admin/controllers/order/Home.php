@@ -3056,4 +3056,49 @@ class Home extends MX_Controller {
         }
         echo json_encode($response);
     }
+
+    public function changePassword()
+    {
+        $this->load->model('order/apiLogs');
+        $id = $this->input->post('id');
+        $userdata = $this->session->userdata('admin');
+        $params = array(
+            'id' => $id
+        );
+        $userInfo = $this->home_model->get_rows($params);
+        $response = $this->addNewUserToResware($userInfo);
+        if ($response['success']) {
+            $customerData['resware_user_id'] = $response['resware_user_id'];
+            $customerData['random_password'] = $this->order->randomPassword();
+            $reswareUpdatePwdData = array(
+                'user_name' =>  $userInfo['email_address'],
+                'password' => 'Pacific1',
+                'new_password' => $customerData['random_password'],
+            );
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+            $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+            $responsePwd = json_decode($updatePwdResult,true);
+
+            if(!empty($responsePwd['message'])) {
+                $customerData['resware_error_msg'] = $responsePwd['message'];
+                $data['error_msg'] = 'Password update failed due to: '.$responsePwd['message'];
+                $response = array('status' => 'error','message' => $data['error_msg']);
+            } else {
+                $customerData['is_password_updated'] = 1;
+                $data['success_msg'] = 'Password updated successfully for email user: '. $this->input->post('email_address');
+                $response = array('status' => 'success', 'message' => $data['success_msg']);
+            }
+
+            $updateCondition = array(
+                'partner_id' => $userInfo['partner_id'],
+                'resware_user_id' => $userInfo['resware_user_id']
+            );
+            $this->home_model->update($customerData, $updateCondition);
+        } else {
+            $data['error_msg'] = $response['msg'];
+            $response = array('status' => 'error', 'message' =>  $data['error_msg']);
+        } 
+    	echo json_encode($response);
+    }
 }
