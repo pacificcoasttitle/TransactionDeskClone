@@ -653,7 +653,7 @@ else
 </tbody>
 </table>
 </td>
-<?php if(isset($OpenEmail) && !empty($OpenEmail) && $OpenEmail == 'info@flaremedia.io') { ?>
+<?php if(isset($OpenEmail) && !empty($OpenEmail) && $OpenEmail == 'info1@flaremedia.io') { ?>
     <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="center" class="mcnButtonBlockInner">
         <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 0px;background-color: #D35411;">
             <tbody>
