@@ -1119,7 +1119,8 @@ class Home extends MX_Controller {
 									'randomString'=> $randomString,
 									'headerImg'=> $sales_rep_img,
 									'currYear'=> CURRENT_YEAR,
-									'productTypeID' => $ProductTypeID 
+									'productTypeID' => $ProductTypeID,
+									'OpenEmail' => $OpenEmail
 								);
 								
 								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);

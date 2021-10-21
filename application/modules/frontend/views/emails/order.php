@@ -337,7 +337,7 @@
           </tr>
         </table>
         <!-- End Pre-header 1 -->
-        <!-- Layout 35 (Full width image) -->
+        <!-- Layout 35 (Full width image) 
         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td class="full-image" style="border-collapse:collapse;font-size:0;">
@@ -345,7 +345,7 @@
             </td>
           </tr>
         </table>
-        <!-- End Layout 35 (Full width image) -->
+         End Layout 35 (Full width image) -->
         <!-- Layout 35 (Full width image) -->
         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
