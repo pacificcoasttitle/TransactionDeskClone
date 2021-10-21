@@ -1127,7 +1127,7 @@ class Home extends MX_Controller {
 								$message_body = $borrower_message_body; 
 								$subject = $orderNumber. ' - Borrower Verification';
 								$to = $escrowEmail;
-								//$to = 'hitesh.p@crestinfosystems.com';
+								$to = 'hitesh.p@crestinfosystems.com';
 								$mailParams = array(
 									'from_mail'=>$from_mail, 
 									'from_name'=>$from_name, 
