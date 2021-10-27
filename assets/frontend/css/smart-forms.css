@@ -507,9 +507,18 @@ html, body{
 	top:15px;		
 }
 
-.smart-forms .checkbox:before, 
-.smart-forms .radio:before {
+.smart-forms .checkbox:before {
     content: '';
+    display: none;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	-o-box-sizing: content-box;
+	box-sizing: content-box;
+	padding: 0;	
+	margin: 0; 
+}
+
+.smart-forms .radio:before {
     display: none;
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;

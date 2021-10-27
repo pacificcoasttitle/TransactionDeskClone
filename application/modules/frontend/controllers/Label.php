@@ -57,7 +57,6 @@ class Label extends MX_Controller
                 mkdir(FCPATH.'uploads/label', 0777, TRUE);
             }
             chmod(FCPATH.'uploads/label', 0777);
-            $document_name = date('YmdHis')."_".str_replace(' ', '_', $_FILES['csvFile']['name']);
             $config['upload_path'] = './uploads/label/';
             $config['allowed_types'] = 'csv';   
             $config['max_size'] = 18000;
@@ -68,6 +67,11 @@ class Label extends MX_Controller
                 $this->session->set_flashdata('error', $error);
             } else {
                 $data = $this->upload->data();
+                $fileName = str_replace(' ', '-', $_FILES['csvFile']['name']); 
+                $fileName = str_replace('CSV', 'csv', $_FILES['csvFile']['name']); 
+                $fileName = preg_replace('/[^A-Za-z0-9.\-]/', '', $fileName); 
+                $fileName = preg_replace('/-+/', '-', $fileName);
+                $document_name = date('YmdHis')."_".$fileName;
                 rename(FCPATH."/uploads/label/".$data['file_name'], FCPATH."/uploads/label/".$document_name);
                 $this->load->library('order/order');
                 $this->order->uploadDocumentOnAwsS3($document_name, 'label');
@@ -108,9 +112,9 @@ class Label extends MX_Controller
     public function downloadPdf()
     {
         $data = array();
-        $line1 = $this->input->post('line_1');
-        $line2 = $this->input->post('line_2');
-        $line3 = $this->input->post('line_3');
+        $line_1_columns = $this->input->post('line_1_columns');
+        $line_2_columns = $this->input->post('line_2_columns');
+        $line_3_columns = $this->input->post('line_3_columns');
         $file_name = $this->input->post('file_name');
         $url = env('AWS_PATH').'label/'.$file_name;
         $fileContents   = file_get_contents($url); 
@@ -122,9 +126,27 @@ class Label extends MX_Controller
 
         if (is_array($csv_records)) {
             foreach ($csv_records as $csv_record) {
-                $data['pdfInfos'][$i]['line_1'] = $csv_record[$line1];
-                $data['pdfInfos'][$i]['line_2'] = $csv_record[$line2];
-                $data['pdfInfos'][$i]['line_3'] = $csv_record[$line3];
+                if($line_1_columns == '1') {
+                    $data['pdfInfos'][$i]['line_1'] = $csv_record[$this->input->post('line_1_1')];
+                } else if($line_1_columns == '2') {
+                    $data['pdfInfos'][$i]['line_1'] = $csv_record[$this->input->post('line_1_1')].", ".$csv_record[$this->input->post('line_1_2')];
+                } else if($line_1_columns == '3') {
+                    $data['pdfInfos'][$i]['line_1'] = $csv_record[$this->input->post('line_1_1')].", ".$csv_record[$this->input->post('line_1_2')].", ".$csv_record[$this->input->post('line_1_3')];
+                }
+                if($line_2_columns == '1') {
+                    $data['pdfInfos'][$i]['line_2'] = $csv_record[$this->input->post('line_2_1')];
+                } else if($line_2_columns == '2') {
+                    $data['pdfInfos'][$i]['line_2'] = $csv_record[$this->input->post('line_2_1')].", ".$csv_record[$this->input->post('line_2_2')];
+                } else if($line_2_columns == '3') {
+                    $data['pdfInfos'][$i]['line_2'] = $csv_record[$this->input->post('line_2_1')].", ".$csv_record[$this->input->post('line_2_2')].", ".$csv_record[$this->input->post('line_2_3')];
+                }
+                if($line_3_columns == '1') {
+                    $data['pdfInfos'][$i]['line_3'] = $csv_record[$this->input->post('line_3_1')];
+                } else if($line_3_columns == '2') {
+                    $data['pdfInfos'][$i]['line_3'] = $csv_record[$this->input->post('line_3_1')].", ".$csv_record[$this->input->post('line_3_2')];
+                } else if($line_3_columns == '3') {
+                    $data['pdfInfos'][$i]['line_3'] = $csv_record[$this->input->post('line_3_1')].", ".$csv_record[$this->input->post('line_3_2')].", ".$csv_record[$this->input->post('line_3_3')];
+                }
                 $i++;
             }            
         }

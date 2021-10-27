@@ -224,15 +224,15 @@
 			</div>
 		</div>
 	</section>
-	<div class="modal fade" width="500px" id="select_columns" tabindex="-1" role="dialog"
+	<div class="modal fade" width="700px" id="select_columns" tabindex="-1" role="dialog"
 		aria-labelledby="Select Columns" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document" style="width:40%;">
+		<div class="modal-dialog modal-lg" role="document" style="width:50%;">
 			<div class="modal-content">
-				<form method="POST" id="select_columns_form" name="select_columns_form">
+				<form method="POST" id="select_columns_form" name="select_columns_form" onsubmit="return generatePdf();">
 					<div class="smart-forms smart-container wrap-2" style="margin:30px">
 						<div class="modal-body search-result">
 							<div id="lender-details-fields" style="">
-								<div class="spacer-b20">
+								<div class="spacer-b30">
 									<div class="tagline"><span>Select Columns</span></div>
 								</div>
 
@@ -240,29 +240,38 @@
 								<input type="hidden" id="file_name" name="file_name" value="">
 								
 								<div class="spacer-b20">
-									<div class="tagline"><span>Line 1</span></div>
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm12">
-									<label class="field select">
-											<select id="line_1" name="line_1">
-												<option value="">---- Select Line 1 ----</option>
-											</select>
-											<i class="arrow double"></i>
-										</label>
-									</div>
+									<div class="tagline"><span style="text-transform: none;">How many columns are you want to display on line1?</span></div>
 								</div>
 								
-								<div class="spacer-b20">
-									<div class="tagline"><span>Line 2</span></div>
-								</div>
-
 								<div class="frm-row">
 									<div class="section colm colm12">
-									<label class="field select">
-											<select id="line_2" name="line_2">
-												<option value="">---- Select Line 2 ----</option>
+										<input checked style="top:5px;margin-right: 15px;" class="field radio" type="radio" name="line_1_columns" value="1">1 
+									  	<input style="top:5px;margin-left:30px;margin-right: 15px;" class="field radio" type="radio" name="line_1_columns" value="2">2  
+									  	<input style="top:5px;margin-left:30px;margin-right: 15px;" class="field radio" type="radio" name="line_1_columns" value="3">3
+									</div>
+								</div>
+
+								<div class="frm-row spacer-b20">
+									<div class="section colm colm4" id="line_1_1_container" style="display:none">
+										<label class="field select">
+											<select id="line_1_1" name="line_1_1">
+												<option value="">---- Select Column ----</option>
+											</select>
+											<i class="arrow double"></i>
+										</label>
+									</div>
+									<div class="section colm colm4" id="line_1_2_container" style="display:none">
+										<label class="field select">
+											<select id="line_1_2" name="line_1_2">
+												<option value="">---- Select Column ----</option>
+											</select>
+											<i class="arrow double"></i>
+										</label>
+									</div>
+									<div class="section colm colm4" id="line_1_3_container" style="display:none">
+										<label class="field select">
+											<select id="line_1_3" name="line_1_3">
+												<option value="">---- Select Column ----</option>
 											</select>
 											<i class="arrow double"></i>
 										</label>
@@ -270,25 +279,86 @@
 								</div>
 
 								<div class="spacer-b20">
-									<div class="tagline"><span>Line 3</span></div>
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm12">
-									<label class="field select">
-											<select id="line_3" name="line_3">
-												<option value="">---- Select Line 3 ----</option>
-											</select>
-											<i class="arrow double"></i>
-										</label>
-									</div>
+									<div class="tagline"><span style="text-transform: none;">How many columns are you want to display on line2?</span></div>
 								</div>
 								
+								<div class="frm-row">
+									<div class="section colm colm12">
+										<input checked style="top:5px;margin-right: 15px;" class="field radio" type="radio" name="line_2_columns" value="1">1 
+									  	<input style="top:5px;margin-left:30px;margin-right: 15px;" class="field radio" type="radio" name="line_2_columns" value="2">2  
+									  	<input style="top:5px;margin-left:30px;margin-right: 15px;" class="field radio" type="radio" name="line_2_columns" value="3">3
+									</div>
+								</div>
+
+								<div class="frm-row spacer-b20">
+									<div class="section colm colm4" id="line_2_1_container" style="display:none">
+										<label class="field select">
+											<select id="line_2_1" name="line_2_1">
+												<option value="">---- Select Column ----</option>
+											</select>
+											<i class="arrow double"></i>
+										</label>
+									</div>
+									<div class="section colm colm4">
+										<label class="field select" id="line_2_2_container" style="display:none">
+											<select id="line_2_2" name="line_2_2">
+												<option value="">---- Select Column ----</option>
+											</select>
+											<i class="arrow double"></i>
+										</label>
+									</div>
+									<div class="section colm colm4">
+										<label class="field select" id="line_2_3_container" style="display:none">
+											<select id="line_2_3" name="line_2_3">
+												<option value="">---- Select Column ----</option>
+											</select>
+											<i class="arrow double"></i>
+										</label>
+									</div>
+								</div>
+
+								<div class="spacer-b20">
+									<div class="tagline"><span style="text-transform: none;">How many columns are you want to display on line3?</span></div>
+								</div>
+								
+								<div class="frm-row">
+									<div class="section colm colm12">
+										<input checked style="top:5px;margin-right: 15px;" class="field radio" type="radio" name="line_3_columns" value="1">1 
+									  	<input style="top:5px;margin-left:30px;margin-right: 15px;" class="field radio" type="radio" name="line_3_columns" value="2">2  
+									  	<input style="top:5px;margin-left:30px;margin-right: 15px;" class="field radio" type="radio" name="line_3_columns" value="3">3
+									</div>
+								</div>
+
+								<div class="frm-row">
+									<div class="section colm colm4">
+										<label class="field select" id="line_3_1_container" style="display:none">
+											<select id="line_3_1" name="line_3_1">
+												<option value="">---- Select Column ----</option>
+											</select>
+											<i class="arrow double"></i>
+										</label>
+									</div>
+									<div class="section colm colm4" id="line_3_2_container" style="display:none">
+										<label class="field select">
+											<select id="line_3_2" name="line_3_2">
+												<option value="">---- Select Column ----</option>
+											</select>
+											<i class="arrow double"></i>
+										</label>
+									</div>
+									<div class="section colm colm4" id="line_3_3_container" style="display:none">
+										<label class="field select">
+											<select id="line_3_3" name="line_3_3">
+												<option value="">---- Select Column ----</option>
+											</select>
+											<i class="arrow double"></i>
+										</label>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="form-footer" style="margin: 0px 20px;">
-							<button type="button" onclick="generatePdf();"
-								class="button btn-primary">Export PDF</button>
+							<button type="submit" class="button btn-primary">Export PDF</button>
 							<button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
 						</div>
 					</div>
@@ -314,35 +384,140 @@
 					"emptyTable": "Record(s) not found.",
 				},
     		});
+
+			$('input:radio[name=line_1_columns]').change(function() {
+				if (this.value == '1') {
+					$("#line_1_1").prop('required',true);
+					$("#line_1_2").prop('required',false);
+					$("#line_1_3").prop('required',false);
+					$("#line_1_1_container").show();
+					$("#line_1_2_container").hide();
+					$("#line_1_3_container").hide();
+				} else if (this.value == '2') {
+					$("#line_1_1").prop('required',true);
+					$("#line_1_2").prop('required',true);
+					$("#line_1_3").prop('required',false);
+					$("#line_1_1_container").show();
+					$("#line_1_2_container").show();
+					$("#line_1_3_container").hide();
+				} else if (this.value == '3') {
+					$("#line_1_1").prop('required',true);
+					$("#line_1_2").prop('required',true);
+					$("#line_1_3").prop('required',true);
+					$("#line_1_1_container").show();
+					$("#line_1_2_container").show();
+					$("#line_1_3_container").show();
+				}
+			});
+
+			$('input:radio[name=line_2_columns]').change(function() {
+				if (this.value == '1') {
+					$("#line_2_1").prop('required',true);
+					$("#line_2_2").prop('required',false);
+					$("#line_2_3").prop('required',false);
+					$("#line_2_1_container").show();
+					$("#line_2_2_container").hide();
+					$("#line_2_3_container").hide();
+				} else if (this.value == '2') {
+					$("#line_2_1").prop('required',true);
+					$("#line_2_2").prop('required',true);
+					$("#line_2_3").prop('required',false);
+					$("#line_2_1_container").show();
+					$("#line_2_2_container").show();
+					$("#line_2_3_container").hide();
+				} else if (this.value == '3') {
+					$("#line_2_1").prop('required',true);
+					$("#line_2_2").prop('required',true);
+					$("#line_2_3").prop('required',true);
+					$("#line_2_1_container").show();
+					$("#line_2_2_container").show();
+					$("#line_2_3_container").show();
+				}
+			});
+
+			$('input:radio[name=line_3_columns]').change(function() {
+				if (this.value == '1') {
+					$("#line_3_1").prop('required',true);
+					$("#line_3_2").prop('required',false);
+					$("#line_3_3").prop('required',false);
+					$("#line_3_1_container").show();
+					$("#line_3_2_container").hide();
+					$("#line_3_3_container").hide();
+				} else if (this.value == '2') {
+					$("#line_3_1").prop('required',true);
+					$("#line_3_2").prop('required',true);
+					$("#line_3_3").prop('required',false);
+					$("#line_3_1_container").show();
+					$("#line_3_2_container").show();
+					$("#line_3_3_container").hide();
+				} else if (this.value == '3') {
+					$("#line_3_1").prop('required',true);
+					$("#line_3_2").prop('required',true);
+					$("#line_3_3").prop('required',true);
+					$("#line_3_1_container").show();
+					$("#line_3_2_container").show();
+					$("#line_3_3_container").show();
+				}
+			});
     	});
 
 		function selectColumns(label_id, columns, file_name) 
 		{
-			var line_options_1 = "";
-			var line_options_2 = "";
-			var line_options_3 = "";
+			var line_options = "";
 			var columnsArr = columns.split(',');
-			for (var i = 0; i < columnsArr.length; i++) {
-				line_options_1 += "<option value='" + columnsArr[i] + "'>" + columnsArr[i] + "</option>";	
-			}
+			$("input[name=line_1_columns][value=1]").attr('checked', 'checked');
+			$("input[name=line_2_columns][value=1]").attr('checked', 'checked');
+			$("input[name=line_3_columns][value=1]").attr('checked', 'checked');
 
 			for (var i = 0; i < columnsArr.length; i++) {
-				line_options_2 += "<option value='" + columnsArr[i] + "'>" + columnsArr[i] + "</option>";	
+				line_options += "<option value='" + columnsArr[i] + "'>" + columnsArr[i] + "</option>";	
 			}
 
-			for (var i = 0; i < columnsArr.length; i++) {
-				line_options_3 += "<option value='" + columnsArr[i] + "'>" + columnsArr[i] + "</option>";	
-			}
+			$('select[name="line_1_1"]').children('option:not(:first)').remove();
+			$('select[name="line_1_1"]' ).append( line_options );
+			$('select[name="line_1_2"]').children('option:not(:first)').remove();
+			$('select[name="line_1_2"]' ).append( line_options );
+			$('select[name="line_1_3"]').children('option:not(:first)').remove();
+			$('select[name="line_1_3"]' ).append( line_options );
 
-			$('select[name="line_1"]').children('option:not(:first)').remove();
-			$( 'select[name="line_1"]' ).append( line_options_1 );
-			$("#line_1").prop('required',true);
-			$('select[name="line_2"]').children('option:not(:first)').remove();
-			$( 'select[name="line_2"]' ).append( line_options_2 );
-			$("#line_2").prop('required',true);
-			$('select[name="line_3"]').children('option:not(:first)').remove();
-			$( 'select[name="line_3"]' ).append( line_options_3 );
-			$("#line_3").prop('required',true);
+			$('select[name="line_2_1"]').children('option:not(:first)').remove();
+			$('select[name="line_2_1"]' ).append( line_options );
+			$('select[name="line_2_2"]').children('option:not(:first)').remove();
+			$('select[name="line_2_2"]' ).append( line_options );
+			$('select[name="line_2_3"]').children('option:not(:first)').remove();
+			$('select[name="line_2_3"]' ).append( line_options );
+
+			$('select[name="line_3_1"]').children('option:not(:first)').remove();
+			$('select[name="line_3_1"]' ).append( line_options );
+			$('select[name="line_3_2"]').children('option:not(:first)').remove();
+			$('select[name="line_3_2"]' ).append( line_options );
+			$('select[name="line_3_3"]').children('option:not(:first)').remove();
+			$('select[name="line_3_3"]' ).append( line_options );
+
+			$("#line_1_1").prop('required',true);
+			$("#line_2_1").prop('required',true);
+			$("#line_3_1").prop('required',true);
+
+			$("#line_1_2").prop('required',false);
+			$("#line_2_2").prop('required',false);
+			$("#line_3_2").prop('required',false);
+
+			$("#line_1_3").prop('required',false);
+			$("#line_2_3").prop('required',false);
+			$("#line_3_3").prop('required',false);
+
+			$("#line_1_1_container").show();
+			$("#line_2_1_container").show();
+			$("#line_3_1_container").show();
+
+			$("#line_1_2_container").hide();
+			$("#line_2_2_container").hide();
+			$("#line_3_2_container").hide();
+
+			$("#line_1_3_container").hide();
+			$("#line_2_3_container").hide();
+			$("#line_3_3_container").hide();
+			
 			$("#label_id").val(label_id);
 			$("#file_name").val(file_name);
 			$('#select_columns').modal('show');
@@ -372,19 +547,28 @@
 		}
 
 		function generatePdf() 
-		{
+		{	
 			$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 			$('#page-preloader').css('display', 'block');
 			$.ajax({
 				url: base_url + "download-label-pdf",
 				type: "post",
 				data:{
-					line_1: $('#line_1').val(),
-					line_2: $('#line_2').val(),
+					line_1_1: $('#line_1_1').val(),
+					line_1_2: $('#line_1_2').val(),
+					line_1_3: $('#line_1_3').val(),
+					line_2_1: $('#line_2_1').val(),
+					line_2_2: $('#line_2_2').val(),
+					line_2_3: $('#line_2_3').val(),
+					line_3_1: $('#line_3_1').val(),
+					line_3_2: $('#line_3_2').val(),
+					line_3_3: $('#line_3_3').val(),
 					line_3: $('#line_3').val(),
 					label_id: $('#label_id').val(),
 					file_name: $('#file_name').val(),
-					
+					line_1_columns: $("input[name='line_1_columns']:checked").val(),
+					line_2_columns: $("input[name='line_2_columns']:checked").val(),
+					line_3_columns: $("input[name='line_3_columns']:checked").val()
 				}, 
 				success: function(response) {
 					$('#page-preloader').css('display', 'none');
@@ -401,6 +585,7 @@
 					}
 				}
 			});
+			return false;
 		}
     </script>
 </body>
