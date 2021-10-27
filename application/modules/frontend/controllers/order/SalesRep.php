@@ -76,7 +76,7 @@ class SalesRep extends MX_Controller
         $data['total_premium'] = $data['sale_total_premium'] + $data['refi_total_premium'];
         if ($data['total_premium'] > 0) {
             $premiumWorkedDays = $data['total_premium']/$workedDays;
-            $data['projected_revenue'] = (round($premiumWorkedDays*$workingDaysRemaining))+ $data['total_close_count'];
+            $data['projected_revenue'] = (round($premiumWorkedDays*$workingDaysRemaining))+ $data['total_premium'];
         } else {
             $premiumWorkedDays = 0;
             $data['projected_revenue'] = 0;
