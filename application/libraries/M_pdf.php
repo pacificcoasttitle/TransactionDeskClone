@@ -8,6 +8,6 @@ class M_pdf {
     {
     	require_once(APPPATH."third_party/mpdf/mpdf.php");
         $this->param =$param;
-        $this->pdf = new mPDF('','A4','','',20,20,20,20);
+        $this->pdf = new mPDF('','A4','','',10,10,10,10);
     }
 }
