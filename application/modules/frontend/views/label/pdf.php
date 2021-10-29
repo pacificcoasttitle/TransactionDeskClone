@@ -15,9 +15,9 @@
 <body>
     <?php foreach($pdfInfos as $pdfInfo) {?>
         <div class="label">
-            <span><?php echo $pdfInfo['line_1'];?></span><br>
-            <span><?php echo $pdfInfo['line_2'];?></span><br>
-            <span><?php echo $pdfInfo['line_3'];?></span><br>
+            <span style="margin-left:12px;"><?php echo $pdfInfo['line_1'];?></span><br>
+            <span style="margin-right:12px;"><?php echo $pdfInfo['line_2'];?></span><br>
+            <span style="margin-right:24px;"><?php echo $pdfInfo['line_3'];?></span><br>
         </div>
     <?php } ?>
 	
