@@ -160,6 +160,7 @@ class Sales extends MX_Controller {
                         'sales_rep_no_of_open_orders' => $_POST['sales_rep_no_of_open_orders'],
                         'sales_rep_no_of_close_orders' => $_POST['sales_rep_no_of_close_orders'],
                         'sales_rep_premium' => $_POST['sales_rep_premium'],
+                        'is_password_updated' => 1
                     );
 
                     $insert = $this->sales_model->insert($salesRepData);
@@ -291,6 +292,7 @@ class Sales extends MX_Controller {
                             'sales_rep_no_of_open_orders' => $_POST['sales_rep_no_of_open_orders'],
                             'sales_rep_no_of_close_orders' => $_POST['sales_rep_no_of_close_orders'],
                             'sales_rep_premium' => $_POST['sales_rep_premium'],
+                            'is_password_updated' => 1
                         );
 
                         $condition = array('id' => $id);

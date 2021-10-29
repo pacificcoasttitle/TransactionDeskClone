@@ -612,7 +612,7 @@ class Cron extends MX_Controller {
                             'id' => $userdata['id']
                         );
 
-                        if (!empty($v['random_password'])) {
+                        if (!empty($v['random_password']) && $v['is_sales_rep'] == 0 && $v['is_title_officer'] == 0) {
                             $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'password_check', env('RESWARE_ORDER_API').'me', array(), array(), 0, 0);
                             $result = $this->make_request('GET', 'me','',$userdata);
                             $this->apiLogs->syncLogs($userdata['id'], 'resware', 'password_check', env('RESWARE_ORDER_API').'me', array(), $result, 0, $logid);
@@ -638,11 +638,13 @@ class Cron extends MX_Controller {
                                     $notUpdatePasswordCount++;
                                 }
                             } else {
-                                $customerData = array(
-                                    'is_password_updated' => 0
-                                );
-                                $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
-                                $notUpdatePasswordCount++;
+                                if($v['is_sales_rep'] == 0 && $v['is_title_officer'] == 0) {
+                                    $customerData = array(
+                                        'is_password_updated' => 0
+                                    );
+                                    $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                                    $notUpdatePasswordCount++;
+                                }
                             }
                         } else {
                             $customerData = array(
