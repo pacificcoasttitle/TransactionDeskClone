@@ -2644,7 +2644,7 @@ class Cron extends MX_Controller {
                             $saleskey = array_search("Sales Rep",$headerColumns);
                             $salesRepName = $data[$saleskey];
                             $salesRepName = str_replace(' ', '_', $salesRepName);
-                            $salesRepName = preg_replace('/[^A-Za-z0-9\_]/', '',  $salesRepName);
+                            $salesRepName = preg_replace('/[^A-Za-z0-9\_-]/', '',  $salesRepName);
                             $salesRepName = str_replace('_', ' ', $salesRepName);
                             $key = array_search($salesRepName, array_column($salesRepNameArr, 'name'));
                             if (isset($key) && !empty($key)) {
