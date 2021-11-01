@@ -649,11 +649,13 @@ class Cron extends MX_Controller {
                                 }
                             }
                         } else {
-                            $customerData = array(
-                                'is_password_updated' => 0
-                            );
-                            $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
-                            $notUpdatePasswordCount++;
+                            if($v['is_sales_rep'] == 0 && $v['is_title_officer'] == 0) {
+                                $customerData = array(
+                                    'is_password_updated' => 0
+                                );
+                                $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                                $notUpdatePasswordCount++;
+                            }
                         }
                     }
                     $successMsg = 'Password updated successfully. Total Rows ('.$rowCount.') | Updated ('.$updateCount.') | NotUpdated ('.$notUpdatePasswordCount.')';
