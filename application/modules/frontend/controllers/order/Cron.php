@@ -631,11 +631,13 @@ class Cron extends MX_Controller {
                                         $updateCount++;                          
                                     }
                                 } else {
-                                    $customerData = array(
-                                        'is_password_updated' => 0
-                                    );
-                                    $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
-                                    $notUpdatePasswordCount++;
+                                    if($v['is_sales_rep'] == 0 && $v['is_title_officer'] == 0) {
+                                        $customerData = array(
+                                            'is_password_updated' => 0
+                                        );
+                                        $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                                        $notUpdatePasswordCount++;
+                                    }
                                 }
                             } else {
                                 if($v['is_sales_rep'] == 0 && $v['is_title_officer'] == 0) {
@@ -2643,9 +2645,9 @@ class Cron extends MX_Controller {
                         if(in_array('Sales Rep', $headerColumns)) {
                             $saleskey = array_search("Sales Rep",$headerColumns);
                             $salesRepName = $data[$saleskey];
-                            $salesRepName = str_replace(' ', '-', $salesRepName);
-                            $salesRepName = preg_replace('/[^A-Za-z0-9\-]/', '',  $salesRepName);
-                            $salesRepName = str_replace('-', ' ', $salesRepName);
+                            $salesRepName = str_replace(' ', '_', $salesRepName);
+                            $salesRepName = preg_replace('/[^A-Za-z0-9\_-]/', '',  $salesRepName);
+                            $salesRepName = str_replace('_', ' ', $salesRepName);
                             $key = array_search($salesRepName, array_column($salesRepNameArr, 'name'));
                             if (isset($key) && !empty($key)) {
                                $salesRepId =  $salesRepNameArr[$key]['id'];
