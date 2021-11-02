@@ -9,18 +9,36 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	
 	<link rel="stylesheet" href="<?php echo base_url('assets/frontend/css/label/style.css');?>">
-
+    
 </head>
 
 <body>
-    <?php foreach($pdfInfos as $pdfInfo) {?>
-        <div class="label">
-            <span style="margin-left:12px;"><?php echo $pdfInfo['line_1'];?></span><br>
-            <span style="margin-right:12px;"><?php echo $pdfInfo['line_2'];?></span><br>
-            <span style="margin-right:24px;"><?php echo $pdfInfo['line_3'];?></span><br>
-        </div>
-    <?php } ?>
-	
+    <table class="bordered">
+      
+
+        <?php foreach(array_chunk($pdfInfos,3) as $pdfInfo_details) {?>
+            <tr>
+                <?php $i = 0;?>
+                <?php foreach($pdfInfo_details as $pdfInfo) { ?>
+                    <?php if($i != 0) { ?>
+                        <td class="separator" />
+                    <?php } ?>
+                    <td>
+                        <?php echo $pdfInfo['line_1'];?>
+                        <br/>
+                        <?php echo $pdfInfo['line_2'];?>
+                        <br/>
+                        <?php echo $pdfInfo['line_3'];?>
+                    </td>
+
+                <?php $i++; } ?>	
+            </tr>
+        <?php } ?>
+    </table>
 </body>
 
 </html>
+
+
+ 
+	
