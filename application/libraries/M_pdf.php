@@ -8,7 +8,7 @@ class M_pdf {
     {
     	require_once(APPPATH."third_party/mpdf/mpdf.php");
         $this->param =$param;
-        $this->pdf = new mPDF('','A4','','',10,10,10,10);
+        $this->pdf = new mPDF('',array(216, 279),'','',10,10,10,10);
         // $mpdf = new mPDF('',    // mode - default ''
         //             '',    // format - A4, for example, default ''
         //             0,     // font size - default 0
