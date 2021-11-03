@@ -4014,11 +4014,11 @@ class Cron extends MX_Controller {
         $month = sprintf('%02d',date('m') - 1);
         $this->db->select('order_details.file_id, 
             order_details.file_number, 
+            order_details.customer_id, 
             order_details.id as order_id,
             order_details.resware_status, 
             property_details.full_address,
             customer_basic_details.email_address as sales_email,
-            property_details.escrow_lender_id,
             CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name,
             user_details.email_address, 
             transaction_details.sales_representative');
@@ -4027,6 +4027,7 @@ class Cron extends MX_Controller {
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
+        $this->db->where('customer_basic_details.email_address != ""');
         $this->db->where('user_details.first_name != "" and user_details.last_name != ""');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
@@ -4046,23 +4047,23 @@ class Cron extends MX_Controller {
                     $sales_rep_user_id = $res['sales_representative'];
                     $sales_rep_email = $res['sales_email'];
                     $order_user_id = $res['customer_id'];
+                    $userName = $res['name'];
                     $checkFlag = 1;
                     $j = 0;
                 }
                 if ($res['sales_representative'] == $sales_rep_user_id) {
                     if($res['customer_id'] == $order_user_id) {
-                        $userName = $res['name'];
                         $j++;
-                    } else {
                         $userName = $res['name'];
+                    } else {    
                         $j = 1;
                         $i++;
+                        $userName = $res['name'];
                         $order_user_id = $res['customer_id'];
                     }
                     $data['summary_info'][$i]['name'] = $userName;
                     $data['summary_info'][$i]['count'] = $j;
                 } else {
-                   
                     $message = $this->load->view('emails/summary.php',$data,TRUE);
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
@@ -4077,8 +4078,8 @@ class Cron extends MX_Controller {
                         'message'=>json_encode($data),
                         'cc' => $cc
                     );
-                    $to = 'hitesh.p@crestinfosystems.com';
-                    $cc = array();
+                    //$to = 'hitesh.p@crestinfosystems.com';
+                    //$cc = array();
                     $this->load->helper('sendemail');
                     $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
                     $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
@@ -4089,16 +4090,16 @@ class Cron extends MX_Controller {
                     $sales_rep_email = $res['sales_email'];
                     $sales_rep_user_id = $res['sales_representative'];
                     $order_user_id = $res['customer_id'];
-                    $userName = $res['customer_id'];
+                    $userName = $res['name'];
                     $data['summary_info'][$i]['name'] = $userName;
                     $data['summary_info'][$i]['count'] = $j;
                 }
             }
             if(!empty($data)){
-                $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
+                $message = $this->load->view('emails/summary.php',$data,TRUE);
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
-                $subject = 'Thank You!';
+                $subject = 'Client Summary';
                 $to = $sales_rep_email;  
                 $cc = array('ghernandez@pct.com');          
                 $this->load->helper('sendemail');
@@ -4110,14 +4111,14 @@ class Cron extends MX_Controller {
                     'message'=>json_encode($data),
                     'cc' => $cc
                 );
-                $to = 'hitesh.p@crestinfosystems.com';
-                $cc = array();   
+                //$to = 'hitesh.p@crestinfosystems.com';
+                //$cc = array();   
   
-                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), 0, 0);
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
-                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), 0, $logid);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array('status'=> $escrow_mail_result), 0, $logid);
             }
-            echo "Mails sent successfully to Escow user ";exit;
+            echo "Mails sent successfully to Sales rep users ";exit;
         }
     }
 }
