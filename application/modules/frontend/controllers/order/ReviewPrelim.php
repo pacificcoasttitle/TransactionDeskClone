@@ -992,18 +992,18 @@ class ReviewPrelim extends MX_Controller {
 					$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
 					$message = $prelim_message_body; 
 					$subject = 'The Prelim Hot Sheet';
-					//$to = $customer_email;
-					$to = 'hitesh.p@crestinfosystems.com';
 					
-					$this->load->helper('sendemail');
-					
-					$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file);
-
-					$result = array();
-					if ($mail_result) {
-						$result['mail_status'] = 'success';
-					} else {
-						$result['mail_status'] = 'error';		
+					if(!empty($orderUser['email_address'])) {
+						$to = $orderUser['email_address'];
+						//$to = 'hitesh.p@crestinfosystems.com';
+						$this->load->helper('sendemail');
+						$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file);
+						$result = array();
+						if ($mail_result) {
+							$result['mail_status'] = 'success';
+						} else {
+							$result['mail_status'] = 'error';		
+						}
 					}
 					/* Send email to customer */
 					$result['message'] = "Data stored successfully.";
