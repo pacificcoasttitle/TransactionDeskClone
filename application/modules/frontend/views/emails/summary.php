@@ -873,7 +873,7 @@ $previousMonth = Date('F', strtotime($currentMonth . " last month"));
 		<tr>
             <th>Client Source Name</th>
             <th>Company Name</th>
-			<th># Of Deals</th>
+			<!-- <th># Of Deals</th> -->
 		</tr>
 	</thead>
                                                                                 <tbody>
