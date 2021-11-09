@@ -865,13 +865,14 @@ $previousMonth = Date('F', strtotime($currentMonth . " last month"));
                                                                                 <span style="font-size:28px">Client Summary.</span>
                                                                             </h3>
 
-                                                                            <p>We have prepared a list of all of the orders that you currently with us for the month of <?php echo $previousMonth;?>. If you have any questions feel free to contact us.&nbsp;<br>
+                                                                            <p>Below you will find a summary the clients who you closed a transaction(s) with in <?php echo $previousMonth;?>.<br>
                                                                                 &nbsp;</p>
 
                                                                             <table>
                                                                             <thead>
 		<tr>
             <th>Client Source Name</th>
+            <th>Company Name</th>
 			<th># Of Deals</th>
 		</tr>
 	</thead>
@@ -879,8 +880,9 @@ $previousMonth = Date('F', strtotime($currentMonth . " last month"));
                                                                                     <?php if(!empty($summary_info)) { 
                                                                                         foreach($summary_info as $summary) {?>
                                                                                             <tr>
-                                                                                            <td style="width: 422px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['name'];?></strong></td>
-                                                                                            <td style="width: 422px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['count'];?></strong></td>
+                                                                                            <td style="width: 300px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['name'];?></strong></td>
+                                                                                            <td style="width: 300px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['company_name'];?></strong></td>
+                                                                                            <td style="width: 100px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['count'];?></strong></td>
                                                                                             </tr>
                                                                                     <?php }} ?>
                                                                                     
