@@ -4085,7 +4085,7 @@ class Cron extends MX_Controller {
                         'message'=>json_encode($data),
                         'cc' => $cc
                     );
-                    $to = 'hitesh.p@crestinfosystems.com';
+                    $to = 'ghernandez@pct.com';
                     $cc = array();
                     $this->load->helper('sendemail');
                     $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
@@ -4120,7 +4120,7 @@ class Cron extends MX_Controller {
                     'message'=>json_encode($data),
                     'cc' => $cc
                 );
-                $to = 'hitesh.p@crestinfosystems.com';
+                $to = 'ghernandez@pct.com';
                 $cc = array();   
   
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
