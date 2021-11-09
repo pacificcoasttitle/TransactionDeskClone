@@ -206,6 +206,7 @@ $route['download-policy-doc'] = 'frontend/order/dashboardMail/downloadPolicyDoc'
 $route['remove-doc-from-server'] = 'frontend/order/cron/removeDocServer';
 $route['send-message-recording-confirmation'] = 'frontend/order/cron/sendMessageRecordingConfirmation';
 $route['sync-prelim-data'] = 'frontend/order/cron/syncPrelimData';
+$route['send-summary-mail-sales'] = 'frontend/order/cron/sendSummaryMailSalesRepUsers';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';
