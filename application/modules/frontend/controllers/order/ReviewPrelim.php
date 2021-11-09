@@ -993,16 +993,26 @@ class ReviewPrelim extends MX_Controller {
 					$message = $prelim_message_body; 
 					$subject = 'The Prelim Hot Sheet';
 					
-					if(!empty($orderUser['email_address'])) {
-						$to = $orderUser['email_address'];
-						//$to = 'hitesh.p@crestinfosystems.com';
-						$this->load->helper('sendemail');
-						$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file);
-						$result = array();
-						if ($mail_result) {
-							$result['mail_status'] = 'success';
-						} else {
-							$result['mail_status'] = 'error';		
+					if ($_SERVER['SERVER_NAME'] == 'app.pacificcoasttitle.com') {
+						if(!empty($orderUser['email_address'])) {
+							$to = $orderUser['email_address'];
+							//$to = 'hitesh.p@crestinfosystems.com';
+							$mailParams = array(
+								'from_mail'=>$from_mail, 
+								'from_name'=>$from_name, 
+								'to'=> $to,
+								'subject'=>$subject
+							);
+							$this->load->helper('sendemail');
+							$logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_client', '', $mailParams, array(), 0, 0);
+							$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file);
+							$this->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_client', '', $mailParams, array('status'=> $mail_result), 0, $logid);
+							$result = array();
+							if ($mail_result) {
+								$result['mail_status'] = 'success';
+							} else {
+								$result['mail_status'] = 'error';		
+							}
 						}
 					}
 					/* Send email to customer */
