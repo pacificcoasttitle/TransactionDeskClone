@@ -1,20 +1,7 @@
-.label {
-	width: 33.3%;
-	height: 1in;
-	float: left;
-	line-height: 1.8;
-	font-size: 13px;
-}
-
-.label span {
-	width: 33.3%;
-	display: table-footer-group;
-}
-
 @media print {
 	@page {
 		size: portrait;
-		margin: 0.42in 0.22in 0.42in 0.22in ;
+		margin: 0.5in 0.19in 0 0.19in ;
 	}
 }
 
@@ -25,23 +12,24 @@ tr {
 
 td {
 	font-size: 13px;
-	/*font-family: sans-serif;*/
-	width: 2.57in;
-	height: 0.99in;
-	margin: 0;
+	font-family: Calibri, sans-serif;
+	width: 2.63in;
+	height: 1in;
+	margin-top: 0;
 	vertical-align: top;
 	-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
-	padding: 0.10in 0.05in 0.05in 0.10in;
+	padding: 0.132in 0.05in 0.05in 0.05in;
 	line-height: 1.5;
-	border: 0.1px solid black;
+	/*border: 0.1px solid black;*/
 	overflow: hidden;
 }
 
 td.separator {
-	width: 0.16in;
-	border: none;
+	width: 0.125in;
+	/*border: none;
+	border: 0.1px solid black;*/
 }
 
 * { font-family: sans-serif; }
 
-td h1, td h2, td p { font-size: 12px; }
+td h1, td h2, td p { font-size: 11px; }

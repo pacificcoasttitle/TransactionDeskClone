@@ -13,9 +13,7 @@
 </head>
 
 <body>
-    <table class="bordered">
-      
-
+    <table class="bordered" cellspacing="0" cellpadding="0">
         <?php foreach(array_chunk($pdfInfos,3) as $pdfInfo_details) {?>
             <tr>
                 <?php $i = 0;?>
