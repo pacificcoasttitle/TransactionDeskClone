@@ -880,9 +880,9 @@ $previousMonth = Date('F', strtotime($currentMonth . " last month"));
                                                                                     <?php if(!empty($summary_info)) { 
                                                                                         foreach($summary_info as $summary) {?>
                                                                                             <tr>
-                                                                                            <td style="width: 300px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['name'];?></strong></td>
-                                                                                            <td style="width: 300px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['company_name'];?></strong></td>
-                                                                                            <td style="width: 100px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['count'];?></strong></td>
+                                                                                            <td style="width: 422px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['name'];?></strong></td>
+                                                                                            <td style="width: 422px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['company_name'];?></strong></td>
+                                                                                            <!--<td style="width: 100px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php // echo $summary['count'];?></strong></td>-->
                                                                                             </tr>
                                                                                     <?php }} ?>
                                                                                     
