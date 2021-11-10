@@ -44,9 +44,12 @@ class Order
         $userdata = $this->CI->session->userdata('user');
         $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
         $month = isset($params['month']) && !empty($params['month']) ? $params['month'] : '';
+        $is_pay_off = isset($params['is_pay_off']) && !empty($params['is_pay_off']) ? $params['is_pay_off'] : '';
         $yearFlag = isset($params['yearFlag']) && !empty($params['yearFlag']) ? $params['yearFlag'] : '';
         $dashboard_order_by = isset($params['dashboard_order_by']) && !empty($params['dashboard_order_by']) ? $params['dashboard_order_by'] : '';
         $result = $this->getUserFromPartners();
+        $select = 'order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
 
         if(isset($params['searchvalue']) && !empty($params['searchvalue']))
         {
@@ -81,15 +84,24 @@ class Order
                 $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
             }
 
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner')
-            ->from('order_details')
-            ->join('property_details', 'order_details.property_id = property_details.id')
-            ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
-            ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
-            ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
+            if (isset($is_pay_off) && !empty($is_pay_off)) {        
+                $select .= ', customer_basic_details.first_name, customer_basic_details.last_name';
+            }
+
+            $this->CI->db->select($select)
+                ->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+                ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
+                ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
+
+            if (isset($is_pay_off) && !empty($is_pay_off)) { 
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id'); 
+                $this->CI->db->join('customer_basic_details','customer_basic_details.id = transaction_details.title_officer', 'left');
+                $this->CI->db->where('order_details.is_payoff_order', 1);
+            }
             
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0  && $userdata['is_title_officer'] == 0) {
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -99,10 +111,12 @@ class Order
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
             }
+
             if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
             }
+
             if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if(!empty($result)) {
                     $this->CI->db->group_start()
@@ -119,6 +133,7 @@ class Order
                 $this->CI->db->like('property_details.full_address', $keyword);            
                 $this->CI->db->or_like('order_details.file_number', $keyword);
             }
+
             if(isset($status) && !empty($status))
             {
                 if ($status == 'open') {
@@ -145,17 +160,21 @@ class Order
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
-           
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner')
+
+            $this->CI->db->select($select)
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
                 ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
-
             
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0  && $userdata['is_title_officer'] == 0) {
+            if (isset($is_pay_off) && !empty($is_pay_off)) { 
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id'); 
+                $this->CI->db->join('customer_basic_details','customer_basic_details.id = transaction_details.title_officer', 'left');
+                $this->CI->db->where('order_details.is_payoff_order', 1);
+            }
+
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -219,15 +238,24 @@ class Order
                 $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
             }
 
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner')
-            ->from('order_details')
-            ->join('property_details', 'order_details.property_id = property_details.id')
-            ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
-            ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
-            ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
+            if (isset($is_pay_off) && !empty($is_pay_off)) {        
+                $select .= ', customer_basic_details.first_name, customer_basic_details.last_name';
+            }
 
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
+            $this->CI->db->select($select)
+                ->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+                ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
+                ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
+            
+            if (isset($is_pay_off) && !empty($is_pay_off)) { 
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id'); 
+                $this->CI->db->join('customer_basic_details','customer_basic_details.id = transaction_details.title_officer', 'left');
+                $this->CI->db->where('order_details.is_payoff_order', 1);
+            }
+
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -283,16 +311,20 @@ class Order
                 $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
             }
 
-            $this->CI->db->select('order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner')
+            $this->CI->db->select($select)
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
                 ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id','left');
-
             
-            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
+            if (isset($is_pay_off) && !empty($is_pay_off)) { 
+                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id'); 
+                $this->CI->db->join('customer_basic_details','customer_basic_details.id = transaction_details.title_officer', 'left');
+                $this->CI->db->where('order_details.is_payoff_order', 1);
+            }
+
+            if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0) {
                 $this->CI->db->group_start()
                     ->where('order_details.customer_id', $userdata['id'])
                     ->or_where('property_details.escrow_lender_id', $userdata['id'])

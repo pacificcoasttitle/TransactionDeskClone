@@ -86,6 +86,7 @@ $route['order'] = 'frontend/order/home/index';
 $route['dashboard'] = 'frontend/order/dashboard/index';
 $route['sales-dashboard'] = 'frontend/order/salesRep/index';
 $route['title-officer-dashboard'] = 'frontend/order/titleOfficers/index';
+$route['pay-off-dashboard'] = 'frontend/order/payOff/index';
 $route['home/getSearchResults'] = 'frontend/order/common/getSearchResults';
 $route['home/getDetailsByName'] = 'frontend/order/common/getDetailsByName';
 $route['special-dashboard'] = 'frontend/order/dashboard/index';
@@ -207,6 +208,8 @@ $route['remove-doc-from-server'] = 'frontend/order/cron/removeDocServer';
 $route['send-message-recording-confirmation'] = 'frontend/order/cron/sendMessageRecordingConfirmation';
 $route['sync-prelim-data'] = 'frontend/order/cron/syncPrelimData';
 $route['send-summary-mail-sales'] = 'frontend/order/cron/sendSummaryMailSalesRepUsers';
+$route['import-data-for-pay-off'] = 'frontend/order/cron/importDataForPayOff';
+$route['get-pay-off-orders'] = 'frontend/order/payOff/get_pay_off_orders';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';
