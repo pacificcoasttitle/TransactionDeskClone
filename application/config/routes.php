@@ -330,6 +330,9 @@ $route['calculator/admin_logout'] = 'admin/calc/admin/admin_logout';
 $route['reports'] = "frontend/report";
 $route['reports/(.+)'] = "frontend/report/$1";
 $route['pmas'] = "frontend/pma";
+$route['labels'] = "frontend/label";
+$route['labels/(.+)'] = "frontend/label/$1";
+$route['download-label-pdf'] = "frontend/label/downloadPdf";
 $route['pmas/(.+)'] = "frontend/pma/$1";
 $route['send_invite'] = 'frontend/order/home/send_invite'; 
 

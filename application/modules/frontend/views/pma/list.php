@@ -122,7 +122,10 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="">
-						<h2 class="ui-title-block ui-title-block_light">Concierge Profile<a href="<?php echo base_url('reports'); ?>" class="pull-right report_switch_btn">Create F.A.R</a></h2>
+						<h2 class="ui-title-block ui-title-block_light">Concierge Profile
+							<a href="<?php echo base_url('reports'); ?>" class="pull-right report_switch_btn">Create F.A.R</a>
+							<a style="margin-right:10px;" href="<?php echo base_url('labels'); ?>" class="pull-right report_switch_btn">Create Labels</a>
+						</h2>
 						<div class="ui-decor-1a bg-accent"></div>
 						
 					</div>
