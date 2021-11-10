@@ -24,6 +24,10 @@
                     <td>
                         <?php echo $pdfInfo['line_1'];?>
                         <br/>
+                        <?php if($or_current_resident == '1') { ?>
+                            Or Current Resident
+                            <br/>
+                        <?php } ?>
                         <?php echo $pdfInfo['line_2'];?>
                         <br/>
                         <?php echo $pdfInfo['line_3'];?>
