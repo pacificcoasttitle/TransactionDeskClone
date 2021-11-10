@@ -115,6 +115,7 @@ class Label extends MX_Controller
         $line_1_columns = $this->input->post('line_1_columns');
         $line_2_columns = $this->input->post('line_2_columns');
         $line_3_columns = $this->input->post('line_3_columns');
+        $or_current_resident = $this->input->post('or_current_resident');
         $file_name = $this->input->post('file_name');
         $url = env('AWS_PATH').'label/'.$file_name;
         $fileContents   = file_get_contents($url); 
@@ -148,7 +149,8 @@ class Label extends MX_Controller
                     $data['pdfInfos'][$i]['line_3'] = $csv_record[$this->input->post('line_3_1')].", ".$csv_record[$this->input->post('line_3_2')].", ".$csv_record[$this->input->post('line_3_3')];
                 }
                 $i++;
-            }            
+            }  
+            $data['or_current_resident'] = $or_current_resident;  
         }
         
         $this->load->view('label/pdf');

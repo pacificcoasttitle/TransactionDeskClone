@@ -238,6 +238,12 @@
 
 								<input type="hidden" id="label_id" name="label_id" value="">
 								<input type="hidden" id="file_name" name="file_name" value="">
+
+								<div class="frm-row spacer-b20">
+									<div class="section colm colm12">
+										<input style="top:5px;margin-right: 15px;" class="field checkbox" type="checkbox" id="or_current_resident" name="or_current_resident">OR CURRENT RESIDENT
+									</div>
+								</div>
 								
 								<div class="spacer-b20">
 									<div class="tagline"><span style="text-transform: none;">How many columns are you want to display on line1?</span></div>
@@ -554,6 +560,7 @@
 				url: base_url + "download-label-pdf",
 				type: "post",
 				data:{
+					or_current_resident: $('#or_current_resident').is(":checked") ? 1 : 0,
 					line_1_1: $('#line_1_1').val(),
 					line_1_2: $('#line_1_2').val(),
 					line_1_3: $('#line_1_3').val(),
