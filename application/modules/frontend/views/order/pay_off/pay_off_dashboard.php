@@ -12,9 +12,9 @@
 			max-height: 300px !important;
 		}
 
-    	
-
-    	
+    	th {
+			text-align: center;
+		}
 
     	.button-color {
 		    color: #888888;
@@ -111,11 +111,12 @@
 										<thead>
 											<tr>
 												<th>#</th>
-												<th>Opened</th>
-												<th>Property Address</th>
-												<!-- <th>Buyer/Seller</th> -->
+												<th>Opened Date</th>
+												<th>File Number</th>
+												<th>Title Officer</th>
 												<th>Status</th>
-												<th>Action</th>
+												<th>View Package</th>
+												<th>Disburse funds</th>
 											</tr>
 										</thead>
 										<tbody></tbody>
@@ -153,34 +154,29 @@
 					},
 					"emptyTable": "Record(s) not found.",
 					"search": "",
-                },
+				},
+				/*"searching": false,*/
+				"bStateSave": true,
+				"fnStateSave": function (oSettings, oData) {
+					localStorage.setItem('offersDataTables', JSON.stringify(oData));
+				},
+				"fnStateLoad": function (oSettings) {
+					return JSON.parse(localStorage.getItem('offersDataTables'));
+				},
 				initComplete: function () {
-					
-					
-                },
-				"dom": 'lfrtip',
+
+
+				},
+				dom: 'Bfrtip',
 				buttons: [],
 				"drawCallback": function () {
-					
+
 				},
 				"ordering": false,
 				"serverSide": true,
 				"ajax": {
 					url: base_url + "get-pay-off-orders", // json datasource
 					type: "post", // method  , by default get
-					data   : function( d ) {
-	                  
-	                },
-					dataFilter: function(data){
-
-						var json = jQuery.parseJSON( data );
-						var countingData = json.count_data;
-						
-						json.recordsTotal = json.recordsTotal;
-						json.recordsFiltered = json.recordsFiltered;
-						json.data = json.data;
-						return JSON.stringify( json );
-					},
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
 						if (parseInt(XMLHttpRequest.status) == 419) {
 							alert("You are logged out. Please login.");
@@ -190,10 +186,9 @@
 								location.reload();
 							}, 1000);
 						}
-						$("#orders_listing tbody").append(
+						$("#pay_off_orders_listing tbody").append(
 							'<tr><td colspan="4" class="text-center">No records found</td></tr>');
-						$("#orders_listing_processing").css("display", "none");
-
+						$("#pay_off_orders_listing_processing").css("display", "none");
 					}
 				}
 			});

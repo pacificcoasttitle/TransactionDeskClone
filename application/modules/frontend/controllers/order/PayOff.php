@@ -28,7 +28,7 @@ class PayOff extends MX_Controller
 		$data['user_email'] = $userdata['email'];
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/pay_off_dashboard');
+        $this->load->view('order/pay_off/pay_off_dashboard');
 	}
 
 	function get_pay_off_orders()
@@ -57,81 +57,18 @@ class PayOff extends MX_Controller
             foreach ($order_lists['data'] as $order)  {
 
                 $nestedData = array();
-                $nestedData[] = $order['file_number'];
-               // $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
-                $nestedData[] = $order['full_address'];
-                $nestedData[] = ucfirst($order['resware_status']);
-               
-                if ($order['prelim_summary_id'] != 0) {
-					$action = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a button-color' type='button'>REVIEW FILE</button></a>";
-				} else {
-					$action = "<a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a>";
-				}
-				$action .= "<a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>VIEW Partners</button></a>";
-               	$nestedData[] = $action;
-
+				$nestedData[] = $i;
+                
+                $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
+				$nestedData[] = $order['file_number'];
+                $nestedData[] = $order['first_name']." ".$order['last_name'];
+				$nestedData[] = ucfirst($order['resware_status']);
+				$nestedData[] = "<a href=''><button class='btn btn-grad-2a button-color' type='button'>Action</button></a>";
+                $nestedData[] = "<a href=''><button class='btn btn-grad-2a button-color' type='button'>Action</button></a>";
                 $data[] = $nestedData; 
                 $i++; 
-            }
-
-			/*if(!empty($month)) {
-				
-				$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month);
-				$count_data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-
-				$openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month);
-				$count_data['sale_open_count'] = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
-
-				$count_data['open_order_count'] = $count_data['refi_open_count'] + $count_data['sale_open_count']; 
-
-				$closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month);
-				$count_data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-
-				$closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month);
-				$count_data['sale_close_count'] =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
-
-				$count_data['close_order_count'] = $count_data['refi_close_count'] + $count_data['sale_close_count']; 
-
-				$openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
-				$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-				$count_data['refi_total_premium'] = ($openOrderRefiTotalPremium + $closeOrderRefiTotalPremium);
-
-				$openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
-				$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-				$count_data['sale_total_premium'] = ($openOrderSaleTotalPremium + $closeOrderSaleTotalPremium);
-
-				$count_data['total_premium'] = number_format($count_data['sale_total_premium'] + $count_data['refi_total_premium']);
-				$count_data['sale_total_premium'] = number_format($openOrderSaleTotalPremium + $closeOrderSaleTotalPremium);
-				$count_data['refi_total_premium'] = number_format($openOrderRefiTotalPremium + $closeOrderRefiTotalPremium);
-
-				$totalCount = $count_data['sale_close_count'] + $count_data['refi_close_count'] + $count_data['sale_open_count'] + $count_data['refi_open_count'];
-				if($totalCount > 0) {
-					$count_data['refi_close_order_percetage'] = round(($count_data['refi_close_count']*100)/$totalCount);
-					$count_data['sale_close_order_percetage'] = round(($count_data['sale_close_count']*100)/$totalCount);
-					$count_data['close_order_percetage'] = $count_data['refi_close_order_percetage'] + $count_data['sale_close_order_percetage'];
-				} else {
-					$count_data['refi_close_order_percetage'] = 0;
-					$count_data['sale_close_order_percetage'] = 0;
-					$count_data['close_order_percetage'] = 0;
-				}
-				$json_data['count_data'] = $count_data;
-			}*/
-			
-        } else {
-			/*$count_data['refi_open_count'] = 0;
-			$count_data['sale_open_count'] = 0;
-			$count_data['open_order_count'] = 0;
-			$count_data['refi_close_count'] = 0;
-			$count_data['sale_close_count'] =  0;
-			$count_data['close_order_count'] = 0;
-			$count_data['total_premium'] = 0;
-			$count_data['sale_total_premium'] = 0;
-			$count_data['refi_total_premium'] = 0;
-			$count_data['refi_close_order_percetage'] = 0;
-			$count_data['sale_close_order_percetage'] = 0;
-			$count_data['close_order_percetage'] = 0;
-			$json_data['count_data'] = $count_data;*/
-		}
+			}
+        } 
         $json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
         $json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
         $json_data['data'] = $data;
