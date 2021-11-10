@@ -4234,7 +4234,7 @@ class Cron extends MX_Controller {
             echo "No orders found to update partner";exit;
         }
     }
-
+    
     public function importDataForPayOff()
     {
         $sftp = new SFTP(env('SFTP_HOST'));
