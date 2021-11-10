@@ -60,6 +60,7 @@ class Login extends MX_Controller {
                         "is_master" =>  $user['is_master'],
                         "is_sales_rep" =>  $user['is_sales_rep'],
                         "is_title_officer" =>  $user['is_title_officer'],
+                        "is_payoff_user" =>  $user['is_payoff_user'],
                         "partner_companies" =>  $user['partner_companies'],
                         "is_special_lender" =>  isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                     );
@@ -70,6 +71,8 @@ class Login extends MX_Controller {
                         $response = array('status'=>'success', 'message'=> '', 'url' => 'sales-dashboard');
                     } else if ($user['is_special_lender'] == 1) {
                         $response = array('status'=>'success', 'message'=> '', 'url' => 'special-lender-dashboard');
+                    } else if ($user['is_payoff_user'] == 1) {
+                        $response = array('status'=>'success', 'message'=> '', 'url' => 'pay-off-dashboard');
                     } else {
                         $response = array('status'=>'success', 'message'=> '', 'url' => 'dashboard');
                     }
