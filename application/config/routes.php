@@ -216,6 +216,7 @@ $route['upload-document'] = 'frontend/order/common/upload_document';
 $route['create-payoff/:num'] = 'frontend/order/payOff/createPayoff';
 $route['generate-payoff'] = 'frontend/order/payOff/generatePayoff';
 $route['add-partner-for-orders'] = 'frontend/order/cron/addPartnerForOrders';
+$route['import-data-for-pay-off'] = 'frontend/order/cron/importDataForPayOff';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';
