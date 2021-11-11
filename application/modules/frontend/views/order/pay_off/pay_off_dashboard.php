@@ -115,16 +115,12 @@
 												<th>File Number</th>
 												<th>Title Officer</th>
 												<th>Status</th>
-												<th>View Package</th>
-												<th>Disburse funds</th>
+												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody></tbody>
 									</table>
-
-									<div class="typography-sectionab">	
-									</div>
-
+									<div class="typography-sectionab"></div>
 								</div>
 							</div>
 						</div>
@@ -194,4 +190,69 @@
 			});
 		}
 	});
+
+	function downloadPayOffDocument(file_id)
+    {
+        $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+        var filename = 'Pay_off_'+file_id+'.pdf';
+        $.ajax({
+			url: base_url + "download-pay-off-document",
+			type: "post",
+			data: {
+				file_id : file_id
+			},
+			dataType: "html",
+			success: function (response) {
+				if (response) {
+					if (navigator.msSaveBlob) {
+						var csvData = base64toBlob(response, 'application/octet-stream');
+						var csvURL = navigator.msSaveBlob(csvData, filename);
+						var element = document.createElement('a');
+						element.setAttribute('href', csvURL);
+						element.setAttribute('download', filename);
+						element.style.display = 'none';
+						document.body.appendChild(element);
+						document.body.removeChild(element);
+					} else {
+						console.log(response);
+						var csvURL = 'data:application/octet-stream;base64,' + response;
+						var element = document.createElement('a');
+						element.setAttribute('href', csvURL);
+						element.setAttribute('download', filename);
+						element.style.display = 'none';
+						document.body.appendChild(element);
+						element.click();
+						document.body.removeChild(element);
+					}
+				}
+                $('#page-preloader').css('display', 'none');
+			}
+        });
+    }
+
+	function updatePayOffAction(file_id)
+    {
+        $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+        var filename = 'Pay_off_'+file_id+'.pdf';
+        $.ajax({
+			url: base_url + "update-pay-off-action",
+			type: "post",
+			data: {
+				file_id : file_id
+			},
+			dataType: "html",
+			success: function (response) {
+				var results = JSON.parse(response);
+				$('#page-preloader').css('display', 'none');
+				if(results.status == 'success') {
+					alert(results.msg);
+				}
+				else if(results.status == 'error') {
+					alert(results.msg);
+				}
+			}
+        });
+    }
 </script>

@@ -58,13 +58,12 @@ class PayOff extends MX_Controller
 
                 $nestedData = array();
 				$nestedData[] = $i;
-                
+                $file_id = $order['file_id'];
                 $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
 				$nestedData[] = $order['file_number'];
                 $nestedData[] = $order['first_name']." ".$order['last_name'];
 				$nestedData[] = ucfirst($order['resware_status']);
-				$nestedData[] = "<a href=''><button class='btn btn-grad-2a button-color' type='button'>Action</button></a>";
-                $nestedData[] = "<a href=''><button class='btn btn-grad-2a button-color' type='button'>Action</button></a>";
+				$nestedData[] = "<a href='javascript:void(0);' onclick='downloadPayOffDocument($file_id);'><button class='btn btn-grad-2a button-color' type='button'>View Package</button></a><a href='javascript:void(0);' onclick='updatePayOffAction($file_id);'><button class='btn btn-grad-2a button-color' type='button'>Disburse funds</button></a>";
                 $data[] = $nestedData; 
                 $i++; 
 			}
@@ -75,52 +74,99 @@ class PayOff extends MX_Controller
         echo json_encode($json_data);
     }
 
-	function salesProductionHistory()
-	{
+	public function downloadPayOffDocument()
+    {
 		$userdata = $this->session->userdata('user');
-		$data['title'] = 'Sales Production History | Pacific Coast Title Company';
-		$salesHistory = array();
-		for ($iM = 1; $iM <= (int)date('m'); $iM++) {
-			$month = date("m", strtotime("$iM/12/10"));
-			$dateObj   = DateTime::createFromFormat('!m', $iM);
-			$monthName = $dateObj->format('F'); 
-			$salesHistory[$iM-1]['month'] = $monthName;
+		$file_id = $this->input->post('file_id');
+		$user_data = array();
+		$user_data = array(
+			'admin_api' => 1
+		);
+		$user_data['from_mail'] = 1;
 
-			$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month);
-			$refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-			$openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month);
-			$sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
-			$salesHistory[$iM-1]['total_open_count'] = $sale_open_count + $refi_open_count;
+		$endPoint = 'files/'. $file_id .'/documents';
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $file_id, 0);
+		$resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $file_id, $logid);
+		$resDocuments = json_decode($resultDocuments, true);
 
-			$closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month);
-			$refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-			$closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month);
-			$sale_close_count =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
-			$salesHistory[$iM-1]['total_close_count'] = $refi_close_count + $sale_close_count;
-
-			$openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
-			$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-			//$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
-			$refi_total_premium =  $closeOrderRefiTotalPremium;
-			$openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
-			$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-			//$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
-			$sale_total_premium = $closeOrderSaleTotalPremium;
-			$salesHistory[$iM-1]['total_premium'] = $sale_total_premium + $refi_total_premium;
-
-			$totalCount = $sale_close_count + $refi_close_count + $sale_open_count + $refi_open_count;
-			if($totalCount > 0) { 
-				$refi_close_order_percetage = round(($refi_close_count*100)/$totalCount);
-				$sale_close_order_percetage = round(($sale_close_count*100)/$totalCount);
-				$salesHistory[$iM-1]['close_order_percetage'] = $refi_close_order_percetage + $sale_close_order_percetage;
-			} else {
-				$refi_close_order_percetage = 0;
-				$sale_close_order_percetage = 0;
-				$salesHistory[$iM-1]['close_order_percetage'] = 0;
+		foreach($resDocuments['Documents'] as $orderDocuments) {
+			if($orderDocuments['DocumentType']['DocumentTypeID'] == 1035) {
+				$api_document_id = $orderDocuments['DocumentID'];
+				$this->load->model('order/document');
+				$endPoint = 'documents/'.$api_document_id.'?format=json';
+				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+				$resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
+				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, 0, $logid);
+				$resDocument = json_decode($resultDocument, true);
+				if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+					$binaryData  = $resDocument['Document']['DocumentBody'];
+				}	
 			}
 		}
-		$data['salesHistory'] = $salesHistory;
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/sales_production_history');
+		echo $binaryData;exit;
+	}
+
+	public function updatePayOffAction()
+	{
+		$fileId = $this->input->post('file_id');
+		$endPoint = 'files/'. $fileId.'/actions';
+        $user_data['admin_api'] = 1; 
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+        $res = $this->resware->make_request('GET', $endPoint, array(), $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API').$endPoint, array(), $res, 0, $logid);
+        $result = json_decode($res,TRUE);
+	
+        if (isset($result['Actions']) && !empty($result['Actions'])) {
+            $array_keymap = $this->order->array_recursive_search_key_map(154, $result['Actions']);
+            if(!empty($array_keymap)) {
+                $actionData = array(
+                    'StartTask' => array(
+                        'CoordinatorTypeID'=> 8,
+                        'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
+                    )
+                );
+                $endPoint = 'files/'. $fileId.'/actions/'.$result['Actions'][$array_keymap[0]]['FileActionID'];
+                $user_data['admin_api'] = 1; 
+                $actionData = json_encode($actionData);
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, array(), $fileId, 0);
+                $res = $this->resware->make_request('PUT', $endPoint,  $actionData, $user_data);
+                $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API').$endPoint,  $actionData, $res, $fileId, $logid);
+                $result = json_decode($res,TRUE);
+
+				if (!empty($result['FileActionID'])) {
+					$resultPayOffaction = array('status'=>'success', 'msg'=> 'Payoff action updated successfully.');
+				} else {
+					$resultPayOffaction = array('status'=>'error', 'msg' => 'Something went wrong during update action prelim.');
+				}
+            } else {
+                $actionData = array(
+                    'ActionType' => array(
+                        'ActionTypeID' => 154
+                    ),
+                    'Group' => array(
+                        'ActionGroupID' => 3
+                    ),    
+                    'StartTask' => array(
+                        'CoordinatorTypeID'=> 8,
+                        'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
+                    )
+                );
+                $endPoint = 'files/'. $fileId.'/actions/';
+                $user_data['admin_api'] = 1; 
+                $actionData = json_encode($actionData);
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, array(), $fileId, 0);
+                $res = $this->resware->make_request('POST', $endPoint, $actionData, $user_data);
+                $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, $res, $fileId, $logid);
+                $result = json_decode($res,TRUE);
+
+				if (!empty($result['FileActionID'])) {
+					$resultPayOffaction = array('status'=>'success', 'msg'=> 'Payoff action added successfully.');
+				} else {
+					$resultPayOffaction = array('status'=>'error', 'msg'=> 'Something went wrong during update action prelim.');
+				}
+            }
+        }
+		echo json_encode($resultPayOffaction);
 	}
 }
