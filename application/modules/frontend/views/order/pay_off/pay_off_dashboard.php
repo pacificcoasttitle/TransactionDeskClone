@@ -128,8 +128,7 @@
 												<th>File Number</th>
 												<th>Title Officer</th>
 												<th>Status</th>
-												<th>View Package</th>
-												<th>Disburse funds</th>
+												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody></tbody>
