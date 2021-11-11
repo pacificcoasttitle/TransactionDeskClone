@@ -348,7 +348,8 @@ button:focus {outline:0;}
 			data: {
 				resware_document_id: resware_document_id,
                 order_id: order_id,
-				document_name: document_name
+				document_name: document_name,
+				fileId: $('#fileId').val()
 			},
 			success: function (response) {
 				$('#page-preloader').css('display', 'none');

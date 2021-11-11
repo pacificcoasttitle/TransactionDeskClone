@@ -1625,4 +1625,56 @@ class Order
 		$res = json_decode($result);
 		$this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
+
+    public function uploadPrelimDocxDocToResware($document_name, $order_id, $binaryData, $file_id)
+    {
+    	$this->CI->load->model('order/document');
+		$this->CI->load->library('order/resware');
+		$this->CI->load->model('order/apiLogs');
+        $userdata = $this->CI->session->userdata('user');
+        if(empty($userdata)) {
+			$userdata['id'] = 0;
+		}
+		$fileSize = filesize('./uploads/documents/'.$document_name);
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1032,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $order_id,
+			'description' => 'Prelim Word Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_proposed_insured_doc' => 1
+		);
+		$documentId = $this->CI->document->insert($documentData);
+		$endPoint = 'files/'.$file_id.'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1032,
+			),
+			'Description' => 'Prelim Word Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		$user_data = array();
+		if (!empty($userdata['id'])) {
+			if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+				$user_data['admin_api'] = 1; 
+			} else {
+				$user_data = array();
+			}
+		} else {
+			$user_data['admin_api'] = 1; 
+		}
+		$logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $order_id, 0);
+		$result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $order_id, $logid);
+		$res = json_decode($result);
+		$this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+    }
 }
