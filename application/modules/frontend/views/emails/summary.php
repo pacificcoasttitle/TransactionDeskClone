@@ -833,7 +833,7 @@ $previousMonth = Date('F', strtotime($currentMonth . " last month"));
                                                                 <tbody>
                                                                     <tr>
                                                                         <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
-                                                                            <img align="center" alt="" src="'http://app.pacificcoasttitle.com/assets/frontend/images/summary.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+                                                                            <img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/summary.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
