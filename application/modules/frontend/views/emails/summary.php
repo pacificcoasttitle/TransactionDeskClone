@@ -833,7 +833,7 @@ $previousMonth = Date('F', strtotime($currentMonth . " last month"));
                                                                 <tbody>
                                                                     <tr>
                                                                         <td class="mcnImageContent" valign="top" style="padding-right: 0px; padding-left: 0px; padding-top: 0; padding-bottom: 0; text-align:center;">
-                                                                            <img align="center" alt="" src="<?php echo base_url().'assets/frontend/images/summary.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+                                                                            <img align="center" alt="" src="'http://app.pacificcoasttitle.com/assets/frontend/images/summary.jpg';?>" width="600" style="max-width:800px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -880,9 +880,9 @@ $previousMonth = Date('F', strtotime($currentMonth . " last month"));
                                                                                     <?php if(!empty($summary_info)) { 
                                                                                         foreach($summary_info as $summary) {?>
                                                                                             <tr>
-                                                                                            <td style="width: 422px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['name'];?></strong></td>
-                                                                                            <td style="width: 422px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['company_name'];?></strong></td>
-                                                                                            <!--<td style="width: 100px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php // echo $summary['count'];?></strong></td>-->
+                                                                                            <td style="width: 322px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['name'];?></strong></td>
+                                                                                            <td style="width: 322px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['company_name'];?></strong></td>
+                                                                                            <td style="width: 300px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $summary['count'];?></strong></td>
                                                                                             </tr>
                                                                                     <?php }} ?>
                                                                                     
