@@ -994,7 +994,7 @@ class ReviewPrelim extends MX_Controller {
 					$subject = 'The Prelim Hot Sheet';
 					
 					if ($_SERVER['SERVER_NAME'] == 'app.pacificcoasttitle.com') {
-						if(!empty($orderUser['email_address'])) {
+						/*if(!empty($orderUser['email_address'])) {
 							$to = $orderUser['email_address'];
 							//$to = 'hitesh.p@crestinfosystems.com';
 							$mailParams = array(
@@ -1013,7 +1013,7 @@ class ReviewPrelim extends MX_Controller {
 							} else {
 								$result['mail_status'] = 'error';		
 							}
-						}
+						}*/
 					}
 					/* Send email to customer */
 					$result['message'] = "Data stored successfully.";
