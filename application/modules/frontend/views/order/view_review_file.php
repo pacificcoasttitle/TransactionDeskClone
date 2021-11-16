@@ -351,6 +351,7 @@ button:focus {outline:0;}
 				document_name: document_name,
 				fileId: $('#fileId').val()
 			},
+			dataType: "html",
 			success: function (response) {
 				$('#page-preloader').css('display', 'none');
 				if (response) {
@@ -374,6 +375,32 @@ button:focus {outline:0;}
 						element.click();
 						document.body.removeChild(element);
 					}
+				}
+			}
+		});
+	}
+
+	function upload_document(resware_document_id, order_id, document_name) 
+    {
+		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+		$.ajax({
+			url: base_url + "upload-document",
+			type: "post",
+			data: {
+				resware_document_id: resware_document_id,
+                order_id: order_id,
+				document_name: document_name,
+				fileId: $('#fileId').val()
+			},
+			dataType: "html",
+			success: function (response) {
+				$('#page-preloader').css('display', 'none');
+				var results = JSON.parse(response);
+				if (results.status == 'success') {
+					alert(results.msg);
+				} else if(results.status == 'error') {
+					alert(results.msg);
 				}
 			}
 		});

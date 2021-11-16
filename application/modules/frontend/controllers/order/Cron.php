@@ -4027,8 +4027,8 @@ class Cron extends MX_Controller {
         $this->db->from('order_details');
         $this->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
-        $this->db->where('transaction_details.sales_representative != ""');
-        //$this->db->where('transaction_details.sales_representative = 11948');
+        //$this->db->where('transaction_details.sales_representative != ""');
+        $this->db->where('transaction_details.sales_representative = 11948');
         $this->db->where('customer_basic_details.email_address != ""');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
@@ -4085,8 +4085,8 @@ class Cron extends MX_Controller {
                         'message'=>json_encode($data),
                         'cc' => $cc
                     );
-                    //$to = 'ghernandez@pct.com';
-                    //$cc = array();
+                    $to = 'ghernandez@pct.com';
+                    $cc = array('hitesh.p@crestinfosystems.com');   
                     $this->load->helper('sendemail');
                     $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
                     $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
@@ -4120,8 +4120,8 @@ class Cron extends MX_Controller {
                     'message'=>json_encode($data),
                     'cc' => $cc
                 );
-                //$to = 'ghernandez@pct.com';
-                //$cc = array();   
+                $to = 'ghernandez@pct.com';
+                $cc = array('hitesh.p@crestinfosystems.com');   
   
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
