@@ -2707,8 +2707,13 @@ class Cron extends MX_Controller {
                                 );
                                 $order = $this->order->get_order($condition);
                             
-                            
                                 if (!empty($order)) {
+                                    if (in_array($file_number, $file_numbers)) {
+                                        if (!empty($premium)) {
+                                            $premium = (float)$premium +  $order[0]['premium'];
+                                        }
+                                    }
+                                    $file_numbers[] = $file_number;
                                     if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
                                         $this->home_model->update(
                                             array(
@@ -2746,7 +2751,6 @@ class Cron extends MX_Controller {
                                             ), 
                                             'transaction_details'
                                         );
-                                        $file_numbers[] = $file_number;
                                     } else {
                                         $this->home_model->update(
                                             array(
@@ -2759,6 +2763,7 @@ class Cron extends MX_Controller {
                                         );
                                     }
                                 } else {
+                                    $file_numbers[] = $file_number;
                                     $data = json_encode(array('FileNumber' => $file_number));
                                     $userData = array(
                                         'admin_api' => 1
