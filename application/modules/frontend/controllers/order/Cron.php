@@ -2608,7 +2608,9 @@ class Cron extends MX_Controller {
                     $documentName = pathinfo($filePath);
                     $file_numbers = array();
                     $salesRepNameArr = array();
+                    $titleOfficerNameArr = array();
                     $i = 0;
+                    $j = 0;
                     while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
                         $num = count($data);
                         if($row == 1) {
@@ -2625,6 +2627,7 @@ class Cron extends MX_Controller {
                         $salesRepId = 0;
                         $sales_rep_img = '';
                         $escrow_email = '';
+                        $titleOfficerId = 0;
 
                         if(in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number",$headerColumns);
@@ -2659,6 +2662,21 @@ class Cron extends MX_Controller {
                             }
                         }
 
+                        $titleOfficerName = '';
+                        if(in_array('Title Officer', $headerColumns)) {
+                            $titleOfficerkey = array_search("Title Officer",$headerColumns);
+                            $titleOfficerName = $data[$titleOfficerkey];
+                            $titleOfficerName = str_replace(' ', '_', $titleOfficerName);
+                            $titleOfficerName = preg_replace('/[^A-Za-z0-9\_-]/', '',  $titleOfficerName);
+                            $titleOfficerName = str_replace('_', ' ', $titleOfficerName);
+                            $titleOfckey = array_search($titleOfficerName, array_column($titleOfficerNameArr, 'name'));
+                            if (isset($titleOfckey) && !empty($titleOfckey)) {
+                               $titleOfficerId =  $titleOfficerNameArr[$titleOfckey]['id'];
+                            } else {
+                                $titleOfficerNameArr[$j]['name'] =  $titleOfficerName;
+                            }
+                        }
+
                         if(in_array('Sent To External Accounting', $headerColumns)) {
                             $closedDatekey = array_search("Sent To External Accounting",$headerColumns);
                             $closedDate = $data[$closedDatekey];
@@ -2688,6 +2706,28 @@ class Cron extends MX_Controller {
                                         if (!empty(trim($salesRepNameArr[$i]['name']))) {
                                             $salesRepNameArr[$i]['id'] = 0;
                                             $i++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            $resultTitleOfficer = array();
+                            if(!empty($titleOfficerName)) {
+                                if ($titleOfficerId == 0) {
+                                    $this->db->select('*');
+                                    $this->db->from('customer_basic_details');
+                                    $this->db->like("CONCAT_WS(' ', first_name, last_name)", $titleOfficerName);
+                                    $this->db->where('is_title_officer', 1);
+                                    $query = $this->db->get();
+                                    $resultTitleOfficer = $query->row_array(); 
+                                    if (!empty($resultTitleOfficer)) {
+                                        $titleOfficerId =  $resultTitleOfficer['id'];
+                                        $titleOfficerNameArr[$j]['id'] = $titleOfficerId;
+                                        $j++;
+                                    } else {
+                                        if (!empty(trim($titleOfficerNameArr[$i]['name']))) {
+                                            $titleOfficerNameArr[$j]['id'] = 0;
+                                            $j++;
                                         }
                                     }
                                 }
@@ -2755,6 +2795,28 @@ class Cron extends MX_Controller {
                                         $this->home_model->update(
                                             array(
                                                 'sales_representative' => 0,
+                                            ), 
+                                            array(
+                                                'id' => $orderDetails['transaction_id']
+                                            ), 
+                                            'transaction_details'
+                                        );
+                                    }
+
+                                    if (!empty($titleOfficerId)) {
+                                        $this->home_model->update(
+                                            array(
+                                                'title_officer' => $titleOfficerId,
+                                            ), 
+                                            array(
+                                                'id' => $orderDetails['transaction_id']
+                                            ), 
+                                            'transaction_details'
+                                        );
+                                    } else {
+                                        $this->home_model->update(
+                                            array(
+                                                'title_officer' => 0,
                                             ), 
                                             array(
                                                 'id' => $orderDetails['transaction_id']
@@ -2836,6 +2898,7 @@ class Cron extends MX_Controller {
                                                 'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
                                                 'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
                                                 'sales_representative' => $salesRepId,
+                                                'title_officer' => $titleOfficerId,
                                                 'status'=> 1
                                             );
                 
