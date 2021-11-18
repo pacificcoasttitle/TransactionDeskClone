@@ -2628,6 +2628,8 @@ class Cron extends MX_Controller {
                         $sales_rep_img = '';
                         $escrow_email = '';
                         $titleOfficerId = 0;
+                        $titleOfficerColumnFlag = 0;
+                        $salesRepColumnFlag = 0;
 
                         if(in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number",$headerColumns);
@@ -2660,6 +2662,7 @@ class Cron extends MX_Controller {
                             } else {
                                 $salesRepNameArr[$i]['name'] =  $salesRepName;
                             }
+                            $salesRepColumnFlag = 1;
                         }
 
                         $titleOfficerName = '';
@@ -2675,6 +2678,7 @@ class Cron extends MX_Controller {
                             } else {
                                 $titleOfficerNameArr[$j]['name'] =  $titleOfficerName;
                             }
+                            $titleOfficerColumnFlag = 1;
                         }
 
                         if(in_array('Sent To External Accounting', $headerColumns)) {
@@ -2754,29 +2758,30 @@ class Cron extends MX_Controller {
                                         }
                                     }
                                     $file_numbers[] = $file_number;
-                                    if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
+                                    $orderData = array();
+
+                                    if (!empty($prodType)) {
+                                        $orderData['prod_type'] = strtolower($prodType);
+                                    }
+
+                                    if (!empty($premium)) {
+                                        $orderData['premium'] = (float)$premium;
+                                    }
+
+                                    if (!empty($completed_date)) {
+                                        $orderData['sent_to_accounting_date'] = $completed_date;
+                                    }
+
+                                    if (!empty($orderData)) {
                                         $this->home_model->update(
-                                            array(
-                                                'prod_type' => strtolower($prodType)
-                                            ), 
-                                            array(
-                                                'id' => $order[0]['id']
-                                            ), 
-                                            'order_details'
-                                        );
-                                    } else {
-                                        $this->home_model->update(
-                                            array(
-                                                'prod_type' => strtolower($prodType),
-                                                'premium' => (float)$premium,
-                                                'sent_to_accounting_date' => $completed_date
-                                            ), 
+                                            $orderData, 
                                             array(
                                                 'id' => $order[0]['id']
                                             ), 
                                             'order_details'
                                         );
                                     }
+
                                     $orderDetails = $this->order->get_order_details($order[0]['file_id']);
                                     $propertyAddress = $orderDetails['address'];
                                     $productTypeID = $orderDetails['purchase_type'];
@@ -2792,15 +2797,17 @@ class Cron extends MX_Controller {
                                             'transaction_details'
                                         );
                                     } else {
-                                        $this->home_model->update(
-                                            array(
-                                                'sales_representative' => 0,
-                                            ), 
-                                            array(
-                                                'id' => $orderDetails['transaction_id']
-                                            ), 
-                                            'transaction_details'
-                                        );
+                                        if ($salesRepColumnFlag == 1) {
+                                            $this->home_model->update(
+                                                array(
+                                                    'sales_representative' => 0,
+                                                ), 
+                                                array(
+                                                    'id' => $orderDetails['transaction_id']
+                                                ), 
+                                                'transaction_details'
+                                            );
+                                        }
                                     }
 
                                     if (!empty($titleOfficerId)) {
@@ -2814,15 +2821,17 @@ class Cron extends MX_Controller {
                                             'transaction_details'
                                         );
                                     } else {
-                                        $this->home_model->update(
-                                            array(
-                                                'title_officer' => 0,
-                                            ), 
-                                            array(
-                                                'id' => $orderDetails['transaction_id']
-                                            ), 
-                                            'transaction_details'
-                                        );
+                                        if ($titleOfficerColumnFlag == 1) {
+                                            $this->home_model->update(
+                                                array(
+                                                    'title_officer' => 0,
+                                                ), 
+                                                array(
+                                                    'id' => $orderDetails['transaction_id']
+                                                ), 
+                                                'transaction_details'
+                                            );
+                                        }
                                     }
                                 } else {
                                     $file_numbers[] = $file_number;
