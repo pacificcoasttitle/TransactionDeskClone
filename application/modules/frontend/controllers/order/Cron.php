@@ -2608,7 +2608,9 @@ class Cron extends MX_Controller {
                     $documentName = pathinfo($filePath);
                     $file_numbers = array();
                     $salesRepNameArr = array();
+                    $titleOfficerNameArr = array();
                     $i = 0;
+                    $j = 0;
                     while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
                         $num = count($data);
                         if($row == 1) {
@@ -2625,6 +2627,9 @@ class Cron extends MX_Controller {
                         $salesRepId = 0;
                         $sales_rep_img = '';
                         $escrow_email = '';
+                        $titleOfficerId = 0;
+                        $titleOfficerColumnFlag = 0;
+                        $salesRepColumnFlag = 0;
 
                         if(in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number",$headerColumns);
@@ -2657,6 +2662,23 @@ class Cron extends MX_Controller {
                             } else {
                                 $salesRepNameArr[$i]['name'] =  $salesRepName;
                             }
+                            $salesRepColumnFlag = 1;
+                        }
+
+                        $titleOfficerName = '';
+                        if(in_array('Title Officer', $headerColumns)) {
+                            $titleOfficerkey = array_search("Title Officer",$headerColumns);
+                            $titleOfficerName = $data[$titleOfficerkey];
+                            $titleOfficerName = str_replace(' ', '_', $titleOfficerName);
+                            $titleOfficerName = preg_replace('/[^A-Za-z0-9\_-]/', '',  $titleOfficerName);
+                            $titleOfficerName = str_replace('_', ' ', $titleOfficerName);
+                            $titleOfckey = array_search($titleOfficerName, array_column($titleOfficerNameArr, 'name'));
+                            if (isset($titleOfckey) && !empty($titleOfckey)) {
+                               $titleOfficerId =  $titleOfficerNameArr[$titleOfckey]['id'];
+                            } else {
+                                $titleOfficerNameArr[$j]['name'] =  $titleOfficerName;
+                            }
+                            $titleOfficerColumnFlag = 1;
                         }
 
                         if(in_array('Sent To External Accounting', $headerColumns)) {
@@ -2693,6 +2715,28 @@ class Cron extends MX_Controller {
                                 }
                             }
 
+                            $resultTitleOfficer = array();
+                            if(!empty($titleOfficerName)) {
+                                if ($titleOfficerId == 0) {
+                                    $this->db->select('*');
+                                    $this->db->from('customer_basic_details');
+                                    $this->db->like("CONCAT_WS(' ', first_name, last_name)", $titleOfficerName);
+                                    $this->db->where('is_title_officer', 1);
+                                    $query = $this->db->get();
+                                    $resultTitleOfficer = $query->row_array(); 
+                                    if (!empty($resultTitleOfficer)) {
+                                        $titleOfficerId =  $resultTitleOfficer['id'];
+                                        $titleOfficerNameArr[$j]['id'] = $titleOfficerId;
+                                        $j++;
+                                    } else {
+                                        if (!empty(trim($titleOfficerNameArr[$i]['name']))) {
+                                            $titleOfficerNameArr[$j]['id'] = 0;
+                                            $j++;
+                                        }
+                                    }
+                                }
+                            }
+
                             $completed_date = null;
                             if (!empty($closedDate)) {
                                 $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
@@ -2714,29 +2758,30 @@ class Cron extends MX_Controller {
                                         }
                                     }
                                     $file_numbers[] = $file_number;
-                                    if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
+                                    $orderData = array();
+
+                                    if (!empty($prodType)) {
+                                        $orderData['prod_type'] = strtolower($prodType);
+                                    }
+
+                                    if (!empty($premium)) {
+                                        $orderData['premium'] = (float)$premium;
+                                    }
+
+                                    if (!empty($completed_date)) {
+                                        $orderData['sent_to_accounting_date'] = $completed_date;
+                                    }
+
+                                    if (!empty($orderData)) {
                                         $this->home_model->update(
-                                            array(
-                                                'prod_type' => strtolower($prodType)
-                                            ), 
-                                            array(
-                                                'id' => $order[0]['id']
-                                            ), 
-                                            'order_details'
-                                        );
-                                    } else {
-                                        $this->home_model->update(
-                                            array(
-                                                'prod_type' => strtolower($prodType),
-                                                'premium' => (float)$premium,
-                                                'sent_to_accounting_date' => $completed_date
-                                            ), 
+                                            $orderData, 
                                             array(
                                                 'id' => $order[0]['id']
                                             ), 
                                             'order_details'
                                         );
                                     }
+
                                     $orderDetails = $this->order->get_order_details($order[0]['file_id']);
                                     $propertyAddress = $orderDetails['address'];
                                     $productTypeID = $orderDetails['purchase_type'];
@@ -2752,15 +2797,41 @@ class Cron extends MX_Controller {
                                             'transaction_details'
                                         );
                                     } else {
+                                        if ($salesRepColumnFlag == 1) {
+                                            $this->home_model->update(
+                                                array(
+                                                    'sales_representative' => 0,
+                                                ), 
+                                                array(
+                                                    'id' => $orderDetails['transaction_id']
+                                                ), 
+                                                'transaction_details'
+                                            );
+                                        }
+                                    }
+
+                                    if (!empty($titleOfficerId)) {
                                         $this->home_model->update(
                                             array(
-                                                'sales_representative' => 0,
+                                                'title_officer' => $titleOfficerId,
                                             ), 
                                             array(
                                                 'id' => $orderDetails['transaction_id']
                                             ), 
                                             'transaction_details'
                                         );
+                                    } else {
+                                        if ($titleOfficerColumnFlag == 1) {
+                                            $this->home_model->update(
+                                                array(
+                                                    'title_officer' => 0,
+                                                ), 
+                                                array(
+                                                    'id' => $orderDetails['transaction_id']
+                                                ), 
+                                                'transaction_details'
+                                            );
+                                        }
                                     }
                                 } else {
                                     $file_numbers[] = $file_number;
@@ -2836,6 +2907,7 @@ class Cron extends MX_Controller {
                                                 'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
                                                 'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
                                                 'sales_representative' => $salesRepId,
+                                                'title_officer' => $titleOfficerId,
                                                 'status'=> 1
                                             );
                 
@@ -2874,41 +2946,32 @@ class Cron extends MX_Controller {
                                                 }
                                             }
                                             
-                                            if (strpos(strtolower($documentName['basename']), 'mtd') !== false) {
-                                                $orderData = array(
-                                                    'customer_id' => $customerId,
-                                                    'file_id' => $res['FileID'],
-                                                    'file_number' => $res['FileNumber'],
-                                                    'property_id' => $propertyId,
-                                                    'transaction_id' => $transactionId,
-                                                    'created_at' => $created_date,
-                                                    'prod_type' => strtolower($prodType),
-                                                    'status'=> 1,
-                                                    'is_imported'=> 1,
-                                                    'is_sales_rep_order'=> 1,
-                                                    'random_number' => $randomString,
-                                                    'resware_closed_status_date' => $completed_date,
-                                                    'resware_status'=> strtolower($res['Status']['Name'])
-                                                );
-                                            } else {
-                                                $orderData = array(
-                                                    'customer_id' => $customerId,
-                                                    'file_id' => $res['FileID'],
-                                                    'file_number' => $res['FileNumber'],
-                                                    'property_id' => $propertyId,
-                                                    'transaction_id' => $transactionId,
-                                                    'created_at' => $created_date,
-                                                    'prod_type' => strtolower($prodType),
-                                                    'premium' => $premium,
-                                                    'status'=> 1,
-                                                    'is_imported'=> 1,
-                                                    'is_sales_rep_order'=> 1,
-                                                    'random_number' => $randomString,
-                                                    'resware_closed_status_date' => $completed_date,
-                                                    'resware_status'=> strtolower($res['Status']['Name']),
-                                                    'sent_to_accounting_date' => $completed_date
-                                                );
+                                            $orderData = array(
+                                                'customer_id' => $customerId,
+                                                'file_id' => $res['FileID'],
+                                                'file_number' => $res['FileNumber'],
+                                                'property_id' => $propertyId,
+                                                'transaction_id' => $transactionId,
+                                                'created_at' => $created_date,
+                                                'prod_type' => strtolower($prodType),
+                                                'premium' => $premium,
+                                                'status'=> 1,
+                                                'is_imported'=> 1,
+                                                'is_sales_rep_order'=> 1,
+                                                'random_number' => $randomString,
+                                                'resware_closed_status_date' => $completed_date,
+                                                'resware_status'=> strtolower($res['Status']['Name']),
+                                                'sent_to_accounting_date' => $completed_date
+                                            );
+                                            
+                                            if (!empty($premium)) {
+                                                $orderData['premium'] = (float)$premium;
                                             }
+        
+                                            if (!empty($completed_date)) {
+                                                $orderData['sent_to_accounting_date'] = $completed_date;
+                                            }
+
                                             $orderId = $this->home_model->insert($orderData,'order_details');
                                         }
                                     }
