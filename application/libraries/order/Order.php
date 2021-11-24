@@ -444,6 +444,7 @@ class Order
             property_details.cpl_proposed_property_state,
             property_details.cpl_proposed_property_zip,
             property_details.unit_number,
+            property_details.apn,
             transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             transaction_details.title_officer,
@@ -491,7 +492,7 @@ class Order
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->CI->db->where('file_id', $fileId);
          
-        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
+        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0) {
             $this->CI->db->group_start()
                 ->where('order_details.customer_id', $userdata['id'])
                 ->or_where('property_details.escrow_lender_id', $userdata['id'])

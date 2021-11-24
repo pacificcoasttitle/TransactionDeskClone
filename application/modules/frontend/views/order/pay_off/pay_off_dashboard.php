@@ -103,7 +103,20 @@
 							<div class="ui-decor-1a bg-accent"></div>
 							<h4 class="ui-title-block_light">Below is order list of pay off.</b></h3>
 						</div>
-					
+						<?php if(!empty($success)) {?>
+						<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
+							<?php foreach($success as $sucess) {
+									echo $sucess."<br \>";	
+								}?>
+						</div>
+						<?php } 
+						 if(!empty($errors)) {?>
+						<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
+							<?php foreach($errors as $error) {
+									echo $error."<br \>";	
+								}?>
+						</div>
+						<?php } ?>
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">

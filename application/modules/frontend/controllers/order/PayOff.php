@@ -22,6 +22,17 @@ class PayOff extends MX_Controller
 	
 	function index()
 	{
+        $data['errors'] = array();
+		$data['success'] = array();
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+
 		$userdata = $this->session->userdata('user');
 		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
 		$data['name'] = $name;
@@ -63,7 +74,15 @@ class PayOff extends MX_Controller
 				$nestedData[] = $order['file_number'];
                 $nestedData[] = $order['first_name']." ".$order['last_name'];
 				$nestedData[] = ucfirst($order['resware_status']);
-				$nestedData[] = "<a href='javascript:void(0);' onclick='downloadPayOffDocument($file_id);'><button class='btn btn-grad-2a button-color' type='button'>View Package</button></a><a href='javascript:void(0);' onclick='updatePayOffAction($file_id);'><button class='btn btn-grad-2a button-color' type='button'>Disburse funds</button></a>";
+				$nestedData[] = "<a href='javascript:void(0);' onclick='downloadPayOffDocument($file_id);'>
+                                    <button class='btn btn-grad-2a button-color' type='button'>View Package</button>
+                                </a>
+                                <a href='javascript:void(0);' onclick='updatePayOffAction($file_id);'>
+                                    <button class='btn btn-grad-2a button-color' type='button'>Disburse funds</button>
+                                </a>
+                                <a href='".base_url()."create-payoff/$file_id'>
+                                    <button style='margin-top: 5px;' class='btn btn-grad-2a button-color' type='button'>Create Payoff</button>
+                                </a>";
                 $data[] = $nestedData; 
                 $i++; 
 			}
@@ -169,4 +188,197 @@ class PayOff extends MX_Controller
         }
 		echo json_encode($resultPayOffaction);
 	}
+
+    public function createPayoff()
+    {
+        $fileId = $this->uri->segment(2);
+        $this->load->model('order/home_model');
+        $data['orderDetails'] = $this->order->get_order_details($fileId);
+        $data['orderUser'] =  $this->home_model->get_user(array('id' => $data['orderDetails']['customer_id']));
+        $userdata = $this->session->userdata('user');
+		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $this->load->view('order/pay_off/create_payoff', $data);
+    }
+
+    public function generatePayoff()
+    {
+        $success = array();
+        $errors = array();
+        $config['upload_path'] = './uploads/payoff/';
+		$config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';   
+		$config['max_size'] = 18000;
+		$userdata = $this->session->userdata('user');
+		$this->load->library('upload', $config);
+        $fileId = $this->input->post('file_id');
+        $file_number = $this->input->post('file_number');
+        if (!empty($_FILES['payoff_files']['name'])) {
+            foreach ($_FILES['payoff_files']['name'] as $key => $file) {
+                $_FILES['file']['name']= $_FILES['payoff_files']['name'][$key];
+                $_FILES['file']['type']= $_FILES['payoff_files']['type'][$key];
+                $_FILES['file']['tmp_name']= $_FILES['payoff_files']['tmp_name'][$key];
+                $_FILES['file']['error']= $_FILES['payoff_files']['error'][$key];
+                $_FILES['file']['size']= $_FILES['payoff_files']['size'][$key];
+               
+                if (! $this->upload->do_upload('file')) {
+                    $errors[] = $this->upload->display_errors();
+                } else { 
+                    $data = $this->upload->data();
+                    
+                    $contents = file_get_contents($data['full_path']);
+                    $binaryData   = base64_encode($contents); 
+                    $document_name = date('YmdHis')."_".$data['file_name'];
+                    rename(FCPATH."/uploads/payoff/".$data['file_name'], FCPATH."/uploads/payoff/".$document_name);
+                    $this->order->uploadDocumentOnAwsS3($document_name, 'payoff');
+                   
+                    $endPoint = 'files/'.$fileId.'/documents';
+                    $documentApiData = array(			
+                        'DocumentName' => $data['file_name'],
+                        'DocumentType' => array(
+                            'DocumentTypeID' => 1035,
+                        ),
+                        'Description' => 'Create PayOff Document',
+                        'InternalOnly' => false,
+                        'DocumentBody' => $binaryData
+                    );
+                    $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+                    if ($userdata['is_payoff_user'] == 1 || $userdata['is_master'] == 1) {
+                        $user_data['admin_api'] = 1; 
+                    }
+                    
+                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $fileId, 0);
+                    $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+                    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $fileId, $logid);
+                    $res = json_decode($result);
+                    if (!empty($res->Document->DocumentID)) {
+                        $success[] = $data['file_name']." uploaded successfully on Resware side for file number ".$file_number;
+                    } else {
+                        $errors[] = $data['file_name'].": Something went wrong.Please try again.";
+                    }
+                }
+            }
+        }
+        $data = array();
+
+        $data['data']['to'] = $this->input->post('to');
+        $data['data']['recording_date'] = $this->input->post('recording_date');
+        $data['data']['8am'] = $this->input->post('8am');
+        $data['data']['am_special'] = $this->input->post('am_special');
+        $data['data']['need_prefigures_by'] = $this->input->post('need_prefigures_by');
+        $data['data']['customer'] = $this->input->post('customer');
+        $data['data']['reference_number'] = $this->input->post('reference_number');
+        $data['data']['phone'] = $this->input->post('phone');
+        $data['data']['fax'] = $this->input->post('fax');
+        $data['data']['email'] = $this->input->post('email');
+        $data['data']['property_address'] = $this->input->post('property_address');
+        $data['data']['order_type'] = $this->input->post('order_type');
+        $data['data']['apn'] = $this->input->post('apn');
+        $data['data']['country'] = $this->input->post('country');
+        $data['data']['seller'] = $this->input->post('seller');
+        $data['data']['ssn'] = $this->input->post('ssn');
+        $data['data']['buyer'] = $this->input->post('buyer');
+        $data['data']['ssn_buyer'] = $this->input->post('ssn_buyer');
+        $data['data']['fund_expected'] = $this->input->post('fund_expected');
+        $data['data']['funding_from'] = $this->input->post('funding_from');
+        $data['data']['payment_method'] = $this->input->post('payment_method');
+        $data['data']['fund_expected1'] = $this->input->post('fund_expected1');
+        $data['data']['funding_from1'] = $this->input->post('funding_from1');
+        $data['data']['payment_method1'] = $this->input->post('payment_method1');
+        $data['data']['pay'] = $this->input->post('pay');
+        $data['data']['FHA0'] = $this->input->post('FHA0');
+        $data['data']['payment_method2'] = $this->input->post('payment_method2');
+        $data['data']['pay1'] = $this->input->post('pay1');
+        $data['data']['FHA1'] = $this->input->post('FHA1');
+        $data['data']['payment_method3'] = $this->input->post('payment_method3');
+        $data['data']['pay2'] = $this->input->post('pay2');
+        $data['data']['FHA2'] = $this->input->post('FHA2');
+        $data['data']['payment_method4'] = $this->input->post('payment_method4');
+        $data['data']['pay3'] = $this->input->post('pay3');
+        $data['data']['FHA3'] = $this->input->post('FHA3');
+        $data['data']['payment_method5'] = $this->input->post('payment_method5');
+        $data['data']['pay_or_not'] = $this->input->post('pay_or_not');
+        $data['data']['hold_until'] = $this->input->post('hold_until');
+        $data['data']['taxes'] = $this->input->post('taxes');
+        $data['data']['other'] = $this->input->post('other');
+        $data['data']['current_taxes'] = $this->input->post('current_taxes');
+        $data['data']['first'] = $this->input->post('first');
+        $data['data']['first_value'] = $this->input->post('first_value');
+        $data['data']['penalty1'] = $this->input->post('penalty1');
+        $data['data']['penalty1_value'] = $this->input->post('penalty1_value');
+        $data['data']['total1'] = $this->input->post('total1');
+        $data['data']['second'] = $this->input->post('second');
+        $data['data']['second_value'] = $this->input->post('second_value');
+        $data['data']['penalty2'] = $this->input->post('penalty2');
+        $data['data']['penalty2_value'] = $this->input->post('penalty2_value');
+        $data['data']['total2'] = $this->input->post('total2');
+        $data['data']['first1'] = $this->input->post('first1');
+        $data['data']['first1_value'] = $this->input->post('first1_value');
+        $data['data']['penalty3'] = $this->input->post('penalty3');
+        $data['data']['penalty3_value'] = $this->input->post('penalty3_value');
+        $data['data']['total3'] = $this->input->post('total3');
+        $data['data']['second1'] = $this->input->post('second1');
+        $data['data']['second1_value'] = $this->input->post('second1_value');
+        $data['data']['penalty4'] = $this->input->post('penalty4');
+        $data['data']['penalty4_value'] = $this->input->post('penalty4_value');
+        $data['data']['total4'] = $this->input->post('total4');
+        $data['data']['delinquent_taxes'] = $this->input->post('delinquent_taxes');
+        $data['data']['amount'] = $this->input->post('amount');
+        $data['data']['apn_2'] = $this->input->post('apn_2');
+        $data['data']['payment_method6'] = $this->input->post('payment_method6');
+
+        $this->load->library('m_pdf');
+        $html = $this->load->view('order/pay_off/create_payoff', $data,true);
+        // $stylesheet = file_get_contents('assets/frontend/css/payoff/style.css');
+       
+        // $customCss = '';
+        // $combinedCss = $stylesheet . $customCss;
+        // $this->m_pdf->pdf->WriteHTML($combinedCss, 1); 
+        $this->m_pdf->pdf->WriteHTML($html,2);
+        $this->load->model('order/document');
+
+        if (!is_dir('uploads/payoff')) {
+			mkdir('./uploads/payoff', 0777, TRUE);
+		}
+        chmod(FCPATH.'uploads/payoff', 0777);
+        $document_name = date('YmdHis')."_"."payoff_".$fileId.".pdf";
+        $pdfFilePath = './uploads/payoff/'.$document_name;
+        $this->m_pdf->pdf->Output($pdfFilePath,'F'); 
+        $contents = file_get_contents($pdfFilePath);
+        $binaryData   = base64_encode($contents); 
+        $this->order->uploadDocumentOnAwsS3($document_name, 'payoff');
+
+        $endPoint = 'files/'.$fileId.'/documents';
+        $documentApiData = array(			
+            'DocumentName' => $document_name,
+            'DocumentType' => array(
+                'DocumentTypeID' => 1035,
+            ),
+            'Description' => 'Create PayOff Document',
+            'InternalOnly' => false,
+            'DocumentBody' => $binaryData
+        );
+        $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+        if ($userdata['is_payoff_user'] == 1 || $userdata['is_master'] == 1) {
+            $user_data['admin_api'] = 1; 
+        }
+        
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $fileId, 0);
+        $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $fileId, $logid);
+        $res = json_decode($result);
+        if (!empty($res->Document->DocumentID)) {
+            $success[] = $document_name." uploaded successfully on Resware side for file number ".$file_number;
+        } else {
+            $errors[] = $document_name.": Something went wrong.Please try again.";
+        }
+
+        $data['errors'] = $errors;
+		$data['success'] = $success;
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'pay-off-dashboard');
+    }
 }
