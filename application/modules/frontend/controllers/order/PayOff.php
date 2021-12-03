@@ -74,6 +74,8 @@ class PayOff extends MX_Controller
 				$nestedData[] = $order['file_number'];
                 $nestedData[] = $order['first_name']." ".$order['last_name'];
 				$nestedData[] = ucfirst($order['resware_status']);
+                $class = $order['is_payoff_generated'] == 1 ? 'button-color-green' : 'button-color';
+                $text = $order['is_payoff_generated'] == 1 ? 'Recreate Payoff' : 'Create Payoff';
 				$nestedData[] = "<a href='javascript:void(0);' onclick='downloadPayOffDocument($file_id);'>
                                     <button class='btn btn-grad-2a button-color' type='button'>View Package</button>
                                 </a>
@@ -81,7 +83,7 @@ class PayOff extends MX_Controller
                                     <button class='btn btn-grad-2a button-color' type='button'>Disburse funds</button>
                                 </a>
                                 <a href='".base_url()."create-payoff/$file_id'>
-                                    <button style='margin-top: 5px;' class='btn btn-grad-2a button-color' type='button'>Create Payoff</button>
+                                    <button style='margin-top: 5px;' class='btn btn-grad-2a $class' type='button'>$text</button>
                                 </a>";
                 $data[] = $nestedData; 
                 $i++; 
@@ -195,6 +197,7 @@ class PayOff extends MX_Controller
         $this->load->model('order/home_model');
         $data['orderDetails'] = $this->order->get_order_details($fileId);
         $data['orderUser'] =  $this->home_model->get_user(array('id' => $data['orderDetails']['customer_id']));
+        $data['titleOfficer'] =  $this->home_model->get_user(array('id' => $data['orderDetails']['title_officer']));
         $userdata = $this->session->userdata('user');
 		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
@@ -212,6 +215,11 @@ class PayOff extends MX_Controller
 		$this->load->library('upload', $config);
         $fileId = $this->input->post('file_id');
         $file_number = $this->input->post('file_number');
+
+        if ($userdata['is_payoff_user'] == 1 || $userdata['is_master'] == 1) {
+            $user_data['admin_api'] = 1; 
+        }
+
         if (!empty($_FILES['payoff_files']['name'])) {
             foreach ($_FILES['payoff_files']['name'] as $key => $file) {
                 $_FILES['file']['name']= $_FILES['payoff_files']['name'][$key];
@@ -242,9 +250,7 @@ class PayOff extends MX_Controller
                         'DocumentBody' => $binaryData
                     );
                     $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
-                    if ($userdata['is_payoff_user'] == 1 || $userdata['is_master'] == 1) {
-                        $user_data['admin_api'] = 1; 
-                    }
+                    
                     
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $fileId, 0);
                     $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
@@ -349,7 +355,7 @@ class PayOff extends MX_Controller
 
         $endPoint = 'files/'.$fileId.'/documents';
         $documentApiData = array(			
-            'DocumentName' => $document_name,
+            'DocumentName' => 'Payoff Package',
             'DocumentType' => array(
                 'DocumentTypeID' => 1035,
             ),
@@ -370,6 +376,64 @@ class PayOff extends MX_Controller
             $success[] = $document_name." uploaded successfully on Resware side for file number ".$file_number;
         } else {
             $errors[] = $document_name.": Something went wrong.Please try again.";
+        }
+
+        $this->home_model->update(array('is_payoff_generated' => 1), array('file_id' => $fileId), 'order_details');
+
+        $endPoint = 'files/'. $fileId.'/actions';
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+        $res = $this->resware->make_request('GET', $endPoint, array(), $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API').$endPoint, array(), $res, 0, $logid);
+        $result = json_decode($res,TRUE);
+        if (isset($result['Actions']) && !empty($result['Actions'])) {
+            $array_keymap = $this->order->array_recursive_search_key_map(151, $result['Actions']);
+            if(!empty($array_keymap)) {
+                $actionData = array(
+                    'StartTask' => array(
+                        'CoordinatorTypeID'=> 19,
+                        'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
+                    )
+                );
+                $endPoint = 'files/'. $fileId.'/actions/'.$result['Actions'][$array_keymap[0]]['FileActionID'];
+                $user_data['admin_api'] = 1; 
+                $actionData = json_encode($actionData);
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, array(), $fileId, 0);
+                $res = $this->resware->make_request('PUT', $endPoint,  $actionData, $user_data);
+                $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API').$endPoint,  $actionData, $res, $fileId, $logid);
+                $result = json_decode($res,TRUE);
+
+				if (!empty($result['FileActionID'])) {
+                    $success[] = array('status'=>'success', 'msg'=> 'Payoff action updated successfully.');
+				} else {
+					$errors[] = array('status'=>'error', 'msg' => 'Something went wrong during start action 151.');
+				}
+            } else {
+                $actionData = array(
+                    'ActionType' => array(
+                        'ActionTypeID' => 151
+                    ),
+                    'Group' => array(
+                        'ActionGroupID' => 6
+                    ),    
+                    'StartTask' => array(
+                        'CoordinatorTypeID'=> 19,
+                        'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
+                    )
+                );
+                $endPoint = 'files/'. $fileId.'/actions/';
+                $user_data['admin_api'] = 1; 
+                $actionData = json_encode($actionData);
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, array(), $fileId, 0);
+                $res = $this->resware->make_request('POST', $endPoint, $actionData, $user_data);
+                $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, $res, $fileId, $logid);
+                $result = json_decode($res,TRUE);
+
+				if (!empty($result['FileActionID'])) {
+					$success[] = array('status'=>'success', 'msg'=> 'Payoff action 151 started successfully.');
+				} else {
+					$errors[] = array('status'=>'error', 'msg'=> 'Something went wrong during start action 151.');
+				}
+            }
         }
 
         $data['errors'] = $errors;
