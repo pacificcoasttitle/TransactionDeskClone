@@ -60,6 +60,10 @@
 							<label for="reference_number" class="w130">Reference Number: </label>
 							<input type="text" id="reference_number" name="reference_number" value="<?php echo !empty($data['reference_number']) && isset($data['reference_number']) ? $data['reference_number']: '';?>" class="form-control full_width130">
 						</div>
+						<div class="mt-10 d-flex">
+							<label for="company" class="w130">Company: </label>
+							<input type="text" id="company" name="company" value="<?php echo !empty($orderUser['company_name']) && isset($orderUser['company_name']) ? $orderUser['company_name']: '';?>" class="form-control full_width130">
+						</div>
 					</div>
 					<div class="width49">
 						<div class="d-flex">
@@ -126,6 +130,15 @@
 							<label class="w50"><strong>SSN: </strong></label>
 							<input type="text" id="ssn_buyer" name="ssn_buyer" value="<?php echo !empty($data['ssn_buyer']) && isset($data['ssn_buyer']) ? $data['ssn_buyer']: '';?>" class="form-control full_width50">
 						</div>
+					</div>
+					<div class="d-flex justify-space-between">
+						<div class="width49">
+							<div class="mt-10 d-flex">
+								<label for="title_officer" class="w130">Title Officer: </label>
+								<input type="text" id="title_officer" name="title_officer" value="<?php echo $titleOfficer['first_name']." ".$titleOfficer['last_name'];?>" class="form-control full_width50">
+							</div>
+						</div>
+						
 					</div>
 				</div>
 				<hr>
@@ -297,11 +310,11 @@
 						<div class="width49 d-flex">
 							<div class="mr-10">PROPERTY TAXES</div>
 							<div class="radio mr-10">
-								<input type="radio" name="pay_or_not" value="pay" <?php echo !empty($data['pay_or_not']) && $data['pay_or_not'] == 'pay' ? 'checked' : '';?> class="form-control">
+								<input type="radio" name="pay_or_not" id="pay" value="pay" <?php echo !empty($data['pay_or_not']) && $data['pay_or_not'] == 'pay' ? 'checked' : '';?> class="form-control">
 								<label for="pay">Pay</label>
 							</div>
 							<div class="radio">
-								<input type="radio" name="pay_or_not" value="dont_pay" <?php echo !empty($data['pay_or_not']) && $data['pay_or_not'] == 'dont_pay' ? 'checked' : '';?> class="form-control">
+								<input type="radio" name="pay_or_not" id="dont_pay" value="dont_pay" <?php echo !empty($data['pay_or_not']) && $data['pay_or_not'] == 'dont_pay' ? 'checked' : '';?> class="form-control">
 								<label for="dont_pay">Do Not Pay</label>
 							</div>
 						</div>
