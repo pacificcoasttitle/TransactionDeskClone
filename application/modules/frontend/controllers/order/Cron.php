@@ -4548,7 +4548,6 @@ class Cron extends MX_Controller {
         $this->db->where('created_at BETWEEN DATE_SUB(NOW(), INTERVAL 45 DAY) AND NOW()');
         $this->db->where('((order_details.resware_status != "closed" AND order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)'); 
         $query = $this->db->get();
-        echo $this->db->last_query();exit;
         $orderDetails = $query->result_array();
         $userdata = array();
 
