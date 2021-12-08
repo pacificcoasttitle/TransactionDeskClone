@@ -415,6 +415,13 @@ class Home extends MX_Controller {
 						if($orderNumber)
 						{
 							$partners = array();
+							$partners[] = array(
+								'PartnerTypeID' => 10049,
+								'PartnerID' => 400023,
+								'PartnerType' => array(
+									'PartnerTypeID' => 10049
+								)
+							);
 							$endPoint = 'files/'. $file_id .'/partners';
 							$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $file_id, 0);
 							$user_data['admin_api'] = 1; 
