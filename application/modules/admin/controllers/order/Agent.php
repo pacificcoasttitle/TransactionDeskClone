@@ -110,6 +110,9 @@ class Agent extends MX_Controller {
                                         $rowNumber .= $rowCount.",";
                                     }
                                 }
+                                $maxEmployeeid =  $this->agent_model->findMaxEmployeeId($email_address);
+                                $statusCondition = array('email_address' => $email_address, 'partner_employee_id != ' => $maxEmployeeid);
+                                $update = $this->agent_model->update( array('status' => 0), $statusCondition);
                             }
                             
                         }

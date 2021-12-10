@@ -157,4 +157,15 @@ class Agent_model extends CI_Model
         }
         return false;
     }
+
+    public function findMaxEmployeeId($email) 
+    {
+        $table = $this->table;
+        $this->db->select('max(partner_employee_id) as max_employee_id');
+        $this->db->from($table);
+        $this->db->where('email_address', $email);
+        $query = $this->db->get();
+        $result = $query->row_array();
+        return $result['max_employee_id'];
+    }
 }
