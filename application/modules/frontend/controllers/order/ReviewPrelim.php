@@ -781,7 +781,16 @@ class ReviewPrelim extends MX_Controller {
 														continue;
 													}
 												}
+												$dir = "./vendor/gufy/pdftohtml-php/output/";
+												if(file_exists($dir)){
+													$di = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
+													$ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
+													foreach ( $ri as $file ) {
+														$file->isDir() ?  rmdir($file) : unlink($file);
+													}
+												}
 											}
+											
 											$this->order->uploadDocumentOnAwsS3($prelimDocumentName, 'documents');
 										}	
 									} else {
@@ -951,6 +960,15 @@ class ReviewPrelim extends MX_Controller {
 															continue;
 														}
 													}
+													$dir = "./vendor/gufy/pdftohtml-php/output/";
+													if(file_exists($dir)){
+														$di = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
+														$ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
+														foreach ( $ri as $file ) {
+															$file->isDir() ?  rmdir($file) : unlink($file);
+														}
+													}
+													//array_map('unlink', array_filter((array) glob("./vendor/gufy/pdftohtml-php/output/*") ) );
 												}
 												
 											}

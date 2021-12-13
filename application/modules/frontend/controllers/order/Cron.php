@@ -4540,4 +4540,36 @@ class Cron extends MX_Controller {
         }
         echo "All data imported successfully";exit;
     }
+
+    public function addPartnerForOrders()
+    {
+        $this->db->select('*');
+        $this->db->from('order_details');   
+        $this->db->where('created_at BETWEEN DATE_SUB(NOW(), INTERVAL 45 DAY) AND NOW()');
+        $this->db->where('((order_details.resware_status != "closed" AND order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)'); 
+        $query = $this->db->get();
+        $orderDetails = $query->result_array();
+        $userdata = array();
+
+        if (!empty($orderDetails)) {
+            foreach($orderDetails as $orderDetail) {
+                $partners = array(
+                    'PartnerTypeID' => 10049,
+                    'PartnerID' => 400023,
+                    'PartnerType' => array(
+                        'PartnerTypeID' => 10049
+                    )
+                );
+                $userdata['email'] = 'admin@pct24.com';
+                $partnerData = json_encode(array('Partners' => $partners));
+                $endPoint = 'files/'.$orderDetail['file_id'].'/partners';
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
+                $resultPartner = $this->make_request('POST', $endPoint, $partnerData, $userdata);
+                $this->apiLogs->syncLogs(0, 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid); 
+            }
+            echo "Updated partner for last 45 days orders";exit;
+        } else {
+            echo "No orders found to update partner";exit;
+        }
+    }
 }
