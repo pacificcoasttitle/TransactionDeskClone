@@ -124,7 +124,7 @@ class SalesRep extends MX_Controller
 
                 $nestedData = array();
                 $nestedData[] = $order['file_number'];
-               // $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
+                $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
                 $nestedData[] = $order['full_address'];
                 $nestedData[] = ucfirst($order['resware_status']);
                

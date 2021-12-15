@@ -119,6 +119,7 @@ class TitleOfficers extends MX_Controller {
             foreach ($order_lists['data'] as $order)  {
                 $nestedData = array();
                 $nestedData[] = $order['file_number'];
+				$nestedData[] = date("m/d/Y", strtotime($order['created_at']));
                 $nestedData[] = $order['full_address'];
                 $nestedData[] = ucfirst($order['resware_status']);
                 if ($order['prelim_summary_id'] != 0) {

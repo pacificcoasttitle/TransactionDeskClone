@@ -109,6 +109,11 @@
 			margin-bottom: 20px;
 		}
 
+		th {
+			text-align: center;
+		}
+
+
     </style>
 	<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 		<div class="container">
@@ -188,7 +193,7 @@
 										<thead>
 											<tr>
 												<th>#</th>
-												<!-- <th>Opened</th> -->
+												<th>Opened</th>
 												<th>Property Address</th>
 												<!-- <th>Buyer/Seller</th> -->
 												<th>Status</th>
