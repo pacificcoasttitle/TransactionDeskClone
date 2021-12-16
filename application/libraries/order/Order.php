@@ -289,6 +289,7 @@ class Order
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 if ($userdata['is_sales_rep_manager'] == 1) {
                     $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                    $this->CI->db->join('customer_basic_details as sales_users','sales_users.id = transaction_details.sales_representative', 'inner');
                     if ($salesUser != 'all') {
                         $this->CI->db->where('transaction_details.sales_representative', $salesUser);
                     } 
@@ -365,6 +366,7 @@ class Order
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 if ($userdata['is_sales_rep_manager'] == 1) {
                     $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                    $this->CI->db->join('customer_basic_details as sales_users','sales_users.id = transaction_details.sales_representative', 'inner');
                     if ($salesUser != 'all') {
                         $this->CI->db->where('transaction_details.sales_representative', $salesUser);
                     } 

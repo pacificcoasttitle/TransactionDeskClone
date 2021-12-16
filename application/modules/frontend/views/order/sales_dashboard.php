@@ -128,16 +128,18 @@
 						<div class="typography-section__inner">
 							<h2 class="ui-title-block ui-title-block_light">Welcome Back <?php echo $name; ?>,</h2>
 							<div class="ui-decor-1a bg-accent"></div>
-							<div id="sales_user_listing">
-								<label>
-									<select style="width:auto;" name="sales_user_filter" id="sales_user_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
-										<option value="all"> All Sales Rep Users </option>
-										<?php foreach($salesUsers as $salesUser) { ?>
-											<option value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
-										<?php }?>
-									</select>
-								</label>
-							</div>
+							<?php if(!empty($salesUsers)) { ?>
+								<div id="sales_user_listing">
+									<label>
+										<select style="width:auto;" name="sales_user_filter" id="sales_user_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
+											<option value="all"> All Sales Rep Users </option>
+											<?php foreach($salesUsers as $salesUser) { ?>
+												<option value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
+											<?php }?>
+										</select>
+									</label>
+								</div>
+							<?php } ?>
 							<h4 class="ui-title-block_light">Below is your production figures for the current month of <b><?php echo date('F');?></b></h3>
 						</div>
 						
@@ -209,6 +211,9 @@
 										<thead>
 											<tr>
 												<th>#</th>
+												<?php if(!empty($salesUsers)) { ?>
+													<th>Sales Rep</th>
+												<?php } ?>
 												<th>Opened</th>
 												<th>Property Address</th>
 												<!-- <th>Buyer/Seller</th> -->

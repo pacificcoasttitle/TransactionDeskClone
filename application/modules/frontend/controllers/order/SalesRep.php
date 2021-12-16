@@ -134,7 +134,7 @@ class SalesRep extends MX_Controller
                 $nestedData = array();
                 $nestedData[] = $order['file_number'];
 				if ($userdata['is_sales_rep_manager'] == 1) {
-					$nestedData[] = $order['full_address'];
+					$nestedData[] = $order['sales_first_name']." ".$order['sales_last_name'];
 				}
                 $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
                 $nestedData[] = $order['full_address'];
