@@ -29,6 +29,12 @@ class SalesRep extends MX_Controller
 		$userdata = $this->session->userdata('user');
 		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
 		$data['name'] = $name;
+		$data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+		if ($userdata['is_sales_rep_manager'] == 1) {
+			$data['salesUsers'] = $this->order->get_sales_users();
+		} else {
+			$data['salesUsers'] = array();
+		}
 		$data['user_email'] = $userdata['email'];
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
@@ -98,8 +104,11 @@ class SalesRep extends MX_Controller
 	function get_sales_orders()
     {
         $params = array();  $data = array();
+		$userdata = $this->session->userdata('user');
         $status = $this->input->post('status');
 		$month = $this->input->post('month') ? $this->input->post('month') :  '';
+		$salesUser = $this->input->post('sales_user') ? $this->input->post('sales_user') :  '';
+		$params['salesUser'] = $salesUser;
         $params['status'] = isset($status) && !empty($status) ? $status : 'open';
 		$params['month'] = isset($month) && !empty($month) ? $month : date('m');
 		
@@ -124,6 +133,9 @@ class SalesRep extends MX_Controller
 
                 $nestedData = array();
                 $nestedData[] = $order['file_number'];
+				if ($userdata['is_sales_rep_manager'] == 1) {
+					$nestedData[] = $order['full_address'];
+				}
                 $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
                 $nestedData[] = $order['full_address'];
                 $nestedData[] = ucfirst($order['resware_status']);

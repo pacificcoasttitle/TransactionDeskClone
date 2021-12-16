@@ -44,6 +44,7 @@ class Order
         $userdata = $this->CI->session->userdata('user');
         $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
         $month = isset($params['month']) && !empty($params['month']) ? $params['month'] : '';
+        $salesUser = isset($params['salesUser']) && !empty($params['salesUser']) ? $params['salesUser'] : '';
         $is_pay_off = isset($params['is_pay_off']) && !empty($params['is_pay_off']) ? $params['is_pay_off'] : '';
         $yearFlag = isset($params['yearFlag']) && !empty($params['yearFlag']) ? $params['yearFlag'] : '';
         $dashboard_order_by = isset($params['dashboard_order_by']) && !empty($params['dashboard_order_by']) ? $params['dashboard_order_by'] : '';
@@ -88,6 +89,10 @@ class Order
                 $select .= ', customer_basic_details.first_name, customer_basic_details.last_name';
             }
 
+            if ($userdata['is_sales_rep_manager'] == 1) {
+                $select .= ', sales_users.first_name as sales_first_name, sales_users.last_name as sales_last_name';
+            }
+
             $this->CI->db->select($select)
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
@@ -108,8 +113,16 @@ class Order
                     ->group_end();
             }
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
-                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
-                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+                if ($userdata['is_sales_rep_manager'] == 1) {
+                    $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                    $this->CI->db->join('customer_basic_details as sales_users','sales_users.id = transaction_details.sales_representative', 'inner');
+                    if ($salesUser != 'all') {
+                        $this->CI->db->where('transaction_details.sales_representative', $salesUser);
+                    } 
+                } else {
+                    $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                    $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+                } 
             }
 
             if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
@@ -181,8 +194,16 @@ class Order
                     ->group_end();
             }
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
-                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
-                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+                if ($userdata['is_sales_rep_manager'] == 1) {
+                    $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                    $this->CI->db->join('customer_basic_details as sales_users','sales_users.id = transaction_details.sales_representative', 'inner');
+                    if ($salesUser != 'all') {
+                        $this->CI->db->where('transaction_details.sales_representative', $salesUser);
+                    } 
+                } else {
+                    $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                    $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+                } 
             }
             if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
@@ -242,6 +263,10 @@ class Order
                 $select .= ', customer_basic_details.first_name, customer_basic_details.last_name';
             }
 
+            if ($userdata['is_sales_rep_manager'] == 1) {
+                $select .= ', sales_users.first_name as sales_first_name, sales_users.last_name as sales_last_name';
+            }
+
             $this->CI->db->select($select)
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
@@ -262,8 +287,15 @@ class Order
                     ->group_end();
             }
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
-                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
-                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+                if ($userdata['is_sales_rep_manager'] == 1) {
+                    $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                    if ($salesUser != 'all') {
+                        $this->CI->db->where('transaction_details.sales_representative', $salesUser);
+                    } 
+                } else {
+                    $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                    $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+                } 
             }
             if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
@@ -331,8 +363,15 @@ class Order
                     ->group_end();
             }
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
-                $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
-                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+                if ($userdata['is_sales_rep_manager'] == 1) {
+                    $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                    if ($salesUser != 'all') {
+                        $this->CI->db->where('transaction_details.sales_representative', $salesUser);
+                    } 
+                } else {
+                    $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                    $this->CI->db->where('transaction_details.sales_representative', $userdata['id']);
+                } 
             }
             if ($userdata['is_master'] == 0 && $userdata['is_title_officer'] == 1) {
                 $this->CI->db->join('transaction_details','order_details.transaction_id = transaction_details.id');
@@ -1709,5 +1748,16 @@ class Order
 		$this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $order_id, $logid);
 		$res = json_decode($result);
 		$this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+    }
+
+    public function get_sales_users() 
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('customer_basic_details');
+        $this->CI->db->where('is_sales_rep', 1);
+        $this->CI->db->where('is_sales_rep_manager', 0);
+        $query = $this->CI->db->get();
+        $result = $query->result_array();
+        return $result;
     }
 }

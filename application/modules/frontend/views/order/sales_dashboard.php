@@ -114,6 +114,11 @@
 		}
 
 
+		#sales_user_listing {
+			margin-bottom: 20px;
+			float:right;
+		}
+
     </style>
 	<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 		<div class="container">
@@ -123,8 +128,19 @@
 						<div class="typography-section__inner">
 							<h2 class="ui-title-block ui-title-block_light">Welcome Back <?php echo $name; ?>,</h2>
 							<div class="ui-decor-1a bg-accent"></div>
+							<div id="sales_user_listing">
+								<label>
+									<select style="width:auto;" name="sales_user_filter" id="sales_user_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
+										<option value="all"> All Sales Rep Users </option>
+										<?php foreach($salesUsers as $salesUser) { ?>
+											<option value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
+										<?php }?>
+									</select>
+								</label>
+							</div>
 							<h4 class="ui-title-block_light">Below is your production figures for the current month of <b><?php echo date('F');?></b></h3>
 						</div>
+						
 						<div class="order-count-cotainer">
 							<div class="col-md-3 title">Title Openings MTD</div>
 							<div class="col-md-3 title">Title Closings MTD</div>
@@ -297,6 +313,7 @@
 					data   : function( d ) {
 	                  d.status = $('#orders_filter').val();
 					  d.month = $('#month_filter').val();
+					  d.sales_user = $('#sales_user_filter').val();
 	                },
 					dataFilter: function(data){
 
@@ -355,6 +372,10 @@
 		}
 
 		$("#orders_filter").on("change", function(){
+	        order_list.ajax.reload();
+	    });
+
+		$("#sales_user_filter").on("change", function(){
 	        order_list.ajax.reload();
 	    });
 
