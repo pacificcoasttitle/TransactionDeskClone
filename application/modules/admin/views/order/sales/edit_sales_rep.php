@@ -105,6 +105,13 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="language" class="col-sm-4 col-form-label">Sales Manager</label>
+                    <div class="col-sm-1">
+                        <input <?php echo $sales_rep_info['is_sales_rep_manager'] == 1 ? "checked" : "";?>  type="checkbox" class="form-control" name="is_sales_rep_manager" id="is_sales_rep_manager" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label for="sales_rep_profile_img" class="col-sm-4 col-form-label">Profile Img For Borrower Email</label>
                     <div class="col-sm-6">
                         <input type="file" class="form-control" name="sales_rep_profile_img" id="sales_rep_profile_img" accept=".png,.jpg" class="form-control">

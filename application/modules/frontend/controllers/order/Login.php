@@ -59,6 +59,7 @@ class Login extends MX_Controller {
                         "is_admin" => 0,
                         "is_master" =>  $user['is_master'],
                         "is_sales_rep" =>  $user['is_sales_rep'],
+                        "is_sales_rep_manager" =>  $user['is_sales_rep_manager'],
                         "is_title_officer" =>  $user['is_title_officer'],
                         "is_payoff_user" =>  $user['is_payoff_user'],
                         "partner_companies" =>  $user['partner_companies'],

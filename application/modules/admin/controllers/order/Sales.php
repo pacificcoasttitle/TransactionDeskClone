@@ -19,6 +19,7 @@ class Sales extends MX_Controller {
     public function index()
     {
         $data = array();
+        
         $data['title'] = 'PCT Order: Sales Rep.';
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/sales', $data);
@@ -155,6 +156,7 @@ class Sales extends MX_Controller {
                         'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
                         'status' => 1,
                         'is_sales_rep' => 1,
+                        'is_sales_rep_manager' => isset($_POST['is_sales_rep_manager']) ? 1 : 0,
                         'sales_rep_profile_img' => $fileuri,
                         'sales_rep_profile_thank_you_img' => $fileUrlThankYou,
                         'sales_rep_no_of_open_orders' => $_POST['sales_rep_no_of_open_orders'],
@@ -203,6 +205,7 @@ class Sales extends MX_Controller {
             $con = array('id' => $id);
             $sales_rep_info = $this->sales_model->getSalesRep($con);
             if (isset($_POST) && !empty($_POST)) {
+               
                 $this->form_validation->set_rules('sales_rep_first_name', 'Sales Rep. First Name', 'required', array('required'=> 'Please Enter Sales Rep. First Name'));
                 $this->form_validation->set_rules('sales_rep_last_name', 'Sales Rep. Last Name', 'required', array('required'=> 'Please Enter Sales Rep. Last Name'));
                 $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
@@ -277,6 +280,7 @@ class Sales extends MX_Controller {
 
                     if($status == "success" && $statusThank == "success")
                     {
+                       
                         $salesRepData = array(
                             'first_name' => $_POST['sales_rep_first_name'],
                             'last_name' => $_POST['sales_rep_last_name'],
@@ -287,6 +291,7 @@ class Sales extends MX_Controller {
                             'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
                             'status' => 1,
                             'is_sales_rep' => 1,
+                            'is_sales_rep_manager' => isset($_POST['is_sales_rep_manager']) ? 1 : 0,
                             'sales_rep_profile_img' => $fileuri,
                             'sales_rep_profile_thank_you_img' => $fileUrlThankYou,
                             'sales_rep_no_of_open_orders' => $_POST['sales_rep_no_of_open_orders'],
