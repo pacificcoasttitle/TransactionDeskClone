@@ -1395,7 +1395,7 @@ class Order
         }
     }
 
-    public function getOpenOrdersCountForRefiProducts($month, $is_sales_rep = 1)
+    public function getOpenOrdersCountForRefiProducts($month, $userId)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders')
@@ -1405,18 +1405,22 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
-        if ($is_sales_rep == 1) {
-            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
-        } else {
-            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
-        }
+        if ($userdata['is_sales_rep'] == 1) {
+            if ($userdata['is_sales_rep_manager'] == 1) {
+                if ($userdata['id'] != $userId) {
+                    $this->CI->db->where('transaction_details.sales_representative', $userId); 
+                }
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+            }
+        } 
         
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
     }
 
-    public function getOpenOrdersCountForSaleProducts($month, $is_sales_rep = 1)
+    public function getOpenOrdersCountForSaleProducts($month, $userId)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders')
@@ -1426,17 +1430,21 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
-        if ($is_sales_rep == 1) {
-            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
-        } else {
-            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
-        }
+        if ($userdata['is_sales_rep'] == 1) {
+            if ($userdata['is_sales_rep_manager'] == 1) {
+                if ($userdata['id'] != $userId) {
+                    $this->CI->db->where('transaction_details.sales_representative', $userId); 
+                }
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+            }
+        } 
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
     }
 
-    public function getClosedOrdersCountForRefiProducts($month, $is_sales_rep = 1)
+    public function getClosedOrdersCountForRefiProducts($month, $userId)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders')
@@ -1446,17 +1454,21 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
-        if ($is_sales_rep == 1) {
-            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
-        } else {
-            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
-        }
+        if ($userdata['is_sales_rep'] == 1) {
+            if ($userdata['is_sales_rep_manager'] == 1) {
+                if ($userdata['id'] != $userId) {
+                    $this->CI->db->where('transaction_details.sales_representative', $userId); 
+                }
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+            }
+        } 
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
     }
 
-    public function getClosedOrdersCountForSaleProducts($month, $is_sales_rep = 1)
+    public function getClosedOrdersCountForSaleProducts($month, $userId)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders')
@@ -1466,11 +1478,15 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
-        if ($is_sales_rep == 1) {
-            $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
-        } else {
-            $this->CI->db->where('transaction_details.title_officer', $userdata['id']); 
-        }
+        if ($userdata['is_sales_rep'] == 1) {
+            if ($userdata['is_sales_rep_manager'] == 1) {
+                if ($userdata['id'] != $userId) {
+                    $this->CI->db->where('transaction_details.sales_representative', $userId); 
+                }
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
+            }
+        } 
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
