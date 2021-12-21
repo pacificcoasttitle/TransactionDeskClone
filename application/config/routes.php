@@ -84,7 +84,7 @@ $route['glendale'] = 'frontend/contact/glendale';
 /* Route for PCT-Order Frontside*/
 $route['order'] = 'frontend/order/home/index';
 $route['dashboard'] = 'frontend/order/dashboard/index';
-$route['sales-dashboard'] = 'frontend/order/salesRep/index';
+$route['sales-dashboard/:any'] = 'frontend/order/salesRep/index';
 $route['title-officer-dashboard'] = 'frontend/order/titleOfficers/index';
 $route['pay-off-dashboard'] = 'frontend/order/payOff/index';
 $route['home/getSearchResults'] = 'frontend/order/common/getSearchResults';

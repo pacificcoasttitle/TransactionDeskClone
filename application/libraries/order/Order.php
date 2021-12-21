@@ -551,7 +551,7 @@ class Order
             if ($userdata['is_title_officer'] ==  1) {
                 redirect(base_url().'title-officer-dashboard');
             } else if ($userdata['is_sales_rep'] ==  1) {
-                redirect(base_url().'sales-dashboard');
+                redirect(base_url().'sales-dashboard/'.$userdata['id']);
             } else if ($userdata['is_special_lender'] ==  1) {
                 redirect(base_url().'special-lender-dashboard');
             }
@@ -1405,16 +1405,10 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
-        if ($userdata['is_sales_rep'] == 1) {
-            if ($userdata['is_sales_rep_manager'] == 1) {
-                if ($userdata['id'] != $userId) {
-                    $this->CI->db->where('transaction_details.sales_representative', $userId); 
-                }
-            } else {
-                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
-            }
-        } 
-        
+
+        if ($userId != 'all') {
+            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        }
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
@@ -1430,15 +1424,10 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
-        if ($userdata['is_sales_rep'] == 1) {
-            if ($userdata['is_sales_rep_manager'] == 1) {
-                if ($userdata['id'] != $userId) {
-                    $this->CI->db->where('transaction_details.sales_representative', $userId); 
-                }
-            } else {
-                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
-            }
-        } 
+
+        if ($userId != 'all') {
+            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        }
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
@@ -1454,15 +1443,10 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
-        if ($userdata['is_sales_rep'] == 1) {
-            if ($userdata['is_sales_rep_manager'] == 1) {
-                if ($userdata['id'] != $userId) {
-                    $this->CI->db->where('transaction_details.sales_representative', $userId); 
-                }
-            } else {
-                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
-            }
-        } 
+       
+        if ($userId != 'all') {
+            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        }  
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
@@ -1478,15 +1462,10 @@ class Order
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
-        if ($userdata['is_sales_rep'] == 1) {
-            if ($userdata['is_sales_rep_manager'] == 1) {
-                if ($userdata['id'] != $userId) {
-                    $this->CI->db->where('transaction_details.sales_representative', $userId); 
-                }
-            } else {
-                $this->CI->db->where('transaction_details.sales_representative', $userdata['id']); 
-            }
-        } 
+        
+        if ($userId != 'all') {
+            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        }   
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
@@ -1773,7 +1752,7 @@ class Order
         $this->CI->db->select('*');
         $this->CI->db->from('customer_basic_details');
         $this->CI->db->where('is_sales_rep', 1);
-        $this->CI->db->where('is_sales_rep_manager', 0);
+        $this->CI->db->order_by('first_name', 'asc');
         $query = $this->CI->db->get();
         $result = $query->result_array();
         return $result;

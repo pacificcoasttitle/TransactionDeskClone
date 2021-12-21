@@ -27,7 +27,7 @@
                                          
                                 <?php } else {
                                     if($userdata['is_sales_rep']  == 1) { ?>
-                                        <li><a href="<?php echo base_url(); ?>sales-dashboard">Dashboard Home</a></li>
+                                        <li><a href="<?php echo base_url(); ?>sales-dashboard/<?php echo $userdata['id']; ?>">Dashboard Home</a></li>
                                         <li><a href="<?php echo base_url(); ?>sales-production-history/<?php echo $userdata['id'];?>">Production History</a></li>
                                     <?php } else if($userdata['is_title_officer'] == 1)  { ?>
                                         <li><a href="<?php echo base_url(); ?>title-officer-dashboard">Dashboard Home</a></li>

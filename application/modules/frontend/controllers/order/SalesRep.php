@@ -30,9 +30,14 @@ class SalesRep extends MX_Controller
 		$name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
 		$data['name'] = $name;
 		$data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+        $userId = $this->uri->segment(2);
+        $data['user_id'] =  $userId;
 		if ($userdata['is_sales_rep_manager'] == 1) {
 			$data['salesUsers'] = $this->order->get_sales_users();
 		} else {
+            if ($userId != $userdata['id']) {
+                redirect(base_url().'sales-dashboard/'.$userdata['id']);
+            }
 			$data['salesUsers'] = array();
 		}
 		$data['user_email'] = $userdata['email'];
@@ -43,9 +48,9 @@ class SalesRep extends MX_Controller
         $data['sales_rep_info'] = $sales_rep_info;
         $workedDays = $this->order->countWorkedDaysOfMonth();
         $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
-        $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'), 0);
+        $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'), $userId);
         $data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-        $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'), 0);
+        $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'), $userId);
         $data['sale_open_count'] = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
         $data['total_open_count'] = $data['sale_open_count'] + $data['refi_open_count'];
 
@@ -57,9 +62,9 @@ class SalesRep extends MX_Controller
             $data['projected_open_count'] = 0;
         }
         
-        $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'), 0);
+        $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'), $userId);
         $data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-        $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), 0);
+        $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $userId);
         $data['sale_close_count'] =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
         $data['total_close_count'] = $data['refi_close_count'] + $data['sale_close_count'];
 
@@ -167,6 +172,9 @@ class SalesRep extends MX_Controller
 		if ($userdata['is_sales_rep_manager'] == 1) {
 			$data['salesUsers'] = $this->order->get_sales_users();
 		} else {
+            if ($userId != $userdata['id']) {
+                redirect(base_url().'sales-production-history/'.$userdata['id']);
+            }
 			$data['salesUsers'] = array();
 		}
 		$data['title'] = 'Sales Production History | Pacific Coast Title Company';
