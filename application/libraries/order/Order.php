@@ -1408,8 +1408,11 @@ class Order
 
         if ($userId != 'all') {
             $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative is not null'); 
         }
         $query = $this->CI->db->get();
+       
         $result = $query->row_array();
         return $result;
     }
@@ -1427,6 +1430,8 @@ class Order
 
         if ($userId != 'all') {
             $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative is not null'); 
         }
         $query = $this->CI->db->get();
         $result = $query->row_array();
@@ -1446,7 +1451,9 @@ class Order
        
         if ($userId != 'all') {
             $this->CI->db->where('transaction_details.sales_representative', $userId); 
-        }  
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative is not null'); 
+        }
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
@@ -1465,7 +1472,9 @@ class Order
         
         if ($userId != 'all') {
             $this->CI->db->where('transaction_details.sales_representative', $userId); 
-        }   
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative is not null'); 
+        } 
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
