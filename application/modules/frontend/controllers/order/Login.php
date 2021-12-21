@@ -69,7 +69,7 @@ class Login extends MX_Controller {
                     if ($user['is_title_officer'] == 1) {
                         $response = array('status'=>'success', 'message'=> '', 'url' => 'title-officer-dashboard');
                     } else if ($user['is_sales_rep'] == 1) {
-                        $response = array('status'=>'success', 'message'=> '', 'url' => 'sales-dashboard');
+                        $response = array('status'=>'success', 'message'=> '', 'url' => 'sales-dashboard/'.$user['id']);
                     } else if ($user['is_special_lender'] == 1) {
                         $response = array('status'=>'success', 'message'=> '', 'url' => 'special-lender-dashboard');
                     } else if ($user['is_payoff_user'] == 1) {

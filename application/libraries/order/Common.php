@@ -30,7 +30,7 @@ class Common
         $userdata = $this->CI->session->userdata('user');
         if (!empty($userdata['id'])) {
             if ($userdata['is_sales_rep'] ==  1) {
-                redirect(base_url().'sales-dashboard');
+                redirect(base_url().'sales-dashboard/'.$userdata['id']);
             } else if ($userdata['is_special_lender'] ==  1) {
                 redirect(base_url().'special-lender-dashboard');
             } else if ($userdata['is_payoff_user'] ==  1) {
@@ -68,7 +68,7 @@ class Common
             if ($userdata['is_title_officer'] ==  1) {
                 redirect(base_url().'title-officer-dashboard');
             } else if ($userdata['is_sales_rep'] ==  1) {
-                redirect(base_url().'sales-dashboard');
+                redirect(base_url().'sales-dashboard/'.$userdata['id']);
             } else if ($userdata['is_payoff_user'] ==  1) {
                 redirect(base_url().'pay-off-dashboard');
             } else if ($userdata['is_special_lender'] ==  0) {
@@ -86,7 +86,7 @@ class Common
             if ($userdata['is_title_officer'] ==  1) {
                 redirect(base_url().'title-officer-dashboard');
             } else if ($userdata['is_sales_rep'] ==  1) {
-                redirect(base_url().'sales-dashboard');
+                redirect(base_url().'sales-dashboard/'.$userdata['id']);
             } else if ($userdata['is_special_lender'] ==  1) {
                 redirect(base_url().'special-lender-dashboard');
             } else if ($userdata['is_payoff_user'] ==  0) {

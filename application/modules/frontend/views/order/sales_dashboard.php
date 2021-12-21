@@ -117,6 +117,7 @@
 		#sales_user_listing {
 			margin-bottom: 20px;
 			float:right;
+			margin-right: 25px;
 		}
 
     </style>
@@ -128,13 +129,13 @@
 						<div class="typography-section__inner">
 							<h2 class="ui-title-block ui-title-block_light">Welcome Back <?php echo $name; ?>,</h2>
 							<div class="ui-decor-1a bg-accent"></div>
-							<?php if(!empty($salesUsers)) { ?>
+							<?php if(!empty($salesUsers) && $is_sales_rep_manager == 1) { ?>
 								<div id="sales_user_listing">
 									<label>
 										<select style="width:auto;" name="sales_user_filter" id="sales_user_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
 											<option value="all"> All Sales Rep Users </option>
 											<?php foreach($salesUsers as $salesUser) { ?>
-												<option value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
+												<option <?Php echo ($user_id == $salesUser['id']) ? 'selected' : '';?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
 											<?php }?>
 										</select>
 									</label>
@@ -380,12 +381,13 @@
 	        order_list.ajax.reload();
 	    });
 
-		$("#sales_user_filter").on("change", function(){
+		$("#month_filter").on("change", function(){
 	        order_list.ajax.reload();
 	    });
 
-		$("#month_filter").on("change", function(){
-	        order_list.ajax.reload();
+		$("#sales_user_filter").on("change", function(){
+			var user_id = $(this).val();
+	        window.location.replace('<?php echo base_url();?>sales-dashboard/'+user_id);
 	    });
 	});
 
