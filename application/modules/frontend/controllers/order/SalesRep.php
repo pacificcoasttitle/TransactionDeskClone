@@ -217,6 +217,23 @@ class SalesRep extends MX_Controller
 				$sale_close_order_percetage = 0;
 				$salesHistory[$iM-1]['close_order_percetage'] = 0;
 			}
+            if ($month == date('m')) {
+                if ($month == '01') {
+                    $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonthForPreviousYear($userId);
+                } else {
+                    $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonth($userId);
+                }
+                $salesHistory[$iM-1]['trending'] = $previousCount['total_count'] > $salesHistory[$iM-1]['total_open_count'] ? '<span style="color: red;font-weight:bold;">Negatively</span>' : '<span style="color: limegreen;font-weight:bold;">Positively</span>';
+            } else {
+                if ($month == '01') {
+                    $previousCount = $this->order->getOpenOrdersCountForLastMonthOfPreviousYear($userId);
+                    $previousCount = $previousCount['total_count'];
+                } else {
+                    $previousCount = $salesHistory[$iM-2]['total_open_count'];
+                }
+                $salesHistory[$iM-1]['trending'] = $previousCount > $salesHistory[$iM-1]['total_open_count'] ? '<span style="color: red;font-weight:bold;">Negatively</span>' : '<span style="color: limegreen;font-weight:bold;">Positively</span>';
+            }
+
 		}
 		$data['salesHistory'] = $salesHistory;
 		$this->load->view('layout/head_dashboard',$data);
