@@ -1766,4 +1766,58 @@ class Order
         $result = $query->result_array();
         return $result;
     }
+
+    public function getOpenOrdersCountForLastMonthOfPreviousYear($userId)
+    {
+        $previousYear =  (string)(date('Y')-1);
+        $this->CI->db->select('count(*) as total_count')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('MONTH(order_details.created_at)', '12'); 
+        $this->CI->db->where('YEAR(order_details.created_at)', $previousYear); 
+        if ($userId != 'all') {
+            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative is not null'); 
+        }
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        return $result;
+    }
+
+    public function getCountBasedOnCurrentDayForPreviousMonthForPreviousYear($userId)
+    {
+        $firstDate = date("Y",strtotime("-1 year")).'-12-01';
+        $lastDate = date("Y",strtotime("-1 year")).'-12-%d';
+        $this->CI->db->select('count(*) as total_count')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where("(order_details.created_at BETWEEN  DATE_FORMAT(NOW() , '$firstDate') AND DATE_FORMAT(NOW() + INTERVAL 1 DAY , '$lastDate'))"); 
+        if ($userId != 'all') {
+            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative is not null'); 
+        }
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        return $result;
+    }
+
+    public function getCountBasedOnCurrentDayForPreviousMonth($userId)
+    {
+        $firstDate = '%Y-'.date("m",strtotime("-1 month")).'-01';
+        $lastDate = '%Y-'.date("m",strtotime("-1 month")).'-%d';
+        $this->CI->db->select('count(*) as total_count')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where("(order_details.created_at BETWEEN  DATE_FORMAT(NOW() , '$firstDate') AND DATE_FORMAT(NOW() + INTERVAL 1 DAY , '$lastDate'))"); 
+        if ($userId != 'all') {
+            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative is not null'); 
+        }
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        return $result;
+    }
 }

@@ -36,6 +36,7 @@
 										<thead>
 											<tr>
 												<th align="center">Month</th>
+												<th>Trending</th>
 												<th>Total Openings</th>
 												<th>Total Closings</th>
 												<th>Total Revenue</th>
@@ -47,6 +48,7 @@
 												<?php foreach($salesHistory as $salesData) { ?>
 													<tr>
 														<td><?php echo $salesData['month'];?></td>
+														<th><?php echo $salesData['trending'];?></th>
 														<td><?php echo $salesData['total_open_count'];?></td>
 														<td><?php echo $salesData['total_close_count'];?></td>
 														<td><?php echo "$".number_format($salesData['total_premium']);?></td>
