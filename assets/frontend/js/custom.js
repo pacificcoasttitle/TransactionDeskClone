@@ -828,7 +828,6 @@ function parse187()
     {
         getProductTypes(county,state);
     }*/
-    apn = apn.replace("-00", "");
     var legalDescription = toTitleCase($(reportXML).find("PropertyProfile").find("LegalBriefDescription").text());
     legalDescription = legalDescription.replace(/\s\s+/g, ' ');
     var usecode = toTitleCase($(reportXML).find("PropertyProfile").find("UseCode").text());
