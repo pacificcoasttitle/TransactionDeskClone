@@ -306,6 +306,7 @@ $route['get-commonwealth-branches'] = 'admin/order/cpl/getCommonwealthBranches';
 $route['update-mortgage-user'] = 'admin/order/home/updateMortgageUser';
 $route['order/admin/mortgage-brokers'] = 'admin/order/home/mortgageBrokers';
 $route['is-mortgage-primary-user'] = 'admin/order/home/isMortgagePrimaryUser';
+$route['is-password-required'] = 'admin/order/home/isPasswordRequired';
 
 
 $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';

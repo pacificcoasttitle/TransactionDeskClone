@@ -317,9 +317,9 @@
 					url: base_url + "get-sales-orders", // json datasource
 					type: "post", // method  , by default get
 					data   : function( d ) {
-	                  d.status = $('#orders_filter').val();
-					  d.month = $('#month_filter').val();
-					  d.sales_user = $('#sales_user_filter').val();
+	                  //d.status = $('#orders_filter').val();
+					  //d.month = $('#month_filter').val();
+						d.sales_user = $('#sales_user_filter').val();
 	                },
 					dataFilter: function(data){
 
@@ -366,15 +366,15 @@
 				}
 			});
 
-			$("div#orders_listing_filter").append('<label><select style="width:auto;" name="month_filter" id="month_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="01"> January </option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></label><label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option><option value="cancelled">Cancelled</option></select></label>');
+			// $("div#orders_listing_filter").append('<label><select style="width:auto;" name="month_filter" id="month_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="01"> January </option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></label><label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option><option value="cancelled">Cancelled</option></select></label>');
 
-    		var d = new Date(),
+    		// var d = new Date(),
 
-				m = d.getMonth(),
+			// 	m = d.getMonth(),
 
-				y = d.getFullYear();
+			// 	y = d.getFullYear();
 
-			$('#month_filter option:eq('+m+')').prop('selected', true);
+			// $('#month_filter option:eq('+m+')').prop('selected', true);
 		}
 
 		$("#orders_filter").on("change", function(){

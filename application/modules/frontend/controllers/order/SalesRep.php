@@ -114,8 +114,9 @@ class SalesRep extends MX_Controller
 		$month = $this->input->post('month') ? $this->input->post('month') :  '';
 		$salesUser = $this->input->post('sales_user') ? $this->input->post('sales_user') :  '';
 		$params['salesUser'] = $salesUser;
-        $params['status'] = isset($status) && !empty($status) ? $status : 'open';
-		$params['month'] = isset($month) && !empty($month) ? $month : date('m');
+        $params['salesFlag'] = 1;
+       // $params['status'] = isset($status) && !empty($status) ? $status : 'open';
+		//$params['month'] = isset($month) && !empty($month) ? $month : date('m');
 		
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
