@@ -44,6 +44,7 @@ class Order
         $userdata = $this->CI->session->userdata('user');
         $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
         $month = isset($params['month']) && !empty($params['month']) ? $params['month'] : '';
+        $salesFlag = isset($params['salesFlag']) && !empty($params['salesFlag']) ? $params['salesFlag'] : '';
         $salesUser = isset($params['salesUser']) && !empty($params['salesUser']) ? $params['salesUser'] : '';
         $is_pay_off = isset($params['is_pay_off']) && !empty($params['is_pay_off']) ? $params['is_pay_off'] : '';
         $yearFlag = isset($params['yearFlag']) && !empty($params['yearFlag']) ? $params['yearFlag'] : '';
@@ -52,12 +53,15 @@ class Order
         $select = 'order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
             order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
 
-        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
-        {
+        if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if(isset($keyword) && !empty($keyword))
-            {
+            if (isset($keyword) && !empty($keyword) && $salesFlag == 1) {
+                $this->CI->db->like('property_details.full_address', $keyword);            
+                $this->CI->db->or_like('order_details.file_number', $keyword); 
+                $this->CI->db->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword))); 
+                $this->CI->db->or_like('order_details.resware_status', $keyword); 
+            } else {
                 $this->CI->db->like('property_details.full_address', $keyword);            
                 $this->CI->db->or_like('order_details.file_number', $keyword);
             }
@@ -141,8 +145,12 @@ class Order
 
             $total_records =  $this->CI->db->count_all_results();
             
-            if(isset($keyword) && !empty($keyword))
-            {
+            if (isset($keyword) && !empty($keyword) && $salesFlag == 1) {
+                $this->CI->db->like('property_details.full_address', $keyword);            
+                $this->CI->db->or_like('order_details.file_number', $keyword); 
+                $this->CI->db->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword))); 
+                $this->CI->db->or_like('order_details.resware_status', $keyword); 
+            } else {
                 $this->CI->db->like('property_details.full_address', $keyword);            
                 $this->CI->db->or_like('order_details.file_number', $keyword);
             }
@@ -914,6 +922,7 @@ class Order
             {
                 $this->CI->db->group_start()
                     ->like("property_details.full_address", $keyword)
+                    ->or_like('order_details.file_number',$keyword)
                     ->or_like('order_details.file_number',$keyword)
                     ->group_end();
             }

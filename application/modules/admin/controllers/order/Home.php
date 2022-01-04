@@ -2451,12 +2451,36 @@ class Home extends MX_Controller {
 	            $nestedData[] = $value['first_name'];
 	            $nestedData[] = $value['last_name'];
 	            $nestedData[] = $value['email_address'];
-	            $nestedData[] = $value['telephone_no'];
+                if ($value['is_title_officer'] == 1) {
+                    $nestedData[] = 'Title Officer';
+                } else if ($value['is_sales_rep'] == 1) {
+                    if ($value['is_sales_rep_manager'] == 1) {
+                        $nestedData[] = 'Sales Rep. Manager';
+                    } else {
+                        $nestedData[] = 'Sales Rep';
+                    }
+                } else if ($value['is_special_lender'] == 1) {
+                    $nestedData[] = 'Special Lender';
+                } else if ($value['is_payoff_user'] == 1) {
+                    $nestedData[] = 'Payoff User';
+                } else if ($value['is_escrow'] == 1) {
+                    $nestedData[] = 'Escrow User';
+                } else {
+                    $nestedData[] = 'Lender User';
+                } 
 	            $nestedData[] = $value['company_name'];
 	            $nestedData[] = $value['street_address'];
 	            $nestedData[] = $value['city'];
 	            $nestedData[] = $value['zip_code'];
-	                    
+                $user_id = $value['id'];
+
+                if ($value['is_password_required'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='isPasswordRequired();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";       
+
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $action = "<a href='javascript:void(0);' onclick='sendPasswordMail(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-envelope' aria-hidden='true'></span></a>";
                     $nestedData[] = $action;
@@ -3100,5 +3124,19 @@ class Home extends MX_Controller {
             $response = array('status' => 'error', 'message' =>  $data['error_msg']);
         } 
     	echo json_encode($response);
+    }
+
+    public function isPasswordRequired()
+    {
+        $user_id = $this->input->post('user_id');
+        $is_password_required = $this->input->post('is_password_required');
+        $data['is_password_required'] = $is_password_required;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $user_id
+        );
+        $this->db->update('customer_basic_details', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'Password required field updated successfully.');
+        echo json_encode($data);
     }
 }
