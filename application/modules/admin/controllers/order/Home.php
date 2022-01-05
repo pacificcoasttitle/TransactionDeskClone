@@ -2508,12 +2508,12 @@ class Home extends MX_Controller {
             $randomPassword = $this->order->randomPassword();
 
             $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-            $message_body .= "Use this link for login: ".getenv('APP_URL')."order/login_test <br><br>";
+            $message_body .= "Use this link for login: ".getenv('APP_URL')."order/login <br><br>";
            
             $this->home_model->update(array('password' => password_hash($randomPassword, PASSWORD_DEFAULT), 'is_tmp_password' => 1), array('id' => $user['id']));
             $subject = 'Change Passsword';
-           // $to = $user['email_address'];
-            $to = 'ghernandez@pct.com';
+            $to = $user['email_address'];
+           // $to = 'ghernandez@pct.com';
             $cc = array();
             $bcc = array();
             $file = array();

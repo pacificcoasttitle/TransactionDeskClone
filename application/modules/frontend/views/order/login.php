@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/iofrm-theme2.css">
     <link rel="stylesheet" type="text/css"  href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
     <style>
-        #email_address_php_error {
+        #email_address_php_error, #password_php_error {
             display: none;
             margin-top: 6px;
             padding: 0 3px;
@@ -68,6 +68,14 @@
                             </label>
                             
                             <span id="email_address_php_error" class=""></span>
+
+                            <label class="field state-error" style="display:none;" id="password_container">
+                                <input class="form-control gui-input" type="password" name="pwd" id="pwd" placeholder="Password">
+                            </label>
+                            
+                            <span id="password_php_error" class=""></span>
+                            
+                            <input type="hidden" id="is_password_field_show" name="is_password_field_show" value="0">
                             
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Log in</button>
