@@ -2835,7 +2835,7 @@ $(document).ready(function () {
             initComplete: function() {
                 
             },
-            dom: 'Blfrtip',
+            dom: 'lf<"password_listing_filter">rtip',
             buttons: [],
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
@@ -2861,6 +2861,8 @@ $(document).ready(function () {
                 }
             }            
         });
+
+        $("div.password_listing_filter").html('<label> User Types: <select style="width:auto;" name="user_filter" id="user_filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="escrow"> Escrow </option> <option value="lender"> Lender </option><option value="is_title_officer"> Title Officer </option><option value="sales_rep"> Sales Rep </option><option value="sales_rep_manager">Sales Rep Manager</option><option value="is_special_lender">Special Lender User</option></select></label>');
     }
 
 

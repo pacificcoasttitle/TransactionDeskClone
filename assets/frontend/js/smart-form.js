@@ -437,6 +437,11 @@
 										if (res.password_err_msg) {
 											$('#password_php_error').html(res.password_err_msg);
 											$('#password_php_error').show();
+											
+											if (res.is_password_field_show == '1') {
+												$('#password_container').css('display', 'block');
+												$('#is_password_field_show').val(1);
+											}
 										} else {
 											$('#password_php_error').hide();
 										}
