@@ -26,6 +26,18 @@
             color: red;
             font-size: 0.85em;
         }
+
+        #change_pwd_success p {
+            margin: 0px 0 12px 0 !important;
+            padding: 0px !important;
+            font-family: Arial, Helvetica, sans-serif;
+            font-style: normal;
+            line-height: normal;
+            color: #0eef0e;
+            text-transform: capitalize;
+            font-size: 1em;
+        }
+
     </style>
 </head>
 <body>
