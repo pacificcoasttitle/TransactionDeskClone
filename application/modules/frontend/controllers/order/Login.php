@@ -21,6 +21,10 @@ class Login extends MX_Controller {
             redirect(base_url().'order');
         } else {
             $data = array();
+            if ($this->session->userdata('success')) {
+                $data['change_pwd_success'] = $this->session->userdata('success');
+                $this->session->unset_userdata('success');
+            }
             $this->load->view('order/login', $data);	
         }
     }
