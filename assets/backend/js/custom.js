@@ -2847,6 +2847,9 @@ $(document).ready(function () {
             "ajax": {                
                 url: base_url+"admin/order/home/get_password_list", 
                 type: "post", 
+                data   : function( d ) {
+                    d.user_type = $('#user_filter').val();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -2862,8 +2865,12 @@ $(document).ready(function () {
             }            
         });
 
-        //$("div.password_listing_filter").html('<label> User Types: <select style="width:auto;" name="user_filter" id="user_filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="escrow"> Escrow </option> <option value="lender"> Lender </option><option value="is_title_officer"> Title Officer </option><option value="sales_rep"> Sales Rep </option><option value="sales_rep_manager">Sales Rep Manager</option><option value="is_special_lender">Special Lender User</option></select></label>');
+        $("div.password_listing_filter").html('<label> User Types: <select style="width:auto;" name="user_filter" id="user_filter" class="custom-select custom-select-sm form-control form-control-sm"><option value=""> Select User Type </option><option value="escrow"> Escrow </option> <option value="lender"> Lender </option><option value="title_officer"> Title Officer </option><option value="sales_rep"> Sales Rep </option><option value="sales_rep_manager">Sales Rep Manager</option><option value="special_lender">Special Lender User</option></select></label>');
     }
+
+    $("#user_filter").on("change", function(){
+        password_list.ajax.reload();
+    });
 
 
     if ($('#tbl-import-order-customers-listing').length) 

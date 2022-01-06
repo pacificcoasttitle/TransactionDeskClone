@@ -1115,6 +1115,24 @@ class Home_model extends CI_Model
 
     public function get_password_list($params)
     {
+        $user_type = isset($params['user_type']) && !empty($params['user_type']) ? $params['user_type'] : '';
+
+        if (isset($user_type) && !empty($user_type)) {
+            if ($user_type == 'title_officer') {
+                $this->db->where('is_title_officer', 1);
+            } else if ($user_type == 'sales_rep') {
+                $this->db->where('is_sales_rep', 1);
+            } else if ($user_type == 'sales_rep_manager') {
+                $this->db->where('is_sales_rep', 1);
+                $this->db->where('is_sales_rep_manager', 1);
+            } else if ($user_type == 'escrow') {
+                $this->db->where('is_escrow', 1);
+            } else  if ($user_type == 'lender') {
+                $this->db->where('is_escrow', 0);
+            } else  if ($user_type == 'special_lender') {
+                $this->db->where('is_special_lender', 1);
+            }
+        }
         $this->db->where('is_password_updated', 1);
     	$this->db->where('status', 1);
     	$this->db->from('customer_basic_details');
@@ -1138,6 +1156,22 @@ class Home_model extends CI_Model
                     ->group_end();
             }
 
+            if (isset($user_type) && !empty($user_type)) {
+                if ($user_type == 'title_officer') {
+                    $this->db->where('is_title_officer', 1);
+                } else if ($user_type == 'sales_rep') {
+                    $this->db->where('is_sales_rep', 1);
+                } else if ($user_type == 'sales_rep_manager') {
+                    $this->db->where('is_sales_rep', 1);
+                    $this->db->where('is_sales_rep_manager', 1);
+                } else if ($user_type == 'escrow') {
+                    $this->db->where('is_escrow', 1);
+                } else  if ($user_type == 'lender') {
+                    $this->db->where('is_escrow', 0);
+                } else  if ($user_type == 'special_lender') {
+                    $this->db->where('is_special_lender', 1);
+                }
+            }
             $this->db->where('status', 1);
 			$this->db->where('is_password_updated', 1);
 	    	$this->db->from('customer_basic_details');
@@ -1155,6 +1189,22 @@ class Home_model extends CI_Model
                     ->group_end();
             }
             
+            if (isset($user_type) && !empty($user_type)) {
+                if ($user_type == 'title_officer') {
+                    $this->db->where('is_title_officer', 1);
+                } else if ($user_type == 'sales_rep') {
+                    $this->db->where('is_sales_rep', 1);
+                } else if ($user_type == 'sales_rep_manager') {
+                    $this->db->where('is_sales_rep', 1);
+                    $this->db->where('is_sales_rep_manager', 1);
+                } else if ($user_type == 'escrow') {
+                    $this->db->where('is_escrow', 1);
+                } else  if ($user_type == 'lender') {
+                    $this->db->where('is_escrow', 0);
+                } else  if ($user_type == 'special_lender') {
+                    $this->db->where('is_special_lender', 1);
+                }
+            }
 			$this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
 
@@ -1167,12 +1217,44 @@ class Home_model extends CI_Model
 			if ($query->num_rows() > 0)  {
 	            $customer_lists = $query->result_array();
 	        }
-    	} else {    		
+    	} else {  
+            if (isset($user_type) && !empty($user_type)) {
+                if ($user_type == 'title_officer') {
+                    $this->db->where('is_title_officer', 1);
+                } else if ($user_type == 'sales_rep') {
+                    $this->db->where('is_sales_rep', 1);
+                } else if ($user_type == 'sales_rep_manager') {
+                    $this->db->where('is_sales_rep', 1);
+                    $this->db->where('is_sales_rep_manager', 1);
+                } else if ($user_type == 'escrow') {
+                    $this->db->where('is_escrow', 1);
+                } else  if ($user_type == 'lender') {
+                    $this->db->where('is_escrow', 0);
+                } else  if ($user_type == 'special_lender') {
+                    $this->db->where('is_special_lender', 1);
+                }
+            }  		
     		$this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
 	    	$this->db->from('customer_basic_details');
             $filter_total_records =  $this->db->count_all_results();
 
+            if (isset($user_type) && !empty($user_type)) {
+                if ($user_type == 'title_officer') {
+                    $this->db->where('is_title_officer', 1);
+                } else if ($user_type == 'sales_rep') {
+                    $this->db->where('is_sales_rep', 1);
+                } else if ($user_type == 'sales_rep_manager') {
+                    $this->db->where('is_sales_rep', 1);
+                    $this->db->where('is_sales_rep_manager', 1);
+                } else if ($user_type == 'escrow') {
+                    $this->db->where('is_escrow', 1);
+                } else  if ($user_type == 'lender') {
+                    $this->db->where('is_escrow', 0);
+                } else  if ($user_type == 'special_lender') {
+                    $this->db->where('is_special_lender', 1);
+                }
+            }
             $this->db->where('is_password_updated', 1);
             $this->db->where('status', 1);
             
