@@ -26,6 +26,18 @@
             color: red;
             font-size: 0.85em;
         }
+
+        #change_pwd_success p {
+            margin: 0px 0 12px 0 !important;
+            padding: 0px !important;
+            font-family: Arial, Helvetica, sans-serif;
+            font-style: normal;
+            line-height: normal;
+            color: #0eef0e;
+            text-transform: capitalize;
+            font-size: 1em;
+        }
+
     </style>
 </head>
 <body>
@@ -63,6 +75,19 @@
                             <!-- <a href="register2.html">Register</a> -->
                         </div>
                         <form method="POST" action="<?php echo base_url();?>do_login" id="login-form" enctype="multipart/form-data">
+
+                            <?php if(isset($change_password_error_msg) && !empty($change_password_error_msg)) {?>
+                                <span id="change_password_error_msg" class="">
+                                    <p><?php echo $change_password_error_msg;?></p>
+                                </span>
+                            <?php } ?>
+
+                            <?php if(isset($change_pwd_success) && !empty($change_pwd_success)) {?>
+                                <span id="change_pwd_success" class="">
+                                    <p><?php echo $change_pwd_success;?></p>
+                                </span>
+                            <?php } ?>
+
                             <label class="field state-error" style="display:block;">
                                 <input class="form-control gui-input" type="email" name="email_address" id="email_address" placeholder="E-mail Address">
                             </label>
@@ -93,7 +118,7 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/main.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script>   
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js?random=<?php echo uniqid(); ?>"></script>   
     <script type="text/javascript">
         var base_url = '<?php echo base_url(); ?>';
     </script>

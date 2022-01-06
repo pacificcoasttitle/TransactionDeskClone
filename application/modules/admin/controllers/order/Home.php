@@ -2429,6 +2429,7 @@ class Home extends MX_Controller {
     public function get_password_list()
     {
         $params = array();
+        $params['user_type'] = $this->input->post('user_type');
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
             $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
