@@ -212,14 +212,9 @@ $route['import-data-for-pay-off'] = 'frontend/order/cron/importDataForPayOff';
 $route['get-pay-off-orders'] = 'frontend/order/payOff/get_pay_off_orders';
 $route['download-pay-off-document'] = 'frontend/order/payOff/downloadPayOffDocument';
 $route['update-pay-off-action'] = 'frontend/order/payOff/updatePayOffAction';
-$route['upload-document'] = 'frontend/order/common/upload_document';
 $route['create-payoff/:num'] = 'frontend/order/payOff/createPayoff';
 $route['generate-payoff'] = 'frontend/order/payOff/generatePayoff';
-$route['add-partner-for-orders'] = 'frontend/order/cron/addPartnerForOrders';
-$route['import-data-for-pay-off'] = 'frontend/order/cron/importDataForPayOff';
-$route['get-pay-off-orders'] = 'frontend/order/payOff/get_pay_off_orders';
-$route['download-pay-off-document'] = 'frontend/order/payOff/downloadPayOffDocument';
-$route['update-pay-off-action'] = 'frontend/order/payOff/updatePayOffAction';
+
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';
