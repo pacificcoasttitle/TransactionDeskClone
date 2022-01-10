@@ -313,8 +313,52 @@ $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';
 $route['order/admin/escrow-officers'] = 'admin/order/home/escrow_officers';
 $route['order/admin/add-escrow-officer'] = 'admin/order/home/add_escrow_officer';
 $route['order/admin/edit-escrow-officer/:num'] = 'admin/order/home/edit_escrow_officer';
-
 /* Route for PCT-Order backend*/
+
+/* Start Route for HR-Center frontend */
+$route['hr'] = 'frontend/hr/login/index';
+$route['hr/login'] = 'frontend/hr/login/login';
+$route['hr/change-password/:any'] = 'frontend/hr/login/change_password';
+$route['hr/dashboard'] = 'frontend/hr/dashboard/index';
+$route['hr/time-cards'] = 'frontend/hr/timeCards/index';
+$route['hr/get-time-cards'] = 'frontend/hr/timeCards/getTimeCards';
+$route['hr/save-time-cards'] = 'frontend/hr/timeCards/saveTimeCards';
+$route['hr/vacation-requests'] = 'frontend/hr/vacationRequests/index';
+$route['hr/get-vacation-requests'] = 'frontend/hr/vacationRequests/getVacationRequests';
+$route['hr/save-vacation-requests'] = 'frontend/hr/vacationRequests/saveVacationRequests';
+$route['hr/incident-reports'] = 'frontend/hr/incidentReports/index';
+$route['hr/get-incident-reports'] = 'frontend/hr/incidentReports/getIncidentReports';
+$route['hr/save-incident-reports'] = 'frontend/hr/incidentReports/saveIncidentReports';
+$route['hr/logout'] = 'frontend/hr/dashboard/logout';
+/* End Route for HR-Center frontend */
+
+/* Start Route for HR-Center backend*/
+$route['hr/admin'] = 'admin/hr/login/login';
+$route['hr/admin/login/do_login'] = 'admin/hr/login/do_login';
+$route['hr/admin/dashboard'] = 'admin/hr/dashboard/index';
+$route['hr/admin/admin-users'] = 'admin/hr/adminUsers/index';
+$route['hr/admin/add-admin-user'] = 'admin/hr/adminUsers/addAdminUser';
+$route['hr/admin/get-admin-users'] = 'admin/hr/adminUsers/getAdminUsers';
+$route['hr/admin/edit-admin-user/:num'] = 'admin/hr/adminUsers/editAdminUser';
+$route['hr/admin/delete-admin-user'] = 'admin/hr/adminUsers/deleteAdminUser';
+$route['hr/admin/users'] = 'admin/hr/users/index';
+$route['hr/admin/add-user'] = 'admin/hr/users/addUser';
+$route['hr/admin/get-users'] = 'admin/hr/users/getUsers';
+$route['hr/admin/edit-user/:num'] = 'admin/hr/users/editUser';
+$route['hr/admin/delete-user'] = 'admin/hr/users/deleteUser';
+$route['hr/admin/time-cards'] = 'admin/hr/timeCards/index';
+$route['hr/admin/add-time-card'] = 'admin/hr/timeCards/addTimeCard';
+$route['hr/admin/get-time-cards'] = 'admin/hr/timeCards/getTimeCards';
+$route['hr/admin/edit-time-card/:num'] = 'admin/hr/timeCards/editTimeCard';
+$route['hr/admin/delete-time-card'] = 'admin/hr/timeCards/deleteTimeCard';
+$route['hr/admin/vacation-requests'] = 'admin/hr/vacationRequests/index';
+$route['hr/admin/add-vacation-request'] = 'admin/hr/vacationRequests/addVacationRequest';
+$route['hr/admin/get-vacation-requests'] = 'admin/hr/vacationRequests/getVacationRequests';
+$route['hr/admin/edit-time-card/:num'] = 'admin/hr/vacationRequests/editVacationRequest';
+$route['hr/admin/delete-time-card'] = 'admin/hr/vacationRequests/deleteVacationRequest';
+$route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
+/* End Route for HR-Center backend */
+
 $route['calculator'] = 'frontend/calc/welcome/index';  
 $route['calculator/signup'] = 'frontend/calc/welcome/signup';  
 $route['calculator/dashboard'] = 'frontend/calc/welcome/dashboard';  
