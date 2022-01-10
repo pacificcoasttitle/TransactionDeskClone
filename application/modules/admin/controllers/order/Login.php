@@ -22,7 +22,9 @@ class Login extends MX_Controller {
         } else {
             $data['msg'] = $this->session->userdata('msg');
             $this->session->unset_userdata('msg');
+            $this->load->view('order/layout/login_header', $data);
             $this->load->view('order/home/login', $data);
+            $this->load->view('order/layout/login_footer', $data);
         }		
 	}
 
