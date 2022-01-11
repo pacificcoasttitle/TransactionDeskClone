@@ -24,9 +24,9 @@
             <div class="col-md-12">
                 <div class="card strpied-tabled-with-hover">
                     <div class="card-header ">
-                        <a style="float:right;" class="btn btn-info btn-fill btn-wd" href="<?php echo base_url().'hr/admin/time-card'; ?>">
+                        <!-- <a style="float:right;" class="btn btn-info btn-fill btn-wd" href="<?php echo base_url().'hr/admin/time-card'; ?>">
                             Add Time Card
-                        </a>
+                        </a> -->
                     </div>
                     <div class="card-body table-full-width table-responsive">
                         <table style="width:100%;" class="table table-hover table-striped" id="time_cards">
