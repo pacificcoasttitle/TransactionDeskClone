@@ -18,10 +18,16 @@
 					<p>Time Cards</p>
 				</a>
 			</li>
-			<li class="<?php if($this->uri->uri_string() == 'hr/admin/vacation-requests' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user') { echo 'active'; } ?>">
+			<li class="<?php if($this->uri->uri_string() == 'hr/admin/vacation-requests' || $this->uri->uri_string() == 'hr/admin/add-vacation-request' || $this->uri->segment(3) == 'edit-vacation-request') { echo 'active'; } ?>">
 				<a class="nav-link" href="<?php echo base_url().'hr/admin/vacation-requests'; ?>">
 					<img style="height:30px;margin-right:10px;" src="<?php echo base_url(); ?>assets/media/hr/vacation.png" class="buttImg">
 					<p>Vacation Requests</p>
+				</a>
+			</li>
+			<li class="<?php if($this->uri->uri_string() == 'hr/admin/incident-reports' || $this->uri->uri_string() == 'hr/admin/add-incident-report' || $this->uri->segment(3) == 'edit-incident-report') { echo 'active'; } ?>">
+				<a class="nav-link" href="<?php echo base_url().'hr/admin/incident-reports'; ?>">
+					<img style="height:30px;margin-right:10px;" src="<?php echo base_url(); ?>assets/media/hr/incident.png" class="buttImg">
+					<p>Report Incident</p>
 				</a>
 			</li>
 			<li class="<?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user') { echo 'active'; } ?>">

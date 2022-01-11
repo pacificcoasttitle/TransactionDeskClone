@@ -16,8 +16,8 @@
         </div>
     <?php } ?>
 
-    <div id="time_cards_success_msg" class="alert alert-success" style="display:none;"></div>
-    <div id="time_cards_error_msg" class="alert alert-danger" style="display:none;"></div>
+    <div id="incident_reports_success_msg" class="alert alert-success" style="display:none;"></div>
+    <div id="incident_reports_error_msg" class="alert alert-danger" style="display:none;"></div>
     
     <div class="container-fluid">
         <div class="row">
@@ -29,19 +29,20 @@
                         </a> -->
                     </div>
                     <div class="card-body table-full-width table-responsive">
-                        <table style="width:100%;" class="table table-hover table-striped" id="time_cards">
+                        <table style="width:100%;" class="table table-hover table-striped" id="incident_reports">
                             <thead>
-                                <th>No</th>
-                                <th>Employee</th>
-                                <th>Date</th>
-                                <th>Reg Hours</th>
-                                <th>OT Hours</th>
-                                <th>Double OT</th>
-                                <th>Total Hours</th>
-                                <th>Action</th>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Employee #</th>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Reason</th>
+                                    <th>Num Of Incident</th>
+                                    <th>Incident Actions</th>
+                                    <th>Actions</th>
+                                </tr>
                             </thead>
                             <tbody>
-                                
                             </tbody>
                         </table>
                     </div>
