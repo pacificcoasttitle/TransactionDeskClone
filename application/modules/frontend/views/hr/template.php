@@ -11,6 +11,11 @@
     <meta name="HandheldFriendly" content="true">
     <meta charset="utf-8" />
     <link rel="icon" href="<?php echo base_url(); ?>assets/frontend/images/favicon.ico" type="image/x-icon">
+    <style>
+        th {
+            text-align: center;
+        }
+    </style>
     <?php echo $css_files; ?>
     <?php echo $js_files; ?>
     <script>

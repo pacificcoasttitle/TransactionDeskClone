@@ -287,4 +287,112 @@ class Common
             'data' => $vacationRequestsList
         );
     }
+
+    public function getIncidentReports($params)
+    { 
+        $this->CI->db->from('pct_hr_incident_reports')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
+
+        if(!empty($this->CI->session->userdata('hr_user'))) {
+            $userdata = $this->CI->session->userdata('hr_user');
+            $this->CI->db->where('pct_hr_incident_reports.user_id', $userdata['id']);
+        }
+
+        $total_records =  $this->CI->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $incidentReportsList = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->or_like('pct_hr_incident_reports.employee_number', $keyword)
+                        ->or_like('pct_hr_incident_reports.incident_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_incident_reports.incident_reason', $keyword)
+                        ->or_like('pct_hr_incident_reports.actions', $keyword)
+                        ->or_like('pct_hr_incident_reports.num_of_incidents', $keyword)
+                        ->group_end();
+            }
+            
+            $this->CI->db->from('pct_hr_incident_reports')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_incident_reports.user_id', $userdata['id']);
+            }
+			$filter_total_records =  $this->CI->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like('pct_hr_users.first_name', $keyword)
+                    ->or_like('pct_hr_users.last_name', $keyword)
+                    ->or_like('pct_hr_incident_reports.employee_number', $keyword)
+                    ->or_like('pct_hr_incident_reports.incident_date', date("Y-m-d", strtotime($keyword)))
+                    ->or_like('pct_hr_incident_reports.incident_reason', $keyword)
+                    ->or_like('pct_hr_incident_reports.actions', $keyword)
+                    ->or_like('pct_hr_incident_reports.num_of_incidents', $keyword)
+                    ->group_end();
+            }
+
+            $this->CI->db->select('pct_hr_incident_reports.*, pct_hr_users.first_name,  pct_hr_users.last_name');
+            $this->CI->db->from('pct_hr_incident_reports')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_incident_reports.user_id', $userdata['id']);
+            }
+            $this->CI->db->order_by('pct_hr_incident_reports.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }	
+
+			$query = $this->CI->db->get();
+           
+			if ($query->num_rows() > 0) {
+	            $incidentReportsList = $query->result_array();
+	        }
+    	} else {    		
+    		$this->CI->db->from('pct_hr_incident_reports')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_incident_reports.user_id', $userdata['id']);
+            }
+            $filter_total_records =  $this->CI->db->count_all_results();
+
+            $this->CI->db->select('pct_hr_incident_reports.*, pct_hr_users.first_name,  pct_hr_users.last_name');
+            $this->CI->db->from('pct_hr_incident_reports')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
+
+            if(!empty($this->CI->session->userdata('hr_user'))) {
+                $userdata = $this->CI->session->userdata('hr_user');
+                $this->CI->db->where('pct_hr_incident_reports.user_id', $userdata['id']);
+            }
+            $this->CI->db->order_by('pct_hr_incident_reports.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                
+                $this->CI->db->limit($limit, $offset);
+            }
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $incidentReportsList = $query->result_array();
+	        } 
+    	}
+        
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $incidentReportsList
+        );
+    }
 }

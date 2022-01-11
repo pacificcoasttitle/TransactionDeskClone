@@ -23,7 +23,7 @@ class Template
         $this->addJS( base_url('assets/vendor/datatables/jquery.dataTables.js') );
         $this->addJS( base_url('assets/vendor/datatables/dataTables.bootstrap4.js') );
         $this->addJS( base_url('assets/vendor/datatables/dataTables.buttons.min.js') );
-        $this->addJS( base_url('assets/frontend/js/custom.js') );
+        
         $this->addJS( base_url('assets/frontend/hr/js/custom.js') );
         $this->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
         $this->addJS( base_url('assets/frontend/js/parsley.min.js') );

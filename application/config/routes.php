@@ -356,6 +356,8 @@ $route['hr/admin/add-vacation-request'] = 'admin/hr/vacationRequests/addVacation
 $route['hr/admin/get-vacation-requests'] = 'admin/hr/vacationRequests/getVacationRequests';
 $route['hr/admin/edit-time-card/:num'] = 'admin/hr/vacationRequests/editVacationRequest';
 $route['hr/admin/delete-time-card'] = 'admin/hr/vacationRequests/deleteVacationRequest';
+$route['hr/admin/incident-reports'] = 'admin/hr/incidentReports/index';
+$route['hr/admin/get-incident-reports'] = 'admin/hr/incidentReports/getIncidentReports';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

@@ -2,6 +2,7 @@ var adminList ='';
 var users ='';
 var time_cards = '';
 var vacation_requests = '';
+var incident_reports = '';
 
 $(document).ready(function () {
     if ($('#admin_users').length)  {
@@ -163,6 +164,47 @@ $(document).ready(function () {
                     }
                     $("#vacation_requests tbody").append('<tr><td colspan="7" class="text-center">No records found</td></tr>');
                     $("#vacation_requests_processing").css("display", "none");
+                }
+            }            
+        });
+    } 
+
+    if ($('#incident_reports').length)  {
+        incident_reports = $('#incident_reports').DataTable({
+           "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "dom": 'lf<"FilterOrderListing">rtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"hr/admin/get-incident-reports", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#incident_reports tbody").append('<tr><td colspan="7" class="text-center">No records found</td></tr>');
+                    $("#incident_reports_processing").css("display", "none");
                 }
             }            
         });
