@@ -23,9 +23,9 @@
 					<div class="ui-decor-1a bg-accent"></div>
 					<h3 class="ui-title-block_light">Helping Get Your Transaction Started.</h3>
 				</div>
-				<div class="col-md-9">
+				<div class="col-md-12">
 					<div class="smart-wrap">
-						<div class="smart-forms smart-container wrap-2">
+						<div class="smart-forms smart-container wrap-0">
 							
 							<!-- Start Form -->
 							<form method="POST" id="smart-form" enctype="multipart/form-data">
@@ -770,7 +770,7 @@
 						</div><!-- end .smart-forms section -->
 					</div><!-- end .smart-wrap section -->
 				</div>
-				<div class="col-md-3">
+				<!-- <div class="col-md-3">
 					<section class="b-sm-about">
 						<ul class="b-isotope-grid grid list-unstyled">
 							<li class="grid-sizer"></li>
@@ -782,7 +782,7 @@
 						<h3 class="b-sm-about__title">Video Tutorial - Smart Form</h3>
 						<p>We have created a quick video that shows you how our smart open order form works.</p>
 					</section>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</section>

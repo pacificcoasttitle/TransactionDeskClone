@@ -1,7 +1,5 @@
 <style>
-	.smart-forms .prepend-icon .field-icon {
-		top: 14px !important;
-	}
+	
 	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}  
 	.ui-autocomplete {
 		max-height: 300px !important;
