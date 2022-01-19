@@ -46,7 +46,8 @@ $(document).ready(function () {
         });
     } 
     
-    if ($('#users').length)  {
+    if ($('#users').length > 0)  {
+        console.log($('#users').length);
         users = $('#users').DataTable({
            "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
@@ -60,7 +61,7 @@ $(document).ready(function () {
             },
             initComplete: function() {
             },
-            "dom": 'lf<"FilterOrderListing">rtip',
+            "dom": 'Blfrtip',
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
                 $('.dataTables_paginate > .pagination a').addClass('page-link');
@@ -101,7 +102,7 @@ $(document).ready(function () {
             },
             initComplete: function() {
             },
-            "dom": 'lf<"FilterOrderListing">rtip',
+            "dom": 'Blfrtip',
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
                 $('.dataTables_paginate > .pagination a').addClass('page-link');

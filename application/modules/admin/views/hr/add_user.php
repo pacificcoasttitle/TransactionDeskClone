@@ -1,7 +1,7 @@
 <div class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Add User</h4>
@@ -20,34 +20,6 @@
                                         </div>
                                     <?php } ?>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="first_name">First Name<span class="required"> *</span></label>
-                                        <input type="text" class="form-control" placeholder="First Name" name="first_name" id="first_name" value="" required="required">
-                                    </div>
-                                    <?php if(!empty($first_name_error_msg)){ ?>  
-                                        <div class="typography-line text-danger">
-                                           <?php echo $first_name_error_msg;?>
-                                        </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Last Name<span class="required"> *</span></label>
-                                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" id="last_name" value="" required="required">
-                                    </div>
-                                    <?php if(!empty($last_name_error_msg)){ ?>  
-                                        <div class="typography-line text-danger">
-                                            <?php echo $last_name_error_msg;?>
-                                        </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Position<span class="required"> *</span></label>
@@ -64,7 +36,34 @@
                                         </div>
                                     <?php } ?>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="first_name">First Name<span class="required"> *</span></label>
+                                        <input type="text" class="form-control" placeholder="First Name" name="first_name" id="first_name" value="" required="required">
+                                    </div>
+                                    <?php if(!empty($first_name_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                           <?php echo $first_name_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
                             </div>
+                            <div class="row">
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Last Name<span class="required"> *</span></label>
+                                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" id="last_name" value="" required="required">
+                                    </div>
+                                    <?php if(!empty($last_name_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $last_name_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            
+                            
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -93,8 +92,20 @@
                                     <?php } ?>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-info btn-fill pull-left">Save</button>
-                            <a style="margin-left:10px;" href="<?php echo base_url().'hr/admin/users'; ?>" id="cancel" name="cancel" class="btn btn-info btn-fill pull-left">Cancel</a>
+                            <button type="submit" class="btn btn-info btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-save"></i>
+                                </span>
+                                <span class="text">Save</span>
+                                
+                            </button>
+                            <a href="<?php echo base_url().'hr/admin/users'; ?>" class="btn btn-secondary btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-arrow-right"></i>
+                                </span>
+                                <span class="text">Cancel</span>
+                            </a>
+                            
                             <div class="clearfix"></div>
                         </form>
                     </div>
@@ -103,6 +114,4 @@
         </div>
     </div>
 </div>
-
-
 

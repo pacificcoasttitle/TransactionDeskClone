@@ -46,6 +46,10 @@ class Users extends MX_Controller {
 			$data['success'] = $this->session->userdata('success');
 			$this->session->unset_userdata('success');
 		}
+        $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
         $this->admintemplate->show("hr", "users", $data);
     }
 
@@ -80,11 +84,19 @@ class Users extends MX_Controller {
                 $nestedData[] = $value['hire_date'];
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-user/'.$value['id'];
-                    $nestedData[] = '<a href="'.$editUrl.'"><button type="button" rel="tooltip" title="" class="btn btn-info btn-simple btn-link" data-original-title="Edit Task">
-                    <i class="fa fa-edit"></i></a>
-                    </button><button type="button" style="cursor:pointer;" rel="tooltip" title="" onclick="deleteUser('.$value["id"].')" class="btn btn-danger btn-simple btn-link" data-original-title="Remove">
-                        <i class="fa fa-times"></i>
-                    </button>';
+                    
+                    $nestedData[] = '<a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </span>
+                                        <span class="text">Edit</span>
+                                    </a>
+                                    <a href="#" onclick="deleteUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                        <span class="text">Delete</span>
+                                    </a>';
                 }
 	            $data[] = $nestedData;    
                 $count++;          
@@ -128,7 +140,7 @@ class Users extends MX_Controller {
                 $successMsg = 'User added successfully.';
 
                 $from_name = 'Pacific Coast Title Company';
-                $from_mail = getenv('FROM_EMAIL');
+                $from_mail = getenv('FROM_EMAIL');2
                 $message_body = "Hi ".$this->input->post('first_name')." ".$this->input->post('last_name').", <br><br>";
                 $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
                 $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
