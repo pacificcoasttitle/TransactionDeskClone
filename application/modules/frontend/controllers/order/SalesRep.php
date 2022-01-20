@@ -240,4 +240,59 @@ class SalesRep extends MX_Controller
 		$this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/sales_production_history', $data);
 	}
+
+    function trends()
+	{
+        $userdata = $this->session->userdata('user');
+		$userId = $this->uri->segment(2);
+		$data['sales_user_id']  = $userId;
+		$data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+
+		if ($userdata['is_sales_rep_manager'] == 1) {
+			$data['salesUsers'] = $this->order->get_sales_users();
+		} else {
+            if ($userId != $userdata['id']) {
+                redirect(base_url().'sales-production-history/'.$userdata['id']);
+            }
+			$data['salesUsers'] = array();
+		}
+		$data['title'] = 'Trends | Pacific Coast Title Company';
+        $salesHistory = array();
+
+        for ($year = (int)date('Y'); $year > (int)date('Y')- 2; $year--) {
+            $monthLimit = ($year == (int)date('Y')) ? (int)date('m') : 12; 
+            
+            for ($iM = 1; $iM <= $monthLimit; $iM++) {
+                $month = date("m", strtotime("$iM/12/10"));
+                $dateObj   = DateTime::createFromFormat('!m', $iM);
+                $monthName = $dateObj->format('F'); 
+                $salesHistory[$year][$iM-1]['month'] = $monthName;
+    
+                $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $userId, strval( $year));
+                $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+                $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId);
+                $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+                $salesHistory[$year][$iM-1]['total_open_count'] = $sale_open_count + $refi_open_count;
+    
+                $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $userId, strval( $year));
+                $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+                $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $userId);
+                $sale_close_count =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+                $salesHistory[$year][$iM-1]['total_close_count'] = $refi_close_count + $sale_close_count;
+    
+                $closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+                $refi_total_premium =  $closeOrderRefiTotalPremium;
+                $closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+                $sale_total_premium = $closeOrderSaleTotalPremium;
+                $salesHistory[$year][$iM-1]['total_premium'] = $sale_total_premium + $refi_total_premium;
+            }
+        }
+
+        //echo "<pre>";
+        //print_r($salesHistory[2022]);exit;
+		
+		$data['salesHistory'] = $salesHistory;
+        $this->load->view('layout/head_dashboard',$data);
+		$this->load->view('order/trends', $data);
+    }
 }
