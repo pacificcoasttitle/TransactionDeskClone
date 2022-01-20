@@ -216,6 +216,7 @@ $route['download-pay-off-document'] = 'frontend/order/payOff/downloadPayOffDocum
 $route['update-pay-off-action'] = 'frontend/order/payOff/updatePayOffAction';
 $route['create-payoff/:num'] = 'frontend/order/payOff/createPayoff';
 $route['generate-payoff'] = 'frontend/order/payOff/generatePayoff';
+$route['trends/:any'] = 'frontend/order/salesRep/trends';
 
 
 /* Route for PCT-Order backend*/
