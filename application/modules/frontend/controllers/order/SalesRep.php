@@ -21,6 +21,7 @@ class SalesRep extends MX_Controller
 		$this->load->model('order/fees_model');
 		$this->load->library('order/resware');
 		$this->load->library('order/common');
+        $this->load->model('order/salesRep');
 		$this->common->is_sales_user();
 	}
 	
@@ -252,7 +253,7 @@ class SalesRep extends MX_Controller
 			$data['salesUsers'] = $this->order->get_sales_users();
 		} else {
             if ($userId != $userdata['id']) {
-                redirect(base_url().'sales-production-history/'.$userdata['id']);
+                redirect(base_url().'trends/'.$userdata['id']);
             }
 			$data['salesUsers'] = array();
 		}
@@ -294,5 +295,71 @@ class SalesRep extends MX_Controller
 		$data['salesHistory'] = $salesHistory;
         $this->load->view('layout/head_dashboard',$data);
 		$this->load->view('order/trends', $data);
+    }
+
+    function summary()
+	{
+        $userdata = $this->session->userdata('user');
+		$userId = $this->uri->segment(2);
+		$data['sales_user_id']  = $userId;
+		$data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+
+		if ($userdata['is_sales_rep_manager'] == 1) {
+			$data['salesUsers'] = $this->order->get_sales_users();
+		} else {
+            if ($userId != $userdata['id']) {
+                redirect(base_url().'summary/'.$userdata['id']);
+            }
+			$data['salesUsers'] = array();
+		}
+        $result = $this->salesRep->getSummaryDetailsForSalesRep();
+        if(!empty($result)) {
+            $checkFlag = 0;
+            $data = array();
+            $i = 0;
+            $userName = '';
+            $companyName = '';
+            foreach($result as $res) {
+                if ($checkFlag == 0) {
+                    $sales_rep_user_id = $res['sales_representative'];
+                    $order_user_id = $res['customer_id'];
+                    $userName = $res['name'];
+                    $companyName = $res['company_name'];
+                    $checkFlag = 1;
+                    $j = 0;
+                }
+                if ($res['sales_representative'] == $sales_rep_user_id) {
+                    if($res['customer_id'] == $order_user_id) {
+                        $j++;
+                        $userName = $res['name'];
+                        $companyName = $res['company_name'];
+                    } else {    
+                        $j = 1;
+                        $i++;
+                        $userName = $res['name'];
+                        $$companyName = $res['company_name'];
+                        $order_user_id = $res['customer_id'];
+                    }
+                    $data['summary_info'][$i]['sales_name'] = $res['sales_name'];
+                    $data['summary_info'][$i]['name'] = $userName;
+                    $data['summary_info'][$i]['company_name'] = $companyName;
+                    $data['summary_info'][$i]['num_of_deals'] = $j;
+                } else {
+                    $data = array();
+                    $i = 0;
+                    $j = 1;
+                    $sales_rep_user_id = $res['sales_representative'];
+                    $order_user_id = $res['customer_id'];
+                    $userName = $res['name'];
+                    $companyName = $res['company_name'];
+                    $data['summary_info'][$i]['sales_name'] = $res['sales_name'];
+                    $data['summary_info'][$i]['name'] = $userName;
+                    $data['summary_info'][$i]['num_of_deals'] = $j;
+                    $data['summary_info'][$i]['company_name'] = $companyName;
+                }
+            }
+        }
+        $this->load->view('layout/head_dashboard',$data);
+		$this->load->view('order/summary', $data);
     }
 }
