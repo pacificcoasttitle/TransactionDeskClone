@@ -21,7 +21,7 @@ class SalesRep extends MX_Controller
 		$this->load->model('order/fees_model');
 		$this->load->library('order/resware');
 		$this->load->library('order/common');
-        $this->load->model('order/salesRep');
+        $this->load->model('order/salesRep_model');
 		$this->common->is_sales_user();
 	}
 	
@@ -312,7 +312,7 @@ class SalesRep extends MX_Controller
             }
 			$data['salesUsers'] = array();
 		}
-        $result = $this->salesRep->getSummaryDetailsForSalesRep();
+        $result = $this->salesRep_model->getSummaryDetailsForSalesRep();
         if(!empty($result)) {
             $checkFlag = 0;
             $data = array();
