@@ -17,7 +17,7 @@ class SalesRep_model extends CI_Model
             user_details.company_name, 
             transaction_details.sales_representative');
         $this->db->from('order_details');
-        $this->db->where('YEAR(order_details.sent_to_accounting_date)', '2021'); 
+        $this->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
         $this->db->where('transaction_details.sales_representative', $userdata['id']);
         $this->db->where('customer_basic_details.email_address != ""');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
