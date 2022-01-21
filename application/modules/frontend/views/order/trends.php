@@ -37,7 +37,7 @@
 						</div>  
                         
 						<div class="typography-sectiona">
-							<div class="col-md-8 chart-container">
+							<div class="col-md-12 chart-container">
 								<div class="card shadow mb-4">
 									<!-- Card Header - Dropdown -->
 									<div
@@ -66,7 +66,7 @@
 						</div>
 
                         <div class="typography-sectiona">
-							<div class="col-md-8 chart-container">
+							<div class="col-md-12 chart-container">
 								<div class="card shadow mb-4">
 									<!-- Card Header - Dropdown -->
 									<div
@@ -95,7 +95,7 @@
 						</div>
 
                         <div class="typography-sectiona">
-							<div class="col-md-8 chart-container">
+							<div class="col-md-12 chart-container">
 								<div class="card shadow mb-4">
 									<!-- Card Header - Dropdown -->
 									<div
