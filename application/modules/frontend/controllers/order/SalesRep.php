@@ -37,10 +37,13 @@ class SalesRep extends MX_Controller
 			$salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
             if (!empty($salesUser['sales_rep_users'])) {
                 $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userdata['id'], $salesRepUsers)) {
+                    $salesRepUsers[] = $userdata['id'];
+                }
                 if (!in_array($userId, $salesRepUsers)) {
                     redirect(base_url().'sales-dashboard/'.$userdata['id']);
                 }
-                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
             } else {
                 $data['salesUsers'] = $this->order->get_sales_users();
             }
@@ -184,10 +187,13 @@ class SalesRep extends MX_Controller
             $salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
             if (!empty($salesUser['sales_rep_users'])) {
                 $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userdata['id'], $salesRepUsers)) {
+                    $salesRepUsers[] = $userdata['id'];
+                }
                 if (!in_array($userId, $salesRepUsers)) {
                     redirect(base_url().'sales-production-history/'.$userdata['id']);
                 }
-                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
             } else {
                 $data['salesUsers'] = $this->order->get_sales_users();
             }
@@ -271,10 +277,13 @@ class SalesRep extends MX_Controller
 			$salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
             if (!empty($salesUser['sales_rep_users'])) {
                 $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userdata['id'], $salesRepUsers)) {
+                    $salesRepUsers[] = $userdata['id'];
+                }
                 if (!in_array($userId, $salesRepUsers)) {
                     redirect(base_url().'trends/'.$userdata['id']);
                 }
-                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
             } else {
                 $data['salesUsers'] = $this->order->get_sales_users();
             }
@@ -331,10 +340,13 @@ class SalesRep extends MX_Controller
 			$salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
             if (!empty($salesUser['sales_rep_users'])) {
                 $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userdata['id'], $salesRepUsers)) {
+                    $salesRepUsers[] = $userdata['id'];
+                }
                 if (!in_array($userId, $salesRepUsers)) {
                     redirect(base_url().'sales-summary/'.$userdata['id']);
                 }
-                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
             } else {
                 $data['salesUsers'] = $this->order->get_sales_users();
             }

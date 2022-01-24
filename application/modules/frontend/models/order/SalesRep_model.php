@@ -26,8 +26,8 @@ class SalesRep_model extends CI_Model
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
         $this->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
-        $this->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','inner');
-        $this->db->order_by('transaction_details.sales_representative asc, order_details.customer_id asc'); 
+        $this->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','left');
+        $this->db->order_by('transaction_details.sales_representative asc, order_details.customer_id desc'); 
         $query = $this->db->get();
         return $query->result_array(); 
 
