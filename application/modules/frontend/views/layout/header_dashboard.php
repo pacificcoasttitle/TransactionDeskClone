@@ -29,10 +29,8 @@
                                     if($userdata['is_sales_rep']  == 1) { ?>
                                         <li><a href="<?php echo base_url(); ?>sales-dashboard/<?php echo $userdata['id']; ?>">Dashboard Home</a></li>
                                         <li><a href="<?php echo base_url(); ?>sales-production-history/<?php echo $userdata['id'];?>">Production History</a></li>
-                                        <?php if ($userdata['email']  == 'teammeza@pct.com') { ?>
-                                            <li><a href="<?php echo base_url(); ?>trends/<?php echo $userdata['id'];?>">Trends</a></li>
-                                            <li><a href="<?php echo base_url(); ?>sales-summary/<?php echo $userdata['id'];?>">Summary</a></li>
-                                        <?php } ?>
+                                        <li><a href="<?php echo base_url(); ?>trends/<?php echo $userdata['id'];?>">Trends</a></li>
+                                        <li><a href="<?php echo base_url(); ?>sales-summary/<?php echo $userdata['id'];?>">Summary</a></li>
                                     <?php } else if($userdata['is_title_officer'] == 1)  { ?>
                                         <li><a href="<?php echo base_url(); ?>title-officer-dashboard">Dashboard Home</a></li>
                                         <li><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></li>
