@@ -133,7 +133,7 @@
 								<div id="sales_user_listing">
 									<label>
 										<select style="width:auto;" name="sales_user_filter" id="sales_user_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
-											<option value="all"> All Sales Rep Users </option>
+											<!-- <option value="all"> All Sales Rep Users </option> -->
 											<?php foreach($salesUsers as $salesUser) { ?>
 												<option <?Php echo ($user_id == $salesUser['id']) ? 'selected' : '';?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
 											<?php }?>

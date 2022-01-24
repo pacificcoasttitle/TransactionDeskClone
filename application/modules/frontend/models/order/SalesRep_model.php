@@ -1,9 +1,8 @@
 <?php
 class SalesRep_model extends CI_Model 
 {
-    public function getSummaryDetailsForSalesRep()
+    public function getSummaryDetailsForSalesRep($userId)
     {
-        $userdata = $this->session->userdata('user');
         $this->db->select('order_details.file_id, 
             order_details.file_number, 
             order_details.customer_id, 
@@ -18,7 +17,11 @@ class SalesRep_model extends CI_Model
             transaction_details.sales_representative');
         $this->db->from('order_details');
         $this->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
-        $this->db->where('transaction_details.sales_representative', $userdata['id']);
+        if ($userId != 'all') {
+            $this->db->where('transaction_details.sales_representative', $userId); 
+        } else {
+            $this->db->where('transaction_details.sales_representative is not null'); 
+        }
         $this->db->where('customer_basic_details.email_address != ""');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');

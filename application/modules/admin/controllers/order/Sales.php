@@ -77,6 +77,7 @@ class Sales extends MX_Controller {
         $data = array();
         $data['title'] = 'PCT Order: Add Sales Rep.';
         $salesRepData = array();
+        $data['salesUsers'] = $this->order->get_sales_users();
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('sales_rep_first_name', 'Sales Rep. First Name', 'required', array('required'=> 'Please Enter Sales Rep. First Name'));
@@ -162,7 +163,8 @@ class Sales extends MX_Controller {
                         'sales_rep_no_of_open_orders' => $_POST['sales_rep_no_of_open_orders'],
                         'sales_rep_no_of_close_orders' => $_POST['sales_rep_no_of_close_orders'],
                         'sales_rep_premium' => $_POST['sales_rep_premium'],
-                        'is_password_updated' => 1
+                        'is_password_updated' => 1,
+                        'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
                     );
 
                     $insert = $this->sales_model->insert($salesRepData);
@@ -200,6 +202,7 @@ class Sales extends MX_Controller {
         $data = array();
         $data['title'] = 'PCT Order: Edit Sales Rep.';
         $id = $this->uri->segment('4');
+        $data['salesUsers'] = $this->order->get_sales_users();
         
         if (isset($id) && !empty($id)) {
             $con = array('id' => $id);
@@ -297,7 +300,8 @@ class Sales extends MX_Controller {
                             'sales_rep_no_of_open_orders' => $_POST['sales_rep_no_of_open_orders'],
                             'sales_rep_no_of_close_orders' => $_POST['sales_rep_no_of_close_orders'],
                             'sales_rep_premium' => $_POST['sales_rep_premium'],
-                            'is_password_updated' => 1
+                            'is_password_updated' => 1,
+                            'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
                         );
 
                         $condition = array('id' => $id);

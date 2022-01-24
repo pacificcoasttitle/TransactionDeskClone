@@ -26,9 +26,9 @@
 								<div id="sales_user_listing">
 									<label>
 										<select style="width:auto;" name="sales_user_filter" id="sales_user_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
-											<option value="all"> All Sales Rep Users </option>
+											<!-- <option value="all"> All Sales Rep Users </option> -->
 											<?php foreach($salesUsers as $salesUser) { ?>
-												<option <?Php echo ($user_id == $salesUser['id']) ? 'selected' : '';?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
+												<option <?Php echo ($sales_user_id == $salesUser['id']) ? 'selected' : '';?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
 											<?php }?>
 										</select>
 									</label>
@@ -140,7 +140,13 @@
 
 <script src="<?php echo base_url(); ?>assets/plugins/chart/Chart.min.js"></script>
 <script>
-	
+	$(document).ready(function () {
+		$("#sales_user_filter").on("change", function(){
+			var user_id = $(this).val();
+	        window.location.replace('<?php echo base_url();?>trends/'+user_id);
+	    });
+	});
+
     var salesData = <?php echo json_encode($salesHistory);?>;
     var salesDataKeys =  Object.keys(salesData);
     const openOrderDataset = [];
