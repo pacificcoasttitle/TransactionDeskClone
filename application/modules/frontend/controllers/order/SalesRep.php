@@ -43,7 +43,7 @@ class SalesRep extends MX_Controller
                 if (!in_array($userId, $salesRepUsers)) {
                     redirect(base_url().'sales-dashboard/'.$userdata['id']);
                 }
-                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
             } else {
                 $data['salesUsers'] = $this->order->get_sales_users();
             }
@@ -193,7 +193,7 @@ class SalesRep extends MX_Controller
                 if (!in_array($userId, $salesRepUsers)) {
                     redirect(base_url().'sales-production-history/'.$userdata['id']);
                 }
-                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
             } else {
                 $data['salesUsers'] = $this->order->get_sales_users();
             }
@@ -283,7 +283,7 @@ class SalesRep extends MX_Controller
                 if (!in_array($userId, $salesRepUsers)) {
                     redirect(base_url().'trends/'.$userdata['id']);
                 }
-                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
             } else {
                 $data['salesUsers'] = $this->order->get_sales_users();
             }
@@ -346,7 +346,7 @@ class SalesRep extends MX_Controller
                 if (!in_array($userId, $salesRepUsers)) {
                     redirect(base_url().'sales-summary/'.$userdata['id']);
                 }
-                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
             } else {
                 $data['salesUsers'] = $this->order->get_sales_users();
             }
