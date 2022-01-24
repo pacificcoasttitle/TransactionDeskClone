@@ -34,7 +34,16 @@ class SalesRep extends MX_Controller
         $userId = $this->uri->segment(2);
         $data['user_id'] =  $userId;
 		if ($userdata['is_sales_rep_manager'] == 1) {
-			$data['salesUsers'] = $this->order->get_sales_users();
+			$salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
+            if (!empty($salesUser['sales_rep_users'])) {
+                $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userId, $salesRepUsers)) {
+                    redirect(base_url().'sales-dashboard/'.$userdata['id']);
+                }
+                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+            } else {
+                $data['salesUsers'] = $this->order->get_sales_users();
+            }
 		} else {
             if ($userId != $userdata['id']) {
                 redirect(base_url().'sales-dashboard/'.$userdata['id']);
@@ -172,7 +181,16 @@ class SalesRep extends MX_Controller
 		$data['sales_user_id']  = $userId;
 		$data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
 		if ($userdata['is_sales_rep_manager'] == 1) {
-			$data['salesUsers'] = $this->order->get_sales_users();
+            $salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
+            if (!empty($salesUser['sales_rep_users'])) {
+                $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userId, $salesRepUsers)) {
+                    redirect(base_url().'sales-production-history/'.$userdata['id']);
+                }
+                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+            } else {
+                $data['salesUsers'] = $this->order->get_sales_users();
+            }
 		} else {
             if ($userId != $userdata['id']) {
                 redirect(base_url().'sales-production-history/'.$userdata['id']);
@@ -250,7 +268,16 @@ class SalesRep extends MX_Controller
 		$data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
 
 		if ($userdata['is_sales_rep_manager'] == 1) {
-			$data['salesUsers'] = $this->order->get_sales_users();
+			$salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
+            if (!empty($salesUser['sales_rep_users'])) {
+                $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userId, $salesRepUsers)) {
+                    redirect(base_url().'trends/'.$userdata['id']);
+                }
+                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+            } else {
+                $data['salesUsers'] = $this->order->get_sales_users();
+            }
 		} else {
             if ($userId != $userdata['id']) {
                 redirect(base_url().'trends/'.$userdata['id']);
@@ -287,14 +314,10 @@ class SalesRep extends MX_Controller
                 $sale_total_premium = $closeOrderSaleTotalPremium;
                 $salesHistory[$year][$iM-1]['total_premium'] = $sale_total_premium + $refi_total_premium;
             }
-        }
-
-        //echo "<pre>";
-        //print_r($salesHistory[2022]);exit;
-		
+        }	
 		$data['salesHistory'] = $salesHistory;
         $this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/trends', $data);
+		$this->load->view('order/sales_trends', $data);
     }
 
     function summary()
@@ -305,17 +328,27 @@ class SalesRep extends MX_Controller
 		$data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
 
 		if ($userdata['is_sales_rep_manager'] == 1) {
-			$data['salesUsers'] = $this->order->get_sales_users();
+			$salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
+            if (!empty($salesUser['sales_rep_users'])) {
+                $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userId, $salesRepUsers)) {
+                    redirect(base_url().'sales-summary/'.$userdata['id']);
+                }
+                $data['salesUsers'] = $this->order->get_sales_users($salesUser['sales_rep_users']);
+            } else {
+                $data['salesUsers'] = $this->order->get_sales_users();
+            }
 		} else {
             if ($userId != $userdata['id']) {
-                redirect(base_url().'summary/'.$userdata['id']);
+                redirect(base_url().'sales-summary/'.$userdata['id']);
             }
 			$data['salesUsers'] = array();
 		}
-        $result = $this->salesRep_model->getSummaryDetailsForSalesRep();
+
+        $result = $this->salesRep_model->getSummaryDetailsForSalesRep($userId);
         if(!empty($result)) {
             $checkFlag = 0;
-            $data = array();
+            $data['summary_info'] = array();
             $i = 0;
             $userName = '';
             $companyName = '';
@@ -345,8 +378,7 @@ class SalesRep extends MX_Controller
                     $data['summary_info'][$i]['company_name'] = $companyName;
                     $data['summary_info'][$i]['num_of_deals'] = $j;
                 } else {
-                    $data = array();
-                    $i = 0;
+                    $i++;
                     $j = 1;
                     $sales_rep_user_id = $res['sales_representative'];
                     $order_user_id = $res['customer_id'];
@@ -360,6 +392,6 @@ class SalesRep extends MX_Controller
             }
         }
         $this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/summary', $data);
+		$this->load->view('order/sales_summary', $data);
     }
 }

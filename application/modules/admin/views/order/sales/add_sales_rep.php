@@ -1,3 +1,8 @@
+<style>
+.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+    width: -webkit-fill-available;
+}
+</style>
 <div class="container">
     <?php if(!empty($success_msg)){ ?>
         <div class="col-xs-12">
@@ -108,6 +113,22 @@
                     <label for="language" class="col-sm-4 col-form-label">Sales Manager</label>
                     <div class="col-sm-1">
                         <input type="checkbox" class="form-control" name="is_sales_rep_manager" id="is_sales_rep_manager" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="zipcode" class="col-sm-4 col-form-label">Select Sales Reps.</label>
+                    <div class="col-sm-8">
+                        <select name="sales_rep_users[]"  class="selectpicker" multiple data-live-search="true" data-actions-box="true">
+                            <?php foreach($salesUsers as $salesUser) {?>
+                                <?php $selected = '';
+                                    if(set_value('sales_rep_users') && in_array($salesUser['id'], set_value('sales_rep_users')))  {
+                                        $selected = 'selected';
+                                    } 
+                                ?> 
+                                <option <?php echo $selected;?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
+                            <?php }?>
+                        </select>
                     </div>
                 </div>
 

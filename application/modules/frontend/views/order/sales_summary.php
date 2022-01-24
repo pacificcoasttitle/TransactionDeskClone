@@ -21,7 +21,7 @@
 							<div id="sales_user_listing">
 								<label>
 									<select style="width:auto;" name="sales_user_filter" id="sales_user_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
-										<option value="all"> All Sales Rep Users </option>
+										<!-- <option value="all"> All Sales Rep Users </option> -->
 										<?php foreach($salesUsers as $salesUser) { ?>
 											<option <?php echo ($sales_user_id == $salesUser['id']) ? 'selected' : '' ;?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
 										<?php }?>
@@ -84,7 +84,7 @@
 	$(document).ready(function () {
 		$("#sales_user_filter").on("change", function(){
 			var user_id = $(this).val();
-	        window.location.replace('<?php echo base_url();?>sales-production-history/'+user_id);
+	        window.location.replace('<?php echo base_url();?>sales-summary/'+user_id);
 	    });
 	});
 </script>

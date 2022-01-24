@@ -1786,11 +1786,14 @@ class Order
 		$this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
 
-    public function get_sales_users() 
+    public function get_sales_users($sales_rep_users = '') 
     {
         $this->CI->db->select('*');
         $this->CI->db->from('customer_basic_details');
         $this->CI->db->where('is_sales_rep', 1);
+        if (!empty($sales_rep_users)) {
+            $this->CI->db->where_in('id', explode(',', $sales_rep_users));
+        }
         $this->CI->db->order_by('first_name', 'asc');
         $query = $this->CI->db->get();
         $result = $query->result_array();
