@@ -12,6 +12,7 @@
 					<p>Dashboard</p>
 				</a>
 			</li>
+			
 			<li class="<?php if($this->uri->uri_string() == 'hr/admin/time-cards' || $this->uri->uri_string() == 'hr/admin/add-time-card' || $this->uri->segment(3) == 'edit-time-card') { echo 'active'; } ?>">
 				<a class="nav-link" href="<?php echo base_url().'hr/admin/time-cards'; ?>">
 					<img style="height:30px;margin-right:10px;" src="<?php echo base_url(); ?>assets/media/hr/timecard.png" class="buttImg">
