@@ -22,7 +22,7 @@ class Home extends MX_Controller {
     	$userdata = $this->session->userdata('user');
 		$this->load->model('order/apiLogs');
 		$this->load->model('order/titleOfficer');
-		$this->load->model('order/salesRep');
+		//$this->load->model('order/salesRep');
 		$this->load->model('order/partnerApiLogs');
 		$this->load->library('order/titlepoint');
 		
