@@ -1,54 +1,59 @@
-<div class="content">
+<div class="container-fluid">	
+	<div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Incident Reports</h1>
+		</div>
+		<div class="col-sm-6">
+            <a href="#" class="btn btn-success btn-icon-split float-right">
+                <span class="icon text-white-50">
+                    <i class="fa fa-plus"></i>
+                </span>
+                <span class="text">Add Incident Report</span>
+            </a>
+		</div>
+	</div>
+
     <?php if(!empty($success)) {?>
-        <div class="alert alert-success">
-            <button type="button" aria-hidden="true" class="close" data-dismiss="alert">
-                <i class="nc-icon nc-simple-remove"></i>
-            </button>
-            <span><?php echo $success;?></span>
-        </div>
-    <?php } 
+        <a href="#" class="btn btn-success btn-block mt-1 mb-3"><?php echo $success;?></a>
+    <?php }   
     if(!empty($errors)) {?>
-        <div class="alert alert-danger">
-            <button type="button" aria-hidden="true" class="close" data-dismiss="alert">
-                <i class="nc-icon nc-simple-remove"></i>
-            </button>
-            <span><?php echo $errors;?></span>
-        </div>
+        <a href="#" class="btn btn-danger btn-block mt-1 mb-3"><?php echo $errors;?></a>
     <?php } ?>
 
-    <div id="incident_reports_success_msg" class="alert alert-success" style="display:none;"></div>
-    <div id="incident_reports_error_msg" class="alert alert-danger" style="display:none;"></div>
-    
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card strpied-tabled-with-hover">
-                    <div class="card-header ">
-                        <!-- <a style="float:right;" class="btn btn-info btn-fill btn-wd" href="<?php echo base_url().'hr/admin/time-card'; ?>">
-                            Add Time Card
-                        </a> -->
-                    </div>
-                    <div class="card-body table-full-width table-responsive">
-                        <table style="width:100%;" class="table table-hover table-striped" id="incident_reports">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Employee #</th>
-                                    <th>Date</th>
-                                    <th>Name</th>
-                                    <th>Reason</th>
-                                    <th>Num Of Incident</th>
-                                    <th>Incident Actions</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div id="incident_reports_success_msg" class="btn btn-success btn-block mt-1 mb-3" style="display:none;"></div>
+	<div id="incident_reports_error_msg" class="btn btn-danger btn-block mt-1 mb-3" style="display:none;"></div>
+
+	<!-- DataTales Example -->
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Incident Reports Listing</h6>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-bordered" id="incident_reports" width="100%" cellspacing="0">
+					<thead>
+						<tr>
+                            <th>No</th>
+                            <th>Employee #</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Reason</th>
+                            <th>Num Of Incident</th>
+                            <th>Incident Actions</th>
+                            <th>Actions</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
 </div>
+
+
+
 

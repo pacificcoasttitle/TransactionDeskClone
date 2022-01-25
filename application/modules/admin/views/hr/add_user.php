@@ -1,10 +1,15 @@
 <div class="content">
     <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <h1 class="h3 text-gray-800">Users -> Employees</h1>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Add User</h4>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Add Employee</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" name="user_form" >
@@ -20,6 +25,34 @@
                                         </div>
                                     <?php } ?>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="first_name">First Name<span class="required"> *</span></label>
+                                        <input type="text" class="form-control" placeholder="First Name" name="first_name" id="first_name" value="" required="required">
+                                    </div>
+                                    <?php if(!empty($first_name_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                           <?php echo $first_name_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Last Name<span class="required"> *</span></label>
+                                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" id="last_name" value="" required="required">
+                                    </div>
+                                    <?php if(!empty($last_name_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $last_name_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Position<span class="required"> *</span></label>
@@ -36,34 +69,7 @@
                                         </div>
                                     <?php } ?>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="first_name">First Name<span class="required"> *</span></label>
-                                        <input type="text" class="form-control" placeholder="First Name" name="first_name" id="first_name" value="" required="required">
-                                    </div>
-                                    <?php if(!empty($first_name_error_msg)){ ?>  
-                                        <div class="typography-line text-danger">
-                                           <?php echo $first_name_error_msg;?>
-                                        </div>
-                                    <?php } ?>
-                                </div>
                             </div>
-                            <div class="row">
-                                
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Last Name<span class="required"> *</span></label>
-                                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" id="last_name" value="" required="required">
-                                    </div>
-                                    <?php if(!empty($last_name_error_msg)){ ?>  
-                                        <div class="typography-line text-danger">
-                                            <?php echo $last_name_error_msg;?>
-                                        </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            
-                            
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -114,4 +120,5 @@
         </div>
     </div>
 </div>
+
 

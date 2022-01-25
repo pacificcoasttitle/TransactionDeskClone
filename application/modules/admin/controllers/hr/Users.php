@@ -140,7 +140,7 @@ class Users extends MX_Controller {
                 $successMsg = 'User added successfully.';
 
                 $from_name = 'Pacific Coast Title Company';
-                $from_mail = getenv('FROM_EMAIL');2
+                $from_mail = getenv('FROM_EMAIL');
                 $message_body = "Hi ".$this->input->post('first_name')." ".$this->input->post('last_name').", <br><br>";
                 $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
                 $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
@@ -160,6 +160,7 @@ class Users extends MX_Controller {
                 $data['user_type_error_msg'] = form_error('user_type');
             }                                       
         }
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
         $this->admintemplate->show("hr", "add_user", $data);
     }
 
@@ -206,6 +207,7 @@ class Users extends MX_Controller {
         } else {
             redirect(base_url().'hr/admin/users');
         }
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
         $this->admintemplate->show("hr", "edit_user", $data);
     }
 

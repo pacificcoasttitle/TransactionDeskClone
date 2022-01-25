@@ -1,7 +1,7 @@
 <div class="container-fluid">	
-	<div class="row mb-2">
+	<div class="row mb-3">
 		<div class="col-sm-6">
-			<h1>Timecards</h1>
+			<h1 class="h3 text-gray-800">Timecards</h1>
 		</div>
 		<div class="col-sm-6">
             <a href="#" class="btn btn-success btn-icon-split float-right">

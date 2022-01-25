@@ -84,7 +84,7 @@ class Timecards extends MX_Controller {
 				$nestedData[] = $timeCard['total_hours'];
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-time-card/'.$timeCard['id'];
-                    $nestedData[] = '<a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
+                    $nestedData[] = '<a href="" class="btn btn-info btn-icon-split btn-sm">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-pencil-alt"></i>
                                         </span>
