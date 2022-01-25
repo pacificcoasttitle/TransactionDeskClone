@@ -332,6 +332,7 @@ $route['hr/save-vacation-requests'] = 'frontend/hr/vacationRequests/saveVacation
 $route['hr/incident-reports'] = 'frontend/hr/incidentReports/index';
 $route['hr/get-incident-reports'] = 'frontend/hr/incidentReports/getIncidentReports';
 $route['hr/save-incident-reports'] = 'frontend/hr/incidentReports/saveIncidentReports';
+$route['hr/profile'] = 'frontend/hr/user/index';
 $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 

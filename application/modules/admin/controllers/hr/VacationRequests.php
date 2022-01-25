@@ -46,6 +46,10 @@ class VacationRequests extends MX_Controller {
 			$data['success'] = $this->session->userdata('success');
 			$this->session->unset_userdata('success');
 		}
+        $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
         $this->admintemplate->show("hr", "vacation_requests", $data);
     }
 
@@ -79,11 +83,18 @@ class VacationRequests extends MX_Controller {
                 $nestedData[] = $vacationRequestList['is_time_charged_vacation'] == 1 ? 'Yes' : 'No';
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-vacation-request/'.$vacationRequestList['id'];
-                    $nestedData[] = '<a href=""><button type="button" rel="tooltip" title="" class="btn btn-info btn-simple btn-link" data-original-title="Edit Task">
-                    <i class="fa fa-edit"></i></a>
-                    </button><button type="button" style="cursor:pointer;" rel="tooltip" title="" onclick="deleteTimeCard('.$vacationRequestList["id"].')" class="btn btn-danger btn-simple btn-link" data-original-title="Remove">
-                        <i class="fa fa-times"></i>
-                    </button>';
+                    $nestedData[] = '<a href="" class="btn btn-info btn-icon-split btn-sm">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </span>
+                                    <span class="text">Edit</span>
+                                </a>
+                                <a href="#" onclick="deleteVacationRequest('.$vacationRequestList["id"].')" class="btn btn-danger btn-icon-split btn-sm">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-trash"></i>
+                                    </span>
+                                    <span class="text">Delete</span>
+                                </a>';
                 }
 				$data[] = $nestedData; 
 				$i++; 

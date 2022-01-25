@@ -1,24 +1,23 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg " color-on-scroll="500">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#pablo"> <?php echo $page_title;?> </a>
-        <button href="" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-bar burger-lines"></span>
-            <span class="navbar-toggler-bar burger-lines"></span>
-            <span class="navbar-toggler-bar burger-lines"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navigation">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="nc-icon nc-circle-09" style="font-size: 27px;"></i>
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="right:0px;">
-                        <a class="dropdown-item" href="<?php echo base_url().'hr/admin/logout'; ?>">Logout</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+	
+	<ul class="navbar-nav ml-auto">
+		
+		<li class="nav-item dropdown no-arrow">
+			<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+				aria-haspopup="true" aria-expanded="false">
+				<?php $admin = $this->session->userdata('admin');?>
+				<span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo strtoupper($admin['name']);?></span>
+				<img class="img-profile rounded-circle" src="<?php echo base_url()?>assets/backend/hr/img/undraw_profile.svg">
+			</a>
+			
+			<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+				<a class="dropdown-item" href="<?php echo base_url().'hr/admin/logout'; ?>">
+					<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+					Logout
+				</a>
+			</div>
+		</li>
+
+	</ul>
 </nav>
-<!-- End Navbar -->
+
