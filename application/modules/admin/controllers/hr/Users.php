@@ -114,6 +114,8 @@ class Users extends MX_Controller {
         $data['page_title'] = 'Users';
         $data['hrPositions'] = $this->hr->getHrPositions(); 
         $data['userTypes'] = $this->hr->getHrUserTypes(); 
+        $data['branchManagers'] = $this->hr->getBranchManagers(); 
+
         if ($this->input->post()) {
             $this->load->library('hr/common');
             $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
@@ -122,7 +124,11 @@ class Users extends MX_Controller {
             $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
             $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
             $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
-           
+
+            if($this->input->post('user_type') == '1') {
+                $this->form_validation->set_rules('branch_manager', 'Branch Manager', 'required', array('required'=> 'Please Select Branch Manager.'));
+            }
+        
             if ($this->form_validation->run() == true) {
                 $randomPassword = $this->common->randomPassword();
                 $usersData = array(
@@ -134,7 +140,8 @@ class Users extends MX_Controller {
                     'user_type_id' => $this->input->post('user_type'),
                     'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
                     'status' => 1,
-                    'is_tmp_password' => 1
+                    'is_tmp_password' => 1,
+                    'branch_manager_id' => $this->input->post('user_type') == '1' ? $this->input->post('branch_manager') : 0
                 );
                 $this->hr->insert($usersData, 'pct_hr_users');
                 $successMsg = 'User added successfully.';
@@ -171,6 +178,7 @@ class Users extends MX_Controller {
         $data['page_title'] = 'Users';
         $data['hrPositions'] = $this->hr->getHrPositions(); 
         $data['userTypes'] = $this->hr->getHrUserTypes(); 
+        $data['branchManagers'] = $this->hr->getBranchManagers(); 
 
         if(isset($id) && !empty($id)) {
             if ($this->input->post()) {
@@ -180,6 +188,10 @@ class Users extends MX_Controller {
                 $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
                 $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
                 $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
+
+                if($this->input->post('user_type') == '1') {
+                    $this->form_validation->set_rules('branch_manager', 'Branch Manager', 'required', array('required'=> 'Please Select Branch Manager.'));
+                }
                
                 if ($this->form_validation->run() == true) {
                     $usersData = array(
@@ -188,7 +200,8 @@ class Users extends MX_Controller {
                         'position_id' => $this->input->post('position'),
                         'user_type_id' => $this->input->post('user_type'),
                         'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
-                        'status' => 1
+                        'status' => 1,
+                        'branch_manager_id' => $this->input->post('user_type') == '1' ? $this->input->post('branch_manager') : 0
                     );
                     $condition = array('id' => $id);
                     $this->hr->update($usersData, $condition, 'pct_hr_users');

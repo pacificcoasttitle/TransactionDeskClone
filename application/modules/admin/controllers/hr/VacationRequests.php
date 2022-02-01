@@ -81,20 +81,21 @@ class VacationRequests extends MX_Controller {
                 $nestedData[] = date("m/d/Y", strtotime($vacationRequestList['to_date']));
                 $nestedData[] = $vacationRequestList['is_salary_deduction'] == 1 ? 'Yes' : 'No';
                 $nestedData[] = $vacationRequestList['is_time_charged_vacation'] == 1 ? 'Yes' : 'No';
+                $nestedData[] = ucfirst(!empty($vacationRequestList['action_taken_user_id']) ? $vacationRequestList['status'] : '');
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-vacation-request/'.$vacationRequestList['id'];
-                    $nestedData[] = '<a href="" class="btn btn-info btn-icon-split btn-sm">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </span>
-                                    <span class="text">Edit</span>
-                                </a>
-                                <a href="#" onclick="deleteVacationRequest('.$vacationRequestList["id"].')" class="btn btn-danger btn-icon-split btn-sm">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-trash"></i>
-                                    </span>
-                                    <span class="text">Delete</span>
-                                </a>';
+                    $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$vacationRequestList["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                        <span class="text">Approve</span>
+                                    </a>
+                                    <a href="#" onclick="return approve_deny_popup(0, '.$vacationRequestList["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-ban"></i>
+                                        </span>
+                                        <span class="text">Deny</span>
+                                    </a>';
                 }
 				$data[] = $nestedData; 
 				$i++; 

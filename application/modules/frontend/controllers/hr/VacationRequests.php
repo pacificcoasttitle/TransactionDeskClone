@@ -36,8 +36,9 @@ class VacationRequests extends MX_Controller
         $this->template->show("hr", "vacation_requests", $data);
 	}
 
-    public function  getVacationRequests()
+    public function getVacationRequests()
     {
+        $userdata = $this->session->userdata('hr_user');
         $params = array();  $data = array();
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -64,6 +65,21 @@ class VacationRequests extends MX_Controller
                 $nestedData[] = date("m/d/Y", strtotime($vacationRequestList['to_date']));
                 $nestedData[] = $vacationRequestList['is_salary_deduction'] == 1 ? 'Yes' : 'No';
                 $nestedData[] = $vacationRequestList['is_time_charged_vacation'] == 1 ? 'Yes' : 'No';
+                $nestedData[] = ucfirst(!empty($vacationRequestList['action_taken_user_id']) ? $vacationRequestList['status'] : '');
+                $vacationRequestId = $vacationRequestList['id'];
+                if ($userdata['user_type_id'] == 2) {
+                    if($userdata['id'] != $vacationRequestList['user_id']) {
+                        $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                            <form onclick='return approve_deny_popup(1, $vacationRequestId);' action='' method='POST'>
+                                <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                            </form>
+                            <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $vacationRequestId);' action='' method='POST'>
+                                <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                            </form>";
+                    } else {
+                        $nestedData[] = '';
+                    }
+                } 
 				$data[] = $nestedData; 
 				$i++; 
 			}
@@ -74,7 +90,7 @@ class VacationRequests extends MX_Controller
 		echo json_encode($json_data);
     }
 
-    public function  saveVacationRequests()
+    public function saveVacationRequests()
     {
         $userdata = $this->session->userdata('hr_user');
         $errors = array();

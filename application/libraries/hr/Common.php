@@ -75,12 +75,27 @@ class Common
 
     public function getTimeCards($params)
     { 
+        $userdata = $this->CI->session->userdata('hr_user');
+        $usersIds = array();
+        if(!empty($this->CI->session->userdata('hr_user'))) {
+            if ($userdata['user_type_id'] == 2) {
+                $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                if(!empty($usersForBranchManager)) {
+                    $usersIds = explode(",", $usersForBranchManager['ids']);
+                    $usersIds[] = $userdata['id'];
+                } else {
+                    $usersIds[] = $userdata['id'];
+                }
+            } 
+        }
+        
         $this->CI->db->from('pct_hr_time_cards')
                  ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
 
-        if(!empty($this->CI->session->userdata('hr_user'))) {
-            $userdata = $this->CI->session->userdata('hr_user');
-            $this->CI->db->where('pct_hr_time_cards.user_id', $userdata['id']);
+        if(!empty($usersIds)) {
+            $this->CI->db->where_in('pct_hr_time_cards.user_id', $usersIds);
+        } else {
+            $this->CI->db->where_in('pct_hr_time_cards.user_id', $userdata['id']);
         }
 
         $total_records =  $this->CI->db->count_all_results();
@@ -106,9 +121,10 @@ class Common
             $this->CI->db->from('pct_hr_time_cards')
                  ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_time_cards.user_id', $userdata['id']);
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $userdata['id']);
             }
 			$filter_total_records =  $this->CI->db->count_all_results();
 
@@ -128,9 +144,10 @@ class Common
             $this->CI->db->from('pct_hr_time_cards')
                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_time_cards.user_id', $userdata['id']);
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $userdata['id']);
             }
             $this->CI->db->order_by('pct_hr_time_cards.id', 'desc');
 
@@ -146,9 +163,10 @@ class Common
     		$this->CI->db->from('pct_hr_time_cards')
                  ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_time_cards.user_id', $userdata['id']);
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $userdata['id']);
             }
             $filter_total_records =  $this->CI->db->count_all_results();
 
@@ -156,9 +174,10 @@ class Common
             $this->CI->db->from('pct_hr_time_cards')
                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_time_cards.user_id', $userdata['id']);
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $userdata['id']);
             }
             $this->CI->db->order_by('pct_hr_time_cards.id', 'desc');
 
@@ -182,14 +201,29 @@ class Common
 
     public function getVacationRequests($params)
     { 
-        $this->CI->db->from('pct_hr_vacation_requests')
-                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
-
+        $userdata = $this->CI->session->userdata('hr_user');
+        $usersIds = array();
         if(!empty($this->CI->session->userdata('hr_user'))) {
-            $userdata = $this->CI->session->userdata('hr_user');
-            $this->CI->db->where('pct_hr_vacation_requests.user_id', $userdata['id']);
+            if ($userdata['user_type_id'] == 2) {
+                $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                if(!empty($usersForBranchManager)) {
+                    $usersIds = explode(",", $usersForBranchManager['ids']);
+                    $usersIds[] = $userdata['id'];
+                } else {
+                    $usersIds[] = $userdata['id'];
+                }
+            } 
         }
 
+        $this->CI->db->from('pct_hr_vacation_requests')
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
+
+        if(!empty($usersIds)) {
+            $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $usersIds);
+        } else {
+            $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $userdata['id']);
+        }
+    
         $total_records =  $this->CI->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -213,10 +247,12 @@ class Common
             $this->CI->db->from('pct_hr_vacation_requests')
                  ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_vacation_requests.user_id', $userdata['id']);
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $userdata['id']);
             }
+
 			$filter_total_records =  $this->CI->db->count_all_results();
 
 			if (isset($keyword) && !empty($keyword)) {
@@ -235,10 +271,12 @@ class Common
             $this->CI->db->from('pct_hr_vacation_requests')
                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_vacation_requests.user_id', $userdata['id']);
+            if (!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $userdata['id']);
             }
+
             $this->CI->db->order_by('pct_hr_vacation_requests.id', 'desc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -254,9 +292,10 @@ class Common
     		$this->CI->db->from('pct_hr_vacation_requests')
                  ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_vacation_requests.user_id', $userdata['id']);
+            if (!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $userdata['id']);
             }
             $filter_total_records =  $this->CI->db->count_all_results();
 
@@ -264,9 +303,10 @@ class Common
             $this->CI->db->from('pct_hr_vacation_requests')
                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_vacation_requests.user_id', $userdata['id']);
+            if (!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $userdata['id']);
             }
             $this->CI->db->order_by('pct_hr_vacation_requests.id', 'desc');
 
@@ -290,12 +330,27 @@ class Common
 
     public function getIncidentReports($params)
     { 
+        $userdata = $this->CI->session->userdata('hr_user');
+        $usersIds = array();
+        if(!empty($this->CI->session->userdata('hr_user'))) {
+            if ($userdata['user_type_id'] == 2) {
+                $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                if(!empty($usersForBranchManager)) {
+                    $usersIds = explode(",", $usersForBranchManager['ids']);
+                    $usersIds[] = $userdata['id'];
+                } else {
+                    $usersIds[] = $userdata['id'];
+                }
+            } 
+        }
+
         $this->CI->db->from('pct_hr_incident_reports')
                  ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
 
-        if(!empty($this->CI->session->userdata('hr_user'))) {
-            $userdata = $this->CI->session->userdata('hr_user');
-            $this->CI->db->where('pct_hr_incident_reports.user_id', $userdata['id']);
+        if(!empty($usersIds)) {
+            $this->CI->db->where_in('pct_hr_incident_reports.user_id', $usersIds);
+        } else {
+            $this->CI->db->where_in('pct_hr_incident_reports.user_id', $userdata['id']);
         }
 
         $total_records =  $this->CI->db->count_all_results();
@@ -321,9 +376,10 @@ class Common
             $this->CI->db->from('pct_hr_incident_reports')
                  ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_incident_reports.user_id', $userdata['id']);
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $userdata['id']);
             }
 			$filter_total_records =  $this->CI->db->count_all_results();
 
@@ -343,9 +399,10 @@ class Common
             $this->CI->db->from('pct_hr_incident_reports')
                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_incident_reports.user_id', $userdata['id']);
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $userdata['id']);
             }
             $this->CI->db->order_by('pct_hr_incident_reports.id', 'desc');
 
@@ -362,9 +419,10 @@ class Common
     		$this->CI->db->from('pct_hr_incident_reports')
                  ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_incident_reports.user_id', $userdata['id']);
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $userdata['id']);
             }
             $filter_total_records =  $this->CI->db->count_all_results();
 
@@ -372,9 +430,10 @@ class Common
             $this->CI->db->from('pct_hr_incident_reports')
                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
 
-            if(!empty($this->CI->session->userdata('hr_user'))) {
-                $userdata = $this->CI->session->userdata('hr_user');
-                $this->CI->db->where('pct_hr_incident_reports.user_id', $userdata['id']);
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $usersIds);
+            } else {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $userdata['id']);
             }
             $this->CI->db->order_by('pct_hr_incident_reports.id', 'desc');
 
@@ -394,5 +453,18 @@ class Common
             'recordsFiltered' => $filter_total_records,
             'data' => $incidentReportsList
         );
+    }
+
+    public function getUsersForBranchManager($user_id) 
+    {
+        $this->CI->db->select('Group_concat(id) as ids')
+            ->from('pct_hr_users');
+        $this->CI->db->where('branch_manager_id', $user_id);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }
     }
 }

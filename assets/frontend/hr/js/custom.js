@@ -422,3 +422,18 @@ $(function() {
         }
     });
 });
+
+function approve_deny_popup(status, requestId) 
+{ 
+    if(status == 1) {
+        $('#approve_deny_title').html('Approve Request Confirmation');   
+        $('#approve_deny_msg').html('Are you sure to approve this request?');   
+    } else {
+        $('#approve_deny_title').html('Deny Request Confirmation');   
+        $('#approve_deny_msg').html('Are you sure to deny this request?');  
+    }
+    $('#status').val(status);
+    $('#request_id').val(requestId);
+    $('#approve_deny_popup').modal('show');   
+    return false;
+}

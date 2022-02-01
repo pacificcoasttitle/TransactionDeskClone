@@ -333,6 +333,7 @@ $route['hr/incident-reports'] = 'frontend/hr/incidentReports/index';
 $route['hr/get-incident-reports'] = 'frontend/hr/incidentReports/getIncidentReports';
 $route['hr/save-incident-reports'] = 'frontend/hr/incidentReports/saveIncidentReports';
 $route['hr/profile'] = 'frontend/hr/user/index';
+$route['hr/approve-deny-request'] = 'frontend/hr/common/approveDenyRequest';
 $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 
@@ -362,6 +363,7 @@ $route['hr/admin/edit-time-card/:num'] = 'admin/hr/vacationRequests/editVacation
 $route['hr/admin/delete-time-card'] = 'admin/hr/vacationRequests/deleteVacationRequest';
 $route['hr/admin/incident-reports'] = 'admin/hr/incidentReports/index';
 $route['hr/admin/get-incident-reports'] = 'admin/hr/incidentReports/getIncidentReports';
+$route['hr/admin/approve-deny-request'] = 'admin/hr/common/approveDenyRequest';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

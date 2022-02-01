@@ -36,8 +36,9 @@ class TimeCards extends MX_Controller
         $this->template->show("hr", "time_cards", $data);
 	}
 
-    public function  getTimeCards()
+    public function getTimeCards()
     {
+        $userdata = $this->session->userdata('hr_user');
         $params = array();  $data = array();
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -65,6 +66,21 @@ class TimeCards extends MX_Controller
                 $nestedData[] = $timeCard['ot_hours'];
                 $nestedData[] = $timeCard['double_ot'];
 				$nestedData[] = $timeCard['total_hours'];
+                $nestedData[] = ucfirst(!empty($timeCard['action_taken_user_id']) ? $timeCard['status'] : '');
+                $timeCardId = $timeCard['id'];
+                if ($userdata['user_type_id'] == 2) {
+                    if($userdata['id'] != $timeCard['user_id']) {
+                        $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                            <form onclick='return approve_deny_popup(1, $timeCardId);' action='' method='POST'>
+                                <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                            </form>
+                            <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $timeCardId);' action='' method='POST'>
+                                <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                            </form>";
+                    } else {
+                        $nestedData[] = '';
+                    }
+                } 
 				$data[] = $nestedData; 
 				$i++; 
 			}
@@ -76,7 +92,7 @@ class TimeCards extends MX_Controller
 		echo json_encode($json_data);
     }
 
-    public function  saveTimeCards()
+    public function saveTimeCards()
     {
         $userdata = $this->session->userdata('hr_user');
         $errors = array();

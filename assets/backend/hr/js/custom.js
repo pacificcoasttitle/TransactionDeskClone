@@ -5,6 +5,22 @@ var vacation_requests = '';
 var incident_reports = '';
 
 $(document).ready(function () {
+
+    $('#hire_date').datepicker().datepicker("setDate", new Date());
+    if ($("#hire_date_val").length != 0) {
+        $('#hire_date').val($("#hire_date_val").val());
+    }
+
+    $("input[name='user_type']").change(function(){
+        if ($(this).val() == '1') {
+            $('#branch_manger_container').show();
+            $("#branch_manager").prop('required',true);
+        } else {
+            $('#branch_manger_container').hide();
+            $("#branch_manager").prop('required',false);
+        }
+    });
+
     if ($('#admin_users').length)  {
         adminList = $('#admin_users').DataTable({
            "paging": true,
@@ -210,11 +226,6 @@ $(document).ready(function () {
             }            
         });
     } 
-
-    $('#hire_date').datepicker().datepicker("setDate", new Date());
-    if ($("#hire_date_val").length != 0) {
-        $('#hire_date').val($("#hire_date_val").val());
-    }
 });
 
 
@@ -319,7 +330,29 @@ function deleteUser(id)
         })
     } else {
         return false;
+    } 
+}
+
+function assignBranchManger(value)
+{
+    if(value == 'manager') {
+        console.log('hi');
     }
+}
+
+function approve_deny_popup(status, requestId) 
+{ 
+    if(status == 1) {
+        $('#approve_deny_title').html('Approve Request Confirmation');   
+        $('#approve_deny_msg').html('Are you sure to approve this request?');   
+    } else {
+        $('#approve_deny_title').html('Deny Request Confirmation');   
+        $('#approve_deny_msg').html('Are you sure to deny this request?');  
+    }
+    $('#status').val(status);
+    $('#request_id').val(requestId);
+    $('#approve_deny_popup').modal('show');   
+    return false;
 }
 
 
