@@ -82,19 +82,20 @@ class Timecards extends MX_Controller {
                 $nestedData[] = $timeCard['ot_hours'];
                 $nestedData[] = $timeCard['double_ot'];
 				$nestedData[] = $timeCard['total_hours'];
+                $nestedData[] = ucfirst(!empty($timeCard['action_taken_user_id']) ? $timeCard['status'] : '');
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-time-card/'.$timeCard['id'];
-                    $nestedData[] = '<a href="" class="btn btn-info btn-icon-split btn-sm">
+                    $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
                                         <span class="icon text-white-50">
-                                            <i class="fas fa-pencil-alt"></i>
+                                            <i class="fas fa-check"></i>
                                         </span>
-                                        <span class="text">Edit</span>
+                                        <span class="text">Approve</span>
                                     </a>
-                                    <a href="#" onclick="deleteTimeCard('.$timeCard["id"].')" class="btn btn-danger btn-icon-split btn-sm">
+                                    <a href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
                                         <span class="icon text-white-50">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="fas fa-ban"></i>
                                         </span>
-                                        <span class="text">Delete</span>
+                                        <span class="text">Deny</span>
                                     </a>';
                 }
 				$data[] = $nestedData; 

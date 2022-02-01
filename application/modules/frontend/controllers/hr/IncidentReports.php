@@ -39,6 +39,7 @@ class IncidentReports extends MX_Controller
 
     public function  getIncidentReports()
     {
+        $userdata = $this->session->userdata('hr_user');
         $params = array();  $data = array();
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -66,6 +67,21 @@ class IncidentReports extends MX_Controller
                 $nestedData[] = $incidentReport['incident_reason'];
                 $nestedData[] = $incidentReport['num_of_incidents'];
                 $nestedData[] = $incidentReport['actions'];
+                $nestedData[] = ucfirst(!empty($incidentReport['action_taken_user_id']) ? $incidentReport['status'] : '');
+                $incidentReportId = $incidentReport['id'];
+                if ($userdata['user_type_id'] == 2) {
+                    if($userdata['id'] != $incidentReport['user_id']) {
+                        $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                            <form onclick='return approve_deny_popup(1, $incidentReportId);' action='' method='POST'>
+                                <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                            </form>
+                            <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
+                                <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                            </form>";
+                    } else {
+                        $nestedData[] = '';
+                    }
+                } 
 				$data[] = $nestedData; 
 				$i++; 
 			}

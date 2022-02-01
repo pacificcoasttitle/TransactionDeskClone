@@ -19,8 +19,14 @@ class Dashboard extends MX_Controller
 	
 	function index()
 	{
-		$data['title'] = 'HR-Center Employee Dashboard';
-        $this->template->show("hr/employee", "dashboard", $data);
+		$userdata = $this->session->userdata('hr_user');
+		if ($userdata['user_type_id'] == 2) {
+			$data['title'] = 'HR-Center Branch Manager Dashboard';
+			$this->template->show("hr/branch_manager", "dashboard", $data);
+		} else {
+			$data['title'] = 'HR-Center Employee Dashboard';
+			$this->template->show("hr/employee", "dashboard", $data);
+		}
 	}
 
 	function logout()

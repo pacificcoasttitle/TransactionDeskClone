@@ -98,6 +98,24 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            <div class="row" id="branch_manger_container" style="display: none;">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Position<span class="required"> *</span></label>
+                                        <select name="branch_manager" id="branch_manager" class="form-control">
+                                            <option value="">Select Branch Manager</option>
+                                            <?php foreach($branchManagers as $branchManager) {?>
+                                                <option value="<?php echo $branchManager['id'];?>"><?php echo $branchManager['first_name']." ".$branchManager['last_name'];?></option>
+                                            <?php } ?>
+                                        </select> 
+                                    </div>
+                                    <?php if(!empty($position_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $position_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
                             <button type="submit" class="btn btn-info btn-icon-split">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-save"></i>

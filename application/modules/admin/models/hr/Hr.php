@@ -237,4 +237,17 @@ class Hr extends CI_Model
             return array();
         }
     }
+
+    public function getBranchManagers() 
+    {
+        $this->db->select('*');
+        $this->db->where('user_type_id', 2);
+        $this->db->where('status', 1);
+        $query = $this->db->get('pct_hr_users');
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
 }

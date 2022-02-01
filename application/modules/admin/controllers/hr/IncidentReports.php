@@ -82,19 +82,20 @@ class IncidentReports extends MX_Controller {
                 $nestedData[] = $incidentReport['incident_reason'];
                 $nestedData[] = $incidentReport['num_of_incidents'];
                 $nestedData[] = $incidentReport['actions'];
+                $nestedData[] = ucfirst(!empty($incidentReport['action_taken_user_id']) ? $incidentReport['status'] : '');
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-vacation-request/'.$incidentReport['id'];
-                    $nestedData[] = '<a href="" class="btn btn-info btn-icon-split btn-sm">
+                    $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$incidentReport["id"].');" class="btn btn-success btn-icon-split btn-sm">
                                         <span class="icon text-white-50">
-                                            <i class="fas fa-pencil-alt"></i>
+                                            <i class="fas fa-check"></i>
                                         </span>
-                                        <span class="text">Edit</span>
+                                        <span class="text">Approve</span>
                                     </a>
-                                    <a href="#" onclick="deleteIncidentReport('.$incidentReport["id"].')" class="btn btn-danger btn-icon-split btn-sm">
+                                    <a href="#" onclick="return approve_deny_popup(0, '.$incidentReport["id"].');" class="btn btn-danger btn-icon-split btn-sm">
                                         <span class="icon text-white-50">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="fas fa-ban"></i>
                                         </span>
-                                        <span class="text">Delete</span>
+                                        <span class="text">Deny</span>
                                     </a>';
                 }
 				$data[] = $nestedData; 
