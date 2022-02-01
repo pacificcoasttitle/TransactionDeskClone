@@ -2,7 +2,7 @@
 th {
     text-align: center;
 }
-th, td {
+#incident_reports_listing th, #incident_reports_listing td {
     padding: 18px 15px 16px !important;
 }
 </style>
