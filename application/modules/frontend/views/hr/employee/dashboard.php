@@ -21,7 +21,8 @@
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <a href="<?php echo base_url(); ?>hr/profile">
+                                <!-- <a href="<?php echo base_url(); ?>hr/profile"> -->
+                                <a href="">
                                     <div class="buttonOuter">
                                         <button class="btn2 btn-type-6a btn-lg2" type="button">
                                             <img src="<?php echo base_url(); ?>assets/media/hr/profile.png" class="buttImg">
