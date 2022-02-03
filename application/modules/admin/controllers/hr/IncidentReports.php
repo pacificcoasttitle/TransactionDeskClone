@@ -110,18 +110,20 @@ class IncidentReports extends MX_Controller {
                                     '; 
                         }
                     } else {
-                        $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$incidentReport["id"].');" class="btn btn-success btn-icon-split btn-sm">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                        <span class="text">Approve</span>
-                                    </a>
-                                    <a href="#" onclick="return approve_deny_popup(0, '.$incidentReport["id"].');" class="btn btn-danger btn-icon-split btn-sm">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-ban"></i>
-                                        </span>
-                                        <span class="text">Deny</span>
-                                    </a>'; 
+                        $nestedData[] = '<div style="display:inline-flex;">
+                                            <a href="" onclick="return approve_deny_popup(1, '.$incidentReport["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                                <span class="text">Approve</span>
+                                            </a>
+                                            <a style="margin-left: 5px;" href="#" onclick="return approve_deny_popup(0, '.$incidentReport["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-ban"></i>
+                                                </span>
+                                                <span class="text">Deny</span>
+                                            </a>
+                                        </div>'; 
                     }
                 }
 				$data[] = $nestedData; 
