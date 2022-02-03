@@ -41,6 +41,7 @@
 							<th>Double OT</th>
 							<th>Total Hours</th>
 							<th>Status</th>
+							<th>Approved By</th>
 							<th>Action</th>
 						</tr>
 					</thead>

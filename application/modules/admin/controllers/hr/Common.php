@@ -18,7 +18,7 @@ class Common extends MX_Controller
 	
 	function approveDenyRequest()
 	{
-		$userdata = $this->session->userdata('hr_user');
+		$userdata = $this->session->userdata('hr_admin');
 		$request_type = $this->input->post('request_type');
         $request_id = $this->input->post('request_id');
         $status = $this->input->post('status');
@@ -28,21 +28,21 @@ class Common extends MX_Controller
         if ($request_type == 'time_card') {
             $data = array(
                 'status' => $status == '1' ? 'approved' : 'denied',
-                'action_taken_user_id' => $userdata['id']
+                'approved_by_admin_user_id' => $userdata['id']
             );
 			$this->hr->update($data, $condition, 'pct_hr_time_cards'); 
             redirect(base_url().'hr/admin/time-cards');
         } else if ($request_type == 'incident_report') {
             $data = array(
                 'status' => $status == '1' ? 'approved' : 'denied',
-                'action_taken_user_id' => $userdata['id']
+                'approved_by_admin_user_id' => $userdata['id']
             );
 			$this->hr->update($data, $condition, 'pct_hr_incident_reports'); 
             redirect(base_url().'hr/admin/incident-reports');
         } else if ($request_type == 'vacation_request') {
             $data = array(
                 'status' => $status == '1' ? 'approved' : 'denied',
-                'action_taken_user_id' => $userdata['id']
+                'approved_by_admin_user_id' => $userdata['id']
             );
 			$this->hr->update($data, $condition, 'pct_hr_vacation_requests'); 
             redirect(base_url().'hr/admin/vacation-requests');

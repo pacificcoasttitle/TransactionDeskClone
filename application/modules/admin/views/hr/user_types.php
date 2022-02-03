@@ -1,14 +1,14 @@
 <div class="container-fluid">	
 	<div class="row mb-3">
 		<div class="col-sm-6">
-			<h1 class="h3 text-gray-800">Users</h1>
+			<h1 class="h3 text-gray-800">User Types</h1>
 		</div>
 		<div class="col-sm-6">
-            <a href="<?php echo base_url().'hr/admin/add-user'; ?>" class="btn btn-success btn-icon-split float-right">
+            <a href="<?php echo base_url().'hr/admin/add-user-type'; ?>" class="btn btn-success btn-icon-split float-right">
                 <span class="icon text-white-50">
                     <i class="fa fa-plus"></i>
                 </span>
-                <span class="text">Add User</span>
+                <span class="text">Add User Type</span>
             </a>
 		</div>
 	</div>
@@ -20,26 +20,21 @@
         <a href="#" class="btn btn-danger btn-block mt-1 mb-3"><?php echo $errors;?></a>
     <?php } ?>
 
-	<div id="users_success_msg" class="btn btn-success btn-block mt-1 mb-3" style="display:none;"></div>
-	<div id="users_error_msg" class="btn btn-danger btn-block mt-1 mb-3" style="display:none;"></div>
+	<div id="user_types_success_msg" class="btn btn-success btn-block mt-1 mb-3" style="display:none;"></div>
+	<div id="user_types_error_msg" class="btn btn-danger btn-block mt-1 mb-3" style="display:none;"></div>
 
 	<!-- DataTales Example -->
 	<div class="card shadow mb-4">
 		<div class="card-header py-3">
-			<h6 class="m-0 font-weight-bold text-primary">Users Listing</h6>
+			<h6 class="m-0 font-weight-bold text-primary">User Types Listing</h6>
 		</div>
 		<div class="card-body">
 			<div class="table-responsive">
-				<table class="table table-bordered" id="users" width="100%" cellspacing="0">
+				<table class="table table-bordered" id="user_types" width="100%" cellspacing="0">
 					<thead>
 						<tr>
                             <th>No</th>
                             <th>Name</th>
-                            <th>Email</th>
-                            <th>Position</th>
-                            <th>User Type</th>
-							<th>Department</th>
-                            <th>Hire Date</th>
                             <th>Action</th>
 						</tr>
 					</thead>

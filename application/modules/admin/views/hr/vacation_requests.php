@@ -40,6 +40,7 @@
                             <th>Salary Deduction</th>
                             <th>Time Charged Vacation</th>
 							<th>Status</th>
+							<th>Approved By</th>
                             <th>Action</th>
 						</tr>
 					</thead>

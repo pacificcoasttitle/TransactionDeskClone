@@ -64,11 +64,11 @@ class VacationRequests extends MX_Controller {
 			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
 			$pageno = ($params['start'] / $params['length'])+1;
-			$vacationRequestsList = $this->common->getVacationRequests($params);
+			$vacationRequestsList = $this->hr->getVacationRequests($params);
 			$json_data['draw'] = intval( $params['draw'] );
 		} else {
 			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-			$vacationRequestsList = $this->common->getVacationRequests($params);
+			$vacationRequestsList = $this->hr->getVacationRequests($params);
 		}
 		
 		if (isset($vacationRequestsList['data']) && !empty($vacationRequestsList['data'])) {
@@ -81,10 +81,35 @@ class VacationRequests extends MX_Controller {
                 $nestedData[] = date("m/d/Y", strtotime($vacationRequestList['to_date']));
                 $nestedData[] = $vacationRequestList['is_salary_deduction'] == 1 ? 'Yes' : 'No';
                 $nestedData[] = $vacationRequestList['is_time_charged_vacation'] == 1 ? 'Yes' : 'No';
-                $nestedData[] = ucfirst(!empty($vacationRequestList['action_taken_user_id']) ? $vacationRequestList['status'] : '');
+                $nestedData[] = ucfirst(!empty($vacationRequestList['approved_by_user_id']) || !empty($vacationRequestList['approved_by_admin_user_id']) ? $vacationRequestList['status'] : 'Pending');
+                if (!empty($vacationRequestList['approved_by_user_id'])) {
+                    $nestedData[] = $vacationRequestList['branch_manager_first_name']." ".$vacationRequestList['branch_manager_last_name'];
+                } else if (!empty($vacationRequestList['approved_by_admin_user_id'])) {
+                    $nestedData[] = $vacationRequestList['user_name'];
+                } else {
+                    $nestedData[] = ''  ;
+                }
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $editUrl = base_url().'hr/admin/edit-vacation-request/'.$vacationRequestList['id'];
-                    $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$vacationRequestList["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                    if (!empty($vacationRequestList['approved_by_user_id']) || !empty($vacationRequestList['approved_by_admin_user_id'])) {
+                        if ($vacationRequestList['status'] == 'approved') {
+                            $nestedData[] = '
+                                    <a href="#" onclick="return approve_deny_popup(0, '.$vacationRequestList["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-ban"></i>
+                                        </span>
+                                        <span class="text">Deny</span>
+                                    </a>';
+                        } else {
+                            $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$vacationRequestList["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                        <span class="text">Approve</span>
+                                    </a>
+                                    '; 
+                        }
+                    } else {
+                        $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$vacationRequestList["id"].');" class="btn btn-success btn-icon-split btn-sm">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-check"></i>
                                         </span>
@@ -95,7 +120,8 @@ class VacationRequests extends MX_Controller {
                                             <i class="fas fa-ban"></i>
                                         </span>
                                         <span class="text">Deny</span>
-                                    </a>';
+                                    </a>'; 
+                    }
                 }
 				$data[] = $nestedData; 
 				$i++; 

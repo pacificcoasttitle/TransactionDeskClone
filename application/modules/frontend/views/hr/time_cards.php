@@ -153,8 +153,8 @@ th {
                                             <th>Reg Hours</th>
                                             <th>OT Hours</th>
                                             <th>Double OT</th>
-                                            <th>Total Hours</th>
                                             <th>Status</th>
+                                            <th>Approved By</th>
                                             <?php  $userdata = $this->session->userdata('hr_user');
                                             if ($userdata['user_type_id'] == 2) { ?>
                                                 <th>Actions</th>

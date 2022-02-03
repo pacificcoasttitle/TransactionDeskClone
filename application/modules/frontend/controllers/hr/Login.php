@@ -92,11 +92,14 @@ class Login extends MX_Controller {
                 } else {
                     $password = $this->input->post('password');
                     $this->hr->update(array('password' => password_hash($password, PASSWORD_DEFAULT), 'is_tmp_password' => 0, 'hash' => ''), array('id' => $user['id']), 'pct_hr_users');
-                    $data = array(
-						"success" => 'Password updated successfully.'
-					);
-					$this->session->set_userdata($data);
-                    redirect(base_url().'hr/login');
+                    $session_data = array(
+                        "id" => isset($user['id']) && !empty($user['id']) ? $user['id'] : '',
+                        "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name']." ".$user['last_name'] : '',
+                        "email" => isset($user['email']) && !empty($user['email']) ? $user['email'] : '',
+                        "user_type_id" => isset($user['user_type_id']) && !empty($user['user_type_id']) ? $user['user_type_id'] : '',
+                    );
+                    $this->session->set_userdata('hr_user', $session_data);
+                    redirect(base_url().'hr/dashboard');
                 }
             } else {
                 $data['hash'] = $hash;

@@ -122,7 +122,7 @@ class AdminUsers extends MX_Controller {
                     'password' => md5($this->input->post('password')),    
                     'email_id' => $this->input->post('email'),
                     'is_hr_admin' => 1,
-                    'is_super_hr_admin' => 0,
+                    'is_super_hr_admin' => 1,
                     'status' => 1,
                     'created_at' => date('Y-m-d H:i:s')
                 );
