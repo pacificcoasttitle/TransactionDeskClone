@@ -69,8 +69,7 @@ class Login extends MX_Controller {
                         }
                     }
                 } else {
-                    $response = array('status'=>'error', 'email_err_msg' => '', 'password_err_msg'=> '<p>Please enter the correct login details.</p>');
-					echo json_encode($response); exit;
+                    $data['password_error_msg'] = 'Please enter the correct login details.';
                 }
             }
     	} 
