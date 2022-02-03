@@ -5,7 +5,7 @@
 		<li class="nav-item dropdown no-arrow">
 			<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
 				aria-haspopup="true" aria-expanded="false">
-				<?php $admin = $this->session->userdata('admin');?>
+				<?php $admin = $this->session->userdata('hr_admin');?>
 				<span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo strtoupper($admin['name']);?></span>
 				<img class="img-profile rounded-circle" src="<?php echo base_url()?>assets/backend/hr/img/undraw_profile.svg">
 			</a>

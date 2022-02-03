@@ -48,11 +48,11 @@ class VacationRequests extends MX_Controller
 			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
 			$pageno = ($params['start'] / $params['length'])+1;
-			$vacationRequestsList = $this->common->getVacationRequests($params);
+			$vacationRequestsList = $this->hr->getVacationRequests($params);
 			$json_data['draw'] = intval( $params['draw'] );
 		} else {
 			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-			$vacationRequestsList = $this->common->getVacationRequests($params);
+			$vacationRequestsList = $this->hr->getVacationRequests($params);
 		}
 		
 		if (isset($vacationRequestsList['data']) && !empty($vacationRequestsList['data'])) {
@@ -65,17 +65,42 @@ class VacationRequests extends MX_Controller
                 $nestedData[] = date("m/d/Y", strtotime($vacationRequestList['to_date']));
                 $nestedData[] = $vacationRequestList['is_salary_deduction'] == 1 ? 'Yes' : 'No';
                 $nestedData[] = $vacationRequestList['is_time_charged_vacation'] == 1 ? 'Yes' : 'No';
-                $nestedData[] = ucfirst(!empty($vacationRequestList['action_taken_user_id']) ? $vacationRequestList['status'] : '');
+                $nestedData[] = ucfirst(!empty($vacationRequestList['approved_by_user_id']) || !empty($vacationRequestList['approved_by_admin_user_id']) ? $vacationRequestList['status'] : 'Pending');
+                if (!empty($vacationRequestList['approved_by_user_id'])) {
+                    $nestedData[] = $vacationRequestList['branch_manager_first_name']." ".$vacationRequestList['branch_manager_last_name'];
+                } else if (!empty($vacationRequestList['approved_by_admin_user_id'])) {
+                    $nestedData[] = $vacationRequestList['user_name'];
+                } else {
+                    $nestedData[] = ''  ;
+                }
                 $vacationRequestId = $vacationRequestList['id'];
+
                 if ($userdata['user_type_id'] == 2) {
                     if($userdata['id'] != $vacationRequestList['user_id']) {
-                        $nestedData[] = "<div style='display:flex;' class='smart-forms'>
-                            <form onclick='return approve_deny_popup(1, $vacationRequestId);' action='' method='POST'>
-                                <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
-                            </form>
-                            <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $vacationRequestId);' action='' method='POST'>
-                                <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
-                            </form>";
+                        if (!empty($vacationRequestList['approved_by_user_id']) || !empty($vacationRequestList['approved_by_admin_user_id'])) {
+                            if ($vacationRequestList['status'] == 'approved') {
+                                $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                                        <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $vacationRequestId);' action='' method='POST'>
+                                            <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                                        </form>
+                                    </div>";
+                            } else {
+                                $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                                        <form onclick='return approve_deny_popup(1, $vacationRequestId);' action='' method='POST'>
+                                            <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                                        </form>
+                                    </div>";
+                            }
+                        } else {
+                            $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                                    <form onclick='return approve_deny_popup(1, $vacationRequestId);' action='' method='POST'>
+                                        <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                                    </form>
+                                    <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $vacationRequestId);' action='' method='POST'>
+                                        <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                                    </form>
+                                </div>";
+                        }
                     } else {
                         $nestedData[] = '';
                     }

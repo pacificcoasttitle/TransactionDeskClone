@@ -34,13 +34,14 @@
 					<thead>
 						<tr>
                             <th>No</th>
-                            <th>Employee #</th>
+                            <!-- <th>Employee #</th> -->
                             <th>Date</th>
                             <th>Name</th>
                             <th>Reason</th>
                             <th>Num Of Incident</th>
                             <th>Incident Actions</th>
 							<th>Status</th>
+                            <th>Approved By</th>
                             <th>Actions</th>
 						</tr>
 					</thead>

@@ -2,6 +2,9 @@
 th {
     text-align: center;
 }
+#vacation_requests_listing th, #vacation_requests_listing td {
+    padding: 16px 5px 16px !important;
+}
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
     <div class="container">
@@ -123,6 +126,7 @@ th {
                                             <th>Salary Deduction</th>
                                             <th>Time Charged Vacation</th>
                                             <th>Status</th>
+                                            <th>Approved By</th>
                                             <?php  $userdata = $this->session->userdata('hr_user');
                                             if ($userdata['user_type_id'] == 2) { ?>
                                                 <th>Actions</th>

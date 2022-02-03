@@ -76,11 +76,11 @@ class Users extends MX_Controller {
 	    	foreach ($users['data'] as $key => $value)  {
 	    		$nestedData=array();
                 $nestedData[] = $count;
-	            $nestedData[] = $value['first_name'];
-                $nestedData[] = $value['last_name'];
+	            $nestedData[] = $value['first_name']." ".$value['last_name'];
                 $nestedData[] = $value['email'];
                 $nestedData[] = $value['position'];
                 $nestedData[] = $value['name'];
+                $nestedData[] = $value['department_name'];
                 $nestedData[] = $value['hire_date'];
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-user/'.$value['id'];
@@ -114,7 +114,7 @@ class Users extends MX_Controller {
         $data['page_title'] = 'Users';
         $data['hrPositions'] = $this->hr->getHrPositions(); 
         $data['userTypes'] = $this->hr->getHrUserTypes(); 
-        $data['branchManagers'] = $this->hr->getBranchManagers(); 
+        $data['departments'] = $this->hr->getHrDepartments(); 
 
         if ($this->input->post()) {
             $this->load->library('hr/common');
@@ -124,11 +124,8 @@ class Users extends MX_Controller {
             $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
             $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
             $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
-
-            if($this->input->post('user_type') == '1') {
-                $this->form_validation->set_rules('branch_manager', 'Branch Manager', 'required', array('required'=> 'Please Select Branch Manager.'));
-            }
-        
+            $this->form_validation->set_rules('department', 'Department', 'required', array('required'=> 'Please Select Department.'));
+            
             if ($this->form_validation->run() == true) {
                 $randomPassword = $this->common->randomPassword();
                 $usersData = array(
@@ -141,7 +138,7 @@ class Users extends MX_Controller {
                     'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
                     'status' => 1,
                     'is_tmp_password' => 1,
-                    'branch_manager_id' => $this->input->post('user_type') == '1' ? $this->input->post('branch_manager') : 0
+                    'department_id' => $this->input->post('department')
                 );
                 $this->hr->insert($usersData, 'pct_hr_users');
                 $successMsg = 'User added successfully.';
@@ -165,6 +162,7 @@ class Users extends MX_Controller {
                 $data['position_error_msg'] = form_error('position');
                 $data['hire_date_error_msg'] = form_error('hire_date');
                 $data['user_type_error_msg'] = form_error('user_type');
+                $data['department_error_msg'] = form_error('department');
             }                                       
         }
         $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
@@ -178,8 +176,8 @@ class Users extends MX_Controller {
         $data['page_title'] = 'Users';
         $data['hrPositions'] = $this->hr->getHrPositions(); 
         $data['userTypes'] = $this->hr->getHrUserTypes(); 
-        $data['branchManagers'] = $this->hr->getBranchManagers(); 
-
+        $data['departments'] = $this->hr->getHrDepartments(); 
+       
         if(isset($id) && !empty($id)) {
             if ($this->input->post()) {
                 $this->load->library('hr/common');
@@ -188,11 +186,8 @@ class Users extends MX_Controller {
                 $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
                 $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
                 $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
-
-                if($this->input->post('user_type') == '1') {
-                    $this->form_validation->set_rules('branch_manager', 'Branch Manager', 'required', array('required'=> 'Please Select Branch Manager.'));
-                }
-               
+                $this->form_validation->set_rules('department', 'Department', 'required', array('required'=> 'Please Select Department.'));
+                
                 if ($this->form_validation->run() == true) {
                     $usersData = array(
                         'first_name' =>  $this->input->post('first_name'),
@@ -201,7 +196,7 @@ class Users extends MX_Controller {
                         'user_type_id' => $this->input->post('user_type'),
                         'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
                         'status' => 1,
-                        'branch_manager_id' => $this->input->post('user_type') == '1' ? $this->input->post('branch_manager') : 0
+                        'department_id' => $this->input->post('department')
                     );
                     $condition = array('id' => $id);
                     $this->hr->update($usersData, $condition, 'pct_hr_users');
@@ -214,6 +209,7 @@ class Users extends MX_Controller {
                     $data['position_error_msg'] = form_error('position');
                     $data['hire_date_error_msg'] = form_error('hire_date');
                     $data['user_type_error_msg'] = form_error('user_type');
+                    $data['department_error_msg'] = form_error('department');
                 }                                       
             }
             $data['userInfo'] = $this->hr->getUserInfo($id);

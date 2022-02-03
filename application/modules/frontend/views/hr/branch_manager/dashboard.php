@@ -193,7 +193,8 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="typography-section__inner">
-						<h2 class="ui-title-block ui-title-block_light">Welcome Elizabeth,</h2>
+						<?php $userdata = $this->session->userdata('hr_user');?>
+						<h2 class="ui-title-block ui-title-block_light">Welcome <?php echo $userdata['name'];?>,</h2>
 						<div class="ui-decor-1a bg-accent"></div>
 						<h3 class="ui-title-block_light">Below is your production figures for your branch in the month
 							of January</h3>

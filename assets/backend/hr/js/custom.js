@@ -3,6 +3,9 @@ var users ='';
 var time_cards = '';
 var vacation_requests = '';
 var incident_reports = '';
+var user_types = '';
+var departments = '';
+var positions = '';
 
 $(document).ready(function () {
 
@@ -10,16 +13,6 @@ $(document).ready(function () {
     if ($("#hire_date_val").length != 0) {
         $('#hire_date').val($("#hire_date_val").val());
     }
-
-    $("input[name='user_type']").change(function(){
-        if ($(this).val() == '1') {
-            $('#branch_manger_container').show();
-            $("#branch_manager").prop('required',true);
-        } else {
-            $('#branch_manger_container').hide();
-            $("#branch_manager").prop('required',false);
-        }
-    });
 
     if ($('#admin_users').length)  {
         adminList = $('#admin_users').DataTable({
@@ -226,6 +219,129 @@ $(document).ready(function () {
             }            
         });
     } 
+
+    if ($('#user_types').length > 0)  {
+        user_types = $('#user_types').DataTable({
+           "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "dom": 'Blfrtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"hr/admin/get-user-types", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#user_types tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
+                    $("#user_types_processing").css("display", "none");
+                }
+            }            
+        });
+    }
+    
+    if ($('#departments').length > 0)  {
+        departments = $('#departments').DataTable({
+           "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "dom": 'Blfrtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"hr/admin/get-departments", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#departments tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
+                    $("#departments_processing").css("display", "none");
+                }
+            }            
+        });
+    } 
+
+    if ($('#positions').length > 0)  {
+        positions = $('#positions').DataTable({
+           "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "dom": 'Blfrtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"hr/admin/get-positions", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#positions tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
+                    $("#positions_processing").css("display", "none");
+                }
+            }            
+        });
+    } 
 });
 
 
@@ -333,13 +449,6 @@ function deleteUser(id)
     } 
 }
 
-function assignBranchManger(value)
-{
-    if(value == 'manager') {
-        console.log('hi');
-    }
-}
-
 function approve_deny_popup(status, requestId) 
 { 
     if(status == 1) {
@@ -353,6 +462,162 @@ function approve_deny_popup(status, requestId)
     $('#request_id').val(requestId);
     $('#approve_deny_popup').modal('show');   
     return false;
+}
+
+function deleteUserType(id)
+{
+    if (id=='') {
+        alert('User Type ID is required.');
+        return false;
+    }
+    var ready = confirm("Are you sure want to delete?");
+    if (ready) {
+        $.ajax({
+            url: base_url+"hr/admin/delete-user-type",
+            method: "POST",
+            data : {
+                id : id
+            },
+            success: function(data){
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#user_types_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#user_types_success_msg").offset().top
+                    }, 1000);
+                    user_types.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#user_types_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#user_types_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#user_types_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#user_types_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#user_types_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#user_types_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#user_types_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    } 
+}
+
+function deleteDepartment(id)
+{
+    if (id=='') {
+        alert('Department ID is required.');
+        return false;
+    }
+    var ready = confirm("Are you sure want to delete?");
+    if (ready) {
+        $.ajax({
+            url: base_url+"hr/admin/delete-department",
+            method: "POST",
+            data : {
+                id : id
+            },
+            success: function(data){
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#departments_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#departments_success_msg").offset().top
+                    }, 1000);
+                    departments.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#departments_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#departments_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#departments_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#departments_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#departments_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#departments_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#departments_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    } 
+}
+
+function deletePosition(id)
+{
+    if (id=='') {
+        alert('Position ID is required.');
+        return false;
+    }
+    var ready = confirm("Are you sure want to delete?");
+    if (ready) {
+        $.ajax({
+            url: base_url+"hr/admin/delete-position",
+            method: "POST",
+            data : {
+                id : id
+            },
+            success: function(data){
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#positions_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#positions_success_msg").offset().top
+                    }, 1000);
+                    positions.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#positions_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#positions_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#positions_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#positions_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#positions_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#positions_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#positions_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    } 
 }
 
 

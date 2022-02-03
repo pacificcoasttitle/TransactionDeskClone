@@ -99,20 +99,20 @@
                                     <?php } ?>
                                 </div>
                             </div>
-                            <div class="row" id="branch_manger_container" style="<?php echo $userInfo['user_type_id'] == 2 ? 'display: none;' : '' ?>">
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Position<span class="required"> *</span></label>
-                                        <select name="branch_manager" id="branch_manager" class="form-control" <?php echo $userInfo['user_type_id'] == 1 ? 'required' : '' ?>>
-                                            <option value="">Select Branch Manager</option>
-                                            <?php foreach($branchManagers as $branchManager) {?>
-                                                <option value="<?php echo $branchManager['id'];?>" <?php echo $userInfo['branch_manager_id'] == $branchManager['id'] ? 'selected' : '';?>><?php echo $branchManager['first_name']." ".$branchManager['last_name'];?></option>
+                                        <label>Department<span class="required"> *</span></label>
+                                        <select name="department" id="department" class="form-control" required>
+                                            <option value="">Select Department</option>
+                                            <?php foreach($departments as $department) {?>
+                                                <option value="<?php echo $department['id'];?>" <?php echo $userInfo['department_id'] == $department['id'] ? 'selected' : '';?>><?php echo $department['name'];?></option>
                                             <?php } ?>
                                         </select> 
                                     </div>
-                                    <?php if(!empty($position_error_msg)){ ?>  
+                                    <?php if(!empty($department_error_msg)){ ?>  
                                         <div class="typography-line text-danger">
-                                            <?php echo $position_error_msg;?>
+                                            <?php echo $department_error_msg;?>
                                         </div>
                                     <?php } ?>
                                 </div>

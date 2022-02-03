@@ -49,11 +49,11 @@ class IncidentReports extends MX_Controller
 			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
 			$pageno = ($params['start'] / $params['length'])+1;
-			$incidentReportsList = $this->common->getIncidentReports($params);
+			$incidentReportsList = $this->hr->getIncidentReports($params);
 			$json_data['draw'] = intval( $params['draw'] );
 		} else {
 			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-			$incidentReportsList = $this->common->getIncidentReports($params);
+			$incidentReportsList = $this->hr->getIncidentReports($params);
 		}
 		
 		if (isset($incidentReportsList['data']) && !empty($incidentReportsList['data'])) {
@@ -61,23 +61,47 @@ class IncidentReports extends MX_Controller
 			foreach ($incidentReportsList['data'] as $incidentReport)  {
 				$nestedData = array();
 				$nestedData[] = $i;
-                $nestedData[] = $incidentReport['employee_number'];
+                //$nestedData[] = $incidentReport['employee_number'];
                 $nestedData[] =  date("m/d/Y", strtotime($incidentReport['incident_date']));
 				$nestedData[] = $incidentReport['first_name']." ".$incidentReport['last_name'];
                 $nestedData[] = $incidentReport['incident_reason'];
                 $nestedData[] = $incidentReport['num_of_incidents'];
                 $nestedData[] = $incidentReport['actions'];
-                $nestedData[] = ucfirst(!empty($incidentReport['action_taken_user_id']) ? $incidentReport['status'] : '');
+                $nestedData[] = ucfirst(!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id']) ? $incidentReport['status'] : 'Pending');
+                if (!empty($incidentReport['approved_by_user_id'])) {
+                    $nestedData[] = $incidentReport['branch_manager_first_name']." ".$incidentReport['branch_manager_last_name'];
+                } else if (!empty($incidentReport['approved_by_admin_user_id'])) {
+                    $nestedData[] = $incidentReport['user_name'];
+                } else {
+                    $nestedData[] = ''  ;
+                }
                 $incidentReportId = $incidentReport['id'];
                 if ($userdata['user_type_id'] == 2) {
                     if($userdata['id'] != $incidentReport['user_id']) {
-                        $nestedData[] = "<div style='display:flex;' class='smart-forms'>
-                            <form onclick='return approve_deny_popup(1, $incidentReportId);' action='' method='POST'>
-                                <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
-                            </form>
-                            <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
-                                <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
-                            </form>";
+                        if (!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id'])) {
+                            if ($incidentReport['status'] == 'approved') {
+                                $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                                        <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
+                                            <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                                        </form>
+                                    </div>";
+                            } else {
+                                $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                                        <form onclick='return approve_deny_popup(1, $incidentReportId);' action='' method='POST'>
+                                            <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                                        </form>
+                                    </div>";
+                            }
+                        } else {
+                            $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                                    <form onclick='return approve_deny_popup(1, $incidentReportId);' action='' method='POST'>
+                                        <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                                    </form>
+                                    <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
+                                        <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                                    </form>
+                                </div>";
+                        }
                     } else {
                         $nestedData[] = '';
                     }

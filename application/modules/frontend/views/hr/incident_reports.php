@@ -3,7 +3,7 @@ th {
     text-align: center;
 }
 #incident_reports_listing th, #incident_reports_listing td {
-    padding: 18px 15px 16px !important;
+    padding: 16px 5px 16px !important;
 }
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
@@ -199,13 +199,14 @@ th {
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Employee #</th>
+                                            <!-- <th>Employee #</th> -->
                                             <th>Date</th>
                                             <th>Name</th>
                                             <th>Reason</th>
                                             <th>Num Of Incident</th>
                                             <th>Incident Actions</th>
                                             <th>Status</th>
+                                            <th>Approved By</th>
                                             <?php  $userdata = $this->session->userdata('hr_user');
                                             if ($userdata['user_type_id'] == 2) { ?>
                                                 <th>Actions</th>

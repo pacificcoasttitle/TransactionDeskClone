@@ -18,9 +18,11 @@ class HrPositionSeeder extends AbstractSeed
         $data = [
             [
                 'name'    => 'Title Officer',
+                'status'    => 1,
                 'created_at' => date('Y-m-d H:i:s'),
             ],[
                 'name'    => 'Customer Service Rep',
+                'status'    => 1,
                 'created_at' => date('Y-m-d H:i:s'),
             ]
         ];

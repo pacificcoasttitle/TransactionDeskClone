@@ -64,11 +64,11 @@ class Timecards extends MX_Controller {
 			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
 			$pageno = ($params['start'] / $params['length'])+1;
-			$timeCardsList = $this->common->getTimeCards($params);
+			$timeCardsList = $this->hr->getTimeCards($params);
 			$json_data['draw'] = intval( $params['draw'] );
 		} else {
 			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-			$timeCardsList = $this->common->getTimeCards($params);
+			$timeCardsList = $this->hr->getTimeCards($params);
 		}
 		
 		if (isset($timeCardsList['data']) && !empty($timeCardsList['data'])) {
@@ -82,10 +82,37 @@ class Timecards extends MX_Controller {
                 $nestedData[] = $timeCard['ot_hours'];
                 $nestedData[] = $timeCard['double_ot'];
 				$nestedData[] = $timeCard['total_hours'];
-                $nestedData[] = ucfirst(!empty($timeCard['action_taken_user_id']) ? $timeCard['status'] : '');
+                $nestedData[] = ucfirst(!empty($timeCard['approved_by_user_id']) || !empty($timeCard['approved_by_admin_user_id']) ? $timeCard['status'] : 'Pending');
+                if (!empty($timeCard['approved_by_user_id'])) {
+                    $nestedData[] = $timeCard['branch_manager_first_name']." ".$timeCard['branch_manager_last_name'];
+                } else if (!empty($timeCard['approved_by_admin_user_id'])) {
+                    $nestedData[] = $timeCard['user_name'];
+                } else {
+                    $nestedData[] = ''  ;
+                }
+
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-time-card/'.$timeCard['id'];
-                    $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                    if (!empty($timeCard['approved_by_user_id']) || !empty($timeCard['approved_by_admin_user_id'])) {
+                        if ($timeCard['status'] == 'approved') {
+                            $nestedData[] = '
+                                    <a href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-ban"></i>
+                                        </span>
+                                        <span class="text">Deny</span>
+                                    </a>';
+                        } else {
+                            $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                        <span class="text">Approve</span>
+                                    </a>
+                                    '; 
+                        }
+                    } else {
+                       $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-check"></i>
                                         </span>
@@ -96,7 +123,8 @@ class Timecards extends MX_Controller {
                                             <i class="fas fa-ban"></i>
                                         </span>
                                         <span class="text">Deny</span>
-                                    </a>';
+                                    </a>'; 
+                    }
                 }
 				$data[] = $nestedData; 
 				$i++; 

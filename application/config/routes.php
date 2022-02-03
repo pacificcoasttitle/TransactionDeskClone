@@ -361,6 +361,21 @@ $route['hr/admin/delete-time-card'] = 'admin/hr/vacationRequests/deleteVacationR
 $route['hr/admin/incident-reports'] = 'admin/hr/incidentReports/index';
 $route['hr/admin/get-incident-reports'] = 'admin/hr/incidentReports/getIncidentReports';
 $route['hr/admin/approve-deny-request'] = 'admin/hr/common/approveDenyRequest';
+$route['hr/admin/user-types'] = 'admin/hr/userTypes/index';
+$route['hr/admin/add-user-type'] = 'admin/hr/userTypes/addUserType';
+$route['hr/admin/get-user-types'] = 'admin/hr/userTypes/getUserTypes';
+$route['hr/admin/edit-user-type/:num'] = 'admin/hr/userTypes/editUserType';
+$route['hr/admin/delete-user-type'] = 'admin/hr/userTypes/deleteUserType';
+$route['hr/admin/departments'] = 'admin/hr/departments/index';
+$route['hr/admin/add-department'] = 'admin/hr/departments/addDepartment';
+$route['hr/admin/get-departments'] = 'admin/hr/departments/getDepartments';
+$route['hr/admin/edit-department/:num'] = 'admin/hr/departments/editDepartment';
+$route['hr/admin/delete-department'] = 'admin/hr/departments/deleteDepartment';
+$route['hr/admin/positions'] = 'admin/hr/positions/index';
+$route['hr/admin/add-position'] = 'admin/hr/positions/addPosition';
+$route['hr/admin/get-positions'] = 'admin/hr/positions/getPositions';
+$route['hr/admin/edit-position/:num'] = 'admin/hr/positions/editPosition';
+$route['hr/admin/delete-position'] = 'admin/hr/positions/deletePosition';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 
