@@ -28,6 +28,8 @@ class Common extends MX_Controller
         if ($request_type == 'time_card') {
             $data = array(
                 'status' => $status == '1' ? 'approved' : 'denied',
+                'approved_date' => date('Y-m-d'),
+                'approved_by_user_id' => 0,
                 'approved_by_admin_user_id' => $userdata['id']
             );
 			$this->hr->update($data, $condition, 'pct_hr_time_cards'); 
@@ -35,6 +37,8 @@ class Common extends MX_Controller
         } else if ($request_type == 'incident_report') {
             $data = array(
                 'status' => $status == '1' ? 'approved' : 'denied',
+                'approved_date' => date('Y-m-d'),
+                'approved_by_user_id' => 0,
                 'approved_by_admin_user_id' => $userdata['id']
             );
 			$this->hr->update($data, $condition, 'pct_hr_incident_reports'); 
@@ -42,6 +46,8 @@ class Common extends MX_Controller
         } else if ($request_type == 'vacation_request') {
             $data = array(
                 'status' => $status == '1' ? 'approved' : 'denied',
+                'approved_date' => date('Y-m-d'),
+                'approved_by_user_id' => 0,
                 'approved_by_admin_user_id' => $userdata['id']
             );
 			$this->hr->update($data, $condition, 'pct_hr_vacation_requests'); 

@@ -82,7 +82,15 @@ class Timecards extends MX_Controller {
                 $nestedData[] = $timeCard['ot_hours'];
                 $nestedData[] = $timeCard['double_ot'];
 				$nestedData[] = $timeCard['total_hours'];
-                $nestedData[] = ucfirst(!empty($timeCard['approved_by_user_id']) || !empty($timeCard['approved_by_admin_user_id']) ? $timeCard['status'] : 'Pending');
+                $status = '<span class="badge badge-info">Pending</span>';
+                if (ucfirst(!empty($timeCard['approved_by_user_id']) || !empty($timeCard['approved_by_admin_user_id']))) {
+                    if ($timeCard['status'] == 'approved') {
+                        $status = '<span class="badge badge-success">Approved</span>';
+                    } else {
+                        $status = '<span class="badge badge-danger">Denied</span>';
+                    }
+                }
+                $nestedData[] = $status;
                 if (!empty($timeCard['approved_by_user_id'])) {
                     $nestedData[] = $timeCard['branch_manager_first_name']." ".$timeCard['branch_manager_last_name'];
                 } else if (!empty($timeCard['approved_by_admin_user_id'])) {

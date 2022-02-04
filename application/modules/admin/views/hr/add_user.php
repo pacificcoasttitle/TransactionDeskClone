@@ -12,7 +12,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">Add Employee</h6>
                     </div>
                     <div class="card-body">
-                        <form method="post" name="user_form" >
+                        <form method="post" name="user_form" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -116,12 +116,24 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Profile Img<span class="required"></span></label>
+                                        <input type="file" class="form-control" name="profile_img" id="profile_img" accept="image/*" class="form-control">
+                                    </div>
+                                    <?php if(!empty($profile_img_error_msg)) { ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $profile_img_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
                             <button type="submit" class="btn btn-info btn-icon-split">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-save"></i>
                                 </span>
                                 <span class="text">Save</span>
-                                
                             </button>
                             <a href="<?php echo base_url().'hr/admin/users'; ?>" class="btn btn-secondary btn-icon-split">
                                 <span class="icon text-white-50">

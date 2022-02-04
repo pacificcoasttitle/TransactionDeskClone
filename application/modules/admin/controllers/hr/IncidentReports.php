@@ -82,7 +82,15 @@ class IncidentReports extends MX_Controller {
                 $nestedData[] = $incidentReport['incident_reason'];
                 $nestedData[] = $incidentReport['num_of_incidents'];
                 $nestedData[] = $incidentReport['actions'];
-                $nestedData[] = ucfirst(!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id']) ? $incidentReport['status'] : 'Pending');
+                $status = '<span class="badge badge-info">Pending</span>';
+                if (ucfirst(!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id']))) {
+                    if ($incidentReport['status'] == 'approved') {
+                        $status = '<span class="badge badge-success">Approved</span>';
+                    } else {
+                        $status = '<span class="badge badge-danger">Denied</span>';
+                    }
+                }
+                $nestedData[] = $status;
                 if (!empty($incidentReport['approved_by_user_id'])) {
                     $nestedData[] = $incidentReport['branch_manager_first_name']." ".$incidentReport['branch_manager_last_name'];
                 } else if (!empty($incidentReport['approved_by_admin_user_id'])) {

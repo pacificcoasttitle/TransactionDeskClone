@@ -66,7 +66,15 @@ class TimeCards extends MX_Controller
                 $nestedData[] = $timeCard['ot_hours'];
                 $nestedData[] = $timeCard['double_ot'];
 				//$nestedData[] = $timeCard['total_hours'];
-                $nestedData[] = ucfirst(!empty($timeCard['approved_by_user_id']) || !empty($timeCard['approved_by_admin_user_id']) ? $timeCard['status'] : 'Pending');
+                $status = '<span class="badge-new badge-new-info">Pending</span>';
+                if (ucfirst(!empty($timeCard['approved_by_user_id']) || !empty($timeCard['approved_by_admin_user_id']))) {
+                    if ($timeCard['status'] == 'approved') {
+                        $status = '<span class="badge-new badge-new-success">Approved</span>';
+                    } else {
+                        $status = '<span class="badge-new badge-new-danger">Denied</span>';
+                    }
+                }
+                $nestedData[] = $status;
                 if (!empty($timeCard['approved_by_user_id'])) {
                     $nestedData[] = $timeCard['branch_manager_first_name']." ".$timeCard['branch_manager_last_name'];
                 } else if (!empty($timeCard['approved_by_admin_user_id'])) {
@@ -74,30 +82,33 @@ class TimeCards extends MX_Controller
                 } else {
                     $nestedData[] = ''  ;
                 }
+                if ($userdata['user_type_id'] == 1) {
+                    $nestedData[] = !empty($timeCard['approved_date']) ? date("m/d/Y", strtotime($timeCard['approved_date'])) : '';
+                }
                 $timeCardId = $timeCard['id'];
                 if ($userdata['user_type_id'] == 2) {
                     if($userdata['id'] != $timeCard['user_id']) {
                         if (!empty($timeCard['approved_by_user_id']) || !empty($timeCard['approved_by_admin_user_id'])) {
                             if ($timeCard['status'] == 'approved') {
-                                $nestedData[] = "<div style='display:flex;' class='smart-forms'>
-                                        <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $timeCardId);' action='' method='POST'>
-                                            <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                                $nestedData[] = "<div class='smart-forms'>
+                                        <form onclick='return approve_deny_popup(0, $timeCardId);' action='' method='POST'>
+                                            <button style='height:29px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
                                         </form>
                                     </div>";
                             } else {
-                                $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                                $nestedData[] = "<div class='smart-forms'>
                                         <form onclick='return approve_deny_popup(1, $timeCardId);' action='' method='POST'>
-                                            <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                                            <button style='height:29px;' class='button btn-primary' type='submit'>Approve</button>
                                         </form>
                                     </div>";
                             }
                         } else {
-                            $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                            $nestedData[] = "<div style='display:inline-flex;' class='smart-forms'>
                                     <form onclick='return approve_deny_popup(1, $timeCardId);' action='' method='POST'>
-                                        <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                                        <button style='height:29px;' class='button btn-primary' type='submit'>Approve</button>
                                     </form>
-                                    <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $timeCardId);' action='' method='POST'>
-                                        <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                                    <form style='margin-left:5px;' onclick='return approve_deny_popup(0, $timeCardId);' action='' method='POST'>
+                                        <button style='height:29px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
                                     </form>
                                 </div>";
                         }

@@ -73,5 +73,49 @@ class Common
         }
     }
 
+    public function uploadDocumentOnAwsS3($fileName, $folder= '', $csv = 0)
+    {
+        $bucket = env('AWS_BUCKET');
+        if(!empty($folder)) {
+            $keyname = $folder."/".basename($fileName);    
+            $filepath = "uploads/".$folder."/".$fileName;             
+        } else {
+            if ($csv == 1) {
+                $keyname = "csv/".basename($fileName); 
+            } else {
+                $keyname = basename($fileName); 
+            }
+            $filepath = "uploads/".$fileName;  
+        }
+        
+        try {
+            $s3Client = new Aws\S3\S3Client([
+                'region' => env('AWS_REGION'),
+                'version' => '2006-03-01',
+                'credentials' => [
+                    'key' => env('AWS_ACCESS_KEY_ID'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY')
+                ],
+            ]);
+            
+            $result = $s3Client->putObject([
+                'Bucket' => $bucket,
+                'Key' => $keyname,
+                'SourceFile' => $filepath,
+            ]);
+        } catch (Aws\Exception\AwsException $e) {
+            //return $e->getMessage() . "\n";
+            return false;
+        }
+        if(!empty($result['ObjectURL'])) {
+            chmod($filepath, 0644);
+            gc_collect_cycles();
+            unlink($filepath);
+            return true;
+        } else {
+            return false;
+        } 
+    }
+
     
 }

@@ -142,31 +142,32 @@ th {
                         <h3 class="ui-title-block_light">Below is a detail of all your requests.</h3>
                     </div>
                     <div class="typography-sectiona">
-                        <div class="col-md-12">
-                            <div class="table-container">
-                                <table class="table table-type-3 typography-last-elem" id="time_card_listing">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Employee</th>
-                                            <th>Date</th>
-                                            <th>Reg Hours</th>
-                                            <th>OT Hours</th>
-                                            <th>Double OT</th>
-                                            <th>Status</th>
-                                            <th>Approved By</th>
-                                            <?php  $userdata = $this->session->userdata('hr_user');
-                                            if ($userdata['user_type_id'] == 2) { ?>
-                                                <th>Actions</th>
-                                            <?php } ?>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                       
-                                    </tbody>
-                                </table>
-                                <div class="typography-sectionab"></div>
-                            </div>
+                        <div class="table-container">
+                            <table class="table table-type-3 typography-last-elem" id="time_card_listing" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Employee</th>
+                                        <th>Date</th>
+                                        <th>Reg Hours</th>
+                                        <th>OT Hours</th>
+                                        <th>Double OT</th>
+                                        <th>Status</th>
+                                        <th>Approved By</th>
+                                        <?php  $userdata = $this->session->userdata('hr_user');
+                                        if ($userdata['user_type_id'] == 1) { ?>
+                                            <th>Approved Date</th> 
+                                        <?php }
+                                        if ($userdata['user_type_id'] == 2) { ?>
+                                            <th>Actions</th>
+                                        <?php } ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                            <div class="typography-sectionab"></div>
                         </div>
                     </div>
                 </div>

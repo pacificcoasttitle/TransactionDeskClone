@@ -81,7 +81,7 @@ class Users extends MX_Controller {
                 $nestedData[] = $value['position'];
                 $nestedData[] = $value['name'];
                 $nestedData[] = $value['department_name'];
-                $nestedData[] = $value['hire_date'];
+                $nestedData[] = date("m/d/Y", strtotime($value['hire_date'])); 
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-user/'.$value['id'];
                     
@@ -117,6 +117,15 @@ class Users extends MX_Controller {
         $data['hrPositions'] = $this->hr->getHrPositions(); 
         $data['userTypes'] = $this->hr->getHrUserTypes(); 
         $data['departments'] = $this->hr->getHrDepartments(); 
+        $config['upload_path'] = './uploads/hr/user/';
+        $config['allowed_types'] = 'gif|jpg|png';   
+        $config['max_size'] = 12000;
+        $this->load->library('upload', $config);
+        if (!is_dir('/uploads/hr/user')) {
+			mkdir('./uploads/hr/user', 0777, TRUE);
+		}
+        $profileImgError = 0;
+        $document_name = '';
 
         if ($this->input->post()) {
             $this->load->library('hr/common');
@@ -128,35 +137,50 @@ class Users extends MX_Controller {
             $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
             $this->form_validation->set_rules('department', 'Department', 'required', array('required'=> 'Please Select Department.'));
             
-            if ($this->form_validation->run() == true) {
-                $randomPassword = $this->common->randomPassword();
-                $usersData = array(
-                    'first_name' =>  $this->input->post('first_name'),
-                    'last_name' =>  $this->input->post('last_name'),
-                    'email' => $this->input->post('email'),
-                    'password' => password_hash($randomPassword, PASSWORD_DEFAULT),    
-                    'position_id' => $this->input->post('position'),
-                    'user_type_id' => $this->input->post('user_type'),
-                    'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
-                    'status' => 1,
-                    'is_tmp_password' => 1,
-                    'department_id' => $this->input->post('department')
-                );
-                $this->hr->insert($usersData, 'pct_hr_users');
-                $successMsg = 'User added successfully.';
+            if ($this->form_validation->run() == true) {        
+                if (!empty($_FILES['profile_img']['name'])) {
+                    if (! $this->upload->do_upload('profile_img')) {
+                        $data['profile_img_error_msg'] = $this->upload->display_errors();
+                        $profileImgError = 1;
+                    } else { 
+                        $data = $this->upload->data();
+                        $document_name = date('YmdHis')."_".$data['file_name'];
+                        rename(FCPATH."/uploads/hr/user/".$data['file_name'], FCPATH."/uploads/hr/user/".$document_name);
+                        $this->common->uploadDocumentOnAwsS3($document_name, 'hr/user');
+                    } 
+                }
 
-                $from_name = 'Pacific Coast Title Company';
-                $from_mail = getenv('FROM_EMAIL');
-                $message_body = "Hi ".$this->input->post('first_name')." ".$this->input->post('last_name').", <br><br>";
-                $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
-                $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-                $message_body .= "Please click on the link below to complete your registration.<br><br> ".getenv('APP_URL')."hr/login";
-                $subject = 'Invitation For Pacific Coast Title HR Center';
-                $to = $this->input->post('email');
-                $this->load->helper('sendemail');
-                send_email($from_mail, $from_name, $to, $subject, $message_body);
-                $this->session->set_userdata('success', $successMsg);
-                redirect(base_url().'hr/admin/users');
+                if ($profileImgError == 0) {
+                    $randomPassword = $this->common->randomPassword();
+                    $usersData = array(
+                        'first_name' =>  $this->input->post('first_name'),
+                        'last_name' =>  $this->input->post('last_name'),
+                        'email' => $this->input->post('email'),
+                        'password' => password_hash($randomPassword, PASSWORD_DEFAULT),    
+                        'position_id' => $this->input->post('position'),
+                        'user_type_id' => $this->input->post('user_type'),
+                        'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
+                        'status' => 1,
+                        'is_tmp_password' => 1,
+                        'department_id' => $this->input->post('department'),
+                        'profile_img' => $document_name
+                    );
+
+                    $this->hr->insert($usersData, 'pct_hr_users');
+                    $successMsg = 'User added successfully.';
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = getenv('FROM_EMAIL');
+                    $message_body = "Hi ".$this->input->post('first_name')." ".$this->input->post('last_name').", <br><br>";
+                    $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
+                    $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
+                    $message_body .= "Please click on the link below to complete your registration.<br><br> ".getenv('APP_URL')."hr/login";
+                    $subject = 'Invitation For Pacific Coast Title HR Center';
+                    $to = $this->input->post('email');
+                    $this->load->helper('sendemail');
+                    send_email($from_mail, $from_name, $to, $subject, $message_body);
+                    $this->session->set_userdata('success', $successMsg);
+                    redirect(base_url().'hr/admin/users'); 
+                }
             } else {
                 $data['first_name_error_msg'] = form_error('first_name');
                 $data['last_name_error_msg'] = form_error('last_name');
@@ -179,6 +203,15 @@ class Users extends MX_Controller {
         $data['hrPositions'] = $this->hr->getHrPositions(); 
         $data['userTypes'] = $this->hr->getHrUserTypes(); 
         $data['departments'] = $this->hr->getHrDepartments(); 
+        $config['upload_path'] = './uploads/hr/user/';
+        $config['allowed_types'] = 'gif|jpg|png';   
+        $config['max_size'] = 12000;
+        $this->load->library('upload', $config);
+        if (!is_dir('/uploads/hr/user')) {
+			mkdir('./uploads/hr/user', 0777, TRUE);
+		}
+        $profileImgError = 0;
+        $document_name = '';
        
         if(isset($id) && !empty($id)) {
             if ($this->input->post()) {
@@ -191,20 +224,37 @@ class Users extends MX_Controller {
                 $this->form_validation->set_rules('department', 'Department', 'required', array('required'=> 'Please Select Department.'));
                 
                 if ($this->form_validation->run() == true) {
-                    $usersData = array(
-                        'first_name' =>  $this->input->post('first_name'),
-                        'last_name' =>  $this->input->post('last_name'), 
-                        'position_id' => $this->input->post('position'),
-                        'user_type_id' => $this->input->post('user_type'),
-                        'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
-                        'status' => 1,
-                        'department_id' => $this->input->post('department')
-                    );
-                    $condition = array('id' => $id);
-                    $this->hr->update($usersData, $condition, 'pct_hr_users');
-                    $successMsg = 'User updated successfully.';
-                    $this->session->set_userdata('success', $successMsg);
-                    redirect(base_url().'hr/admin/users');
+                    if (!empty($_FILES['profile_img']['name'])) {
+                        if (! $this->upload->do_upload('profile_img')) {
+                            $data['profile_img_error_msg'] = $this->upload->display_errors();
+                            $profileImgError = 1;
+                        } else { 
+                            $data = $this->upload->data();
+                            $document_name = date('YmdHis')."_".$data['file_name'];
+                            rename(FCPATH."/uploads/hr/user/".$data['file_name'], FCPATH."/uploads/hr/user/".$document_name);
+                            $this->common->uploadDocumentOnAwsS3($document_name, 'hr/user');
+                        } 
+                    }
+
+                    if ($profileImgError == 0) {
+                        $usersData = array(
+                            'first_name' =>  $this->input->post('first_name'),
+                            'last_name' =>  $this->input->post('last_name'), 
+                            'position_id' => $this->input->post('position'),
+                            'user_type_id' => $this->input->post('user_type'),
+                            'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
+                            'status' => 1,
+                            'department_id' => $this->input->post('department')
+                        );
+                        if (!empty($document_name)) {
+                            $usersData['profile_img'] = $document_name;
+                        }
+                        $condition = array('id' => $id);
+                        $this->hr->update($usersData, $condition, 'pct_hr_users');
+                        $successMsg = 'User updated successfully.';
+                        $this->session->set_userdata('success', $successMsg);
+                        redirect(base_url().'hr/admin/users');
+                    }
                 } else {
                     $data['first_name_error_msg'] = form_error('first_name');
                     $data['last_name_error_msg'] = form_error('last_name');
