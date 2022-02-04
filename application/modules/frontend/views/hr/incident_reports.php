@@ -193,31 +193,32 @@ th {
                         <h3 class="ui-title-block_light">Below is a detail of all your requests.</h3>
                     </div>
                     <div class="typography-sectiona">
-                        <div class="col-md-12">
-                            <div class="table-container">
-                                <table class="table table-type-3 typography-last-elem" id="incident_reports_listing">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <!-- <th>Employee #</th> -->
-                                            <th>Date</th>
-                                            <th>Name</th>
-                                            <th>Reason</th>
-                                            <th>Num Of Incident</th>
-                                            <th>Incident Actions</th>
-                                            <th>Status</th>
-                                            <th>Approved By</th>
-                                            <?php  $userdata = $this->session->userdata('hr_user');
-                                            if ($userdata['user_type_id'] == 2) { ?>
-                                                <th>Actions</th>
-                                            <?php } ?>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                                <div class="typography-sectionab">
-                                </div>
+                        <div class="table-container">
+                            <table class="table table-type-3 typography-last-elem" id="incident_reports_listing" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <!-- <th>Employee #</th> -->
+                                        <th>Date</th>
+                                        <th>Name</th>
+                                        <th>Reason</th>
+                                        <th>Num Of Incident</th>
+                                        <th>Incident Actions</th>
+                                        <th>Status</th>
+                                        <th>Approved By</th>
+                                        <?php  $userdata = $this->session->userdata('hr_user');
+                                        if ($userdata['user_type_id'] == 1) { ?>
+                                            <th>Approved Date</th> 
+                                        <?php }
+                                        if ($userdata['user_type_id'] == 2) { ?>
+                                            <th>Actions</th>
+                                        <?php } ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div class="typography-sectionab">
                             </div>
                         </div>
                     </div>

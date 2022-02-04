@@ -81,7 +81,15 @@ class VacationRequests extends MX_Controller {
                 $nestedData[] = date("m/d/Y", strtotime($vacationRequestList['to_date']));
                 $nestedData[] = $vacationRequestList['is_salary_deduction'] == 1 ? 'Yes' : 'No';
                 $nestedData[] = $vacationRequestList['is_time_charged_vacation'] == 1 ? 'Yes' : 'No';
-                $nestedData[] = ucfirst(!empty($vacationRequestList['approved_by_user_id']) || !empty($vacationRequestList['approved_by_admin_user_id']) ? $vacationRequestList['status'] : 'Pending');
+                $status = '<span class="badge badge-info">Pending</span>';
+                if (ucfirst(!empty($vacationRequestList['approved_by_user_id']) || !empty($vacationRequestList['approved_by_admin_user_id']))) {
+                    if ($vacationRequestList['status'] == 'approved') {
+                        $status = '<span class="badge badge-success">Approved</span>';
+                    } else {
+                        $status = '<span class="badge badge-danger">Denied</span>';
+                    }
+                }
+                $nestedData[] = $status;
                 if (!empty($vacationRequestList['approved_by_user_id'])) {
                     $nestedData[] = $vacationRequestList['branch_manager_first_name']." ".$vacationRequestList['branch_manager_last_name'];
                 } else if (!empty($vacationRequestList['approved_by_admin_user_id'])) {

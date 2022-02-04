@@ -5814,6 +5814,38 @@ label.pic {
   color:red;
 }
 
+.badge-new {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 80%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.35rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.badge-new-success {
+  color:#fff;
+  background-color:#4ebd4a
+}
+.badge-new-info {
+  color:#fff;
+  background-color:#36b9cc
+}
+.badge-new-warning {
+  color:#fff;
+  background-color:#f6c23e
+}
+.badge-new-danger {
+  color:#fff;
+  background-color:#e74a3b
+}
+
+
+
 
 
 

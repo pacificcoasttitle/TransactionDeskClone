@@ -67,7 +67,15 @@ class IncidentReports extends MX_Controller
                 $nestedData[] = $incidentReport['incident_reason'];
                 $nestedData[] = $incidentReport['num_of_incidents'];
                 $nestedData[] = $incidentReport['actions'];
-                $nestedData[] = ucfirst(!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id']) ? $incidentReport['status'] : 'Pending');
+                $status = '<span class="badge-new badge-new-info">Pending</span>';
+                if (ucfirst(!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id']))) {
+                    if ($incidentReport['status'] == 'approved') {
+                        $status = '<span class="badge-new badge-new-success">Approved</span>';
+                    } else {
+                        $status = '<span class="badge-new badge-new-danger">Denied</span>';
+                    }
+                }
+                $nestedData[] = $status;
                 if (!empty($incidentReport['approved_by_user_id'])) {
                     $nestedData[] = $incidentReport['branch_manager_first_name']." ".$incidentReport['branch_manager_last_name'];
                 } else if (!empty($incidentReport['approved_by_admin_user_id'])) {
@@ -75,30 +83,33 @@ class IncidentReports extends MX_Controller
                 } else {
                     $nestedData[] = ''  ;
                 }
+                if ($userdata['user_type_id'] == 1) {
+                    $nestedData[] = !empty($incidentReport['approved_date']) ? date("m/d/Y", strtotime($incidentReport['approved_date'])) : '';
+                }
                 $incidentReportId = $incidentReport['id'];
                 if ($userdata['user_type_id'] == 2) {
                     if($userdata['id'] != $incidentReport['user_id']) {
                         if (!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id'])) {
                             if ($incidentReport['status'] == 'approved') {
-                                $nestedData[] = "<div style='display:flex;' class='smart-forms'>
-                                        <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
-                                            <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                                $nestedData[] = "<div class='smart-forms'>
+                                        <form onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
+                                            <button style='height:29px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
                                         </form>
                                     </div>";
                             } else {
-                                $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                                $nestedData[] = "<div class='smart-forms'>
                                         <form onclick='return approve_deny_popup(1, $incidentReportId);' action='' method='POST'>
-                                            <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                                            <button style='height:29px;' class='button btn-primary' type='submit'>Approve</button>
                                         </form>
                                     </div>";
                             }
                         } else {
-                            $nestedData[] = "<div style='display:flex;' class='smart-forms'>
+                            $nestedData[] = "<div style='display:inline-flex;' class='smart-forms'>
                                     <form onclick='return approve_deny_popup(1, $incidentReportId);' action='' method='POST'>
-                                        <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
+                                        <button style='height:29px;' class='button btn-primary' type='submit'>Approve</button>
                                     </form>
-                                    <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
-                                        <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
+                                    <form style='margin-left:5px;' onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
+                                        <button style='height:29px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
                                     </form>
                                 </div>";
                         }
