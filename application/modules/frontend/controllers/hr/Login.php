@@ -76,6 +76,56 @@ class Login extends MX_Controller {
         $this->load->view('hr/login', $data);	
     }
 
+	function forgot_password() 
+    {
+        $userdata = $this->session->userdata('hr_user');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 0) {
+            redirect(base_url().'hr/dashboard');
+        } 
+        $data = array();
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email', array('required'=> 'Please enter Email', 'valid_email' => 'Enter a Valid email address'));
+            // $this->form_validation->set_rules('password', 'Password', 'required', array('required'=> 'Please enter password'));
+
+            if ($this->form_validation->run($this) == FALSE) {
+                $data['email_error_msg'] = form_error('email');
+                // $data['password_error_msg'] = form_error('password');
+            } else {
+                $email = $this->input->post('email');
+                $user =  $this->hr->get_hr_user(array('email' => $email, 'status' => 1));
+                if (!empty($user)) {
+					$this->load->library('hr/common');
+					$randomPassword = $this->common->randomPassword();
+					$update_user = [
+						'password' => password_hash($randomPassword, PASSWORD_DEFAULT),
+						'is_tmp_password' => 1
+					];
+					
+                    $this->hr->update($update_user, array('id' => $user['id']), 'pct_hr_users');
+					$successMsg = 'Please check your email for new password';
+
+					$from_name = 'Pacific Coast Title Company';
+					$from_mail = getenv('FROM_EMAIL');
+					$message_body = "Hi ".$user['first_name']." ".$user['last_name'].", <br><br>";
+					$message_body .= "You have requested to redet password for the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
+					$message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
+					$message_body .= "Please click on the link below.<br><br> <a href=".base_url('hr/login').">".base_url('hr/login')."</a>";
+					$subject = 'Reset Password For Pacific Coast Title HR Center';
+					$to = $this->input->post('email');
+					$this->load->helper('sendemail');
+					send_email($from_mail, $from_name, $to, $subject, $message_body);
+					$this->session->set_flashdata('success',$successMsg);
+					redirect(base_url('hr/login'));
+                    
+                } else {
+                    $data['password_error_msg'] = "We can't find a user with that email address.";
+                }
+            }
+    	} 
+        $this->load->view('hr/forgot_password', $data);	
+    }
+
     function change_password()
     {
         $hash = $this->uri->segment(3); 
