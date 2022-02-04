@@ -104,7 +104,6 @@ class Common
                 'SourceFile' => $filepath,
             ]);
         } catch (Aws\Exception\AwsException $e) {
-            //return $e->getMessage() . "\n";
             return false;
         }
         if(!empty($result['ObjectURL'])) {

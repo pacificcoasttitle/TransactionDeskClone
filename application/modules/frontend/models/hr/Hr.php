@@ -484,4 +484,18 @@ class Hr extends CI_Model
             return array();
         }
     }
+
+    public function getUserInfo($user_id)
+    {
+        $this->db->select('pct_hr_users.*, pct_hr_position.name as position,  pct_hr_user_types.name, pct_hr_departments.name as department_name');
+        $this->db->from('pct_hr_users')
+                 ->join('pct_hr_position', 'pct_hr_position.id = pct_hr_users.position_id')
+                 ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
+                 ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id');
+        $this->db->where('pct_hr_users.status', 1);
+        $this->db->where('pct_hr_users.id', $user_id);
+        $query = $this->db->get();
+        $userInfo = $query->row_array();
+        return $userInfo;
+    }
 }
