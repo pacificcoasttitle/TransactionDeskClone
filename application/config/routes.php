@@ -335,6 +335,8 @@ $route['hr/get-incident-reports'] = 'frontend/hr/incidentReports/getIncidentRepo
 $route['hr/save-incident-reports'] = 'frontend/hr/incidentReports/saveIncidentReports';
 $route['hr/profile'] = 'frontend/hr/user/index';
 $route['hr/approve-deny-request'] = 'frontend/hr/common/approveDenyRequest';
+$route['hr/update-password'] = 'frontend/hr/user/updatePassword';
+$route['hr/upload-profile-pic'] = 'frontend/hr/user/uploadProfilePic';
 $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 
