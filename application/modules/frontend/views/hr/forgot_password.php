@@ -19,7 +19,7 @@
 <body>
     <div class="form-body without-side">
         <div class="website-logo">
-            <a href="index.html">
+            <a href="<?php echo base_url(); ?>">
                 <div class="logo">
                     <img class="logo-size" src="<?php echo base_url(); ?>assets/media/hr/logo2.png" alt="">
                 </div>
@@ -37,27 +37,20 @@
                     <div class="form-items">
                         <h3>PCT HUB</h3>
                         <p>Access to the most helpful resources that we have to offer.</p>
-						<?php if($this->session->flashdata('success')): ?>
-						<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success');?></div>
-						<?php
-						endif;
-						?>
-                        <form data-parsley-validate="" name="login_form" id="login_form" method="post"> 
+                        <form data-parsley-validate="" name="forgot_password_form" id="forgot_password_form" method="post"> 
                             <input class="form-control" type="email" name="email" id="email" placeholder="E-mail Address" data-parsley-trigger="change" data-parsley-required-message="Please enter email address" required>
-                            <?php if(!empty($email_error_msg)){ ?>         
+                            <?php if(!empty($email_error_msg)): ?>         
                                 <ul class="parsley-errors-list filled" id="parsley-id-5" aria-hidden="false">
                                     <li class="parsley-required"><?php echo $email_error_msg;?></li>
                                 </ul>
-                            <?php } ?>
-                            <input class="form-control" type="password" name="password" id="password" placeholder="Password" data-parsley-required-message="Please enter password" required>
-                            <?php if(!empty($password_error_msg)){ ?>     
+                            <?php elseif(!empty($password_error_msg)):?>     
                                 <ul class="parsley-errors-list filled" id="parsley-id-7" aria-hidden="false">
                                     <li class="parsley-required"><?php echo $password_error_msg;?></li>
                                 </ul>
-                            <?php } ?>
+                            <?php endif; ?>
                             <div class="form-button">
-                                <button id="submit" type="submit" class="ibtn">Login</button> 
-                                <span style="color:#fff">&nbsp | &nbsp</span> <a href="<?php echo base_url('hr/forgot-password'); ?>">Forgot password?</a>
+                                <button id="submit" type="submit" class="ibtn">Submit</button> 
+                                <span style="color:#fff">&nbsp | &nbsp</span> <a href="<?php echo base_url('hr/login'); ?>">Login</a>
                             </div>
                         </form> 
                     </div>
