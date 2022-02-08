@@ -1,6 +1,7 @@
 var time_card_listing = '';
 var vacation_requests_listing = '';
 var incident_reports_listing = '';
+var memos_listing = '';
 
 $(document).ready(function() {
     "use strict";
@@ -245,6 +246,58 @@ $(document).ready(function() {
                     $("#incident_reports_listing tbody").append(
                         '<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#incident_reports_listing_processing").css("display", "none");
+                }
+            }
+        });
+    }
+
+    if ($('#memos_listing').length) {
+        memos_listing = $('#memos_listing').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                    next: '<span class="fa fa-angle-right"></span>',
+                    previous: '<span class="fa fa-angle-left"></span>',
+                },
+                "emptyTable": "Record(s) not found.",
+                "search": "",
+            },
+            /*"searching": false,*/
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('offersDataTables', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('offersDataTables'));
+            },
+            initComplete: function () {
+
+
+            },
+            dom: 'Bfrtip',
+            buttons: [],
+            "drawCallback": function () {
+
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "hr/get-memos", 
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#memos_listing tbody").append(
+                        '<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#memos_listing_processing").css("display", "none");
                 }
             }
         });
