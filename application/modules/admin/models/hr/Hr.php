@@ -916,4 +916,17 @@ class Hr extends CI_Model
             return array();
         }
     }
+
+    public function getAssignedMemoInfo($memo_id)
+    {
+        $this->db->select('Group_concat(user_id) as user_ids')
+            ->from('pct_hr_assigned_memo_users');
+        $this->db->where('memo_id', $memo_id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }
+    }
 }

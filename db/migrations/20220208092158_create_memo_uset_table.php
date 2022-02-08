@@ -2,9 +2,8 @@
 declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
-use Phinx\Db\Adapter\MysqlAdapter;
 
-final class CreateMemoTabel extends AbstractMigration
+final class CreateMemoUsetTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -19,15 +18,13 @@ final class CreateMemoTabel extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('pct_hr_memos');
-        $table->addColumn('subject', 'string')
-            ->addColumn('description', 'text', ['limit' => MysqlAdapter::TEXT_LONG])
-            ->addColumn('date', 'date')
-            ->addColumn('created_by', 'integer')
+        $table = $this->table('pct_hr_assigned_memo_users');
+        $table->addColumn('user_id', 'integer')
+            ->addColumn('memo_id', 'integer')
+            ->addColumn('is_read', 'boolean', ['default' => 0])
             ->addColumn('created_at', 'datetime')
-            ->addColumn('status', 'boolean', ['default' => 0])
             ->addColumn('updated_at', 'datetime', ['null' => true])
-            ->addIndex(['created_by'])  
+            ->addIndex(['user_id', 'memo_id'])  
             ->create();
     }
 }

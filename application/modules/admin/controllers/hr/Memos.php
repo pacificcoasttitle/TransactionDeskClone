@@ -123,13 +123,20 @@ class Memos extends MX_Controller {
             if ($this->form_validation->run() == true) {
                 $memoData = array(
                     'subject' =>  $this->input->post('subject'),
-                    'to' =>  implode(",",$this->input->post('users')),
                     'description' => $this->input->post('memo_description'),
                     'date' => date("Y-m-d", strtotime($this->input->post('memo_date'))),
                     'status' => 1,
                     'created_by' => $userdata['id']
                 );
-                $this->hr->insert($memoData, 'pct_hr_memos');
+                $memoId = $this->hr->insert($memoData, 'pct_hr_memos');
+                $users = $this->input->post('users');
+                foreach($users as $user) {
+                    $memoAssignedData = array(
+                        'user_id' =>  $user,
+                        'memo_id' =>  $memoId
+                    );
+                    $this->hr->insert($memoAssignedData, 'pct_hr_assigned_memo_users');
+                }
                 $successMsg = 'Memo added successfully.';
                 $this->session->set_userdata('success', $successMsg);
                 redirect(base_url().'hr/admin/memos');
@@ -155,6 +162,7 @@ class Memos extends MX_Controller {
         $data['title'] = 'HR-Center Memos';
         $data['page_title'] = 'Edit memo';
         $data['users'] = $this->common->getAllUsers();
+        $data['assignedMemoUsers'] = $this->hr->getAssignedMemoInfo($id);
     
         if(isset($id) && !empty($id)) {
             if ($this->input->post()) {
@@ -166,14 +174,21 @@ class Memos extends MX_Controller {
                 if ($this->form_validation->run() == true) {
                     $memoData = array(
                         'subject' =>  $this->input->post('subject'),
-                        'to' =>  implode(",",$this->input->post('users')),
                         'description' => $this->input->post('memo_description'),
                         'date' => date("Y-m-d", strtotime($this->input->post('memo_date'))),
                         'status' => 1
                     );
-                    
                     $condition = array('id' => $id);
                     $this->hr->update($memoData, $condition, 'pct_hr_memos');
+                    $users = $this->input->post('users');
+                    $this->db->delete('pct_hr_assigned_memo_users', array('memo_id' => $id));
+                    foreach($users as $user) {
+                        $memoAssignedData = array(
+                            'user_id' =>  $user,
+                            'memo_id' =>  $id
+                        );
+                        $this->hr->insert($memoAssignedData, 'pct_hr_assigned_memo_users');
+                    }
                     $successMsg = 'Memo edited successfully.';
                     $this->session->set_userdata('success', $successMsg);
                     redirect(base_url().'hr/admin/memos');
@@ -185,6 +200,7 @@ class Memos extends MX_Controller {
                 }                                       
             }
             $data['memoInfo'] = $this->hr->getMemoInfo($id);
+            $data['assignedMemoInfo'] = $this->hr->getAssignedMemoInfo($id);
         } else { 
             redirect(base_url().'hr/admin/memos');
         }

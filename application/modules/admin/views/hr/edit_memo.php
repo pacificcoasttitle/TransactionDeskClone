@@ -42,7 +42,7 @@
                                                     if(set_value('users') && in_array($user['id'], set_value('users')))  {
                                                         $selected = 'selected';
                                                     } else {
-                                                        $memoInfoUsers = explode(',', $memoInfo['to']);
+                                                        $memoInfoUsers = explode(',', $assignedMemoUsers['user_ids']);
                                                         if(in_array($user['id'], $memoInfoUsers))  {
                                                             $selected = 'selected';
                                                         }
