@@ -116,5 +116,15 @@ class Common
         } 
     }
 
-    
+    public function getAllUsers() 
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->where('status', 1);
+        $query = $this->CI->db->get('pct_hr_users');
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
 }
