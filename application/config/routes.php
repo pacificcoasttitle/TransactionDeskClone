@@ -382,6 +382,11 @@ $route['hr/admin/add-position'] = 'admin/hr/positions/addPosition';
 $route['hr/admin/get-positions'] = 'admin/hr/positions/getPositions';
 $route['hr/admin/edit-position/:num'] = 'admin/hr/positions/editPosition';
 $route['hr/admin/delete-position'] = 'admin/hr/positions/deletePosition';
+$route['hr/admin/memos'] = 'admin/hr/memos/index';
+$route['hr/admin/add-memo'] = 'admin/hr/memos/addMemo';
+$route['hr/admin/get-memos'] = 'admin/hr/memos/getMemos';
+$route['hr/admin/edit-memo/:num'] = 'admin/hr/memos/editMemo';
+$route['hr/admin/delete-memo'] = 'admin/hr/memos/deleteMemo';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

@@ -83,6 +83,14 @@
 		</a>
 	</li>
 
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'hr/admin/memos'; ?>">
+			<i class="fas fa-fw fa-sticky-note"></i>
+			<span>Memos</span>
+		</a>
+	</li>
+
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">
 
