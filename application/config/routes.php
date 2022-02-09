@@ -386,6 +386,17 @@ $route['hr/admin/add-position'] = 'admin/hr/positions/addPosition';
 $route['hr/admin/get-positions'] = 'admin/hr/positions/getPositions';
 $route['hr/admin/edit-position/:num'] = 'admin/hr/positions/editPosition';
 $route['hr/admin/delete-position'] = 'admin/hr/positions/deletePosition';
+$route['hr/admin/task-category'] = 'admin/hr/taskList/category';
+$route['hr/admin/get-task-category'] = 'admin/hr/taskList/getCategory';
+$route['hr/admin/add-task-category'] = 'admin/hr/taskList/addCategory';
+$route['hr/admin/edit-task-category/(:num)'] = 'admin/hr/taskList/editCategory/$1';
+$route['hr/admin/delete-task-category/(:num)'] = 'admin/hr/taskList/deleteCategory/$1';
+$route['hr/admin/task-list'] = 'admin/hr/taskList/index';
+$route['hr/admin/get-task-list'] = 'admin/hr/taskList/getTask';
+$route['hr/admin/add-task-list'] = 'admin/hr/taskList/addTask';
+$route['hr/admin/edit-task-list/(:num)'] = 'admin/hr/taskList/editTask/$1';
+$route['hr/admin/delete-task-list/(:num)'] = 'admin/hr/taskList/deleteTask/$1';
+
 $route['hr/admin/memos'] = 'admin/hr/memos/index';
 $route['hr/admin/add-memo'] = 'admin/hr/memos/addMemo';
 $route['hr/admin/get-memos'] = 'admin/hr/memos/getMemos';
