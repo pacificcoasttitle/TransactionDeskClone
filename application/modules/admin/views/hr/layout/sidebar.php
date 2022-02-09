@@ -83,6 +83,24 @@
 		</a>
 	</li>
 
+	<li
+		class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*task-/',$this->uri->uri_string())) { echo 'active'; } ?>" >
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#tasks_menu" aria-expanded="true"
+			aria-controls="tasks_menu">
+			<i class="fas fa-fw fa-check"></i>
+			<span>Onboarding</span>
+		</a>
+		<div id="tasks_menu" class="collapse <?php if(preg_match('/hr\/admin\/([a-z\-])*task-/',$this->uri->uri_string())) { echo 'show'; }?>" aria-labelledby="tasks_menu" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<a class="collapse-item <?php if(preg_match('/hr\/admin\/([a-z\-])*task-category/',$this->uri->uri_string())) { echo 'active'; } ?> ?>"
+					href="<?php echo base_url().'hr/admin/task-category'; ?>">Task Category</a>
+				<a class="collapse-item <?php if(preg_match('/hr\/admin\/([a-z\-])*task-list/',$this->uri->uri_string())) { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/task-list'; ?>">Task List</a>
+
+			</div>
+		</div>
+	</li>
+
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">
 
