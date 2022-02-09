@@ -48,7 +48,7 @@
 			<i class="fas fa-fw fa-users"></i>
 			<span>Users</span>
 		</a>
-		<div id="users_menu" class="collapse" aria-labelledby="users_menu" data-parent="#accordionSidebar">
+		<div id="users_menu" class="collapse <?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user' || $this->uri->uri_string() == 'hr/admin/admin-users' || $this->uri->uri_string() == 'hr/admin/add-admin-user' || $this->uri->segment(3) == 'edit-admin-user') { echo 'show'; } ?>" aria-labelledby="users_menu" data-parent="#accordionSidebar">
 			<div class="bg-white py-2 collapse-inner rounded">
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user') { echo 'active'; } ?>"
 					href="<?php echo base_url().'hr/admin/users'; ?>">Employees</a>
@@ -89,6 +89,21 @@
 			<i class="fas fa-fw fa-sticky-note"></i>
 			<span>Memos</span>
 		</a>
+	</li>
+
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/memoLogs' ) { echo 'active'; } ?>">
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#logs_memu" aria-expanded="true"
+			aria-controls="logs_memu">
+			<i class="fas fa-fw fa-history"></i>
+			<span>Logs</span>
+		</a>
+		<div id="logs_memu" class="collapse <?php if($this->uri->uri_string() == 'hr/admin/memo-logs' ) { echo 'show'; } ?>" aria-labelledby="logs_memu" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/memo-logs') { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/memo-logs'; ?>">Memo</a>
+			</div>
+		</div>
 	</li>
 
 	<!-- Divider -->

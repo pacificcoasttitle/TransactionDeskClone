@@ -490,3 +490,32 @@ function approve_deny_popup(status, requestId)
     $('#approve_deny_popup').modal('show');   
     return false;
 }
+
+function showMemoInfo(memoId) 
+{
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    $.ajax({
+        url: base_url + "hr/get-memo-info",
+        type: "post",
+        data: {
+            memoId: memoId
+        },
+        success: function (response) {
+            var res = jQuery.parseJSON(response);
+            if(res.status == 'success') {
+                $("#subject_container").html(res.memoInfo['subject']+ ' Memo');
+                $("#subject").val(res.memoInfo['subject']);
+                $("#to").html('<b>To: </b>'+res.memoInfo['to']);
+                $("#date").html('<b>Date: </b>'+res.memoInfo['date']);
+                $("#from").html('<b>From: </b>'+res.memoInfo['user_name']);
+                $("#description").html(res.memoInfo['description']);
+               
+            }  
+            $('#page-preloader').css('display', 'none');
+            $('#memo_information').modal('show');
+            $('#memoId').val(memoId);
+        }
+    });
+    return false;
+}

@@ -7,6 +7,7 @@ var user_types = '';
 var departments = '';
 var positions = '';
 var memos = '';
+var memo_logs = '';
 
 $(document).ready(function () {
     
@@ -379,6 +380,47 @@ $(document).ready(function () {
                     }
                     $("#memos tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
                     $("#memos_processing").css("display", "none");
+                }
+            }            
+        });
+    } 
+
+    if ($('#memo_logs').length > 0)  {
+        memo_logs = $('#memo_logs').DataTable({
+           "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "dom": 'Blfrtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"hr/admin/get-memo-logs", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#memo_logs tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
+                    $("#memo_logs_processing").css("display", "none");
                 }
             }            
         });

@@ -904,19 +904,6 @@ class Hr extends CI_Model
         );
     }
 
-    public function getMemoInfo($id) 
-    {
-        $this->db->select('*');
-        $this->db->where('id', $id);
-        $this->db->where('status', 1);
-        $query = $this->db->get('pct_hr_memos');
-        if ($query->num_rows() > 0)  {
-            return $query->row_array();
-        } else {
-            return array();
-        }
-    }
-
     public function getAssignedMemoInfo($memo_id)
     {
         $this->db->select('Group_concat(user_id) as user_ids')
@@ -928,5 +915,96 @@ class Hr extends CI_Model
         } else {
             return array();
         }
+    }
+
+    public function getMemoLogs($params)
+    {
+        $this->db->from('pct_hr_memos')
+                 ->join('admin', 'admin.id = pct_hr_memos.created_by')
+                 ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_assigned_memo_users.user_id');
+        $this->db->where('pct_hr_memos.status', 1);
+        $total_records =  $this->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $memos = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('pct_hr_memos.subject', $keyword)
+                        ->or_like('pct_hr_memos.date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('admin.user_name', $keyword)
+                        ->or_like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->group_end();
+            }
+            
+            $this->db->from('pct_hr_memos')
+                ->join('admin', 'admin.id = pct_hr_memos.created_by')
+                ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_assigned_memo_users.user_id');
+            $this->db->where('pct_hr_memos.status', 1);
+			$filter_total_records =  $this->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('pct_hr_memos.subject', $keyword)
+                        ->or_like('pct_hr_memos.date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('admin.user_name', $keyword)
+                        ->or_like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->group_end();
+            }
+
+            $this->db->select('pct_hr_memos.*, admin.user_name, pct_hr_users.first_name, pct_hr_users.last_name, pct_hr_assigned_memo_users.is_read');
+            $this->db->from('pct_hr_memos')
+                    ->join('admin', 'admin.id = pct_hr_memos.created_by')
+                    ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id')
+                    ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_assigned_memo_users.user_id');
+            $this->db->where('pct_hr_memos.status', 1);
+            $this->db->order_by('pct_hr_memos.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }	
+
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $memos = $query->result_array();
+	        }
+    	} else {    		
+    		$this->db->from('pct_hr_memos')
+                    ->join('admin', 'admin.id = pct_hr_memos.created_by')
+                    ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id')
+                    ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_assigned_memo_users.user_id');
+            $this->db->where('pct_hr_memos.status', 1);
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->select('pct_hr_memos.*, admin.user_name, pct_hr_users.first_name, pct_hr_users.last_name, pct_hr_assigned_memo_users.is_read');
+            $this->db->from('pct_hr_memos')
+                    ->join('admin', 'admin.id = pct_hr_memos.created_by')
+                    ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id')
+                    ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_assigned_memo_users.user_id');
+            $this->db->where('pct_hr_memos.status', 1);
+            $this->db->order_by('pct_hr_memos.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $memos = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $memos
+        );
     }
 }
