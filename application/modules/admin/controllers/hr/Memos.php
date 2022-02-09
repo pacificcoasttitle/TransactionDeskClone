@@ -199,7 +199,7 @@ class Memos extends MX_Controller {
                     $data['memo_description_error_msg'] = form_error('memo_description');
                 }                                       
             }
-            $data['memoInfo'] = $this->hr->getMemoInfo($id);
+            $data['memoInfo'] = $this->common->getMemoInfo($id);
             $data['assignedMemoInfo'] = $this->hr->getAssignedMemoInfo($id);
         } else { 
             redirect(base_url().'hr/admin/memos');
