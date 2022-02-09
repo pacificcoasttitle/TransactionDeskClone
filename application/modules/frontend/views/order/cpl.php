@@ -576,7 +576,7 @@
 					var res = jQuery.parseJSON(response);
 					if(res.status == 'success') {
 						var optionsAsString = "";
-						for(var i = 0; i < res.orderDetails['agents_data'].length; i++) {
+						for (var i = 0; i < res.orderDetails['agents_data'].length; i++) {
 							var selected = '';
 							if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
 								selected = 'selected';

@@ -12,7 +12,7 @@
                 <div class="header-navibox-2">
                     <ul class="yamm nav navbar-nav">                                   
                         <li><a href="<?php echo base_url(); ?>hr/dashboard">Dashboard</a></li>
-                        <li><a href="">My Documents</a></li>
+                        <li><a href="<?php echo base_url(); ?>hr/memos">Memos</a></li>
                         <li><a href="<?php echo base_url(); ?>hr/logout">Logout</a></li>    
                     </ul>
                 </div>

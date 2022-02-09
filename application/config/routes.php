@@ -337,6 +337,10 @@ $route['hr/profile'] = 'frontend/hr/user/index';
 $route['hr/approve-deny-request'] = 'frontend/hr/common/approveDenyRequest';
 $route['hr/update-password'] = 'frontend/hr/user/updatePassword';
 $route['hr/upload-profile-pic'] = 'frontend/hr/user/uploadProfilePic';
+$route['hr/memos'] = 'frontend/hr/memos/index';
+$route['hr/get-memos'] = 'frontend/hr/memos/getMemos';
+$route['hr/get-memo-info'] = 'frontend/hr/memos/getMemoInfo';
+$route['hr/accept-memo'] = 'frontend/hr/memos/acceptMemo';
 $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 
@@ -393,6 +397,13 @@ $route['hr/admin/add-task-list'] = 'admin/hr/taskList/addTask';
 $route['hr/admin/edit-task-list/(:num)'] = 'admin/hr/taskList/editTask/$1';
 $route['hr/admin/delete-task-list/(:num)'] = 'admin/hr/taskList/deleteTask/$1';
 
+$route['hr/admin/memos'] = 'admin/hr/memos/index';
+$route['hr/admin/add-memo'] = 'admin/hr/memos/addMemo';
+$route['hr/admin/get-memos'] = 'admin/hr/memos/getMemos';
+$route['hr/admin/edit-memo/:num'] = 'admin/hr/memos/editMemo';
+$route['hr/admin/delete-memo'] = 'admin/hr/memos/deleteMemo';
+$route['hr/admin/memo-logs'] = 'admin/hr/logs/memoLogs';
+$route['hr/admin/get-memo-logs'] = 'admin/hr/logs/getMemoLogs';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

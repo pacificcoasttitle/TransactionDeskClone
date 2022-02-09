@@ -116,5 +116,30 @@ class Common
         } 
     }
 
-    
+    public function getAllUsers() 
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->where('status', 1);
+        $query = $this->CI->db->get('pct_hr_users');
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function getMemoInfo($id) 
+    {
+        $this->CI->db->select('pct_hr_memos.*, admin.user_name');
+        $this->CI->db->from('pct_hr_memos')
+            ->join('admin', 'admin.id = pct_hr_memos.created_by');
+        $this->CI->db->where('pct_hr_memos.id', $id);
+        $this->CI->db->where('pct_hr_memos.status', 1);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }
+    }
 }
