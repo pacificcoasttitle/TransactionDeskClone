@@ -396,6 +396,7 @@ $route['hr/admin/get-task-list'] = 'admin/hr/taskList/getTask';
 $route['hr/admin/add-task-list'] = 'admin/hr/taskList/addTask';
 $route['hr/admin/edit-task-list/(:num)'] = 'admin/hr/taskList/editTask/$1';
 $route['hr/admin/delete-task-list/(:num)'] = 'admin/hr/taskList/deleteTask/$1';
+$route['hr/admin/users-tasks/(:num)'] = 'admin/hr/users/getTask/$1';
 
 $route['hr/admin/memos'] = 'admin/hr/memos/index';
 $route['hr/admin/add-memo'] = 'admin/hr/memos/addMemo';
