@@ -18,7 +18,7 @@ final class CreateHrEmploeeTaskListComplete extends AbstractMigration
      */
     public function change(): void
     {
-		$table = $this->table('pct_hr_employee_task_list_Complete');
+		$table = $this->table('pct_hr_employee_task_list_complete');
         $table->addColumn('task_id', 'integer')
 				->addColumn('employee_id', 'integer')
                 ->addTimestamps()
