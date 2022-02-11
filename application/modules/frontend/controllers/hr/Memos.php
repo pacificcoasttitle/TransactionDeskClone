@@ -117,6 +117,7 @@ class Memos extends MX_Controller {
         );
         $this->hr->update($data, $condition, 'pct_hr_assigned_memo_users'); 
         $success[] =  $subject." memo accepted successfully.";
+        
         $data = array(
             "errors" =>  $errors,
             "success" => $success
