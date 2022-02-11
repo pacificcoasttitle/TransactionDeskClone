@@ -73,6 +73,16 @@ class Common
         }
     }
 
+	public function is_onboarding_user()
+    {
+        $userdata = $this->CI->session->userdata('hr_user');
+        if(!empty($userdata) && isset($userdata['user_type']) && strtolower(trim($userdata['user_type'])) == 'onboarding laison'){
+            return true;
+        } else {
+            redirect(base_url().'hr/dashboard');
+        }
+    }
+
     public function uploadDocumentOnAwsS3($fileName, $folder= '', $csv = 0)
     {
         $bucket = env('AWS_BUCKET');

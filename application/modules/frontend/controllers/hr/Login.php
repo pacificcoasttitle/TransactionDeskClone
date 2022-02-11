@@ -61,6 +61,7 @@ class Login extends MX_Controller {
                                 "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name']." ".$user['last_name'] : '',
                                 "email" => isset($user['email']) && !empty($user['email']) ? $user['email'] : '',
                                 "user_type_id" => isset($user['user_type_id']) && !empty($user['user_type_id']) ? $user['user_type_id'] : '',
+                                "user_type" => isset($user['user_type']) && !empty($user['user_type']) ? $user['user_type'] : '',
                             );
                             $this->session->set_userdata('hr_user', $session_data);
                             redirect(base_url().'hr/dashboard');
@@ -146,6 +147,7 @@ class Login extends MX_Controller {
                         "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name']." ".$user['last_name'] : '',
                         "email" => isset($user['email']) && !empty($user['email']) ? $user['email'] : '',
                         "user_type_id" => isset($user['user_type_id']) && !empty($user['user_type_id']) ? $user['user_type_id'] : '',
+						"user_type" => isset($user['user_type']) && !empty($user['user_type']) ? $user['user_type'] : '',
                     );
                     $this->session->set_userdata('hr_user', $session_data);
                     redirect(base_url().'hr/dashboard');

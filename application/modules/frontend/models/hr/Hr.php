@@ -3,10 +3,11 @@ class Hr extends CI_Model
 {
     public function get_hr_user($params = array()) 
     {
-        $this->db->select('*');
+        $this->db->select('pct_hr_users.*,pct_hr_user_types.name as user_type');
         $this->db->from('pct_hr_users');
+        $this->db->join('pct_hr_user_types','pct_hr_users.user_type_id = pct_hr_user_types.id','left');
         foreach($params as $key => $val){
-            $this->db->where($key, $val);
+            $this->db->where('pct_hr_users.'.$key, $val);
         }
         $query = $this->db->get();
         $result = $query->row_array();
