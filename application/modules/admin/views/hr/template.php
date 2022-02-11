@@ -40,7 +40,109 @@
 
     <!-- Custom scripts for all pages-->
     <script src="<?php echo base_url(); ?>assets/backend/hr/js/sb-admin-2.min.js"></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <?php echo $js_files; ?>
+
+    <?php $userdata = $this->session->userdata('hr_admin');
+        if(!empty($userdata)) { ?>
+            <script>
+                var notificationsWrapper   = $('.admin-notifications');
+                var notificationsToggle    = notificationsWrapper.find('a[data-toggle]');
+                var notificationsCountElem = notificationsToggle.find('span[data-count]');
+                var notificationsCount     = parseInt(notificationsCountElem.data('count'));
+                var notifications          = notificationsWrapper.find('div.notification-item-list');
+                var notificationClickFlag  = 0;
+                var newNotificationFlag    = 0;
+
+                // Enable pusher logging - don't include this in production
+                Pusher.logToConsole = true;
+
+                var pusher = new Pusher('<?php echo env("PUSHER_KEY"); ?>', {
+                    cluster: '<?php echo env("PUSHER_CLUSTER"); ?>'
+                });
+
+                var channel = pusher.subscribe('admin-channel');
+                channel.bind('admin-event', function(data) {
+                    var notification = data;
+                    var alertClass = '';
+                    var iconClass = '';
+                    if (notification.type == 'approved') {
+                        alertClass = 'bg-success';
+                        iconClass = 'fa-check';
+                    } else if (notification.type == 'denied') {
+                        alertClass = 'bg-danger';
+                        iconClass = 'fa-ban';
+                    } else if (notification.type == 'accepted') {
+                        alertClass = 'bg-warning';
+                        iconClass = 'fa-exclamation-triangle';
+                    }
+                     
+                    var existingNotifications = notifications.html();
+                    
+                    var newNotificationHtml = `<a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle `+alertClass+`">
+                                            <i class="fas `+iconClass+` text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">`+notification.date+`</div>
+                                        `+notification.message+`
+                                    </div>
+                                </a>`; 
+ 
+                    if (notificationsCount > 0 ){
+                        notifications.html(newNotificationHtml + existingNotifications);
+                    } else {
+                        notifications.html(newNotificationHtml);
+                    }     
+                    notificationsCount += 1;
+                    notificationsCountElem.attr('data-count', notificationsCount);
+                    notificationsWrapper.find('.badge-counter').removeClass('d-none').text(notificationsCount);
+                    notificationsWrapper.show();
+                    newNotificationFlag = 1;
+                    
+                });
+
+                $('#notification').click(function(e) {
+                    if(notificationClickFlag == 0 || newNotificationFlag == 1) {
+                        if( notificationsCount > 0 ){
+                            $.ajaxSetup({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                }
+                            });                                 
+                            $.ajax({
+                                type: "POST",
+                                url: "{{route('mark-as-read')}}",  
+                                async: false,                                          
+                                success: function(response){     
+                                    notificationClickFlag = 1; 
+                                    notificationsCountElem.attr('data-count', 0);
+                                    notificationsCount = 0;
+                                    notificationsWrapper.find('.notif-count').addClass('d-none').text(0);
+                                    newNotificationFlag = 0;
+                                },
+                                error: function(response){	
+                                    notificationClickFlag = 0;  
+                                }                                        
+                            });
+                        }
+                    } else {
+                        var newNotificationHtml = `
+                                <span class="dropdown-item notify-item">
+                                    <div class="notify-icon bg-success"><i class="mdi mdi-message"></i></div>
+                                    <span class="notify-details ml-0">No new notifications</span>                                                                                    
+                                </span>`;
+                        notifications.html(newNotificationHtml); 
+                        notificationsCountElem.attr('data-count', 0);
+                        notificationsCount = 0;
+                        notificationsWrapper.find('.notif-count').addClass('d-none').text(0); 
+                    }  
+                }); 
+            </script>
+        <?php }
+    ?>
 </body>
 
 </html>
