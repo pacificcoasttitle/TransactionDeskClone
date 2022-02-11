@@ -303,6 +303,59 @@ $(document).ready(function() {
         });
     }
 
+	if ($('#common_tbl_listing').length) {
+		var tbl_url = $('#common_tbl_listing').attr('data-url');
+        $('#common_tbl_listing').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                    next: '<span class="fa fa-angle-right"></span>',
+                    previous: '<span class="fa fa-angle-left"></span>',
+                },
+                "emptyTable": "Record(s) not found.",
+                "search": "",
+            },
+            /*"searching": false,*/
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('offersDataTables', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('offersDataTables'));
+            },
+            initComplete: function () {
+
+
+            },
+            dom: 'Bfrtip',
+            buttons: [],
+            "drawCallback": function () {
+
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: tbl_url, 
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#common_tbl_listing tbody").append(
+                        '<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#common_tbl_listing_processing").css("display", "none");
+                }
+            }
+        });
+    }
+
     $("#reg_hours, #ot_hours, #double_ot").on('change', function() {
         var reg_hours = $('#reg_hours').val() != '' ? $('#reg_hours').val() : 0;
         var ot_hours = $('#ot_hours').val() != '' ? $('#ot_hours').val() : 0;

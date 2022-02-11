@@ -13,6 +13,11 @@
                     <ul class="yamm nav navbar-nav">                                   
                         <li><a href="<?php echo base_url(); ?>hr/dashboard">Dashboard</a></li>
                         <li><a href="<?php echo base_url(); ?>hr/memos">Memos</a></li>
+						<?php
+						if(!empty($this->session->userdata('hr_user')) && isset($this->session->userdata('hr_user')['user_type']) && strtolower(trim($this->session->userdata('hr_user')['user_type'])) == 'onboarding laison'):
+						?>
+						<li><a href="<?php echo base_url(); ?>hr/onboarding/employees">Onboarding</a></li>
+						<?php endif; ?>
                         <li><a href="<?php echo base_url(); ?>hr/logout">Logout</a></li>    
                     </ul>
                 </div>
