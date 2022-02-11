@@ -2,7 +2,7 @@
 
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-class Common extends MX_Controller 
+class HrCommon extends MX_Controller 
 {
 	function __construct() 
     {
