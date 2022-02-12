@@ -232,13 +232,17 @@ class TaskList extends MX_Controller
     {
 		$data['title'] = 'HR-Center Task Category';
         $data['page_title'] = 'Add Category';
+		$this->load->model('hr/users_position');
 		$task_list_category = $this->task_list_category->get_many_by('status', '1');
+		$users_position = $this->users_position->get_many_by('status', '1');
         $data['task_list_category'] = $task_list_category;
+        $data['users_position'] = $users_position;
 
 		if ($this->input->post()) {
             $this->load->library('hr/common');
             $this->form_validation->set_rules('task_name', 'Task Name', 'required');
             $this->form_validation->set_rules('task_category', 'Task Category', 'required');
+            $this->form_validation->set_rules('task_position[]', 'Position', 'required');//task_position
         
             if ($this->form_validation->run() == true) {
                 $taskData = array(
@@ -247,15 +251,31 @@ class TaskList extends MX_Controller
                     'description' =>  $this->input->post('task_description'),
                     'status' =>  $this->input->post('check_status') ? 1 : 0,
                 );
-                $this->task_list_model->insert($taskData);
+                $task_id = $this->task_list_model->insert($taskData);
+				if($task_id) {
+					$this->load->model('hr/task_position');
+					$position_ids = $this->input->post('task_position');
+					$task_positions = array();
+					foreach($position_ids as $position_id) {
+						$tmp_array = array();
+						$tmp_array['task_id'] = $task_id;
+						$tmp_array['position_id'] = $position_id;
+						$task_positions[] = $tmp_array;
+					}
+					$this->task_position->insert_many($task_positions);
+
+				}
                 $successMsg = 'Task added successfully.';
                 $this->session->set_userdata('success', $successMsg);
                 redirect(base_url().'hr/admin/task-list');
             } else {
                 $data['task_name_error_msg'] = form_error('task_name');
                 $data['task_category_error_msg'] = form_error('task_category');
+                $data['task_position_error_msg'] = form_error('task_position');
             }                                       
         }
+		$this->admintemplate->addCSS(base_url('assets/backend/hr/css/bootstrap-multiselect.min.css'));
+		$this->admintemplate->addJS( base_url('assets/backend/hr/js/plugins/bootstrap-multiselect.min.js') );
 		$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
         $this->admintemplate->show("hr", "add_task_list", $data);
 	}
@@ -265,7 +285,15 @@ class TaskList extends MX_Controller
 		$record = $this->task_list_model->get($id);
 		// $task_list_category = $this->task_list_category->get_many_by(['status'=> '1']);
 		$task_list_category = $this->task_list_category->get_many_by("(status='1' OR id={$record->category_id})");
+		$this->load->model('hr/users_position');
+		$users_position = $this->users_position->get_many_by('status', '1');
+		$this->load->model('hr/task_position');
+		$hr_task_positions = $this->task_position->get_many_by('task_id',$id);
+		
         $data['task_list_category'] = $task_list_category;
+        $data['users_position'] = $users_position;
+        $data['hr_task_positions'] = array_column($hr_task_positions,'position_id');
+		
 		if($record) {
 			$data['title'] = 'HR-Center Task Category';
 			$data['page_title'] = 'Edit Category';
@@ -274,6 +302,8 @@ class TaskList extends MX_Controller
 				$this->load->library('hr/common');
 				$this->form_validation->set_rules('task_name', 'Task Name', 'required');
 				$this->form_validation->set_rules('task_category', 'Task Category', 'required');
+				$this->form_validation->set_rules('task_position[]', 'Position', 'required');//task_position
+
 			
 				if ($this->form_validation->run() == true) {
 					$taskData = array(
@@ -283,14 +313,41 @@ class TaskList extends MX_Controller
 						'status' =>  $this->input->post('check_status') ? 1 : 0,
 					);
 					$this->task_list_model->update($id,$taskData);
+					$position_ids = $this->input->post('task_position');
+					$task_positions = array();
+					foreach($position_ids as $position_id) {
+						if(!(in_array($position_id,$data['hr_task_positions']))){
+							$tmp_array = array();
+							$tmp_array['task_id'] = $id;
+							$tmp_array['position_id'] = $position_id;
+							$task_positions[] = $tmp_array;
+						}
+					}
+					if(count($task_positions)) {
+						$this->task_position->insert_many($task_positions);
+					}
+					//Delete records if task unchecked
+					$delete_id_array = array();
+					foreach($hr_task_positions as $task_position) {
+						if(!(in_array($task_position->position_id,$position_ids))){
+							$delete_id_array[] = $task_position->id;
+						}
+					}
+					if(count($delete_id_array)) {
+						$this->task_position->delete_many($delete_id_array);
+					}
 					$successMsg = 'Task updated successfully.';
 					$this->session->set_userdata('success', $successMsg);
 					redirect(base_url().'hr/admin/task-list');
 				} else {
 					$data['task_name_error_msg'] = form_error('task_name');
 					$data['task_category_error_msg'] = form_error('task_category');
+					$data['task_position_error_msg'] = form_error('task_position');
+
 				}                                       
 			}
+			$this->admintemplate->addCSS(base_url('assets/backend/hr/css/bootstrap-multiselect.min.css'));
+			$this->admintemplate->addJS( base_url('assets/backend/hr/js/plugins/bootstrap-multiselect.min.js') );
 			$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
 			$this->admintemplate->show("hr", "edit_task_list", $data);
 		}

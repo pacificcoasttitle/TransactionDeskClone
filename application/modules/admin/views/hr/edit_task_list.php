@@ -1,3 +1,8 @@
+<style>
+.multiselect-selected-text {
+    float: left;
+}
+</style>
 <div class="content">
     <div class="container-fluid">
         <div class="row mb-3">
@@ -54,6 +59,25 @@
 										<?php if(!empty($task_category_error_msg)){ ?>       
                                         <div class="typography-line text-danger">
                                             <?php echo $task_category_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+										<label for="task_position" style="display: block;">For EMployee Position <span class="required"> *</span></label>
+										<select class="form-control" name="task_position[]" id="task_position" required multiple>
+											<!-- <option value="">Select Position</option> -->
+											<?php foreach($users_position as $position): ?>
+												<option value="<?php echo $position->id;?>" <?php if(in_array($position->id,$hr_task_positions)) { echo 'selected'; } ?>><?php echo $position->name; ?></option>
+											<?php endforeach; ?>
+										</select>
+										<?php if(!empty($task_position_error_msg)){ ?>       
+                                        <div class="typography-line text-danger">
+                                            <?php echo $task_position_error_msg;?>
                                         </div>
                                     <?php } ?>
 									</div>

@@ -79,6 +79,10 @@
 		.task__info label input:checked ~ .check_box_text {
 			text-decoration: line-through;
 		}
+		.task__info.no__task {
+    margin-left: 35px;
+    font-size: 16px;
+}
 </style>
 <section class="section-type-4a section-defaulta b-contact b-contact_mod-a" style="padding-bottom:0px;">
 <div class="content">
@@ -121,9 +125,11 @@
 							<div class="task__category">
 								<h3 class="m-0 font-weight-bold text-primary"><?php echo $task_cat->name; ?></h3>
 							</div>
+							<?php $cnt_task = 0; ?>
 							<div class="task__info">
 								<?php foreach($task_cat->tasks as $task): ?>
-									<?php if($task->status) : ?>
+									<?php if($task->status && in_array($task->id,$hr_task_positions)) : ?>
+										<?php $cnt_task++; ?>
 										<label class="custom-control custom-checkbox"> 
 											<input type="checkbox" class="custom-control-input" id="check_<?php echo $task->id; ?>" name="task_done[]" value="<?php echo $task->id; ?>" <?php if(in_array($task->id,$users_tasks)) echo "checked";?>>
 											<div class="check_box_text"> <?php echo $task->name; ?></div>
@@ -133,6 +139,10 @@
 									<?php endif; ?>
 								<?php endforeach;?>
 							</div>
+							<?php
+								if($cnt_task == 0) : ?>
+								<div class="task__info no__task">No Task Found</div>
+							<?php endif; ?>
 						<?php endforeach; ?>
 						
 						
