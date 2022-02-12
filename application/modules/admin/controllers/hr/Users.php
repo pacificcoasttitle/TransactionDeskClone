@@ -86,7 +86,7 @@ class Users extends MX_Controller {
                     $editUrl = base_url().'hr/admin/edit-user/'.$value['id'];
 					$task_list = "";
                     if(trim(strtolower($value['name'])) == 'employee') {
-						$task_list_url = $editUrl = base_url().'hr/admin/users-tasks/'.$value['id'];
+						$task_list_url = base_url().'hr/admin/users-tasks/'.$value['id'];
 						$task_list = '<a style="margin-left: 5px;" href="'.$task_list_url.'" class="btn btn-info btn-icon-split btn-sm">
 										<span class="icon text-white-50">
 											<i class="fas fa-clipboard-check"></i>
