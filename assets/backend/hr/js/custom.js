@@ -15,6 +15,12 @@ $(document).ready(function () {
     if ($("#hire_date_val").length != 0) {
         $('#hire_date').val($("#hire_date_val").val());
     }
+	if($('#task_position').length) {
+		$('#task_position').multiselect({
+			includeSelectAllOption: true,
+			buttonWidth: '100%',
+		});
+	}
 
     if ($('#admin_users').length)  {
         adminList = $('#admin_users').DataTable({

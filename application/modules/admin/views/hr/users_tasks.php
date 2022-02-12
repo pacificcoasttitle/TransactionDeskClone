@@ -14,15 +14,22 @@
 								<h6 class="m-0 font-weight-bold text-primary"><?php echo $task_cat->name; ?></h6>
 							</div>
 							<div class="card-body">
+								<?php $cnt_task = 0; ?>
 								<?php foreach($task_cat->tasks as $task): ?>
-									<?php if($task->status) : ?>
+									<?php if($task->status && in_array($task->id,$hr_task_positions)) : ?>
+										<?php $cnt_task++; ?>
 										<!-- <p><?php echo $task->name; ?></p> -->
 										<div class="custom-control custom-checkbox">
 											<input type="checkbox" class="custom-control-input" id="check_<?php echo $task->id; ?>" name="task_done[]" value="<?php echo $task->id; ?>" <?php if(in_array($task->id,$users_tasks)) echo "checked";?>>
 											<label class="custom-control-label" for="check_<?php echo $task->id; ?>"><?php echo $task->name; ?></label>
 										</div>
 									<?php endif; ?>
+									
 								<?php endforeach;?>
+								<?php
+									if($cnt_task == 0) : ?>
+									<div>No Task Found</div>
+								<?php endif; ?>
 							</div>
 						<?php endforeach; ?>
 						
