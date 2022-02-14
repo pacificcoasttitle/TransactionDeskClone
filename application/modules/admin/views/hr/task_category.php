@@ -30,7 +30,7 @@
 		</div>
 		<div class="card-body">
 			<div class="table-responsive">
-				<table class="table table-bordered" id="taskList_category" width="100%" cellspacing="0">
+				<table class="table table-bordered" id="commonAdminTbl" data-url="<?php echo base_url('hr/admin/get-task-category');?>" width="100%" cellspacing="0">
 					<thead>
 						<tr>
                             <th>No</th>
@@ -51,39 +51,23 @@
 
 </div>
 
-<div class="modal fade" width="500px" id="approve_deny_popup" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" width="500px" id="pct__delete_modal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 		<div class="modal-content">
-			<form method="POST" action="<?php echo base_url();?>hr/admin/approve-deny-request" enctype="multipart/form-data">
-				<div class="row">
-					<div class="col-lg-12">
-						<div class="card shadow mb-4">
-							<div class="card-header py-3">
-								<h6 class="m-0 font-weight-bold text-primary" id="approve_deny_title"></h6>
-							</div>
-							<input type="hidden" id="request_type" name="request_type" value="incident_report">
-							<input type="hidden" id="request_id" name="request_id" value="">
-							<input type="hidden" id="status" name="status" value="">
-							<div class="card-body" id="approve_deny_msg"> </div>
-							<div class="card-body"> 
-								<button type="submit" data-btntext-sending="Sending..."
-									class="btn btn-success btn-icon-split btn-sm">
-									<span class="icon text-white-50">
-										<i class="fas fa-check"></i>
-									</span>
-									<span class="text">Yes</span>
-								</button>
-								<button type="reset" data-dismiss="modal" aria-label="Close"
-									class="btn btn-danger btn-icon-split btn-sm">
-									<span class="icon text-white-50">
-										<i class="fas fa-ban"></i>
-									</span>
-									<span class="text">No</span>
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
+			<form method="POST" action="<?php echo base_url('hr/admin/delete-task-category');?>">
+			<div class="modal-header">
+                <h4 class="modal-title">Are you sure?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              </div>
+              <div class="modal-body">
+                <p>Do you really want to delete this record? This process cannot be undone.</p>
+				<input type="hidden" name="action" value="delete" />
+				<input type="hidden" name="id" id="pct__delete_record_id">
+              </div>
+              <div class="modal-footer justify-content-center">
+                <button type="button" class="btn  btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </div>
 			</form>
 		</div>
 	</div>

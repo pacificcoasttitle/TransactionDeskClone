@@ -4,6 +4,7 @@
 
 class TaskList extends MX_Controller 
 {
+	private $custom_js_version = '02';
 	function __construct() 
     {
         parent::__construct();
@@ -36,7 +37,7 @@ class TaskList extends MX_Controller
 		$this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=task_'.$this->custom_js_version) );
         $this->admintemplate->show("hr", "task_category", $data);
 	}
 	
@@ -66,7 +67,7 @@ class TaskList extends MX_Controller
 					</span>
 					<span class="text">Edit</span>
 				</a>
-				<a style="margin-left: 5px;" href="'.$deleteUrl.'" onclick="return confirm(\'Are you sure you want to delete this record?\');" class="btn btn-danger btn-icon-split btn-sm">
+				<a style="margin-left: 5px;" data-id="'.$record->id.'" data-href="'.$deleteUrl.'" data-toggle="modal" data-target="#pct__delete_modal" class="btn btn-danger btn-icon-split btn-sm pct__btn_delete">
 					<span class="icon text-white-50">
 						<i class="fas fa-trash"></i>
 					</span>
@@ -105,7 +106,7 @@ class TaskList extends MX_Controller
                 $data['category_name_error_msg'] = form_error('category_name');
             }                                       
         }
-		$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+		$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=task_'.$this->custom_js_version) );
         $this->admintemplate->show("hr", "add_task_category", $data);
 	}
 
@@ -134,7 +135,7 @@ class TaskList extends MX_Controller
 					$data['category_name_error_msg'] = form_error('category_name');
 				}                                       
 			}
-			$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+			$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=task_'.$this->custom_js_version) );
 			$this->admintemplate->show("hr", "edit_task_category", $data);
 		}
 		else {
@@ -143,10 +144,12 @@ class TaskList extends MX_Controller
 		}
 	}
 
-	public function deleteCategory($id)
+	public function deleteCategory()
     {
+		$id = $this->input->post('id');
+		$action = $this->input->post('action');
 		$record = $this->task_list_category->with('tasks')->get($id);
-        if ($record) {
+        if ($record && $action == 'delete') {
 			$tasks = ($record->tasks);
 			if($tasks) {
 				$this->session->set_userdata('errors', 'You can not delete this category because there is task/tasks associate with this. You can In-active this instead.');
@@ -179,7 +182,7 @@ class TaskList extends MX_Controller
 		$this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=task_'.$this->custom_js_version) );
         $this->admintemplate->show("hr", "task_list", $data);
 	}
 	
@@ -217,7 +220,7 @@ class TaskList extends MX_Controller
 					</span>
 					<span class="text">Edit</span>
 				</a>
-				<a style="margin-left: 5px;" href="'.$deleteUrl.'" onclick="return confirm(\'Are you sure you want to delete this record?\');" class="btn btn-danger btn-icon-split btn-sm">
+				<a style="margin-left: 5px;" data-id="'.$record->id.'" data-href="'.$deleteUrl.'" data-toggle="modal" data-target="#pct__delete_modal" class="btn btn-danger btn-icon-split btn-sm pct__btn_delete">
 					<span class="icon text-white-50">
 						<i class="fas fa-trash"></i>
 					</span>
@@ -282,7 +285,7 @@ class TaskList extends MX_Controller
         }
 		$this->admintemplate->addCSS(base_url('assets/backend/hr/css/bootstrap-multiselect.min.css'));
 		$this->admintemplate->addJS( base_url('assets/backend/hr/js/plugins/bootstrap-multiselect.min.js') );
-		$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+		$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=task_'.$this->custom_js_version) );
         $this->admintemplate->show("hr", "add_task_list", $data);
 	}
 
@@ -354,7 +357,7 @@ class TaskList extends MX_Controller
 			}
 			$this->admintemplate->addCSS(base_url('assets/backend/hr/css/bootstrap-multiselect.min.css'));
 			$this->admintemplate->addJS( base_url('assets/backend/hr/js/plugins/bootstrap-multiselect.min.js') );
-			$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+			$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=task_'.$this->custom_js_version) );
 			$this->admintemplate->show("hr", "edit_task_list", $data);
 		}
 		else {
@@ -363,13 +366,21 @@ class TaskList extends MX_Controller
 		}
 	}
 
-	public function deleteTask($id)
+	public function deleteTask()
     {
-		$record = $this->task_list_model->with('tasks')->get($id);
-        if ($record) {
+		$id = $this->input->post('id');
+		$action = $this->input->post('action');
+		$record = $this->task_list_model->with('users')->get($id);
+        if ($record && $action == 'delete') {
+			$users = ($record->users);
+			if($users) {
+				$this->session->set_userdata('errors', 'You can not delete this task because there is user/userss associate with this. You can In-active this instead.');
+			}
+			else {
+				$this->task_list_model->delete($id);
+				$this->session->set_userdata('success', 'Task deleted');
+			}
 			
-			$this->task_list_model->delete($id);
-			$this->session->set_userdata('success', 'Task deleted');
 			
         } else {
             $this->session->set_userdata('errors', 'Invalid Request');
