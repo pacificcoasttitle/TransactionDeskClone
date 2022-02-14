@@ -84,24 +84,17 @@
 	</li>
 
 	<li
-		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'hr/admin/memos'; ?>">
+		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo' || $this->uri->uri_string() == 'hr/admin/memos-status') { echo 'active'; } ?>">
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#memos_menu" aria-expanded="true" aria-controls="memos_menu">
 			<i class="fas fa-fw fa-sticky-note"></i>
 			<span>Memos</span>
 		</a>
-	</li>
-
-	<li
-		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/memoLogs' ) { echo 'active'; } ?>">
-		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#logs_memu" aria-expanded="true"
-			aria-controls="logs_memu">
-			<i class="fas fa-fw fa-history"></i>
-			<span>Logs</span>
-		</a>
-		<div id="logs_memu" class="collapse <?php if($this->uri->uri_string() == 'hr/admin/memo-logs' ) { echo 'show'; } ?>" aria-labelledby="logs_memu" data-parent="#accordionSidebar">
+		<div id="memos_menu" class="collapse <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo' || $this->uri->uri_string() == 'hr/admin/memos-status') { echo 'show'; } ?>" aria-labelledby="memos_menu" data-parent="#accordionSidebar">
 			<div class="bg-white py-2 collapse-inner rounded">
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/memo-logs') { echo 'active'; } ?>"
-					href="<?php echo base_url().'hr/admin/memo-logs'; ?>">Memo</a>
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo') { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/memos'; ?>">Memos List</a>
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/memos-status') { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/memos-status'; ?>">Memo's Status</a>
 			</div>
 		</div>
 	</li>
@@ -122,6 +115,14 @@
 
 			</div>
 		</div>
+	</li>
+
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/notifications') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'hr/admin/notifications'; ?>">
+			<i class="fas fa-bell fa-fw"></i>
+			<span>Notifications</span>
+		</a>
 	</li>
 
 	<!-- Divider -->
