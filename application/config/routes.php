@@ -393,12 +393,12 @@ $route['hr/admin/task-category'] = 'admin/hr/taskList/category';
 $route['hr/admin/get-task-category'] = 'admin/hr/taskList/getCategory';
 $route['hr/admin/add-task-category'] = 'admin/hr/taskList/addCategory';
 $route['hr/admin/edit-task-category/(:num)'] = 'admin/hr/taskList/editCategory/$1';
-$route['hr/admin/delete-task-category/(:num)'] = 'admin/hr/taskList/deleteCategory/$1';
+$route['hr/admin/delete-task-category'] = 'admin/hr/taskList/deleteCategory';
 $route['hr/admin/task-list'] = 'admin/hr/taskList/index';
 $route['hr/admin/get-task-list'] = 'admin/hr/taskList/getTask';
 $route['hr/admin/add-task-list'] = 'admin/hr/taskList/addTask';
 $route['hr/admin/edit-task-list/(:num)'] = 'admin/hr/taskList/editTask/$1';
-$route['hr/admin/delete-task-list/(:num)'] = 'admin/hr/taskList/deleteTask/$1';
+$route['hr/admin/delete-task-list'] = 'admin/hr/taskList/deleteTask';
 $route['hr/admin/users-tasks/(:num)'] = 'admin/hr/users/getTask/$1';
 
 $route['hr/admin/memos'] = 'admin/hr/memos/index';
