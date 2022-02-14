@@ -344,6 +344,9 @@ $route['hr/accept-memo'] = 'frontend/hr/memos/acceptMemo';
 $route['hr/onboarding/employees'] = 'frontend/hr/taskList/empoyees';
 $route['hr/onboarding/get-employees'] = 'frontend/hr/taskList/getEmpoyees';
 $route['hr/onboarding/employee-task/(:num)'] = 'frontend/hr/taskList/tasks/$1';
+$route['hr/mark-as-read'] = 'frontend/hr/hrCommon/markAsRead';
+$route['hr/notifications'] = 'frontend/hr/notifications/index';
+$route['hr/get-notifications'] = 'frontend/hr/notifications/getNotifications';
 $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 
@@ -410,6 +413,7 @@ $route['hr/admin/memos-status'] = 'admin/hr/memos/memosStatus';
 $route['hr/admin/get-memos-status'] = 'admin/hr/memos/getMemosStatus';
 $route['hr/admin/notifications'] = 'admin/hr/notifications/index';
 $route['hr/admin/get-notifications'] = 'admin/hr/notifications/getNotifications';
+$route['hr/admin/mark-as-read'] = 'admin/hr/hrCommon/markAsRead';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

@@ -195,4 +195,32 @@ class Common
             return array();
         }
     }
+
+    public function getIncidentReport($id) 
+    {
+        $this->CI->db->select('pct_hr_incident_reports.*, pct_hr_users.first_name, pct_hr_users.last_name');
+        $this->CI->db->from('pct_hr_incident_reports')
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
+        $this->CI->db->where('pct_hr_incident_reports.id', $id);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function getVacationRequest($id) 
+    {
+        $this->CI->db->select('pct_hr_vacation_requests.*, pct_hr_users.first_name, pct_hr_users.last_name');
+        $this->CI->db->from('pct_hr_vacation_requests')
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
+        $this->CI->db->where('pct_hr_vacation_requests.id', $id);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }
+    }
 }

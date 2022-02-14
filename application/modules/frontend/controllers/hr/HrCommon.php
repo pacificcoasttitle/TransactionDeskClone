@@ -56,6 +56,18 @@ class HrCommon extends MX_Controller
                 'approved_by_admin_user_id' => 0
             );
 			$this->hr->update($data, $condition, 'pct_hr_incident_reports'); 
+            $incidentReportInfo = $this->common->getIncidentReport($request_id);
+            $incident_date = date("F d, Y", strtotime($incidentReportInfo['incident_date']));
+            $message = 'Incident report request of '.$incident_date.' '.$type.' by '.$userdata['name'].' for '.$incidentReportInfo['first_name']." ".$incidentReportInfo['last_name'];
+            $notificationData = array(
+                'sent_user_id' => $incidentReportInfo['user_id'],
+                'message' => $message,
+                'is_admin' => 1,
+                'type' =>  $type
+            );
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->callPusher($message, $type, 0, 1);
+            $this->common->callPusher($message, $type, $incidentReportInfo['user_id'], 0);
             redirect(base_url().'hr/incident-reports');
         } else if ($request_type == 'vacation_request') {
             $data = array(
@@ -65,7 +77,37 @@ class HrCommon extends MX_Controller
                 'approved_by_admin_user_id' => 0
             );
 			$this->hr->update($data, $condition, 'pct_hr_vacation_requests'); 
+            $vacationRequestInfo = $this->common->getVacationRequest($request_id);
+            $from_date = date("F d, Y", strtotime($vacationRequestInfo['from_date']));
+            $to_date = date("F d, Y", strtotime($vacationRequestInfo['to_date']));
+            $message = 'Vacation request from '.$from_date.' to '.$to_date.' '.$type.' by '.$userdata['name'].' for '.$vacationRequestInfo['first_name']." ".$vacationRequestInfo['last_name'];
+            $notificationData = array(
+                'sent_user_id' => $vacationRequestInfo['user_id'],
+                'message' => $message,
+                'is_admin' => 1,
+                'type' =>  $type
+            );
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->callPusher($message, $type, 0, 1);
+            $this->common->callPusher($message, $type, $vacationRequestInfo['user_id'], 0);
             redirect(base_url().'hr/vacation-requests');
         }
 	}	
+
+    public function markAsRead()
+    {
+        $userdata = $this->session->userdata('hr_user');
+        $condition = array(
+            'sent_user_id' => $userdata['id']
+        );
+        $data = array(
+            'is_read' => 1
+        );
+        $this->hr->update($data, $condition, 'pct_hr_notifications');
+        $response = array(
+            'success' => 'true',
+            'message'  => 'Notifcation marked as read.',
+        );
+        echo json_encode($response);
+    }
 }

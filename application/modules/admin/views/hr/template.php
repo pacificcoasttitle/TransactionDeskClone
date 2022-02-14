@@ -72,7 +72,7 @@
                     } else if (notification.type == 'denied') {
                         alertClass = 'bg-danger';
                         iconClass = 'fa-ban';
-                    } else if (notification.type == 'accepted') {
+                    } else if (notification.type == 'accepted' || notification.type == 'assigned' || notification.type == 'submitted') {
                         alertClass = 'bg-warning';
                         iconClass = 'fa-exclamation-triangle';
                     }
@@ -101,26 +101,20 @@
                     notificationsWrapper.find('.badge-counter').removeClass('d-none').text(notificationsCount);
                     notificationsWrapper.show();
                     newNotificationFlag = 1;
-                    
                 });
 
-                $('#notification').click(function(e) {
+                $('#adminNotificationDropdown').click(function(e) {
                     if(notificationClickFlag == 0 || newNotificationFlag == 1) {
-                        if( notificationsCount > 0 ){
-                            $.ajaxSetup({
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                }
-                            });                                 
+                        if( notificationsCount > 0 ) {                            
                             $.ajax({
                                 type: "POST",
-                                url: "{{route('mark-as-read')}}",  
+                                url: base_url+"hr/admin/mark-as-read",  
                                 async: false,                                          
                                 success: function(response){     
                                     notificationClickFlag = 1; 
                                     notificationsCountElem.attr('data-count', 0);
                                     notificationsCount = 0;
-                                    notificationsWrapper.find('.notif-count').addClass('d-none').text(0);
+                                    notificationsWrapper.find('.badge-counter').addClass('d-none').text(0);
                                     newNotificationFlag = 0;
                                 },
                                 error: function(response){	
@@ -130,14 +124,15 @@
                         }
                     } else {
                         var newNotificationHtml = `
-                                <span class="dropdown-item notify-item">
-                                    <div class="notify-icon bg-success"><i class="mdi mdi-message"></i></div>
-                                    <span class="notify-details ml-0">No new notifications</span>                                                                                    
-                                </span>`;
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div>
+                                    <span class="font-weight-bold">No new notification found</span>
+                                </div>
+                            </a>`;
                         notifications.html(newNotificationHtml); 
                         notificationsCountElem.attr('data-count', 0);
                         notificationsCount = 0;
-                        notificationsWrapper.find('.notif-count').addClass('d-none').text(0); 
+                        notificationsWrapper.find('.badge-counter').addClass('d-none').text(0); 
                     }  
                 }); 
             </script>
