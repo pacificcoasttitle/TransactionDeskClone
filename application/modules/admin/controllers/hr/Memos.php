@@ -136,6 +136,17 @@ class Memos extends MX_Controller {
                         'memo_id' =>  $memoId
                     );
                     $this->hr->insert($memoAssignedData, 'pct_hr_assigned_memo_users');
+                    $memo_date = date("F d, Y", strtotime($this->input->post('memo_date')));
+                    $message = $this->input->post('subject').' Memo request of '.$memo_date.' has assigned to you.';
+                    $notificationData = array(
+                        'sent_user_id' => $user,
+                        'message' => $message,
+                        'is_admin' => 0,
+                        'type' =>  'assigned'
+                    );
+                    $this->hr->insert($notificationData, 'pct_hr_notifications');
+                    $this->common->callPusher($message, 'accepted', $user, 0);
+
                 }
                 $successMsg = 'Memo added successfully.';
                 $this->session->set_userdata('success', $successMsg);
