@@ -136,17 +136,6 @@ class Memos extends MX_Controller {
                         'memo_id' =>  $memoId
                     );
                     $this->hr->insert($memoAssignedData, 'pct_hr_assigned_memo_users');
-                    $memo_date = date("F d, Y", strtotime($this->input->post('memo_date')));
-                    $message = $this->input->post('subject').' Memo request of '.$memo_date.' has assigned to you.';
-                    $notificationData = array(
-                        'sent_user_id' => $user,
-                        'message' => $message,
-                        'is_admin' => 0,
-                        'type' =>  'assigned'
-                    );
-                    $this->hr->insert($notificationData, 'pct_hr_notifications');
-                    $this->common->callPusher($message, 'accepted', $user, 0);
-
                 }
                 $successMsg = 'Memo added successfully.';
                 $this->session->set_userdata('success', $successMsg);
@@ -239,58 +228,5 @@ class Memos extends MX_Controller {
             $response = array('status' => 'error','message'=>$msg);
         }
         echo json_encode($response);
-    }
-
-    public function memosStatus()
-    {
-        $data['title'] = 'HR-Center Memos';
-        $data['page_title'] = "Memo's Status";
-        $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
-        $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
-        $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
-        $this->admintemplate->show("hr", "memos_status", $data);
-    }
-
-    public function getMemosStatus()
-    {
-        $params = array();
-        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
-            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
-            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
-            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
-            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
-            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
-            $memos = $this->hr->getMemosStatus($params);
-            $json_data['draw'] = intval( $params['draw'] );
-        } else {
-            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $memos = $this->hr->getMemosStatus($params);            
-        }
-
-        $data = array(); 
-        $count = $params['start'] + 1;
-	    if (isset($memos['data']) && !empty($memos['data'])) {
-	    	foreach ($memos['data'] as $key => $value)  {
-	    		$nestedData=array();
-                $nestedData[] = $count;
-	            $nestedData[] = $value['subject'];
-                $nestedData[] = date("m/d/Y", strtotime($value['date'])); 
-                $nestedData[] = $value['user_name'];
-                $nestedData[] = $value['first_name']." ".$value['last_name']; 
-                $status = '<span class="badge badge-info">Pending</span>';
-                if ($value['is_read'] == 1) {
-                    $status = '<span class="badge badge-success">Accepted</span>';
-                }
-                $nestedData[] = $status;
-	            $data[] = $nestedData;    
-                $count++;          
-	    	}
-	    }
-        $json_data['recordsTotal'] = intval( $memos['recordsTotal'] );
-        $json_data['recordsFiltered'] = intval( $memos['recordsFiltered'] );
-        $json_data['data'] = $data;
-	    echo json_encode($json_data);
     }
 }

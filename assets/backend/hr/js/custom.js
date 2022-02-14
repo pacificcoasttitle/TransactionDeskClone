@@ -7,7 +7,7 @@ var user_types = '';
 var departments = '';
 var positions = '';
 var memos = '';
-var memos_status = '';
+var memo_logs = '';
 
 $(document).ready(function () {
     
@@ -393,7 +393,48 @@ $(document).ready(function () {
         });
     } 
 
-    if ($('#commonAdminTbl').length)  {
+    if ($('#memo_logs').length > 0)  {
+        memo_logs = $('#memo_logs').DataTable({
+           "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "dom": 'Blfrtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"hr/admin/get-memo-logs", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#memo_logs tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
+                    $("#memo_logs_processing").css("display", "none");
+                }
+            }            
+        });
+    }
+	
+	if ($('#commonAdminTbl').length)  {
 		var ajax_url = $('#commonAdminTbl').attr('data-url');
         commonAdminTbl = $('#commonAdminTbl').DataTable({
            "paging": true,
@@ -430,88 +471,6 @@ $(document).ready(function () {
                     }
                     $("#commonAdminTbl tbody").append('<tr><td colspan="7" class="text-center">No records found</td></tr>');
                     $("#commonAdminTbl_processing").css("display", "none");
-                }
-            }            
-        });
-    }
-
-    if ($('#memos_status').length > 0)  {
-        memos_status = $('#memos_status').DataTable({
-           "paging": true,
-            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
-            "lengthChange": true,
-            "language": {
-                paginate: {
-                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
-                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
-                },
-                "emptyTable": "Record(s) not found.",
-            },
-            initComplete: function() {
-            },
-            "dom": 'lf<"FilterOrderListing">rtip',
-            "drawCallback": function () {               
-                $('.dataTables_paginate > .pagination li').addClass('page-item');
-                $('.dataTables_paginate > .pagination a').addClass('page-link');
-                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
-            },
-            "ordering": false,            
-            // "serverSide": true,
-            "ajax": {                
-                url: base_url+"hr/admin/get-memos-status", 
-                type: "post", 
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    if (parseInt(XMLHttpRequest.status) == 419) {
-                        alert("You are logged out. Please login.");
-                    }
-                    if (parseInt(XMLHttpRequest.status) == 419) {
-                        setTimeout(function () {
-                            location.reload();
-                        }, 1000);
-                    }
-                    $("#memos_status tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
-                    $("#memos_status_processing").css("display", "none");
-                }
-            }            
-        });
-    } 
-
-    if ($('#notifications').length > 0)  {
-        memos_status = $('#notifications').DataTable({
-           "paging": true,
-            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
-            "lengthChange": true,
-            "language": {
-                paginate: {
-                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
-                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
-                },
-                "emptyTable": "Record(s) not found.",
-            },
-            initComplete: function() {
-            },
-            "dom": 'Blfrtip',
-            "drawCallback": function () {               
-                $('.dataTables_paginate > .pagination li').addClass('page-item');
-                $('.dataTables_paginate > .pagination a').addClass('page-link');
-                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
-            },
-            "ordering": false,            
-            "serverSide": true,
-            "ajax": {                
-                url: base_url+"hr/admin/get-notifications", 
-                type: "post", 
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    if (parseInt(XMLHttpRequest.status) == 419) {
-                        alert("You are logged out. Please login.");
-                    }
-                    if (parseInt(XMLHttpRequest.status) == 419) {
-                        setTimeout(function () {
-                            location.reload();
-                        }, 1000);
-                    }
-                    $("#notifications tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
-                    $("#notifications_processing").css("display", "none");
                 }
             }            
         });
