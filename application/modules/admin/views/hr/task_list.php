@@ -37,8 +37,8 @@
                             <th>Name</th>
                             <th>Category</th>
                             <th>Description</th>
+                            <th>Positions</th>
 							<th>Status</th>
-                            <!-- <th>Added At</th> -->
                             <th>Actions</th>
 						</tr>
 					</thead>

@@ -187,7 +187,8 @@ class TaskList extends MX_Controller
     {
         $params = array();  $data = array();
 		
-		$task_list = $this->task_list_model->with('category')->get_all();
+		$task_list = $this->task_list_model->with('category')->with('positions')->get_all();
+		// echo "<pre>";
 		// var_dump($task_list);die;
 		$i = 1;
 		foreach($task_list as $record){
@@ -196,17 +197,22 @@ class TaskList extends MX_Controller
 			if($record->status == 1) {
 				$status = '<span class="badge badge-success">Active</span>';
 			}
+			$positions_display = '<span class="badge badge-danger">No Position</span>';
+			if(count($record->positions)) {
+				$positions_display = '<span class="badge badge-success">'.count($record->positions).' Positions</span>';
+			} 
 			$tmp_array[] = $i;
 			$tmp_array[] = $record->name;
 			$tmp_array[] = $record->category->name;
 			$tmp_array[] = strlen($record->description) > 50 ? substr($record->description,0,50)."..." : $record->description;
+			$tmp_array[] = $positions_display;
 			$tmp_array[] = $status;
 			// $tmp_array[] = $record->created_at;
 			$editUrl = base_url().'hr/admin/edit-task-list/'.$record->id;
 			$deleteUrl = base_url().'hr/admin/delete-task-list/'.$record->id;
 			$tmp_array[] = '<div style="display:inline-flex;">
-				<a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
-					<span class="icon text-white-50">
+			<a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
+				<span class="icon text-white-50">
 						<i class="fas fa-pencil-alt"></i>
 					</span>
 					<span class="text">Edit</span>
