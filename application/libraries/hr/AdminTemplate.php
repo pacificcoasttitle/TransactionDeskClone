@@ -68,9 +68,10 @@ class AdminTemplate
     {
         $this->CI->db->select('*');
         $this->CI->db->where('is_admin', 1);
+        $this->CI->db->where('is_admin_read', 0);
         $query = $this->CI->db->get('pct_hr_notifications');
         $this->CI->db->order_by('pct_hr_notifications.id', 'desc');
-        $this->CI->db->limit($limit);  
+        //$this->CI->db->limit($limit);  
         if ($query->num_rows() > 0)  {
             return $query->result_array();
         } else {

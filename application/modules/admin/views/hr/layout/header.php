@@ -3,7 +3,7 @@
 	<ul class="navbar-nav ml-auto">
 		
 	<li class="nav-item dropdown no-arrow mx-1 admin-notifications">
-			<a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
+			<a class="nav-link dropdown-toggle" href="#" id="adminNotificationDropdown" role="button"
 				data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-bell fa-fw" style="font-size:26px;"></i>
 				<!-- Counter - Alerts -->
@@ -14,7 +14,7 @@
 				<?php } ?>
 			</a>
 			<!-- Dropdown - Alerts -->
-			<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="notificationDropdown">
+			<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="adminNotificationDropdown">
 				<h6 class="dropdown-header">
 					Notification Center
 				</h6>
@@ -29,7 +29,7 @@
 							} else if ($notification['type'] == 'denied') {
 								$alertClass = 'bg-danger';
 								$iconClass = 'fa-ban';
-							} else if ($notification['type'] == 'accepted') {
+							} else if ($notification['type'] == 'accepted' || $notification['type'] == 'assigned' || $notification['type'] == 'submitted') {
 								$alertClass = 'bg-warning';
 								$iconClass = 'fa-exclamation-triangle';
 							}
@@ -50,7 +50,7 @@
 						<a class="dropdown-item d-flex align-items-center" href="#">
 							
 							<div>
-								<span class="font-weight-bold">No new notifications found</span>
+								<span class="font-weight-bold">No new notification found</span>
 							</div>
 						</a>
 					<?php } ?>	
