@@ -152,6 +152,17 @@ class TimeCards extends MX_Controller
                 'comment' => $comment[$i]
             );
             $ids[] = $this->hr->insert($timeCardsData, 'pct_hr_time_cards');
+            $exceptionDate = date("F d, Y", strtotime($exception_date));
+            $message = 'Timecard request of '.$exceptionDate.' has submitted by '.$userdata['name'];
+            $notificationData = array(
+                'sent_user_id' => 0,
+                'message' => $message,
+                'is_admin' => 1,
+                'type' =>  'submitted'
+            );
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->callPusher($message, 'submitted', 0, 1);
+            //$this->common->callPusher($message, 'submitted', $timeCardInfo['user_id'], 0);
             $i++;
         }
         if(!empty($ids)) {

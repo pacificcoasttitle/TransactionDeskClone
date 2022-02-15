@@ -21,6 +21,9 @@ class AdminTemplate
             show_404();
         } else {
             $this->load_JS_and_css();
+            $data['notifications'] = $this->getNotifications(5);
+            $data['unreadNotificationCount'] = $this->getUnreadNotificationCount(5);
+            
             $this->data['header'] = $this->CI->load->view('hr/layout/header.php', $data, true);
             $this->data['sidebar'] = $this->CI->load->view('hr/layout/sidebar.php', $data, true);
             $this->data['content'] = $this->CI->load->view($folder.'/'.$page.'.php', $data, true);
@@ -58,6 +61,34 @@ class AdminTemplate
             foreach( $this->js_file as $js ) {
                 $this->data['js_files'] .= "<script type='text/javascript' src=".$js->file."></script>". "\n";
             }
+        }
+    }
+
+    public function getNotifications($limit) 
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->where('is_admin', 1);
+        $this->CI->db->where('is_admin_read', 0);
+        $query = $this->CI->db->get('pct_hr_notifications');
+        $this->CI->db->order_by('pct_hr_notifications.id', 'desc');
+        //$this->CI->db->limit($limit);  
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function getUnreadNotificationCount() 
+    {
+        $this->CI->db->select('count(*) as total_unread_count');
+        $this->CI->db->where('is_admin', 1);
+        $this->CI->db->where('is_admin_read', 0);
+        $query = $this->CI->db->get('pct_hr_notifications');
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
         }
     }
 }
