@@ -8,6 +8,7 @@ var departments = '';
 var positions = '';
 var memos = '';
 var memos_status = '';
+var notifications = '';
 
 $(document).ready(function () {
     
@@ -477,7 +478,7 @@ $(document).ready(function () {
     } 
 
     if ($('#notifications').length > 0)  {
-        memos_status = $('#notifications').DataTable({
+        notifications = $('#notifications').DataTable({
            "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "lengthChange": true,
