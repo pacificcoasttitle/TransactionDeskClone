@@ -106,6 +106,7 @@ class Memos extends MX_Controller {
         $userdata = $this->session->userdata('hr_user');
         $memoId = $this->input->post('memoId');
         $subject = $this->input->post('subject');
+        $memoInfo = $this->common->getMemoInfo($memoId);
         $errors = array();
         $success = array();
         $data = array(
@@ -117,6 +118,16 @@ class Memos extends MX_Controller {
         );
         $this->hr->update($data, $condition, 'pct_hr_assigned_memo_users'); 
         $success[] =  $subject." memo accepted successfully.";
+        $memo_date = date("F d, Y", strtotime($memoInfo['date']));
+        $message = $subject.' Memo request of '.$memo_date.' accepted by '.$userdata['name'];
+        $notificationData = array(
+            'sent_user_id' => 0,
+            'message' => $message,
+            'is_admin' => 1,
+            'type' =>  'accepted'
+        );
+        $this->hr->insert($notificationData, 'pct_hr_notifications');
+        $this->common->sendNotification($message, 'accepted', 0, 1);
         $data = array(
             "errors" =>  $errors,
             "success" => $success

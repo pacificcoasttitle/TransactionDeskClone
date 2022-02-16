@@ -1,18 +1,18 @@
 <div class="container-fluid">	
 	<div class="row mb-3">
 		<div class="col-sm-6">
-			<h1 class="h3 text-gray-800">Memo Logs</h1>
+			<h1 class="h3 text-gray-800">Memo's Status</h1>
 		</div>
 	</div>
 
 	<!-- DataTales Example -->
 	<div class="card shadow mb-4">
 		<div class="card-header py-3">
-			<h6 class="m-0 font-weight-bold text-primary">Memo Logs Listing</h6>
+			<h6 class="m-0 font-weight-bold text-primary">Memo's Status Listing</h6>
 		</div>
 		<div class="card-body">
 			<div class="table-responsive">
-				<table class="table table-bordered" id="memo_logs" width="100%" cellspacing="0">
+				<table class="table table-bordered" id="memos_status" width="100%" cellspacing="0">
 					<thead>
 						<tr>
                             <th>No</th>

@@ -149,6 +149,17 @@ class VacationRequests extends MX_Controller
                 'is_time_charged_vacation' => $is_time_charged_vacations[$i] == 'on' ? 1 : 0
             );
             $ids[] = $this->hr->insert($vacationRequestsData, 'pct_hr_vacation_requests');
+            $from_date = date("F d, Y", strtotime($from_date));
+            $to_date = date("F d, Y", strtotime($to_dates[$i]));
+            $message = 'Vacation request from '.$from_date.' to '.$to_date.' has submitted by '.$userdata['name'];
+            $notificationData = array(
+                'sent_user_id' => 0,
+                'message' => $message,
+                'is_admin' => 1,
+                'type' =>  'submitted'
+            );
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', 0, 1);
             $i++;
         }
         if(!empty($ids)) {

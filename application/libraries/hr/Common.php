@@ -1,6 +1,8 @@
 <?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+use ElephantIO\Client;
+use ElephantIO\Engine\SocketIO\Version1X;
 
 class Common 
 {
@@ -145,6 +147,62 @@ class Common
             ->join('admin', 'admin.id = pct_hr_memos.created_by');
         $this->CI->db->where('pct_hr_memos.id', $id);
         $this->CI->db->where('pct_hr_memos.status', 1);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function sendNotification($message, $type, $sent_to_user, $is_sent_admin = 0)
+    {
+        $client = new Client(new Version1X('//127.0.0.1:1337'));
+		$client->initialize();
+		$client->emit('broadcast', [
+            'type' => $type, 
+            'message' => $message, 
+            'sent_to_user' => $sent_to_user, 
+            'is_sent_admin' => $is_sent_admin, 
+            'date' => date("F d, Y")
+        ]);
+		$client->close();
+    }
+
+    public function getTimeCardInfo($id) 
+    {
+        $this->CI->db->select('pct_hr_time_cards.*, pct_hr_users.first_name, pct_hr_users.last_name');
+        $this->CI->db->from('pct_hr_time_cards')
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id');
+        $this->CI->db->where('pct_hr_time_cards.id', $id);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function getIncidentReport($id) 
+    {
+        $this->CI->db->select('pct_hr_incident_reports.*, pct_hr_users.first_name, pct_hr_users.last_name');
+        $this->CI->db->from('pct_hr_incident_reports')
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id');
+        $this->CI->db->where('pct_hr_incident_reports.id', $id);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function getVacationRequest($id) 
+    {
+        $this->CI->db->select('pct_hr_vacation_requests.*, pct_hr_users.first_name, pct_hr_users.last_name');
+        $this->CI->db->from('pct_hr_vacation_requests')
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id');
+        $this->CI->db->where('pct_hr_vacation_requests.id', $id);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->row_array();

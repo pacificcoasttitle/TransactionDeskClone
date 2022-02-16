@@ -144,7 +144,18 @@ class IncidentReports extends MX_Controller
             'num_of_incidents' => implode(",", $this->input->post('num_of_incidents'))
         );
         $id = $this->hr->insert($timeCardsData, 'pct_hr_incident_reports');
-            
+
+        $incident_date = date("F d, Y", strtotime($this->input->post('incident_date')));
+        $message = 'Incident Report request of '.$incident_date.' has submitted by '.$userdata['name'];
+        $notificationData = array(
+            'sent_user_id' => 0,
+            'message' => $message,
+            'is_admin' => 1,
+            'type' =>  'submitted'
+        );
+        $this->hr->insert($notificationData, 'pct_hr_notifications');
+        $this->common->sendNotification($message, 'submitted', 0, 1);
+        
         if(!empty($id)) {
             $success[] = "Incident Report saved successfully.";
         } else {
