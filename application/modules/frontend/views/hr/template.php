@@ -31,11 +31,9 @@
     </div>
     <?php echo $content; ?>
     <?php echo $footer; ?>      
-    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.4/socket.io.min.js'></script>
-    
     <?php $userdata = $this->session->userdata('hr_user');
-        if(!empty($userdata)) { ?>
+        if (!empty($userdata)) { ?>
             <script>
                 var notificationsWrapper   = $('.user-notifications');
                 var notificationsToggle    = notificationsWrapper.find('a[data-toggle]');
@@ -45,53 +43,56 @@
                 var notificationClickFlag  = 0;
                 var newNotificationFlag    = 0;
 
-                // Enable pusher logging - don't include this in production
-                Pusher.logToConsole = true;
+                var socket = io.connect('//'+'<?php echo $_SERVER['SERVER_ADDR'];?>'+':1337');
+                var user_id = <?php echo $userdata['id'];?>;
 
-                var pusher = new Pusher('<?php echo env("PUSHER_KEY"); ?>', {
-                    cluster: '<?php echo env("PUSHER_CLUSTER"); ?>'
-                });
-
-                var channel = pusher.subscribe('user-channel-'+'<?php echo $userdata['id'];?>');
-                channel.bind('user-event-'+'<?php echo $userdata['id'];?>', function(data) {
-                    var notification = data;
-                    var alertClass = '';
-                    var iconClass = '';
-                    if (notification.type == 'approved') {
-                        alertClass = 'bg-success';
-                        iconClass = 'fa-check';
-                    } else if (notification.type == 'denied') {
-                        alertClass = 'bg-danger';
-                        iconClass = 'fa-ban';
-                    } else if (notification.type == 'accepted' || notification.type == 'assigned' || notification.type == 'submitted') {
-                        alertClass = 'bg-warning';
-                        iconClass = 'fa-exclamation-triangle';
-                    }
-                     
-                    var existingNotifications = notifications.html();
-                    
-                    var newNotificationHtml = `<a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle `+alertClass+`">
-                                            <i class="fa `+iconClass+` text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div style="width: max-content;color:#333 !important;">
-                                        <div class="small text-gray-500">`+notification.date+`</div>
-                                        `+notification.message+`
-                                    </div>
-                                </a>`; 
- 
-                    if (notificationsCount > 0 ){
-                        notifications.html(newNotificationHtml + existingNotifications);
-                    } else {
-                        notifications.html(newNotificationHtml);
-                    }     
-                    notificationsCount += 1;
-                    notificationsCountElem.attr('data-count', notificationsCount);
-                    notificationsWrapper.find('.badge-counter').removeClass('d-none').text(notificationsCount);
-                    notificationsWrapper.show();
-                    newNotificationFlag = 1;
+                socket.on('connect', function () {
+                    console.log('connected');
+                    socket.on('broadcast', function (data) {
+                        if(data.sent_to_user == user_id) {
+                            var notification = data;
+                            var alertClass = '';
+                            var iconClass = '';
+                            if (notification.type == 'approved') {
+                                alertClass = 'bg-success';
+                                iconClass = 'fa-check';
+                            } else if (notification.type == 'denied') {
+                                alertClass = 'bg-danger';
+                                iconClass = 'fa-ban';
+                            } else if (notification.type == 'accepted' || notification.type == 'assigned' || notification.type == 'submitted') {
+                                alertClass = 'bg-warning';
+                                iconClass = 'fa-exclamation-triangle';
+                            }
+                            
+                            var existingNotifications = notifications.html();
+                            
+                            var newNotificationHtml = `<a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="mr-3">
+                                                <div class="icon-circle `+alertClass+`">
+                                                    <i class="fa `+iconClass+` text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div style="width: max-content;color:#333 !important;">
+                                                <div class="small text-gray-500">`+notification.date+`</div>
+                                                `+notification.message+`
+                                            </div>
+                                        </a>`; 
+        
+                            if (notificationsCount > 0 ){
+                                notifications.html(newNotificationHtml + existingNotifications);
+                            } else {
+                                notifications.html(newNotificationHtml);
+                            }     
+                            notificationsCount += 1;
+                            notificationsCountElem.attr('data-count', notificationsCount);
+                            notificationsWrapper.find('.badge-counter').removeClass('d-none').text(notificationsCount);
+                            notificationsWrapper.show();
+                            newNotificationFlag = 1;
+                        }
+                    });
+                    socket.on('disconnect', function () {
+                        console.log('disconnected');
+                    });
                 });
 
                 $('#notificationDropdown').click(function(e) {
@@ -126,29 +127,6 @@
                         notificationsWrapper.find('.badge-counter').addClass('d-none').text(0); 
                     }  
                 }); 
-                
-                
-            </script>
-
-           
-
-            <script>
-                
-            var socket = io.connect('//127.0.0.1:1337');
-
-            socket.on('connect', function () {
-                console.log('connected');
-
-                socket.on('broadcast', function (data) {
-                    console.log(data);
-                    //socket.emit("broadcast", data);
-                    alert(data.text);
-                });
-
-                socket.on('disconnect', function () {
-                    console.log('disconnected');
-                });
-            });
             </script>
         <?php }
     ?>

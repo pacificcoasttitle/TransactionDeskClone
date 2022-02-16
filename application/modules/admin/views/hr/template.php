@@ -40,7 +40,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="<?php echo base_url(); ?>assets/backend/hr/js/sb-admin-2.min.js"></script>
-    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.4/socket.io.min.js'></script>
     <?php echo $js_files; ?>
 
     <?php $userdata = $this->session->userdata('hr_admin');
@@ -54,53 +54,55 @@
                 var notificationClickFlag  = 0;
                 var newNotificationFlag    = 0;
 
-                // Enable pusher logging - don't include this in production
-                Pusher.logToConsole = true;
-
-                var pusher = new Pusher('<?php echo env("PUSHER_KEY"); ?>', {
-                    cluster: '<?php echo env("PUSHER_CLUSTER"); ?>'
-                });
-
-                var channel = pusher.subscribe('admin-channel');
-                channel.bind('admin-event', function(data) {
-                    var notification = data;
-                    var alertClass = '';
-                    var iconClass = '';
-                    if (notification.type == 'approved') {
-                        alertClass = 'bg-success';
-                        iconClass = 'fa-check';
-                    } else if (notification.type == 'denied') {
-                        alertClass = 'bg-danger';
-                        iconClass = 'fa-ban';
-                    } else if (notification.type == 'accepted' || notification.type == 'assigned' || notification.type == 'submitted') {
-                        alertClass = 'bg-warning';
-                        iconClass = 'fa-exclamation-triangle';
-                    }
-                     
-                    var existingNotifications = notifications.html();
-                    
-                    var newNotificationHtml = `<a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle `+alertClass+`">
-                                            <i class="fas `+iconClass+` text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">`+notification.date+`</div>
-                                        `+notification.message+`
-                                    </div>
-                                </a>`; 
- 
-                    if (notificationsCount > 0 ){
-                        notifications.html(newNotificationHtml + existingNotifications);
-                    } else {
-                        notifications.html(newNotificationHtml);
-                    }     
-                    notificationsCount += 1;
-                    notificationsCountElem.attr('data-count', notificationsCount);
-                    notificationsWrapper.find('.badge-counter').removeClass('d-none').text(notificationsCount);
-                    notificationsWrapper.show();
-                    newNotificationFlag = 1;
+                var socket = io.connect('//'+'<?php echo $_SERVER['SERVER_ADDR'];?>'+':1337');
+                var user_id = <?php echo $userdata['id'];?>;
+                
+                socket.on('connect', function () {
+                    console.log('connected');
+                    socket.on('broadcast', function (data) {
+                        if (data.is_sent_admin == 1) {
+                            var notification = data;
+                            var alertClass = '';
+                            var iconClass = '';
+                            if (notification.type == 'approved') {
+                                alertClass = 'bg-success';
+                                iconClass = 'fa-check';
+                            } else if (notification.type == 'denied') {
+                                alertClass = 'bg-danger';
+                                iconClass = 'fa-ban';
+                            } else if (notification.type == 'accepted' || notification.type == 'assigned' || notification.type == 'submitted') {
+                                alertClass = 'bg-warning';
+                                iconClass = 'fa-exclamation-triangle';
+                            }
+                            
+                            var existingNotifications = notifications.html();
+                            var newNotificationHtml = `<a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="mr-3">
+                                                <div class="icon-circle `+alertClass+`">
+                                                    <i class="fas `+iconClass+` text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="small text-gray-500">`+notification.date+`</div>
+                                                `+notification.message+`
+                                            </div>
+                                        </a>`; 
+        
+                            if (notificationsCount > 0 ){
+                                notifications.html(newNotificationHtml + existingNotifications);
+                            } else {
+                                notifications.html(newNotificationHtml);
+                            }     
+                            notificationsCount += 1;
+                            notificationsCountElem.attr('data-count', notificationsCount);
+                            notificationsWrapper.find('.badge-counter').removeClass('d-none').text(notificationsCount);
+                            notificationsWrapper.show();
+                            newNotificationFlag = 1;
+                        }
+                    });
+                    socket.on('disconnect', function () {
+                        console.log('disconnected');
+                    });
                 });
 
                 $('#adminNotificationDropdown').click(function(e) {
