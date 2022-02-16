@@ -852,3 +852,31 @@ $('#pct__delete_modal').on('show.bs.modal', function (event) {
 	$(this).find('.modal-body #pct__delete_record_id').val(record_id)
 })
 
+if($("#training__material").length) {
+	var new_mat_id = 1;
+	$( ".select_material_type" ).click(function() {
+		var selected_val = $(this).val();
+		var new_input_type = '';
+		var new_div_id="matrerial_type_"+new_mat_id;
+		if(selected_val == 'url') {
+			new_input_type = `<div  class="clearfix"><div class="float-left">Enter Url<span class="required"> *</span></div><div class="float-right"><button type="button" class="btn btn-danger btn-sm remove_material_type" data-div="`+new_div_id+`"><i class="fas fa-trash"></i></button></div></div>
+			<div><input type="url" class="form-control" placeholder="Url" name="material_url[]" id="material_url_`+new_mat_id+`" required="required"></div>`;
+		}
+		else if(selected_val == 'file') {
+			new_input_type = `<div  class="clearfix"><div class="float-left">Select File<span class="required"> *</span></div><div class="float-right"><button type="button" class="btn btn-danger btn-sm remove_material_type" data-div="`+new_div_id+`"><i class="fas fa-trash"></i></button></div></div>
+			<div><input type="file" class="form-control" name="material_file[]" id="material_file_`+new_mat_id+`" required="required"></div>`;
+		}
+		var new_input = `<div id="`+new_div_id+`" class="form-group">`+new_input_type+`</div>`;
+
+	$('.material_container').append(new_input);
+	new_mat_id++;
+
+	});
+
+	$(document).on('click','.remove_material_type', function (event) {
+		var removed_div = '#'+$(this).attr('data-div');
+		console.log(removed_div);
+		$(removed_div).remove();
+	});
+}
+
