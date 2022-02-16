@@ -145,7 +145,7 @@ class Memos extends MX_Controller {
                         'type' =>  'assigned'
                     );
                     $this->hr->insert($notificationData, 'pct_hr_notifications');
-                    $this->common->sendNotification($message, 'accepted', $user, 0);
+                    //$this->common->sendNotification($message, 'accepted', $user, 0);
 
                 }
                 $successMsg = 'Memo added successfully.';

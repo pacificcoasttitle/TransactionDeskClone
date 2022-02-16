@@ -161,7 +161,7 @@ class TimeCards extends MX_Controller
                 'type' =>  'submitted'
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->sendNotification($message, 'submitted', 0, 1);
+            //$this->common->sendNotification($message, 'submitted', 0, 1);
             //$this->common->sendNotification($message, 'submitted', $timeCardInfo['user_id'], 0);
             $i++;
         }
