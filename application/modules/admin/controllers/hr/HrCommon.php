@@ -45,7 +45,7 @@ class HrCommon extends MX_Controller
                 'type' =>  $type
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->callPusher($message, $type, $timeCardInfo['user_id'], 0);
+            $this->common->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
             redirect(base_url().'hr/admin/time-cards');
         } else if ($request_type == 'incident_report') {
             $data = array(
@@ -65,7 +65,7 @@ class HrCommon extends MX_Controller
                 'type' =>  $type
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->callPusher($message, $type, $incidentReportInfo['user_id'], 0);
+            $this->common->sendNotification($message, $type, $incidentReportInfo['user_id'], 0);
             redirect(base_url().'hr/admin/incident-reports');
         } else if ($request_type == 'vacation_request') {
             $data = array(
@@ -86,7 +86,7 @@ class HrCommon extends MX_Controller
                 'type' =>  $type
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->callPusher($message, $type, $vacationRequestInfo['user_id'], 0);
+            $this->common->sendNotification($message, $type, $vacationRequestInfo['user_id'], 0);
             redirect(base_url().'hr/admin/vacation-requests');
         }
 	}

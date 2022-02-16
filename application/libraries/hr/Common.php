@@ -155,7 +155,7 @@ class Common
         }
     }
 
-    public function callPusher($message, $type, $sent_to_user, $is_sent_admin = 0)
+    public function sendNotification($message, $type, $sent_to_user, $is_sent_admin = 0)
     {
         $client = new Client(new Version1X('//127.0.0.1:1337'));
 		$client->initialize();
