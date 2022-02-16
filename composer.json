@@ -16,7 +16,8 @@
 		"wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3",
 		"phpseclib/phpseclib": "^3.0",
 		"aspose-cloud/aspose-words-cloud": "^21.9",
-		"pusher/pusher-php-server": "^6.1"
+		"pusher/pusher-php-server": "^6.1",
+		"wisembly/elephant.io": "^3.3"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

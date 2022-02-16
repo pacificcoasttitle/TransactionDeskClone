@@ -1,6 +1,8 @@
 <?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+use ElephantIO\Client;
+use ElephantIO\Engine\SocketIO\Version1X;
 
 class Common 
 {
@@ -155,6 +157,13 @@ class Common
 
     public function callPusher($message, $type, $sent_to_user, $is_sent_admin = 0)
     {
+        $client = new Client(new Version1X('//127.0.0.1:1337'));
+
+		$client->initialize();
+		// send message to connected clients
+		$client->emit('broadcast', ['type' => 'notification', 'text' => 'Hello There!']);
+		$client->close();
+        
         if ($is_sent_admin == 1) {
             $channel = 'admin-channel';
             $event = 'admin-event';

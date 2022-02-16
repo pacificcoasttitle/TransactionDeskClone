@@ -32,6 +32,8 @@
     <?php echo $content; ?>
     <?php echo $footer; ?>      
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.4/socket.io.min.js'></script>
+    
     <?php $userdata = $this->session->userdata('hr_user');
         if(!empty($userdata)) { ?>
             <script>
@@ -124,6 +126,29 @@
                         notificationsWrapper.find('.badge-counter').addClass('d-none').text(0); 
                     }  
                 }); 
+                
+                
+            </script>
+
+           
+
+            <script>
+                
+            var socket = io.connect('//127.0.0.1:1337');
+
+            socket.on('connect', function () {
+                console.log('connected');
+
+                socket.on('broadcast', function (data) {
+                    console.log(data);
+                    //socket.emit("broadcast", data);
+                    alert(data.text);
+                });
+
+                socket.on('disconnect', function () {
+                    console.log('disconnected');
+                });
+            });
             </script>
         <?php }
     ?>
