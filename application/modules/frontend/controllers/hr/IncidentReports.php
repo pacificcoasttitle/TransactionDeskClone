@@ -154,7 +154,7 @@ class IncidentReports extends MX_Controller
             'type' =>  'submitted'
         );
         $this->hr->insert($notificationData, 'pct_hr_notifications');
-        //$this->common->sendNotification($message, 'submitted', 0, 1);
+        $this->common->sendNotification($message, 'submitted', 0, 1);
         
         if(!empty($id)) {
             $success[] = "Incident Report saved successfully.";
