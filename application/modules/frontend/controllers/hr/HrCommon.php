@@ -45,8 +45,8 @@ class HrCommon extends MX_Controller
                 'type' =>  $type
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
-            //$this->common->sendNotification($message, $type, 0, 1);
-            //$this->common->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
+            $this->common->sendNotification($message, $type, 0, 1);
+            $this->common->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
             redirect(base_url().'hr/time-cards');
         } else if ($request_type == 'incident_report') {
             $data = array(
