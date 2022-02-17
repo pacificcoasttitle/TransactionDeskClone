@@ -122,10 +122,11 @@
 		<a class="nav-link" href="<?php echo base_url().'hr/admin/notifications'; ?>">
 			<i class="fas fa-bell fa-fw"></i>
 			<span>Notifications</span>
+		</a>
 	</li>
 	
 	<li
-		class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*training/',$this->uri->uri_string())) { echo 'active'; } ?>"">
+		class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*training/',$this->uri->uri_string())) { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'hr/admin/training'; ?>">
 			<i class="fas fa-fw fa-clipboard-check"></i>
 			<span>Trainings</span>
