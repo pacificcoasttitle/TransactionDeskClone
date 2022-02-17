@@ -403,6 +403,12 @@ $route['hr/admin/add-task-list'] = 'admin/hr/taskList/addTask';
 $route['hr/admin/edit-task-list/(:num)'] = 'admin/hr/taskList/editTask/$1';
 $route['hr/admin/delete-task-list'] = 'admin/hr/taskList/deleteTask';
 $route['hr/admin/users-tasks/(:num)'] = 'admin/hr/users/getTask/$1';
+$route['hr/admin/training'] = 'admin/hr/training/index';
+$route['hr/admin/get-training'] = 'admin/hr/training/getTraining';
+$route['hr/admin/add-training'] = 'admin/hr/training/addTraining';
+$route['hr/admin/edit-training/(:num)'] = 'admin/hr/training/editTraining/$1';
+$route['hr/admin/delete-training'] = 'admin/hr/training/deleteTraining';
+$route['hr/admin/delete-training-material/(:num)'] = 'admin/hr/training/deleteTrainingMaterial/$1';
 
 $route['hr/admin/memos'] = 'admin/hr/memos/index';
 $route['hr/admin/add-memo'] = 'admin/hr/memos/addMemo';
