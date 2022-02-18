@@ -2,12 +2,11 @@
     "name": "elephantIO_example_emitter",
     "version": "3.0.0",
     "main": "server.js",
-
     "scripts": {
         "start": "node server.js"
     },
-
     "dependencies": {
+        "express": "^4.17.3",
         "socket.io": "~1",
         "winston": "*"
     }
