@@ -127,7 +127,7 @@ class Memos extends MX_Controller {
             'type' =>  'accepted'
         );
         $this->hr->insert($notificationData, 'pct_hr_notifications');
-        //$this->common->sendNotification($message, 'accepted', 0, 1);
+        $this->common->sendNotification($message, 'accepted', 0, 1);
         $data = array(
             "errors" =>  $errors,
             "success" => $success
