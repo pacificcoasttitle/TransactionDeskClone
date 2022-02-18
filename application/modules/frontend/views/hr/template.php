@@ -43,8 +43,7 @@
                 var notificationClickFlag  = 0;
                 var newNotificationFlag    = 0;
 
-                
-                var socket = io.connect();
+                var socket = io.connect('//'+'<?php echo $_SERVER['SERVER_ADDR'];?>'+':1337');
                 var user_id = <?php echo $userdata['id'];?>;
 
                 socket.on('connect', function () {
