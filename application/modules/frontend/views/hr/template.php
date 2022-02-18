@@ -31,7 +31,7 @@
     </div>
     <?php echo $content; ?>
     <?php echo $footer; ?>      
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.0/socket.io.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.4/socket.io.min.js'></script>
     <?php $userdata = $this->session->userdata('hr_user');
         if (!empty($userdata)) { ?>
             <script>

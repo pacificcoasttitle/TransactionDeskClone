@@ -40,7 +40,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="<?php echo base_url(); ?>assets/backend/hr/js/sb-admin-2.min.js"></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.0/socket.io.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.4/socket.io.min.js'></script>
     <?php echo $js_files; ?>
 
     <?php $userdata = $this->session->userdata('hr_admin');
