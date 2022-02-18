@@ -1,5 +1,5 @@
 var server = require('http').createServer(),
-    io = require('socket.io')(server),
+    io = require('socket.io').listen(server),
     logger = require('winston'),
     port = 1337;
 
