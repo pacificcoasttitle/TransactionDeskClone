@@ -25,6 +25,7 @@ io.on('connection', function (socket){
         logger.info('SocketIO : Received ' + nb + ' messages');
         logger.info('SocketIO > Disconnected socket ' + socket.id);
     });
+    console.log('hi');
 });
 
 server.listen(port);
