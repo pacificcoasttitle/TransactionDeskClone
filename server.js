@@ -1,12 +1,11 @@
-var server = require('http').createServer(),
+var express = require("express");
+var app = express();
+var server = require('http').createServer(app),
     logger = require('winston'),
     port = 1337;
 
-    var io = require('socket.io')(server, {
-        cors: {
-          origin: '*',
-        }
-      });
+var io = require('socket.io').listen(server);
+        
 
 // Logger config
 logger.remove(logger.transports.Console);
