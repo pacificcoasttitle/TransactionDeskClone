@@ -66,8 +66,8 @@ class HrCommon extends MX_Controller
                 'type' =>  $type
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->sendNotification($message, $type, 0, 1);
-            $this->common->sendNotification($message, $type, $incidentReportInfo['user_id'], 0);
+            //$this->common->sendNotification($message, $type, 0, 1);
+            //$this->common->sendNotification($message, $type, $incidentReportInfo['user_id'], 0);
             redirect(base_url().'hr/incident-reports');
         } else if ($request_type == 'vacation_request') {
             $data = array(
@@ -88,8 +88,8 @@ class HrCommon extends MX_Controller
                 'type' =>  $type
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->sendNotification($message, $type, 0, 1);
-            $this->common->sendNotification($message, $type, $vacationRequestInfo['user_id'], 0);
+            //$this->common->sendNotification($message, $type, 0, 1);
+            //$this->common->sendNotification($message, $type, $vacationRequestInfo['user_id'], 0);
             redirect(base_url().'hr/vacation-requests');
         }
 	}	
