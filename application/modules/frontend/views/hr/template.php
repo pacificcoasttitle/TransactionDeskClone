@@ -44,8 +44,7 @@
                 var newNotificationFlag    = 0;
 
                 var socket = io.connect('//'+'<?php echo $_SERVER['SERVER_ADDR'];?>'+':1337', {
-                    transports: ['websocket', 'xhr-polling'],
-                    reconnect: true
+                    transports: ['websocket', 'xhr-polling']
                 });
                 var user_id = <?php echo $userdata['id'];?>;
 
