@@ -347,6 +347,8 @@ $route['hr/onboarding/employee-task/(:num)'] = 'frontend/hr/taskList/tasks/$1';
 $route['hr/mark-as-read'] = 'frontend/hr/hrCommon/markAsRead';
 $route['hr/notifications'] = 'frontend/hr/notifications/index';
 $route['hr/get-notifications'] = 'frontend/hr/notifications/getNotifications';
+$route['hr/trainings'] = 'frontend/hr/trainings/index';
+$route['hr/get-trainings'] = 'frontend/hr/trainings/getTrainings';
 $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 

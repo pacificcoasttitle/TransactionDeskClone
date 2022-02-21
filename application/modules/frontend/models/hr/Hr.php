@@ -657,4 +657,90 @@ class Hr extends CI_Model
             'data' => $notifications
         );
     }
+
+    public function getTrainings($params)
+    { 
+        $userdata = $this->session->userdata('hr_user');
+        $this->db->from('pct_hr_employee_training')
+            ->join('pct_hr_users', 'pct_hr_users.position_id = pct_hr_employee_training.position_id and pct_hr_users.department_id = pct_hr_employee_training.department_id', 'inner');
+
+        $this->db->where('pct_hr_employee_training.status', 1);
+        $this->db->where('pct_hr_users.id', $userdata['id']);
+        $total_records =  $this->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $trainingsList = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('pct_hr_employee_training.name', $keyword)
+                        ->or_like('pct_hr_employee_training.description', $keyword)
+                        ->group_end();
+            }
+            
+            $this->db->from('pct_hr_employee_training')
+                ->join('pct_hr_users', 'pct_hr_users.position_id = pct_hr_employee_training.position_id and pct_hr_users.department_id = pct_hr_employee_training.department_id', 'inner');
+            $this->db->where('pct_hr_employee_training.status', 1);
+            $this->db->where('pct_hr_users.id', $userdata['id']);
+			$filter_total_records =  $this->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like('pct_hr_employee_training.name', $keyword)
+                    ->or_like('pct_hr_employee_training.description', $keyword)
+                    ->group_end();
+            }
+
+            $this->db->select('pct_hr_employee_training.*');
+            $this->db->from('pct_hr_employee_training')
+                ->join('pct_hr_users', 'pct_hr_users.position_id = pct_hr_employee_training.position_id and pct_hr_users.department_id = pct_hr_employee_training.department_id', 'inner');
+
+            $this->db->where('pct_hr_employee_training.status', 1);
+            $this->db->where('pct_hr_users.id', $userdata['id']);
+            $this->db->order_by('pct_hr_employee_training.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }	
+
+			$query = $this->db->get();
+           
+			if ($query->num_rows() > 0) {
+	            $trainingsList = $query->result_array();
+	        }
+    	} else {    		
+            $this->db->from('pct_hr_employee_training')
+                ->join('pct_hr_users', 'pct_hr_users.position_id = pct_hr_employee_training.position_id and pct_hr_users.department_id = pct_hr_employee_training.department_id', 'inner');
+
+            $this->db->where('pct_hr_employee_training.status', 1);
+            $this->db->where('pct_hr_users.id', $userdata['id']);
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->select('pct_hr_employee_training.*');
+            $this->db->from('pct_hr_employee_training')
+                ->join('pct_hr_users', 'pct_hr_users.position_id = pct_hr_employee_training.position_id and pct_hr_users.department_id = pct_hr_employee_training.department_id', 'inner');
+
+            $this->db->where('pct_hr_employee_training.status', 1);
+            $this->db->where('pct_hr_users.id', $userdata['id']);
+            $this->db->order_by('pct_hr_employee_training.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                
+                $this->db->limit($limit, $offset);
+            }
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $trainingsList = $query->result_array();
+	        } 
+    	}
+        
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $trainingsList
+        );
+    }
 }

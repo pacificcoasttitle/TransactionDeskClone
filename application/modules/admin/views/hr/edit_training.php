@@ -18,10 +18,10 @@
             <div class="col-md-12">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Add New</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Edit</h6>
                     </div>
                     <div class="card-body">
-                        <form method="post" name="add_task_list_form" >
+                        <form method="post" name="edit_task_list_form" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -97,8 +97,44 @@
 												<div class="material_container">
 													<?php foreach($record->materials as $material): ?>
 														<?php if($material->type == 'url'): ?>
-														<div id="matrerial_type__exist_<?php echo $material->id; ?>" class="form-group"><div class="clearfix"><div class="float-left">Url<span class="required"> *</span></div><div class="float-right"><button type="button"  data-toggle="modal" data-target="#pct__delete_modal" data-id="<?php echo $material->id; ?>" class="btn btn-danger btn-sm remove_material_type_exist pct__btn_delete" data-div="matrerial_type_exist_<?php echo $material->id; ?>"><i class="fas fa-trash"></i></button></div></div>
-			<div><input type="url" value="<?php echo $material->path; ?>" class="form-control" placeholder="Url" name="material_exist_url[<?php echo $material->id; ?>]"  required="required"></div></div>
+															<div id="matrerial_type__exist_<?php echo $material->id; ?>" class="form-group">
+																<div class="clearfix">
+																	<div class="float-left">Url<span class="required"> *</span></div>
+																	<div class="float-right">
+																		<button type="button"  data-toggle="modal" data-target="#pct__delete_modal" data-id="<?php echo $material->id; ?>" class="btn btn-danger btn-sm remove_material_type_exist pct__btn_delete" data-div="matrerial_type_exist_<?php echo $material->id; ?>">
+																			<i class="fas fa-trash"></i>
+																		</button>
+																	</div>
+																</div>
+																<div>
+																	<input type="url" value="<?php echo $material->path; ?>" class="form-control" placeholder="Url" name="material_exist_url[<?php echo $material->id; ?>]"  required="required">
+																</div>
+															</div>
+														<?php elseif($material->type == 'file'): ?>
+															<div id="matrerial_type__exist_<?php echo $material->id; ?>" class="form-group">
+																<div class="clearfix">
+																	<div class="float-left">File<span class="required"> *</span></div>
+																	<div class="float-right">
+																		<?php 
+																		$path = '';
+																		if (isset($material->path) && !empty($material->path)) {
+																			$path = env('AWS_PATH').'hr/training/'.$material->path;
+																		} ?>
+																		<a href="<?php echo $path;?>" target="_blank">
+																			<button type="button" class="btn btn-info btn-sm remove_material_type_exist pct__btn_delete" data-div="matrerial_type_exist_<?php echo $material->id; ?>">
+																				<i class="fas fa-eye"></i>
+																			</button>
+																		</a>
+																		<button type="button" data-toggle="modal" data-target="#pct__delete_modal" data-id="<?php echo $material->id; ?>" class="btn btn-danger btn-sm remove_material_type_exist pct__btn_delete" data-div="matrerial_type_exist_<?php echo $material->id; ?>">
+																			<i class="fas fa-trash"></i>
+																		</button>
+																	</div>
+																</div>
+																<div>
+																	<input type="file" class="form-control" placeholder="File" name="material_exist_file[<?php echo $material->id; ?>]">
+																</div>
+																<div style="margin-top: 10px;"><?php echo $material->path; ?></div>
+															</div>
 														<?php endif; ?>
 													<?php endforeach; ?>
 												</div>
@@ -109,7 +145,6 @@
 													<div class="dropdown-menu">
 														<button type="button" class="dropdown-item select_material_type" value="file">Upload File</button>
 														<button type="button" class="dropdown-item select_material_type" value="url">Enter Url</button>
-														
 													</div>
 												</div>
 											</div>
@@ -134,7 +169,7 @@
 										</span>
 										<span class="text">Save</span>
 									</button>
-									<a href="<?php echo base_url().'hr/admin/task-list'; ?>" class="btn btn-secondary btn-icon-split">
+									<a href="<?php echo base_url().'hr/admin/training'; ?>" class="btn btn-secondary btn-icon-split">
 										<span class="icon text-white-50">
 											<i class="fas fa-arrow-right"></i>
 										</span>
