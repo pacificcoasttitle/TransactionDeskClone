@@ -100,11 +100,18 @@
 													<div class="dropdown-menu">
 														<button type="button" class="dropdown-item select_material_type" value="file">Upload File</button>
 														<button type="button" class="dropdown-item select_material_type" value="url">Enter Url</button>
-														
 													</div>
 												</div>
 											</div>
 										</div>
+										</select>
+										<?php if(!empty($material_files_error)){ ?>  
+											<?php foreach($material_files_error as $material_file_error): ?>     
+												<div class="typography-line text-danger">
+													<?php echo $material_file_error;?>
+												</div>
+											<?php endforeach; ?>
+										<?php } ?>
 									</div>
 								</div>
 							</div>
@@ -125,7 +132,7 @@
 										</span>
 										<span class="text">Save</span>
 									</button>
-									<a href="<?php echo base_url().'hr/admin/task-list'; ?>" class="btn btn-secondary btn-icon-split">
+									<a href="<?php echo base_url().'hr/admin/training'; ?>" class="btn btn-secondary btn-icon-split">
 										<span class="icon text-white-50">
 											<i class="fas fa-arrow-right"></i>
 										</span>

@@ -94,42 +94,88 @@ class Training extends MX_Controller
     {
 		$data['title'] = 'HR-Center Training';
         $data['page_title'] = 'Add Training';
-		
+		$config['upload_path'] = './uploads/hr/training/';  
+        $config['max_size'] = 18000;
+		$config['allowed_types'] = '*';
+        $this->load->library('upload', $config);
+        if (!is_dir('/uploads/hr/training')) {
+			mkdir('./uploads/hr/training', 0777, TRUE);
+		}
+        $filesName = array();
+		$data['material_files_error'] = array();
+        
 		if ($this->input->post()) {
-			
             $this->load->library('hr/common');
             $this->form_validation->set_rules('traning_name', 'Name', 'required');
             $this->form_validation->set_rules('traning_department', 'Department', 'required');
             $this->form_validation->set_rules('traning_position', 'Position', 'required');
         
             if ($this->form_validation->run() == true) {
-                $trainingData = array(
-                    'name' =>  $this->input->post('traning_name'),
-                    'description' =>  $this->input->post('traning_description'),
-                    'department_id' =>  $this->input->post('traning_department'),
-                    'position_id' =>  $this->input->post('traning_position'),
-                    'status' =>  $this->input->post('check_status') ? 1 : 0,
-                );
-                $training_id = $this->training_model->insert($trainingData);
-				if($training_id) {
-					$this->load->model('hr/training_material_model');
-					if($this->input->post('material_url') && count($this->input->post('material_url'))) {
-						$material_insert = array();
-						foreach($this->input->post('material_url') as $material_url) {
-							$material_insert[] = array(
-								'path' => $material_url,
-								'type' => 'url',
-								'training_id' => $training_id
-							);
-						}
-						if(count($material_insert)) {
-							$this->training_material_model->insert_many($material_insert);
+				if (!empty(($_FILES['material_file']))) {
+					$fileName = '';
+					foreach ($_FILES['material_file']['name'] as $key => $image) {
+						$_FILES['material_file[]']['name']= $_FILES['material_file']['name'][$key];
+						$_FILES['material_file[]']['type']= $_FILES['material_file']['type'][$key];
+						$_FILES['material_file[]']['tmp_name']= $_FILES['material_file']['tmp_name'][$key];
+						$_FILES['material_file[]']['error']= $_FILES['material_file']['error'][$key];
+						$_FILES['material_file[]']['size']= $_FILES['material_file']['size'][$key];
+						$this->upload->initialize($config);
+			
+						if ($this->upload->do_upload('material_file[]')) {
+							$data = $this->upload->data();
+							$fileName = date('YmdHis')."_".$data['file_name'];
+							$filesName[] = date('YmdHis')."_".$data['file_name'];
+							rename(FCPATH."/uploads/hr/training/".$data['file_name'], FCPATH."/uploads/hr/training/".$fileName);
+							$this->common->uploadDocumentOnAwsS3($fileName, 'hr/training');
+						} else {
+							$data['material_files_error'][] = $this->upload->display_errors();
 						}
 					}
 				}
-                $successMsg = 'Training detail added successfully.';
-                $this->session->set_userdata('success', $successMsg);
-                redirect(base_url().'hr/admin/training');
+				
+				if (empty($data['material_files_error'])) {
+					$trainingData = array(
+						'name' =>  $this->input->post('traning_name'),
+						'description' =>  $this->input->post('traning_description'),
+						'department_id' =>  $this->input->post('traning_department'),
+						'position_id' =>  $this->input->post('traning_position'),
+						'status' =>  $this->input->post('check_status') ? 1 : 0,
+					);
+					$training_id = $this->training_model->insert($trainingData);
+					if($training_id) {
+						$this->load->model('hr/training_material_model');
+						if ($this->input->post('material_url') && count($this->input->post('material_url'))) {
+							$material_insert = array();
+							foreach($this->input->post('material_url') as $material_url) {
+								$material_insert[] = array(
+									'path' => $material_url,
+									'type' => 'url',
+									'training_id' => $training_id
+								);
+							}
+							if(count($material_insert)) {
+								$this->training_material_model->insert_many($material_insert);
+							}
+						}
+
+						if (!empty($filesName)) {
+							$material_insert = array();
+							foreach($filesName as $fileName) {
+								$material_insert[] = array(
+									'path' => $fileName,
+									'type' => 'file',
+									'training_id' => $training_id
+								);
+							}
+							if(count($material_insert)) {
+								$this->training_material_model->insert_many($material_insert);
+							}
+						}
+					}
+					$successMsg = 'Training detail added successfully.';
+					$this->session->set_userdata('success', $successMsg);
+					redirect(base_url().'hr/admin/training');
+				}
             } else {
                 $data['traning_name_error_msg'] = form_error('traning_name');
                 $data['traning_department_error_msg'] = form_error('traning_department');
@@ -141,7 +187,6 @@ class Training extends MX_Controller
 
 		$data['departments'] = $this->users_department->get_many_by('status',1);
 		$data['positions'] = $this->users_position->get_many_by('status',1);
-		
 
 		$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=training_'.$this->custom_js_version) );
         $this->admintemplate->show("hr", "add_training", $data);
@@ -150,6 +195,18 @@ class Training extends MX_Controller
 	public function  editTraining($id)
     {
 		$data = array();
+		$config['upload_path'] = './uploads/hr/training/';  
+        $config['max_size'] = 18000;
+		$config['allowed_types'] = '*';
+        $this->load->library('upload', $config);
+        if (!is_dir('/uploads/hr/training')) {
+			mkdir('./uploads/hr/training', 0777, TRUE);
+		}
+        $filesName = array();
+		$editFilesName = array();
+		$data['material_files_error'] = array();
+		$data['material_exist_files_error'] = array();
+		
 		$record = $this->training_model->with('materials')->get($id);
 		if($record) {
 			$data['title'] = 'HR-Center Training';
@@ -161,6 +218,52 @@ class Training extends MX_Controller
 				$this->form_validation->set_rules('traning_position', 'Position', 'required');
 			
 				if ($this->form_validation->run() == true) {
+					if (!empty(($_FILES['material_file']))) {
+						$fileName = '';
+						foreach ($_FILES['material_file']['name'] as $key => $image) {
+							$_FILES['material_file[]']['name']= $_FILES['material_file']['name'][$key];
+							$_FILES['material_file[]']['type']= $_FILES['material_file']['type'][$key];
+							$_FILES['material_file[]']['tmp_name']= $_FILES['material_file']['tmp_name'][$key];
+							$_FILES['material_file[]']['error']= $_FILES['material_file']['error'][$key];
+							$_FILES['material_file[]']['size']= $_FILES['material_file']['size'][$key];
+							$this->upload->initialize($config);
+				
+							if ($this->upload->do_upload('material_file[]')) {
+								$data = $this->upload->data();
+								$fileName = date('YmdHis')."_".$data['file_name'];
+								$filesName[] = date('YmdHis')."_".$data['file_name'];
+								rename(FCPATH."/uploads/hr/training/".$data['file_name'], FCPATH."/uploads/hr/training/".$fileName);
+								$this->common->uploadDocumentOnAwsS3($fileName, 'hr/training');
+							} else {
+								$data['material_files_error'][] = $this->upload->display_errors();
+							}
+						}
+					}
+
+					if (!empty(($_FILES['material_exist_file']))) {
+						$fileName = '';
+						foreach ($_FILES['material_exist_file']['name'] as $key => $image) {
+							if (!empty($_FILES['material_exist_file']['name'][$key])) {
+								$_FILES['material_exist_file[]']['name']= $_FILES['material_exist_file']['name'][$key];
+								$_FILES['material_exist_file[]']['type']= $_FILES['material_exist_file']['type'][$key];
+								$_FILES['material_exist_file[]']['tmp_name']= $_FILES['material_exist_file']['tmp_name'][$key];
+								$_FILES['material_exist_file[]']['error']= $_FILES['material_exist_file']['error'][$key];
+								$_FILES['material_exist_file[]']['size']= $_FILES['material_exist_file']['size'][$key];
+								$this->upload->initialize($config);
+					
+								if ($this->upload->do_upload('material_exist_file[]')) {
+									$data = $this->upload->data();
+									$fileName = date('YmdHis')."_".$data['file_name'];
+									$editFilesName[$key] = date('YmdHis')."_".$data['file_name'];
+									rename(FCPATH."/uploads/hr/training/".$data['file_name'], FCPATH."/uploads/hr/training/".$fileName);
+									$this->common->uploadDocumentOnAwsS3($fileName, 'hr/training');
+								} else {
+									$data['material_exist_files_error'][] = $this->upload->display_errors();
+								}
+							}
+						}
+					}
+
 					$trainingData = array(
 						'name' =>  $this->input->post('traning_name'),
 						'description' =>  $this->input->post('traning_description'),
@@ -170,16 +273,17 @@ class Training extends MX_Controller
 					);
 					$this->training_model->update($id,$trainingData);
 					$this->load->model('hr/training_material_model');
+
 					if($this->input->post('material_exist_url') && count($this->input->post('material_exist_url'))) {
 						foreach($this->input->post('material_exist_url') as $key=>$material_url) {
 							$material_update = array(
 								'path' => $material_url,
 								'type' => 'url',
 							);
-
 							$this->training_material_model->update($key,$material_update);
 						}
 					}
+
 					if($this->input->post('material_url') && count($this->input->post('material_url'))) {
 						$material_insert = array();
 						foreach($this->input->post('material_url') as $material_url) {
@@ -191,6 +295,30 @@ class Training extends MX_Controller
 						}
 						if(count($material_insert)) {
 							$this->training_material_model->insert_many($material_insert);
+						}
+					}
+
+					if (!empty($filesName)) {
+						$material_insert = array();
+						foreach($filesName as $fileName) {
+							$material_insert[] = array(
+								'path' => $fileName,
+								'type' => 'file',
+								'training_id' => $id
+							);
+						}
+						if(count($material_insert)) {
+							$this->training_material_model->insert_many($material_insert);
+						}
+					}
+
+					if (!empty($editFilesName)) {
+						foreach ($editFilesName as $key=>$editFileName) {
+							$material_update = array(
+								'path' => $editFileName,
+								'type' => 'file',
+							);
+							$this->training_material_model->update($key, $material_update);
 						}
 					}
 					$successMsg = 'Training detail updated successfully.';
