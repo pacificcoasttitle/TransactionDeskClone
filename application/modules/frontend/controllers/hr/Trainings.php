@@ -38,7 +38,6 @@ class Trainings extends MX_Controller
 
     public function  getTrainings()
     {
-        $userdata = $this->session->userdata('hr_user');
         $params = array();  $data = array();
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -62,9 +61,8 @@ class Trainings extends MX_Controller
 				$nestedData[] = $i;
                 $nestedData[] = $training['name'];
                 $nestedData[] = $training['description'];
-                $trainingId = $training['id'];
                 $nestedData[] = "<div class='smart-forms'>
-                                    <form onclick='return approve_deny_popup($trainingId);' action='' method='POST'>
+                                    <form action='".base_url()."hr/view-trainings-docs/".$training['id']."' method='POST'>
                                         <button style='height:29px;color: white;' class='button' type='submit'>View Documents</button>
                                     </form>
                                 </div>";
@@ -77,5 +75,17 @@ class Trainings extends MX_Controller
 		$json_data['recordsFiltered'] = intval( $trainingsList['recordsFiltered'] );
 		$json_data['data'] = $data;
 		echo json_encode($json_data);
+    }
+
+    public function viewTrainingsDocs()
+    {
+        $id = $this->uri->segment(3);
+        $userdata = $this->session->userdata('hr_user');
+        $this->load->model('admin/hr/training_model');
+        $this->load->model('admin/hr/training_material_model');
+        $this->load->model('admin/hr/training_status_model');
+        $data['trainingMaterials'] = $this->training_model->with('materials')->get($id);
+        $data['training_status'] = $this->training_status_model->get("(user_id = {$userdata['id']} and training_id ={$id})");
+        $this->template->show("hr", "view_training_docs", $data);
     }
 }

@@ -1075,4 +1075,88 @@ class Hr extends CI_Model
             'data' => $notifications
         );
     }
+
+    public function getTrainingStatus($params)
+    {
+        $this->db->from('pct_hr_employee_training')
+                 ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_user_training_status.user_id');
+        $this->db->where('pct_hr_employee_training.status', 1);
+        $total_records =  $this->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $trainings_status = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('pct_hr_employee_training.name', $keyword)
+                        ->or_like('pct_hr_user_training_status.created_at', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->group_end();
+            }
+            
+            $this->db->from('pct_hr_employee_training')
+                        ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id')
+                        ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_user_training_status.user_id');
+            $this->db->where('pct_hr_employee_training.status', 1);
+			$filter_total_records =  $this->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('pct_hr_employee_training.name', $keyword)
+                        ->or_like('pct_hr_user_training_status.created_at', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->group_end();
+            }
+
+            $this->db->select('pct_hr_employee_training.*, pct_hr_users.first_name, pct_hr_users.last_name, pct_hr_user_training_status.is_complete, pct_hr_user_training_status.created_at');
+            $this->db->from('pct_hr_employee_training')
+                        ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id')
+                        ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_user_training_status.user_id');
+            $this->db->where('pct_hr_employee_training.status', 1);
+            $this->db->order_by('pct_hr_employee_training.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }	
+
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $trainings_status = $query->result_array();
+	        }
+    	} else {    		
+    		$this->db->from('pct_hr_employee_training')
+                        ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id')
+                        ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_user_training_status.user_id');
+            $this->db->where('pct_hr_employee_training.status', 1);
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->select('pct_hr_employee_training.*, pct_hr_users.first_name, pct_hr_users.last_name, pct_hr_user_training_status.is_complete, pct_hr_user_training_status.created_at');
+            $this->db->from('pct_hr_employee_training')
+                        ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id')
+                        ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_user_training_status.user_id');
+            $this->db->where('pct_hr_employee_training.status', 1);
+            $this->db->order_by('pct_hr_employee_training.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $trainings_status = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $trainings_status
+        );
+    }
 }

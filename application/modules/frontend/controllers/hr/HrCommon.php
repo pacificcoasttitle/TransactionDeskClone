@@ -110,4 +110,18 @@ class HrCommon extends MX_Controller
         );
         echo json_encode($response);
     }
+
+    public function completeTraining($id)
+    {
+        $userdata = $this->session->userdata('hr_user');
+        $condition = array(
+            'user_id' => $userdata['id'],
+            'training_id' => $id
+        );
+        $data = array(
+            'is_complete' => 1
+        );
+        $this->hr->update($data, $condition, 'pct_hr_user_training_status');
+        redirect(base_url().'hr/view-trainings-docs/'.$id);
+    }
 }

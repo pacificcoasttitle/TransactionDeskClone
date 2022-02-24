@@ -175,7 +175,9 @@ class Users extends MX_Controller {
                         'profile_img' => $document_name
                     );
 
-                    $this->hr->insert($usersData, 'pct_hr_users');
+                    $user_id = $this->hr->insert($usersData, 'pct_hr_users');
+
+                    
                     $successMsg = 'User added successfully.';
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = getenv('FROM_EMAIL');

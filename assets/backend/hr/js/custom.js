@@ -9,6 +9,7 @@ var positions = '';
 var memos = '';
 var memos_status = '';
 var notifications = '';
+var training_status = '';
 
 $(document).ready(function () {
     
@@ -517,6 +518,47 @@ $(document).ready(function () {
             }            
         });
     }
+
+    if ($('#training_status').length > 0)  {
+        training_status = $('#training_status').DataTable({
+           "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "dom": 'Blfrtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"hr/admin/get-training-status", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#training_status tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
+                    $("#training_status_processing").css("display", "none");
+                }
+            }            
+        });
+    }
 });
 
 
@@ -864,7 +906,7 @@ if($("#training__material").length) {
 		}
 		else if(selected_val == 'file') {
 			new_input_type = `<div  class="clearfix"><div class="float-left">Select File<span class="required"> *</span></div><div class="float-right"><button type="button" class="btn btn-danger btn-sm remove_material_type" data-div="`+new_div_id+`"><i class="fas fa-trash"></i></button></div></div>
-			<div><input type="file" class="form-control" name="material_file[]" id="material_file_`+new_mat_id+`" required="required"></div>`;
+			<div><input type="file" accept="application/pdf" class="form-control" name="material_file[]" id="material_file_`+new_mat_id+`" required="required"></div>`;
 		}
 		var new_input = `<div id="`+new_div_id+`" class="form-group">`+new_input_type+`</div>`;
 
@@ -879,4 +921,23 @@ if($("#training__material").length) {
 		$(removed_div).remove();
 	});
 }
+
+$('input[name=user_selection]').on('change', function() {
+    var user_selection_val = $('input[name=user_selection]:checked').val(); 
+    if (user_selection_val == 'based_on_user_listing') {
+        $('#user_container').removeClass('d-none');
+        $('#department_container').addClass('d-none');
+        $('#position_container').addClass('d-none');
+        $('input[name=user_selection]').prop('required',true);
+        $('#traning_position').prop('required', false);
+        $('#traning_department').prop('required', false);
+    } else if (user_selection_val == 'based_on_position_and_department') {
+        $('#user_container').addClass('d-none');
+        $('#department_container').removeClass('d-none');
+        $('#position_container').removeClass('d-none');
+        $('input[name=user_selection]').prop('required',false);
+        $('#traning_position').prop('required', true);
+        $('#traning_department').prop('required', true);
+    }
+});
 

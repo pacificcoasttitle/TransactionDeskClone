@@ -2,6 +2,9 @@
 	.remove_material_type {
 		margin-bottom: 5px;
 	}
+	.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+		width: -webkit-fill-available;
+	}
 </style>
 <div class="content">
     <div class="container-fluid">
@@ -49,8 +52,46 @@
 							<div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label style="width:100%;">User Selection<span class="required"> *</span></label>
+										<input style="width:15px;height:15px;" class="" type="radio" name="user_selection" value="based_on_user_listing" required>&nbsp;&nbsp;&nbsp;Based On User Listing&nbsp;&nbsp;&nbsp;
+										<input style="width:15px;height:15px;" class="" type="radio" name="user_selection" value="based_on_position_and_department" required>&nbsp;&nbsp;&nbsp;Based On Position And Department&nbsp;&nbsp;&nbsp;
+                                    </div>
+                                    <?php if(!empty($user_selection_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $user_selection_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
+							<div class="row d-none" id="user_container">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="users">Select Users<span class="required"> *</span></label>
+                                        <select name="users[]" class="selectpicker" multiple data-live-search="true" data-actions-box="true">
+                                            <?php foreach($users as $user) {?>
+                                                <?php $selected = '';
+                                                    if(set_value('users') && in_array($user['id'], set_value('users')))  {
+                                                        $selected = 'selected';
+                                                    } 
+                                                ?> 
+                                                <option <?php echo $selected;?> value="<?php echo $user['id'];?>"><?php echo $user['first_name']." ".$user['last_name'];?></option>
+                                            <?php }?>
+                                        </select>
+                                    </div>
+                                    <?php if(!empty($users_error_msg)){ ?>       
+                                        <div class="typography-line text-danger">
+                                            <?php echo $users_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
+							<div class="row d-none" id="department_container">
+                                <div class="col-md-6">
+                                    <div class="form-group">
 										<label for="traning_department">Department <span class="required"> *</span></label>
-										<select class="form-control" name="traning_department" id="traning_department" required>
+										<select class="form-control" name="traning_department" id="traning_department">
 											<option value="">Select Department</option>
 											<?php foreach($departments as $department): ?>
 												<option value="<?php echo $department->id;?>"><?php echo $department->name; ?></option>
@@ -65,11 +106,11 @@
 								</div>
 							</div>
 
-							<div class="row">
+							<div class="row d-none" id="position_container">
                                 <div class="col-md-6">
                                     <div class="form-group">
 										<label for="traning_position">Position <span class="required"> *</span></label>
-										<select class="form-control" name="traning_position" id="traning_position" required>
+										<select class="form-control" name="traning_position" id="traning_position">
 											<option value="">Select Position</option>
 											<?php foreach($positions as $position): ?>
 												<option value="<?php echo $position->id;?>"><?php echo $position->name; ?></option>
