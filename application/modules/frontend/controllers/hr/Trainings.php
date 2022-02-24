@@ -84,8 +84,8 @@ class Trainings extends MX_Controller
         $this->load->model('admin/hr/training_model');
         $this->load->model('admin/hr/training_material_model');
         $this->load->model('admin/hr/training_status_model');
+        $data['training_status'] = $this->training_status_model->get_many_by("(user_id = {$userdata['id']} and training_id ={$id})");
         $data['trainingMaterials'] = $this->training_model->with('materials')->get($id);
-        $data['training_status'] = $this->training_status_model->get("(user_id = {$userdata['id']} and training_id ={$id})");
         $this->template->show("hr", "view_training_docs", $data);
     }
 }
