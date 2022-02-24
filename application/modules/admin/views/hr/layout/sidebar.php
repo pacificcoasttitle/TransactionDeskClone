@@ -94,7 +94,7 @@
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo') { echo 'active'; } ?>"
 					href="<?php echo base_url().'hr/admin/memos'; ?>">Memos List</a>
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/memos-status') { echo 'active'; } ?>"
-					href="<?php echo base_url().'hr/admin/memos-status'; ?>">Memo's Status</a>
+					href="<?php echo base_url().'hr/admin/memos-status'; ?>">Memo Status</a>
 			</div>
 		</div>
 	</li>
@@ -126,12 +126,21 @@
 	</li>
 	
 	<li
-		class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*training/',$this->uri->uri_string())) { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'hr/admin/training'; ?>">
-			<i class="fas fa-fw fa-clipboard-check"></i>
+		class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*training*([a-z\-])/',$this->uri->uri_string())) { echo 'active'; } ?>">
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#training_menu" aria-expanded="true" aria-controls="training_menu">
+			<i class="fas fa-fw fa-sticky-note"></i>
 			<span>Trainings</span>
 		</a>
+		<div id="training_menu" class="collapse <?php if(preg_match('/hr\/admin\/([a-z\-])*training*([-\a-z])/',$this->uri->uri_string())) { echo 'show'; } ?>" aria-labelledby="memos_menu" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<a class="collapse-item <?php if(preg_match('/hr\/admin\/([a-z\-])*training/',$this->uri->uri_string())) { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/training'; ?>">Training List</a>
+				<a class="collapse-item <?php if(preg_match('/hr\/admin\/training-*([a-z])/',$this->uri->uri_string())) { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/training-status'; ?>">Training Status</a>
+			</div>
+		</div>
 	</li>
+
 
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">

@@ -662,10 +662,10 @@ class Hr extends CI_Model
     { 
         $userdata = $this->session->userdata('hr_user');
         $this->db->from('pct_hr_employee_training')
-            ->join('pct_hr_users', 'pct_hr_users.position_id = pct_hr_employee_training.position_id and pct_hr_users.department_id = pct_hr_employee_training.department_id', 'inner');
+            ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
 
         $this->db->where('pct_hr_employee_training.status', 1);
-        $this->db->where('pct_hr_users.id', $userdata['id']);
+        $this->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
         $total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -682,9 +682,9 @@ class Hr extends CI_Model
             }
             
             $this->db->from('pct_hr_employee_training')
-                ->join('pct_hr_users', 'pct_hr_users.position_id = pct_hr_employee_training.position_id and pct_hr_users.department_id = pct_hr_employee_training.department_id', 'inner');
+                ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
             $this->db->where('pct_hr_employee_training.status', 1);
-            $this->db->where('pct_hr_users.id', $userdata['id']);
+            $this->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
 			$filter_total_records =  $this->db->count_all_results();
 
 			if (isset($keyword) && !empty($keyword)) {
@@ -696,10 +696,10 @@ class Hr extends CI_Model
 
             $this->db->select('pct_hr_employee_training.*');
             $this->db->from('pct_hr_employee_training')
-                ->join('pct_hr_users', 'pct_hr_users.position_id = pct_hr_employee_training.position_id and pct_hr_users.department_id = pct_hr_employee_training.department_id', 'inner');
+                ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
 
             $this->db->where('pct_hr_employee_training.status', 1);
-            $this->db->where('pct_hr_users.id', $userdata['id']);
+            $this->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
             $this->db->order_by('pct_hr_employee_training.id', 'desc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -713,18 +713,18 @@ class Hr extends CI_Model
 	        }
     	} else {    		
             $this->db->from('pct_hr_employee_training')
-                ->join('pct_hr_users', 'pct_hr_users.position_id = pct_hr_employee_training.position_id and pct_hr_users.department_id = pct_hr_employee_training.department_id', 'inner');
+                ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
 
             $this->db->where('pct_hr_employee_training.status', 1);
-            $this->db->where('pct_hr_users.id', $userdata['id']);
+            $this->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
             $filter_total_records =  $this->db->count_all_results();
 
             $this->db->select('pct_hr_employee_training.*');
             $this->db->from('pct_hr_employee_training')
-                ->join('pct_hr_users', 'pct_hr_users.position_id = pct_hr_employee_training.position_id and pct_hr_users.department_id = pct_hr_employee_training.department_id', 'inner');
+                ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
 
             $this->db->where('pct_hr_employee_training.status', 1);
-            $this->db->where('pct_hr_users.id', $userdata['id']);
+            $this->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
             $this->db->order_by('pct_hr_employee_training.id', 'desc');
 
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -742,5 +742,17 @@ class Hr extends CI_Model
             'recordsFiltered' => $filter_total_records,
             'data' => $trainingsList
         );
+    }
+
+    public function getTrainingMaterials($id) 
+    {
+        $this->db->select('*');
+        $this->db->where('training_id', $id);
+        $query = $this->db->get('pct_hr_employee_training_material');
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }
     }
 }

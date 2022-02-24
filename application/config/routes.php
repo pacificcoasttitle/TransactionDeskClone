@@ -349,6 +349,8 @@ $route['hr/notifications'] = 'frontend/hr/notifications/index';
 $route['hr/get-notifications'] = 'frontend/hr/notifications/getNotifications';
 $route['hr/trainings'] = 'frontend/hr/trainings/index';
 $route['hr/get-trainings'] = 'frontend/hr/trainings/getTrainings';
+$route['hr/view-trainings-docs/:num'] = 'frontend/hr/trainings/viewTrainingsDocs';
+$route['hr/complete-training/(:num)'] = 'frontend/hr/hrCommon/completeTraining/$1';
 $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 
@@ -410,6 +412,8 @@ $route['hr/admin/get-training'] = 'admin/hr/training/getTraining';
 $route['hr/admin/add-training'] = 'admin/hr/training/addTraining';
 $route['hr/admin/edit-training/(:num)'] = 'admin/hr/training/editTraining/$1';
 $route['hr/admin/delete-training'] = 'admin/hr/training/deleteTraining';
+$route['hr/admin/training-status'] = 'admin/hr/training/trainingStatus';
+$route['hr/admin/get-training-status'] = 'admin/hr/training/getTrainingStatus';
 $route['hr/admin/delete-training-material/(:num)'] = 'admin/hr/training/deleteTrainingMaterial/$1';
 
 $route['hr/admin/memos'] = 'admin/hr/memos/index';
