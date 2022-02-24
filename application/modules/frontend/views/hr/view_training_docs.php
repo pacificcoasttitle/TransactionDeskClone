@@ -152,8 +152,7 @@ button:focus {outline:0;}
                             <div class="col-md-8" id="links_details">
                                 <div class="typography-section__inner smart-forms">
                                     <!-- <a onclick="" href="javascript:void(0);"><button class='button btn-primary' type='button'>Download</button></a> -->
-                                    <?php print_r($training_statu);
-                                        if ($training_status->is_complete == 1) {?>
+                                    <?php if ($training_status[0]->is_complete == 1) {?>
                                         <button class='button btn-primary' type='button'>Training Completed</button>
                                     <?php } else { ?>
                                         <a href="javascript:void(0)"><button data-toggle="modal" data-target="#training_complete" class='button btn-primary' type='button'>Complete Training</button></a>
