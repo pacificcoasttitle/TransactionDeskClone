@@ -61,6 +61,12 @@ class Trainings extends MX_Controller
 				$nestedData[] = $i;
                 $nestedData[] = $training['name'];
                 $nestedData[] = $training['description'];
+                if ($training['is_complete'] == 1) {
+                    $status = '<span class="badge-new badge-new-success">Completed</span>';
+                } else {
+                    $status = '<span class="badge-new badge-new-info">Pending</span>';
+                }
+                $nestedData[] = $status;
                 $nestedData[] = "<div class='smart-forms'>
                                     <form action='".base_url()."hr/view-trainings-docs/".$training['id']."' method='POST'>
                                         <button style='height:29px;color: white;' class='button' type='submit'>View Documents</button>

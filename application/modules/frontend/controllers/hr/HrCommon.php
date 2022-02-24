@@ -113,6 +113,10 @@ class HrCommon extends MX_Controller
 
     public function completeTraining($id)
     {
+        $this->load->model('admin/hr/training_model');
+        $errors = array();
+        $success = array();
+        $trainingDetails = $this->training_model->get($id);
         $userdata = $this->session->userdata('hr_user');
         $condition = array(
             'user_id' => $userdata['id'],
@@ -122,6 +126,22 @@ class HrCommon extends MX_Controller
             'is_complete' => 1
         );
         $this->hr->update($data, $condition, 'pct_hr_user_training_status');
-        redirect(base_url().'hr/view-trainings-docs/'.$id);
+        $message = $trainingDetails->name.' training completed successfully by '.$userdata['name'];
+        $notificationData = array(
+            'sent_user_id' => 0,
+            'message' => $message,
+            'is_admin' => 1,
+            'type' => 'approved'
+        );
+        $this->hr->insert($notificationData, 'pct_hr_notifications');
+        $this->common->sendNotification($message, 'approved', 0, 1);
+        
+        $success[] = $trainingDetails->name.' training completed successfully';
+        $data = array(
+            "errors" =>  $errors,
+            "success" => $success
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url().'hr/trainings');
     }
 }

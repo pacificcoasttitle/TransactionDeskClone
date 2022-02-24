@@ -694,7 +694,7 @@ class Hr extends CI_Model
                     ->group_end();
             }
 
-            $this->db->select('pct_hr_employee_training.*');
+            $this->db->select('pct_hr_employee_training.*, pct_hr_user_training_status.is_complete');
             $this->db->from('pct_hr_employee_training')
                 ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
 
@@ -719,7 +719,7 @@ class Hr extends CI_Model
             $this->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
             $filter_total_records =  $this->db->count_all_results();
 
-            $this->db->select('pct_hr_employee_training.*');
+            $this->db->select('pct_hr_employee_training.*, pct_hr_user_training_status.is_complete');
             $this->db->from('pct_hr_employee_training')
                 ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
 
