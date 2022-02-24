@@ -133,9 +133,9 @@
 		</a>
 		<div id="training_menu" class="collapse <?php if(preg_match('/hr\/admin\/([a-z\-])*training*([-\a-z])/',$this->uri->uri_string())) { echo 'show'; } ?>" aria-labelledby="memos_menu" data-parent="#accordionSidebar">
 			<div class="bg-white py-2 collapse-inner rounded">
-				<a class="collapse-item <?php if(preg_match('/hr\/admin\/([a-z\-])*training/',$this->uri->uri_string())) { echo 'active'; } ?>"
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/training' || $this->uri->uri_string() == 'hr/admin/add-training' || $this->uri->segment(3) == 'edit-training') { echo 'active'; } ?>"
 					href="<?php echo base_url().'hr/admin/training'; ?>">Training List</a>
-				<a class="collapse-item <?php if(preg_match('/hr\/admin\/training-*([a-z])/',$this->uri->uri_string())) { echo 'active'; } ?>"
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/training-status') { echo 'active'; } ?>"
 					href="<?php echo base_url().'hr/admin/training-status'; ?>">Training Status</a>
 			</div>
 		</div>
