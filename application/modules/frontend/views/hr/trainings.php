@@ -17,6 +17,20 @@ th {
                         <h2 class="ui-title-block ui-title-block_light">Trainings,</h2>
                         <div class="ui-decor-1a bg-accent"></div>
                         <h3 class="ui-title-block_light">Below is a detail of all your trainings.</h3>
+                        <?php if(!empty($success)) {?>
+                            <div id="time_card_success_msg" class="w-100 alert alert-success alert-dismissible">
+                                <?php foreach($success as $sucess) {
+                                    echo $sucess."<br \>";	
+                                }?>
+                            </div>
+                        <?php } 
+                        if(!empty($errors)) {?>
+                            <div id="time_card_error_msg" class="w-100 alert alert-danger alert-dismissible">
+                                <?php foreach($errors as $error) {
+                                    echo $error."<br \>";	
+                                }?>
+                            </div>
+                        <?php } ?>
                     </div>
                     <div class="typography-sectiona">
                         <div class="table-container">
@@ -26,6 +40,7 @@ th {
                                         <th>No</th>
                                         <th>Name</th>
                                         <th>Description</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

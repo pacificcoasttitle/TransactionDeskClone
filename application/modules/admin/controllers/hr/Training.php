@@ -275,9 +275,7 @@ class Training extends MX_Controller
 		$record = $this->training_model->with('materials')->with('users')->get($id);
 		if($record) {
 			if ($record->user_selection == 'based_on_user_listing') {
-				foreach ($record->users as $user) {
-					$data['trainingUsers'][] = $user->user_id;
-				}
+				$data['trainingUsers'] = array_column($record->users,'user_id');
 			} 
 			$data['title'] = 'HR-Center Training';
 			$data['page_title'] = 'Edit Training';
