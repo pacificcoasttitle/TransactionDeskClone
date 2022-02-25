@@ -94,7 +94,6 @@ class Home_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }			
 			$query = $this->db->get('customer_basic_details');
-            echo $this->db->last_query();exit;
 
 			if ($query->num_rows() > 0) 
 	        {
