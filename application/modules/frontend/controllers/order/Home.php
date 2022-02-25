@@ -1058,7 +1058,6 @@ class Home extends MX_Controller {
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
 							$taxfilename = $orderNumber.'.pdf';
-							// $orderDetails = $this->order->get_order_details($file_id);
 
 							if (!empty($_FILES['upload_curative']['name'])) {
 								$this->uploadCurativeDocsToResware($orderDetails); 
@@ -1077,6 +1076,19 @@ class Home extends MX_Controller {
 							if ($this->order->fileExistOrNotOnS3('tax/'.$taxfilename)) {
 								$file[] = env('AWS_PATH')."tax/".$taxfilename;
 								$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
+							}
+
+							$escrow_officer_email = '';
+							if (isset($escrowOfficer) && !empty($escrowOfficer) && ($ProductTypeID == '4' || $ProductTypeID == '5')) {
+								$con = array(
+									'where' => array(
+										'partner_id' => $escrowOfficer,
+									)
+								);
+								$escrowCompanyData = $this->home_model->get_company_rows($con);
+								$escrow_officer_email = $escrowCompanyData[0]['email'];
+								$escrow_officer_email = 'hitesh.p@crestinfosystems.com';
+								$parties_email[] = $escrow_officer_email;
 							}
 								
 							/*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
@@ -1099,21 +1111,7 @@ class Home extends MX_Controller {
 
 							$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
 
-							/* Escrow officer email */
-						
-							$escrow_email = '';
-							if (isset($escrowOfficer) && !empty($escrowOfficer)) {
-								$con = array(
-									'where' => array(
-										'partner_id' => $escrowOfficer,
-									)
-								);
-								$escrowCompanyData = $this->home_model->get_company_rows($con);
-								$escrow_email = $escrowCompanyData[0]['email'];
-								//$escrow_email = 'hitesh.p@crestinfosystems.com';
-							}
-
-							if (!empty($escrowEmail) && $loanFlag == 1) {							
+							if ((!empty($escrowEmail) && $loanFlag == 1) || (!empty($escrow_officer_email))) {							
 
 								$sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
 								if(!empty($sales_rep_img)) {
@@ -1133,8 +1131,7 @@ class Home extends MX_Controller {
 								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
 								$message_body = $borrower_message_body; 
 								$subject = $orderNumber. ' - Borrower Verification';
-								$to = $escrowEmail;
-								//$to = 'hitesh.p@crestinfosystems.com';
+								
 								$mailParams = array(
 									'from_mail'=>$from_mail, 
 									'from_name'=>$from_name, 
@@ -1143,14 +1140,20 @@ class Home extends MX_Controller {
 									'message'=>json_encode($email_data)
 								);
 
-								$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
+								if (!empty($escrowEmail) && $loanFlag == 1) {
+									$to = $escrowEmail;
+									$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array(), $orderId, 0);
+									$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+									$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
+								}
 
-								$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
-
-								$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
+								if (!empty($escrow_officer_email)) {
+									$to = $escrow_officer_email;
+									$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
+									$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+									$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
+								}
 							}					
-
-							/* Escrow officer email */	
 
 							/* Send notification to admin based on rules */
 							$condition = array(
