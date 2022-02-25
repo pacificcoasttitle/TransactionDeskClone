@@ -1087,7 +1087,7 @@ class Home extends MX_Controller {
 								);
 								$escrowCompanyData = $this->home_model->get_company_rows($con);
 								$escrow_officer_email = $escrowCompanyData[0]['email'];
-								$escrow_officer_email = 'hitesh.p@crestinfosystems.com';
+								//$escrow_officer_email = 'hitesh.p@crestinfosystems.com';
 								$parties_email[] = $escrow_officer_email;
 							}
 								
@@ -1135,13 +1135,13 @@ class Home extends MX_Controller {
 								$mailParams = array(
 									'from_mail'=>$from_mail, 
 									'from_name'=>$from_name, 
-									'to'=>$to,
 									'subject'=>$subject,
 									'message'=>json_encode($email_data)
 								);
 
 								if (!empty($escrowEmail) && $loanFlag == 1) {
 									$to = $escrowEmail;
+									$mailParams['to'] = $to;
 									$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array(), $orderId, 0);
 									$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
 									$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
@@ -1149,6 +1149,7 @@ class Home extends MX_Controller {
 
 								if (!empty($escrow_officer_email)) {
 									$to = $escrow_officer_email;
+									$mailParams['to'] = $to;
 									$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
 									$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
 									$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
