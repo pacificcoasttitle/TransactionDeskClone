@@ -341,6 +341,7 @@ $route['hr/memos'] = 'frontend/hr/memos/index';
 $route['hr/get-memos'] = 'frontend/hr/memos/getMemos';
 $route['hr/get-memo-info'] = 'frontend/hr/memos/getMemoInfo';
 $route['hr/accept-memo'] = 'frontend/hr/memos/acceptMemo';
+$route['hr/acknowledge-memo/(:any)/(:any)'] = 'frontend/hr/memos/acknowledgeMemo/$1/$2';
 $route['hr/onboarding/employees'] = 'frontend/hr/taskList/empoyees';
 $route['hr/onboarding/get-employees'] = 'frontend/hr/taskList/getEmpoyees';
 $route['hr/onboarding/employee-task/(:num)'] = 'frontend/hr/taskList/tasks/$1';
