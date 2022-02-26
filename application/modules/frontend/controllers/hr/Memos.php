@@ -30,7 +30,10 @@ class Memos extends MX_Controller {
 		$this->load->library('hr/template');
         $this->load->library('hr/common');
         $this->load->model('hr/hr'); 
-        $this->common->is_user();
+		$current_url = current_url();
+		if (!(strpos($current_url, 'acknowledge-memo') !== false)) {
+			$this->common->is_user();
+		}
     }
 
     public function index()
@@ -134,5 +137,48 @@ class Memos extends MX_Controller {
         );
         $this->session->set_userdata($data);
         redirect(base_url().'hr/memos');
+    }
+
+	public function acknowledgeMemo($memo_cipher,$user_cipher)
+    {
+		
+		$this->load->library('encryption');
+		$memoId = $this->encryption->decrypt($memo_cipher);
+		$userId = $this->encryption->decrypt($user_cipher);
+        $memoInfo = $this->common->getAssignedMemoInfo($memoId);
+		$userInfo = $this->hr->getUserInfo($userId);
+		if($memoInfo && $userInfo) {
+			$subject =  $memoInfo['subject'];
+			$errors = array();
+			$success = array();
+			$data = array(
+				'is_read' => 1,
+			);
+			$condition = array(
+				'id' => $memoId,
+				'user_id' => $userId
+			);
+			$this->hr->update($data, $condition, 'pct_hr_assigned_memo_users'); 
+			$success[] =  $subject." memo accepted successfully.";
+			$memo_date = date("F d, Y", strtotime($memoInfo['date']));
+			$message = $subject.' Memo request of '.$memo_date.' accepted by '.$userInfo['first_name'].' '.$userInfo['last_name'];
+			$notificationData = array(
+				'sent_user_id' => 0,
+				'message' => $message,
+				'is_admin' => 1,
+				'type' =>  'accepted'
+			);
+			$this->hr->insert($notificationData, 'pct_hr_notifications');
+			$this->common->sendNotification($message, 'accepted', 0, 1);
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+			$this->session->set_userdata($data);
+			redirect(base_url().'hr/memos');
+		}
+		else {
+			echo "Invalid Request";
+		}
     }
 }
