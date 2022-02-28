@@ -4602,8 +4602,9 @@ class Cron extends MX_Controller {
 			$from_name = 'Pacific Coast Title Company';
 			$from_mail = env('FROM_EMAIL');
 			$subject = 'Memo Created';
-			$to = 'cs@pct.com';
-			$cc = array('ghernandez@pct.com');
+			$to = $memo_mail['email'];
+			// $to = 'cs@pct.com';
+			$cc = array();
 			$this->load->helper('sendemail');
 			$check_mail = send_email($from_mail,$from_name, $to, $subject, $message, $cc);
 			if($check_mail) {
