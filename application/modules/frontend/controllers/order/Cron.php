@@ -4574,7 +4574,7 @@ class Cron extends MX_Controller {
     }
 
 	// Sent Memo acknowledge mail to assigned User
-	public function sendMemoMail()
+	public function sendMemoMail($memo_assign_id)
     {
 		//Get pending mails to be sent
 
@@ -4582,7 +4582,7 @@ class Cron extends MX_Controller {
         $this->db->from('pct_hr_assigned_memo_users');
         $this->db->join('pct_hr_users','pct_hr_users.id = pct_hr_assigned_memo_users.user_id');
         $this->db->join('pct_hr_memos','pct_hr_memos.id = pct_hr_assigned_memo_users.memo_id');
-        $this->db->where('pct_hr_assigned_memo_users.mail_sent',0);
+        $this->db->where('pct_hr_assigned_memo_users.id',$memo_assign_id);
 
         $query = $this->db->get();
         $memo_mails = $query->result_array();
