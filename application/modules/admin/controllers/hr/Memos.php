@@ -135,7 +135,7 @@ class Memos extends MX_Controller {
                         'user_id' =>  $user,
                         'memo_id' =>  $memoId
                     );
-                    $this->hr->insert($memoAssignedData, 'pct_hr_assigned_memo_users');
+                    $memo_assign_id = $this->hr->insert($memoAssignedData, 'pct_hr_assigned_memo_users');
                     $memo_date = date("F d, Y", strtotime($this->input->post('memo_date')));
                     $message = $this->input->post('subject').' Memo request of '.$memo_date.' has assigned to you.';
                     $notificationData = array(
@@ -147,6 +147,15 @@ class Memos extends MX_Controller {
                     $this->hr->insert($notificationData, 'pct_hr_notifications');
                     $this->common->sendNotification($message, 'accepted', $user, 0);
 
+					//Send Mail
+					$param = $memo_assign_id;
+					$command = "php ".FCPATH."index.php frontend/order/cron sendMemoMail $param";
+					if (substr(php_uname(), 0, 7) == "Windows"){
+						pclose(popen("start /B ". $command, "r")); 
+					}
+					else {
+						exec($command . " > /dev/null &");  
+					}
                 }
                 $successMsg = 'Memo added successfully.';
                 $this->session->set_userdata('success', $successMsg);
