@@ -307,13 +307,13 @@ class SalesRep extends MX_Controller
     
                 $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $userId, strval( $year));
                 $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-                $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId);
+                $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId, strval( $year));
                 $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
                 $salesHistory[$year][$iM-1]['total_open_count'] = $sale_open_count + $refi_open_count;
     
                 $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $userId, strval( $year));
                 $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-                $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $userId);
+                $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $userId, strval( $year));
                 $sale_close_count =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
                 $salesHistory[$year][$iM-1]['total_close_count'] = $refi_close_count + $sale_close_count;
     

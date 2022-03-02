@@ -1406,50 +1406,54 @@ class Order
 
     public function getOpenOrdersCountForRefiProducts($month, $userId, $year = 0)
     {
-        $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        //$this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+
         if ($year == 0) {
             $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
         } else {
             $this->CI->db->where('YEAR(order_details.created_at)', $year); 
         }
         
-
-        if ($userId != 'all') {
-            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        if (is_array($userId)) {
+            $this->CI->db->where_in('transaction_details.sales_representative', $userId); 
         } else {
-            $this->CI->db->where('transaction_details.sales_representative is not null'); 
+            if ($userId != 'all') {
+                $this->CI->db->where('transaction_details.sales_representative', $userId); 
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative is not null'); 
+            }
         }
         $query = $this->CI->db->get();
-       
         $result = $query->row_array();
         return $result;
     }
 
     public function getOpenOrdersCountForSaleProducts($month, $userId, $year = 0)
     {
-        $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        //$this->CI->db->where('((order_details.resware_status != "closed" and order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+
         if ($year == 0) {
             $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
         } else {
             $this->CI->db->where('YEAR(order_details.created_at)', $year); 
         }
 
-        if ($userId != 'all') {
-            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        if (is_array($userId)) {
+            $this->CI->db->where_in('transaction_details.sales_representative', $userId); 
         } else {
-            $this->CI->db->where('transaction_details.sales_representative is not null'); 
+            if ($userId != 'all') {
+                $this->CI->db->where('transaction_details.sales_representative', $userId); 
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative is not null'); 
+            }
         }
         $query = $this->CI->db->get();
         $result = $query->row_array();
@@ -1458,11 +1462,9 @@ class Order
 
     public function getClosedOrdersCountForRefiProducts($month, $userId, $year = 0)
     {
-        $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        //$this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
 
@@ -1472,11 +1474,14 @@ class Order
             $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year); 
         }
         
-       
-        if ($userId != 'all') {
-            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        if (is_array($userId)) {
+            $this->CI->db->where_in('transaction_details.sales_representative', $userId); 
         } else {
-            $this->CI->db->where('transaction_details.sales_representative is not null'); 
+            if ($userId != 'all') {
+                $this->CI->db->where('transaction_details.sales_representative', $userId); 
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative is not null'); 
+            }
         }
         $query = $this->CI->db->get();
         $result = $query->row_array();
@@ -1485,11 +1490,9 @@ class Order
 
     public function getClosedOrdersCountForSaleProducts($month, $userId, $year = 0)
     {
-        $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        //$this->CI->db->where('order_details.resware_status = "closed"');
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
 
@@ -1499,12 +1502,15 @@ class Order
             $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year); 
         }
         
-        
-        if ($userId != 'all') {
-            $this->CI->db->where('transaction_details.sales_representative', $userId); 
+        if (is_array($userId)) {
+            $this->CI->db->where_in('transaction_details.sales_representative', $userId); 
         } else {
-            $this->CI->db->where('transaction_details.sales_representative is not null'); 
-        } 
+            if ($userId != 'all') {
+                $this->CI->db->where('transaction_details.sales_representative', $userId); 
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative is not null'); 
+            }
+        }
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
@@ -1852,5 +1858,17 @@ class Order
         $query = $this->CI->db->get();
         $result = $query->row_array();
         return $result;
+    }
+
+    public function getUsersInfo($emailAddresses) 
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->where_in('email_address', $emailAddresses);
+        $query = $this->CI->db->get('customer_basic_details');
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
     }
 }
