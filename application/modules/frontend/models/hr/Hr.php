@@ -46,7 +46,7 @@ class Hr extends CI_Model
             if ($userdata['user_type_id'] == 2) {
                 $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
                 if(!empty($usersForBranchManager)) {
-                    $usersIds = explode(",", $usersForBranchManager['ids']);
+                    $usersIds = array_column($usersForBranchManager, 'id');
                     $usersIds[] = $userdata['id'];
                 } else {
                     $usersIds[] = $userdata['id'];
@@ -191,7 +191,7 @@ class Hr extends CI_Model
             if ($userdata['user_type_id'] == 2) {
                 $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
                 if(!empty($usersForBranchManager)) {
-                    $usersIds = explode(",", $usersForBranchManager['ids']);
+                    $usersIds = array_column($usersForBranchManager, 'id');
                     $usersIds[] = $userdata['id'];
                 } else {
                     $usersIds[] = $userdata['id'];
@@ -336,7 +336,7 @@ class Hr extends CI_Model
             if ($userdata['user_type_id'] == 2) {
                 $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
                 if(!empty($usersForBranchManager)) {
-                    $usersIds = explode(",", $usersForBranchManager['ids']);
+                    $usersIds = array_column($usersForBranchManager, 'id');
                     $usersIds[] = $userdata['id'];
                 } else {
                     $usersIds[] = $userdata['id'];
@@ -475,12 +475,12 @@ class Hr extends CI_Model
     {
         $userdata = $this->session->userdata('hr_user');
         $userInfo = $this->get_hr_user(array('id' => $userdata['id']));
-        $this->db->select('Group_concat(id) as ids')
+        $this->db->select('id, email')
             ->from('pct_hr_users');
         $this->db->where('department_id', $userInfo['department_id']);
         $query = $this->db->get();
         if ($query->num_rows() > 0)  {
-            return $query->row_array();
+            return $query->result_array();
         } else {
             return array();
         }
@@ -755,4 +755,5 @@ class Hr extends CI_Model
             return array();
         }
     }
+
 }
