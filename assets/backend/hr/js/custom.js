@@ -10,9 +10,9 @@ var memos = '';
 var memos_status = '';
 var notifications = '';
 var training_status = '';
+var branches = '';
 
 $(document).ready(function () {
-    
     $('#hire_date').datepicker().datepicker("setDate", new Date());
     if ($("#hire_date_val").length != 0) {
         $('#hire_date').val($("#hire_date_val").val());
@@ -352,8 +352,6 @@ $(document).ready(function () {
         });
     }
 
-	
-    
     if ($('#memos').length > 0)  {
         memos = $('#memos').DataTable({
            "paging": true,
@@ -559,6 +557,47 @@ $(document).ready(function () {
             }            
         });
     }
+
+    if ($('#branches').length > 0)  {
+        branches = $('#branches').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            "language": {
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+            },
+            "dom": 'Blfrtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"hr/admin/get-branches", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#branches tbody").append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
+                    $("#dbranches_processing").css("display", "none");
+                }
+            }            
+        });
+    } 
 });
 
 
@@ -881,6 +920,58 @@ function deleteMemo(id)
 
                 setTimeout(function () {
                     $('#memos_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    } 
+}
+
+function deleteBranch(id)
+{
+    if (id=='') {
+        alert('Branch ID is required.');
+        return false;
+    }
+    var ready = confirm("Are you sure want to delete?");
+    if (ready) {
+        $.ajax({
+            url: base_url+"hr/admin/delete-branch",
+            method: "POST",
+            data : {
+                id : id
+            },
+            success: function(data){
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#branches_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#branches_success_msg").offset().top
+                    }, 1000);
+                    branches.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#branches_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#branches_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#branches_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#branches_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#branches_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#branches_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#branches_error_msg').html('').hide();
                 }, 4000);
             }
         })

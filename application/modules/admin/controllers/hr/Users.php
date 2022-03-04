@@ -29,6 +29,7 @@ class Users extends MX_Controller {
         $this->load->library('hr/adminTemplate');
         $this->load->model('hr/hr'); 
         $this->load->library('hr/common');
+        $this->load->model('hr/branches_model');
         $this->common->is_hr_admin();
     }
 
@@ -126,6 +127,7 @@ class Users extends MX_Controller {
         $data['hrPositions'] = $this->hr->getHrPositions(); 
         $data['userTypes'] = $this->hr->getHrUserTypes(); 
         $data['departments'] = $this->hr->getHrDepartments(); 
+        $data['branches'] = $this->branches_model->get_many_by('status', '1');
         $config['upload_path'] = './uploads/hr/user/';
         $config['allowed_types'] = 'gif|jpg|png';   
         $config['max_size'] = 12000;
@@ -145,6 +147,7 @@ class Users extends MX_Controller {
             $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
             $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
             $this->form_validation->set_rules('department', 'Department', 'required', array('required'=> 'Please Select Department.'));
+            $this->form_validation->set_rules('branch', 'Branch', 'required', array('required'=> 'Please Select Branch.'));
             
             if ($this->form_validation->run() == true) {        
                 if (!empty($_FILES['profile_img']['name'])) {
@@ -172,6 +175,7 @@ class Users extends MX_Controller {
                         'status' => 1,
                         'is_tmp_password' => 1,
                         'department_id' => $this->input->post('department'),
+                        'branch_id' => $this->input->post('branch'),
                         'profile_img' => $document_name
                     );
 
@@ -242,6 +246,7 @@ class Users extends MX_Controller {
         $data['hrPositions'] = $this->hr->getHrPositions(); 
         $data['userTypes'] = $this->hr->getHrUserTypes(); 
         $data['departments'] = $this->hr->getHrDepartments(); 
+        $data['branches'] = $this->branches_model->get_many_by('status', '1');
         $config['upload_path'] = './uploads/hr/user/';
         $config['allowed_types'] = 'gif|jpg|png';   
         $config['max_size'] = 12000;
@@ -261,6 +266,7 @@ class Users extends MX_Controller {
                 $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
                 $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
                 $this->form_validation->set_rules('department', 'Department', 'required', array('required'=> 'Please Select Department.'));
+                $this->form_validation->set_rules('branch', 'Branch', 'required', array('required'=> 'Please Select Branch.'));
                 
                 if ($this->form_validation->run() == true) {
                     if (!empty($_FILES['profile_img']['name'])) {
@@ -283,7 +289,8 @@ class Users extends MX_Controller {
                             'user_type_id' => $this->input->post('user_type'),
                             'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
                             'status' => 1,
-                            'department_id' => $this->input->post('department')
+                            'department_id' => $this->input->post('department'),
+                            'branch_id' => $this->input->post('branch')
                         );
                         if (!empty($document_name)) {
                             $usersData['profile_img'] = $document_name;

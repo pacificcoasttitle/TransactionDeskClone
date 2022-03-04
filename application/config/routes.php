@@ -427,6 +427,11 @@ $route['hr/admin/get-memos-status'] = 'admin/hr/memos/getMemosStatus';
 $route['hr/admin/notifications'] = 'admin/hr/notifications/index';
 $route['hr/admin/get-notifications'] = 'admin/hr/notifications/getNotifications';
 $route['hr/admin/mark-as-read'] = 'admin/hr/hrCommon/markAsRead';
+$route['hr/admin/branches'] = 'admin/hr/branches/index';
+$route['hr/admin/add-branch'] = 'admin/hr/branches/addBranch';
+$route['hr/admin/get-branches'] = 'admin/hr/branches/getBranches';
+$route['hr/admin/edit-branch/(:num)'] = 'admin/hr/branches/editBranch/$1';
+$route['hr/admin/delete-branch'] = 'admin/hr/branches/deleteBranch';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

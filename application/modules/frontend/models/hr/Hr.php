@@ -477,7 +477,7 @@ class Hr extends CI_Model
         $userInfo = $this->get_hr_user(array('id' => $userdata['id']));
         $this->db->select('id, email')
             ->from('pct_hr_users');
-        $this->db->where('department_id', $userInfo['department_id']);
+        $this->db->where('branch_id', $userInfo['branch_id']);
         $query = $this->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();
