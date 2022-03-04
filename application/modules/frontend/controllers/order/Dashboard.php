@@ -11,6 +11,7 @@ class Dashboard extends MX_Controller {
         );
         $this->load->library('session');
 		$this->load->library('form_validation');
+		$this->load->library('order/template');
 		$this->load->model('order/orderRecording');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
@@ -35,8 +36,11 @@ class Dashboard extends MX_Controller {
 		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/dashboard');
+		$this->template->addCSS( base_url('assets/vendor/datatables/dataTables.bootstrap4.min.css'));
+        $this->template->addJS( base_url('assets/vendor/datatables/jquery.dataTables.min.js'));
+        $this->template->addJS( base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js'));
+		$this->template->addJS( base_url('assets/frontend/js/order/dashboard.js'));
+		$this->template->show("order", "dashboard", $data);
 	}
 
     function getFiles()
