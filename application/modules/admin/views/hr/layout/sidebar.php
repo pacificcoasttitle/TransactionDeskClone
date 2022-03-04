@@ -84,6 +84,14 @@
 	</li>
 
 	<li
+		class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*branch/',$this->uri->uri_string())) { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'hr/admin/branches'; ?>">
+			<i class="fas fa-fw fa-code-branch"></i>
+			<span>Branches</span>
+		</a>
+	</li>
+
+	<li
 		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo' || $this->uri->uri_string() == 'hr/admin/memos-status') { echo 'active'; } ?>">
 		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#memos_menu" aria-expanded="true" aria-controls="memos_menu">
 			<i class="fas fa-fw fa-sticky-note"></i>

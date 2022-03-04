@@ -120,6 +120,24 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label>Branch<span class="required"> *</span></label>
+                                        <select name="branch" id="branch" class="form-control" required>
+                                            <option value="">Select Branch</option>
+                                            <?php foreach($branches as $branches) {?>
+                                                <option value="<?php echo $branches->id;?>" <?php echo $userInfo['branch_id'] == $branches->id ? 'selected' : '';?>><?php echo $branches->name;?></option>
+                                            <?php } ?>
+                                        </select> 
+                                    </div>
+                                    <?php if(!empty($branch_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $branch_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label>Profile Img<span class="required"></span></label>
                                         <input type="file" class="form-control" name="profile_img" id="profile_img" accept="image/*" class="form-control">
                                     </div>

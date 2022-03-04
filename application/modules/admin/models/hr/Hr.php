@@ -1159,4 +1159,72 @@ class Hr extends CI_Model
             'data' => $trainings_status
         );
     }
+
+    public function getBranches($params)
+    {
+        $this->db->from('pct_hr_branches');
+        $this->db->where('pct_hr_branches.status', 1);
+        $total_records =  $this->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $branches = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('pct_hr_branches.name', $keyword)
+                        ->group_end();
+            }
+            
+            $this->db->from('pct_hr_branches');
+            $this->db->where('pct_hr_branches.status', 1);
+			$filter_total_records =  $this->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('pct_hr_branches.name', $keyword)
+                        ->group_end();
+            }
+
+            $this->db->select('pct_hr_branches.*');
+            $this->db->from('pct_hr_branches');
+            $this->db->where('pct_hr_branches.status', 1);
+            $this->db->order_by('pct_hr_branches.id', 'asc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }	
+
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $branches = $query->result_array();
+	        }
+    	} else {    		
+    		$this->db->from('pct_hr_branches');
+            $this->db->where('pct_hr_branches.status', 1);
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->select('pct_hr_branches.*');
+            $this->db->from('pct_hr_branches');
+            $this->db->where('pct_hr_branches.status', 1);
+            $this->db->order_by('pct_hr_branches.id', 'asc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $branches = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $branches
+        );
+    }
 }
