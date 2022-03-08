@@ -6,6 +6,11 @@ class Common extends MX_Controller {
 
 	private $cpl_js_version = '01';
 	private $proposed_js_version = '01';
+	private $prelim_orders_js_version = '01';
+	private $prelim_order_js_version = '01';
+	private $upload_doc_orders_js_version = '01';
+	private $upload_document_for_order = '01';
+
 	function __construct() 
     {
         parent::__construct();
@@ -32,8 +37,8 @@ class Common extends MX_Controller {
             redirect(base_url().'order');
         }
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/review_files');
+		$this->template->addJS( base_url('assets/frontend/js/order/prelim_orders.js?v=prelim_orders_'.$this->prelim_orders_js_version));
+		$this->template->show("order", "review_files", $data);
     }
 
     public function review_file()
@@ -82,8 +87,8 @@ class Common extends MX_Controller {
 		$data['prelimDocument'] = $prelimDocument;
 		$data['orderDetails'] = $orderDetails;
 		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/view_review_file');
+		$this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_'.$this->prelim_order_js_version));
+		$this->template->show("order", "view_review_file", $data);
 	}
 
 	public function summary()
@@ -620,8 +625,8 @@ class Common extends MX_Controller {
             redirect(base_url().'order');
         }
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/common/upload_doc_orders');
+		$this->template->addJS( base_url('assets/frontend/js/order/upload_doc_orders.js?v=upload_doc_orders_'.$this->upload_doc_orders_js_version));
+		$this->template->show("order/common", "upload_doc_orders", $data);
 	}
 
 	function getOrdersUploadDoc()
@@ -740,8 +745,8 @@ class Common extends MX_Controller {
 				}	
 			}
         }   
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/common/upload_documents');
+		$this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
+		$this->template->show("order/common", "upload_documents", $data);
 	}
 
 	function getOrderDocumentS() 

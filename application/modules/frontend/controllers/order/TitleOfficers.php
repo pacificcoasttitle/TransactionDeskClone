@@ -2,8 +2,9 @@
 
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-class TitleOfficers extends MX_Controller {
-
+class TitleOfficers extends MX_Controller 
+{
+	private $title_officer_dashboard_js_version = '01';
 	function __construct() 
     {
         parent::__construct();
@@ -12,6 +13,7 @@ class TitleOfficers extends MX_Controller {
         );
         $this->load->library('session');
 		$this->load->library('form_validation');
+		$this->load->library('order/template');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
@@ -32,8 +34,8 @@ class TitleOfficers extends MX_Controller {
 		$con = array('id' => $userdata['id']);
 		$user_info = $this->order->getSalesRep($con);
 		$data['user_info'] = $user_info;
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/title_officer/dashboard');
+		$this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
+		$this->template->show("order/title_officer", "dashboard", $data);
 	}
 
 	function get_title_officer_orders()
@@ -87,8 +89,8 @@ class TitleOfficers extends MX_Controller {
 	function notes()
     {
         $data['title'] = 'Notes | Pacific Coast Title Company';
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/title_officer/notes');
+		$this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
+		$this->template->show("order/title_officer", "notes", $data);
     }
 
     function get_notes_orders()
@@ -145,8 +147,9 @@ class TitleOfficers extends MX_Controller {
 		$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
 		$data['orderDetails'] = $orderDetails;
 		$data['notes'] = $this->order->get_order_notes($orderId);
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/title_officer/get_notes');
+       
+		$this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
+		$this->template->show("order/title_officer", "get_notes", $data);
     }
 
     public function create_note()
@@ -213,8 +216,8 @@ class TitleOfficers extends MX_Controller {
     function uploadFileDocument() 
 	{
 		$data['title'] = 'Smart Dashboard | Upload FIle';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/title_officer/attach_files');
+		$this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
+		$this->template->show("order/title_officer", "attach_files", $data);
 	}
 
 	function getFileDocument() 

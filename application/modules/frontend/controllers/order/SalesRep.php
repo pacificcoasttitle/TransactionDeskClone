@@ -4,6 +4,8 @@
 
 class SalesRep extends MX_Controller 
 {
+    private $sales_dashboard_js_version = '01';
+
 	function __construct() 
     {
         parent::__construct();
@@ -12,6 +14,7 @@ class SalesRep extends MX_Controller
         );
         $this->load->library('session');
 		$this->load->library('form_validation');
+        $this->load->library('order/template');
 		$this->load->model('order/orderRecording');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
@@ -115,8 +118,8 @@ class SalesRep extends MX_Controller
             $data['sale_close_order_percetage'] = 0;
             $data['close_order_percetage'] = 0;
         }
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/sales_dashboard');
+        $this->template->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+		$this->template->show("order", "sales_dashboard", $data);
 	}
 
 	function get_sales_orders()
@@ -184,6 +187,7 @@ class SalesRep extends MX_Controller
 		$data['sales_user_id']  = $userId;
 		$data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
 		if ($userdata['is_sales_rep_manager'] == 1) {
+            //echo "hehe";exit;
             $salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
             if (!empty($salesUser['sales_rep_users'])) {
                 $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
@@ -262,8 +266,8 @@ class SalesRep extends MX_Controller
 
 		}
 		$data['salesHistory'] = $salesHistory;
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/sales_production_history', $data);
+        $this->template->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+		$this->template->show("order", "sales_production_history", $data);
 	}
 
     function trends()
@@ -325,8 +329,9 @@ class SalesRep extends MX_Controller
             }
         }	
 		$data['salesHistory'] = $salesHistory;
-        $this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/sales_trends', $data);
+        $this->template->addJS( base_url('assets/plugins/chart/Chart.min.js') );
+        $this->template->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+		$this->template->show("order", "sales_trends", $data);
     }
 
     function summary()
@@ -403,7 +408,7 @@ class SalesRep extends MX_Controller
                 }
             }
         }
-        $this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/sales_summary', $data);
+        $this->template->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+		$this->template->show("order", "sales_summary", $data);
     }
 }

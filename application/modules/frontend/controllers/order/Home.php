@@ -1285,6 +1285,7 @@ class Home extends MX_Controller {
 			$data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
 			$data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
 
+			$this->template->addCSS( base_url('assets/frontend/css/custom.css') );
 			$this->template->addJS('https://maps.googleapis.com/maps/api/js?key='.env('GOOGLE_MAP_KEY').'&libraries=places&sensor=false');
 			$this->template->addJS( base_url('assets/frontend/js/additional-methods.min.js'));
 			$this->template->addJS( base_url('assets/frontend/js/smart-form.js'));
