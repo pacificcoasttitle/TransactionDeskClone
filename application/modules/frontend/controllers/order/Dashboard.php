@@ -4,6 +4,7 @@
 
 class Dashboard extends MX_Controller {
 
+	private $dashboard_js_version = '01';
 	function __construct() {
         parent::__construct();
 		$this->load->helper(
@@ -36,10 +37,7 @@ class Dashboard extends MX_Controller {
 		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addCSS( base_url('assets/vendor/datatables/dataTables.bootstrap4.min.css'));
-        $this->template->addJS( base_url('assets/vendor/datatables/jquery.dataTables.min.js'));
-        $this->template->addJS( base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js'));
-		$this->template->addJS( base_url('assets/frontend/js/order/dashboard.js'));
+		$this->template->addJS( base_url('assets/frontend/js/order/dashboard.js?v=dashboard_'.$this->dashboard_js_version) );
 		$this->template->show("order", "dashboard", $data);
 	}
 

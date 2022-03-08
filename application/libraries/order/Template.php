@@ -34,9 +34,17 @@ class Template
         $this->addJS( base_url('assets/plugins/animate/jquery.shuffleLetters.js') );
         $this->addJS( base_url('assets/plugins/animate/jquery.scrollme.min.js') );
         $this->addJS( base_url('assets/js/custom.js') );
+        $this->addJS( base_url('assets/frontend/js/jquery.form.min.js'));
+        $this->addJS( base_url('assets/frontend/js/jquery.validate.min.js'));
+        $this->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
+        $this->addJS( base_url('assets/vendor/datatables/jquery.dataTables.min.js'));
+        $this->addJS( base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js'));
 
-        $this->addCSS( base_url('assets/frontend/css/custom.css') );
         $this->addCSS( base_url('assets/css/master.css') );
+        $this->addCSS( base_url('assets/frontend/css/smart-forms.css'));
+        $this->addCSS( base_url('assets/frontend/css/font-awesome.min.css'));
+        $this->addCSS( base_url('assets/frontend/css/jquery-ui.css'));
+        $this->addCSS( base_url('assets/vendor/datatables/dataTables.bootstrap4.min.css'));
     }
 
     public function show($folder, $page, $data=null)

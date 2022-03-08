@@ -4,6 +4,8 @@
 
 class Common extends MX_Controller {
 
+	private $cpl_js_version = '01';
+	private $proposed_js_version = '01';
 	function __construct() 
     {
         parent::__construct();
@@ -12,6 +14,7 @@ class Common extends MX_Controller {
         );
         $this->load->library('session');
 		$this->load->library('form_validation');
+		$this->load->library('order/template');
 		$this->load->model('order/orderRecording');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
@@ -883,8 +886,8 @@ class Common extends MX_Controller {
 			$this->session->unset_userdata('success');
 		}
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/cpl');
+		$this->template->addJS( base_url('assets/frontend/js/order/cpl.js?v=cpl_'.$this->cpl_js_version));
+		$this->template->show("order", "cpl", $data);
 	}
 
 	public function get_orders_cpl()
@@ -2014,10 +2017,9 @@ class Common extends MX_Controller {
 		
 		$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
 		$data['proposedBranches'] = $this->order->getProposedBranches();
-
     	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/proposed_insured');
+		$this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->proposed_js_version));
+		$this->template->show("order", "proposed_insured", $data);
     }
 
     function get_proposed_orders()
