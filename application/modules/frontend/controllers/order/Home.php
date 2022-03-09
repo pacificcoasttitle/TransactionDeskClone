@@ -1526,13 +1526,6 @@ class Home extends MX_Controller {
 		}
 	}
 
-	function selectFiles()
-    {
-		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/dashboard');
-    }
-
     function getProductTypes()
     {
     	$this->load->model('order/apiLogs');
