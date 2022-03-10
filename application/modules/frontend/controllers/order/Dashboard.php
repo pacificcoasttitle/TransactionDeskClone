@@ -44,18 +44,10 @@ class Dashboard extends MX_Controller {
 		$this->template->show("order", "dashboard", $data);
 	}
 
-    function getFiles()
-    {
-		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/dashboard');
-    }
-
     function recordings()
     {
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/recordings');
+		$this->template->show("order", "recordings", $data);
 	}
 	
 	function get_recordings()

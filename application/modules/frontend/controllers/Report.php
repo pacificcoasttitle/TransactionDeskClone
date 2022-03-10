@@ -1,8 +1,11 @@
 <?php
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 class Report extends MX_Controller {
+
     private $user;
     private $sorting_fields;
+    private $report_js_version = '01';
+
 	function __construct() 
     {
         parent::__construct();
@@ -12,14 +15,15 @@ class Report extends MX_Controller {
         }
         $this->user = $userdata;
         $this->sorting_fields = [
-                        'carrier_route'=>'Route',
-                        'avg_price' => 'Avg. $',
-                        'total_sales' => '#of Sales',
-                        'NOO_ratio' => 'NOO %',
-                        'avg_yr_owned' => 'Avg. Y.O.',
-                        'total_units' => '# of Units',
-                        'turnover_rate' => 'T.O.%'
-                    ];
+            'carrier_route'=>'Route',
+            'avg_price' => 'Avg. $',
+            'total_sales' => '#of Sales',
+            'NOO_ratio' => 'NOO %',
+            'avg_yr_owned' => 'Avg. Y.O.',
+            'total_units' => '# of Units',
+            'turnover_rate' => 'T.O.%'
+        ];
+        $this->load->library('order/template');             
         $this->load->model('order/home_model');
         $this->load->model('report_model');
         $this->load->library('order/order');
@@ -39,10 +43,9 @@ class Report extends MX_Controller {
             'added_by' => $this->user['id'],
         );
 		$data['reports_data'] = $this->report_model->getData($report_condition);
-        
         $data['sorting_fields']=$this->sorting_fields;
-		$this->load->view('layout/head_dashboard',$data);
-    	$this->load->view('report/list');
+        $this->template->addJS( base_url('assets/frontend/js/report.js?v=pma_'.$this->report_js_version));
+		$this->template->show("report", "list", $data);
     }
 
     function importData()
@@ -284,9 +287,7 @@ class Report extends MX_Controller {
                     'id' => $id,
             );
             $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
-            // var_dump($data['salesRep']);die;
-            $this->load->view('layout/head_dashboard',$data);
-            $this->load->view('report/sales_rep_edit');
+            $this->template->show("report", "sales_rep_edit", $data);
         }
         else {
 
@@ -295,9 +296,7 @@ class Report extends MX_Controller {
                     'status' => 1,
             );
             $data['salesReps'] = $this->report_model->getSalesRepData($condition);
-            
-            $this->load->view('layout/head_dashboard',$data);
-            $this->load->view('report/sales_rep');
+            $this->template->show("report", "sales_rep", $data);
         }
     }
 
