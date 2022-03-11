@@ -527,8 +527,8 @@ class Westcor
 						'is_admin' => 0,
 						'type' =>  'created'
 					);
-					$this->home_model->insert($notificationData, 'pct_order_notifications');
-					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+					$this->CI->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->CI->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
 				} else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
 					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
 					$notificationData = array(
@@ -537,8 +537,8 @@ class Westcor
 						'is_admin' => 0,
 						'type' =>  'created'
 					);
-					$this->home_model->insert($notificationData, 'pct_order_notifications');
-					$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+					$this->CI->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->CI->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
 				} else {
 					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
 					$notificationData = array(
@@ -547,16 +547,16 @@ class Westcor
 						'is_admin' => 0,
 						'type' =>  'created'
 					);
-					$this->home_model->insert($notificationData, 'pct_order_notifications');
-					$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+					$this->CI->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->CI->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
 					$notificationData = array(
 						'sent_user_id' => $orderDetails['customer_id'],
 						'message' => $message,
 						'is_admin' => 0,
 						'type' =>  'created'
 					);
-					$this->home_model->insert($notificationData, 'pct_order_notifications');
-					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+					$this->CI->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->CI->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
 				} 
 			} else {
 				$errors[] = $resultCPL;
