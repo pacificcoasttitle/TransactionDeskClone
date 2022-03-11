@@ -12,7 +12,117 @@ $(document).ready(function() {
     if($(".legal-vesting-no-data").length)
     {
         notifyAdmin('Legal Vesting Document Not Found');
-    }    
+    }   
+    
+    $('#clone-email-address').cloneya({
+        maximum: 5
+    }).on('after_append.cloneya', function (event, toclone, newclone) {
+        var name = $(newclone).find("input[type='email']").attr('id');
+    }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
+        $(clone).slideToggle('slow', function () {
+            $(clone).remove();
+        })
+    });
+
+    getProductTypes();
+
+    $('.search-file-btn').children("input").bind('change', function() {
+        var fileName = '';
+        fileName = $(this).val().split("\\").slice(-1)[0];
+        $(this).parent().parent().children("span").html(fileName);
+    });
+
+    $("#CompanyName").autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: base_url+'getDetailsByName',
+                data: {
+                    term : request.term,
+                    is_master_search: 1           
+                },
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if (data.length > 0) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    } else {
+                        response([{ label: 'No results found.', val: -1}]);
+                    }
+                }
+            });
+        },
+        delay: 0,
+        minLength: 3,
+        select: function( event, ui ) {
+            event.preventDefault();
+            $("#CompanyName").val(ui.item.company);
+            $("#OpenEmail").val(ui.item.email_address).parent().addClass('state-success');
+            $("#Opentelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+            $("#OpenName").val(ui.item.fname).parent().addClass('state-success');
+            $("#OpenLastName").val(ui.item.lname).parent().addClass('state-success');
+            $("#StreetAddress").val(ui.item.address).parent().addClass('state-success');
+            $("#City").val(ui.item.city).parent().addClass('state-success');
+            $("#Zipcode").val(ui.item.zip_code).parent().addClass('state-success');
+            $("#CustomerId").val(ui.item.id);
+            
+
+            var is_escrow = ui.item.is_escrow;
+            var is_mortgage_broker = ui.item.is_primary_mortgage_user;
+
+            if(is_mortgage_broker == 1) {
+                $('#add-lender-section').show();
+                $('#add-escrow-section').show();
+                $('#email-notification-section').show();
+                $('#upload_lender').show();
+                $('#upload_escrow').show();
+            } else {
+                if(is_escrow == 1) {
+                    $('#add-lender-section').show();
+                    $('#add-escrow-section').hide();
+                    $('#escrow-details-fields').hide();
+                    $("#add-escrow-details").prop( "checked", false );
+                    $('#upload_lender').hide();
+                    $('#upload_escrow').show();
+                    $('#email-notification-section').hide();
+                } else {
+                    $('#add-lender-section').hide();
+                    $('#lender-details-fields').hide();
+                    $("#add-lender-details").prop( "checked", false );
+                    $('#add-escrow-section').show();
+                    $('#email-notification-section').show();
+                    $('#upload_lender').show();
+                    $('#upload_escrow').hide();
+                }
+            }
+            
+            getProductTypes();
+            getDeliverables(ui.item.partner_id);
+        },
+        change: function( event, ui ) {
+            if (ui.item == null)
+            {
+                $("#CompanyName").parent().removeClass('state-success').addClass('state-error');
+                $("#OpenEmail").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#Opentelephone").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#OpenName").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#OpenLastName").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#StreetAddress").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#City").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#Zipcode").val('').parent().removeClass('state-success').addClass('state-error');
+                $("#CustomerId").val('');
+            }
+        }
+    });
+
+    $('#email-notification').on('click' , function() {
+        if ( $(this).is(":checked") ) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
 });
 
 
@@ -819,4 +929,77 @@ function notifyAdmin(subject)
            },
         });
     }    
+}
+
+function getProductTypes()
+{
+    var email = $('#OpenEmail').val();
+    var customerId = $('#CustomerId').val();
+    if(email)
+    {
+        $.ajax({
+            url: base_url+'get-product-types',
+            type: "POST",//type of posting the data
+            data: {
+                email: email,
+                customerId: customerId
+            },
+            success: function (data) {
+                var res = jQuery.parseJSON(data);
+                
+                if(res)
+                {
+                    var output = [];
+                    output.push('<option value="">Select Product</option>')
+                    $.each(res, function(key, value) {
+                        output.push('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                    $('#ProductTypeID').html(output.join(''));
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                
+            },
+        });
+    }
+}
+
+function getDeliverables(partner_id)
+{
+    $.ajax({
+        url:base_url+"admin/order/home/getDeliverables",
+        type: "POST",
+        data: {
+            partner_id: partner_id,
+        },
+        async: true,
+        success: function(result) {
+            var res = jQuery.parseJSON(result);
+            var preDeliverables = $("input[name^='AdditionalEmail']").length;
+            for (j=1; j< preDeliverables; j++) {
+                $("#cloner"+j)[0].click();
+            }
+            $('#AdditionalEmail').val('');
+
+            if (res.deliverables.length > 0) {
+                
+                for (i = 0; i < res.deliverables.length; i++) {
+                    if(i == 0) {
+                        $('#AdditionalEmail').val(res.deliverables[i]);
+                    } else {
+                        $("#clonea")[0].click();
+                    } 
+                }
+                for (i = 0; i < res.deliverables.length; i++) {
+                    if(i != 0) {
+                        var emailVal = res.deliverables[i];
+                        $('#AdditionalEmail'+i).val(emailVal);
+                    } 
+                }
+            } 
+        },
+        error:function(){
+            
+        },
+    });
 }

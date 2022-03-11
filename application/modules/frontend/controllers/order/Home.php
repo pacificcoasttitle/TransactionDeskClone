@@ -4,10 +4,14 @@
 
 class Home extends MX_Controller {
 
+	private $order_js_version = '01';
+	private $custom_js_version = '01';
+
     function __construct() {
         parent::__construct();
         $this->load->helper(array('file', 'url'));
         $this->load->library('session');
+		$this->load->library('order/template');
 		$this->load->model('order/home_model');
 		$this->load->model('order/agent_model');
 		$this->load->library('form_validation');
@@ -918,6 +922,18 @@ class Home extends MX_Controller {
 
 							$orderId = $this->home_model->insert($orderData,'order_details');
 
+							if ($userdata['is_master'] == 1) {
+								$message = 'Order number #'.$orderNumber.' has assigned to you.';
+								$notificationData = array(
+									'sent_user_id' => $customer_id,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'assigned'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'assigned', $customer_id, 0);
+							}
+
 							/* Escrow Details */					
 							if(isset($escrowId) && !empty($escrowId)) {
 				        		$name = explode(' ', $escrowName);
@@ -935,6 +951,15 @@ class Home extends MX_Controller {
 									'id' => $escrowId
 								);
 								$this->home_model->update($escrowData, $condition);
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $escrowId,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $escrowId, 0);
 							}
 							/* Escrow Details */
 
@@ -954,12 +979,43 @@ class Home extends MX_Controller {
 								$condition = array(
 									'id' => $lenderId
 								);
-								
 								$lenderId = $this->home_model->update($lenderData, $condition);
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $lenderId,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $lenderId, 0);
 							}
 							/*Lender Details */
 
-							
+							if (!empty($SalesRep)) {
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $SalesRep,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $SalesRep, 0);
+							}
+
+							if (!empty($TitleOfficer)) {
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $TitleOfficer,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $TitleOfficer, 0);
+							}
+
 							if($this->session->has_userdata('tp_api_id_'.$random_number))
 							{
 								$session_id = 'tp_api_id_'.$random_number;
@@ -1281,13 +1337,17 @@ class Home extends MX_Controller {
 			$data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
 			$data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
 
-	        if($is_master)
-	        {
-	        	$this->load->view('layout/head',$data);
-	        	$this->load->view('order/master_order');
-	        }
-	        else 
-	        {
+			$this->template->addCSS('http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css');
+			$this->template->addJS('https://maps.googleapis.com/maps/api/js?key='.env('GOOGLE_MAP_KEY').'&libraries=places&sensor=false');
+			$this->template->addJS( base_url('assets/frontend/js/additional-methods.min.js'));
+			$this->template->addJS( base_url('assets/frontend/js/smart-form.js'));
+			$this->template->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
+			$this->template->addJS( base_url('assets/frontend/js/custom.js?v=custom_'.$this->custom_js_version));
+			$this->template->addJS( base_url('assets/frontend/js/order.js?v=order_'.$this->order_js_version));
+			
+	        if ($is_master) {
+				$this->template->show("order", "master_order", $data);
+	        } else {
 	        	$data['customer_data'] = $customer_data;
 				$con = array(
 					'where' => array(
@@ -1296,8 +1356,7 @@ class Home extends MX_Controller {
 				);
 				$companyData = $this->home_model->get_company_rows($con);
 				$data['deliverables'] = !empty($companyData[0]['deliverables']) ? explode(',', $companyData[0]['deliverables']) : array();
-	        	$this->load->view('layout/head',$data);
-	        	$this->load->view('order/home');
+				$this->template->show("order", "home", $data);
 	        }	       	
     	}
     }
@@ -1518,13 +1577,6 @@ class Home extends MX_Controller {
 			}
 		}
 	}
-
-	function selectFiles()
-    {
-		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/dashboard');
-    }
 
     function getProductTypes()
     {

@@ -58,70 +58,62 @@
 	    background: #ffffff;
 	}
 </style>
-<body>
-	<?php
-        $this->load->view('layout/header_dashboard');
-    ?>
-    <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="">
-						<h2 class="ui-title-block ui-title-block_light">Sales Representatives</h2>
-						<div class="ui-decor-1a bg-accent"></div>
-						
-					</div>
-				</div>
-			</div>
-			<div class="">
-				<div class="row">
-					<div class="row">
-						<div class="col-md-12">
-							<!-- <h2>List</h2> -->
-							<ul class="u-list">
-					          	<?php
-					          	foreach($salesReps as $key=>$salesRep):
-					          	?>
-					          	<li>
-					          		<div class="u-pic">
-				          			<?php
-				          			$image_url = trim(env('AWS_PATH').$salesRep['sales_rep_report_image']);
-				          			if (!empty($salesRep['sales_rep_report_image'])):
-				          			?>
-						              <img src="<?php echo $image_url;?>" alt="main-logo" class="retina">
-						              <?php else : ?>
-						              	<div class="no-report-image"><span><?php echo strtoupper(substr(trim($salesRep['first_name']) , 0,1).substr(trim($salesRep['last_name']) , 0,1)) ?></span></div>
-						              <?php endif; ?>
-						            </div>
-						            <div class="u-info">
-						            	<div class="u-name"><?php echo $salesRep['first_name'].' '.$salesRep['last_name'] ?></div>
-						              <div><?php echo $salesRep['email_address'];?></div>
-						              <div>
-						              	<?php echo $salesRep['telephone_no'];?>
-						              </div>
-						            </div>
-						            <div class="u-count">
-						            	<div><a href="<?php echo base_url('reports/sales_rep').'/'.$salesRep['id'] ?>">Edit</a></div>
-						            </div>
-					          	</li>
-					          	<?php
-					          	
-					          	endforeach;
-						        ?>
-					        </ul>
-						        
-						</div>
 
-					</div>
+<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="">
+					<h2 class="ui-title-block ui-title-block_light">Sales Representatives</h2>
+					<div class="ui-decor-1a bg-accent"></div>
+					
 				</div>
 			</div>
 		</div>
-	</section>
+		<div class="">
+			<div class="row">
+				<div class="row">
+					<div class="col-md-12">
+						<!-- <h2>List</h2> -->
+						<ul class="u-list">
+							<?php
+							foreach($salesReps as $key=>$salesRep):
+							?>
+							<li>
+								<div class="u-pic">
+								<?php
+								$image_url = trim(env('AWS_PATH').$salesRep['sales_rep_report_image']);
+								if (!empty($salesRep['sales_rep_report_image'])):
+								?>
+									<img src="<?php echo $image_url;?>" alt="main-logo" class="retina">
+									<?php else : ?>
+									<div class="no-report-image"><span><?php echo strtoupper(substr(trim($salesRep['first_name']) , 0,1).substr(trim($salesRep['last_name']) , 0,1)) ?></span></div>
+									<?php endif; ?>
+								</div>
+								<div class="u-info">
+									<div class="u-name"><?php echo $salesRep['first_name'].' '.$salesRep['last_name'] ?></div>
+									<div><?php echo $salesRep['email_address'];?></div>
+									<div>
+									<?php echo $salesRep['telephone_no'];?>
+									</div>
+								</div>
+								<div class="u-count">
+									<div><a href="<?php echo base_url('reports/sales_rep').'/'.$salesRep['id'] ?>">Edit</a></div>
+								</div>
+							</li>
+							<?php
+							
+							endforeach;
+							?>
+						</ul>
+							
+					</div>
 
-	<?php
-        $this->load->view('layout/footer');
-    ?>
-    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
-</body>
-</html>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+	
 

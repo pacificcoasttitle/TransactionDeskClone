@@ -4,6 +4,7 @@
 
 class PayOff extends MX_Controller 
 {
+    private $payoff_js_version = '01';
 	function __construct() 
     {
         parent::__construct();
@@ -12,6 +13,7 @@ class PayOff extends MX_Controller
         );
         $this->load->library('session');
 		$this->load->library('form_validation');
+        $this->load->library('order/template');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
 		$this->load->model('order/home_model');
@@ -38,8 +40,8 @@ class PayOff extends MX_Controller
 		$data['name'] = $name;
 		$data['user_email'] = $userdata['email'];
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/pay_off/pay_off_dashboard');
+        $this->template->addJS( base_url('assets/frontend/js/order/payoff.js?v=payoff_'.$this->payoff_js_version));
+		$this->template->show("order/pay_off", "pay_off_dashboard", $data);
 	}
 
 	function get_pay_off_orders()

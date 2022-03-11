@@ -4,6 +4,7 @@
 class Label extends MX_Controller 
 {
     private $user;
+    private $label_js_version = '01';
 	function __construct() 
     {
         parent::__construct();
@@ -12,6 +13,7 @@ class Label extends MX_Controller
             redirect('dashboard');
         }
         $this->user = $userdata; 
+        $this->load->library('order/template');
         $this->load->model('order/home_model');
         $this->load->model('label_model');
         $this->load->library('order/order');
@@ -30,8 +32,8 @@ class Label extends MX_Controller
             'added_by' => $this->user['id'],
         );
 		$data['labels_data'] = $this->label_model->getData($lableCondition);
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('label/list');
+        $this->template->addJS( base_url('assets/frontend/js/label.js?v=lable_'.$this->label_js_version));
+		$this->template->show("label", "list", $data);
     }
 
     function importData()

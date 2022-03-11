@@ -4,6 +4,10 @@
 
 class Dashboard extends MX_Controller {
 
+	private $dashboard_js_version = '01';
+	private $fees_js_version = '01';
+	private $order_fee_js_version = '01';
+
 	function __construct() {
         parent::__construct();
 		$this->load->helper(
@@ -11,6 +15,7 @@ class Dashboard extends MX_Controller {
         );
         $this->load->library('session');
 		$this->load->library('form_validation');
+		$this->load->library('order/template');
 		$this->load->model('order/orderRecording');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
@@ -35,22 +40,14 @@ class Dashboard extends MX_Controller {
 		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/dashboard');
+		$this->template->addJS( base_url('assets/frontend/js/order/dashboard.js?v=dashboard_'.$this->dashboard_js_version) );
+		$this->template->show("order", "dashboard", $data);
 	}
-
-    function getFiles()
-    {
-		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/dashboard');
-    }
 
     function recordings()
     {
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/recordings');
+		$this->template->show("order", "recordings", $data);
 	}
 	
 	function get_recordings()
@@ -175,8 +172,8 @@ class Dashboard extends MX_Controller {
     function fees()
     {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/fees');
+		$this->template->addJS( base_url('assets/frontend/js/order/fees.js?v=fees_'.$this->fees_js_version) );
+		$this->template->show("order", "fees", $data);
     }
 
     function get_transaction_orders()
@@ -362,9 +359,10 @@ class Dashboard extends MX_Controller {
 
 	        /* end get fees details from resware */
         }        
-
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/get_fees');
+		$this->template->addCSS(base_url('assets/front/css/style.css'));
+		$this->template->addJS('https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js');
+		$this->template->addJS( base_url('assets/frontend/js/order/order_fee.js?v=order_fee_'.$this->order_fee_js_version) );
+		$this->template->show("order", "get_fees", $data);
     }
 
     function get_fee_estimate_pdf()

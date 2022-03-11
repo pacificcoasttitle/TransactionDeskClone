@@ -1010,6 +1010,35 @@ class ReviewPrelim extends MX_Controller {
 					$prelim_message_body = $this->load->view('emails/prelim.php',$emailContent,TRUE);
 					$message = $prelim_message_body; 
 					$subject = 'The Prelim Hot Sheet';
+
+					$message = 'Prelim is ready for order number #'.$orderDetails['file_number'];
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['title_officer'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['customer_id'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['sales_representative'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+
 					
 					if ($_SERVER['SERVER_NAME'] == 'app.pacificcoasttitle.com') {
 						/*if(!empty($orderUser['email_address'])) {
