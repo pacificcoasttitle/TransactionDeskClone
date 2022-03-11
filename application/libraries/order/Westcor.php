@@ -12,6 +12,7 @@ class Westcor
 		$this->CI->load->database();
         $this->CI->load->library('email');
         $this->CI->load->library('session');
+		$this->CI->load->model('order/home_model');
         self::$CI = $this->CI;
     }
 
