@@ -113,7 +113,7 @@
 	</noscript>
 
 	<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-	<?php $userdata = $this->session->userdata('hr_user');
+	<?php $userdata = $this->session->userdata('user');
         if(!empty($userdata)) { ?>
             <script>
                 var notificationsWrapper = $('.user-notifications');
