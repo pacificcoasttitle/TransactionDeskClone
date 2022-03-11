@@ -98,7 +98,7 @@
 													<li class="review_li"><a href="javascript:void(0);" onclick="summary();">Summary</a></li><br>
 													<?php  if(!empty($prelimDocument)) { ?>
 														<li class="review_li">
-															<a onclick="load_doc(<?php echo $prelimDocument['is_sync'];?>, <?php echo $prelimDocument['api_document_id'];?>, <?php echo $prelimDocument['order_id'];?>, <?php echo $prelimDocument['order_id'];?>, <?php echo $prelimDocument['id'];?>);" href="javascript:void(0);">
+															<a onclick="load_doc(<?php echo $prelimDocument['is_sync'];?>, <?php echo $prelimDocument['api_document_id'];?>, <?php echo $prelimDocument['order_id'];?>, <?php echo $prelimDocument['id'];?>);" href="javascript:void(0);">
 																Prelim
 															</a>
 														</li>
