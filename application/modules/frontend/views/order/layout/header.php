@@ -38,7 +38,7 @@
                                                     } else if ($notification['type'] == 'denied') {
                                                         $alertClass = 'bg-danger';
                                                         $iconClass = 'fa-ban';
-                                                    } else if ($notification['type'] == 'accepted' || $notification['type'] == 'assigned' || $notification['type'] == 'submitted') {
+                                                    } else if ($notification['type'] == 'added' || $notification['type'] == 'assigned' || $notification['type'] == 'created') {
                                                         $alertClass = 'bg-warning';
                                                         $iconClass = 'fa-exclamation-triangle';
                                                     }

@@ -922,6 +922,18 @@ class Home extends MX_Controller {
 
 							$orderId = $this->home_model->insert($orderData,'order_details');
 
+							if ($userdata['is_master'] == 1) {
+								$message = 'Order number #'.$orderNumber.' has assigned to you.';
+								$notificationData = array(
+									'sent_user_id' => $customer_id,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'assigned'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'assigned', $customer_id, 0);
+							}
+
 							/* Escrow Details */					
 							if(isset($escrowId) && !empty($escrowId)) {
 				        		$name = explode(' ', $escrowName);
@@ -939,6 +951,15 @@ class Home extends MX_Controller {
 									'id' => $escrowId
 								);
 								$this->home_model->update($escrowData, $condition);
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $escrowId,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $escrowId, 0);
 							}
 							/* Escrow Details */
 
@@ -958,12 +979,43 @@ class Home extends MX_Controller {
 								$condition = array(
 									'id' => $lenderId
 								);
-								
 								$lenderId = $this->home_model->update($lenderData, $condition);
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $lenderId,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $lenderId, 0);
 							}
 							/*Lender Details */
 
-							
+							if (!empty($SalesRep)) {
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $SalesRep,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $SalesRep, 0);
+							}
+
+							if (!empty($TitleOfficer)) {
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $TitleOfficer,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $TitleOfficer, 0);
+							}
+
 							if($this->session->has_userdata('tp_api_id_'.$random_number))
 							{
 								$session_id = 'tp_api_id_'.$random_number;

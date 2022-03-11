@@ -1871,4 +1871,34 @@ class Order
             return array();
         }
     }
+    
+    public function sendNotification($message, $type, $sent_to_user, $is_sent_admin = 0)
+    {
+        if ($is_sent_admin == 1) {
+            $channel = 'admin-channel';
+            $event = 'admin-event';
+        }
+
+        if(!empty($sent_to_user) && $is_sent_admin == 0) {
+            $channel = 'user-channel-'.$sent_to_user;
+            $event = 'user-event-'.$sent_to_user;
+        }
+
+        $options = array(
+            'cluster' => env("PUSHER_CLUSTER"),
+            'useTLS' => true
+        );
+
+        $pusher = new Pusher\Pusher(
+            env("PUSHER_KEY"),
+            env("PUSHER_SECRET"),
+            env("PUSHER_APP_ID"),
+            $options
+        );
+
+        $data['message'] = $message ;
+        $data['date'] = date("F d, Y");
+        $data['type'] = $type;
+        $pusher->trigger($channel, $event, $data);
+    }
 }
