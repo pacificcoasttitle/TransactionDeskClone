@@ -131,9 +131,10 @@
                     cluster: '<?php echo env("PUSHER_CLUSTER"); ?>'
                 });
 
-                var channel = pusher.subscribe('user-channel-' + '<?php echo $userdata['id '];?>');
-                channel.bind('user-event-' + '<?php echo $userdata['id '];?>',
+                var channel = pusher.subscribe('user-channel-' + '<?php echo $userdata['id'];?>');
+                channel.bind('user-event-' + '<?php echo $userdata['id'];?>',
                     function (data) {
+                        console.log(data);
                         var notification = data;
                         var alertClass = '';
                         var iconClass = '';
@@ -144,7 +145,7 @@
                             alertClass = 'bg-danger';
                             iconClass = 'fa-ban';
                         } else if (notification.type == 'accepted' || notification.type == 'assigned' || notification.type ==
-                            'submitted') {
+                            'created') {
                             alertClass = 'bg-warning';
                             iconClass = 'fa-exclamation-triangle';
                         }
@@ -180,7 +181,7 @@
                         if (notificationsCount > 0) {
                             $.ajax({
                                 type: "POST",
-                                url: base_url + "hr/mark-as-read",
+                                url: base_url + "mark-as-read",
                                 async: false,
                                 success: function (response) {
                                     notificationClickFlag = 1;

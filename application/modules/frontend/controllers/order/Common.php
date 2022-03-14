@@ -2315,4 +2315,21 @@ class Common extends MX_Controller {
 		$json_data['data'] = $data;
 		echo json_encode($json_data);
 	}
+
+	public function markAsRead()
+    {
+        $userdata = $this->session->userdata('user');
+        $condition = array(
+            'sent_user_id' => $userdata['id']
+        );
+        $data = array(
+            'is_read' => 1
+        );
+		$this->home_model->update($data, $condition, 'pct_order_notifications');
+        $response = array(
+            'success' => 'true',
+            'message'  => 'Notifcation marked as read.',
+        );
+        echo json_encode($response);
+    }
 }

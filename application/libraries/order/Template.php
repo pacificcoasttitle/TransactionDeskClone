@@ -40,6 +40,9 @@ class Template
         $this->addJS( base_url('assets/vendor/datatables/jquery.dataTables.min.js'));
         $this->addJS( base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js'));
 
+        if ($this->CI->uri->segment(1) == 'order' && empty($this->CI->uri->segment(2))) {
+            $this->addCSS( base_url('assets/frontend/css/custom.css'));
+        }
         $this->addCSS( base_url('assets/css/master.css') );
         $this->addCSS( base_url('assets/frontend/css/smart-forms.css'));
         $this->addCSS( base_url('assets/frontend/css/font-awesome.min.css'));
@@ -96,7 +99,7 @@ class Template
 
     public function getNotifications($limit) 
     {
-        $userdata = $this->CI->session->userdata('hr_user');
+        $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('*');
         $this->CI->db->where('sent_user_id', $userdata['id']);
         $this->CI->db->where('is_read', 0);
@@ -112,7 +115,7 @@ class Template
 
     public function getUnreadNotificationCount() 
     {
-        $userdata = $this->CI->session->userdata('hr_user');
+        $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('count(*) as total_unread_count');
         $this->CI->db->where('sent_user_id', $userdata['id']);
         $this->CI->db->where('is_read', 0);
