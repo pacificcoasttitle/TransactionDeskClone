@@ -12,7 +12,7 @@
                     
                     <?php if(!isset($mail_dashboard)) {?>
                         <div class="header-navibox-2">
-                            <ul class="yamm nav navbar-nav">
+                            <ul class="nav navbar-nav">
                                 <li class="user-notifications">
                                     <a style="top: -5px;" class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-bell fa-fw" style="font-size:26px;"></i>

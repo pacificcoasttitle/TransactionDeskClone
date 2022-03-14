@@ -218,6 +218,7 @@ $route['create-payoff/:num'] = 'frontend/order/payOff/createPayoff';
 $route['generate-payoff'] = 'frontend/order/payOff/generatePayoff';
 $route['trends/:any'] = 'frontend/order/salesRep/trends';
 $route['sales-summary/:any'] = 'frontend/order/salesRep/summary';
+$route['mark-as-read'] = 'frontend/order/common/markAsRead';
 
 
 /* Route for PCT-Order backend*/
