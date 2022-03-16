@@ -748,7 +748,7 @@ class ReviewPrelim extends MX_Controller {
 														}
 														$document_name = date('YmdHis')."_".$linkText;
 														$documentId = explode('=', $linkHref);
-														if (!in_array($documentId[1], $apiDocumentIds))  {
+														if (!in_array($documentId[1], $linkDocArray))  {
 															file_put_contents(FCPATH.'/uploads/documents/'.$document_name, file_get_contents($linkHref));
 															$fileSize = filesize(FCPATH.'/uploads/documents/'.$document_name);
 															$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
