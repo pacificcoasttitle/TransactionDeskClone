@@ -1041,7 +1041,7 @@ class ReviewPrelim extends MX_Controller {
 						'type' =>  'created'
 					);
 					$this->home_model->insert($notificationData, 'pct_order_notifications');
-					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+					$this->order->sendNotification($message, 'created', $orderDetails['sales_representative'], 0);
 
 					
 					if ($_SERVER['SERVER_NAME'] == 'app.pacificcoasttitle.com') {
