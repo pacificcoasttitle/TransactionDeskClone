@@ -44,9 +44,9 @@ class Template
             $this->addCSS( base_url('assets/frontend/css/custom.css'));
         }
         $this->addCSS( base_url('assets/css/master.css') );
-        $this->addCSS( base_url('assets/frontend/css/smart-forms.css?v=smart_01'));
         $this->addCSS( base_url('assets/frontend/css/font-awesome.min.css'));
         $this->addCSS( base_url('assets/frontend/css/jquery-ui.css'));
+        $this->addCSS( base_url('assets/frontend/css/smart-forms.css?v=smart_01'));
         $this->addCSS( base_url('assets/vendor/datatables/dataTables.bootstrap4.min.css'));
     }
 
