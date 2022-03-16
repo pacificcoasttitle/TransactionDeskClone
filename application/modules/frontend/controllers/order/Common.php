@@ -162,7 +162,8 @@ class Common extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$resware_document_id = $this->input->post('resware_document_id');
 		$order_id = $this->input->post('order_id');
-		$documentDetail = $this->order->get_document_detail($resware_document_id, $order_id);
+		$document_id = $this->input->post('document_id');
+		$documentDetail = $this->order->get_document_detail($resware_document_id, $order_id, $document_id);
 		$is_sync = $this->input->post('is_sync');
 
 		if ($userdata['is_title_officer'] == 1 || $userdata['is_sales_rep'] == 1 || $userdata['is_master'] == 1) {
