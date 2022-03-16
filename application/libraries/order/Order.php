@@ -607,6 +607,7 @@ class Order
                 order_details.file_id, 
                 order_details.id as order_id, 
                 pct_order_documents.document_name, 
+                pct_order_documents.id, 
                 pct_order_documents.original_document_name, 
                 pct_order_documents.is_sync, 
                 pct_order_documents.is_prelim_document, 
@@ -786,13 +787,14 @@ class Order
         }         
     }
 
-    public function get_document_detail($api_document_id, $order_id)
+    public function get_document_detail($api_document_id, $order_id, $document_id)
     {
         $this->CI->db->select('*')
             ->from('pct_order_documents');
         
         $this->CI->db->where('api_document_id', $api_document_id);
         $this->CI->db->where('order_id', $order_id);
+        $this->CI->db->where('id', $document_id);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->row_array();
@@ -1033,7 +1035,7 @@ class Order
         $this->CI->db->select('order_details.file_number, 
                 order_details.file_id, 
                 order_details.id as order_id, 
-                pct_order_documents.document_name, 
+                pct_order_documents.id, 
                 pct_order_documents.document_name, 
                 pct_order_documents.original_document_name, 
                 pct_order_documents.is_sync, 

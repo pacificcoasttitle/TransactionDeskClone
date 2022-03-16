@@ -651,6 +651,7 @@ class ReviewPrelim extends MX_Controller {
 
 					if (!empty($documents)) {
 						if (!empty($resDocuments['Documents'])) {
+							$linkDocArray = array();
 							foreach($resDocuments['Documents'] as $resDocument) {
 								$ext = end(explode('.', $resDocument['DocumentName']));
 								if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
@@ -721,6 +722,7 @@ class ReviewPrelim extends MX_Controller {
 											$pdf = new \Gufy\PdfToHtml\Pdf($source_pdf);
 											$pages = array(4, 5, 6, 7, 8, 9);
 											$linkedDocCount = 0;
+
 											foreach ($pages as $page) {
 												$html = $pdf->html($page);
 												$total_pages = $pdf->getPages();
@@ -775,6 +777,7 @@ class ReviewPrelim extends MX_Controller {
 															$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
 															$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
 															$apiDocumentIds[] = $documentId[1];
+															$linkDocArray[] = $documentId[1];
 														} 
 														$linkedDocCount++;
 													} else{
@@ -826,6 +829,7 @@ class ReviewPrelim extends MX_Controller {
 						}
 					} else {
 						if (!empty($resDocuments['Documents'])) {
+							$linkDocArray = array();
 							foreach($resDocuments['Documents'] as $resDocument) {
 								if (!in_array($resDocument['DocumentID'], $apiDocumentIds)) {
 									$time = round((str_replace("-0000)/", "", str_replace("/Date(", "", $resDocument['CreateDate'])))/1000);
@@ -907,7 +911,6 @@ class ReviewPrelim extends MX_Controller {
 												} else {
 													$links = $htmlDom->getElementsByTagName('a');
 													$extractedLinks = array();
-
 													foreach($links as $link) {
 														$linkText = $link->nodeValue;
 														$linkHref = $link->getAttribute('href');
@@ -927,7 +930,7 @@ class ReviewPrelim extends MX_Controller {
 															}
 															$document_name = date('YmdHis')."_".$linkText;
 															$documentId = explode('=', $linkHref);
-															if (!in_array($documentId[1], $apiDocumentIds))  {
+															if (!in_array($documentId[1], $linkDocArray))  {
 																file_put_contents(FCPATH.'/uploads/documents/'.$document_name, file_get_contents($linkHref));
 																$fileSize = filesize(FCPATH.'/uploads/documents/'.$document_name);
 																$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
@@ -954,6 +957,7 @@ class ReviewPrelim extends MX_Controller {
 																$linked_doc[$linkedDocCount]['is_prelim_document'] = 0;
 																$linked_doc[$linkedDocCount]['order_id'] = $orderDetails['order_id'];
 																$apiDocumentIds[] = $documentId[1];
+																$linkDocArray[] = $documentId[1];
 															} 
 															$linkedDocCount++;
 														} else{
