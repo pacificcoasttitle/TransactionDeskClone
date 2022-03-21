@@ -353,6 +353,7 @@ $route['hr/trainings'] = 'frontend/hr/trainings/index';
 $route['hr/get-trainings'] = 'frontend/hr/trainings/getTrainings';
 $route['hr/view-trainings-docs/:num'] = 'frontend/hr/trainings/viewTrainingsDocs';
 $route['hr/complete-training/(:num)'] = 'frontend/hr/hrCommon/completeTraining/$1';
+$route['hr/record-time'] = 'frontend/hr/hrCommon/recordTime';
 $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 

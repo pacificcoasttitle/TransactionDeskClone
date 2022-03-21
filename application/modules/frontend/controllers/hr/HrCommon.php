@@ -144,4 +144,17 @@ class HrCommon extends MX_Controller
         $this->session->set_userdata($data);
         redirect(base_url().'hr/trainings');
     }
+
+	function recordTime()
+	{
+		$userdata = $this->session->userdata('hr_user');
+		$response = array('status'=>false);
+		if(!empty($userdata['id'])) {
+			$clock_event = $this->input->post('clock_event');
+			$this->load->model('hr/pct_hr_employee_time_tracking_model');
+			$result = $this->pct_hr_employee_time_tracking_model->track_time($userdata['id'],$clock_event);
+			$response['status'] = $result;
+		}
+		echo json_encode($response);
+	}
 }
