@@ -12,11 +12,14 @@ th {
             <div class="row">
                 <div class="col-xs-12">
                     <div class="typography-section__inner">
-                        <h2 class="ui-title-block ui-title-block_light">Incident Report,</h2>
-                        <div class="ui-decor-1a bg-accent"></div>
-                        <h3 class="ui-title-block_light">Use the form below to file a new incident.</h3>
+						<div class="show-hide-form-div hide">
+							<h2 class="ui-title-block ui-title-block_light">Incident Report,</h2>
+							<div class="ui-decor-1a bg-accent"></div>
+							<h3 class="ui-title-block_light">Use the form below to file a new incident.</h3>
+						</div>
+						<button id="show-hide-form-btn" type="button" class="btn btn-danger show-hide-form-div">Add Incident</button>
                     </div>
-                    <div class="typography-sectiona">
+                    <div class="typography-sectiona show-hide-form-div hide">
                         <div class="col-md-12">
                             <div class="smart-wrap">
                                 <div class="smart-forms smart-container wrap-0">
