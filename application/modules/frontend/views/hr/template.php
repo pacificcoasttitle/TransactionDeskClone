@@ -124,7 +124,7 @@
                         notificationsWrapper.find('.badge-counter').addClass('d-none').text(0); 
                     }  
                 }); 
-
+				<?php if(isset($time_tracking) && isset($clock_event)) : ?>
 				var start_time = <?php echo $time_tracking ?>;
 				var storeTimeInterval = 0;
 				<?php if($clock_event == 'OUT') : ?>
@@ -175,6 +175,8 @@
 							}                                        
 						});
 				});
+
+				<?php endif; ?>
 				
             </script>
         <?php }
