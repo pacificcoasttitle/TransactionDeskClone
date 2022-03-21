@@ -12,14 +12,17 @@ th {
             <div class="row">
                 <div class="col-xs-12">
                     <div class="typography-section__inner">
+						<div class="show-hide-form-div hide">
                         <h2 class="ui-title-block ui-title-block_light">Vacation Request Form,</h2>
-                        <div class="ui-decor-1a bg-accent"></div>
-                        <h3 class="ui-title-block_light">Use the form below to report your time exception.</h3><br>
-                        <h4 class="ui-title-block_light"><strong>Employee Name:</strong> <?php echo $name;?>.</h4>
-                        <h4 class="ui-title-block_light"><strong>Today's Date:</strong> <?php echo date('m/d/Y');?></h4>
-                        <h4 class="ui-title-block_light"><strong>Manager Name:</strong> </h4>
+							<div class="ui-decor-1a bg-accent"></div>
+							<h3 class="ui-title-block_light">Use the form below to report your time exception.</h3><br>
+							<h4 class="ui-title-block_light"><strong>Employee Name:</strong> <?php echo $name;?>.</h4>
+							<h4 class="ui-title-block_light"><strong>Today's Date:</strong> <?php echo date('m/d/Y');?></h4>
+							<h4 class="ui-title-block_light"><strong>Manager Name:</strong> </h4>
+						</div>
+						<button id="show-hide-form-btn" type="button" class="btn btn-danger show-hide-form-div">Add Request</button>
                     </div>
-                    <div class="typography-sectionabcde">
+                    <div class="typography-sectionabcde show-hide-form-div hide">
                         <div class="col-md-12">
                             <div class="smart-wrap">
                                 <div class="smart-forms smart-container wrap-4">
