@@ -30,7 +30,7 @@ class Template
         $this->addCSS( base_url('assets/css/master.css') );
         $this->addCSS( base_url('assets/frontend/hr/css/theme-form.css') );
         $this->addCSS( base_url('assets/vendor/datatables/dataTables.bootstrap4.css') );
-        $this->addCSS( base_url('assets/frontend/hr/css/smart-forms.css') );
+        $this->addCSS( base_url('assets/frontend/hr/css/smart-forms.css?v=0.1') );
         $this->addCSS( base_url('assets/frontend/hr/css/smart-addons.css') );
     }
 

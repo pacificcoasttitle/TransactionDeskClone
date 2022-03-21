@@ -124,6 +124,58 @@
                         notificationsWrapper.find('.badge-counter').addClass('d-none').text(0); 
                     }  
                 }); 
+
+				var start_time = <?php echo $time_tracking ?>;
+				var storeTimeInterval = 0;
+				<?php if($clock_event == 'OUT') : ?>
+					storeTimeInterval = setInterval(myTimer, 1000);
+				<?php else : ?>
+					secondsToHms(start_time);
+				<?php endif; ?>
+				function myTimer() {
+					
+					start_time++;
+					secondsToHms(start_time)
+				}
+				function secondsToHms(d) {
+					d = Number(d);
+					var h = Math.floor(d / 3600);
+					var m = Math.floor(d % 3600 / 60);
+					var s = Math.floor(d % 3600 % 60);
+
+					var hDisplay = h > 0 ? h + (h == 1 ) : "00";
+					var mDisplay = m > 0 ? m + (m == 1 ) : "00";
+					var sDisplay = s > 0 ? s + (s == 1 ) : "00";
+					res = String(hDisplay).padStart(2, '0') +' : '+ String(mDisplay).padStart(2, '0') +' : '+ String(sDisplay).padStart(2, '0'); 
+					$("#timeClock").html(res);
+				}
+
+				$(".track-time-btn").click(function(e) {
+					$(this).attr("disabled", true);
+					if($(this).hasClass('time-start')) {
+						var data = {clock_event : 'IN'};
+						storeTimeInterval = setInterval(myTimer, 1000);
+					}
+					else {
+						if(storeTimeInterval) {
+							clearInterval(storeTimeInterval);
+						}
+						var data = {clock_event : 'OUT'};
+					}
+					$.ajax({
+							type: "POST",
+							url: base_url+"hr/record-time",  
+							data : data,                                      
+							success: function(response){     
+								$(".track-time-btn").toggleClass('hide');
+								$(".track-time-btn").attr("disabled", false);
+							},
+							error: function(response){	
+								$(".track-time-btn").attr("disabled", false);
+							}                                        
+						});
+				});
+				
             </script>
         <?php }
     ?>

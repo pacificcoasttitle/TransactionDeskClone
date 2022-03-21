@@ -84,6 +84,13 @@ class Dashboard extends MX_Controller
 			}
 		} 
 
+		$this->load->model('hr/pct_hr_employee_time_tracking_model');
+		$clock_event = $this->pct_hr_employee_time_tracking_model->get_clock_event($userdata['id']);
+		$get_today_working = $this->pct_hr_employee_time_tracking_model->get_today_working($userdata['id']);
+		$get_last_time = $this->pct_hr_employee_time_tracking_model->get_last_time($userdata['id']);
+		$data['clock_event'] = $clock_event;
+		$data['time_tracking'] = $get_today_working + $get_last_time;
+
 		if ($userdata['user_type_id'] == 2) {
 			$data['title'] = 'HR-Center Branch Manager Dashboard';
 			$this->template->show("hr/branch_manager", "dashboard", $data);
@@ -95,6 +102,16 @@ class Dashboard extends MX_Controller
 
 	function logout()
 	{
+
+		$userdata = $this->session->userdata('hr_user');
+		if(!empty($userdata['id'])) {
+			$this->load->model('hr/pct_hr_employee_time_tracking_model');
+			$clock_event = $this->pct_hr_employee_time_tracking_model->get_clock_event($userdata['id']);
+			if($clock_event == 'OUT') {
+				$this->pct_hr_employee_time_tracking_model->track_time($userdata['id'],$clock_event);
+			}
+		}
+
 		$this->session->sess_destroy();
 		$this->session->unset_userdata('hr_user');
 		redirect(base_url().'hr');

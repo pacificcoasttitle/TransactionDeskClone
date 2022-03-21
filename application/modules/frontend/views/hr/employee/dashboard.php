@@ -5,7 +5,30 @@
                 <div class="col-xs-12">
                     <div class="typography-section__innera">
                         <?php $userdata = $this->session->userdata('hr_user');?>
-                        <h2 class="ui-title-block ui-title-block_light">Welcome <?php echo $userdata['name'];?>,</h2>
+						<div class="row">
+							<div class="col-sm-8">
+								<h2 class="ui-title-block ui-title-block_light">Welcome <?php echo $userdata['name'];?>,</h2>
+							</div>
+							<div class="col-sm-4">
+							<div class="pull-right row">
+								<?php
+								$clock_in_cls = '';
+								$clock_out_cls = 'hide';
+								if($clock_event == 'OUT'):
+									$clock_in_cls = 'hide';
+									$clock_out_cls = '';
+								endif;
+								?>
+								<div id="timeClock" class="col-sm-6"></div>
+								<div class="col-sm-6">
+
+									<button type="button" class="btn btn-warning time-start track-time-btn <?php echo $clock_in_cls; ?>">Start Timer</button>
+									<button type="button" class="btn btn-warning time-stop track-time-btn <?php echo $clock_out_cls; ?>">Stop Timer</button>
+								</div>
+							</div>
+							</div>
+
+						</div>
                         <div class="ui-decor-1a bg-accent"></div>
                         <h3 class="ui-title-block_light">How can we help you today?</h3>
                     </div>
