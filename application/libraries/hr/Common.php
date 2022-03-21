@@ -242,4 +242,26 @@ class Common
             return array();
         }
     }
+
+    public function getVacationDataForCalendar($start, $end, $userIds = array()) 
+    {
+        $this->CI->db->select('pct_hr_vacation_requests.*, pct_hr_users.first_name, pct_hr_users.last_name');
+        $this->CI->db->from('pct_hr_vacation_requests')
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id')
+            ->group_start() 
+                ->where("pct_hr_vacation_requests.from_date between '$start' and '$end'")
+                ->or_where("pct_hr_vacation_requests.to_date between '$start' and '$end'")
+                ->or_where("pct_hr_vacation_requests.from_date <= '$start' and pct_hr_vacation_requests.to_date >= '$end'")
+            ->group_end();
+        if(!empty($userIds)) {
+            $this->CI->db->where_in("pct_hr_vacation_requests.user_id", $userIds);
+        }
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
 }

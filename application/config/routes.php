@@ -354,6 +354,7 @@ $route['hr/get-trainings'] = 'frontend/hr/trainings/getTrainings';
 $route['hr/view-trainings-docs/:num'] = 'frontend/hr/trainings/viewTrainingsDocs';
 $route['hr/complete-training/(:num)'] = 'frontend/hr/hrCommon/completeTraining/$1';
 $route['hr/record-time'] = 'frontend/hr/hrCommon/recordTime';
+$route['hr/get-vacation-data-for-calendar-user'] = 'frontend/hr/dashboard/getVacationDataForCalendarUser';
 $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 
@@ -361,6 +362,7 @@ $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 $route['hr/admin'] = 'admin/hr/login/login';
 $route['hr/admin/login/do_login'] = 'admin/hr/login/do_login';
 $route['hr/admin/dashboard'] = 'admin/hr/dashboard/index';
+$route['hr/admin/get-vacation-data-for-calendar'] = 'admin/hr/dashboard/getVacationDataForCalendar';
 $route['hr/admin/admin-users'] = 'admin/hr/adminUsers/index';
 $route['hr/admin/add-admin-user'] = 'admin/hr/adminUsers/addAdminUser';
 $route['hr/admin/get-admin-users'] = 'admin/hr/adminUsers/getAdminUsers';

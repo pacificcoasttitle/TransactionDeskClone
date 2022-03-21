@@ -360,121 +360,22 @@
 	</div>
 </section>
 
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container">
-		<div class="row">
+<section class="section-type-4a section-defaulta typography-section-border" style="padding-bottom:0px;">
+    <div class="container">
+        <div class="row">
 			<div class="row">
-				<div class="col-xs-12">
-					<div class="typography-section__inner">
-						<h2 class="ui-title-block ui-title-block_light">Recent Actions,</h2>
+				<div class="col-xs-12" style="padding:50px;">
+					<div class="typography-section__innera">
+						<h2 class="ui-title-block ui-title-block_light">Vacation Requests Calendar,</h2>
 						<div class="ui-decor-1a bg-accent"></div>
-						<h3 class="ui-title-block_light">Below are all your orders.</h3>
 					</div>
-					<div class="typography-sectiona">
-						<div class="col-md-12">
-							<div class="table-container">
-								<table class="table table-type-3 typography-last-elem">
-									<thead>
-										<tr>
-											<th>Date</th>
-											<th>Request Type</th>
-											<th>Employee Name</th>
-											<th>View</th>
-											<th>Status</th>
-											<th>Action</th>
-
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-
-									</tbody>
-								</table>
-								<div class="typography-sectionab"></div>
-							</div>
-						</div>
+					
+					<div class="col-md-12">
+						<div id='loading'>loading...</div>	
+						<div id='calendar'></div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
+        </div>
+    </div>
 </section>
