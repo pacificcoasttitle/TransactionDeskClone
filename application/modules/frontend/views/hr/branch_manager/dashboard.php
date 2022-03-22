@@ -360,22 +360,4 @@
 	</div>
 </section>
 
-<section class="section-type-4a section-defaulta typography-section-border" style="padding-bottom:0px;">
-    <div class="container">
-        <div class="row">
-			<div class="row">
-				<div class="col-xs-12" style="padding:50px;">
-					<div class="typography-section__innera">
-						<h2 class="ui-title-block ui-title-block_light">Vacation Requests Calendar,</h2>
-						<div class="ui-decor-1a bg-accent"></div>
-					</div>
-					
-					<div class="col-md-12">
-						<div id='loading'>loading...</div>	
-						<div id='calendar'></div>
-					</div>
-				</div>
-			</div>
-        </div>
-    </div>
-</section>
+
