@@ -4,6 +4,7 @@
 
 class VacationRequests extends MX_Controller 
 {
+    private $vacation_js_version = '01';
 	function __construct() 
     {
         parent::__construct();
@@ -33,6 +34,9 @@ class VacationRequests extends MX_Controller
         }
         $data['name'] = $userdata['name'];
 		$data['title'] = 'HR-Center Vacation Requests';
+        $this->template->addCSS( base_url('assets/libs/calendar/main.css'));
+        $this->template->addJS( base_url('assets/libs/calendar/main.js'));
+        $this->template->addJS( base_url('assets/frontend/hr/js/vacation.js?v=vacation_'.$this->vacation_js_version) );
         $this->template->show("hr", "vacation_requests", $data);
 	}
 
@@ -175,5 +179,33 @@ class VacationRequests extends MX_Controller
         $this->session->set_userdata($data);
         redirect(base_url().'hr/vacation-requests');
     }
+
+    public function getVacationDataForCalendarUser()
+	{
+		$userdata = $this->session->userdata('hr_user');
+        $userIds = array();
+        if(!empty($userdata)) {
+            if ($userdata['user_type_id'] == 2) {
+                $usersForBranchManager = $this->hr->getUsersForBranchManager($userdata['id']);
+                $userIds = array_column($usersForBranchManager, 'id');	
+            } else {
+                $userIds[] = $userdata['id'];
+            }
+        }
+		$start = date('Y-m-d', strtotime($this->input->post('start')));
+		$end = date('Y-m-d', strtotime($this->input->post('end')));
+        $vacationData = $this->common->getVacationDataForCalendar($start, $end, $userIds);
+        $data = array();
+        $i = 0;
+        foreach ($vacationData as $vacation) {
+            $data[$i]['id'] = $vacation['id'];
+            $data[$i]['title'] = $vacation['first_name']." ".$vacation['last_name'];
+            $data[$i]['start'] = $vacation['from_date'];
+            $data[$i]['end'] = date('Y-m-d', strtotime($vacation['to_date'] . ' +1 day'));
+            $i++;
+        }
+        $i++;
+        echo json_encode($data); 
+	}
 
 }

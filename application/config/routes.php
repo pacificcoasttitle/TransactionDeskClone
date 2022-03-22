@@ -354,7 +354,7 @@ $route['hr/get-trainings'] = 'frontend/hr/trainings/getTrainings';
 $route['hr/view-trainings-docs/:num'] = 'frontend/hr/trainings/viewTrainingsDocs';
 $route['hr/complete-training/(:num)'] = 'frontend/hr/hrCommon/completeTraining/$1';
 $route['hr/record-time'] = 'frontend/hr/hrCommon/recordTime';
-$route['hr/get-vacation-data-for-calendar-user'] = 'frontend/hr/dashboard/getVacationDataForCalendarUser';
+$route['hr/get-vacation-data-for-calendar-user'] = 'frontend/hr/vacationRequests/getVacationDataForCalendarUser';
 $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* End Route for HR-Center frontend */
 
