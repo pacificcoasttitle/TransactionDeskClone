@@ -4,7 +4,6 @@
 
 class Dashboard extends MX_Controller 
 {
-	private $dashboard_js_version = '01';
 	function __construct() 
     {
         parent::__construct();
@@ -87,10 +86,6 @@ class Dashboard extends MX_Controller
 			} 
 		}
 
-		$this->template->addCSS( base_url('assets/libs/calendar/main.css'));
-        $this->template->addJS( base_url('assets/libs/calendar/main.js'));
-        $this->template->addJS( base_url('assets/frontend/hr/js/dashboard.js?v=dashboard_'.$this->dashboard_js_version) );
-
 		$this->load->model('hr/pct_hr_employee_time_tracking_model');
 		$clock_event = $this->pct_hr_employee_time_tracking_model->get_clock_event($userdata['id']);
 		$get_today_working = $this->pct_hr_employee_time_tracking_model->get_today_working($userdata['id']);
@@ -107,37 +102,8 @@ class Dashboard extends MX_Controller
 		}
 	}
 
-	public function getVacationDataForCalendarUser()
-	{
-		$userdata = $this->session->userdata('hr_user');
-        $userIds = array();
-        if(!empty($userdata)) {
-            if ($userdata['user_type_id'] == 2) {
-                $usersForBranchManager = $this->hr->getUsersForBranchManager($userdata['id']);
-                $userIds = array_column($usersForBranchManager, 'id');	
-            } else {
-                $userIds[] = $userdata['id'];
-            }
-        }
-		$start = date('Y-m-d', strtotime($this->input->post('start')));
-		$end = date('Y-m-d', strtotime($this->input->post('end')));
-        $vacationData = $this->common->getVacationDataForCalendar($start, $end, $userIds);
-        $data = array();
-        $i = 0;
-        foreach ($vacationData as $vacation) {
-            $data[$i]['id'] = $vacation['id'];
-            $data[$i]['title'] = $vacation['first_name']." ".$vacation['last_name'];
-            $data[$i]['start'] = $vacation['from_date'];
-            $data[$i]['end'] = date('Y-m-d', strtotime($vacation['to_date'] . ' +1 day'));
-            $i++;
-        }
-        $i++;
-        echo json_encode($data); 
-	}
-
 	function logout()
 	{
-
 		$userdata = $this->session->userdata('hr_user');
 		if(!empty($userdata['id'])) {
 			$this->load->model('hr/pct_hr_employee_time_tracking_model');
@@ -146,7 +112,6 @@ class Dashboard extends MX_Controller
 				$this->pct_hr_employee_time_tracking_model->track_time($userdata['id'],$clock_event);
 			}
 		}
-
 		$this->session->sess_destroy();
 		$this->session->unset_userdata('hr_user');
 		redirect(base_url().'hr');
