@@ -106,17 +106,4 @@
     </div>
 </section>
 
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12" style="padding:50px;">
-                <div class="typography-section__innera">
-                    <h2 class="ui-title-block ui-title-block_light">Vacation Requests Calendar,</h2>
-                    <div class="ui-decor-1a bg-accent"></div>
-                </div>
-                <div id='loading'>loading...</div>	
-                <div id='calendar'></div>
-            </div>1
-        </div>
-    </div>
-</section>
+
