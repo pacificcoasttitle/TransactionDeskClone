@@ -31,8 +31,7 @@ class HrCommon extends MX_Controller
             $data = array(
                 'status' => $type,
                 'approved_date' => date('Y-m-d'),
-                'approved_by_user_id' => 0,
-                'approved_by_admin_user_id' => $userdata['id']
+                'approved_by_user_id' => $userdata['id']
             );
 			$this->hr->update($data, $condition, 'pct_hr_time_cards'); 
             $timeCardInfo = $this->common->getTimeCardInfo($request_id);
@@ -51,8 +50,7 @@ class HrCommon extends MX_Controller
             $data = array(
                 'status' => $type,
                 'approved_date' => date('Y-m-d'),
-                'approved_by_user_id' => 0,
-                'approved_by_admin_user_id' => $userdata['id']
+                'approved_by_user_id' => $userdata['id']
             );
 			$this->hr->update($data, $condition, 'pct_hr_incident_reports'); 
             $incidentReportInfo = $this->common->getIncidentReport($request_id);
@@ -71,8 +69,7 @@ class HrCommon extends MX_Controller
             $data = array(
                 'status' => $type,
                 'approved_date' => date('Y-m-d'),
-                'approved_by_user_id' => 0,
-                'approved_by_admin_user_id' => $userdata['id']
+                'approved_by_user_id' => $userdata['id']
             );
 			$this->hr->update($data, $condition, 'pct_hr_vacation_requests'); 
             $vacationRequestInfo = $this->common->getVacationRequest($request_id);

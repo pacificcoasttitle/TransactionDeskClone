@@ -23,7 +23,7 @@ class IncidentReports extends MX_Controller
         $userdata = $this->session->userdata('hr_user');
         $data['errors'] = array();
         $data['success'] = array();
-        $data['employee_info'] = $this->hr->get_hr_user(array('id' => $userdata['id']));
+        $data['employee_info'] = $this->common->get_hr_user(array('id' => $userdata['id']));
         if ($this->session->userdata('errors')) {
             $data['errors'] = $this->session->userdata('errors');
             $this->session->unset_userdata('errors');
@@ -41,6 +41,7 @@ class IncidentReports extends MX_Controller
     {
         $userdata = $this->session->userdata('hr_user');
         $params = array();  $data = array();
+        $params['is_frontend'] = 1;
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -49,11 +50,11 @@ class IncidentReports extends MX_Controller
 			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
 			$pageno = ($params['start'] / $params['length'])+1;
-			$incidentReportsList = $this->hr->getIncidentReports($params);
+			$incidentReportsList = $this->common->getIncidentReports($params);
 			$json_data['draw'] = intval( $params['draw'] );
 		} else {
 			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-			$incidentReportsList = $this->hr->getIncidentReports($params);
+			$incidentReportsList = $this->common->getIncidentReports($params);
 		}
 		
 		if (isset($incidentReportsList['data']) && !empty($incidentReportsList['data'])) {
@@ -61,14 +62,14 @@ class IncidentReports extends MX_Controller
 			foreach ($incidentReportsList['data'] as $incidentReport)  {
 				$nestedData = array();
 				$nestedData[] = $i;
-                //$nestedData[] = $incidentReport['employee_number'];
                 $nestedData[] =  date("m/d/Y", strtotime($incidentReport['incident_date']));
 				$nestedData[] = $incidentReport['first_name']." ".$incidentReport['last_name'];
                 $nestedData[] = $incidentReport['incident_reason'];
                 $nestedData[] = $incidentReport['num_of_incidents'];
                 $nestedData[] = $incidentReport['actions'];
+                
                 $status = '<span class="badge-new badge-new-info">Pending</span>';
-                if (ucfirst(!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id']))) {
+                if (!empty($incidentReport['approved_by_user_id']) ) {
                     if ($incidentReport['status'] == 'approved') {
                         $status = '<span class="badge-new badge-new-success">Approved</span>';
                     } else {
@@ -76,47 +77,14 @@ class IncidentReports extends MX_Controller
                     }
                 }
                 $nestedData[] = $status;
+                
                 if (!empty($incidentReport['approved_by_user_id'])) {
                     $nestedData[] = $incidentReport['branch_manager_first_name']." ".$incidentReport['branch_manager_last_name'];
-                } else if (!empty($incidentReport['approved_by_admin_user_id'])) {
-                    $nestedData[] = $incidentReport['user_name'];
                 } else {
                     $nestedData[] = ''  ;
                 }
-                if ($userdata['user_type_id'] == 1) {
-                    $nestedData[] = !empty($incidentReport['approved_date']) ? date("m/d/Y", strtotime($incidentReport['approved_date'])) : '';
-                }
-                $incidentReportId = $incidentReport['id'];
-                if ($userdata['user_type_id'] == 2) {
-                    if($userdata['id'] != $incidentReport['user_id']) {
-                        if (!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id'])) {
-                            if ($incidentReport['status'] == 'approved') {
-                                $nestedData[] = "<div class='smart-forms'>
-                                        <form onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
-                                            <button style='height:29px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
-                                        </form>
-                                    </div>";
-                            } else {
-                                $nestedData[] = "<div class='smart-forms'>
-                                        <form onclick='return approve_deny_popup(1, $incidentReportId);' action='' method='POST'>
-                                            <button style='height:29px;' class='button btn-primary' type='submit'>Approve</button>
-                                        </form>
-                                    </div>";
-                            }
-                        } else {
-                            $nestedData[] = "<div style='display:inline-flex;' class='smart-forms'>
-                                    <form onclick='return approve_deny_popup(1, $incidentReportId);' action='' method='POST'>
-                                        <button style='height:29px;' class='button btn-primary' type='submit'>Approve</button>
-                                    </form>
-                                    <form style='margin-left:5px;' onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
-                                        <button style='height:29px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
-                                    </form>
-                                </div>";
-                        }
-                    } else {
-                        $nestedData[] = '';
-                    }
-                } 
+
+                $nestedData[] = !empty($incidentReport['approved_date']) ? date("m/d/Y", strtotime($incidentReport['approved_date'])) : '';
 				$data[] = $nestedData; 
 				$i++; 
 			}

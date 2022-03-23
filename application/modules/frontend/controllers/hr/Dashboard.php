@@ -23,7 +23,7 @@ class Dashboard extends MX_Controller
 	{
 		$userdata = $this->session->userdata('hr_user');
 		if ($userdata['user_type_id'] == 2) {
-			$usersForBranchManager = $this->hr->getUsersForBranchManager($userdata['id']);
+			$usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
 			if(!empty($usersForBranchManager)) {
 				$usersEmails = array_column($usersForBranchManager, 'email');	
 				$pctOrderUserInfo = $this->order->getUsersInfo($usersEmails);

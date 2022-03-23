@@ -12,6 +12,7 @@ class Login extends MX_Controller {
         );
         $this->load->library('form_validation');
         $this->load->model('hr/hr'); 
+        $this->load->library('hr/common');
     }
 
     function index() 
@@ -42,13 +43,12 @@ class Login extends MX_Controller {
             } else {
                 $email = $this->input->post('email');
                 $password = $this->input->post('password');
-                $user =  $this->hr->get_hr_user(array('email' => $email, 'status' => 1));
-                if (!empty($user)) {
+                $user =  $this->common->get_hr_user(array('email' => $email, 'status' => 1));
+                if (!empty($user) && ($user['user_type_id'] != 1 && $user['user_type_id'] != 2 && $user['user_type_id'] != 4)) {
                     if($user['is_tmp_password'] == 1) {
                         if (password_verify($password, $user['password'])) {
-                            $this->load->library('hr/common');
                             $randomString = $this->common->randomPassword();
-                            $hash = md5($user['id'] . $user['email_address'] .$randomString);
+                            $hash = md5($user['id'] . $user['email'] .$randomString);
                             $this->hr->update(array('hash' => $hash), array('id' => $user['id']), 'pct_hr_users');
                             redirect(base_url().'hr/change-password/'.$hash);
                         } else {
@@ -94,7 +94,7 @@ class Login extends MX_Controller {
                 // $data['password_error_msg'] = form_error('password');
             } else {
                 $email = $this->input->post('email');
-                $user =  $this->hr->get_hr_user(array('email' => $email, 'status' => 1));
+                $user =  $this->common->get_hr_user(array('email' => $email, 'status' => 1));
                 if (!empty($user)) {
 					$this->load->library('hr/common');
 					$randomPassword = $this->common->randomPassword();
@@ -130,7 +130,7 @@ class Login extends MX_Controller {
     function change_password()
     {
         $hash = $this->uri->segment(3); 
-        $user =  $this->hr->get_hr_user(array('hash' => $hash));
+        $user =  $this->common->get_hr_user(array('hash' => $hash));
         if (!empty($user)) {
             if ($this->input->post()) {
                 $this->form_validation->set_rules('password', 'Password', 'required', array('required'=> 'Enter your password'));
@@ -149,8 +149,15 @@ class Login extends MX_Controller {
                         "user_type_id" => isset($user['user_type_id']) && !empty($user['user_type_id']) ? $user['user_type_id'] : '',
 						"user_type" => isset($user['user_type']) && !empty($user['user_type']) ? $user['user_type'] : '',
                     );
-                    $this->session->set_userdata('hr_user', $session_data);
-                    redirect(base_url().'hr/dashboard');
+                    if ($user['user_type_id'] == 1 || $user['user_type_id'] == 2 || $user['user_type_id'] == 4) {
+                        $session_data['is_hr_admin'] = 1;
+                        $this->session->set_userdata('hr_admin', $session_data);
+                        redirect(base_url().'hr/admin/dashboard');
+                    } else {
+                        $session_data['is_hr_admin'] = 0;
+                        $this->session->set_userdata('hr_user', $session_data);
+                        redirect(base_url().'hr/dashboard');
+                    }
                 }
             } else {
                 $data['hash'] = $hash;

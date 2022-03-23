@@ -56,6 +56,8 @@ class IncidentReports extends MX_Controller {
     public function  getIncidentReports()
     {
         $params = array();  $data = array();
+        $params['is_frontend'] = 0;
+        $userdata = $this->session->userdata('hr_admin');
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -64,11 +66,11 @@ class IncidentReports extends MX_Controller {
 			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
 			$pageno = ($params['start'] / $params['length'])+1;
-			$incidentReportsList = $this->hr->getIncidentReports($params);
+			$incidentReportsList = $this->common->getIncidentReports($params);
 			$json_data['draw'] = intval( $params['draw'] );
 		} else {
 			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-			$incidentReportsList = $this->hr->getIncidentReports($params);
+			$incidentReportsList = $this->common->getIncidentReports($params);
 		}
 		
 		if (isset($incidentReportsList['data']) && !empty($incidentReportsList['data'])) {
@@ -76,14 +78,14 @@ class IncidentReports extends MX_Controller {
 			foreach ($incidentReportsList['data'] as $incidentReport)  {
 				$nestedData = array();
 				$nestedData[] = $i;
-                //$nestedData[] = $incidentReport['employee_number'];
                 $nestedData[] =  date("m/d/Y", strtotime($incidentReport['incident_date']));
 				$nestedData[] = $incidentReport['first_name']." ".$incidentReport['last_name'];
                 $nestedData[] = $incidentReport['incident_reason'];
                 $nestedData[] = $incidentReport['num_of_incidents'];
                 $nestedData[] = $incidentReport['actions'];
+
                 $status = '<span class="badge badge-info">Pending</span>';
-                if (ucfirst(!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id']))) {
+                if (!empty($incidentReport['approved_by_user_id'])) {
                     if ($incidentReport['status'] == 'approved') {
                         $status = '<span class="badge badge-success">Approved</span>';
                     } else {
@@ -91,47 +93,51 @@ class IncidentReports extends MX_Controller {
                     }
                 }
                 $nestedData[] = $status;
+
                 if (!empty($incidentReport['approved_by_user_id'])) {
                     $nestedData[] = $incidentReport['branch_manager_first_name']." ".$incidentReport['branch_manager_last_name'];
-                } else if (!empty($incidentReport['approved_by_admin_user_id'])) {
-                    $nestedData[] = $incidentReport['user_name'];
                 } else {
                     $nestedData[] = ''  ;
                 }
+
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    if (!empty($incidentReport['approved_by_user_id']) || !empty($incidentReport['approved_by_admin_user_id'])) {
-                        if ($incidentReport['status'] == 'approved') {
-                            $nestedData[] = '
-                                    <a href="#" onclick="return approve_deny_popup(0, '.$incidentReport["id"].');" class="btn btn-danger btn-icon-split btn-sm">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-ban"></i>
-                                        </span>
-                                        <span class="text">Deny</span>
-                                    </a>';
+                    if ($userdata['id'] != $incidentReport['user_id']) {
+                        if (!empty($incidentReport['approved_by_user_id'])) {
+                            if ($incidentReport['status'] == 'approved') {
+                                $nestedData[] = '
+                                        <a href="#" onclick="return approve_deny_popup(0, '.$incidentReport["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-ban"></i>
+                                            </span>
+                                            <span class="text">Deny</span>
+                                        </a>';
+                            } else {
+                                $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$incidentReport["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <span class="text">Approve</span>
+                                        </a>
+                                        '; 
+                            }
                         } else {
-                            $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$incidentReport["id"].');" class="btn btn-success btn-icon-split btn-sm">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                        <span class="text">Approve</span>
-                                    </a>
-                                    '; 
+                            $nestedData[] = '<div style="display:inline-flex;">
+                                                <a href="" onclick="return approve_deny_popup(1, '.$incidentReport["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                    <span class="text">Approve</span>
+                                                </a>
+                                                <a style="margin-left: 5px;" href="#" onclick="return approve_deny_popup(0, '.$incidentReport["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-ban"></i>
+                                                    </span>
+                                                    <span class="text">Deny</span>
+                                                </a>
+                                            </div>'; 
                         }
                     } else {
-                        $nestedData[] = '<div style="display:inline-flex;">
-                                            <a href="" onclick="return approve_deny_popup(1, '.$incidentReport["id"].');" class="btn btn-success btn-icon-split btn-sm">
-                                                <span class="icon text-white-50">
-                                                    <i class="fas fa-check"></i>
-                                                </span>
-                                                <span class="text">Approve</span>
-                                            </a>
-                                            <a style="margin-left: 5px;" href="#" onclick="return approve_deny_popup(0, '.$incidentReport["id"].');" class="btn btn-danger btn-icon-split btn-sm">
-                                                <span class="icon text-white-50">
-                                                    <i class="fas fa-ban"></i>
-                                                </span>
-                                                <span class="text">Deny</span>
-                                            </a>
-                                        </div>'; 
+                        $nestedData[] = '';
                     }
                 }
 				$data[] = $nestedData; 

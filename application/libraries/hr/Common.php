@@ -264,4 +264,453 @@ class Common
         }
     }
 
+    public function get_hr_user($params = array()) 
+    {
+        $this->CI->db->select('pct_hr_users.*,pct_hr_user_types.name as user_type');
+        $this->CI->db->from('pct_hr_users');
+        $this->CI->db->join('pct_hr_user_types','pct_hr_users.user_type_id = pct_hr_user_types.id','left');
+        foreach($params as $key => $val){
+            $this->CI->db->where('pct_hr_users.'.$key, $val);
+        }
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        if(!empty($result)) { 
+            return $result;
+        } else {
+            return array();
+        }   
+    }
+
+    public function getUsersForBranchManager($user_id) 
+    {
+        $userdata = $this->CI->session->userdata('hr_user');
+        if (!empty($userdata)) {
+            $this->CI->load->library('hr/common');
+            $userInfo = $this->get_hr_user(array('id' => $userdata['id']));
+            $this->CI->db->select('id, email')
+                ->from('pct_hr_users');
+            $this->CI->db->where('branch_id', $userInfo['branch_id']);
+            $query = $this->CI->db->get();
+            if ($query->num_rows() > 0)  {
+                return $query->result_array();
+            } else {
+                return array();
+            }
+        } else {
+            return array();
+        }
+    }
+
+    public function getTimeCards($params)
+    { 
+        if (isset($params['is_frontend']) && $params['is_frontend'] == 1) {
+            $userdata = $this->CI->session->userdata('hr_user');
+        } else {
+            $userdata = $this->CI->session->userdata('hr_admin');
+        }
+        $usersIds = array();
+        if(!empty($userdata)) {
+            if ($userdata['user_type_id'] == 4) {
+                $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                if(!empty($usersForBranchManager)) {
+                    $usersIds = array_column($usersForBranchManager, 'id');
+                    $usersIds[] = $userdata['id'];
+                } else {
+                    $usersIds[] = $userdata['id'];
+                }
+            } 
+        }
+        
+        $this->CI->db->from('pct_hr_time_cards')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id')
+                ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_time_cards.approved_by_user_id', 'left');
+
+        if(!empty($usersIds)) {
+            $this->CI->db->where_in('pct_hr_time_cards.user_id', $usersIds);
+        } else {
+            if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $userdata['id']);
+            }
+        }
+
+        $total_records =  $this->CI->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $timeCardsList = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->or_like('pct_hr_time_cards.exception_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_time_cards.reg_hours', $keyword)
+                        ->or_like('pct_hr_time_cards.ot_hours', $keyword)
+                        ->or_like('pct_hr_time_cards.double_ot', $keyword)
+                        ->or_like('pct_hr_time_cards.total_hours', $keyword)
+                        ->or_like('branch_manager.first_name', $keyword)
+                        ->or_like('branch_manager.last_name', $keyword)
+                        ->group_end();
+            }
+            
+            $this->CI->db->from('pct_hr_time_cards')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id')
+                ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_time_cards.approved_by_user_id', 'left');
+
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $usersIds);
+            } else {
+                if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                    $this->CI->db->where_in('pct_hr_time_cards.user_id', $userdata['id']);
+                }
+            }
+			$filter_total_records =  $this->CI->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->or_like('pct_hr_time_cards.exception_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_time_cards.reg_hours', $keyword)
+                        ->or_like('pct_hr_time_cards.ot_hours', $keyword)
+                        ->or_like('pct_hr_time_cards.double_ot', $keyword)
+                        ->or_like('pct_hr_time_cards.total_hours', $keyword)
+                        ->or_like('branch_manager.first_name', $keyword)
+                        ->or_like('branch_manager.last_name', $keyword)
+                        ->group_end();
+            }
+
+            $this->CI->db->select('pct_hr_time_cards.*, pct_hr_users.first_name,  pct_hr_users.last_name, branch_manager.first_name as branch_manager_first_name, branch_manager.last_name as branch_manager_last_name');
+            $this->CI->db->from('pct_hr_time_cards')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id')
+                ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_time_cards.approved_by_user_id', 'left');
+
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $usersIds);
+            } else {
+                if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                    $this->CI->db->where_in('pct_hr_time_cards.user_id', $userdata['id']);
+                }
+            }
+            $this->CI->db->order_by('pct_hr_time_cards.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }	
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $timeCardsList = $query->result_array();
+	        }
+    	} else {    		
+            $filter_total_records =  $total_records;
+            $this->CI->db->select('pct_hr_time_cards.*, pct_hr_users.first_name,  pct_hr_users.last_name, branch_manager.first_name as branch_manager_first_name, branch_manager.last_name as branch_manager_last_name');
+            $this->CI->db->from('pct_hr_time_cards')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_time_cards.user_id')
+                ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_time_cards.approved_by_user_id', 'left');
+
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_time_cards.user_id', $usersIds);
+            } else {
+                if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                    $this->CI->db->where_in('pct_hr_time_cards.user_id', $userdata['id']);
+                }
+            }
+            $this->CI->db->order_by('pct_hr_time_cards.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $timeCardsList = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $timeCardsList
+        );
+    }
+
+    public function getIncidentReports($params)
+    { 
+        if (isset($params['is_frontend']) && $params['is_frontend'] == 1) {
+            $userdata = $this->CI->session->userdata('hr_user');
+        } else {
+            $userdata = $this->CI->session->userdata('hr_admin');
+        }
+        $usersIds = array();
+        if(!empty($userdata)) {
+            if ($userdata['user_type_id'] == 4) {
+                $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                if(!empty($usersForBranchManager)) {
+                    $usersIds = array_column($usersForBranchManager, 'id');
+                    $usersIds[] = $userdata['id'];
+                } else {
+                    $usersIds[] = $userdata['id'];
+                }
+            } 
+        }
+
+        $this->CI->db->from('pct_hr_incident_reports')
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id')
+            ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_incident_reports.approved_by_user_id', 'left');
+
+        if(!empty($usersIds)) {
+            $this->CI->db->where_in('pct_hr_incident_reports.user_id', $usersIds);
+        } else {
+            if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $userdata['id']);
+            }
+        }
+
+        $total_records =  $this->CI->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $incidentReportsList = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->or_like('pct_hr_incident_reports.employee_number', $keyword)
+                        ->or_like('pct_hr_incident_reports.incident_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_incident_reports.incident_reason', $keyword)
+                        ->or_like('pct_hr_incident_reports.actions', $keyword)
+                        ->or_like('pct_hr_incident_reports.num_of_incidents', $keyword)
+                        ->or_like('branch_manager.first_name', $keyword)
+                        ->or_like('branch_manager.last_name', $keyword)
+                        ->group_end();
+            }
+            
+            $this->CI->db->from('pct_hr_incident_reports')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id')
+                ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_incident_reports.approved_by_user_id', 'left');
+
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $usersIds);
+            } else {
+                if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                    $this->CI->db->where_in('pct_hr_incident_reports.user_id', $userdata['id']);
+                }
+            }
+			$filter_total_records =  $this->CI->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like('pct_hr_users.first_name', $keyword)
+                    ->or_like('pct_hr_users.last_name', $keyword)
+                    ->or_like('pct_hr_incident_reports.employee_number', $keyword)
+                    ->or_like('pct_hr_incident_reports.incident_date', date("Y-m-d", strtotime($keyword)))
+                    ->or_like('pct_hr_incident_reports.incident_reason', $keyword)
+                    ->or_like('pct_hr_incident_reports.actions', $keyword)
+                    ->or_like('pct_hr_incident_reports.num_of_incidents', $keyword)
+                    ->or_like('branch_manager.first_name', $keyword)
+                    ->or_like('branch_manager.last_name', $keyword)
+                    ->group_end();
+            }
+
+            $this->CI->db->select('pct_hr_incident_reports.*, pct_hr_users.first_name,  pct_hr_users.last_name, branch_manager.first_name as branch_manager_first_name, branch_manager.last_name as branch_manager_last_name');
+            $this->CI->db->from('pct_hr_incident_reports')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id')
+                ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_incident_reports.approved_by_user_id', 'left');
+
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $usersIds);
+            } else {
+                if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                    $this->CI->db->where_in('pct_hr_incident_reports.user_id', $userdata['id']);
+                }
+            }
+            $this->CI->db->order_by('pct_hr_incident_reports.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }	
+
+			$query = $this->CI->db->get();
+           
+			if ($query->num_rows() > 0) {
+	            $incidentReportsList = $query->result_array();
+	        }
+    	} else {    		
+            $filter_total_records =  $total_records;
+            $this->CI->db->select('pct_hr_incident_reports.*, pct_hr_users.first_name,  pct_hr_users.last_name, branch_manager.first_name as branch_manager_first_name, branch_manager.last_name as branch_manager_last_name');
+            $this->CI->db->from('pct_hr_incident_reports')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_incident_reports.user_id')
+                ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_incident_reports.approved_by_user_id', 'left');
+
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_incident_reports.user_id', $usersIds);
+            } else {
+                if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                    $this->CI->db->where_in('pct_hr_incident_reports.user_id', $userdata['id']);
+                }
+            }
+            $this->CI->db->order_by('pct_hr_incident_reports.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $incidentReportsList = $query->result_array();
+	        } 
+    	}
+        
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $incidentReportsList
+        );
+    }
+
+    public function getVacationRequests($params)
+    { 
+        if (isset($params['is_frontend']) && $params['is_frontend'] == 1) {
+            $userdata = $this->CI->session->userdata('hr_user');
+        } else {
+            $userdata = $this->CI->session->userdata('hr_admin');
+        }
+        $usersIds = array();
+        if(!empty($userdata)) {
+            if ($userdata['user_type_id'] == 4) {
+                $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                if(!empty($usersForBranchManager)) {
+                    $usersIds = array_column($usersForBranchManager, 'id');
+                    $usersIds[] = $userdata['id'];
+                } else {
+                    $usersIds[] = $userdata['id'];
+                }
+            } 
+        }
+
+        $this->CI->db->from('pct_hr_vacation_requests')
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id')
+            ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_vacation_requests.approved_by_user_id', 'left');
+
+        if(!empty($usersIds)) {
+            $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $usersIds);
+        } else {
+            if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $userdata['id']);
+            }
+        }
+    
+        $total_records =  $this->CI->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $vacationRequestsList = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->or_like('pct_hr_vacation_requests.comment', $keyword)
+                        ->or_like('pct_hr_vacation_requests.from_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_vacation_requests.to_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_vacation_requests.is_salary_deduction', strtolower($keyword) == 'yes' ? 1 : 0)
+                        ->or_like('pct_hr_vacation_requests.is_time_charged_vacation', strtolower($keyword) == 'yes' ? 1 : 0)
+                        ->or_like('branch_manager.first_name', $keyword)
+                        ->or_like('branch_manager.last_name', $keyword)
+                        ->group_end();
+            }
+            
+            $this->CI->db->from('pct_hr_vacation_requests')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id')
+                ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_vacation_requests.approved_by_user_id', 'left');
+
+            if(!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $usersIds);
+            } else {
+                if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                    $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $userdata['id']);
+                }
+            }
+
+			$filter_total_records =  $this->CI->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
+                        ->or_like('pct_hr_vacation_requests.comment', $keyword)
+                        ->or_like('pct_hr_vacation_requests.from_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_vacation_requests.to_date', date("Y-m-d", strtotime($keyword)))
+                        ->or_like('pct_hr_vacation_requests.is_salary_deduction', strtolower($keyword) == 'yes' ? 1 : 0)
+                        ->or_like('pct_hr_vacation_requests.is_time_charged_vacation', strtolower($keyword) == 'yes' ? 1 : 0)
+                        ->or_like('branch_manager.first_name', $keyword)
+                        ->or_like('branch_manager.last_name', $keyword)
+                        ->group_end();
+            }
+
+            $this->CI->db->select('pct_hr_vacation_requests.*, pct_hr_users.first_name,  pct_hr_users.last_name, branch_manager.first_name as branch_manager_first_name, branch_manager.last_name as branch_manager_last_name');
+            $this->CI->db->from('pct_hr_vacation_requests')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id')
+                ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_vacation_requests.approved_by_user_id', 'left');
+
+            if (!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $usersIds);
+            } else {
+                if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                    $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $userdata['id']);
+                }
+            }
+
+            $this->CI->db->order_by('pct_hr_vacation_requests.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }	
+
+			$query = $this->CI->db->get();
+           
+			if ($query->num_rows() > 0) {
+	            $vacationRequestsList = $query->result_array();
+	        }
+    	} else {    		
+            $filter_total_records =  $total_records;
+            $this->CI->db->select('pct_hr_vacation_requests.*, pct_hr_users.first_name,  pct_hr_users.last_name, branch_manager.first_name as branch_manager_first_name, branch_manager.last_name as branch_manager_last_name');
+            $this->CI->db->from('pct_hr_vacation_requests')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_vacation_requests.user_id')
+                ->join('pct_hr_users as branch_manager', 'branch_manager.id = pct_hr_vacation_requests.approved_by_user_id', 'left');
+
+            if (!empty($usersIds)) {
+                $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $usersIds);
+            } else {
+                if ($userdata['user_type_id'] != 1 && $userdata['user_type_id'] != 2)  {
+                    $this->CI->db->where_in('pct_hr_vacation_requests.user_id', $userdata['id']);
+                }
+            }
+            $this->CI->db->order_by('pct_hr_vacation_requests.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $vacationRequestsList = $query->result_array();
+	        } 
+    	}
+        
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $vacationRequestsList
+        );
+    }
+
 }
