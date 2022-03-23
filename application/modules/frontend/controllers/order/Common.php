@@ -915,7 +915,8 @@ class Common extends MX_Controller {
 				$nestedData[] = $i;
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
-				$nestedData[] = !empty($order['document_created_date']) ? date("m/d/Y", strtotime($order['document_created_date'])) : '';
+				// $nestedData[] = !empty($order['document_created_date']) ? date("m/d/Y", strtotime($order['document_created_date'])) : '';
+				$nestedData[] = !empty($order['document_created_date']) ? convertTimezone($order['document_created_date'],'m/d/Y') : '';
 				if (!empty($order['cpl_document_name'])) {
 					$file_id = $order['file_id'];
 					$documentName = $order['cpl_document_name'];
@@ -2048,7 +2049,8 @@ class Common extends MX_Controller {
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-               	$nestedData[] = !empty($order['proposed_document_created_date']) ? date("m/d/Y", strtotime($order['proposed_document_created_date'])) : '';
+               	// $nestedData[] = !empty($order['proposed_document_created_date']) ? date("m/d/Y", strtotime($order['proposed_document_created_date'])) : '';
+				$nestedData[] = !empty($order['proposed_document_created_date']) ? convertTimezone($order['proposed_document_created_date'],'m/d/Y') : '';
                 if (!empty($order['proposed_insured_document_name'])) 
                 {
                 	$file_id = $order['file_id'];
@@ -2130,4 +2132,21 @@ class Common extends MX_Controller {
 		$json_data['data'] = $data;
 		echo json_encode($json_data);
 	}
+
+	public function markAsRead()
+    {
+        $userdata = $this->session->userdata('user');
+        $condition = array(
+            'sent_user_id' => $userdata['id']
+        );
+        $data = array(
+            'is_read' => 1
+        );
+		$this->home_model->update($data, $condition, 'pct_order_notifications');
+        $response = array(
+            'success' => 'true',
+            'message'  => 'Notifcation marked as read.',
+        );
+        echo json_encode($response);
+    }
 }

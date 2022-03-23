@@ -39,3 +39,20 @@ if(!function_exists('separateZipRoute')) {
 
 	}
 }
+if(!function_exists('convertTimezone')) {
+	function convertTimezone($dateTime,$format = 'm/d/Y h:i:s A')
+	{
+		$default_timezone = $to_timezone = 'America/Los_Angeles';
+		$to_timezone = 'America/Los_Angele';
+		if(!empty($_COOKIE['user_timezone'])) {
+			$to_timezone = $_COOKIE['user_timezone'];
+		}
+		$date = new DateTime($dateTime);
+		try {
+			$date->setTimezone(new DateTimeZone($to_timezone));
+		} catch (\Throwable $th) {
+			$date->setTimezone(new DateTimeZone($default_timezone));
+		}
+		return $date->format($format);
+	}
+}

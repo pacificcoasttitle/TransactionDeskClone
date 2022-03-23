@@ -70,7 +70,8 @@ class Order extends MX_Controller {
                 $checked = '';
             }
             $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
-            $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+            // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+			$nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
             $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
             $nestedData[] = $action;
@@ -311,7 +312,8 @@ class Order extends MX_Controller {
                     $msg = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message']: '';
                     $nestedData[] = $msg;
                 }
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+				$nestedData[] = convertTimezone($value['created_at']);
                 $data[] = $nestedData;
                 $count++;
             }
@@ -385,7 +387,8 @@ class Order extends MX_Controller {
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['cpl_page'];
                 $nestedData[] = $value['error'];
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+				$nestedData[] = convertTimezone($value['created_at']);
                 $data[] = $nestedData;
                 $count++;
             }

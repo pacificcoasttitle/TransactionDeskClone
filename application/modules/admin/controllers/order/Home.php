@@ -566,7 +566,8 @@ class Home extends MX_Controller {
                 } else {
                     $nestedData[] = 'No';
                 }
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+				$nestedData[] = convertTimezone($value['created']);
 
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     
@@ -1054,7 +1055,8 @@ class Home extends MX_Controller {
                 } else {
                     $nestedData[] = 'No';
                 }
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+				$nestedData[] = convertTimezone($value['created']);
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH')."grant-deed/".$documentName;
                     if(isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1115,7 +1117,8 @@ class Home extends MX_Controller {
                     $nestedData[] = 'No';
                 }
                 
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+				$nestedData[] = convertTimezone($value['created']);
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH')."legal-vesting/".$documentName;
                     if(isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1368,7 +1371,8 @@ class Home extends MX_Controller {
                     $nestedData[] = 'No';
                 }
                 
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+				$nestedData[] = convertTimezone($value['created']);
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH')."tax/".$documentName;
                     if(isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1438,7 +1442,8 @@ class Home extends MX_Controller {
                     $nestedData[] = 'No';
                 }
                 
-                $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+				$nestedData[] = convertTimezone($value['created']);
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH')."curative/".$documentName;
                     if(isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1555,7 +1560,8 @@ class Home extends MX_Controller {
             $tmp_array[] = ($key + 1);
             $tmp_array[] = $file_data->name;
             $tmp_array[] = $file_data->description;
-            $tmp_array[] = date('m/d/Y',strtotime($file_data->created_at));
+            // $tmp_array[] = date('m/d/Y',strtotime($file_data->created_at));
+			$tmp_array[] = convertTimezone($file_data->created_at,'m/d/Y');
             $documentName = $file_data->file_path;
             $formId = $file_data->id;
             $documentUrl = env('AWS_PATH')."file_document/".$documentName;
