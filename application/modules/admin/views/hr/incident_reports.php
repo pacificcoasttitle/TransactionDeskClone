@@ -3,14 +3,14 @@
 		<div class="col-sm-6">
 			<h1 class="h3 text-gray-800">Incident Reports</h1>
 		</div>
-		<!-- <div class="col-sm-6">
-            <a href="#" class="btn btn-success btn-icon-split float-right">
+		<div class="col-sm-6">
+            <a href="<?php echo base_url('hr/admin/add-incident-report') ?>" class="btn btn-success btn-icon-split float-right">
                 <span class="icon text-white-50">
                     <i class="fa fa-plus"></i>
                 </span>
                 <span class="text">Add Incident Report</span>
             </a>
-		</div> -->
+		</div>
 	</div>
 
     <?php if(!empty($success)) {?>
