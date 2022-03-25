@@ -380,6 +380,7 @@ $route['hr/admin/edit-time-card/:num'] = 'admin/hr/timeCards/editTimeCard';
 $route['hr/admin/delete-time-card'] = 'admin/hr/timeCards/deleteTimeCard';
 $route['hr/admin/vacation-requests'] = 'admin/hr/vacationRequests/index';
 $route['hr/admin/add-vacation-request'] = 'admin/hr/vacationRequests/addVacationRequest';
+$route['hr/admin/save-vacation-requests'] = 'admin/hr/vacationRequests/saveVacationRequests';
 $route['hr/admin/get-vacation-requests'] = 'admin/hr/vacationRequests/getVacationRequests';
 $route['hr/admin/edit-time-card/:num'] = 'admin/hr/vacationRequests/editVacationRequest';
 $route['hr/admin/delete-time-card'] = 'admin/hr/vacationRequests/deleteVacationRequest';

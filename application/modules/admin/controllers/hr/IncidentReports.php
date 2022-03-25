@@ -176,7 +176,7 @@ class IncidentReports extends MX_Controller {
 		$this->admintemplate->addJS( base_url('assets/frontend/hr/js/jquery-ui-custom.min.js') );
 		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.steps.min.js') );
 		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.validate.min.js') );
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=inc_0.1') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=inc_0.2') );
         $this->admintemplate->show("hr", "add_incident_report", $data);
 	}
 

@@ -145,104 +145,72 @@ class VacationRequests extends MX_Controller {
 
     public function addVacationRequest()
     {
-        $data['title'] = 'HR-Center Add User';
-        $data['page_title'] = 'Users';
-        $data['hrPositions'] = $this->hr->getHrPositions(); 
-        $data['userTypes'] = $this->hr->getHrUserTypes(); 
-        if ($this->input->post()) {
-            $this->load->library('hr/common');
-            $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
-            $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
-            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[pct_hr_users.email]', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique'=>'Email already Exist'));
-            $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
-            $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
-            $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
-           
-            if ($this->form_validation->run() == true) {
-                $randomPassword = $this->common->randomPassword();
-                $usersData = array(
-                    'first_name' =>  $this->input->post('first_name'),
-                    'last_name' =>  $this->input->post('last_name'),
-                    'email' => $this->input->post('email'),
-                    'password' => password_hash($randomPassword, PASSWORD_DEFAULT),    
-                    'position_id' => $this->input->post('position'),
-                    'user_type_id' => $this->input->post('user_type'),
-                    'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
-                    'status' => 1,
-                    'is_tmp_password' => 1
-                );
-                $this->hr->insert($usersData, 'pct_hr_users');
-                $successMsg = 'User added successfully.';
+        $data['title'] = 'HR-Center Vacation Request';
+        $data['page_title'] = 'Report new Vacation Request';
+		$this->load->model('hr/users_model');
+		$users = $this->users_model->with('position')->get_all();
+		$data['employees'] = $users;
+        
+		$this->admintemplate->addCSS( base_url('assets/frontend/hr/css/smart-forms.css?v=0.1') );
 
-                $from_name = 'Pacific Coast Title Company';
-                $from_mail = getenv('FROM_EMAIL');
-                $message_body = "Hi ".$this->input->post('first_name')." ".$this->input->post('last_name').", <br><br>";
-                $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
-                $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-                $message_body .= "Please click on the link below to complete your registration.<br><br> ".getenv('APP_URL')."hr/login";
-                $subject = 'Invitation For Pacific Coast Title HR Center';
-                $to = $this->input->post('email');
-                $this->load->helper('sendemail');
-                send_email($from_mail, $from_name, $to, $subject, $message_body);
-                $this->session->set_userdata('success', $successMsg);
-                redirect(base_url().'hr/admin/users');
-            } else {
-                $data['first_name_error_msg'] = form_error('first_name');
-                $data['last_name_error_msg'] = form_error('last_name');
-                $data['email_error_msg'] = form_error('email');
-                $data['position_error_msg'] = form_error('position');
-                $data['hire_date_error_msg'] = form_error('hire_date');
-                $data['user_type_error_msg'] = form_error('user_type');
-            }                                       
-        }
-        $this->admintemplate->show("hr", "add_user", $data);
+		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.steps.min.js') );
+		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
+		$this->admintemplate->addJS( base_url('assets/frontend/js/parsley.min.js') );
+		// $this->admintemplate->addJS( base_url('assets/frontend/js/jquery.validate.min.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=vac_0.1') );
+        $this->admintemplate->show("hr", "add_vacation_request", $data);
     }
 
-    public function editVacationRequest()
+    public function saveVacationRequests()
     {
-        $id = $this->uri->segment(4);
-        $data['title'] = 'HR-Center Edit User';
-        $data['page_title'] = 'Users';
-        $data['hrPositions'] = $this->hr->getHrPositions(); 
-        $data['userTypes'] = $this->hr->getHrUserTypes(); 
+		// var_dump($this->input->post());die;
+        // $userdata = $this->session->userdata('hr_user');
+        
+        $ids = array();
+        $from_dates = $this->input->post('from_dates');
+        $to_dates = $this->input->post('to_dates');
+        $comments = $this->input->post('comments');
+        $is_salary_deductions = $this->input->post('is_salary_deductions');
+        $is_time_charged_vacations = $this->input->post('is_time_charged_vacations');
+        $i = 0;
 
-        if(isset($id) && !empty($id)) {
-            if ($this->input->post()) {
-                $this->load->library('hr/common');
-                $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
-                $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
-                $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
-                $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
-                $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
-               
-                if ($this->form_validation->run() == true) {
-                    $usersData = array(
-                        'first_name' =>  $this->input->post('first_name'),
-                        'last_name' =>  $this->input->post('last_name'), 
-                        'position_id' => $this->input->post('position'),
-                        'user_type_id' => $this->input->post('user_type'),
-                        'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
-                        'status' => 1
-                    );
-                    $condition = array('id' => $id);
-                    $this->hr->update($usersData, $condition, 'pct_hr_users');
-                    $successMsg = 'User updated successfully.';
-                    $this->session->set_userdata('success', $successMsg);
-                    redirect(base_url().'hr/admin/users');
-                } else {
-                    $data['first_name_error_msg'] = form_error('first_name');
-                    $data['last_name_error_msg'] = form_error('last_name');
-                    $data['position_error_msg'] = form_error('position');
-                    $data['hire_date_error_msg'] = form_error('hire_date');
-                    $data['user_type_error_msg'] = form_error('user_type');
-                }                                       
-            }
-            $data['userInfo'] = $this->hr->getUserInfo($id);
-        } else {
-            redirect(base_url().'hr/admin/users');
+        foreach($from_dates as $from_date) {
+            $vacationRequestsData = array(
+                'user_id' => $this->input->post('select_employee'),
+                'from_date' => date("Y-m-d", strtotime($from_date)),
+                'to_date' => date("Y-m-d", strtotime($to_dates[$i])),
+                'comment' => $comments[$i],
+                'is_salary_deduction' => $is_salary_deductions[$i] == 'on' ? 1 : 0,
+                'is_time_charged_vacation' => $is_time_charged_vacations[$i] == 'on' ? 1 : 0
+            );
+            $ids[] = $this->hr->insert($vacationRequestsData, 'pct_hr_vacation_requests');
+            $from_date = date("F d, Y", strtotime($from_date));
+            $to_date = date("F d, Y", strtotime($to_dates[$i]));
+            $message = 'Vacation request from '.$from_date.' to '.$to_date.' has submitted';
+            $notificationData = array(
+                'sent_user_id' => 0,
+                'message' => $message,
+                'is_admin' => 1,
+                'type' =>  'submitted'
+            );
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', 0, 1);
+            $i++;
         }
-        $this->admintemplate->show("hr", "edit_user", $data);
+        if(!empty($ids)) {
+            $success = "Vacation Requests saved successfully.";
+        } else {
+            $errors = "Something went wrong. Please try again.";
+        }
+        
+        $data = array(
+            "errors" =>  $errors,
+            "success" => $success
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url().'hr/admin/vacation-requests');
     }
+
 
     public function deleteVacationRequest()
     {
