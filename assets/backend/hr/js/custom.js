@@ -802,6 +802,13 @@ $(document).ready(function () {
 			})
 		});
 
+		$("#reg_hours, #ot_hours, #double_ot").on('change', function() {
+			var reg_hours = $('#reg_hours').val() != '' ? $('#reg_hours').val() : 0;
+			var ot_hours = $('#ot_hours').val() != '' ? $('#ot_hours').val() : 0;
+			var double_ot = $('#double_ot').val() != '' ? $('#double_ot').val() : 0;
+			$('#total_hours').val(parseInt(reg_hours) + parseInt (ot_hours) + parseInt(double_ot));
+		});
+
 		$(".exp_date").datepicker({
 			defaultDate: "-1d",
 			changeMonth: false,
