@@ -375,6 +375,7 @@ $route['hr/admin/edit-user/:num'] = 'admin/hr/users/editUser';
 $route['hr/admin/delete-user'] = 'admin/hr/users/deleteUser';
 $route['hr/admin/time-cards'] = 'admin/hr/timeCards/index';
 $route['hr/admin/add-time-card'] = 'admin/hr/timeCards/addTimeCard';
+$route['hr/admin/save-time-cards'] = 'admin/hr/timeCards/saveTimeCards';
 $route['hr/admin/get-time-cards'] = 'admin/hr/timeCards/getTimeCards';
 $route['hr/admin/edit-time-card/:num'] = 'admin/hr/timeCards/editTimeCard';
 $route['hr/admin/delete-time-card'] = 'admin/hr/timeCards/deleteTimeCard';
