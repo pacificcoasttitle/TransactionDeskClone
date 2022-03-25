@@ -161,4 +161,63 @@ class IncidentReports extends MX_Controller {
         }
         echo json_encode($response);
     }
+
+	public function addIncident()
+	{
+		$data['title'] = 'HR-Center Report Incident';
+        $data['page_title'] = 'Report new incident';
+		$this->load->model('hr/users_model');
+		$users = $this->users_model->with('position')->get_all();
+		$data['employees'] = $users;
+        
+		$this->admintemplate->addCSS( base_url('assets/frontend/hr/css/smart-forms.css?v=0.1') );
+        $this->admintemplate->addCSS( base_url('css/smart-addons.css') );
+
+		$this->admintemplate->addJS( base_url('assets/frontend/hr/js/jquery-ui-custom.min.js') );
+		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.steps.min.js') );
+		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.validate.min.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=inc_0.1') );
+        $this->admintemplate->show("hr", "add_incident_report", $data);
+	}
+
+	public function saveIncidentReports()
+    {
+        
+       
+       
+        $incidentData = array(
+            'user_id' => $this->input->post('select_employee'),
+            'incident_date' => date("Y-m-d", strtotime($this->input->post('incident_date'))),
+            'employee_number' => $this->input->post('employee_number'),
+            'incident_reason' => $this->input->post('incident_reason'),
+            'incident_detail' => $this->input->post('incident_detail'),
+            'actions' => implode(",", $this->input->post('actions')),
+            'num_of_incidents' => implode(",", $this->input->post('num_of_incidents'))
+        );
+        $id = $this->hr->insert($incidentData, 'pct_hr_incident_reports');
+
+        $incident_date = date("F d, Y", strtotime($this->input->post('incident_date')));
+        $message = 'Incident Report request of '.$incident_date.' has submitted ';
+        $notificationData = array(
+            'sent_user_id' => 0,
+            'message' => $message,
+            'is_admin' => 1,
+            'type' =>  'submitted'
+        );
+        $this->hr->insert($notificationData, 'pct_hr_notifications');
+        $this->common->sendNotification($message, 'submitted', 0, 1);
+        
+        if(!empty($id)) {
+            $success = "Incident Report saved successfully.";
+        } else {
+            $errors = "Something went wrong. Please try again.";
+        }
+        
+        $data = array(
+            "errors" =>  $errors,
+            "success" => $success
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url().'hr/admin/incident-reports');
+    }
 }

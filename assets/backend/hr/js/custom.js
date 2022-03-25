@@ -598,6 +598,149 @@ $(document).ready(function () {
             }            
         });
     } 
+
+	$("#incident-report-form").steps({
+        bodyTag: "fieldset",
+        headerTag: "h2",
+        bodyTag: "fieldset",
+        transitionEffect: "slideLeft",
+        titleTemplate: "<span class='number'>#index#</span> #title#",
+        labels: {
+            finish: "Submit Form",
+            next: "Continue",
+            previous: "Go Back",
+            loading: "Loading..." 
+        },
+        onStepChanging: function (event, currentIndex, newIndex){
+            if (currentIndex > newIndex){return true; }
+            var form = $(this);
+            if (currentIndex < newIndex){}
+            return form.valid();
+        },
+        onStepChanged: function (event, currentIndex, priorIndex){
+        },
+        onFinishing: function (event, currentIndex){
+            var form = $(this);
+            form.validate().settings.ignore = ":disabled";
+            return form.valid();
+        },
+        onFinished: function (event, currentIndex){
+            var form = $(this);
+            if(form.valid() === true) {
+                $("#incident-report-form")[0].submit();
+            } else {
+                return form.valid();
+            }				
+        }
+    }).validate({
+        errorClass: "state-error",
+        validClass: "state-success",
+        errorElement: "em",
+        onkeyup: false,
+        onclick: false,
+        rules: {
+			select_employee : {
+				required: true
+			},
+            // firstname: {
+            //     required: true
+            // },
+            // lastname: {
+            //     required: true
+            // },					
+            // emailaddress: {
+            //     required: true,
+            //     email: true
+            // },
+            employee_number: {
+                required: true,
+                number: true
+            },
+            position: {
+                required: true,
+            },
+            incident_date: {
+                required: true,
+            },
+            incident_detail: {
+                required: true
+            },
+            'actions[]': {
+                required: true,
+            },	
+            'num_of_incidents[]': {
+                required: true,
+                maxlength: 1
+            },			
+        },
+        messages: {
+            firstname: {
+                required: "Please enter firstname"
+            },
+            lastname: {
+                required: "Please enter lastname"
+            },
+            emailaddress: {
+                required: 'Please enter your email',
+                email: 'You must enter a VALID email'
+            },
+            employee_number: {
+                required: 'Please enter your employee number',
+                number: 'Please enter numbers only'
+            },
+            position: {
+                required: 'Please enter your position',
+            },
+            incident_date: {
+                required: 'Please select incident date',
+            },						
+            incident_detail: {
+                required: "Please enter the incident detail"
+            },
+            'actions[]': {
+                required: "You must check at least 1 box",
+            },
+            'num_of_incidents[]': {
+                required: "You must check at least 1 box",
+                maxlength: "Check no more than {0} boxes"
+            },	
+        },
+        highlight: function(element, errorClass, validClass) {
+            $(element).closest('.field').addClass(errorClass).removeClass(validClass);
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).closest('.field').removeClass(errorClass).addClass(validClass);
+        },
+        errorPlacement: function(error, element) {
+            if (element.is(":radio") || element.is(":checkbox")) {
+                element.closest('.option-group').after(error);
+            } else {
+                error.insertAfter(element.parent());
+            }
+        }
+    
+    });
+
+	$('#inc_select_employee').change(function(){
+		var first_name = $(this).find(':selected').data('first');
+		var last_name = $(this).find(':selected').data('last');
+		var email = $(this).find(':selected').data('email');
+		var position = $(this).find(':selected').data('position');
+		$("#firstname").val(first_name);
+		$("#lastname").val(last_name);
+		$("#emailaddress").val(email);
+		$("#position").val(position);
+	});
+	$(".incident_date").datepicker({
+        defaultDate: "+1w",
+        changeMonth: false,
+        numberOfMonths: 1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>',
+        onClose: function () {
+            // $(this).parsley().validate();
+        }
+    });
 });
 
 
