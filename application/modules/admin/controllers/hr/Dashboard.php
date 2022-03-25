@@ -34,8 +34,9 @@ class Dashboard extends MX_Controller {
         $this->load->model('hr/vacation_request_model');
         $this->load->model('hr/report_incident_model');
         $this->load->model('hr/training_status_model');
+		$this->load->library('order/order');
         $this->common->is_hr_admin();
-        $userdata = $this->session->userdata('user');
+        $userdata = $this->session->userdata('hr_admin');
         $this->user = $userdata;
     }
 

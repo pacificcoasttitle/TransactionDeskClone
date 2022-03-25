@@ -78,7 +78,7 @@ class Memos extends MX_Controller {
                 $nestedData[] = $count;
 	            $nestedData[] = $value['subject'];
                 $nestedData[] = date("m/d/Y", strtotime($value['date'])); 
-                $nestedData[] = $value['user_name'];
+                $nestedData[] = $value['first_name']." ".$value['last_name'];
                 $nestedData[] = date("m/d/Y", strtotime($value['created_at'])); 
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-memo/'.$value['id'];

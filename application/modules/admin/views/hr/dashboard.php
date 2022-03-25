@@ -19,83 +19,86 @@
 		<h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
 	</div>
 
-	<div class="row">
-		<div class="col-xl-3 col-md-6 mb-4">
-			<div class="card border-left-primary shadow h-100 py-2">
-				<div class="card-body">
-					<div class="row no-gutters align-items-center">
-						<div class="col mr-2">
-							<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">TITLE OPENINGS MTD</div>
-							<div class="h5 mb-0 font-weight-bold text-gray-800 mt-1 mb-1"><?php echo $pending_timecard_count;?></div>
-							<div class="text-xs font-weight-bold text-success text-uppercase mt-1 mb-1">SALES = 0</div>
-							<div class="text-xs font-weight-bold text-info text-uppercase mt-1 mb-1">REFI'S = 0</div>
-							<div class="text-xs font-weight-bold text-warning text-uppercase mt-1 mb-1">PROJECTED  = 0</div>
-						</div>
-						<div class="col-auto">
-							<i class="fas fa-clock fa-2x text-gray-300"></i>
+	<?php $userdata = $this->session->userdata('hr_admin'); 
+	if ($userdata['user_type_id'] == 4) {?>
+		<div class="row">
+			<div class="col-xl-3 col-md-6 mb-4">
+				<div class="card border-left-primary shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">TITLE OPENINGS MTD</div>
+								<div class="h5 mb-0 font-weight-bold text-gray-800 mt-1 mb-1"><?Php echo $total_open_count; ?></div>
+								<div class="text-xs font-weight-bold text-success text-uppercase mt-1 mb-1">SALES = <?Php echo $sale_open_count;?></div>
+								<div class="text-xs font-weight-bold text-info text-uppercase mt-1 mb-1">REFI'S = <?Php echo $refi_open_count;?></div>
+								<div class="text-xs font-weight-bold text-warning text-uppercase mt-1 mb-1">PROJECTED  = <?Php echo $projected_open_count;?></div>
+							</div>
+							<div class="col-auto">
+								<i class="fas fa-clock fa-2x text-gray-300"></i>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="col-xl-3 col-md-6 mb-4">
-			<div class="card border-left-success shadow h-100 py-2">
-				<div class="card-body">
-					<div class="row no-gutters align-items-center">
-						<div class="col mr-2">
-							<div class="text-xs font-weight-bold text-success text-uppercase mb-1">TITLE CLOSINGS MTD</div>
-							<div class="h5 mb-0 font-weight-bold text-gray-800 mt-1 mb-1"><?php echo $pending_vacation_request_count;?></div>
-							<div class="text-xs font-weight-bold text-primary text-uppercase mt-1 mb-1">SALES = 0</div>
-							<div class="text-xs font-weight-bold text-info text-uppercase mt-1 mb-1">REFI'S = 0</div>
-							<div class="text-xs font-weight-bold text-warning text-uppercase mt-1 mb-1">PROJECTED  = 0</div>
-						</div>
-						<div class="col-auto">
-							<i class="fas fa-table fa-2x text-gray-300"></i>
+			<div class="col-xl-3 col-md-6 mb-4">
+				<div class="card border-left-success shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-success text-uppercase mb-1">TITLE CLOSINGS MTD</div>
+								<div class="h5 mb-0 font-weight-bold text-gray-800 mt-1 mb-1"><?Php echo $total_close_count; ?></div>
+								<div class="text-xs font-weight-bold text-primary text-uppercase mt-1 mb-1">SALES = <?Php echo $sale_close_count;?></div>
+								<div class="text-xs font-weight-bold text-info text-uppercase mt-1 mb-1">REFI'S = <?Php echo $refi_close_count;?></div>
+								<div class="text-xs font-weight-bold text-warning text-uppercase mt-1 mb-1">PROJECTED  = <?Php echo $projected_close_count;?></div>
+							</div>
+							<div class="col-auto">
+								<i class="fas fa-table fa-2x text-gray-300"></i>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="col-xl-3 col-md-6 mb-4">
-			<div class="card border-left-info shadow h-100 py-2">
-				<div class="card-body">
-					<div class="row no-gutters align-items-center">
-						<div class="col mr-2">
-							<div class="text-xs font-weight-bold text-info text-uppercase mb-1">TITLE REVENUE MTD</div>
-							<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800 mt-1 mb-1"><?php echo '$'.$pending_report_incident_count;?></div>
-							<div class="text-xs font-weight-bold text-primary text-uppercase mt-1 mb-1">SALES = $0</div>
-							<div class="text-xs font-weight-bold text-success text-uppercase mt-1 mb-1">REFI'S = $0</div>
-							<div class="text-xs font-weight-bold text-warning text-uppercase mt-1 mb-1">PROJECTED  = $0</div>
-						</div>
-						<div class="col-auto">
-							<i class="fas fa-file fa-2x text-gray-300"></i>
+			<div class="col-xl-3 col-md-6 mb-4">
+				<div class="card border-left-info shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-info text-uppercase mb-1">TITLE REVENUE MTD</div>
+								<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800 mt-1 mb-1">$<?php echo number_format($total_premium); ?></div>
+								<div class="text-xs font-weight-bold text-primary text-uppercase mt-1 mb-1">SALES = $<?php echo number_format($sale_total_premium); ?></div>
+								<div class="text-xs font-weight-bold text-success text-uppercase mt-1 mb-1">REFI'S = $<?php echo number_format($refi_total_premium); ?></div>
+								<div class="text-xs font-weight-bold text-warning text-uppercase mt-1 mb-1">PROJECTED  = $<?Php echo number_format($projected_revenue);?></div>
+							</div>
+							<div class="col-auto">
+								<i class="fas fa-file fa-2x text-gray-300"></i>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="col-xl-3 col-md-6 mb-4">
-			<div class="card border-left-warning shadow h-100 py-2">
-				<div class="card-body">
-					<div class="row no-gutters align-items-center">
-						<div class="col mr-2">
-							<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">CLOSINGS RATIO AVG</div>
-							<div class="h5 mb-0 font-weight-bold text-gray-800 mt-1 mb-1"><?php echo $pending_training_count."%";?></div>
-							<div class="text-xs font-weight-bold text-primary text-uppercase mt-1 mb-1">SALES = 0%</div>
-							<div class="text-xs font-weight-bold text-success text-uppercase mt-1 mb-1">REFI'S = 0%</div>
-							<div class="text-xs font-weight-bold text-info text-uppercase mt-1 mb-1">PROJECTED  = 0%</div>
-						</div>
-						<div class="col-auto">
-							<i class="fas fa-sticky-note fa-2x text-gray-300"></i>
+			<div class="col-xl-3 col-md-6 mb-4">
+				<div class="card border-left-warning shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">CLOSINGS RATIO AVG</div>
+								<div class="h5 mb-0 font-weight-bold text-gray-800 mt-1 mb-1"><?Php echo $close_order_percetage;?>%</div>
+								<div class="text-xs font-weight-bold text-primary text-uppercase mt-1 mb-1">SALES = <?Php echo $sale_close_order_percetage;?>%</div>
+								<div class="text-xs font-weight-bold text-success text-uppercase mt-1 mb-1">REFI'S = <?Php echo $refi_close_order_percetage;?>%</div>
+								<div class="text-xs font-weight-bold text-info text-uppercase mt-1 mb-1">PROJECTED  = 0%</div>
+							</div>
+							<div class="col-auto">
+								<i class="fas fa-sticky-note fa-2x text-gray-300"></i>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	<?php } ?>
 
 	<div class="row">
 		<div class="col-xl-3 col-md-6 mb-4">

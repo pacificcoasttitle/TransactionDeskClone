@@ -335,7 +335,6 @@ $route['hr/incident-reports'] = 'frontend/hr/incidentReports/index';
 $route['hr/get-incident-reports'] = 'frontend/hr/incidentReports/getIncidentReports';
 $route['hr/save-incident-reports'] = 'frontend/hr/incidentReports/saveIncidentReports';
 $route['hr/profile'] = 'frontend/hr/user/index';
-$route['hr/approve-deny-request'] = 'frontend/hr/hrCommon/approveDenyRequest';
 $route['hr/update-password'] = 'frontend/hr/user/updatePassword';
 $route['hr/upload-profile-pic'] = 'frontend/hr/user/uploadProfilePic';
 $route['hr/memos'] = 'frontend/hr/memos/index';
@@ -440,6 +439,7 @@ $route['hr/admin/add-branch'] = 'admin/hr/branches/addBranch';
 $route['hr/admin/get-branches'] = 'admin/hr/branches/getBranches';
 $route['hr/admin/edit-branch/(:num)'] = 'admin/hr/branches/editBranch/$1';
 $route['hr/admin/delete-branch'] = 'admin/hr/branches/deleteBranch';
+
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

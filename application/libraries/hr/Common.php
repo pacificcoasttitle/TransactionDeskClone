@@ -713,4 +713,105 @@ class Common
         );
     }
 
+    function approveDenyRequest($request_type, $request_id, $status)
+	{
+		$userdata = $this->CI->session->userdata('hr_admin');
+        $condition = array(
+            'id' => $request_id
+        );
+        $type = $status == '1' ? 'approved' : 'denied';
+        if ($request_type == 'time_card') {
+            $data = array(
+                'status' => $type,
+                'approved_date' => date('Y-m-d'),
+                'approved_by_user_id' => $userdata['id']
+            );
+			$this->CI->hr->update($data, $condition, 'pct_hr_time_cards');
+            $timeCardInfo = $this->getTimeCardInfo($request_id);
+            $exceptionDate = date("F d, Y", strtotime($timeCardInfo['exception_date']));
+            $message = 'Timecard request of '.$exceptionDate.' '.$type.' by '.$userdata['name'].' for '.$timeCardInfo['first_name']." ".$timeCardInfo['last_name'];
+
+            if ($userdata['user_type_id'] == 4) {
+                $notificationData = array(
+                    'sent_user_id' => $timeCardInfo['user_id'],
+                    'message' => $message,
+                    'is_admin' => 1,
+                    'type' =>  $type
+                );
+                $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->sendNotification($message, $type, 0, 1);
+                $this->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
+            } else {
+                $notificationData = array(
+                    'sent_user_id' => $timeCardInfo['user_id'],
+                    'message' => $message,
+                    'is_admin' => 0,
+                    'type' =>  $type
+                );
+                $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
+            }
+        } else if ($request_type == 'incident_report') {
+            $data = array(
+                'status' => $type,
+                'approved_date' => date('Y-m-d'),
+                'approved_by_user_id' => $userdata['id']
+            );
+			$this->CI->hr->update($data, $condition, 'pct_hr_incident_reports'); 
+            $incidentReportInfo = $this->getIncidentReport($request_id);
+            $incident_date = date("F d, Y", strtotime($incidentReportInfo['incident_date']));
+            $message = 'Incident report request of '.$incident_date.' '.$type.' by '.$userdata['name'].' for '.$incidentReportInfo['first_name']." ".$incidentReportInfo['last_name'];
+            if ($userdata['user_type_id'] == 4) {
+                $notificationData = array(
+                    'sent_user_id' => $incidentReportInfo['user_id'],
+                    'message' => $message,
+                    'is_admin' => 1,
+                    'type' =>  $type
+                );
+                $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->sendNotification($message, $type, 0, 1);
+                $this->sendNotification($message, $type, $incidentReportInfo['user_id'], 0);
+            } else {
+                $notificationData = array(
+                    'sent_user_id' => $incidentReportInfo['user_id'],
+                    'message' => $message,
+                    'is_admin' => 0,
+                    'type' =>  $type
+                );
+                $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->sendNotification($message, $type, $incidentReportInfo['user_id'], 0);
+            }
+        } else if ($request_type == 'vacation_request') {
+            $data = array(
+                'status' => $type,
+                'approved_date' => date('Y-m-d'),
+                'approved_by_user_id' => $userdata['id']
+            );
+			$this->CI->hr->update($data, $condition, 'pct_hr_vacation_requests'); 
+            $vacationRequestInfo = $this->getVacationRequest($request_id);
+            $from_date = date("F d, Y", strtotime($vacationRequestInfo['from_date']));
+            $to_date = date("F d, Y", strtotime($vacationRequestInfo['to_date']));
+            $message = 'Vacation request from '.$from_date.' to '.$to_date.' '.$type.' by '.$userdata['name'].' for '.$vacationRequestInfo['first_name']." ".$vacationRequestInfo['last_name'];
+            if ($userdata['user_type_id'] == 4) {
+                $notificationData = array(
+                    'sent_user_id' => $vacationRequestInfo['user_id'],
+                    'message' => $message,
+                    'is_admin' => 1,
+                    'type' =>  $type
+                );
+                $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->sendNotification($message, $type, 0, 1);
+                $this->sendNotification($message, $type, $vacationRequestInfo['user_id'], 0);
+            } else {
+                $notificationData = array(
+                    'sent_user_id' => $vacationRequestInfo['user_id'],
+                    'message' => $message,
+                    'is_admin' => 0,
+                    'type' =>  $type
+                );
+                $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->sendNotification($message, $type, $vacationRequestInfo['user_id'], 0);
+            }
+        }
+	}
 }

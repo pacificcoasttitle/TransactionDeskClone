@@ -95,8 +95,6 @@ class Timecards extends MX_Controller {
                 $nestedData[] = $status;
                 if (!empty($timeCard['approved_by_user_id'])) {
                     $nestedData[] = $timeCard['branch_manager_first_name']." ".$timeCard['branch_manager_last_name'];
-                } else if (!empty($timeCard['approved_by_admin_user_id'])) {
-                    $nestedData[] = $timeCard['user_name'];
                 } else {
                     $nestedData[] = ''  ;
                 }
