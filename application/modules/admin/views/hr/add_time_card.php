@@ -44,10 +44,10 @@
 										<div class="frm-row">
 											<div class="section colm colm12">
 												<label class="field select">
-													<select id="vac_select_employee" name="select_employee" required>
+													<select id="tc_select_employee" name="select_employee" required>
 														<option value="">Select Employee</option>
 														<?php foreach($employees as $employee) :?>
-															<option value="<?php echo $employee->id; ?>" data-first="<?php echo $employee->first_name; ?>" data-last="<?php echo $employee->last_name; ?>" data-email="<?php echo $employee->email; ?>" data-position="<?php echo $employee->position->name; ?>"><?php echo $employee->first_name.' '.$employee->last_name; ?></option>
+															<option value="<?php echo $employee->id; ?>"><?php echo $employee->first_name.' '.$employee->last_name; ?></option>
 														<?php endforeach; ?>
 													</select>
 													<i class="arrow double"></i>
