@@ -802,6 +802,17 @@ $(document).ready(function () {
 			})
 		});
 
+		$(".exp_date").datepicker({
+			defaultDate: "-1d",
+			changeMonth: false,
+			numberOfMonths: 1,
+			prevText: '<i class="fa fa-chevron-left"></i>',
+			nextText: '<i class="fa fa-chevron-right"></i>',
+			onClose: function () {
+				$(this).parsley().validate();
+			}
+		});
+
 	}
 	
 	if($('#vacation-requests-clone-group-fields').length) {
