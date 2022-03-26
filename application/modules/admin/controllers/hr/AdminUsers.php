@@ -118,7 +118,7 @@ class AdminUsers extends MX_Controller {
         if ($this->input->post()) {
             $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
             $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
-            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[admin.email_id]', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique'=>'Email already Exist'));
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[pct_hr_users.email]', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique'=>'Email already Exist'));
             $this->form_validation->set_rules('password', 'Password', 'required', array('required'=> 'Please Enter Password'));
             $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Select User Type'));
            

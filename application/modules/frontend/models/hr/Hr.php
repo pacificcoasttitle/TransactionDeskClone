@@ -39,7 +39,7 @@ class Hr extends CI_Model
     {
         $userdata = $this->session->userdata('hr_user');
         $this->db->from('pct_hr_memos')
-                 ->join('admin', 'admin.id = pct_hr_memos.created_by')
+                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_memos.created_by')
                  ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id');
         $this->db->where('pct_hr_memos.status', 1);
         $this->db->where('pct_hr_assigned_memo_users.user_id', $userdata['id']);
@@ -56,12 +56,13 @@ class Hr extends CI_Model
                 $this->db->group_start()
                         ->like('pct_hr_memos.subject', $keyword)
                         ->or_like('pct_hr_memos.created_at', date("Y-m-d", strtotime($keyword)))
-                        ->or_like('admin.user_name', $keyword)
+                        ->or_like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
                         ->group_end();
             }
             
             $this->db->from('pct_hr_memos')
-                    ->join('admin', 'admin.id = pct_hr_memos.created_by')
+                    ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_memos.created_by')
                     ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id');
             $this->db->where('pct_hr_memos.status', 1);
             $this->db->where('pct_hr_assigned_memo_users.user_id', $userdata['id']);
@@ -71,13 +72,14 @@ class Hr extends CI_Model
                 $this->db->group_start()
                         ->like('pct_hr_memos.subject', $keyword)
                         ->or_like('pct_hr_memos.created_at', date("Y-m-d", strtotime($keyword)))
-                        ->or_like('admin.user_name', $keyword)
+                        ->or_like('pct_hr_users.first_name', $keyword)
+                        ->or_like('pct_hr_users.last_name', $keyword)
                         ->group_end();
             }
 
-            $this->db->select('pct_hr_memos.*, admin.user_name');
+            $this->db->select('pct_hr_memos.*, pct_hr_users.first_name, pct_hr_users.last_name');
             $this->db->from('pct_hr_memos')
-                    ->join('admin', 'admin.id = pct_hr_memos.created_by')
+                    ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_memos.created_by')
                     ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id');
             $this->db->where('pct_hr_memos.status', 1);
             $this->db->where('pct_hr_assigned_memo_users.user_id', $userdata['id']);
@@ -92,16 +94,12 @@ class Hr extends CI_Model
 	            $memos = $query->result_array();
 	        }
     	} else {    		
-            $this->db->from('pct_hr_memos')
-                ->join('admin', 'admin.id = pct_hr_memos.created_by')
-                ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id');
-            $this->db->where('pct_hr_memos.status', 1);
-            $this->db->where('pct_hr_assigned_memo_users.user_id', $userdata['id']);
-            $filter_total_records =  $this->db->count_all_results();
+            
+            $filter_total_records =  $total_records;
 
-            $this->db->select('pct_hr_memos.*, admin.user_name');
+            $this->db->select('pct_hr_memos.*, pct_hr_users.first_name, pct_hr_users.last_name');
             $this->db->from('pct_hr_memos')
-                ->join('admin', 'admin.id = pct_hr_memos.created_by')
+                ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_memos.created_by')
                 ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id');
             $this->db->where('pct_hr_memos.status', 1);
             $this->db->where('pct_hr_assigned_memo_users.user_id', $userdata['id']);

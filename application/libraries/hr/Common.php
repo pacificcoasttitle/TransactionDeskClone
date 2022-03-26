@@ -229,10 +229,10 @@ class Common
 
 	public function getAssignedMemoInfo($id) 
     {
-        $this->CI->db->select('pct_hr_memos.*, admin.user_name');
+        $this->CI->db->select('pct_hr_memos.*, pct_hr_users.first_name, pct_hr_users.last_name');
         $this->CI->db->from('pct_hr_assigned_memo_users')
             ->join('pct_hr_memos', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id')
-            ->join('admin', 'admin.id = pct_hr_memos.created_by');
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_memos.created_by');
         $this->CI->db->where('pct_hr_assigned_memo_users.id', $id);
         $this->CI->db->where('pct_hr_memos.status', 1);
         $query = $this->CI->db->get();
