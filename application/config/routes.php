@@ -439,7 +439,10 @@ $route['hr/admin/add-branch'] = 'admin/hr/branches/addBranch';
 $route['hr/admin/get-branches'] = 'admin/hr/branches/getBranches';
 $route['hr/admin/edit-branch/(:num)'] = 'admin/hr/branches/editBranch/$1';
 $route['hr/admin/delete-branch'] = 'admin/hr/branches/deleteBranch';
-
+$route['hr/admin/get-memo-info'] = 'admin/hr/memos/getMemoInfo';
+$route['hr/admin/accept-memo'] = 'admin/hr/memos/acceptMemo';
+$route['hr/admin/trainings-branch-manager'] = 'admin/hr/training/trainingsBranchManager';
+$route['hr/admin/get-branch-manager-trainings'] = 'admin/hr/training/getBranchManagerTrainings';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

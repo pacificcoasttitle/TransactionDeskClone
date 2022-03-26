@@ -142,9 +142,9 @@ class Common
 
     public function getMemoInfo($id) 
     {
-        $this->CI->db->select('pct_hr_memos.*, admin.user_name');
+        $this->CI->db->select('pct_hr_memos.*, pct_hr_users.first_name, pct_hr_users.last_name');
         $this->CI->db->from('pct_hr_memos')
-            ->join('admin', 'admin.id = pct_hr_memos.created_by');
+            ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_memos.created_by');
         $this->CI->db->where('pct_hr_memos.id', $id);
         $this->CI->db->where('pct_hr_memos.status', 1);
         $query = $this->CI->db->get();
@@ -253,6 +253,7 @@ class Common
                 ->or_where("pct_hr_vacation_requests.to_date between '$start' and '$end'")
                 ->or_where("pct_hr_vacation_requests.from_date <= '$start' and pct_hr_vacation_requests.to_date >= '$end'")
             ->group_end();
+        $this->CI->db->where("pct_hr_vacation_requests.status != 'denied'");
         if(!empty($userIds)) {
             $this->CI->db->where_in("pct_hr_vacation_requests.user_id", $userIds);
         }
@@ -814,4 +815,94 @@ class Common
             }
         }
 	}
+
+    public function getTrainings($params)
+    { 
+        if (isset($params['is_frontend']) && $params['is_frontend'] == 1) {
+            $userdata = $this->CI->session->userdata('hr_user');
+        } else {
+            $userdata = $this->CI->session->userdata('hr_admin');
+        }
+
+        $this->CI->db->from('pct_hr_employee_training')
+            ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
+
+        $this->CI->db->where('pct_hr_employee_training.status', 1);
+        $this->CI->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
+        $total_records =  $this->CI->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $trainingsList = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_employee_training.name', $keyword)
+                        ->or_like('pct_hr_employee_training.description', $keyword)
+                        ->group_end();
+            }
+            
+            $this->CI->db->from('pct_hr_employee_training')
+                ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
+            $this->CI->db->where('pct_hr_employee_training.status', 1);
+            $this->CI->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
+			$filter_total_records =  $this->CI->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like('pct_hr_employee_training.name', $keyword)
+                    ->or_like('pct_hr_employee_training.description', $keyword)
+                    ->group_end();
+            }
+
+            $this->CI->db->select('pct_hr_employee_training.*, pct_hr_user_training_status.is_complete');
+            $this->CI->db->from('pct_hr_employee_training')
+                ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
+
+            $this->CI->db->where('pct_hr_employee_training.status', 1);
+            $this->CI->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
+            $this->CI->db->order_by('pct_hr_employee_training.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }	
+
+			$query = $this->CI->db->get();
+           
+			if ($query->num_rows() > 0) {
+	            $trainingsList = $query->result_array();
+	        }
+    	} else {    		
+            $this->CI->db->from('pct_hr_employee_training')
+                ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
+
+            $this->CI->db->where('pct_hr_employee_training.status', 1);
+            $this->CI->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
+            $filter_total_records =  $this->CI->db->count_all_results();
+
+            $this->CI->db->select('pct_hr_employee_training.*, pct_hr_user_training_status.is_complete');
+            $this->CI->db->from('pct_hr_employee_training')
+                ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id', 'inner');
+
+            $this->CI->db->where('pct_hr_employee_training.status', 1);
+            $this->CI->db->where('pct_hr_user_training_status.user_id', $userdata['id']);
+            $this->CI->db->order_by('pct_hr_employee_training.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $trainingsList = $query->result_array();
+	        } 
+    	}
+        
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $trainingsList
+        );
+    }
 }
