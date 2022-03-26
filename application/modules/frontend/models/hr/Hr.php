@@ -94,9 +94,7 @@ class Hr extends CI_Model
 	            $memos = $query->result_array();
 	        }
     	} else {    		
-            
             $filter_total_records =  $total_records;
-
             $this->db->select('pct_hr_memos.*, pct_hr_users.first_name, pct_hr_users.last_name');
             $this->db->from('pct_hr_memos')
                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_memos.created_by')

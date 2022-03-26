@@ -3,14 +3,16 @@
 		<div class="col-sm-6">
 			<h1 class="h3 text-gray-800">Memos</h1>
 		</div>
-		<div class="col-sm-6">
-            <a href="<?php echo base_url().'hr/admin/add-memo'; ?>" class="btn btn-success btn-icon-split float-right">
-                <span class="icon text-white-50">
-                    <i class="fa fa-plus"></i>
-                </span>
-                <span class="text">Add Memo</span>
-            </a>
-		</div>
+		<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
+			<div class="col-sm-6">
+				<a href="<?php echo base_url().'hr/admin/add-memo'; ?>" class="btn btn-success btn-icon-split float-right">
+					<span class="icon text-white-50">
+						<i class="fa fa-plus"></i>
+					</span>
+					<span class="text">Add Memo</span>
+				</a>
+			</div>
+		<?php } ?>
 	</div>
 
     <?php if(!empty($success)) {?>
