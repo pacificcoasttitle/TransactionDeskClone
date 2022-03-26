@@ -19,74 +19,15 @@ class HrCommon extends MX_Controller
 	
 	function approveDenyRequest()
 	{
-		$userdata = $this->session->userdata('hr_admin');
 		$request_type = $this->input->post('request_type');
         $request_id = $this->input->post('request_id');
         $status = $this->input->post('status');
-        $condition = array(
-            'id' => $request_id
-        );
-        $type = $status == '1' ? 'approved' : 'denied';
+        $this->common->approveDenyRequest($request_type, $request_id, $status);
         if ($request_type == 'time_card') {
-            $data = array(
-                'status' => $type,
-                'approved_date' => date('Y-m-d'),
-                'approved_by_user_id' => 0,
-                'approved_by_admin_user_id' => $userdata['id']
-            );
-			$this->hr->update($data, $condition, 'pct_hr_time_cards'); 
-            $timeCardInfo = $this->common->getTimeCardInfo($request_id);
-            $exceptionDate = date("F d, Y", strtotime($timeCardInfo['exception_date']));
-            $message = 'Timecard request of '.$exceptionDate.' '.$type.' by '.$userdata['name'].' for '.$timeCardInfo['first_name']." ".$timeCardInfo['last_name'];
-            $notificationData = array(
-                'sent_user_id' => $timeCardInfo['user_id'],
-                'message' => $message,
-                'is_admin' => 0,
-                'type' =>  $type
-            );
-            $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
             redirect(base_url().'hr/admin/time-cards');
         } else if ($request_type == 'incident_report') {
-            $data = array(
-                'status' => $type,
-                'approved_date' => date('Y-m-d'),
-                'approved_by_user_id' => 0,
-                'approved_by_admin_user_id' => $userdata['id']
-            );
-			$this->hr->update($data, $condition, 'pct_hr_incident_reports'); 
-            $incidentReportInfo = $this->common->getIncidentReport($request_id);
-            $incident_date = date("F d, Y", strtotime($incidentReportInfo['incident_date']));
-            $message = 'Incident report request of '.$incident_date.' '.$type.' by '.$userdata['name'].' for '.$incidentReportInfo['first_name']." ".$incidentReportInfo['last_name'];
-            $notificationData = array(
-                'sent_user_id' => $incidentReportInfo['user_id'],
-                'message' => $message,
-                'is_admin' => 0,
-                'type' =>  $type
-            );
-            $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->sendNotification($message, $type, $incidentReportInfo['user_id'], 0);
             redirect(base_url().'hr/admin/incident-reports');
         } else if ($request_type == 'vacation_request') {
-            $data = array(
-                'status' => $type,
-                'approved_date' => date('Y-m-d'),
-                'approved_by_user_id' => 0,
-                'approved_by_admin_user_id' => $userdata['id']
-            );
-			$this->hr->update($data, $condition, 'pct_hr_vacation_requests'); 
-            $vacationRequestInfo = $this->common->getVacationRequest($request_id);
-            $from_date = date("F d, Y", strtotime($vacationRequestInfo['from_date']));
-            $to_date = date("F d, Y", strtotime($vacationRequestInfo['to_date']));
-            $message = 'Vacation request from '.$from_date.' to '.$to_date.' '.$type.' by '.$userdata['name'].' for '.$vacationRequestInfo['first_name']." ".$vacationRequestInfo['last_name'];
-            $notificationData = array(
-                'sent_user_id' => $vacationRequestInfo['user_id'],
-                'message' => $message,
-                'is_admin' => 0,
-                'type' =>  $type
-            );
-            $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->sendNotification($message, $type, $vacationRequestInfo['user_id'], 0);
             redirect(base_url().'hr/admin/vacation-requests');
         }
 	}

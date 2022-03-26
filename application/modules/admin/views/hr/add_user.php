@@ -87,13 +87,15 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label style="width:100%;">User Type<span class="required"> *</span></label>
-                                        <?php foreach($userTypes as $userType) {?>
-                                            <input style="width:15px;height:15px;" class="" type="radio" name="user_type" value="<?php echo $userType['id'];?>" required>&nbsp;<?php echo $userType['name'];?>&nbsp;
-                                        <?php } ?>
+                                        <?php foreach($userTypes as $userType) {
+                                                if ($userType['id'] != 1 && $userType['id'] !=2 ) {?>
+                                                    <input style="width:15px;height:15px;" class="" type="radio" name="user_type" value="<?php echo $userType['id'];?>" required>&nbsp;<?php echo $userType['name'];?>&nbsp;
+                                                <?php } 
+                                        } ?>
                                     </div>
-                                    <?php if(!empty($hire_date_error_msg)){ ?>  
+                                    <?php if(!empty($user_type_error_msg)){ ?>  
                                         <div class="typography-line text-danger">
-                                            <?php echo $hire_date_error_msg;?>
+                                            <?php echo $user_type_error_msg;?>
                                         </div>
                                     <?php } ?>
                                 </div>

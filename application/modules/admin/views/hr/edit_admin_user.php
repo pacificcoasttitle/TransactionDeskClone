@@ -17,7 +17,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="email">Email address<span class="required"> *</span></label>
-                                        <input type="email" class="form-control" placeholder="Email" name="email" id="email" value="<?php echo $adminUserInfo['email_id'];?>" disabled="disabled" required="required">
+                                        <input type="email" class="form-control" placeholder="Email" name="email" id="email" value="<?php echo $adminUserInfo['email'];?>" disabled="disabled" required="required">
                                     </div>
                                     <?php if(!empty($email_error_msg)){ ?>       
                                         <div class="typography-line text-danger">
@@ -26,12 +26,11 @@
                                     <?php } ?>
                                 </div>
                             </div>
-                            <?php $name = explode(" ", $adminUserInfo['user_name']);?>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="first_name">First Name<span class="required"> *</span></label>
-                                        <input type="text" class="form-control" placeholder="First Name" name="first_name" id="first_name" value="<?php echo $name[0];?>" required="required">
+                                        <input type="text" class="form-control" placeholder="First Name" name="first_name" id="first_name" value="<?php echo $adminUserInfo['first_name'];?>" required="required">
                                     </div>
                                     <?php if(!empty($first_name_error_msg)){ ?>  
                                         <div class="typography-line text-danger">
@@ -44,7 +43,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Last Name<span class="required"> *</span></label>
-                                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" id="last_name" value="<?php echo $name[1];?>" required="required">
+                                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" id="last_name" value="<?php echo $adminUserInfo['last_name'];?>" required="required">
                                     </div>
                                     <?php if(!empty($last_name_error_msg)){ ?>  
                                         <div class="typography-line text-danger">
@@ -66,6 +65,25 @@
                                     <?php } ?>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label style="width:100%;">User Type<span class="required"> *</span></label>
+                                        <?php foreach($userTypes as $userType) { 
+                                                if ($userType['id'] == 1 || $userType['id'] ==2 ) { ?>
+                                                    <input style="width:15px;height:15px;" <?php echo $adminUserInfo['user_type_id'] == $userType['id'] ? 'checked' : '';?> class="" type="radio" name="user_type" value="<?php echo $userType['id'];?>" required>&nbsp;<?php echo $userType['name'];?>&nbsp;
+                                                <?php }
+                                        } ?>
+                                    </div>
+                                    <?php if(!empty($user_type_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $user_type_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
                             <button type="submit" class="btn btn-info btn-icon-split">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-save"></i>

@@ -55,7 +55,9 @@ class Timecards extends MX_Controller {
 
     public function getTimeCards()
     {
+        $userdata = $this->session->userdata('hr_admin');
         $params = array();  $data = array();
+        $params['is_frontend'] = 0;
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -64,11 +66,11 @@ class Timecards extends MX_Controller {
 			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
 			$pageno = ($params['start'] / $params['length'])+1;
-			$timeCardsList = $this->hr->getTimeCards($params);
+			$timeCardsList = $this->common->getTimeCards($params);
 			$json_data['draw'] = intval( $params['draw'] );
 		} else {
 			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-			$timeCardsList = $this->hr->getTimeCards($params);
+			$timeCardsList = $this->common->getTimeCards($params);
 		}
 		
 		if (isset($timeCardsList['data']) && !empty($timeCardsList['data'])) {
@@ -83,7 +85,7 @@ class Timecards extends MX_Controller {
                 $nestedData[] = $timeCard['double_ot'];
 				$nestedData[] = $timeCard['total_hours'];
                 $status = '<span class="badge badge-info">Pending</span>';
-                if (ucfirst(!empty($timeCard['approved_by_user_id']) || !empty($timeCard['approved_by_admin_user_id']))) {
+                if (!empty($timeCard['approved_by_user_id'])) {
                     if ($timeCard['status'] == 'approved') {
                         $status = '<span class="badge badge-success">Approved</span>';
                     } else {
@@ -93,47 +95,48 @@ class Timecards extends MX_Controller {
                 $nestedData[] = $status;
                 if (!empty($timeCard['approved_by_user_id'])) {
                     $nestedData[] = $timeCard['branch_manager_first_name']." ".$timeCard['branch_manager_last_name'];
-                } else if (!empty($timeCard['approved_by_admin_user_id'])) {
-                    $nestedData[] = $timeCard['user_name'];
                 } else {
                     $nestedData[] = ''  ;
                 }
 
-                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $editUrl = base_url().'hr/admin/edit-time-card/'.$timeCard['id'];
-                    if (!empty($timeCard['approved_by_user_id']) || !empty($timeCard['approved_by_admin_user_id'])) {
-                        if ($timeCard['status'] == 'approved') {
-                            $nestedData[] = '
-                                    <a href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-ban"></i>
-                                        </span>
-                                        <span class="text">Deny</span>
-                                    </a>';
-                        } else {
-                            $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                        <span class="text">Approve</span>
-                                    </a>
-                                    '; 
-                        }
-                    } else {
-                       $nestedData[] = '<div style="display:inline-flex;">
-                                        <a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    if($userdata['id'] != $timeCard['user_id']) {
+                        if (!empty($timeCard['approved_by_user_id'])) {
+                            if ($timeCard['status'] == 'approved') {
+                                $nestedData[] = '
+                                        <a href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-ban"></i>
+                                            </span>
+                                            <span class="text">Deny</span>
+                                        </a>';
+                            } else {
+                                $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-check"></i>
                                             </span>
                                             <span class="text">Approve</span>
                                         </a>
-                                        <a style="margin-left: 5px;" href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-ban"></i>
-                                            </span>
-                                            <span class="text">Deny</span>
-                                        </a>
-                                    </div>'; 
+                                        '; 
+                            }
+                        } else {
+                            $nestedData[] = '<div style="display:inline-flex;">
+                                            <a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                                <span class="text">Approve</span>
+                                            </a>
+                                            <a style="margin-left: 5px;" href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-ban"></i>
+                                                </span>
+                                                <span class="text">Deny</span>
+                                            </a>
+                                        </div>'; 
+                        }
+                    } else {
+                        $nestedData[] = ''  ;
                     }
                 }
 				$data[] = $nestedData; 

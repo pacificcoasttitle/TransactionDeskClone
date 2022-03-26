@@ -20,6 +20,7 @@ class Dashboard extends MX_Controller {
 	 */
 
     private $dashboard_js_version = '01';
+    private $user;
 	public function __construct()
     {
         parent::__construct();
@@ -33,7 +34,10 @@ class Dashboard extends MX_Controller {
         $this->load->model('hr/vacation_request_model');
         $this->load->model('hr/report_incident_model');
         $this->load->model('hr/training_status_model');
+		$this->load->library('order/order');
         $this->common->is_hr_admin();
+        $userdata = $this->session->userdata('hr_admin');
+        $this->user = $userdata;
     }
 
     public function index()
@@ -44,6 +48,71 @@ class Dashboard extends MX_Controller {
         $data['pending_vacation_request_count'] = $this->vacation_request_model->count_by('approved_date', null);
         $data['pending_report_incident_count'] = $this->report_incident_model->count_by('approved_date', null);
         $data['pending_training_count'] = $this->training_status_model->count_by('is_complete', 0);
+
+        if ($this->user['user_type_id'] == 4) {
+			$usersForBranchManager = $this->common->getUsersForBranchManager($this->user['id']);
+			if(!empty($usersForBranchManager)) {
+				$usersEmails = array_column($usersForBranchManager, 'email');	
+				$pctOrderUserInfo = $this->order->getUsersInfo($usersEmails);
+
+				if (!empty($pctOrderUserInfo)) {
+					$usersIds = array_column($pctOrderUserInfo, 'id');	
+					$workedDays = $this->order->countWorkedDaysOfMonth();
+					$workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+					$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'), $usersIds);
+					$data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+					$openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'), $usersIds);
+					$data['sale_open_count'] = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+					$data['total_open_count'] = $data['sale_open_count'] + $data['refi_open_count'];
+
+					if ($data['total_open_count'] > 0) {
+						$numOfOpenOrderPerWorkedDays = $data['total_open_count']/$workedDays;
+						$data['projected_open_count'] = (round($numOfOpenOrderPerWorkedDays*$workingDaysRemaining))+ $data['total_open_count'];
+					} else {
+						$numOfOpenOrderPerWorkedDays = 0;
+						$data['projected_open_count'] = 0;
+					}
+					$closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'), $usersIds);
+					$data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+					$closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $usersIds);
+					$data['sale_close_count'] =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+					$data['total_close_count'] = $data['refi_close_count'] + $data['sale_close_count'];
+
+					if ($data['total_close_count'] > 0) {
+						$numOfCloseOrderPerWorkedDays = $data['total_close_count']/$workedDays;
+						$data['projected_close_count'] = (round($numOfCloseOrderPerWorkedDays*$workingDaysRemaining))+ $data['total_close_count'];
+					} else {
+						$numOfCloseOrderPerWorkedDays = 0;
+						$data['projected_close_count'] = 0;
+					}
+					$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+					$data['refi_total_premium'] = $closeOrderRefiTotalPremium;
+					$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+					$data['sale_total_premium'] = $closeOrderSaleTotalPremium;
+					$data['total_premium'] = $data['sale_total_premium'] + $data['refi_total_premium'];
+
+					if ($data['total_premium'] > 0) {
+						$premiumWorkedDays = $data['total_premium']/$workedDays;
+						$data['projected_revenue'] = (round($premiumWorkedDays*$workingDaysRemaining))+ $data['total_premium'];
+					} else {
+						$premiumWorkedDays = 0;
+						$data['projected_revenue'] = 0;
+					}
+					$totalCount = $data['sale_close_count'] + $data['refi_close_count'] + $data['sale_open_count'] + $data['refi_open_count'];
+
+					if($totalCount > 0) { 
+						$data['refi_close_order_percetage'] = round(($data['refi_close_count']*100)/$totalCount);
+						$data['sale_close_order_percetage'] = round(($data['sale_close_count']*100)/$totalCount);
+						$data['close_order_percetage'] = $data['refi_close_order_percetage'] + $data['sale_close_order_percetage'];
+					} else {
+						$data['refi_close_order_percetage'] = 0;
+						$data['sale_close_order_percetage'] = 0;
+						$data['close_order_percetage'] = 0;
+					}
+				}
+			} 
+		}
+
         $this->admintemplate->addCSS( base_url('assets/libs/calendar/main.css'));
         $this->admintemplate->addJS( base_url('assets/libs/calendar/main.js'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/js/dashboard.js?v=dashboard_'.$this->dashboard_js_version) );

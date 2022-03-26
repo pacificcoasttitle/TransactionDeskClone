@@ -557,4 +557,75 @@ class Training extends MX_Controller
 	    echo json_encode($json_data);
     }
 
+	public function trainingsBranchManager()
+	{
+        $data['title'] = 'HR-Center Training';
+        $data['page_title'] = 'Branch Manager Training';
+        $data['errors'] = '';
+		$data['success'] = '';
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+		$this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=training_'.$this->custom_js_version) );
+        $this->admintemplate->show("hr", "training_branch_manager", $data);
+	}
+
+	public function getBranchManagerTrainings()
+    {
+        $params = array();  $data = array();
+		$params['is_frontend'] = 0;
+		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+			$params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+			$params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+			$pageno = ($params['start'] / $params['length'])+1;
+			$trainingsList = $this->common->getTrainings($params);
+			$json_data['draw'] = intval( $params['draw'] );
+		} else {
+			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+			$trainingsList = $this->common->getTrainings($params);
+		}
+		
+		if (isset($trainingsList['data']) && !empty($trainingsList['data'])) {
+			$i = $params['start'] + 1;
+			foreach ($trainingsList['data'] as $training)  {
+				$nestedData = array();
+				$nestedData[] = $i;
+                $nestedData[] = $training['name'];
+                $nestedData[] = $training['description'];
+				
+                if ($training['is_complete'] == 1) {
+                    $status = '<span class="badge badge-success">Completed</span>';
+                } else {
+                    $status = '<span class="badge badge-info">Pending</span>';
+                }
+                $nestedData[] = $status;
+				$nestedData[] = "<a href='".base_url()."hr/view-trainings-docs/".$training['id']."' class='btn btn-info btn-icon-split btn-sm'>
+                                            <span class='icon text-white-50'>
+                                                <i class='fas fa-eye'></i>
+                                            </span>
+                                            <span class='text'>View Documents</span>
+                                        </a>";
+                $data[] = $nestedData; 
+				$i++; 
+			}
+		}
+
+		$json_data['recordsTotal'] = intval( $trainingsList['recordsTotal'] );
+		$json_data['recordsFiltered'] = intval( $trainingsList['recordsFiltered'] );
+		$json_data['data'] = $data;
+		echo json_encode($json_data);
+    }
+
 }

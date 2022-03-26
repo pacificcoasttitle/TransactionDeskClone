@@ -10,7 +10,7 @@ th {
 
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
     <div class="container">
-        <div class="row">
+        <div class="row">                                                                      
             <div class="row">
                 <div class="col-xs-12">
                     <div class="typography-section__inner">

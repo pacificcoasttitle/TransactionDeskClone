@@ -55,6 +55,7 @@ class Memos extends MX_Controller {
 
     public function getMemos()
     {
+        $userdata = $this->session->userdata('hr_admin');
         $params = array();
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -78,26 +79,46 @@ class Memos extends MX_Controller {
                 $nestedData[] = $count;
 	            $nestedData[] = $value['subject'];
                 $nestedData[] = date("m/d/Y", strtotime($value['date'])); 
-                $nestedData[] = $value['user_name'];
+                $nestedData[] = $value['first_name']." ".$value['last_name'];
                 $nestedData[] = date("m/d/Y", strtotime($value['created_at'])); 
-                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $editUrl = base_url().'hr/admin/edit-memo/'.$value['id'];
-                    $nestedData[] = '<div style="display:inline-flex;">
-                                        <a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </span>
-                                            <span class="text">Edit</span>
-                                        </a>
-                                        <a style="margin-left: 5px;" href="#" onclick="deleteMemo('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-trash"></i>
-                                            </span>
-                                            <span class="text">Delete</span>
-                                        </a>
-                                    </div>';
+                
+                if($userdata['user_type_id'] == 4) {
+                    $status = '<span class="badge badge-info">Pending</span>';
+                    if ($value['is_read'] == 1) {
+                        $status = '<span class="badge badge-success">Accepted</span>';
+                    }
+                    $memoId = $value['id'];
+                    $nestedData[] = $status;
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) { 
+                        $nestedData[] = "<div style='display:inline-flex;'>
+                                            <a onclick='return showMemoInfo($memoId);' class='btn btn-info btn-icon-split btn-sm'>
+                                                <span class='icon text-white-50'>
+                                                    <i class='fas fa-eye'></i>
+                                                </span>
+                                                <span class='text'>View</span>
+                                            </a>
+                                        </div>";
+                    }
+                } else {
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $editUrl = base_url().'hr/admin/edit-memo/'.$value['id'];
+                        $nestedData[] = '<div style="display:inline-flex;">
+                                            <a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </span>
+                                                <span class="text">Edit</span>
+                                            </a>
+                                            <a style="margin-left: 5px;" href="#" onclick="deleteMemo('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-trash"></i>
+                                                </span>
+                                                <span class="text">Delete</span>
+                                            </a>
+                                        </div>';
+                    }
                 }
-	            $data[] = $nestedData;    
+                $data[] = $nestedData;    
                 $count++;          
 	    	}
 	    }
@@ -286,8 +307,8 @@ class Memos extends MX_Controller {
                 $nestedData[] = $count;
 	            $nestedData[] = $value['subject'];
                 $nestedData[] = date("m/d/Y", strtotime($value['date'])); 
-                $nestedData[] = $value['user_name'];
                 $nestedData[] = $value['first_name']." ".$value['last_name']; 
+                $nestedData[] = $value['assign_first_name']." ".$value['assign_last_name']; 
                 $status = '<span class="badge badge-info">Pending</span>';
                 if ($value['is_read'] == 1) {
                     $status = '<span class="badge badge-success">Accepted</span>';
@@ -301,5 +322,47 @@ class Memos extends MX_Controller {
         $json_data['recordsFiltered'] = intval( $memos['recordsFiltered'] );
         $json_data['data'] = $data;
 	    echo json_encode($json_data);
+    }
+
+    public function getMemoInfo()
+    {
+        $userdata = $this->session->userdata('hr_admin');
+        $memoId = $this->input->post('memoId');
+        $memoInfo = $this->common->getMemoInfo($memoId);
+        $memoInfo['to'] = $userdata['name']; 
+        $memoInfo['date'] = date("m/d/Y", strtotime($memoInfo['date'])); 
+        $response = array('status'=>'success', 'memoInfo' => $memoInfo);
+		echo json_encode($response); exit; 
+    }
+
+    public function acceptMemo()
+    {
+        $userdata = $this->session->userdata('hr_admin');
+        $memoId = $this->input->post('memoId');
+        $subject = $this->input->post('subject');
+        $memoInfo = $this->common->getMemoInfo($memoId);
+        $errors = array();
+        $success = array();
+        $data = array(
+            'is_read' => 1,
+        );
+        $condition = array(
+            'memo_id' => $memoId,
+            'user_id' => $userdata['id']
+        );
+        $this->hr->update($data, $condition, 'pct_hr_assigned_memo_users'); 
+        $successMsg =  $subject." memo accepted successfully.";
+        $memo_date = date("F d, Y", strtotime($memoInfo['date']));
+        $message = $subject.' Memo request of '.$memo_date.' accepted by '.$userdata['name'];
+        $notificationData = array(
+            'sent_user_id' => 0,
+            'message' => $message,
+            'is_admin' => 1,
+            'type' =>  'accepted'
+        );
+        $this->hr->insert($notificationData, 'pct_hr_notifications');
+        $this->common->sendNotification($message, 'accepted', 0, 1);
+        $this->session->set_userdata('success', $successMsg);
+        redirect(base_url().'hr/admin/memos');
     }
 }

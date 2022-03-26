@@ -15,18 +15,30 @@ class HrUserTypes extends AbstractSeed
      */
     public function run()
     {
+        $posts = $this->table('pct_hr_user_types');
+        $posts->truncate();
         $data = [
+            [
+                'name'    => 'Superadmin',
+                'status'    => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name'    => 'Admin',
+                'status'    => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+            ],
             [
                 'name'    => 'Employee',
                 'status'    => 1,
                 'created_at' => date('Y-m-d H:i:s'),
-            ],[
+            ],
+            [
                 'name'    => 'Manager',
                 'status'    => 1,
                 'created_at' => date('Y-m-d H:i:s'),
             ]
         ];
-        $posts = $this->table('pct_hr_user_types');
         $posts->insert($data)
               ->save();
     }

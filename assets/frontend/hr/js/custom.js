@@ -666,11 +666,11 @@ function showMemoInfo(memoId)
         success: function (response) {
             var res = jQuery.parseJSON(response);
             if(res.status == 'success') {
-                $("#subject_container").html(res.memoInfo['subject']+ ' Memo');
+                $("#subject_container").html(res.memoInfo['subject'] + ' Memo');
                 $("#subject").val(res.memoInfo['subject']);
                 $("#to").html('<b>To: </b>'+res.memoInfo['to']);
                 $("#date").html('<b>Date: </b>'+res.memoInfo['date']);
-                $("#from").html('<b>From: </b>'+res.memoInfo['user_name']);
+                $("#from").html('<b>From: </b>'+res.memoInfo['first_name']+' '+res.memoInfo['last_name']);
                 $("#description").html(res.memoInfo['description']);
                
             }  

@@ -11,6 +11,7 @@ var memos_status = '';
 var notifications = '';
 var training_status = '';
 var branches = '';
+var training_branch_manager = '';
 
 $(document).ready(function () {
     $('#hire_date').datepicker().datepicker("setDate", new Date());
@@ -555,6 +556,58 @@ $(document).ready(function () {
                     $("#training_status_processing").css("display", "none");
                 }
             }            
+        });
+    }
+
+    if ($('#training_branch_manager').length) {
+        training_branch_manager = $('#training_branch_manager').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                    next: '<span class="fa fa-angle-right"></span>',
+                    previous: '<span class="fa fa-angle-left"></span>',
+                },
+                "emptyTable": "Record(s) not found.",
+                "search": "",
+            },
+            /*"searching": false,*/
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('offersDataTables', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('offersDataTables'));
+            },
+            initComplete: function () {
+
+
+            },
+            dom: 'Bfrtip',
+            buttons: [],
+            "drawCallback": function () {
+
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "hr/admin/get-branch-manager-trainings", 
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#training_branch_manager tbody").append(
+                        '<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#training_branch_manager_processing").css("display", "none");
+                }
+            }
         });
     }
 
@@ -1308,4 +1361,34 @@ $('input[name=user_selection]').on('change', function() {
         $('#traning_department').prop('required', true);
     }
 });
+
+function showMemoInfo(memoId) 
+{
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    $.ajax({
+        url: base_url + "hr/admin/get-memo-info",
+        type: "post",
+        data: {
+            memoId: memoId
+        },
+        success: function (response) {
+            var res = jQuery.parseJSON(response);
+            if(res.status == 'success') {
+                $("#subject_container").html(res.memoInfo['subject']+ ' Memo');
+                $("#subject").val(res.memoInfo['subject']);
+                $("#to").html('<b>To: </b>'+res.memoInfo['to']);
+                $("#date").html('<b>Date: </b>'+res.memoInfo['date']);
+                $("#from").html('<b>From: </b>'+res.memoInfo['first_name']+' '+res.memoInfo['last_name']);
+                $("#description").html(res.memoInfo['description']);
+               
+            }  
+            $('#page-preloader').css('display', 'none');
+            $('#memo_information').modal('show');
+            $('#memoId').val(memoId);
+        }
+    });
+    return false;
+}
+
 

@@ -36,9 +36,10 @@ class Trainings extends MX_Controller
         $this->template->show("hr", "trainings", $data);
 	}
 
-    public function  getTrainings()
+    public function getTrainings()
     {
         $params = array();  $data = array();
+        $params['is_frontend'] = 1;
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -47,11 +48,11 @@ class Trainings extends MX_Controller
 			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
 			$pageno = ($params['start'] / $params['length'])+1;
-			$trainingsList = $this->hr->getTrainings($params);
+			$trainingsList = $this->common->getTrainings($params);
 			$json_data['draw'] = intval( $params['draw'] );
 		} else {
 			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-			$trainingsList = $this->hr->getTrainings($params);
+			$trainingsList = $this->common->getTrainings($params);
 		}
 		
 		if (isset($trainingsList['data']) && !empty($trainingsList['data'])) {

@@ -77,7 +77,7 @@ class Memos extends MX_Controller {
 	    		$nestedData=array();
                 $nestedData[] = $count;
 	            $nestedData[] = $value['subject'];
-                $nestedData[] = $value['user_name'];
+                $nestedData[] = $value['first_name']." ".$value['last_name'];
                 $nestedData[] = date("m/d/Y", strtotime($value['created_at'])); 
                 $memoId = $value['id'];
                 $nestedData[] = "<div class=''>
