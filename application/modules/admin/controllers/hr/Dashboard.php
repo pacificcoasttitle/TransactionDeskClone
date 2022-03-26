@@ -50,6 +50,7 @@ class Dashboard extends MX_Controller {
         $data['pending_training_count'] = $this->training_status_model->count_by('is_complete', 0);
 
         if ($this->user['user_type_id'] == 4) {
+			echo "hehe";
 			$usersForBranchManager = $this->common->getUsersForBranchManager($this->user['id']);
 			if(!empty($usersForBranchManager)) {
 				$usersEmails = array_column($usersForBranchManager, 'email');	
