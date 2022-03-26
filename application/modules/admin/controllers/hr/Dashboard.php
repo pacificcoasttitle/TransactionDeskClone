@@ -20,7 +20,6 @@ class Dashboard extends MX_Controller {
 	 */
 
     private $dashboard_js_version = '01';
-    private $user;
 	public function __construct()
     {
         parent::__construct();
@@ -36,12 +35,11 @@ class Dashboard extends MX_Controller {
         $this->load->model('hr/training_status_model');
 		$this->load->library('order/order');
         $this->common->is_hr_admin();
-        $userdata = $this->session->userdata('hr_admin');
-        $this->user = $userdata;
     }
 
     public function index()
     {
+		$userdata = $this->session->userdata('hr_admin');
         $data['title'] = 'HR-Center Admin Dashboard';
         $data['page_title'] = 'Dashboard';
         $data['pending_timecard_count'] = $this->timecards_model->count_by('approved_date', null);
@@ -49,8 +47,7 @@ class Dashboard extends MX_Controller {
         $data['pending_report_incident_count'] = $this->report_incident_model->count_by('approved_date', null);
         $data['pending_training_count'] = $this->training_status_model->count_by('is_complete', 0);
 
-        if ($this->user['user_type_id'] == 4) {
-			echo "hehe";
+        if ($userdata['user_type_id'] == '4') {
 			$usersForBranchManager = $this->common->getUsersForBranchManager($this->user['id']);
 			if(!empty($usersForBranchManager)) {
 				$usersEmails = array_column($usersForBranchManager, 'email');	
