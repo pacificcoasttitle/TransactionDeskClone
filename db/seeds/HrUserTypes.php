@@ -37,6 +37,11 @@ class HrUserTypes extends AbstractSeed
                 'name'    => 'Manager',
                 'status'    => 1,
                 'created_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name'    => 'Onboarding Laison',
+                'status'    => 1,
+                'created_at' => date('Y-m-d H:i:s'),
             ]
         ];
         $posts->insert($data)
