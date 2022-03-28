@@ -611,7 +611,7 @@ class Training extends MX_Controller
                     $status = '<span class="badge badge-info">Pending</span>';
                 }
                 $nestedData[] = $status;
-				$nestedData[] = "<a href='".base_url()."hr/view-trainings-docs/".$training['id']."' class='btn btn-info btn-icon-split btn-sm'>
+				$nestedData[] = "<a href='".base_url()."hr/admin/view-trainings-docs/".$training['id']."' class='btn btn-info btn-icon-split btn-sm'>
                                             <span class='icon text-white-50'>
                                                 <i class='fas fa-eye'></i>
                                             </span>
@@ -626,6 +626,50 @@ class Training extends MX_Controller
 		$json_data['recordsFiltered'] = intval( $trainingsList['recordsFiltered'] );
 		$json_data['data'] = $data;
 		echo json_encode($json_data);
+    }
+
+	public function viewTrainingsDocs()
+    {
+        $id = $this->uri->segment(4);
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->model('hr/training_model');
+        $this->load->model('hr/training_material_model');
+        $this->load->model('hr/training_status_model');
+        $data['training_status'] = $this->training_status_model->get_many_by("(user_id = {$userdata['id']} and training_id ={$id})");
+        $data['trainingMaterials'] = $this->training_model->with('materials')->get($id);
+        $this->admintemplate->show("hr", "view_training_docs", $data);
+    }
+
+	public function completeTraining($id)
+    {
+        $this->load->model('hr/training_model');
+        $trainingDetails = $this->training_model->get($id);
+        $userdata = $this->session->userdata('hr_admin');
+        $condition = array(
+            'user_id' => $userdata['id'],
+            'training_id' => $id
+        );
+        $data = array(
+            'is_complete' => 1
+        );
+        $this->hr->update($data, $condition, 'pct_hr_user_training_status');
+        $message = $trainingDetails->name.' training completed successfully by '.$userdata['name'];
+        $notificationData = array(
+            'sent_user_id' => 0,
+            'message' => $message,
+            'is_admin' => 1,
+            'type' => 'approved'
+        );
+        $this->hr->insert($notificationData, 'pct_hr_notifications');
+        $this->common->sendNotification($message, 'approved', 0, 1);
+        
+        $success = $trainingDetails->name.' training completed successfully';
+        $data = array(
+            "errors" => '' ,
+            "success" => $success
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url().'hr/admin/trainings-branch-manager');
     }
 
 }
