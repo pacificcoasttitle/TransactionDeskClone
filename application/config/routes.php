@@ -422,6 +422,8 @@ $route['hr/admin/edit-training/(:num)'] = 'admin/hr/training/editTraining/$1';
 $route['hr/admin/delete-training'] = 'admin/hr/training/deleteTraining';
 $route['hr/admin/training-status'] = 'admin/hr/training/trainingStatus';
 $route['hr/admin/get-training-status'] = 'admin/hr/training/getTrainingStatus';
+$route['hr/admin/view-trainings-docs/:num'] = 'admin/hr/training/viewTrainingsDocs';
+$route['hr/admin/complete-training/(:num)'] = 'admin/hr/training/completeTraining/$1';
 $route['hr/admin/delete-training-material/(:num)'] = 'admin/hr/training/deleteTrainingMaterial/$1';
 
 $route['hr/admin/memos'] = 'admin/hr/memos/index';
