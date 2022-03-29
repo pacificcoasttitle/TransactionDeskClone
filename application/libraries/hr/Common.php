@@ -909,11 +909,11 @@ class Common
 	public function convertTimezone($dateTime,$format = 'm/d/Y h:i:s A',$to_timezone = '')
 	{
 		$default_timezone = $to_timezone = 'America/Los_Angeles';
-		if($to_timezone == '') {
-			$to_timezone = 'America/Los_Angele';
-		}
-		if(!empty($_COOKIE['user_timezone'])) {
+		if(!empty($_COOKIE['user_timezone']) && $to_timezone == '') {
 			$to_timezone = $_COOKIE['user_timezone'];
+		}
+		else if($to_timezone == ''){
+			$to_timezone = 'America/Los_Angele';
 		}
 		$date = new DateTime($dateTime);
 		try {
