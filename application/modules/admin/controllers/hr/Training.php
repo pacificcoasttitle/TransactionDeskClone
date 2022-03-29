@@ -541,7 +541,8 @@ class Training extends MX_Controller
                 $nestedData[] = $count;
 	            $nestedData[] = $value['name'];
 				$nestedData[] = $value['first_name']." ".$value['last_name']; 
-                $nestedData[] = date("m/d/Y", strtotime($value['created_at'])); 
+                // $nestedData[] = date("m/d/Y", strtotime($value['created_at'])); 
+                $nestedData[] = $this->common->convertTimezone($value['created_at'],'m/d/Y'); 
                 $status = '<span class="badge badge-info">Pending</span>';
                 if ($value['is_complete'] == 1) {
                     $status = '<span class="badge badge-success">Complted</span>';

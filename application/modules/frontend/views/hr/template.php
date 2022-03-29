@@ -20,6 +20,7 @@
     <?php echo $js_files; ?>
     <script>
         var base_url = "<?php echo base_url(); ?>";
+		document.cookie = "user_timezone="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";
     </script>
 </head>
 <body>

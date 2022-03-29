@@ -5022,7 +5022,7 @@ blockquote cite {
 
 /* ======= FOOTER ======= */
 .footer {
-  padding-top: 63px;
+  padding-top: 0px;
   color: #ccc;
   background-color: #03374f;
   

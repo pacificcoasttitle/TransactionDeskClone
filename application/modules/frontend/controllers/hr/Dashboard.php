@@ -28,6 +28,7 @@ class Dashboard extends MX_Controller
 		$data['clock_event'] = $clock_event;
 		$data['time_tracking'] = $get_today_working + $get_last_time;
 		$data['title'] = 'HR-Center Employee Dashboard';
+		// var_dump($get_today_working);die;
 		$this->template->show("hr/employee", "dashboard", $data);
 	}
 

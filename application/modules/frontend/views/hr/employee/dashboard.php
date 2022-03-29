@@ -1,4 +1,4 @@
-<section class="section-type-4a section-default typography-section-border" style="padding-bottom:0px;">
+<section class="section-type-4a section-default" style="padding-bottom:50px;">
     <div class="container">
         <div class="row">
             <div class="row">
