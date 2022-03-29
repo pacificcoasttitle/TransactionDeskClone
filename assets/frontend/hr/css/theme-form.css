@@ -5035,7 +5035,7 @@ blockquote cite {
 
 /* ======= FOOTER ======= */
 .footer {
-  padding-top: 63px;
+  padding-top: 0px;
   color: #ccc;
   background-color: #03374f;
   
@@ -5651,7 +5651,7 @@ padding-left: 0px;
     border: 3px solid #fff;
     width: 280px;
     height: 180px;
-    font-size: 15;
+    font-size: 15px;
     margin-left: 0px;
     background: transparent;
     padding-top: 26px;
@@ -5667,9 +5667,9 @@ padding-left: 0px;
     text-align: center;
     margin-left: 25px;
    /* box-shadow: 0 1px 6px rgb(57 73 76 / 35%); */
-    background: red;
-    background-image: url(../images/);
-	background-color:#dfe4ea;
+	 	background: #ededed;
+    /* background-image: url(../images/); */
+	/* background-color:#dfe4ea; */
 	display: block;
 	
 }	

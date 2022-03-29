@@ -80,4 +80,22 @@ class HrCommon extends MX_Controller
 		}
 		echo json_encode($response);
 	}
+
+	function stopTimer() {
+		$this->load->model('hr/pct_hr_employee_time_tracking_model');
+		$where['time_out'] = NULL;
+		$data = $this->pct_hr_employee_time_tracking_model->get_many_by($where);
+		foreach($data as $record) {
+			$start_time = $record->time_in;
+			$start_date = date('Y-m-d',strtotime($start_time));
+			$end_time = $start_date.' 21:00:00'; // PST 9 pm
+			$current_time = $this->common->convertTimezone(date('Y-m-d H:i:s'),'Y-m-d H:i:s','America/Los_Angeles');
+			if((strtotime($start_time) < strtotime($end_time)) && (strtotime($end_time) <= strtotime($current_time))) {
+				$update_data = array();
+				$update_data['time_out'] = $end_time;
+				$update_data['is_auto'] = 1;
+				$this->pct_hr_employee_time_tracking_model->update($record->id,$update_data);
+			}
+		}
+	}
 }
