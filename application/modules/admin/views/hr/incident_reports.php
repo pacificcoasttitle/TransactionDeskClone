@@ -42,7 +42,9 @@
                             <th>Incident Actions</th>
 							<th>Status</th>
                             <th>Approved By</th>
+							<?php if($show_action) : ?>
                             <th>Actions</th>
+							<?php endif; ?>
 						</tr>
 					</thead>
 
