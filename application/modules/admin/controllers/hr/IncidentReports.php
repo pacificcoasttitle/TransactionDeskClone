@@ -46,6 +46,12 @@ class IncidentReports extends MX_Controller {
 			$data['success'] = $this->session->userdata('success');
 			$this->session->unset_userdata('success');
 		}
+		$userdata = $this->session->userdata('hr_admin');
+		$show_action = false;
+		if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2 ) {
+			$show_action = true;
+		}
+		$data['show_action'] = $show_action;
 		$this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
@@ -101,7 +107,7 @@ class IncidentReports extends MX_Controller {
                 }
 
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    if ($userdata['id'] != $incidentReport['user_id']) {
+                    if ($userdata['id'] != $incidentReport['user_id'] &&  ($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2)) {
                         if (!empty($incidentReport['approved_by_user_id'])) {
                             if ($incidentReport['status'] == 'approved') {
                                 $nestedData[] = '
