@@ -141,31 +141,26 @@
 		</a>
 	</li>
 	
-	<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
-		<li
-			class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*training*([a-z\-])/',$this->uri->uri_string())) { echo 'active'; } ?>">
-			<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#training_menu" aria-expanded="true" aria-controls="training_menu">
-				<i class="fas fa-fw fa-sticky-note"></i>
-				<span>Trainings</span>
-			</a>
-			<div id="training_menu" class="collapse <?php if(preg_match('/hr\/admin\/([a-z\-])*training*([-\a-z])/',$this->uri->uri_string())) { echo 'show'; } ?>" aria-labelledby="memos_menu" data-parent="#accordionSidebar">
-				<div class="bg-white py-2 collapse-inner rounded">
+	<li
+		class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*training*([a-z\-])/',$this->uri->uri_string())) { echo 'active'; } ?>">
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#training_menu" aria-expanded="true" aria-controls="training_menu">
+			<i class="fas fa-fw fa-sticky-note"></i>
+			<span>Trainings</span>
+		</a>
+		<div id="training_menu" class="collapse <?php if(preg_match('/hr\/admin\/([a-z\-])*training*([-\a-z])/',$this->uri->uri_string())) { echo 'show'; } ?>" aria-labelledby="memos_menu" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
 					<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/training' || $this->uri->uri_string() == 'hr/admin/add-training' || $this->uri->segment(3) == 'edit-training') { echo 'active'; } ?>"
-						href="<?php echo base_url().'hr/admin/training'; ?>">Training List</a>
-					<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/training-status') { echo 'active'; } ?>"
-						href="<?php echo base_url().'hr/admin/training-status'; ?>">Training Status</a>
-				</div>
+					href="<?php echo base_url().'hr/admin/training'; ?>">Training List</a>
+				<?php } else { ?>
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/trainings-branch-manager') { echo 'active'; } ?>" 
+					href="<?php echo base_url().'hr/admin/trainings-branch-manager'; ?>">Training List</a>
+				<?php } ?>
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/training-status') { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/training-status'; ?>">Training Status</a>
 			</div>
-		</li>
-	<?php } else { ?>
-		<li class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/trainings-branch-manager') { echo 'active'; } ?>">
-			<a class="nav-link" href="<?php echo base_url().'hr/admin/trainings-branch-manager'; ?>">
-				<i class="fas fa-fw fa-sticky-note"></i>
-				<span>Trainings</span>
-			</a>
-		</li>
-	<?php }  ?>
-
+		</div>
+	</li>
 
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">

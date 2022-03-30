@@ -201,7 +201,11 @@ class Training extends MX_Controller
 									'type' =>  'assigned'
 								);
 								$this->hr->insert($notificationData, 'pct_hr_notifications');
-								$this->common->sendNotification($message, 'assigned', $user->id, 0);
+								if ($user->user_type_id == 4) {
+									$this->common->sendNotification($message, 'assigned', $user->id, 1);
+								} else {
+									$this->common->sendNotification($message, 'assigned', $user->id, 0);
+								}
 							}
 							if(count($training_status)) {
 								$this->training_status_model->insert_many($training_status);
@@ -222,7 +226,11 @@ class Training extends MX_Controller
 									'type' =>  'assigned'
 								);
 								$this->hr->insert($notificationData, 'pct_hr_notifications');
-								$this->common->sendNotification($message, 'assigned', $user, 0);
+								if ($user->user_type_id == 4) {
+									$this->common->sendNotification($message, 'assigned', $user->id, 1);
+								} else {
+									$this->common->sendNotification($message, 'assigned', $user->id, 0);
+								}
 							}
 
 							if(count($training_status)) {

@@ -310,7 +310,6 @@ class Common
                 $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
                 if(!empty($usersForBranchManager)) {
                     $usersIds = array_column($usersForBranchManager, 'id');
-                    $usersIds[] = $userdata['id'];
                 } else {
                     $usersIds[] = $userdata['id'];
                 }
@@ -446,7 +445,6 @@ class Common
                 $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
                 if(!empty($usersForBranchManager)) {
                     $usersIds = array_column($usersForBranchManager, 'id');
-                    $usersIds[] = $userdata['id'];
                 } else {
                     $usersIds[] = $userdata['id'];
                 }
@@ -583,7 +581,6 @@ class Common
                 $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
                 if(!empty($usersForBranchManager)) {
                     $usersIds = array_column($usersForBranchManager, 'id');
-                    $usersIds[] = $userdata['id'];
                 } else {
                     $usersIds[] = $userdata['id'];
                 }
@@ -745,22 +742,29 @@ class Common
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
                 $this->sendNotification($message, $type, $superadminInfo->id, 1);
             } else {
+                $userInfo = $this->CI->users_model->get($timeCardInfo['user_id']);
                 $notificationData = array(
                     'sent_user_id' => $timeCardInfo['user_id'],
                     'message' => $message,
                     'type' =>  $type
                 );
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
-                $this->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
-
-                $userInfo = $this->CI->users_model->get($timeCardInfo['user_id']);
-                if ($userInfo->user_type_id != 4) {
+                if ($userInfo->user_type_id == 4) {
+                    $this->sendNotification($message, $type, $timeCardInfo['user_id'], 1);
+                } else {
+                    $this->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
                     $branchUserInfo = $this->CI->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
                     $notificationData['sent_user_id'] = $branchUserInfo->id;
                     $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
                     $this->sendNotification($message, $type, $branchUserInfo->id, 1);
-                }
+                } 
             }
+            if ($status == 1) {
+                $successMsg = 'Timecard request approved successfully.';
+            } else {
+                $successMsg = 'Timecard request denied successfully.';
+            }
+            $this->CI->session->set_userdata('success', $successMsg);
         } else if ($request_type == 'incident_report') {
             $data = array(
                 'status' => $type,
@@ -785,22 +789,29 @@ class Common
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
                 $this->sendNotification($message, $type, $superadminInfo->id, 1);
             } else {
+                $userInfo = $this->CI->users_model->get($incidentReportInfo['user_id']);
                 $notificationData = array(
                     'sent_user_id' => $incidentReportInfo['user_id'],
                     'message' => $message,
                     'type' =>  $type
                 );
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
-                $this->sendNotification($message, $type, $incidentReportInfo['user_id'], 0);
-
-                $userInfo = $this->CI->users_model->get($incidentReportInfo['user_id']);
-                if ($userInfo->user_type_id != 4) {
+                if ($userInfo->user_type_id == 4) {
+                    $this->sendNotification($message, $type, $incidentReportInfo['user_id'], 1);
+                } else {
+                    $this->sendNotification($message, $type, $incidentReportInfo['user_id'], 0);
                     $branchUserInfo = $this->CI->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
                     $notificationData['sent_user_id'] = $branchUserInfo->id;
                     $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
                     $this->sendNotification($message, $type, $branchUserInfo->id, 1);
-                }
+                } 
             }
+            if ($status == 1) {
+                $successMsg = 'Incident Report request approved successfully.';
+            } else {
+                $successMsg = 'Incident Report request denied successfully.';
+            }
+            $this->CI->session->set_userdata('success', $successMsg);
         } else if ($request_type == 'vacation_request') {
             $data = array(
                 'status' => $type,
@@ -826,22 +837,30 @@ class Common
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
                 $this->sendNotification($message, $type, $superadminInfo->id, 1);
             } else {
+                $userInfo = $this->CI->users_model->get($vacationRequestInfo['user_id']);
                 $notificationData = array(
                     'sent_user_id' => $vacationRequestInfo['user_id'],
                     'message' => $message,
                     'type' =>  $type
                 );
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
-                $this->sendNotification($message, $type, $vacationRequestInfo['user_id'], 0);
 
-                $userInfo = $this->CI->users_model->get($vacationRequestInfo['user_id']);
-                if ($userInfo->user_type_id != 4) {
+                if ($userInfo->user_type_id == 4) {
+                    $this->sendNotification($message, $type, $vacationRequestInfo['user_id'], 1);
+                } else {
+                    $this->sendNotification($message, $type, $vacationRequestInfo['user_id'], 0);
                     $branchUserInfo = $this->CI->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
                     $notificationData['sent_user_id'] = $branchUserInfo->id;
                     $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
                     $this->sendNotification($message, $type, $branchUserInfo->id, 1);
-                }
+                } 
             }
+            if ($status == 1) {
+                $successMsg = 'Vacation request approved successfully.';
+            } else {
+                $successMsg = 'Vacation request denied successfully.';
+            }
+            $this->CI->session->set_userdata('success', $successMsg);
         }
 	}
 
@@ -952,4 +971,78 @@ class Common
 		}
 		return $date->format($format);
 	}
+
+    public function getNotifications($params)
+    {
+        if (isset($params['is_frontend']) && $params['is_frontend'] == 1) {
+            $userdata = $this->CI->session->userdata('hr_user');
+        } else {
+            $userdata = $this->CI->session->userdata('hr_admin');
+        }
+
+        $this->CI->db->from('pct_hr_notifications');
+        $this->CI->db->where('pct_hr_notifications.sent_user_id', $userdata['id']);
+        $total_records =  $this->CI->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $notifications = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_notifications.message', $keyword)
+                        ->group_end();
+            }
+            
+            $this->CI->db->from('pct_hr_notifications');
+            $this->CI->db->where('pct_hr_notifications.sent_user_id', $userdata['id']);
+			$filter_total_records =  $this->CI->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                        ->like('pct_hr_notifications.message', $keyword)
+                        ->group_end();
+            }
+
+            $this->CI->db->select('pct_hr_notifications.*');
+            $this->CI->db->from('pct_hr_notifications');
+            $this->CI->db->where('pct_hr_notifications.sent_user_id', $userdata['id']);
+            $this->CI->db->order_by('pct_hr_notifications.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }	
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $notifications = $query->result_array();
+	        }
+    	} else {    		
+    		$this->CI->db->from('pct_hr_notifications');
+            $this->CI->db->where('pct_hr_notifications.sent_user_id', $userdata['id']);
+            $filter_total_records =  $this->CI->db->count_all_results();
+
+            $this->CI->db->select('pct_hr_notifications.*');
+            $this->CI->db->from('pct_hr_notifications');
+            $this->CI->db->where('pct_hr_notifications.sent_user_id', $userdata['id']);
+            $this->CI->db->order_by('pct_hr_notifications.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $notifications = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $notifications
+        );
+    }
 }
