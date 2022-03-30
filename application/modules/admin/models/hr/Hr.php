@@ -657,11 +657,28 @@ class Hr extends CI_Model
 
     public function getMemosStatus($params)
     {
+        $userdata = $this->session->userdata('hr_admin');
+        $usersIds = array();
+        if ($userdata['user_type_id'] == 4) {
+            $usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
+            if(!empty($usersForBranchManager)) {
+                $usersIds = array_column($usersForBranchManager, 'id');
+                if (($key = array_search($userdata['id'], $usersIds)) !== false) {
+                    unset($usersIds[$key]);
+                }
+            } 
+        } 
+
         $this->db->from('pct_hr_memos')
                  ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_memos.created_by')
                  ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id')
                  ->join('pct_hr_users as asu', 'asu.id = pct_hr_assigned_memo_users.user_id');
         $this->db->where('pct_hr_memos.status', 1);
+
+        if (!empty($usersIds)) {
+            $this->db->where_in('pct_hr_assigned_memo_users.user_id', $usersIds);
+        }
+
         $total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -686,6 +703,9 @@ class Hr extends CI_Model
                 ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id')
                 ->join('pct_hr_users as asu', 'asu.id = pct_hr_assigned_memo_users.user_id');
             $this->db->where('pct_hr_memos.status', 1);
+            if(!empty($usersIds)) {
+                $this->db->where_in('pct_hr_assigned_memo_users.user_id', $usersIds);
+            }
 			$filter_total_records =  $this->db->count_all_results();
 
 			if (isset($keyword) && !empty($keyword)) {
@@ -705,6 +725,9 @@ class Hr extends CI_Model
                     ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id')
                     ->join('pct_hr_users as asu', 'asu.id = pct_hr_assigned_memo_users.user_id');
             $this->db->where('pct_hr_memos.status', 1);
+            if(!empty($usersIds)) {
+                $this->db->where_in('pct_hr_assigned_memo_users.user_id', $usersIds);
+            }
             $this->db->order_by('pct_hr_memos.id', 'desc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -723,6 +746,9 @@ class Hr extends CI_Model
                     ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id')
                     ->join('pct_hr_users as asu', 'asu.id = pct_hr_assigned_memo_users.user_id');
             $this->db->where('pct_hr_memos.status', 1);
+            if(!empty($usersIds)) {
+                $this->db->where_in('pct_hr_assigned_memo_users.user_id', $usersIds);
+            }
             $this->db->order_by('pct_hr_memos.id', 'desc');
 
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -742,80 +768,27 @@ class Hr extends CI_Model
         );
     }
 
-    public function getNotifications($params)
-    {
-        $this->db->from('pct_hr_notifications');
-        $this->db->where('pct_hr_notifications.is_admin', 1);
-        $total_records =  $this->db->count_all_results();
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $notifications = array();
-
-    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
-
-    		if (isset($keyword) && !empty($keyword)) {
-                $this->db->group_start()
-                        ->like('pct_hr_notifications.message', $keyword)
-                        ->group_end();
-            }
-            
-            $this->db->from('pct_hr_notifications');
-            $this->db->where('pct_hr_notifications.is_admin', 1);
-			$filter_total_records =  $this->db->count_all_results();
-
-			if (isset($keyword) && !empty($keyword)) {
-                $this->db->group_start()
-                        ->like('pct_hr_notifications.message', $keyword)
-                        ->group_end();
-            }
-
-            $this->db->select('pct_hr_notifications.*');
-            $this->db->from('pct_hr_notifications');
-            $this->db->where('pct_hr_notifications.is_admin', 1);
-            $this->db->order_by('pct_hr_notifications.id', 'desc');
-
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }	
-
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $notifications = $query->result_array();
-	        }
-    	} else {    		
-    		$this->db->from('pct_hr_notifications');
-            $this->db->where('pct_hr_notifications.is_admin', 1);
-            $filter_total_records =  $this->db->count_all_results();
-
-            $this->db->select('pct_hr_notifications.*');
-            $this->db->from('pct_hr_notifications');
-            $this->db->where('pct_hr_notifications.is_admin', 1);
-            $this->db->order_by('pct_hr_notifications.id', 'desc');
-
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }
-
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $notifications = $query->result_array();
-	        } 
-    	}
-
-    	return array(
-            'recordsTotal' => $total_records,
-            'recordsFiltered' => $filter_total_records,
-            'data' => $notifications
-        );
-    }
-
     public function getTrainingStatus($params)
     {
+        $userdata = $this->session->userdata('hr_admin');
+        $usersIds = array();
+        if ($userdata['user_type_id'] == 4) {
+            $usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
+            if(!empty($usersForBranchManager)) {
+                $usersIds = array_column($usersForBranchManager, 'id');
+                if (($key = array_search($userdata['id'], $usersIds)) !== false) {
+                    unset($usersIds[$key]);
+                }
+            } 
+        } 
+
         $this->db->from('pct_hr_employee_training')
                  ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id')
                  ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_user_training_status.user_id');
         $this->db->where('pct_hr_employee_training.status', 1);
+        if (!empty($usersIds)) {
+            $this->db->where_in('pct_hr_user_training_status.user_id', $usersIds);
+        }
         $total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -837,6 +810,9 @@ class Hr extends CI_Model
                         ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id')
                         ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_user_training_status.user_id');
             $this->db->where('pct_hr_employee_training.status', 1);
+            if (!empty($usersIds)) {
+                $this->db->where_in('pct_hr_user_training_status.user_id', $usersIds);
+            }
 			$filter_total_records =  $this->db->count_all_results();
 
 			if (isset($keyword) && !empty($keyword)) {
@@ -853,6 +829,9 @@ class Hr extends CI_Model
                         ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id')
                         ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_user_training_status.user_id');
             $this->db->where('pct_hr_employee_training.status', 1);
+            if (!empty($usersIds)) {
+                $this->db->where_in('pct_hr_user_training_status.user_id', $usersIds);
+            }
             $this->db->order_by('pct_hr_employee_training.id', 'desc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -864,17 +843,15 @@ class Hr extends CI_Model
 	            $trainings_status = $query->result_array();
 	        }
     	} else {    		
-    		$this->db->from('pct_hr_employee_training')
-                        ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id')
-                        ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_user_training_status.user_id');
-            $this->db->where('pct_hr_employee_training.status', 1);
-            $filter_total_records =  $this->db->count_all_results();
-
+            $filter_total_records =  $total_records;
             $this->db->select('pct_hr_employee_training.*, pct_hr_users.first_name, pct_hr_users.last_name, pct_hr_user_training_status.is_complete, pct_hr_user_training_status.created_at');
             $this->db->from('pct_hr_employee_training')
                         ->join('pct_hr_user_training_status', 'pct_hr_user_training_status.training_id = pct_hr_employee_training.id')
                         ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_user_training_status.user_id');
             $this->db->where('pct_hr_employee_training.status', 1);
+            if (!empty($usersIds)) {
+                $this->db->where_in('pct_hr_user_training_status.user_id', $usersIds);
+            }
             $this->db->order_by('pct_hr_employee_training.id', 'desc');
 
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {

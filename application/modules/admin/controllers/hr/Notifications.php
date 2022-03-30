@@ -46,6 +46,7 @@ class Notifications extends MX_Controller {
     public function getNotifications()
     {
         $params = array();
+        $params['is_frontend'] = 0;
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
             $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
@@ -53,11 +54,11 @@ class Notifications extends MX_Controller {
             $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
-            $notifications = $this->hr->getNotifications($params);
+            $notifications = $this->common->getNotifications($params);
             $json_data['draw'] = intval( $params['draw'] );
         } else {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $notifications = $this->hr->getNotifications($params);            
+            $notifications = $this->common->getNotifications($params);            
         }
 
         $data = array(); 

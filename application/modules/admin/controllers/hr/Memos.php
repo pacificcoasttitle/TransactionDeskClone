@@ -351,8 +351,8 @@ class Memos extends MX_Controller {
         );
         $this->hr->update($data, $condition, 'pct_hr_assigned_memo_users'); 
         $successMsg =  $subject." memo accepted successfully.";
-        $this->CI->load->model('hr/users_model');
-        $superadminInfo = $this->CI->users_model->get_by('user_type_id', 1);
+        $this->load->model('hr/users_model');
+        $superadminInfo = $this->users_model->get_by('user_type_id', 1);
         $memo_date = date("F d, Y", strtotime($memoInfo['date']));
         $message = $subject.' Memo request of '.$memo_date.' accepted by '.$userdata['name'];
         $notificationData = array(
