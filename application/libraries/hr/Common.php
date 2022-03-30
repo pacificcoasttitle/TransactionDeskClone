@@ -759,6 +759,12 @@ class Common
                     $this->sendNotification($message, $type, $branchUserInfo->id, 1);
                 } 
             }
+            if ($status == 1) {
+                $successMsg = 'Timecard request approved successfully.';
+            } else {
+                $successMsg = 'Timecard request denied successfully.';
+            }
+            $this->CI->session->set_userdata('success', $successMsg);
         } else if ($request_type == 'incident_report') {
             $data = array(
                 'status' => $type,
@@ -800,6 +806,12 @@ class Common
                     $this->sendNotification($message, $type, $branchUserInfo->id, 1);
                 } 
             }
+            if ($status == 1) {
+                $successMsg = 'Incident Report request approved successfully.';
+            } else {
+                $successMsg = 'Incident Report request denied successfully.';
+            }
+            $this->CI->session->set_userdata('success', $successMsg);
         } else if ($request_type == 'vacation_request') {
             $data = array(
                 'status' => $type,
@@ -843,6 +855,12 @@ class Common
                     $this->sendNotification($message, $type, $branchUserInfo->id, 1);
                 } 
             }
+            if ($status == 1) {
+                $successMsg = 'Vacation request approved successfully.';
+            } else {
+                $successMsg = 'Vacation request denied successfully.';
+            }
+            $this->CI->session->set_userdata('success', $successMsg);
         }
 	}
 
@@ -953,7 +971,7 @@ class Common
 		}
 		return $date->format($format);
 	}
-    
+
     public function getNotifications($params)
     {
         if (isset($params['is_frontend']) && $params['is_frontend'] == 1) {

@@ -134,7 +134,8 @@ class Memos extends MX_Controller {
         $data['title'] = 'HR-Center Memos';
         $data['page_title'] = 'Add memo';
         $data['users'] = $this->common->getAllUsers();
-    
+        $this->load->model('hr/users_model');
+
         if ($this->input->post()) {
             $this->form_validation->set_rules('subject', 'Subject', 'required', array('required'=> 'Please Enter Subject'));
             $this->form_validation->set_rules('users[]', 'Users', 'required', array('required'=> 'Please Select atleast one user'));
@@ -151,22 +152,29 @@ class Memos extends MX_Controller {
                 );
                 $memoId = $this->hr->insert($memoData, 'pct_hr_memos');
                 $users = $this->input->post('users');
-                foreach($users as $user) {
+                $user_ids = implode(',', $users);
+                $usersInfo = $this->users_model->get_many_by("id in ($user_ids)");
+                foreach($usersInfo as $user) {
                     $memoAssignedData = array(
-                        'user_id' =>  $user,
+                        'user_id' =>  $user->id,
                         'memo_id' =>  $memoId
                     );
                     $memo_assign_id = $this->hr->insert($memoAssignedData, 'pct_hr_assigned_memo_users');
                     $memo_date = date("F d, Y", strtotime($this->input->post('memo_date')));
                     $message = $this->input->post('subject').' Memo request of '.$memo_date.' has assigned to you.';
                     $notificationData = array(
-                        'sent_user_id' => $user,
+                        'sent_user_id' => $user->id,
                         'message' => $message,
                         'type' =>  'assigned'
                     );
                     $this->hr->insert($notificationData, 'pct_hr_notifications');
-                    $this->common->sendNotification($message, 'accepted', $user, 0);
-
+        
+                    if ($user->user_type_id == 4) {
+                        $this->common->sendNotification($message, 'assigned', $user->id, 1);
+                    } else {
+                        $this->common->sendNotification($message, 'assigned', $user->id, 0);
+                    }
+                   
 					//Send Mail
 					$param = $memo_assign_id;
 					$command = "php ".FCPATH."index.php frontend/order/cron sendMemoMail $param";
