@@ -193,73 +193,73 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="typography-section__inner">
-						<h2 class="ui-title-block ui-title-block_light">Welcome Elizabeth,</h2>
+						<?php $userdata = $this->session->userdata('hr_user');?>
+						<h2 class="ui-title-block ui-title-block_light">Welcome <?php echo $userdata['name'];?>,</h2>
 						<div class="ui-decor-1a bg-accent"></div>
 						<h3 class="ui-title-block_light">Below is your production figures for your branch in the month
 							of January</h3>
 					</div>
-					<div class="typography-sectiona">
-						<div class="col-md-12">
-							<div class="order-count-cotainer">
-								<div class="col-md-3 title">Title Openings MTD</div>
-								<div class="col-md-3 title">Title Closings MTD</div>
-								<div class="col-md-3 title">Title Revenue MTD</div>
-								<div class="col-md-3 title">Closings Ratio Avg</div>
+					<div class="order-count-cotainer">
+						<div class="col-md-3 title">Title Openings MTD</div>
+						<div class="col-md-3 title">Title Closings MTD</div>
+						<div class="col-md-3 title">Title Revenue MTD</div>
+						<div class="col-md-3 title">Closings Ratio Avg</div>
 
-								<div class="col-md-3 square-box">
-									<div class="sales_loan_count" id="open_order_count">148</div>
-									<div class="salesdivider">
-										<div class="sales_loan_section">Sales = <span id="sale_open_count">76</span>
-										</div>
-										<div class="sales_loan_section">Refi's = <span id="refi_open_count">72</span>
-										</div>
-									</div>
-									<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span
-											id="projected_open_section">194</span></div>
-									<div class="projected_goal_section">&nbsp;</div>
-								</div>
-
-								<div class="col-md-3 square-box">
-									<div class="sales_loan_count" id="close_order_count">76</div>
-									<div class="salesdivider">
-										<div class="sales_loan_section">Sales = <span id="sale_close_count">35</span>
-										</div>
-										<div class="sales_loan_section">Refi's = <span id="refi_close_count">41</span>
-										</div>
-									</div>
-									<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span
-											id="projected_close_section">100</span></div>
-									<div class="projected_goal_section">&nbsp;</div>
-								</div>
-
-								<div class="col-md-3 square-box">
-									<div class="sales_loan_count">$<span id="total_premium">119,643</span></div>
-									<div class="salesdivider">
-										<div class="sales_loan_section">Sales = $<span
-												id="sale_total_premium">97,764</span></div>
-										<div class="sales_loan_section">Refi's = $<span
-												id="refi_total_premium">21,879</span></div>
-									</div>
-									<div style="margin-top: 20px;" class="projected_goal_section">Projected = $<span
-											id="projected_revenue_section">157,031</span></div>
-									<div class="projected_goal_section">&nbsp;</div>
-								</div>
-
-								<div class="col-md-3 square-box">
-									<div class="sales_loan_count"><span id="close_order_percetage">34</span>%</div>
-									<div class="salesdivider">
-										<div class="sales_loan_section">Sales = <span
-												id="sale_close_order_percetage">16</span>%</div>
-										<div class="sales_loan_section">Refi's = <span
-												id="refi_close_order_percetage">18</span>%</div>
-									</div>
-									<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span
-											id="refi_open_count">0%</span></div>
-									<div class="projected_goal_section">&nbsp;</div>
-								</div>
+						<div class="col-md-3 square-box">
+							<div class="sales_loan_count" id="open_order_count"><?Php echo $total_open_count; ?></div>
+							<div class="salesdivider">
+							<div class="sales_loan_section">Sales = <span id="sale_open_count"><?Php echo $sale_open_count;?></span></div>
+							<div class="sales_loan_section">Refi's = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
 							</div>
+							<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="projected_open_section"><?Php echo $projected_open_count;?></span></div>
+							<?php if($sales_rep_info['sales_rep_no_of_open_orders'] > 0) { ?>
+								<div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div>
+							<?php } else { ?>
+								<div class="projected_goal_section">&nbsp;</div>
+							<?php } ?>
 						</div>
+
+						<div class="col-md-3 square-box">
+							<div class="sales_loan_count" id="close_order_count"><?Php echo $total_close_count; ?></div>
+							<div class="salesdivider">
+							<div class="sales_loan_section">Sales = <span id="sale_close_count"><?Php echo $sale_close_count;?></span></div>
+							<div class="sales_loan_section">Refi's = <span id="refi_close_count"><?Php echo $refi_close_count;?></span></div>
+							</div>
+							<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="projected_close_section"><?Php echo $projected_close_count;?></span></div>
+							<?php if($sales_rep_info['sales_rep_no_of_close_orders'] > 0) { ?>
+								<div class="projected_goal_section">Goal = <span id="goal_close_section"><?Php echo round($sales_rep_info['sales_rep_no_of_close_orders']/12);?></span></div>
+							<?php } else { ?>
+								<div class="projected_goal_section">&nbsp;</div>
+							<?php } ?>
+						</div>
+
+						<div class="col-md-3 square-box">
+							<div class="sales_loan_count">$<span id="total_premium"><?php echo number_format($total_premium); ?></span></div>
+							<div class="salesdivider">
+							<div class="sales_loan_section">Sales = $<span id="sale_total_premium"><?php echo number_format($sale_total_premium); ?></span></div>
+							<div class="sales_loan_section">Refi's = $<span id="refi_total_premium"><?php echo number_format($refi_total_premium); ?></span></div>
+							</div>
+							<div style="margin-top: 20px;" class="projected_goal_section">Projected = $<span id="projected_revenue_section"><?Php echo number_format($projected_revenue);?></span></div>
+							<?php if($sales_rep_info['sales_rep_premium'] > 0) { ?>
+								<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo number_format(round($sales_rep_info['sales_rep_premium']/12));?></span></div>
+							<?php } else { ?>
+								<div class="projected_goal_section">&nbsp;</div>
+							<?php } ?>
+						</div>
+
+						<div class="col-md-3 square-box">
+							<div class="sales_loan_count"><span id="close_order_percetage"><?Php echo $close_order_percetage;?></span>%</div>
+							<div class="salesdivider">
+							<div class="sales_loan_section">Sales = <span id="sale_close_order_percetage"><?Php echo $sale_close_order_percetage;?></span>%</div>
+							<div class="sales_loan_section">Refi's = <span id="refi_close_order_percetage"><?Php echo $refi_close_order_percetage;?></span>%</div>
+							</div>
+							<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="refi_open_count">0%</span></div>
+							<div class="projected_goal_section">&nbsp;</div>
+						</div>
+
+						
 					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -330,7 +330,7 @@
 							</div>
 
 							<div class="col-md-4">
-								<a href="">
+								<a href="<?php echo base_url(); ?>hr/trainings">
 									<div class="buttonOuter">
 										<button class="btn2 btn-type-6a btn-lg2" type="button">
 											<img src="<?php echo base_url(); ?>assets/media/hr/onboarding.png"
@@ -360,121 +360,4 @@
 	</div>
 </section>
 
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container">
-		<div class="row">
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="typography-section__inner">
-						<h2 class="ui-title-block ui-title-block_light">Recent Actions,</h2>
-						<div class="ui-decor-1a bg-accent"></div>
-						<h3 class="ui-title-block_light">Below are all your orders.</h3>
-					</div>
-					<div class="typography-sectiona">
-						<div class="col-md-12">
-							<div class="table-container">
-								<table class="table table-type-3 typography-last-elem">
-									<thead>
-										<tr>
-											<th>Date</th>
-											<th>Request Type</th>
-											<th>Employee Name</th>
-											<th>View</th>
-											<th>Status</th>
-											<th>Action</th>
 
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-										<tr>
-											<td>01/01/2022</td>
-											<td>Vacation</td>
-											<td>Elizabeth Vazquez</td>
-											<td><a href="#">View</a></td>
-											<td> Pending</td>
-											<td> Action</td>
-										</tr>
-
-									</tbody>
-								</table>
-								<div class="typography-sectionab"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>

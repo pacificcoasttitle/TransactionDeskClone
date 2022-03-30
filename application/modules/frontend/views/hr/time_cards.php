@@ -9,15 +9,18 @@ th {
             <div class="row">
                 <div class="col-xs-12">
                     <div class="typography-section__inner">
-                        <h2 class="ui-title-block ui-title-block_light">Timecard Exception Form,</h2>
-                        <div class="ui-decor-1a bg-accent"></div>
-                        <h3 class="ui-title-block_light">Use the form below to report your time exception.</h3><br>
-                        <h4 class="ui-title-block_light"><strong>Employee Name:</strong> <?php echo $name;?>.</h4>
-                        <h4 class="ui-title-block_light"><strong>Today's Date:</strong> <?php echo date('m/d/Y');?></h4>
-                        <h4 class="ui-title-block_light"><strong>Manager Name:</strong> </h4>
+						<div class="show-hide-form-div hide">
+							<h2 class="ui-title-block ui-title-block_light">Timecard Exception Form,</h2>
+							<div class="ui-decor-1a bg-accent"></div>
+							<h3 class="ui-title-block_light">Use the form below to report your time exception.</h3><br>
+							<h4 class="ui-title-block_light"><strong>Employee Name:</strong> <?php echo $name;?>.</h4>
+							<h4 class="ui-title-block_light"><strong>Today's Date:</strong> <?php echo date('m/d/Y');?></h4>
+							<h4 class="ui-title-block_light"><strong>Manager Name:</strong> </h4>
+						</div>
+						<button id="show-hide-form-btn" type="button" class="btn btn-danger show-hide-form-div" style="width: auto;">Add Time Exception</button>
                     </div>
 
-                    <div class="typography-sectionabcde">
+                    <div class="typography-sectionabcde show-hide-form-div hide">
                         <div class="col-md-12">
                             <div class="smart-wrap">
                                 <div class="smart-forms smart-container wrap-4">
@@ -142,31 +145,32 @@ th {
                         <h3 class="ui-title-block_light">Below is a detail of all your requests.</h3>
                     </div>
                     <div class="typography-sectiona">
-                        <div class="col-md-12">
-                            <div class="table-container">
-                                <table class="table table-type-3 typography-last-elem" id="time_card_listing">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Employee</th>
-                                            <th>Date</th>
-                                            <th>Reg Hours</th>
-                                            <th>OT Hours</th>
-                                            <th>Double OT</th>
-                                            <th>Total Hours</th>
-                                            <th>Status</th>
-                                            <?php  $userdata = $this->session->userdata('hr_user');
-                                            if ($userdata['user_type_id'] == 2) { ?>
-                                                <th>Actions</th>
-                                            <?php } ?>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                       
-                                    </tbody>
-                                </table>
-                                <div class="typography-sectionab"></div>
-                            </div>
+                        <div class="table-container">
+                            <table class="table table-type-3 typography-last-elem" id="time_card_listing" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Employee</th>
+                                        <th>Date</th>
+                                        <th>Reg Hours</th>
+                                        <th>OT Hours</th>
+                                        <th>Double OT</th>
+                                        <th>Status</th>
+                                        <th>Approved By</th>
+                                        <?php  $userdata = $this->session->userdata('hr_user');
+                                        if ($userdata['user_type_id'] == 1) { ?>
+                                            <th>Approved Date</th> 
+                                        <?php }
+                                        if ($userdata['user_type_id'] == 2) { ?>
+                                            <th>Actions</th>
+                                        <?php } ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                            <div class="typography-sectionab"></div>
                         </div>
                     </div>
                 </div>

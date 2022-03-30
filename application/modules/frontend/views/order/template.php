@@ -69,9 +69,9 @@
         th {
             text-align: center;
         }
-        .ui-widget.ui-widget-content {
-            z-index: 10000000;
-        }
+		.ui-widget.ui-widget-content {
+			z-index: 10000000;
+		}
     </style>
 	
 	<script>

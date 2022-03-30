@@ -4,12 +4,12 @@
 			<h1 class="h3 text-gray-800">Timecards</h1>
 		</div>
 		<div class="col-sm-6">
-			<!-- <a href="#" class="btn btn-success btn-icon-split float-right">
+			<a href="<?php echo base_url('hr/admin/add-time-card');?>" class="btn btn-success btn-icon-split float-right">
                 <span class="icon text-white-50">
                     <i class="fa fa-plus"></i>
                 </span>
                 <span class="text">Add Timecard</span>
-            </a> -->
+            </a>
 		</div>
 	</div>
 
@@ -41,6 +41,7 @@
 							<th>Double OT</th>
 							<th>Total Hours</th>
 							<th>Status</th>
+							<th>Approved By</th>
 							<th>Action</th>
 						</tr>
 					</thead>

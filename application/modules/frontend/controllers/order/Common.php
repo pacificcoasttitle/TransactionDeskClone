@@ -4,6 +4,13 @@
 
 class Common extends MX_Controller {
 
+	private $cpl_js_version = '01';
+	private $proposed_js_version = '01';
+	private $prelim_orders_js_version = '01';
+	private $prelim_order_js_version = '01';
+	private $upload_doc_orders_js_version = '01';
+	private $upload_document_for_order = '01';
+
 	function __construct() 
     {
         parent::__construct();
@@ -12,6 +19,7 @@ class Common extends MX_Controller {
         );
         $this->load->library('session');
 		$this->load->library('form_validation');
+		$this->load->library('order/template');
 		$this->load->model('order/orderRecording');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
@@ -29,8 +37,8 @@ class Common extends MX_Controller {
             redirect(base_url().'order');
         }
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/review_files');
+		$this->template->addJS( base_url('assets/frontend/js/order/prelim_orders.js?v=prelim_orders_'.$this->prelim_orders_js_version));
+		$this->template->show("order", "review_files", $data);
     }
 
     public function review_file()
@@ -79,8 +87,8 @@ class Common extends MX_Controller {
 		$data['prelimDocument'] = $prelimDocument;
 		$data['orderDetails'] = $orderDetails;
 		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/view_review_file');
+		$this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_'.$this->prelim_order_js_version));
+		$this->template->show("order", "view_review_file", $data);
 	}
 
 	public function summary()
@@ -154,7 +162,8 @@ class Common extends MX_Controller {
 		$userdata = $this->session->userdata('user');
 		$resware_document_id = $this->input->post('resware_document_id');
 		$order_id = $this->input->post('order_id');
-		$documentDetail = $this->order->get_document_detail($resware_document_id, $order_id);
+		$document_id = $this->input->post('document_id');
+		$documentDetail = $this->order->get_document_detail($resware_document_id, $order_id, $document_id);
 		$is_sync = $this->input->post('is_sync');
 
 		if ($userdata['is_title_officer'] == 1 || $userdata['is_sales_rep'] == 1 || $userdata['is_master'] == 1) {
@@ -617,8 +626,8 @@ class Common extends MX_Controller {
             redirect(base_url().'order');
         }
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/common/upload_doc_orders');
+		$this->template->addJS( base_url('assets/frontend/js/order/upload_doc_orders.js?v=upload_doc_orders_'.$this->upload_doc_orders_js_version));
+		$this->template->show("order/common", "upload_doc_orders", $data);
 	}
 
 	function getOrdersUploadDoc()
@@ -737,8 +746,8 @@ class Common extends MX_Controller {
 				}	
 			}
         }   
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/common/upload_documents');
+		$this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
+		$this->template->show("order/common", "upload_documents", $data);
 	}
 
 	function getOrderDocumentS() 
@@ -857,6 +866,28 @@ class Common extends MX_Controller {
 				} 
 			}
 		}
+		$orderDetails = $this->order->get_order_details($fileId);
+		if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
+			$message = 'Documents uploaded for order number #'.$orderDetails['file_number'];
+			$notificationData = array(
+				'sent_user_id' => $orderDetails['customer_id'],
+				'message' => $message,
+				'is_admin' => 0,
+				'type' =>  'created'
+			);
+			$this->home_model->insert($notificationData, 'pct_order_notifications');
+			$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+		} else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
+			$message = 'Documents uploaded for order number #'.$orderDetails['file_number'];
+			$notificationData = array(
+				'sent_user_id' => $orderDetails['title_officer'],
+				'message' => $message,
+				'is_admin' => 0,
+				'type' =>  'created'
+			);
+			$this->home_model->insert($notificationData, 'pct_order_notifications');
+			$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+		}
 		$data['errors'] = $errors;
 		$data['success'] = $success;
 		$data = array(
@@ -883,8 +914,8 @@ class Common extends MX_Controller {
 			$this->session->unset_userdata('success');
 		}
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/cpl');
+		$this->template->addJS( base_url('assets/frontend/js/order/cpl.js?v=cpl_'.$this->cpl_js_version));
+		$this->template->show("order", "cpl", $data);
 	}
 
 	public function get_orders_cpl()
@@ -1351,6 +1382,45 @@ class Common extends MX_Controller {
 				$success[] = "CPL document edited successfully for file number - ".$orderDetails['file_number'];
 				$this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $editCplResponse['response']['a:Content']);
 				$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+				if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
+					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['customer_id'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+				} else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
+					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['title_officer'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+				} else {
+					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['title_officer'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['customer_id'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+				} 
 			} else {
 				$errors[] = $editCplResponse['error']."<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
 				$cplErrorData = array(
@@ -1387,6 +1457,45 @@ class Common extends MX_Controller {
 				$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
 				$this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
 				$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+				if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
+					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['customer_id'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+				} else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
+					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['title_officer'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+				} else {
+					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['title_officer'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['customer_id'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+				} 
 			} else {
 				$errors[] = $generateCplResponse['error']."<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
 				$cplErrorData = array(
@@ -1452,6 +1561,45 @@ class Common extends MX_Controller {
 			$success[] = "Generated CPL request successfully for file number - ".$orderDetails['file_number'];
 			$this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $responseArr['content']);
 			$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+			if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
+				$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
+				$notificationData = array(
+					'sent_user_id' => $orderDetails['customer_id'],
+					'message' => $message,
+					'is_admin' => 0,
+					'type' =>  'created'
+				);
+				$this->home_model->insert($notificationData, 'pct_order_notifications');
+				$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+			} else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
+				$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
+				$notificationData = array(
+					'sent_user_id' => $orderDetails['title_officer'],
+					'message' => $message,
+					'is_admin' => 0,
+					'type' =>  'created'
+				);
+				$this->home_model->insert($notificationData, 'pct_order_notifications');
+				$this->order->sendNotification($message, 'assigned', $orderDetails['title_officer'], 0);
+			} else {
+				$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
+				$notificationData = array(
+					'sent_user_id' => $orderDetails['title_officer'],
+					'message' => $message,
+					'is_admin' => 0,
+					'type' =>  'created'
+				);
+				$this->home_model->insert($notificationData, 'pct_order_notifications');
+				$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+				$notificationData = array(
+					'sent_user_id' => $orderDetails['customer_id'],
+					'message' => $message,
+					'is_admin' => 0,
+					'type' =>  'created'
+				);
+				$this->home_model->insert($notificationData, 'pct_order_notifications');
+				$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+			} 
 		} else {
 			$errors[] = $responseArr['error']."<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
 			$cplErrorData = array(
@@ -1977,6 +2125,45 @@ class Common extends MX_Controller {
 
 				$this->order->uploadProposedDocumentToResware($document_name, $orderDetails, $binaryData);
 				$this->order->uploadDocumentOnAwsS3($document_name, 'proposed-insured');
+				if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
+					$message = 'Proposed Insured document generated for order number #'.$orderDetails['file_number'];
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['customer_id'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+				} else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
+					$message = 'Proposed Insured document generated for order number #'.$orderDetails['file_number'];
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['title_officer'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+				} else {
+					$message = 'Proposed Insured document generated for order number #'.$orderDetails['file_number'];
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['title_officer'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+					$notificationData = array(
+						'sent_user_id' => $orderDetails['customer_id'],
+						'message' => $message,
+						'is_admin' => 0,
+						'type' =>  'created'
+					);
+					$this->home_model->insert($notificationData, 'pct_order_notifications');
+					$this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+				} 
 				/*$fileSize = filesize('./uploads/proposed-insured/'.$document_name);
 				$documentData = array(
 					'document_name' => $document_name,
@@ -2015,10 +2202,9 @@ class Common extends MX_Controller {
 		
 		$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
 		$data['proposedBranches'] = $this->order->getProposedBranches();
-
     	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/proposed_insured');
+		$this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->proposed_js_version));
+		$this->template->show("order", "proposed_insured", $data);
     }
 
     function get_proposed_orders()

@@ -17,16 +17,21 @@ class HrAdminSeeder extends AbstractSeed
     {
         $data = [
             [
-                'user_name'     => 'Violet Gallegos',
-                'password'      => md5('Pacific1#'),
-                'email_id' => 'vgallegos@pct.com',
-                'is_hr_admin' => 1,
-                'is_super_hr_admin' => 1,
+                'first_name'     => 'Violet',
+                'last_name'     => 'Gallegos',
+                'password'      => password_hash('Pacific1#', PASSWORD_DEFAULT),
+                'email' => 'vgallegos@pct.com',
+                'user_type_id' => 1,
+                'position_id' => 0,
+                'department_id' => 0,
+                'hire_Date' => date('Y-m-d'),
                 'status'    => 1,
+                'hash' => '',
+                'is_tmp_password' => 0,
                 'created_at' => date('Y-m-d H:i:s'),
             ]
         ];
-        $posts = $this->table('admin');
+        $posts = $this->table('pct_hr_users');
         $posts->insert($data)
               ->save();
     }

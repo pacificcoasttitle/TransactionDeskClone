@@ -55,7 +55,9 @@ class Timecards extends MX_Controller {
 
     public function getTimeCards()
     {
+        $userdata = $this->session->userdata('hr_admin');
         $params = array();  $data = array();
+        $params['is_frontend'] = 0;
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -82,21 +84,60 @@ class Timecards extends MX_Controller {
                 $nestedData[] = $timeCard['ot_hours'];
                 $nestedData[] = $timeCard['double_ot'];
 				$nestedData[] = $timeCard['total_hours'];
-                $nestedData[] = ucfirst(!empty($timeCard['action_taken_user_id']) ? $timeCard['status'] : '');
-                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $editUrl = base_url().'hr/admin/edit-time-card/'.$timeCard['id'];
-                    $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                        <span class="text">Approve</span>
-                                    </a>
-                                    <a href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-ban"></i>
-                                        </span>
-                                        <span class="text">Deny</span>
-                                    </a>';
+                $status = '<span class="badge badge-info">Pending</span>';
+                if (!empty($timeCard['approved_by_user_id'])) {
+                    if ($timeCard['status'] == 'approved') {
+                        $status = '<span class="badge badge-success">Approved</span>';
+                    } else {
+                        $status = '<span class="badge badge-danger">Denied</span>';
+                    }
+                }
+                $nestedData[] = $status;
+                if (!empty($timeCard['approved_by_user_id'])) {
+                    $nestedData[] = $timeCard['branch_manager_first_name']." ".$timeCard['branch_manager_last_name'];
+                } else {
+                    $nestedData[] = ''  ;
+                }
+
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    if($userdata['id'] != $timeCard['user_id']) {
+                        if (!empty($timeCard['approved_by_user_id'])) {
+                            if ($timeCard['status'] == 'approved') {
+                                $nestedData[] = '
+                                        <a href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-ban"></i>
+                                            </span>
+                                            <span class="text">Deny</span>
+                                        </a>';
+                            } else {
+                                $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <span class="text">Approve</span>
+                                        </a>
+                                        '; 
+                            }
+                        } else {
+                            $nestedData[] = '<div style="display:inline-flex;">
+                                            <a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                                <span class="text">Approve</span>
+                                            </a>
+                                            <a style="margin-left: 5px;" href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-ban"></i>
+                                                </span>
+                                                <span class="text">Deny</span>
+                                            </a>
+                                        </div>'; 
+                        }
+                    } else {
+                        $nestedData[] = ''  ;
+                    }
                 }
 				$data[] = $nestedData; 
 				$i++; 
@@ -111,103 +152,87 @@ class Timecards extends MX_Controller {
 
     public function addTimeCard()
     {
-        $data['title'] = 'HR-Center Add User';
-        $data['page_title'] = 'Users';
-        $data['hrPositions'] = $this->hr->getHrPositions(); 
-        $data['userTypes'] = $this->hr->getHrUserTypes(); 
-        if ($this->input->post()) {
-            $this->load->library('hr/common');
-            $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
-            $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
-            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[pct_hr_users.email]', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique'=>'Email already Exist'));
-            $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
-            $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
-            $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
-           
-            if ($this->form_validation->run() == true) {
-                $randomPassword = $this->common->randomPassword();
-                $usersData = array(
-                    'first_name' =>  $this->input->post('first_name'),
-                    'last_name' =>  $this->input->post('last_name'),
-                    'email' => $this->input->post('email'),
-                    'password' => password_hash($randomPassword, PASSWORD_DEFAULT),    
-                    'position_id' => $this->input->post('position'),
-                    'user_type_id' => $this->input->post('user_type'),
-                    'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
-                    'status' => 1,
-                    'is_tmp_password' => 1
-                );
-                $this->hr->insert($usersData, 'pct_hr_users');
-                $successMsg = 'User added successfully.';
-
-                $from_name = 'Pacific Coast Title Company';
-                $from_mail = getenv('FROM_EMAIL');
-                $message_body = "Hi ".$this->input->post('first_name')." ".$this->input->post('last_name').", <br><br>";
-                $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
-                $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-                $message_body .= "Please click on the link below to complete your registration.<br><br> ".getenv('APP_URL')."hr/login";
-                $subject = 'Invitation For Pacific Coast Title HR Center';
-                $to = $this->input->post('email');
-                $this->load->helper('sendemail');
-                send_email($from_mail, $from_name, $to, $subject, $message_body);
-                $this->session->set_userdata('success', $successMsg);
-                redirect(base_url().'hr/admin/users');
-            } else {
-                $data['first_name_error_msg'] = form_error('first_name');
-                $data['last_name_error_msg'] = form_error('last_name');
-                $data['email_error_msg'] = form_error('email');
-                $data['position_error_msg'] = form_error('position');
-                $data['hire_date_error_msg'] = form_error('hire_date');
-                $data['user_type_error_msg'] = form_error('user_type');
-            }                                       
+        $userdata = $this->session->userdata('hr_admin');
+        $data['title'] = 'HR-Center Time Card';
+        $data['page_title'] = 'Add New Time Card';
+		$this->load->model('hr/users_model');
+        if ($userdata['user_type_id'] == 4) {
+            $userInfo = $this->users_model->get($userdata['id']);
+            $users = $this->users_model->get_many_by('branch_id', $userInfo->branch_id);
+        } else {
+            $users = $this->users_model->get_all();
         }
+		$data['employees'] = $users;
+		$this->admintemplate->addCSS( base_url('assets/frontend/hr/css/smart-forms.css?v=0.1') );
+		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.steps.min.js') );
+		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
+		$this->admintemplate->addJS( base_url('assets/frontend/js/parsley.min.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=tc_0.1') );
         $this->admintemplate->show("hr", "add_time_card", $data);
     }
 
-    public function editTimeCard()
+	public function saveTimeCards()
     {
-        $id = $this->uri->segment(4);
-        $data['title'] = 'HR-Center Edit User';
-        $data['page_title'] = 'Users';
-        $data['hrPositions'] = $this->hr->getHrPositions(); 
-        $data['userTypes'] = $this->hr->getHrUserTypes(); 
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->model('hr/users_model');
+        $userInfo = $this->users_model->get($this->input->post('select_employee'));
+        $ids = array();
+        $exception_dates = $this->input->post('exception_date');
+        $reg_hours = $this->input->post('reg_hours');
+        $ot_hours = $this->input->post('ot_hours');
+        $double_ot = $this->input->post('double_ot');
+        $total_hours = $this->input->post('total_hours');
+        $comment = $this->input->post('comment');
+        $i = 0;
 
-        if(isset($id) && !empty($id)) {
-            if ($this->input->post()) {
-                $this->load->library('hr/common');
-                $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
-                $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
-                $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
-                $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
-                $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
-               
-                if ($this->form_validation->run() == true) {
-                    $usersData = array(
-                        'first_name' =>  $this->input->post('first_name'),
-                        'last_name' =>  $this->input->post('last_name'), 
-                        'position_id' => $this->input->post('position'),
-                        'user_type_id' => $this->input->post('user_type'),
-                        'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
-                        'status' => 1
-                    );
-                    $condition = array('id' => $id);
-                    $this->hr->update($usersData, $condition, 'pct_hr_users');
-                    $successMsg = 'User updated successfully.';
-                    $this->session->set_userdata('success', $successMsg);
-                    redirect(base_url().'hr/admin/users');
-                } else {
-                    $data['first_name_error_msg'] = form_error('first_name');
-                    $data['last_name_error_msg'] = form_error('last_name');
-                    $data['position_error_msg'] = form_error('position');
-                    $data['hire_date_error_msg'] = form_error('hire_date');
-                    $data['user_type_error_msg'] = form_error('user_type');
-                }                                       
+        foreach($exception_dates as $exception_date) {
+            $timeCardsData = array(
+                'user_id' =>  $this->input->post('select_employee'),
+                'exception_date' => date("Y-m-d", strtotime($exception_date)),
+                'reg_hours' => $reg_hours[$i],
+                'ot_hours' => $ot_hours[$i],
+                'double_ot' => $double_ot[$i],
+                'total_hours' => $total_hours[$i],
+                'comment' => $comment[$i]
+            );
+            $ids[] = $this->hr->insert($timeCardsData, 'pct_hr_time_cards');
+            $exceptionDate = date("F d, Y", strtotime($exception_date));
+            $message = 'Timecard request of '.$exceptionDate.' has submitted by '.$userdata['name'];
+            $notificationData = array(
+                'sent_user_id' => $this->input->post('select_employee'),
+                'message' => $message,
+                'type' =>  'submitted'
+            );
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $this->input->post('select_employee'), 0);
+
+            $message = 'Timecard request of '.$exceptionDate.' has submitted for employee '.$userInfo->first_name." ".$userInfo->last_name.' by '.$userdata['name'];
+            $notificationData['message'] = $message;
+            if ($userdata['user_type_id'] == 4) {
+                $superadminInfo = $this->users_model->get_by('user_type_id', 1);
+                $notificationData['sent_user_id'] = $superadminInfo->id;
+                $this->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
+            } else {
+                $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+                $notificationData['sent_user_id'] = $branchUserInfo->id;
+                $this->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
             }
-            $data['userInfo'] = $this->hr->getUserInfo($id);
-        } else {
-            redirect(base_url().'hr/admin/users');
+            $i++;
         }
-        $this->admintemplate->show("hr", "edit_user", $data);
+        if(!empty($ids)) {
+            $success = "Time Cards saved successfully.";
+        } else {
+            $errors = "Something went wrong. Please try again.";
+        }
+        
+        $data = array(
+            "errors" =>  $errors,
+            "success" => $success
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url().'hr/admin/time-cards');
     }
 
     public function deleteTimeCard()
@@ -227,4 +252,6 @@ class Timecards extends MX_Controller {
         }
         echo json_encode($response);
     }
+
+	
 }

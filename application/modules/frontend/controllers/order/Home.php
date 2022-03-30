@@ -4,10 +4,14 @@
 
 class Home extends MX_Controller {
 
+	private $order_js_version = '01';
+	private $custom_js_version = '01';
+
     function __construct() {
         parent::__construct();
         $this->load->helper(array('file', 'url'));
         $this->load->library('session');
+		$this->load->library('order/template');
 		$this->load->model('order/home_model');
 		$this->load->model('order/agent_model');
 		$this->load->library('form_validation');
@@ -918,6 +922,18 @@ class Home extends MX_Controller {
 
 							$orderId = $this->home_model->insert($orderData,'order_details');
 
+							if ($userdata['is_master'] == 1) {
+								$message = 'Order number #'.$orderNumber.' has assigned to you.';
+								$notificationData = array(
+									'sent_user_id' => $customer_id,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'assigned'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'assigned', $customer_id, 0);
+							}
+
 							/* Escrow Details */					
 							if(isset($escrowId) && !empty($escrowId)) {
 				        		$name = explode(' ', $escrowName);
@@ -935,6 +951,15 @@ class Home extends MX_Controller {
 									'id' => $escrowId
 								);
 								$this->home_model->update($escrowData, $condition);
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $escrowId,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $escrowId, 0);
 							}
 							/* Escrow Details */
 
@@ -954,12 +979,43 @@ class Home extends MX_Controller {
 								$condition = array(
 									'id' => $lenderId
 								);
-								
 								$lenderId = $this->home_model->update($lenderData, $condition);
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $lenderId,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $lenderId, 0);
 							}
 							/*Lender Details */
 
-							
+							if (!empty($SalesRep)) {
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $SalesRep,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $SalesRep, 0);
+							}
+
+							if (!empty($TitleOfficer)) {
+								$message = 'You have added on order number #'.$orderNumber;
+								$notificationData = array(
+									'sent_user_id' => $TitleOfficer,
+									'message' => $message,
+									'is_admin' => 0,
+									'type' =>  'added'
+								);
+								$this->home_model->insert($notificationData, 'pct_order_notifications');
+								$this->order->sendNotification($message, 'added', $TitleOfficer, 0);
+							}
+
 							if($this->session->has_userdata('tp_api_id_'.$random_number))
 							{
 								$session_id = 'tp_api_id_'.$random_number;
@@ -1058,7 +1114,6 @@ class Home extends MX_Controller {
 							$lvfilename = $orderNumber.'.pdf';
 							$deedfilename = $orderNumber.'.pdf';
 							$taxfilename = $orderNumber.'.pdf';
-							// $orderDetails = $this->order->get_order_details($file_id);
 
 							if (!empty($_FILES['upload_curative']['name'])) {
 								$this->uploadCurativeDocsToResware($orderDetails); 
@@ -1077,6 +1132,19 @@ class Home extends MX_Controller {
 							if ($this->order->fileExistOrNotOnS3('tax/'.$taxfilename)) {
 								$file[] = env('AWS_PATH')."tax/".$taxfilename;
 								$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
+							}
+
+							$escrow_officer_email = '';
+							if (isset($escrowOfficer) && !empty($escrowOfficer) && ($ProductTypeID == '4' || $ProductTypeID == '5')) {
+								$con = array(
+									'where' => array(
+										'partner_id' => $escrowOfficer,
+									)
+								);
+								$escrowCompanyData = $this->home_model->get_company_rows($con);
+								$escrow_officer_email = $escrowCompanyData[0]['email'];
+								//$escrow_officer_email = 'hitesh.p@crestinfosystems.com';
+								$parties_email[] = $escrow_officer_email;
 							}
 								
 							/*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
@@ -1099,21 +1167,7 @@ class Home extends MX_Controller {
 
 							$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
 
-							/* Escrow officer email */
-						
-							$escrow_email = '';
-							if (isset($escrowOfficer) && !empty($escrowOfficer)) {
-								$con = array(
-									'where' => array(
-										'partner_id' => $escrowOfficer,
-									)
-								);
-								$escrowCompanyData = $this->home_model->get_company_rows($con);
-								$escrow_email = $escrowCompanyData[0]['email'];
-								//$escrow_email = 'hitesh.p@crestinfosystems.com';
-							}
-
-							if (!empty($escrowEmail) && $loanFlag == 1) {							
+							if ((!empty($escrowEmail) && $loanFlag == 1) || (!empty($escrow_officer_email))) {							
 
 								$sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
 								if(!empty($sales_rep_img)) {
@@ -1133,24 +1187,30 @@ class Home extends MX_Controller {
 								$borrower_message_body = $this->load->view('emails/borrower.php',$email_data,TRUE);
 								$message_body = $borrower_message_body; 
 								$subject = $orderNumber. ' - Borrower Verification';
-								$to = $escrowEmail;
-								//$to = 'hitesh.p@crestinfosystems.com';
+								
 								$mailParams = array(
 									'from_mail'=>$from_mail, 
 									'from_name'=>$from_name, 
-									'to'=>$to,
 									'subject'=>$subject,
 									'message'=>json_encode($email_data)
 								);
 
-								$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
+								if (!empty($escrowEmail) && $loanFlag == 1) {
+									$to = $escrowEmail;
+									$mailParams['to'] = $to;
+									$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array(), $orderId, 0);
+									$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+									$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
+								}
 
-								$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
-
-								$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
+								if (!empty($escrow_officer_email)) {
+									$to = $escrow_officer_email;
+									$mailParams['to'] = $to;
+									$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
+									$escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+									$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status'=>$escrow_mail_result), $orderId, $logid);
+								}
 							}					
-
-							/* Escrow officer email */	
 
 							/* Send notification to admin based on rules */
 							$condition = array(
@@ -1277,13 +1337,16 @@ class Home extends MX_Controller {
 			$data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
 			$data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
 
-	        if($is_master)
-	        {
-	        	$this->load->view('layout/head',$data);
-	        	$this->load->view('order/master_order');
-	        }
-	        else 
-	        {
+			$this->template->addJS('https://maps.googleapis.com/maps/api/js?key='.env('GOOGLE_MAP_KEY').'&libraries=places&sensor=false');
+			$this->template->addJS( base_url('assets/frontend/js/additional-methods.min.js'));
+			$this->template->addJS( base_url('assets/frontend/js/smart-form.js'));
+			$this->template->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
+			$this->template->addJS( base_url('assets/frontend/js/custom.js?v=custom_'.$this->custom_js_version));
+			$this->template->addJS( base_url('assets/frontend/js/order.js?v=order_'.$this->order_js_version));
+			
+	        if ($is_master) {
+				$this->template->show("order", "master_order", $data);
+	        } else {
 	        	$data['customer_data'] = $customer_data;
 				$con = array(
 					'where' => array(
@@ -1292,8 +1355,7 @@ class Home extends MX_Controller {
 				);
 				$companyData = $this->home_model->get_company_rows($con);
 				$data['deliverables'] = !empty($companyData[0]['deliverables']) ? explode(',', $companyData[0]['deliverables']) : array();
-	        	$this->load->view('layout/head',$data);
-	        	$this->load->view('order/home');
+				$this->template->show("order", "home", $data);
 	        }	       	
     	}
     }
@@ -1514,13 +1576,6 @@ class Home extends MX_Controller {
 			}
 		}
 	}
-
-	function selectFiles()
-    {
-		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->load->view('layout/head_dashboard',$data);
-		$this->load->view('order/dashboard');
-    }
 
     function getProductTypes()
     {

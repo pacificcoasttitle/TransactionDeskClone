@@ -3,14 +3,17 @@
 		<div class="col-sm-6">
 			<h1 class="h3 text-gray-800">Users</h1>
 		</div>
-		<div class="col-sm-6">
-            <a href="<?php echo base_url().'hr/admin/add-user'; ?>" class="btn btn-success btn-icon-split float-right">
-                <span class="icon text-white-50">
-                    <i class="fa fa-plus"></i>
-                </span>
-                <span class="text">Add User</span>
-            </a>
-		</div>
+		<?php $userdata = $this->session->userdata('hr_admin');
+		if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
+			<div class="col-sm-6">
+				<a href="<?php echo base_url().'hr/admin/add-user'; ?>" class="btn btn-success btn-icon-split float-right">
+					<span class="icon text-white-50">
+						<i class="fa fa-plus"></i>
+					</span>
+					<span class="text">Add User</span>
+				</a>
+			</div>
+		<?php } ?>
 	</div>
 
     <?php if(!empty($success)) {?>
@@ -34,13 +37,15 @@
 					<thead>
 						<tr>
                             <th>No</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
+                            <th>Name</th>
                             <th>Email</th>
                             <th>Position</th>
                             <th>User Type</th>
+							<th>Department</th>
                             <th>Hire Date</th>
-                            <th>Action</th>
+							<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
+                            	<th>Action</th>
+							<?php } ?>
 						</tr>
 					</thead>
 

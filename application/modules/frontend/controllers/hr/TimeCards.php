@@ -38,8 +38,8 @@ class TimeCards extends MX_Controller
 
     public function getTimeCards()
     {
-        $userdata = $this->session->userdata('hr_user');
         $params = array();  $data = array();
+        $params['is_frontend'] = 1;
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -65,22 +65,24 @@ class TimeCards extends MX_Controller
                 $nestedData[] = $timeCard['reg_hours'];
                 $nestedData[] = $timeCard['ot_hours'];
                 $nestedData[] = $timeCard['double_ot'];
-				$nestedData[] = $timeCard['total_hours'];
-                $nestedData[] = ucfirst(!empty($timeCard['action_taken_user_id']) ? $timeCard['status'] : '');
-                $timeCardId = $timeCard['id'];
-                if ($userdata['user_type_id'] == 2) {
-                    if($userdata['id'] != $timeCard['user_id']) {
-                        $nestedData[] = "<div style='display:flex;' class='smart-forms'>
-                            <form onclick='return approve_deny_popup(1, $timeCardId);' action='' method='POST'>
-                                <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
-                            </form>
-                            <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $timeCardId);' action='' method='POST'>
-                                <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
-                            </form>";
+                $status = '<span class="badge-new badge-new-info">Pending</span>';
+
+                if (!empty($timeCard['approved_by_user_id'])) {
+                    if ($timeCard['status'] == 'approved') {
+                        $status = '<span class="badge-new badge-new-success">Approved</span>';
                     } else {
-                        $nestedData[] = '';
+                        $status = '<span class="badge-new badge-new-danger">Denied</span>';
                     }
-                } 
+                }
+                $nestedData[] = $status;
+
+                if (!empty($timeCard['approved_by_user_id'])) {
+                    $nestedData[] = $timeCard['branch_manager_first_name']." ".$timeCard['branch_manager_last_name'];
+                } else {
+                    $nestedData[] = ''  ;
+                }
+
+                $nestedData[] = !empty($timeCard['approved_date']) ? date("m/d/Y", strtotime($timeCard['approved_date'])) : '';
 				$data[] = $nestedData; 
 				$i++; 
 			}
@@ -117,6 +119,24 @@ class TimeCards extends MX_Controller
                 'comment' => $comment[$i]
             );
             $ids[] = $this->hr->insert($timeCardsData, 'pct_hr_time_cards');
+            $exceptionDate = date("F d, Y", strtotime($exception_date));
+            $message = 'Timecard request of '.$exceptionDate.' has submitted by '.$userdata['name'];
+
+            $this->load->model('hr/users_model');
+            $userInfo = $this->users_model->get($userdata['id']);
+            $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+            $notificationData = array(
+                'sent_user_id' => $branchUserInfo->id,
+                'message' => $message,
+                'type' => 'submitted'
+            );
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+    
+            $superadminInfo = $this->users_model->get_by('user_type_id', 1);
+            $notificationData['sent_user_id'] = $superadminInfo->id;
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
             $i++;
         }
         if(!empty($ids)) {

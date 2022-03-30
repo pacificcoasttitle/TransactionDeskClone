@@ -89,6 +89,7 @@ $(document).ready(function() {
                 // "search": "",
             },
         });
+    autoComplete();
 });
 
 function setDefaultValues() {

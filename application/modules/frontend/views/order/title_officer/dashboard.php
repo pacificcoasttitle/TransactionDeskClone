@@ -1,7 +1,4 @@
-<body>
-	<?php
-        $this->load->view('layout/header_dashboard');
-    ?>
+
 	<style type="text/css">
 		table#orders_listing tr td:last-child {
 			display: inline-flex;
@@ -234,7 +231,7 @@
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">
-									<table class="table table-type-3 typography-last-elem" id="orders_listing">
+									<table class="table table-type-3 typography-last-elem" id="title_officer_orders_listing">
 										<thead>
 											<tr>
 												<th>#</th>
@@ -284,127 +281,6 @@
 			</div>
 		</div>
 	</div>
-	<?php $this->load->view('layout/footer'); ?>
-</body>
-
-</html>
-<script>
-	$(document).ready(function () {
-		var order_list = '';
-		if ($('#orders_listing').length) {
-			order_list = $('#orders_listing').DataTable({
-				"paging": true,
-				"lengthChange": false,
-				"language": {
-					searchPlaceholder: "Search File# or Address",
-					paginate: {
-						next: '<span class="fa fa-angle-right"></span>',
-						previous: '<span class="fa fa-angle-left"></span>',
-					},
-					"emptyTable": "Record(s) not found.",
-					"search": "",
-				},
-				initComplete: function () {
-
-
-				},
-				"dom": 'lf<"orders_listing_filter">rtip',
-				buttons: [],
-				"drawCallback": function () {
-
-				},
-				"ordering": false,
-				"serverSide": true,
-				"ajax": {
-					url: base_url + "get-title-officer-orders",
-					type: "post",
-					data: function (d) {
-						d.status = $('#orders_filter').val();
-						d.month = $('#month_filter').val();
-					},
-					dataFilter: function (data) {
-						var json = jQuery.parseJSON(data);
-						var countingData = json.count_data;
-						json.recordsTotal = json.recordsTotal;
-						json.recordsFiltered = json.recordsFiltered;
-						json.data = json.data;
-						return JSON.stringify(json);
-					},
-					error: function (XMLHttpRequest, textStatus, errorThrown) {
-						if (parseInt(XMLHttpRequest.status) == 419) {
-							alert("You are logged out. Please login.");
-						}
-						if (parseInt(XMLHttpRequest.status) == 419) {
-							setTimeout(function () {
-								location.reload();
-							}, 1000);
-						}
-						$("#orders_listing tbody").append(
-							'<tr><td colspan="4" class="text-center">No records found</td></tr>');
-						$("#orders_listing_processing").css("display", "none");
-					}
-				}
-			});
-
-			$("div#orders_listing_filter").append(
-				'<label><select style="width:auto;" name="month_filter" id="month_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="01"> January </option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></label><label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option><option value="cancelled">Cancelled</option></select></label>'
-				);
-
-			var d = new Date(),
-
-				m = d.getMonth(),
-
-				y = d.getFullYear();
-
-			$('#month_filter option:eq(' + m + ')').prop('selected', true);
-		}
-
-		$("#orders_filter").on("change", function () {
-			order_list.ajax.reload();
-		});
-
-		$("#month_filter").on("change", function () {
-			order_list.ajax.reload();
-		});
-	});
 	
-	function getPartners(fileId) 
-	{
-		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
-		$('#page-preloader').css('display', 'block');
-		$.ajax({
-			url: base_url + "get-partners",
-			type: "post",
-			data: {
-				fileId: fileId
-			},
-			dataType: "html",
-			success: function (response) {
 
-				var results = JSON.parse(response);
-				
-				var table_data = '';
-				if(results.status == 'success')
-				{
-					if(!jQuery.isEmptyObject(results.partners))
-					{
-						$.each(results.partners, function( key, value ) {
-			              	table_data += '<tr><td>'+value.PartnerID+'</td><td>'+value.PartnerTypeID+'</td><td>'+value.PartnerType.PartnerTypeName+'</td><td>'+value.PartnerName+'</td></tr>';
-			            });
-					}
-					else
-					{
-						table_data += '<tr><td colspan="4" style="text-align: center;">No records found.</td></tr>';
-					}
-					$('#tbl-partners-data tbody').html(table_data);
-					$('#partnersModal').modal('show');
-				}
-				else if(results.status == 'error')
-				{
-					alert(results.msg);
-				}
-				$('#page-preloader').css('display', 'none');
-			}
-		});
-	}
-</script>
+

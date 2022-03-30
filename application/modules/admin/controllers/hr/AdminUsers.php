@@ -76,25 +76,29 @@ class AdminUsers extends MX_Controller {
 	    	foreach ($adminUsersList['data'] as $key => $value)  {
 	    		$nestedData=array();
                 $nestedData[] = $count;
-                $userName = explode(" ", $value['user_name']);
-	            $nestedData[] = $userName[0];
-                $nestedData[] = $userName[1];
-                $nestedData[] = $value['email_id'];
+               
+	            $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email'];
+                $nestedData[] = $value['name'];
+
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-admin-user/'.$value['id'];
                     
-                    $nestedData[] = '<a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
-                            <span class="icon text-white-50">
-                                <i class="fas fa-pencil-alt"></i>
-                            </span>
-                            <span class="text">Edit</span>
-                        </a>
-                        <a href="#" onclick="deleteAdminUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
-                            <span class="icon text-white-50">
-                                <i class="fas fa-trash"></i>
-                            </span>
-                            <span class="text">Delete</span>
-                        </a>';
+                    $nestedData[] = '<div style="display:inline-flex;">
+                                        <a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </span>
+                                            <span class="text">Edit</span>
+                                        </a>
+                                        <a style="margin-left: 5px;" href="#" onclick="deleteAdminUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
+                                            <span class="text">Delete</span>
+                                        </a>
+                                    </div>';
                 }
 	            $data[] = $nestedData;    
                 $count++;          
@@ -110,23 +114,30 @@ class AdminUsers extends MX_Controller {
     {
         $data['title'] = 'HR-Center Add Admin Users';
         $data['page_title'] = 'Admin Users';
+        $data['userTypes'] = $this->hr->getHrUserTypes(); 
         if ($this->input->post()) {
             $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
             $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
-            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[admin.email_id]', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique'=>'Email already Exist'));
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[pct_hr_users.email]', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique'=>'Email already Exist'));
             $this->form_validation->set_rules('password', 'Password', 'required', array('required'=> 'Please Enter Password'));
+            $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Select User Type'));
            
             if ($this->form_validation->run() == true) {
                 $adminData = array(
-                    'user_name' =>  $this->input->post('first_name')." ".$this->input->post('last_name'),
-                    'password' => md5($this->input->post('password')),    
-                    'email_id' => $this->input->post('email'),
-                    'is_hr_admin' => 1,
-                    'is_super_hr_admin' => 0,
+                    'first_name' =>  $this->input->post('first_name'),
+                    'last_name' =>  $this->input->post('last_name'),
+                    'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+                    'email' => $this->input->post('email'),
+                    'user_type_id' => $this->input->post('user_type'),
+                    'position_id' => 0,
+                    'department_id' => 0,
+                    'hire_Date' => date('Y-m-d'),
                     'status' => 1,
+                    'hash' => '',
+                    'is_tmp_password' => 0,
                     'created_at' => date('Y-m-d H:i:s')
                 );
-                $this->hr->insert($adminData, 'admin');
+                $this->hr->insert($adminData, 'pct_hr_users');
                 $successMsg = 'Admin user added successfully.';
                 $this->session->set_userdata('success', $successMsg);
                 redirect(base_url().'hr/admin/admin-users');
@@ -135,6 +146,7 @@ class AdminUsers extends MX_Controller {
                 $data['last_name_error_msg'] = form_error('last_name');
                 $data['email_error_msg'] = form_error('email');
                 $data['password_error_msg'] = form_error('password');
+                $data['user_type_error_msg'] = form_error('user_type');
             }                                       
         }
         $this->admintemplate->show("hr", "add_admin_user", $data);
@@ -145,19 +157,23 @@ class AdminUsers extends MX_Controller {
         $id = $this->uri->segment(4);
         $data['title'] = 'HR-Center Edit Admin Users';
         $data['page_title'] = 'Admin Users';
-
+        $data['userTypes'] = $this->hr->getHrUserTypes(); 
         if(isset($id) && !empty($id)) {
             if ($this->input->post()) {
                 $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
                 $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
                 $this->form_validation->set_rules('password', 'Password', 'required', array('required'=> 'Please Enter Password'));
+                $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Select User Type'));
+
                 if ($this->form_validation->run() == true) {
                     $adminData = array(
-                        'user_name' =>  $this->input->post('first_name')." ".$this->input->post('last_name'),
-                        'password' => md5($this->input->post('password'))
+                        'first_name' =>  $this->input->post('first_name'),
+                        'last_name' =>  $this->input->post('last_name'),
+                        'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+                        'user_type_id' => $this->input->post('user_type'),
                     );
                     $condition = array('id' => $id);
-                    $this->hr->update($adminData, $condition, 'admin');
+                    $this->hr->update($adminData, $condition, 'pct_hr_users');
                     $successMsg = 'Admin user updated successfully.';
                     $this->session->set_userdata('success', $successMsg);
                     redirect(base_url().'hr/admin/admin-users');
@@ -165,9 +181,10 @@ class AdminUsers extends MX_Controller {
                     $data['first_name_error_msg'] = form_error('first_name');
                     $data['last_name_error_msg'] = form_error('last_name');
                     $data['password_error_msg'] = form_error('password');
+                    $data['user_type_error_msg'] = form_error('user_type');
                 }                                       
             }
-            $data['adminUserInfo'] = $this->hr->getAdminUserInfo($id);
+            $data['adminUserInfo'] = $this->common->get_hr_user(array('id' => $id));
         } else {
             redirect(base_url().'hr/admin/admin-users');
         }

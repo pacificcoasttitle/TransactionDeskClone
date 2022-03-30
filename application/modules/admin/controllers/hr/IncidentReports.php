@@ -46,6 +46,12 @@ class IncidentReports extends MX_Controller {
 			$data['success'] = $this->session->userdata('success');
 			$this->session->unset_userdata('success');
 		}
+		$userdata = $this->session->userdata('hr_admin');
+		$show_action = false;
+		if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2 ) {
+			$show_action = true;
+		}
+		$data['show_action'] = $show_action;
 		$this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
@@ -56,6 +62,8 @@ class IncidentReports extends MX_Controller {
     public function  getIncidentReports()
     {
         $params = array();  $data = array();
+        $params['is_frontend'] = 0;
+        $userdata = $this->session->userdata('hr_admin');
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -76,27 +84,67 @@ class IncidentReports extends MX_Controller {
 			foreach ($incidentReportsList['data'] as $incidentReport)  {
 				$nestedData = array();
 				$nestedData[] = $i;
-                $nestedData[] = $incidentReport['employee_number'];
                 $nestedData[] =  date("m/d/Y", strtotime($incidentReport['incident_date']));
 				$nestedData[] = $incidentReport['first_name']." ".$incidentReport['last_name'];
                 $nestedData[] = $incidentReport['incident_reason'];
                 $nestedData[] = $incidentReport['num_of_incidents'];
                 $nestedData[] = $incidentReport['actions'];
-                $nestedData[] = ucfirst(!empty($incidentReport['action_taken_user_id']) ? $incidentReport['status'] : '');
+
+                $status = '<span class="badge badge-info">Pending</span>';
+                if (!empty($incidentReport['approved_by_user_id'])) {
+                    if ($incidentReport['status'] == 'approved') {
+                        $status = '<span class="badge badge-success">Approved</span>';
+                    } else {
+                        $status = '<span class="badge badge-danger">Denied</span>';
+                    }
+                }
+                $nestedData[] = $status;
+
+                if (!empty($incidentReport['approved_by_user_id'])) {
+                    $nestedData[] = $incidentReport['branch_manager_first_name']." ".$incidentReport['branch_manager_last_name'];
+                } else {
+                    $nestedData[] = ''  ;
+                }
+
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $editUrl = base_url().'hr/admin/edit-vacation-request/'.$incidentReport['id'];
-                    $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$incidentReport["id"].');" class="btn btn-success btn-icon-split btn-sm">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                        <span class="text">Approve</span>
-                                    </a>
-                                    <a href="#" onclick="return approve_deny_popup(0, '.$incidentReport["id"].');" class="btn btn-danger btn-icon-split btn-sm">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-ban"></i>
-                                        </span>
-                                        <span class="text">Deny</span>
-                                    </a>';
+                    if ($userdata['id'] != $incidentReport['user_id'] &&  ($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2)) {
+                        if (!empty($incidentReport['approved_by_user_id'])) {
+                            if ($incidentReport['status'] == 'approved') {
+                                $nestedData[] = '
+                                        <a href="#" onclick="return approve_deny_popup(0, '.$incidentReport["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-ban"></i>
+                                            </span>
+                                            <span class="text">Deny</span>
+                                        </a>';
+                            } else {
+                                $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$incidentReport["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <span class="text">Approve</span>
+                                        </a>
+                                        '; 
+                            }
+                        } else {
+                            $nestedData[] = '<div style="display:inline-flex;">
+                                                <a href="" onclick="return approve_deny_popup(1, '.$incidentReport["id"].');" class="btn btn-success btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                    <span class="text">Approve</span>
+                                                </a>
+                                                <a style="margin-left: 5px;" href="#" onclick="return approve_deny_popup(0, '.$incidentReport["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-ban"></i>
+                                                    </span>
+                                                    <span class="text">Deny</span>
+                                                </a>
+                                            </div>'; 
+                        }
+                    } else {
+                        $nestedData[] = '';
+                    }
                 }
 				$data[] = $nestedData; 
 				$i++; 
@@ -124,5 +172,81 @@ class IncidentReports extends MX_Controller {
             $response = array('status' => 'error','message'=>$msg);
         }
         echo json_encode($response);
+    }
+
+	public function addIncident()
+	{
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->model('hr/users_model');
+		$data['title'] = 'HR-Center Report Incident';
+        $data['page_title'] = 'Report new incident';
+		$this->load->model('hr/users_model');
+        if ($userdata['user_type_id'] == 4) {
+            $userInfo = $this->users_model->get($userdata['id']);
+            $users = $this->users_model->get_many_by('branch_id', $userInfo->branch_id);
+        } else {
+            $users = $this->users_model->get_all();
+        }
+		$data['employees'] = $users;
+		$this->admintemplate->addCSS( base_url('assets/frontend/hr/css/smart-forms.css?v=0.1') );
+        $this->admintemplate->addCSS( base_url('css/smart-addons.css') );
+		$this->admintemplate->addJS( base_url('assets/frontend/hr/js/jquery-ui-custom.min.js') );
+		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.steps.min.js') );
+		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.validate.min.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=inc_0.2') );
+        $this->admintemplate->show("hr", "add_incident_report", $data);
+	}
+
+	public function saveIncidentReports()
+    {
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->model('hr/users_model');
+        $userInfo = $this->users_model->get($this->input->post('select_employee'));
+        $incidentData = array(
+            'user_id' => $this->input->post('select_employee'),
+            'incident_date' => date("Y-m-d", strtotime($this->input->post('incident_date'))),
+            'employee_number' => $this->input->post('employee_number'),
+            'incident_reason' => $this->input->post('incident_reason'),
+            'incident_detail' => $this->input->post('incident_detail'),
+            'actions' => implode(",", $this->input->post('actions')),
+            'num_of_incidents' => implode(",", $this->input->post('num_of_incidents'))
+        );
+        $id = $this->hr->insert($incidentData, 'pct_hr_incident_reports');
+        $incident_date = date("F d, Y", strtotime($this->input->post('incident_date')));
+        $message = 'Incident Report request of '.$incident_date.' has submitted by '.$userdata['name'];
+        $notificationData = array(
+            'sent_user_id' => $this->input->post('select_employee'),
+            'message' => $message,
+            'type' =>  'submitted'
+        );
+        $this->hr->insert($notificationData, 'pct_hr_notifications');
+        $this->common->sendNotification($message, 'submitted', $this->input->post('select_employee'), 0);
+
+        $message = 'Incident Report request of '.$incident_date.' has submitted for employee '.$userInfo->first_name." ".$userInfo->last_name.' by '.$userdata['name'];
+        $notificationData['message'] = $message;
+        if ($userdata['user_type_id'] == 4) {
+            $superadminInfo = $this->users_model->get_by('user_type_id', 1);
+            $notificationData['sent_user_id'] = $superadminInfo->id;
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
+        } else {
+            $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+            $notificationData['sent_user_id'] = $branchUserInfo->id;
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+        }
+        
+        if(!empty($id)) {
+            $success = "Incident Report saved successfully.";
+        } else {
+            $errors = "Something went wrong. Please try again.";
+        }
+        
+        $data = array(
+            "errors" =>  $errors,
+            "success" => $success
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url().'hr/admin/incident-reports');
     }
 }

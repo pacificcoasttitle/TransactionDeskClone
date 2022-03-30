@@ -1,10 +1,34 @@
-<section class="section-type-4a section-default typography-section-border" style="padding-bottom:0px;">
+<section class="section-type-4a section-default" style="padding-bottom:50px;">
     <div class="container">
         <div class="row">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="typography-section__innera">
-                        <h2 class="ui-title-block ui-title-block_light">Welcome Back Jerry Hernandez,</h2>
+                        <?php $userdata = $this->session->userdata('hr_user');?>
+						<div class="row">
+							<div class="col-sm-8">
+								<h2 class="ui-title-block ui-title-block_light">Welcome <?php echo $userdata['name'];?>,</h2>
+							</div>
+							<div class="col-sm-4">
+							<div class="pull-right row">
+								<?php
+								$clock_in_cls = '';
+								$clock_out_cls = 'hide';
+								if($clock_event == 'OUT'):
+									$clock_in_cls = 'hide';
+									$clock_out_cls = '';
+								endif;
+								?>
+								<div id="timeClock" class="col-sm-6"></div>
+								<div class="col-sm-6">
+
+									<button type="button" class="btn btn-warning time-start track-time-btn <?php echo $clock_in_cls; ?>">Start Timer</button>
+									<button type="button" class="btn btn-warning time-stop track-time-btn <?php echo $clock_out_cls; ?>">Stop Timer</button>
+								</div>
+							</div>
+							</div>
+
+						</div>
                         <div class="ui-decor-1a bg-accent"></div>
                         <h3 class="ui-title-block_light">How can we help you today?</h3>
                     </div>
@@ -21,8 +45,7 @@
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <!-- <a href="<?php echo base_url(); ?>hr/profile"> -->
-                                <a href="">
+                                <a href="<?php echo base_url(); ?>hr/profile"> 
                                     <div class="buttonOuter">
                                         <button class="btn2 btn-type-6a btn-lg2" type="button">
                                             <img src="<?php echo base_url(); ?>assets/media/hr/profile.png" class="buttImg">
@@ -56,7 +79,7 @@
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <a href="">
+                                <a href="<?php echo base_url(); ?>hr/trainings">
                                     <div class="buttonOuter">
                                         <button class="btn2 btn-type-6a btn-lg2" type="button">
                                             <img src="<?php echo base_url(); ?>assets/media/hr/training.png" class="buttImg">
@@ -83,50 +106,4 @@
     </div>
 </section>
 
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-    <div class="container">
-        <div class="row">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="typography-section__inner">
-                        <h2 class="ui-title-block ui-title-block_light">Recent Requests,</h2>
-                        <div class="ui-decor-1a bg-accent"></div>
-                        <h3 class="ui-title-block_light">Below are all your orders.</h3>
-                    </div>
-                    <div class="typography-sectiona">
-                        <div class="col-md-12">
-                            <div class="table-container">
-                                <table class="table table-type-3 typography-last-elem">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Opened</th>
-                                            <th>Property Address</th>
-                                            <th>Buyer/Seller</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>10228902</td>
 
-                                            <td>04/28/2021</td>
-
-                                            <td>3 Drover Ct, Coto De Caza, CA, 92679</td>
-                                            <td>Julia L Ahrens</td>
-                                            <td>
-                                                <a href="" style="margin-right:10px;"><i class="fa fa-upload" aria-hidden="true"></i></a>
-                                                <a href=""><i class="fa fa-sticky-note-o"></i></a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="typography-sectionab"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>

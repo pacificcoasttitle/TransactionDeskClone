@@ -11,7 +11,6 @@ class Home_model extends CI_Model
         $this->db->select('*');
         $this->db->where('email_id', $email);
         $this->db->where('password', md5($password));
-        $this->db->where('is_hr_admin', 0);
         $this->db->where('status', 1);
         $query = $this->db->get('admin');
 
@@ -64,9 +63,11 @@ class Home_model extends CI_Model
 
     		if(isset($keyword) && !empty($keyword))
 			{
-                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
-                $this->db->or_like('email_address',$keyword);
-				// $this->db->like('first_name', $keyword);
+                $this->db->group_start()
+                    ->like('first_name', $keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
+                    ->group_end();
 			}
 
             $this->db->where('status', 1);
@@ -77,8 +78,11 @@ class Home_model extends CI_Model
 
 			if(isset($keyword) && !empty($keyword))
 			{
-                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
-                $this->db->or_like('email_address',$keyword);
+                $this->db->group_start()
+                    ->like('first_name', $keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
+                    ->group_end();
 			}
 
 			$this->db->where('status', 1);

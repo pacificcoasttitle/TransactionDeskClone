@@ -23,7 +23,7 @@ class IncidentReports extends MX_Controller
         $userdata = $this->session->userdata('hr_user');
         $data['errors'] = array();
         $data['success'] = array();
-        $data['employee_info'] = $this->hr->get_hr_user(array('id' => $userdata['id']));
+        $data['employee_info'] = $this->common->get_hr_user(array('id' => $userdata['id']));
         if ($this->session->userdata('errors')) {
             $data['errors'] = $this->session->userdata('errors');
             $this->session->unset_userdata('errors');
@@ -41,6 +41,7 @@ class IncidentReports extends MX_Controller
     {
         $userdata = $this->session->userdata('hr_user');
         $params = array();  $data = array();
+        $params['is_frontend'] = 1;
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -61,27 +62,29 @@ class IncidentReports extends MX_Controller
 			foreach ($incidentReportsList['data'] as $incidentReport)  {
 				$nestedData = array();
 				$nestedData[] = $i;
-                $nestedData[] = $incidentReport['employee_number'];
                 $nestedData[] =  date("m/d/Y", strtotime($incidentReport['incident_date']));
 				$nestedData[] = $incidentReport['first_name']." ".$incidentReport['last_name'];
                 $nestedData[] = $incidentReport['incident_reason'];
                 $nestedData[] = $incidentReport['num_of_incidents'];
                 $nestedData[] = $incidentReport['actions'];
-                $nestedData[] = ucfirst(!empty($incidentReport['action_taken_user_id']) ? $incidentReport['status'] : '');
-                $incidentReportId = $incidentReport['id'];
-                if ($userdata['user_type_id'] == 2) {
-                    if($userdata['id'] != $incidentReport['user_id']) {
-                        $nestedData[] = "<div style='display:flex;' class='smart-forms'>
-                            <form onclick='return approve_deny_popup(1, $incidentReportId);' action='' method='POST'>
-                                <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
-                            </form>
-                            <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $incidentReportId);' action='' method='POST'>
-                                <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
-                            </form>";
+                
+                $status = '<span class="badge-new badge-new-info">Pending</span>';
+                if (!empty($incidentReport['approved_by_user_id']) ) {
+                    if ($incidentReport['status'] == 'approved') {
+                        $status = '<span class="badge-new badge-new-success">Approved</span>';
                     } else {
-                        $nestedData[] = '';
+                        $status = '<span class="badge-new badge-new-danger">Denied</span>';
                     }
-                } 
+                }
+                $nestedData[] = $status;
+                
+                if (!empty($incidentReport['approved_by_user_id'])) {
+                    $nestedData[] = $incidentReport['branch_manager_first_name']." ".$incidentReport['branch_manager_last_name'];
+                } else {
+                    $nestedData[] = ''  ;
+                }
+
+                $nestedData[] = !empty($incidentReport['approved_date']) ? date("m/d/Y", strtotime($incidentReport['approved_date'])) : '';
 				$data[] = $nestedData; 
 				$i++; 
 			}
@@ -109,7 +112,25 @@ class IncidentReports extends MX_Controller
             'num_of_incidents' => implode(",", $this->input->post('num_of_incidents'))
         );
         $id = $this->hr->insert($timeCardsData, 'pct_hr_incident_reports');
-            
+
+        $incident_date = date("F d, Y", strtotime($this->input->post('incident_date')));
+        $message = 'Incident Report request of '.$incident_date.' has submitted by '.$userdata['name'];
+        $this->load->model('hr/users_model');
+        $userInfo = $this->users_model->get($userdata['id']);
+        $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+        $notificationData = array(
+            'sent_user_id' => $branchUserInfo->id,
+            'message' => $message,
+            'type' => 'submitted'
+        );
+        $this->hr->insert($notificationData, 'pct_hr_notifications');
+        $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+
+        $superadminInfo = $this->users_model->get_by('user_type_id', 1);
+        $notificationData['sent_user_id'] = $superadminInfo->id;
+        $this->hr->insert($notificationData, 'pct_hr_notifications');
+        $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
+        
         if(!empty($id)) {
             $success[] = "Incident Report saved successfully.";
         } else {

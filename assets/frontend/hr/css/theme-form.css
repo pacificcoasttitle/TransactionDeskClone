@@ -5035,7 +5035,7 @@ blockquote cite {
 
 /* ======= FOOTER ======= */
 .footer {
-  padding-top: 63px;
+  padding-top: 0px;
   color: #ccc;
   background-color: #03374f;
   
@@ -5651,7 +5651,7 @@ padding-left: 0px;
     border: 3px solid #fff;
     width: 280px;
     height: 180px;
-    font-size: 15;
+    font-size: 15px;
     margin-left: 0px;
     background: transparent;
     padding-top: 26px;
@@ -5667,9 +5667,9 @@ padding-left: 0px;
     text-align: center;
     margin-left: 25px;
    /* box-shadow: 0 1px 6px rgb(57 73 76 / 35%); */
-    background: red;
-    background-image: url(../images/);
-	background-color:#dfe4ea;
+	 	background: #ededed;
+    /* background-image: url(../images/); */
+	/* background-color:#dfe4ea; */
 	display: block;
 	
 }	
@@ -5785,7 +5785,7 @@ h3.ui-title-block {
 	margin-bottom:10px;
 }
 
-input#file {
+input#profile_img {
 	display: block;
     width: 100%;
     background-color: #fff;
@@ -5813,6 +5813,38 @@ label.pic {
   list-style: none;
   color:red;
 }
+
+.badge-new {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 80%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.35rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.badge-new-success {
+  color:#fff;
+  background-color:#4ebd4a
+}
+.badge-new-info {
+  color:#fff;
+  background-color:#36b9cc
+}
+.badge-new-warning {
+  color:#fff;
+  background-color:#f6c23e
+}
+.badge-new-danger {
+  color:#fff;
+  background-color:#e74a3b
+}
+
+
 
 
 

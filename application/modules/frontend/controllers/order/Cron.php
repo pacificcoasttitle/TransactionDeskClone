@@ -4572,4 +4572,50 @@ class Cron extends MX_Controller {
         }
         echo "All data imported successfully";exit;
     }
+
+	// Sent Memo acknowledge mail to assigned User
+	public function sendMemoMail($memo_assign_id)
+    {
+		//Get pending mails to be sent
+
+		$this->db->select('pct_hr_assigned_memo_users.id,pct_hr_assigned_memo_users.user_id,pct_hr_users.email,pct_hr_users.first_name,pct_hr_users.last_name,,pct_hr_memos.subject,pct_hr_memos.description');
+        $this->db->from('pct_hr_assigned_memo_users');
+        $this->db->join('pct_hr_users','pct_hr_users.id = pct_hr_assigned_memo_users.user_id');
+        $this->db->join('pct_hr_memos','pct_hr_memos.id = pct_hr_assigned_memo_users.memo_id');
+        $this->db->where('pct_hr_assigned_memo_users.id',$memo_assign_id);
+
+        $query = $this->db->get();
+        $memo_mails = $query->result_array();
+		$this->load->library('encryption');
+
+		foreach($memo_mails as $memo_mail){
+			// var_dump($memo_mail);
+			
+			$memoId = urlencode($this->encryption->encrypt($memo_mail['id']));
+			$userId = urlencode($this->encryption->encrypt($memo_mail['user_id']));
+			$data = array();
+			$data['subject'] = $memo_mail['subject'];
+			$data['description'] = $memo_mail['description'];
+			$data['user_name'] = $memo_mail['first_name'].' '.$memo_mail['last_name'];
+			$data['botton_url'] = base_url('hr/acknowledge-memo/'.$memoId.'/'.$userId);
+			$message = $this->load->view('emails/memo_assigned',$data,TRUE);
+			$from_name = 'Pacific Coast Title Company';
+			$from_mail = env('FROM_EMAIL');
+			$subject = 'Memo Created';
+			$to = $memo_mail['email'];
+			// $to = 'cs@pct.com';
+			$cc = array();
+			$this->load->helper('sendemail');
+			$check_mail = send_email($from_mail,$from_name, $to, $subject, $message, $cc);
+			if($check_mail) {
+				$update_data = array();
+				$update_data['mail_sent'] = 1;
+				$condition = array();
+				$condition['id'] = $memo_mail['id'];
+				$update = $this->home_model->update($update_data, $condition, 'pct_hr_assigned_memo_users');
+			}
+		}
+
+		// $data['file_number'] = $file_number;
+	}
 }

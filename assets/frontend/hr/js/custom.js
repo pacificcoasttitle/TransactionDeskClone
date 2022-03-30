@@ -1,6 +1,8 @@
 var time_card_listing = '';
 var vacation_requests_listing = '';
 var incident_reports_listing = '';
+var memos_listing = '';
+var notifications_listing = '';
 
 $(document).ready(function() {
     "use strict";
@@ -250,6 +252,215 @@ $(document).ready(function() {
         });
     }
 
+    if ($('#memos_listing').length) {
+        memos_listing = $('#memos_listing').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                    next: '<span class="fa fa-angle-right"></span>',
+                    previous: '<span class="fa fa-angle-left"></span>',
+                },
+                "emptyTable": "Record(s) not found.",
+                "search": "",
+            },
+            /*"searching": false,*/
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('offersDataTables', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('offersDataTables'));
+            },
+            initComplete: function () {
+
+
+            },
+            dom: 'Bfrtip',
+            buttons: [],
+            "drawCallback": function () {
+
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "hr/get-memos", 
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#memos_listing tbody").append(
+                        '<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#memos_listing_processing").css("display", "none");
+                }
+            }
+        });
+    }
+
+    if ($('#common_tbl_listing').length) {
+		var tbl_url = $('#common_tbl_listing').attr('data-url');
+        $('#common_tbl_listing').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                    next: '<span class="fa fa-angle-right"></span>',
+                    previous: '<span class="fa fa-angle-left"></span>',
+                },
+                "emptyTable": "Record(s) not found.",
+                "search": "",
+            },
+            /*"searching": false,*/
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('offersDataTables', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('offersDataTables'));
+            },
+            initComplete: function () {
+
+
+            },
+            dom: 'Bfrtip',
+            buttons: [],
+            "drawCallback": function () {
+
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: tbl_url, 
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#common_tbl_listing tbody").append(
+                        '<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#common_tbl_listing_processing").css("display", "none");
+                }
+            }
+        });
+    }
+
+    if ($('#notifications_listing').length) {
+        notifications_listing = $('#notifications_listing').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                    next: '<span class="fa fa-angle-right"></span>',
+                    previous: '<span class="fa fa-angle-left"></span>',
+                },
+                "emptyTable": "Record(s) not found.",
+                "search": "",
+            },
+            /*"searching": false,*/
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('offersDataTables', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('offersDataTables'));
+            },
+            initComplete: function () {
+
+
+            },
+            dom: 'Bfrtip',
+            buttons: [],
+            "drawCallback": function () {
+
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "hr/get-notifications", 
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#notifications_listing tbody").append(
+                        '<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#notifications_listing_processing").css("display", "none");
+                }
+            }
+        });
+    }
+
+    if ($('#trainings_listing').length) {
+        trainings_listing = $('#trainings_listing').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                    next: '<span class="fa fa-angle-right"></span>',
+                    previous: '<span class="fa fa-angle-left"></span>',
+                },
+                "emptyTable": "Record(s) not found.",
+                "search": "",
+            },
+            /*"searching": false,*/
+            "bStateSave": true,
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('offersDataTables', JSON.stringify(oData));
+            },
+            "fnStateLoad": function (oSettings) {
+                return JSON.parse(localStorage.getItem('offersDataTables'));
+            },
+            initComplete: function () {
+
+
+            },
+            dom: 'Bfrtip',
+            buttons: [],
+            "drawCallback": function () {
+
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "hr/get-trainings", 
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#trainings_listing tbody").append(
+                        '<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#trainings_listing_processing").css("display", "none");
+                }
+            }
+        });
+    }
+
     $("#reg_hours, #ot_hours, #double_ot").on('change', function() {
         var reg_hours = $('#reg_hours').val() != '' ? $('#reg_hours').val() : 0;
         var ot_hours = $('#ot_hours').val() != '' ? $('#ot_hours').val() : 0;
@@ -375,6 +586,10 @@ $(document).ready(function() {
         }
     
     });
+
+	$("#show-hide-form-btn").click(function(){
+		$('.show-hide-form-div').toggleClass('hide');
+	});
 });
 
 $(function() {
@@ -435,5 +650,34 @@ function approve_deny_popup(status, requestId)
     $('#status').val(status);
     $('#request_id').val(requestId);
     $('#approve_deny_popup').modal('show');   
+    return false;
+}
+
+function showMemoInfo(memoId) 
+{
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    $.ajax({
+        url: base_url + "hr/get-memo-info",
+        type: "post",
+        data: {
+            memoId: memoId
+        },
+        success: function (response) {
+            var res = jQuery.parseJSON(response);
+            if(res.status == 'success') {
+                $("#subject_container").html(res.memoInfo['subject'] + ' Memo');
+                $("#subject").val(res.memoInfo['subject']);
+                $("#to").html('<b>To: </b>'+res.memoInfo['to']);
+                $("#date").html('<b>Date: </b>'+res.memoInfo['date']);
+                $("#from").html('<b>From: </b>'+res.memoInfo['first_name']+' '+res.memoInfo['last_name']);
+                $("#description").html(res.memoInfo['description']);
+               
+            }  
+            $('#page-preloader').css('display', 'none');
+            $('#memo_information').modal('show');
+            $('#memoId').val(memoId);
+        }
+    });
     return false;
 }

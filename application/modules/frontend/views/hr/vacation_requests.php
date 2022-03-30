@@ -2,6 +2,9 @@
 th {
     text-align: center;
 }
+#vacation_requests_listing th, #vacation_requests_listing td {
+    padding: 16px 5px 16px !important;
+}
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
     <div class="container">
@@ -9,14 +12,17 @@ th {
             <div class="row">
                 <div class="col-xs-12">
                     <div class="typography-section__inner">
+						<div class="show-hide-form-div hide">
                         <h2 class="ui-title-block ui-title-block_light">Vacation Request Form,</h2>
-                        <div class="ui-decor-1a bg-accent"></div>
-                        <h3 class="ui-title-block_light">Use the form below to report your time exception.</h3><br>
-                        <h4 class="ui-title-block_light"><strong>Employee Name:</strong> <?php echo $name;?>.</h4>
-                        <h4 class="ui-title-block_light"><strong>Today's Date:</strong> <?php echo date('m/d/Y');?></h4>
-                        <h4 class="ui-title-block_light"><strong>Manager Name:</strong> </h4>
+							<div class="ui-decor-1a bg-accent"></div>
+							<h3 class="ui-title-block_light">Use the form below to report your time exception.</h3><br>
+							<h4 class="ui-title-block_light"><strong>Employee Name:</strong> <?php echo $name;?>.</h4>
+							<h4 class="ui-title-block_light"><strong>Today's Date:</strong> <?php echo date('m/d/Y');?></h4>
+							<h4 class="ui-title-block_light"><strong>Manager Name:</strong> </h4>
+						</div>
+						<button id="show-hide-form-btn" type="button" class="btn btn-danger show-hide-form-div">Add Request</button>
                     </div>
-                    <div class="typography-sectionabcde">
+                    <div class="typography-sectionabcde show-hide-form-div hide">
                         <div class="col-md-12">
                             <div class="smart-wrap">
                                 <div class="smart-forms smart-container wrap-4">
@@ -106,35 +112,61 @@ th {
             <div class="row">
                 <div class="col-xs-12">
                     <div class="typography-section__inner">
+						
+                        <h2 class="ui-title-block ui-title-block_light">Vacation Requests Calendar</h2>	
+						<div class="ui-decor-1a bg-accent"></div>
+                    </div>
+                    
+                    <div class="typography-sectionabcde">
+                        <div class="col-md-12">
+                            <div id='loading'>loading...</div>	
+                            <div id='calendar'></div>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
+    <div class="container">
+        <div class="row">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="typography-section__inner">
                         <h2 class="ui-title-block ui-title-block_light">Vaction Request History,</h2>
                         <div class="ui-decor-1a bg-accent"></div>
                         <h3 class="ui-title-block_light">Below is a detail of all your requests.</h3>
                     </div>
                     <div class="typography-sectiona">
-                        <div class="col-md-12">
-                            <div class="table-container">
-                                <table class="table table-type-3 typography-last-elem" id="vacation_requests_listing">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Employee</th>
-                                            <th>From Date</th>
-                                            <th>To Date</th>
-                                            <th>Salary Deduction</th>
-                                            <th>Time Charged Vacation</th>
-                                            <th>Status</th>
-                                            <?php  $userdata = $this->session->userdata('hr_user');
-                                            if ($userdata['user_type_id'] == 2) { ?>
-                                                <th>Actions</th>
-                                            <?php } ?>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                    </tbody>
-                                </table>
-                                <div class="typography-sectionab"></div>
-                            </div>
+                        <div class="table-container">
+                            <table class="table table-type-3 typography-last-elem" id="vacation_requests_listing" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Employee</th>
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                        <th>Salary Deduction</th>
+                                        <th>Time Charged Vacation</th>
+                                        <th>Status</th>
+                                        <th>Approved By</th>
+                                        <?php  $userdata = $this->session->userdata('hr_user');
+                                        if ($userdata['user_type_id'] == 1) { ?>
+                                            <th>Approved Date</th> 
+                                        <?php }
+                                        if ($userdata['user_type_id'] == 2) { ?>
+                                            <th>Actions</th>
+                                        <?php } ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                            <div class="typography-sectionab"></div>
                         </div>
                     </div>
                 </div>

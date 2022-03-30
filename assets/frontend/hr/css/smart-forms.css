@@ -2574,3 +2574,11 @@ color: #888888;
 .button-color-green {
 background: rgb(0, 102, 68);
 }
+#timeClock {
+	background: #55e6c1;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 5px 5px;
+}

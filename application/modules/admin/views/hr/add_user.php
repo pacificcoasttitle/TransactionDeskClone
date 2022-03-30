@@ -12,7 +12,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">Add Employee</h6>
                     </div>
                     <div class="card-body">
-                        <form method="post" name="user_form" >
+                        <form method="post" name="user_form" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -87,31 +87,64 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label style="width:100%;">User Type<span class="required"> *</span></label>
-                                        <?php foreach($userTypes as $userType) {?>
-                                            <input style="width:15px;height:15px;" class="" type="radio" name="user_type" value="<?php echo $userType['id'];?>" required>&nbsp;<?php echo $userType['name'];?>&nbsp;
-                                        <?php } ?>
+                                        <?php foreach($userTypes as $userType) {
+                                                if ($userType['id'] != 1 && $userType['id'] !=2 ) {?>
+                                                    <input style="width:15px;height:15px;" class="" type="radio" name="user_type" value="<?php echo $userType['id'];?>" required>&nbsp;<?php echo $userType['name'];?>&nbsp;
+                                                <?php } 
+                                        } ?>
                                     </div>
-                                    <?php if(!empty($hire_date_error_msg)){ ?>  
+                                    <?php if(!empty($user_type_error_msg)){ ?>  
                                         <div class="typography-line text-danger">
-                                            <?php echo $hire_date_error_msg;?>
+                                            <?php echo $user_type_error_msg;?>
                                         </div>
                                     <?php } ?>
                                 </div>
                             </div>
-                            <div class="row" id="branch_manger_container" style="display: none;">
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Position<span class="required"> *</span></label>
-                                        <select name="branch_manager" id="branch_manager" class="form-control">
-                                            <option value="">Select Branch Manager</option>
-                                            <?php foreach($branchManagers as $branchManager) {?>
-                                                <option value="<?php echo $branchManager['id'];?>"><?php echo $branchManager['first_name']." ".$branchManager['last_name'];?></option>
+                                        <label>Department<span class="required"> *</span></label>
+                                        <select name="department" id="department" class="form-control" required>
+                                            <option value="">Select Department</option>
+                                            <?php foreach($departments as $department) {?>
+                                                <option value="<?php echo $department['id'];?>"><?php echo $department['name'];?></option>
                                             <?php } ?>
                                         </select> 
                                     </div>
-                                    <?php if(!empty($position_error_msg)){ ?>  
+                                    <?php if(!empty($department_error_msg)){ ?>  
                                         <div class="typography-line text-danger">
-                                            <?php echo $position_error_msg;?>
+                                            <?php echo $department_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Branch<span class="required"> *</span></label>
+                                        <select name="branch" id="branch" class="form-control" required>
+                                            <option value="">Select Branch</option>
+                                            <?php foreach($branches as $branches) {?>
+                                                <option value="<?php echo $branches->id;?>"><?php echo $branches->name;?></option>
+                                            <?php } ?>
+                                        </select> 
+                                    </div>
+                                    <?php if(!empty($branch_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $branch_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Profile Img<span class="required"></span></label>
+                                        <input type="file" class="form-control" name="profile_img" id="profile_img" accept="image/*" class="form-control">
+                                    </div>
+                                    <?php if(!empty($profile_img_error_msg)) { ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $profile_img_error_msg;?>
                                         </div>
                                     <?php } ?>
                                 </div>
@@ -121,7 +154,6 @@
                                     <i class="fas fa-save"></i>
                                 </span>
                                 <span class="text">Save</span>
-                                
                             </button>
                             <a href="<?php echo base_url().'hr/admin/users'; ?>" class="btn btn-secondary btn-icon-split">
                                 <span class="icon text-white-50">
@@ -129,7 +161,6 @@
                                 </span>
                                 <span class="text">Cancel</span>
                             </a>
-                            
                             <div class="clearfix"></div>
                         </form>
                     </div>

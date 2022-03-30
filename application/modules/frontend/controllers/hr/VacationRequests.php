@@ -4,6 +4,7 @@
 
 class VacationRequests extends MX_Controller 
 {
+    private $vacation_js_version = '01';
 	function __construct() 
     {
         parent::__construct();
@@ -33,13 +34,16 @@ class VacationRequests extends MX_Controller
         }
         $data['name'] = $userdata['name'];
 		$data['title'] = 'HR-Center Vacation Requests';
+        $this->template->addCSS( base_url('assets/libs/calendar/main.css'));
+        $this->template->addJS( base_url('assets/libs/calendar/main.js'));
+        $this->template->addJS( base_url('assets/frontend/hr/js/vacation.js?v=vacation_'.$this->vacation_js_version) );
         $this->template->show("hr", "vacation_requests", $data);
 	}
 
     public function getVacationRequests()
     {
-        $userdata = $this->session->userdata('hr_user');
         $params = array();  $data = array();
+        $params['is_frontend'] = 1;
 		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
 			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
 			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
@@ -65,21 +69,24 @@ class VacationRequests extends MX_Controller
                 $nestedData[] = date("m/d/Y", strtotime($vacationRequestList['to_date']));
                 $nestedData[] = $vacationRequestList['is_salary_deduction'] == 1 ? 'Yes' : 'No';
                 $nestedData[] = $vacationRequestList['is_time_charged_vacation'] == 1 ? 'Yes' : 'No';
-                $nestedData[] = ucfirst(!empty($vacationRequestList['action_taken_user_id']) ? $vacationRequestList['status'] : '');
-                $vacationRequestId = $vacationRequestList['id'];
-                if ($userdata['user_type_id'] == 2) {
-                    if($userdata['id'] != $vacationRequestList['user_id']) {
-                        $nestedData[] = "<div style='display:flex;' class='smart-forms'>
-                            <form onclick='return approve_deny_popup(1, $vacationRequestId);' action='' method='POST'>
-                                <button style='height:35px;' class='button btn-primary' type='submit'>Approve</button>
-                            </form>
-                            <form style='margin-left:10px;' onclick='return approve_deny_popup(0, $vacationRequestId);' action='' method='POST'>
-                                <button style='height:35px;background-color: #e74a3b;color: white;' class='button' type='submit'>Deny</button>
-                            </form>";
+
+                $status = '<span class="badge-new badge-new-info">Pending</span>';
+                if (!empty($vacationRequestList['approved_by_user_id'])) {
+                    if ($vacationRequestList['status'] == 'approved') {
+                        $status = '<span class="badge-new badge-new-success">Approved</span>';
                     } else {
-                        $nestedData[] = '';
+                        $status = '<span class="badge-new badge-new-danger">Denied</span>';
                     }
-                } 
+                }
+                $nestedData[] = $status;
+
+                if (!empty($vacationRequestList['approved_by_user_id'])) {
+                    $nestedData[] = $vacationRequestList['branch_manager_first_name']." ".$vacationRequestList['branch_manager_last_name'];
+                } else {
+                    $nestedData[] = ''  ;
+                }
+
+                $nestedData[] = !empty($vacationRequestList['approved_date']) ? date("m/d/Y", strtotime($vacationRequestList['approved_date'])) : '';
 				$data[] = $nestedData; 
 				$i++; 
 			}
@@ -113,6 +120,25 @@ class VacationRequests extends MX_Controller
                 'is_time_charged_vacation' => $is_time_charged_vacations[$i] == 'on' ? 1 : 0
             );
             $ids[] = $this->hr->insert($vacationRequestsData, 'pct_hr_vacation_requests');
+            $from_date = date("F d, Y", strtotime($from_date));
+            $to_date = date("F d, Y", strtotime($to_dates[$i]));
+            $message = 'Vacation request from '.$from_date.' to '.$to_date.' has submitted by '.$userdata['name'];
+
+            $this->load->model('hr/users_model');
+            $userInfo = $this->users_model->get($userdata['id']);
+            $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+            $notificationData = array(
+                'sent_user_id' => $branchUserInfo->id,
+                'message' => $message,
+                'type' => 'submitted'
+            );
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+    
+            $superadminInfo = $this->users_model->get_by('user_type_id', 1);
+            $notificationData['sent_user_id'] = $superadminInfo->id;
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
             $i++;
         }
         if(!empty($ids)) {
@@ -128,5 +154,38 @@ class VacationRequests extends MX_Controller
         $this->session->set_userdata($data);
         redirect(base_url().'hr/vacation-requests');
     }
+
+    public function getVacationDataForCalendarUser()
+	{
+		$userdata = $this->session->userdata('hr_user');
+        $userIds = array();
+        if(!empty($userdata)) {
+            if ($userdata['user_type_id'] == 2) {
+                $usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
+                $userIds = array_column($usersForBranchManager, 'id');	
+            } else {
+                $userIds[] = $userdata['id'];
+            }
+        }
+		$start = date('Y-m-d', strtotime($this->input->post('start')));
+		$end = date('Y-m-d', strtotime($this->input->post('end')));
+        $vacationData = $this->common->getVacationDataForCalendar($start, $end, $userIds);
+        $data = array();
+        $i = 0;
+        foreach ($vacationData as $vacation) {
+            $data[$i]['id'] = $vacation['id'];
+            $data[$i]['title'] = $vacation['first_name']." ".$vacation['last_name'];
+            $data[$i]['start'] = $vacation['from_date'];
+            $data[$i]['end'] = date('Y-m-d', strtotime($vacation['to_date'] . ' +1 day'));
+            if (!empty($vacation['approved_by_user_id'])) {
+				if ($vacation['status'] == 'approved') {
+					$data[$i]['backgroundColor'] = '#28a745';
+				} 
+			}
+            $i++;
+        }
+        $i++;
+        echo json_encode($data); 
+	}
 
 }

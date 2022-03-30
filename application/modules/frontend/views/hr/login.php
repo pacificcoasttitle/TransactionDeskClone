@@ -37,6 +37,11 @@
                     <div class="form-items">
                         <h3>PCT HUB</h3>
                         <p>Access to the most helpful resources that we have to offer.</p>
+						<?php if($this->session->flashdata('success')): ?>
+						<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success');?></div>
+						<?php
+						endif;
+						?>
                         <form data-parsley-validate="" name="login_form" id="login_form" method="post"> 
                             <input class="form-control" type="email" name="email" id="email" placeholder="E-mail Address" data-parsley-trigger="change" data-parsley-required-message="Please enter email address" required>
                             <?php if(!empty($email_error_msg)){ ?>         
@@ -52,7 +57,7 @@
                             <?php } ?>
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Login</button> 
-                                <a href="">&nbsp | &nbsp Forget password?</a>
+                                <span style="color:#fff">&nbsp | &nbsp</span> <a href="<?php echo base_url('hr/forgot-password'); ?>">Forgot password?</a>
                             </div>
                         </form> 
                     </div>
