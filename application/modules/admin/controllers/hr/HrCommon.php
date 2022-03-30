@@ -34,11 +34,12 @@ class HrCommon extends MX_Controller
     
     public function markAsRead()
     {
+        $userdata = $this->session->userdata('hr_admin');
         $condition = array(
-            'is_admin' => 1
+            'sent_user_id' => $userdata['id']
         );
         $data = array(
-            'is_admin_read' => 1
+            'is_read' => 1
         );
         $this->hr->update($data, $condition, 'pct_hr_notifications');
         $response = array(

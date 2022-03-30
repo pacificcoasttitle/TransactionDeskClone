@@ -116,11 +116,35 @@ class Hr extends CI_Model
 
     public function getUsers($params)
     {
+        $this->load->library('hr/common');
+        $userdata = $this->session->userdata('hr_admin');
+        $usersIds = array();
+        if(!empty($userdata)) {
+            if ($userdata['user_type_id'] == 4) {
+                $usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
+                if(!empty($usersForBranchManager)) {
+                    $usersIds = array_column($usersForBranchManager, 'id');
+                    if (($key = array_search($userdata['id'], $usersIds)) !== false) {
+                        unset($usersIds[$key]);
+                    }
+                } else {
+                    return array(
+                        'recordsTotal' => 0,
+                        'recordsFiltered' => 0,
+                        'data' => array()
+                    );
+                }
+            } 
+        }
+
         $this->db->from('pct_hr_users')
                  ->join('pct_hr_position', 'pct_hr_position.id = pct_hr_users.position_id')
                  ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
                  ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id');
         $this->db->where('pct_hr_users.status', 1);
+        if(!empty($usersIds)) {
+            $this->db->where_in('pct_hr_users.id', $usersIds);
+        } 
         $total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -146,6 +170,9 @@ class Hr extends CI_Model
                  ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
                  ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id');
             $this->db->where('pct_hr_users.status', 1);
+            if(!empty($usersIds)) {
+                $this->db->where_in('pct_hr_users.id', $usersIds);
+            } 
 			$filter_total_records =  $this->db->count_all_results();
 
 			if (isset($keyword) && !empty($keyword)) {
@@ -166,6 +193,9 @@ class Hr extends CI_Model
                     ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
                     ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id');
             $this->db->where('pct_hr_users.status', 1);
+            if(!empty($usersIds)) {
+                $this->db->where_in('pct_hr_users.id', $usersIds);
+            } 
             $this->db->order_by('pct_hr_users.id', 'desc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -177,19 +207,16 @@ class Hr extends CI_Model
 	            $users = $query->result_array();
 	        }
     	} else {    		
-    		$this->db->from('pct_hr_users')
-                 ->join('pct_hr_position', 'pct_hr_position.id = pct_hr_users.position_id')
-                 ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
-                 ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id');
-            $this->db->where('pct_hr_users.status', 1);
-            $filter_total_records =  $this->db->count_all_results();
-
+            $filter_total_records =  $total_records;
             $this->db->select('pct_hr_users.*, pct_hr_position.name as position,  pct_hr_user_types.name, pct_hr_departments.name as department_name');
             $this->db->from('pct_hr_users')
                     ->join('pct_hr_position', 'pct_hr_position.id = pct_hr_users.position_id')
                     ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
                     ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id');
             $this->db->where('pct_hr_users.status', 1);
+            if(!empty($usersIds)) {
+                $this->db->where_in('pct_hr_users.id', $usersIds);
+            } 
             $this->db->order_by('pct_hr_users.id', 'desc');
 
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {

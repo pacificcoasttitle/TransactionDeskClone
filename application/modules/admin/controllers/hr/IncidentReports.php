@@ -170,15 +170,20 @@ class IncidentReports extends MX_Controller {
 
 	public function addIncident()
 	{
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->model('hr/users_model');
 		$data['title'] = 'HR-Center Report Incident';
         $data['page_title'] = 'Report new incident';
 		$this->load->model('hr/users_model');
-		$users = $this->users_model->with('position')->get_all();
+        if ($userdata['user_type_id'] == 4) {
+            $userInfo = $this->users_model->get($userdata['id']);
+            $users = $this->users_model->get_many_by('branch_id', $userInfo->branch_id);
+        } else {
+            $users = $this->users_model->get_all();
+        }
 		$data['employees'] = $users;
-        
 		$this->admintemplate->addCSS( base_url('assets/frontend/hr/css/smart-forms.css?v=0.1') );
         $this->admintemplate->addCSS( base_url('css/smart-addons.css') );
-
 		$this->admintemplate->addJS( base_url('assets/frontend/hr/js/jquery-ui-custom.min.js') );
 		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.steps.min.js') );
 		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.validate.min.js') );
@@ -188,9 +193,9 @@ class IncidentReports extends MX_Controller {
 
 	public function saveIncidentReports()
     {
-        
-       
-       
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->model('hr/users_model');
+        $userInfo = $this->users_model->get($this->input->post('select_employee'));
         $incidentData = array(
             'user_id' => $this->input->post('select_employee'),
             'incident_date' => date("Y-m-d", strtotime($this->input->post('incident_date'))),
@@ -201,17 +206,29 @@ class IncidentReports extends MX_Controller {
             'num_of_incidents' => implode(",", $this->input->post('num_of_incidents'))
         );
         $id = $this->hr->insert($incidentData, 'pct_hr_incident_reports');
-
         $incident_date = date("F d, Y", strtotime($this->input->post('incident_date')));
-        $message = 'Incident Report request of '.$incident_date.' has submitted ';
+        $message = 'Incident Report request of '.$incident_date.' has submitted by '.$userdata['name'];
         $notificationData = array(
-            'sent_user_id' => 0,
+            'sent_user_id' => $this->input->post('select_employee'),
             'message' => $message,
-            'is_admin' => 1,
             'type' =>  'submitted'
         );
         $this->hr->insert($notificationData, 'pct_hr_notifications');
-        $this->common->sendNotification($message, 'submitted', 0, 1);
+        $this->common->sendNotification($message, 'submitted', $this->input->post('select_employee'), 0);
+
+        $message = 'Incident Report request of '.$incident_date.' has submitted for employee '.$userInfo->first_name." ".$userInfo->last_name.' by '.$userdata['name'];
+        $notificationData['message'] = $message;
+        if ($userdata['user_type_id'] == 4) {
+            $superadminInfo = $this->users_model->get_by('user_type_id', 1);
+            $notificationData['sent_user_id'] = $superadminInfo->id;
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
+        } else {
+            $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+            $notificationData['sent_user_id'] = $branchUserInfo->id;
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+        }
         
         if(!empty($id)) {
             $success = "Incident Report saved successfully.";

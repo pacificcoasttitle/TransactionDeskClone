@@ -93,6 +93,7 @@ class Training extends MX_Controller
 
 	function addTraining()
     {
+		$userdata = $this->session->userdata('hr_admin');
 		$data['title'] = 'HR-Center Training';
         $data['page_title'] = 'Add Training';
 		$config['upload_path'] = './uploads/hr/training/';  
@@ -193,12 +194,10 @@ class Training extends MX_Controller
 									'training_id' => $training_id,
 									'is_complete' => 0
 								);
-
-								$message = $this->input->post('traning_name').' training has assigned to you.';
+								$message = $this->input->post('traning_name').' training has assigned to you by '.$userdata['name'];
 								$notificationData = array(
 									'sent_user_id' => $user->id,
 									'message' => $message,
-									'is_admin' => 0,
 									'type' =>  'assigned'
 								);
 								$this->hr->insert($notificationData, 'pct_hr_notifications');
@@ -216,12 +215,10 @@ class Training extends MX_Controller
 									'training_id' => $training_id,
 									'is_complete' => 0
 								);
-
-								$message = $this->input->post('traning_name').' training has assigned to you.';
+								$message = $this->input->post('traning_name').' training has assigned to you by '.$userdata['name'];
 								$notificationData = array(
 									'sent_user_id' => $user,
 									'message' => $message,
-									'is_admin' => 0,
 									'type' =>  'assigned'
 								);
 								$this->hr->insert($notificationData, 'pct_hr_notifications');
@@ -654,14 +651,15 @@ class Training extends MX_Controller
         );
         $this->hr->update($data, $condition, 'pct_hr_user_training_status');
         $message = $trainingDetails->name.' training completed successfully by '.$userdata['name'];
+		$this->load->model('hr/users_model');
+		$superadminInfo = $this->users_model->get_by('user_type_id', 1);
         $notificationData = array(
-            'sent_user_id' => 0,
+            'sent_user_id' => $superadminInfo->id,
             'message' => $message,
-            'is_admin' => 1,
             'type' => 'approved'
         );
         $this->hr->insert($notificationData, 'pct_hr_notifications');
-        $this->common->sendNotification($message, 'approved', 0, 1);
+        $this->common->sendNotification($message, 'approved', $superadminInfo->id, 1);
         
         $success = $trainingDetails->name.' training completed successfully';
         $data = array(

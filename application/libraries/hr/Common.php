@@ -158,11 +158,11 @@ class Common
     public function sendNotification($message, $type, $sent_to_user, $is_sent_admin = 0)
     {
         if ($is_sent_admin == 1) {
-            $channel = 'admin-channel';
-            $event = 'admin-event';
+            $channel = 'admin-channel-'.$sent_to_user;
+            $event = 'admin-event-'.$sent_to_user;
         }
 
-        if(!empty($sent_to_user) && $is_sent_admin == 0) {
+        if ($is_sent_admin == 0) {
             $channel = 'user-channel-'.$sent_to_user;
             $event = 'user-event-'.$sent_to_user;
         }
@@ -284,19 +284,14 @@ class Common
 
     public function getUsersForBranchManager($user_id) 
     {
-        $userdata = $this->CI->session->userdata('hr_user');
-        if (!empty($userdata)) {
-            $this->CI->load->library('hr/common');
-            $userInfo = $this->get_hr_user(array('id' => $userdata['id']));
-            $this->CI->db->select('id, email')
-                ->from('pct_hr_users');
-            $this->CI->db->where('branch_id', $userInfo['branch_id']);
-            $query = $this->CI->db->get();
-            if ($query->num_rows() > 0)  {
-                return $query->result_array();
-            } else {
-                return array();
-            }
+        $this->CI->load->library('hr/common');
+        $userInfo = $this->get_hr_user(array('id' => $user_id));
+        $this->CI->db->select('id, email')
+            ->from('pct_hr_users');
+        $this->CI->db->where('branch_id', $userInfo['branch_id']);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
         } else {
             return array();
         }
@@ -721,6 +716,11 @@ class Common
             'id' => $request_id
         );
         $type = $status == '1' ? 'approved' : 'denied';
+        $this->CI->load->model('hr/users_model');
+        if ($userdata['user_type_id'] == 4) {
+            $superadminInfo = $this->CI->users_model->get_by('user_type_id', 1);
+        }
+
         if ($request_type == 'time_card') {
             $data = array(
                 'status' => $type,
@@ -736,21 +736,30 @@ class Common
                 $notificationData = array(
                     'sent_user_id' => $timeCardInfo['user_id'],
                     'message' => $message,
-                    'is_admin' => 1,
                     'type' =>  $type
                 );
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
-                $this->sendNotification($message, $type, 0, 1);
                 $this->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
+
+                $notificationData['sent_user_id'] = $superadminInfo->id;
+                $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->sendNotification($message, $type, $superadminInfo->id, 1);
             } else {
                 $notificationData = array(
                     'sent_user_id' => $timeCardInfo['user_id'],
                     'message' => $message,
-                    'is_admin' => 0,
                     'type' =>  $type
                 );
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
                 $this->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
+
+                $userInfo = $this->CI->users_model->get($timeCardInfo['user_id']);
+                if ($userInfo->user_type_id != 4) {
+                    $branchUserInfo = $this->CI->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+                    $notificationData['sent_user_id'] = $branchUserInfo->id;
+                    $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                    $this->sendNotification($message, $type, $branchUserInfo->id, 1);
+                }
             }
         } else if ($request_type == 'incident_report') {
             $data = array(
@@ -762,25 +771,35 @@ class Common
             $incidentReportInfo = $this->getIncidentReport($request_id);
             $incident_date = date("F d, Y", strtotime($incidentReportInfo['incident_date']));
             $message = 'Incident report request of '.$incident_date.' '.$type.' by '.$userdata['name'].' for '.$incidentReportInfo['first_name']." ".$incidentReportInfo['last_name'];
+
             if ($userdata['user_type_id'] == 4) {
                 $notificationData = array(
                     'sent_user_id' => $incidentReportInfo['user_id'],
                     'message' => $message,
-                    'is_admin' => 1,
                     'type' =>  $type
                 );
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
-                $this->sendNotification($message, $type, 0, 1);
                 $this->sendNotification($message, $type, $incidentReportInfo['user_id'], 0);
+
+                $notificationData['sent_user_id'] = $superadminInfo->id;
+                $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->sendNotification($message, $type, $superadminInfo->id, 1);
             } else {
                 $notificationData = array(
                     'sent_user_id' => $incidentReportInfo['user_id'],
                     'message' => $message,
-                    'is_admin' => 0,
                     'type' =>  $type
                 );
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
                 $this->sendNotification($message, $type, $incidentReportInfo['user_id'], 0);
+
+                $userInfo = $this->CI->users_model->get($incidentReportInfo['user_id']);
+                if ($userInfo->user_type_id != 4) {
+                    $branchUserInfo = $this->CI->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+                    $notificationData['sent_user_id'] = $branchUserInfo->id;
+                    $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                    $this->sendNotification($message, $type, $branchUserInfo->id, 1);
+                }
             }
         } else if ($request_type == 'vacation_request') {
             $data = array(
@@ -793,25 +812,35 @@ class Common
             $from_date = date("F d, Y", strtotime($vacationRequestInfo['from_date']));
             $to_date = date("F d, Y", strtotime($vacationRequestInfo['to_date']));
             $message = 'Vacation request from '.$from_date.' to '.$to_date.' '.$type.' by '.$userdata['name'].' for '.$vacationRequestInfo['first_name']." ".$vacationRequestInfo['last_name'];
+
             if ($userdata['user_type_id'] == 4) {
                 $notificationData = array(
                     'sent_user_id' => $vacationRequestInfo['user_id'],
                     'message' => $message,
-                    'is_admin' => 1,
                     'type' =>  $type
                 );
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
-                $this->sendNotification($message, $type, 0, 1);
                 $this->sendNotification($message, $type, $vacationRequestInfo['user_id'], 0);
+
+                $notificationData['sent_user_id'] = $superadminInfo->id;
+                $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->sendNotification($message, $type, $superadminInfo->id, 1);
             } else {
                 $notificationData = array(
                     'sent_user_id' => $vacationRequestInfo['user_id'],
                     'message' => $message,
-                    'is_admin' => 0,
                     'type' =>  $type
                 );
                 $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
                 $this->sendNotification($message, $type, $vacationRequestInfo['user_id'], 0);
+
+                $userInfo = $this->CI->users_model->get($vacationRequestInfo['user_id']);
+                if ($userInfo->user_type_id != 4) {
+                    $branchUserInfo = $this->CI->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+                    $notificationData['sent_user_id'] = $branchUserInfo->id;
+                    $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+                    $this->sendNotification($message, $type, $branchUserInfo->id, 1);
+                }
             }
         }
 	}

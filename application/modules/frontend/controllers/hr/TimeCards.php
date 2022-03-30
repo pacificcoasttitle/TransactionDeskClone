@@ -121,15 +121,22 @@ class TimeCards extends MX_Controller
             $ids[] = $this->hr->insert($timeCardsData, 'pct_hr_time_cards');
             $exceptionDate = date("F d, Y", strtotime($exception_date));
             $message = 'Timecard request of '.$exceptionDate.' has submitted by '.$userdata['name'];
+
+            $this->load->model('hr/users_model');
+            $userInfo = $this->users_model->get($userdata['id']);
+            $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
             $notificationData = array(
-                'sent_user_id' => 0,
+                'sent_user_id' => $branchUserInfo->id,
                 'message' => $message,
-                'is_admin' => 1,
-                'type' =>  'submitted'
+                'type' => 'submitted'
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->sendNotification($message, 'submitted', 0, 1);
-            $this->common->sendNotification($message, 'submitted', $timeCardInfo['user_id'], 0);
+            $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+    
+            $superadminInfo = $this->users_model->get_by('user_type_id', 1);
+            $notificationData['sent_user_id'] = $superadminInfo->id;
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
             $i++;
         }
         if(!empty($ids)) {

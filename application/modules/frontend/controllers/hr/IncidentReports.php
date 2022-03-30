@@ -115,14 +115,21 @@ class IncidentReports extends MX_Controller
 
         $incident_date = date("F d, Y", strtotime($this->input->post('incident_date')));
         $message = 'Incident Report request of '.$incident_date.' has submitted by '.$userdata['name'];
+        $this->load->model('hr/users_model');
+        $userInfo = $this->users_model->get($userdata['id']);
+        $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
         $notificationData = array(
-            'sent_user_id' => 0,
+            'sent_user_id' => $branchUserInfo->id,
             'message' => $message,
-            'is_admin' => 1,
-            'type' =>  'submitted'
+            'type' => 'submitted'
         );
         $this->hr->insert($notificationData, 'pct_hr_notifications');
-        $this->common->sendNotification($message, 'submitted', 0, 1);
+        $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+
+        $superadminInfo = $this->users_model->get_by('user_type_id', 1);
+        $notificationData['sent_user_id'] = $superadminInfo->id;
+        $this->hr->insert($notificationData, 'pct_hr_notifications');
+        $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
         
         if(!empty($id)) {
             $success[] = "Incident Report saved successfully.";

@@ -162,7 +162,6 @@ class Memos extends MX_Controller {
                     $notificationData = array(
                         'sent_user_id' => $user,
                         'message' => $message,
-                        'is_admin' => 0,
                         'type' =>  'assigned'
                     );
                     $this->hr->insert($notificationData, 'pct_hr_notifications');
@@ -352,16 +351,17 @@ class Memos extends MX_Controller {
         );
         $this->hr->update($data, $condition, 'pct_hr_assigned_memo_users'); 
         $successMsg =  $subject." memo accepted successfully.";
+        $this->CI->load->model('hr/users_model');
+        $superadminInfo = $this->CI->users_model->get_by('user_type_id', 1);
         $memo_date = date("F d, Y", strtotime($memoInfo['date']));
         $message = $subject.' Memo request of '.$memo_date.' accepted by '.$userdata['name'];
         $notificationData = array(
-            'sent_user_id' => 0,
+            'sent_user_id' => $superadminInfo->id,
             'message' => $message,
-            'is_admin' => 1,
             'type' =>  'accepted'
         );
         $this->hr->insert($notificationData, 'pct_hr_notifications');
-        $this->common->sendNotification($message, 'accepted', 0, 1);
+        $this->common->sendNotification($message, 'accepted', $superadminInfo->id, 1);
         $this->session->set_userdata('success', $successMsg);
         redirect(base_url().'hr/admin/memos');
     }
