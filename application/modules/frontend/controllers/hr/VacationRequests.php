@@ -123,14 +123,22 @@ class VacationRequests extends MX_Controller
             $from_date = date("F d, Y", strtotime($from_date));
             $to_date = date("F d, Y", strtotime($to_dates[$i]));
             $message = 'Vacation request from '.$from_date.' to '.$to_date.' has submitted by '.$userdata['name'];
+
+            $this->load->model('hr/users_model');
+            $userInfo = $this->users_model->get($userdata['id']);
+            $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
             $notificationData = array(
-                'sent_user_id' => 0,
+                'sent_user_id' => $branchUserInfo->id,
                 'message' => $message,
-                'is_admin' => 1,
-                'type' =>  'submitted'
+                'type' => 'submitted'
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->sendNotification($message, 'submitted', 0, 1);
+            $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+    
+            $superadminInfo = $this->users_model->get_by('user_type_id', 1);
+            $notificationData['sent_user_id'] = $superadminInfo->id;
+            $this->hr->insert($notificationData, 'pct_hr_notifications');
+            $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
             $i++;
         }
         if(!empty($ids)) {
@@ -169,6 +177,11 @@ class VacationRequests extends MX_Controller
             $data[$i]['title'] = $vacation['first_name']." ".$vacation['last_name'];
             $data[$i]['start'] = $vacation['from_date'];
             $data[$i]['end'] = date('Y-m-d', strtotime($vacation['to_date'] . ' +1 day'));
+            if (!empty($vacation['approved_by_user_id'])) {
+				if ($vacation['status'] == 'approved') {
+					$data[$i]['backgroundColor'] = '#28a745';
+				} 
+			}
             $i++;
         }
         $i++;

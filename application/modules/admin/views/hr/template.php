@@ -62,8 +62,8 @@
                     cluster: '<?php echo env("PUSHER_CLUSTER"); ?>'
                 });
 
-                var channel = pusher.subscribe('admin-channel');
-                channel.bind('admin-event', function(data) {
+                var channel = pusher.subscribe('admin-channel-'+'<?php echo $userdata['id'];?>');
+                channel.bind('admin-event-'+'<?php echo $userdata['id'];?>', function(data) {
                     var notification = data;
                     var alertClass = '';
                     var iconClass = '';

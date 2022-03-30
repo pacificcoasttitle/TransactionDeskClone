@@ -66,9 +66,10 @@ class AdminTemplate
 
     public function getNotifications($limit) 
     {
+        $userdata = $this->CI->session->userdata('hr_admin');
         $this->CI->db->select('*');
-        $this->CI->db->where('is_admin', 1);
-        $this->CI->db->where('is_admin_read', 0);
+        $this->CI->db->where('is_read', 0);
+        $this->CI->db->where('sent_user_id', $userdata['id']);
         $query = $this->CI->db->get('pct_hr_notifications');
         $this->CI->db->order_by('pct_hr_notifications.id', 'desc');
         //$this->CI->db->limit($limit);  
@@ -81,9 +82,10 @@ class AdminTemplate
 
     public function getUnreadNotificationCount() 
     {
+        $userdata = $this->CI->session->userdata('hr_admin');
         $this->CI->db->select('count(*) as total_unread_count');
-        $this->CI->db->where('is_admin', 1);
-        $this->CI->db->where('is_admin_read', 0);
+        $this->CI->db->where('sent_user_id', $userdata['id']);
+        $this->CI->db->where('is_read', 0);
         $query = $this->CI->db->get('pct_hr_notifications');
         if ($query->num_rows() > 0)  {
             return $query->row_array();

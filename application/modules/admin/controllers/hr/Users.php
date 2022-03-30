@@ -57,6 +57,7 @@ class Users extends MX_Controller {
     public function getUsers()
     {
         $params = array();
+        $userdata = $this->session->userdata('hr_admin');
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
             $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
@@ -83,32 +84,34 @@ class Users extends MX_Controller {
                 $nestedData[] = $value['name'];
                 $nestedData[] = $value['department_name'];
                 $nestedData[] = date("m/d/Y", strtotime($value['hire_date'])); 
-                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $editUrl = base_url().'hr/admin/edit-user/'.$value['id'];
-					$task_list = "";
-                    if(trim(strtolower($value['name'])) == 'employee') {
-						$task_list_url = base_url().'hr/admin/users-tasks/'.$value['id'];
-						$task_list = '<a style="margin-left: 5px;" href="'.$task_list_url.'" class="btn btn-info btn-icon-split btn-sm">
-										<span class="icon text-white-50">
-											<i class="fas fa-clipboard-check"></i>
-										</span>
-										<span class="text">Task</span>
-									</a>';
-					}
-                    $nestedData[] = '<div style="display:inline-flex;">
-                                        <a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
+                if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) {
+                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $editUrl = base_url().'hr/admin/edit-user/'.$value['id'];
+                        $task_list = "";
+                        if(trim(strtolower($value['name'])) == 'employee') {
+                            $task_list_url = base_url().'hr/admin/users-tasks/'.$value['id'];
+                            $task_list = '<a style="margin-left: 5px;" href="'.$task_list_url.'" class="btn btn-info btn-icon-split btn-sm">
                                             <span class="icon text-white-50">
-                                                <i class="fas fa-pencil-alt"></i>
+                                                <i class="fas fa-clipboard-check"></i>
                                             </span>
-                                            <span class="text">Edit</span>
-                                        </a>
-                                        <a style="margin-left: 5px;" href="#" onclick="deleteUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-trash"></i>
-                                            </span>
-                                            <span class="text">Delete</span>
-                                        </a>'.$task_list.'
-                                    </div>';
+                                            <span class="text">Task</span>
+                                        </a>';
+                        }
+                        $nestedData[] = '<div style="display:inline-flex;">
+                                            <a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </span>
+                                                <span class="text">Edit</span>
+                                            </a>
+                                            <a style="margin-left: 5px;" href="#" onclick="deleteUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-trash"></i>
+                                                </span>
+                                                <span class="text">Delete</span>
+                                            </a>'.$task_list.'
+                                        </div>';
+                    }
                 }
 	            $data[] = $nestedData;    
                 $count++;          
@@ -122,6 +125,7 @@ class Users extends MX_Controller {
 
     public function addUser()
     {
+        $userdata = $this->session->userdata('hr_admin');
         $data['title'] = 'HR-Center Add User';
         $data['page_title'] = 'Users';
         $data['hrPositions'] = $this->hr->getHrPositions(); 
@@ -194,11 +198,10 @@ class Users extends MX_Controller {
                                 'is_complete' => 0
                             );
     
-                            $message = $trainingsList->name.' training has assigned to you.';
+                            $message = $trainingsList->name.' training has assigned to you  by '.$userdata['name'];
                             $notificationData = array(
                                 'sent_user_id' => $user_id,
                                 'message' => $message,
-                                'is_admin' => 0,
                                 'type' =>  'assigned'
                             );
                             $this->hr->insert($notificationData, 'pct_hr_notifications');

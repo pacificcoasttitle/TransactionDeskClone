@@ -152,14 +152,18 @@ class Timecards extends MX_Controller {
 
     public function addTimeCard()
     {
+        $userdata = $this->session->userdata('hr_admin');
         $data['title'] = 'HR-Center Time Card';
         $data['page_title'] = 'Add New Time Card';
 		$this->load->model('hr/users_model');
-		$users = $this->users_model->with('position')->get_all();
+        if ($userdata['user_type_id'] == 4) {
+            $userInfo = $this->users_model->get($userdata['id']);
+            $users = $this->users_model->get_many_by('branch_id', $userInfo->branch_id);
+        } else {
+            $users = $this->users_model->get_all();
+        }
 		$data['employees'] = $users;
-        
 		$this->admintemplate->addCSS( base_url('assets/frontend/hr/css/smart-forms.css?v=0.1') );
-
 		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.steps.min.js') );
 		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
 		$this->admintemplate->addJS( base_url('assets/frontend/js/parsley.min.js') );
@@ -169,9 +173,9 @@ class Timecards extends MX_Controller {
 
 	public function saveTimeCards()
     {
-        // $userdata = $this->session->userdata('hr_user');
-        // $errors = array();
-        // $success = array();
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->model('hr/users_model');
+        $userInfo = $this->users_model->get($this->input->post('select_employee'));
         $ids = array();
         $exception_dates = $this->input->post('exception_date');
         $reg_hours = $this->input->post('reg_hours');
@@ -193,16 +197,28 @@ class Timecards extends MX_Controller {
             );
             $ids[] = $this->hr->insert($timeCardsData, 'pct_hr_time_cards');
             $exceptionDate = date("F d, Y", strtotime($exception_date));
-            $message = 'Timecard request of '.$exceptionDate.' has submitted';
+            $message = 'Timecard request of '.$exceptionDate.' has submitted by '.$userdata['name'];
             $notificationData = array(
-                'sent_user_id' => 0,
+                'sent_user_id' => $this->input->post('select_employee'),
                 'message' => $message,
-                'is_admin' => 1,
                 'type' =>  'submitted'
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->sendNotification($message, 'submitted', 0, 1);
             $this->common->sendNotification($message, 'submitted', $this->input->post('select_employee'), 0);
+
+            $message = 'Timecard request of '.$exceptionDate.' has submitted for employee '.$userInfo->first_name." ".$userInfo->last_name.' by '.$userdata['name'];
+            $notificationData['message'] = $message;
+            if ($userdata['user_type_id'] == 4) {
+                $superadminInfo = $this->users_model->get_by('user_type_id', 1);
+                $notificationData['sent_user_id'] = $superadminInfo->id;
+                $this->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
+            } else {
+                $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+                $notificationData['sent_user_id'] = $branchUserInfo->id;
+                $this->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+            }
             $i++;
         }
         if(!empty($ids)) {

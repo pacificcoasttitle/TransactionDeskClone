@@ -84,7 +84,7 @@
 		text-transform: uppercase;
 		font-size: 21px;
 		line-height: 27px;
-		color: #a0a0a0;
+		color: #00B489;
 	}
 	
 	.salesdivider {
@@ -94,8 +94,8 @@
 	}
 
 	.projected_goal_section {
-		color: #d35411;
-		/* font-weight: bold;*/
+		color: #06445a;
+		font-weight: bold;
 		text-align: center;
 		text-transform: uppercase;
 		font-size: large;

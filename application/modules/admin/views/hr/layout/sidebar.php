@@ -41,85 +41,78 @@
 		</a>
 	</li>
 
-	<?php $userdata = $this->session->userdata('hr_admin'); 
-		if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
-			<li
-				class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user' || $this->uri->uri_string() == 'hr/admin/admin-users' || $this->uri->uri_string() == 'hr/admin/add-admin-user' || $this->uri->segment(3) == 'edit-admin-user') { echo 'active'; } ?>">
-				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#users_menu" aria-expanded="true"
-					aria-controls="users_menu">
-					<i class="fas fa-fw fa-users"></i>
-					<span>Users</span>
-				</a>
-				<div id="users_menu" class="collapse <?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user' || $this->uri->uri_string() == 'hr/admin/admin-users' || $this->uri->uri_string() == 'hr/admin/add-admin-user' || $this->uri->segment(3) == 'edit-admin-user') { echo 'show'; } ?>" aria-labelledby="users_menu" data-parent="#accordionSidebar">
-					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user') { echo 'active'; } ?>"
-							href="<?php echo base_url().'hr/admin/users'; ?>">Employees</a>
-						<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/admin-users' || $this->uri->uri_string() == 'hr/admin/add-admin-user' || $this->uri->segment(3) == 'edit-admin-user') { echo 'active'; } ?>"
-							href="<?php echo base_url().'hr/admin/admin-users'; ?>">Admin Users</a>
-
-					</div>
-				</div>
-			</li>
-
-			<li
-				class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/user-types' || $this->uri->uri_string() == 'hr/admin/add-user-type' || $this->uri->segment(3) == 'edit-user-type') { echo 'active'; } ?>">
-				<a class="nav-link" href="<?php echo base_url().'hr/admin/user-types'; ?>">
-					<i class="fas fa-fw fa-table"></i>
-					<span>User Types</span>
-				</a>
-			</li>
-
-			<li
-				class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/departments' || $this->uri->uri_string() == 'hr/admin/add-department' || $this->uri->segment(3) == 'edit-department') { echo 'active'; } ?>">
-				<a class="nav-link" href="<?php echo base_url().'hr/admin/departments'; ?>">
-					<i class="fas fa-fw fa-building"></i>
-					<span>Departments</span>
-				</a>
-			</li>
-
-			<li
-				class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/positions' || $this->uri->uri_string() == 'hr/admin/add-position' || $this->uri->segment(3) == 'edit-position') { echo 'active'; } ?>">
-				<a class="nav-link" href="<?php echo base_url().'hr/admin/positions'; ?>">
-					<i class="fas fa-fw fa-globe"></i>
-					<span>Positions</span>
-				</a>
-			</li>
-
-			<li
-				class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*branch/',$this->uri->uri_string())) { echo 'active'; } ?>">
-				<a class="nav-link" href="<?php echo base_url().'hr/admin/branches'; ?>">
-					<i class="fas fa-fw fa-code-branch"></i>
-					<span>Branches</span>
-				</a>
-			</li>
-
-	<?php } ?>
-
+	<?php $userdata = $this->session->userdata('hr_admin');?>
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user' || $this->uri->uri_string() == 'hr/admin/admin-users' || $this->uri->uri_string() == 'hr/admin/add-admin-user' || $this->uri->segment(3) == 'edit-admin-user') { echo 'active'; } ?>">
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#users_menu" aria-expanded="true"
+			aria-controls="users_menu">
+			<i class="fas fa-fw fa-users"></i>
+			<span>Users</span>
+		</a>
+		
+		<div id="users_menu" class="collapse <?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user' || $this->uri->uri_string() == 'hr/admin/admin-users' || $this->uri->uri_string() == 'hr/admin/add-admin-user' || $this->uri->segment(3) == 'edit-admin-user') { echo 'show'; } ?>" aria-labelledby="users_menu" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user') { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/users'; ?>">Employees</a>
+				<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/admin-users' || $this->uri->uri_string() == 'hr/admin/add-admin-user' || $this->uri->segment(3) == 'edit-admin-user') { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/admin-users'; ?>">Admin Users</a>
+				<?php } ?>
+			</div>
+		</div>
+	</li>
+		
 	<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
 		<li
-			class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo' || $this->uri->uri_string() == 'hr/admin/memos-status') { echo 'active'; } ?>">
-			<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#memos_menu" aria-expanded="true" aria-controls="memos_menu">
-				<i class="fas fa-fw fa-sticky-note"></i>
-				<span>Memos</span>
-			</a>
-			<div id="memos_menu" class="collapse <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo' || $this->uri->uri_string() == 'hr/admin/memos-status') { echo 'show'; } ?>" aria-labelledby="memos_menu" data-parent="#accordionSidebar">
-				<div class="bg-white py-2 collapse-inner rounded">
-					<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo') { echo 'active'; } ?>"
-						href="<?php echo base_url().'hr/admin/memos'; ?>">Memos List</a>
-					<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/memos-status') { echo 'active'; } ?>"
-						href="<?php echo base_url().'hr/admin/memos-status'; ?>">Memo Status</a>
-				</div>
-			</div>
-		</li>
-	<?php } else if($userdata['user_type_id'] == 4) { ?>
-		<li class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/memos') { echo 'active'; } ?>">
-			<a class="nav-link" href="<?php echo base_url().'hr/admin/memos'; ?>">
-				<i class="fas fa-fw fa-sticky-note"></i>
-				<span>Memos</span>
+			class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/user-types' || $this->uri->uri_string() == 'hr/admin/add-user-type' || $this->uri->segment(3) == 'edit-user-type') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url().'hr/admin/user-types'; ?>">
+				<i class="fas fa-fw fa-table"></i>
+				<span>User Types</span>
 			</a>
 		</li>
+
+		<li
+			class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/departments' || $this->uri->uri_string() == 'hr/admin/add-department' || $this->uri->segment(3) == 'edit-department') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url().'hr/admin/departments'; ?>">
+				<i class="fas fa-fw fa-building"></i>
+				<span>Departments</span>
+			</a>
+		</li>
+
+		<li
+			class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/positions' || $this->uri->uri_string() == 'hr/admin/add-position' || $this->uri->segment(3) == 'edit-position') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url().'hr/admin/positions'; ?>">
+				<i class="fas fa-fw fa-globe"></i>
+				<span>Positions</span>
+			</a>
+		</li>
+
+		<li
+			class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*branch/',$this->uri->uri_string())) { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url().'hr/admin/branches'; ?>">
+				<i class="fas fa-fw fa-code-branch"></i>
+				<span>Branches</span>
+			</a>
+		</li>
+
 	<?php } ?>
 
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo' || $this->uri->uri_string() == 'hr/admin/memos-status') { echo 'active'; } ?>">
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#memos_menu" aria-expanded="true" aria-controls="memos_menu">
+			<i class="fas fa-fw fa-sticky-note"></i>
+			<span>Memos</span>
+		</a>
+		<div id="memos_menu" class="collapse <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo' || $this->uri->uri_string() == 'hr/admin/memos-status') { echo 'show'; } ?>" aria-labelledby="memos_menu" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/memos' || $this->uri->uri_string() == 'hr/admin/add-memo' || $this->uri->segment(3) == 'edit-memo') { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/memos'; ?>">Memos List</a>
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/memos-status') { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/memos-status'; ?>">Memo Status</a>
+			</div>
+		</div>
+	</li>
+	
 	<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
 		<li
 			class="nav-item <?php if(preg_match('/hr\/admin\/([a-z\-])*task-/',$this->uri->uri_string())) { echo 'active'; } ?>" >

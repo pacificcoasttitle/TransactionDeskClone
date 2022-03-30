@@ -42,13 +42,27 @@ class Dashboard extends MX_Controller {
 		$userdata = $this->session->userdata('hr_admin');
         $data['title'] = 'HR-Center Admin Dashboard';
         $data['page_title'] = 'Dashboard';
-        $data['pending_timecard_count'] = $this->timecards_model->count_by('approved_date', null);
-        $data['pending_vacation_request_count'] = $this->vacation_request_model->count_by('approved_date', null);
-        $data['pending_report_incident_count'] = $this->report_incident_model->count_by('approved_date', null);
-        $data['pending_training_count'] = $this->training_status_model->count_by('is_complete', 0);
-
+		if ($userdata['user_type_id'] == '4') {
+			$usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
+			$usersIds = array_column($usersForBranchManager, 'id');
+			if (($key = array_search($userdata['id'], $usersIds)) !== false) {
+				unset($usersIds[$key]);
+			}
+			$user_ids = implode(',' , $usersIds);
+			$data['pending_timecard_count'] = !empty($user_ids) ? $this->timecards_model->count_by("approved_date is NULL and user_id in ($user_ids)") : 0;
+			$data['pending_vacation_request_count'] =!empty($user_ids) ? $this->vacation_request_model->count_by("approved_date is NULL and user_id in ($user_ids)") : 0;
+			$data['pending_report_incident_count'] = !empty($user_ids) ? $this->report_incident_model->count_by("approved_date is NULL and user_id in ($user_ids)") : 0;
+			$userid = $userdata['id'];
+			$data['pending_training_count'] = $this->training_status_model->count_by("is_complete= 0 and user_id = $userid");
+		} else {
+			$data['pending_timecard_count'] = $this->timecards_model->count_by('approved_date', null);
+			$data['pending_vacation_request_count'] = $this->vacation_request_model->count_by('approved_date', null);
+			$data['pending_report_incident_count'] = $this->report_incident_model->count_by('approved_date', null);
+			$data['pending_training_count'] = $this->training_status_model->count_by('is_complete', 0);
+		}
+        
         if ($userdata['user_type_id'] == '4') {
-			$usersForBranchManager = $this->common->getUsersForBranchManager($this->user['id']);
+			$usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
 			if(!empty($usersForBranchManager)) {
 				$usersEmails = array_column($usersForBranchManager, 'email');	
 				$pctOrderUserInfo = $this->order->getUsersInfo($usersEmails);
@@ -129,6 +143,11 @@ class Dashboard extends MX_Controller {
             $data[$i]['title'] = $vacation['first_name']." ".$vacation['last_name'];
             $data[$i]['start'] = $vacation['from_date'];
             $data[$i]['end'] = date('Y-m-d', strtotime($vacation['to_date'] . ' +1 day'));
+			if (!empty($vacation['approved_by_user_id'])) {
+				if ($vacation['status'] == 'approved') {
+					$data[$i]['backgroundColor'] = '#28a745';
+				} 
+			}
             $i++;
         }
         $i++;
