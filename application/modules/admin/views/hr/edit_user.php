@@ -117,8 +117,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Department<span class="required"> *</span></label>
-                                        <select name="department" id="department" class="form-control" required>
+                                        <label>Department</label>
+                                        <select name="department" id="department" class="form-control">
                                             <option value="">Select Department</option>
                                             <?php foreach($departments as $department) {?>
                                                 <option value="<?php echo $department['id'];?>" <?php echo $userInfo['department_id'] == $department['id'] ? 'selected' : '';?>><?php echo $department['name'];?></option>
