@@ -4621,6 +4621,11 @@ class Cron extends MX_Controller {
 
     public function insertHrUsersFromCsvFile()
     {
+        if (empty(getenv('APP_URL'))) {
+            $url = "http://".$_SERVER['SERVER_NAME']."/";
+        } else {
+            $url = getenv('APP_URL');
+        }
         $this->load->model('hr/hr'); 
         $this->load->library('hr/common');
         $this->db->select('*');
@@ -4629,7 +4634,7 @@ class Cron extends MX_Controller {
         $users = $query->result_array();
         $usersEmails = array_column($users, 'email');
         $files = glob("uploads/hr/*csv");    
-            
+
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
                 $row = 1;
@@ -4689,7 +4694,7 @@ class Cron extends MX_Controller {
                                 $message_body = "Hi ". $first_name." ".$last_name.", <br><br>";
                                 $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
                                 $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-                                $message_body .= "Please click on the link below to complete your registration.<br><br> ".getenv('APP_URL')."hr/login";
+                                $message_body .= "Please click on the link below to complete your registration.<br><br> ".$url."hr/login";
                                 $subject = 'Invitation For Pacific Coast Title HR Center';
                                 $to = $email;
                                 $this->load->helper('sendemail');
