@@ -779,10 +779,13 @@ $(document).ready(function () {
 			var last_name = $(this).find(':selected').data('last');
 			var email = $(this).find(':selected').data('email');
 			var position = $(this).find(':selected').data('position');
+            var employee_id = $(this).find(':selected').data('employee');
+            console.log(employee_id+'hi');
 			$("#firstname").val(first_name);
 			$("#lastname").val(last_name);
 			$("#emailaddress").val(email);
 			$("#position").val(position);
+            $("#employee_id").val(employee_id);
 		});
 		$(".incident_date").datepicker({
 			defaultDate: "+1w",

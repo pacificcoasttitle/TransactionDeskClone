@@ -82,7 +82,7 @@ class Users extends MX_Controller {
                 $nestedData[] = $value['email'];
                 $nestedData[] = $value['position'];
                 $nestedData[] = $value['name'];
-                $nestedData[] = $value['department_name'];
+                $nestedData[] = $value['employee_id'];
                 $nestedData[] = date("m/d/Y", strtotime($value['hire_date'])); 
                 if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) {
                     if(isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -146,11 +146,12 @@ class Users extends MX_Controller {
             $this->load->library('hr/common');
             $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
             $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+            $this->form_validation->set_rules('employee_id', 'Employee Id', 'required', array('required'=> 'Please Enter Employee Id'));
             $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[pct_hr_users.email]', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique'=>'Email already Exist'));
             $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
             $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
             $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
-            $this->form_validation->set_rules('department', 'Department', 'required', array('required'=> 'Please Select Department.'));
+            //$this->form_validation->set_rules('department', 'Department', 'required', array('required'=> 'Please Select Department.'));
             $this->form_validation->set_rules('branch', 'Branch', 'required', array('required'=> 'Please Select Branch.'));
             
             if ($this->form_validation->run() == true) {        
@@ -171,6 +172,7 @@ class Users extends MX_Controller {
                     $usersData = array(
                         'first_name' =>  $this->input->post('first_name'),
                         'last_name' =>  $this->input->post('last_name'),
+                        'employee_id' =>  $this->input->post('employee_id'),
                         'email' => $this->input->post('email'),
                         'password' => password_hash($randomPassword, PASSWORD_DEFAULT),    
                         'position_id' => $this->input->post('position'),
@@ -178,7 +180,7 @@ class Users extends MX_Controller {
                         'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
                         'status' => 1,
                         'is_tmp_password' => 1,
-                        'department_id' => $this->input->post('department'),
+                        'department_id' => $this->input->post('department') ? $this->input->post('department') : 0,
                         'branch_id' => $this->input->post('branch'),
                         'profile_img' => $document_name
                     );
@@ -186,30 +188,33 @@ class Users extends MX_Controller {
                     $user_id = $this->hr->insert($usersData, 'pct_hr_users');
 
                     $this->load->model('hr/training_model');
-                    $trainingsList = $this->training_model->get_many_by("(position_id = {$this->input->post('position')} and department_id ={$this->input->post('department')})");
-                    $assign_trainings = array();
 
-                    if (!empty($trainingsList)) {
-                        $this->load->model('hr/training_status_model');
-                        foreach($trainingsList as $training) {
-                            $assign_trainings[] = array(
-                                'user_id' => $user_id,
-                                'training_id' => $training->id,
-                                'is_complete' => 0
-                            );
-    
-                            $message = $trainingsList->name.' training has assigned to you  by '.$userdata['name'];
-                            $notificationData = array(
-                                'sent_user_id' => $user_id,
-                                'message' => $message,
-                                'type' =>  'assigned'
-                            );
-                            $this->hr->insert($notificationData, 'pct_hr_notifications');
-                            $this->common->sendNotification($message, 'assigned', $user_id, 0);
-                        }
-    
-                        if(count($assign_trainings)) {
-                            $this->training_status_model->insert_many($assign_trainings);
+                    if (!empty($this->input->post('department'))) {
+                        $trainingsList = $this->training_model->get_many_by("(position_id = {$this->input->post('position')} and department_id ={$this->input->post('department')})");
+                        $assign_trainings = array();
+
+                        if (!empty($trainingsList)) {
+                            $this->load->model('hr/training_status_model');
+                            foreach($trainingsList as $training) {
+                                $assign_trainings[] = array(
+                                    'user_id' => $user_id,
+                                    'training_id' => $training->id,
+                                    'is_complete' => 0
+                                );
+        
+                                $message = $trainingsList->name.' training has assigned to you  by '.$userdata['name'];
+                                $notificationData = array(
+                                    'sent_user_id' => $user_id,
+                                    'message' => $message,
+                                    'type' =>  'assigned'
+                                );
+                                $this->hr->insert($notificationData, 'pct_hr_notifications');
+                                $this->common->sendNotification($message, 'assigned', $user_id, 0);
+                            }
+        
+                            if(count($assign_trainings)) {
+                                $this->training_status_model->insert_many($assign_trainings);
+                            }
                         }
                     }
                     
@@ -230,11 +235,12 @@ class Users extends MX_Controller {
             } else {
                 $data['first_name_error_msg'] = form_error('first_name');
                 $data['last_name_error_msg'] = form_error('last_name');
+                $data['employee_id_error_msg'] = form_error('employee_id');
                 $data['email_error_msg'] = form_error('email');
                 $data['position_error_msg'] = form_error('position');
                 $data['hire_date_error_msg'] = form_error('hire_date');
                 $data['user_type_error_msg'] = form_error('user_type');
-                $data['department_error_msg'] = form_error('department');
+                //$data['department_error_msg'] = form_error('department');
             }                                       
         }
         $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
@@ -265,10 +271,11 @@ class Users extends MX_Controller {
                 $this->load->library('hr/common');
                 $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
                 $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+                $this->form_validation->set_rules('employee_id', 'Employee Id', 'required', array('required'=> 'Please Enter Employee Id'));
                 $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
                 $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
                 $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Check User Type'));
-                $this->form_validation->set_rules('department', 'Department', 'required', array('required'=> 'Please Select Department.'));
+                //$this->form_validation->set_rules('department', 'Department', 'required', array('required'=> 'Please Select Department.'));
                 $this->form_validation->set_rules('branch', 'Branch', 'required', array('required'=> 'Please Select Branch.'));
                 
                 if ($this->form_validation->run() == true) {
@@ -288,11 +295,12 @@ class Users extends MX_Controller {
                         $usersData = array(
                             'first_name' =>  $this->input->post('first_name'),
                             'last_name' =>  $this->input->post('last_name'), 
+                            'employee_id' =>  $this->input->post('employee_id'),
                             'position_id' => $this->input->post('position'),
                             'user_type_id' => $this->input->post('user_type'),
                             'hire_date' => date("Y-m-d", strtotime($this->input->post('hire_date'))),
                             'status' => 1,
-                            'department_id' => $this->input->post('department'),
+                            'department_id' => $this->input->post('department') ? $this->input->post('department') : 0,
                             'branch_id' => $this->input->post('branch')
                         );
                         if (!empty($document_name)) {
@@ -307,10 +315,11 @@ class Users extends MX_Controller {
                 } else {
                     $data['first_name_error_msg'] = form_error('first_name');
                     $data['last_name_error_msg'] = form_error('last_name');
+                    $data['employee_id_error_msg'] = form_error('employee_id');
                     $data['position_error_msg'] = form_error('position');
                     $data['hire_date_error_msg'] = form_error('hire_date');
                     $data['user_type_error_msg'] = form_error('user_type');
-                    $data['department_error_msg'] = form_error('department');
+                    //$data['department_error_msg'] = form_error('department');
                 }                                       
             }
             $data['userInfo'] = $this->hr->getUserInfo($id);

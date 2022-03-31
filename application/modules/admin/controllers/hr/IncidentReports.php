@@ -183,9 +183,9 @@ class IncidentReports extends MX_Controller {
 		$this->load->model('hr/users_model');
         if ($userdata['user_type_id'] == 4) {
             $userInfo = $this->users_model->get($userdata['id']);
-            $users = $this->users_model->get_many_by('branch_id', $userInfo->branch_id);
+            $users = $this->users_model->with('position')->get_many_by('branch_id', $userInfo->branch_id);
         } else {
-            $users = $this->users_model->get_all();
+            $users = $this->users_model->with('position')->get_all();
         }
 		$data['employees'] = $users;
 		$this->admintemplate->addCSS( base_url('assets/frontend/hr/css/smart-forms.css?v=0.1') );
@@ -205,7 +205,7 @@ class IncidentReports extends MX_Controller {
         $incidentData = array(
             'user_id' => $this->input->post('select_employee'),
             'incident_date' => date("Y-m-d", strtotime($this->input->post('incident_date'))),
-            'employee_number' => $this->input->post('employee_number'),
+            //'employee_number' => $this->input->post('employee_number'),
             'incident_reason' => $this->input->post('incident_reason'),
             'incident_detail' => $this->input->post('incident_detail'),
             'actions' => implode(",", $this->input->post('actions')),

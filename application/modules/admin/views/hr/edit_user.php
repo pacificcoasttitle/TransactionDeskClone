@@ -55,6 +55,19 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label>Employee Id<span class="required"> *</span></label>
+                                        <input type="text" class="form-control" placeholder="Employee Id" name="employee_id" id="employee_id" value="<?php echo !empty($userInfo['employee_id']) ? $userInfo['employee_id'] : '';?>" required="required">
+                                    </div>
+                                    <?php if(!empty($employee_id_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $employee_id_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label>Position<span class="required"> *</span></label>
                                         <select name="position" id="position" class="form-control" required>
                                             <option value="">Select Position</option>
