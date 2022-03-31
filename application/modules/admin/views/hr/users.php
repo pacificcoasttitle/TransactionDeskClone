@@ -41,7 +41,7 @@
                             <th>Email</th>
                             <th>Position</th>
                             <th>User Type</th>
-							<th>Department</th>
+							<th>Employee Id</th>
                             <th>Hire Date</th>
 							<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
                             	<th>Action</th>

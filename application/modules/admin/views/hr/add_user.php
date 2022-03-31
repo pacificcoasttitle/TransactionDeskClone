@@ -55,6 +55,19 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label>Employee Id<span class="required"> *</span></label>
+                                        <input type="text" class="form-control" placeholder="Employee Id" name="employee_id" id="employee_id" value="" required="required">
+                                    </div>
+                                    <?php if(!empty($employee_id_error_msg)){ ?>  
+                                        <div class="typography-line text-danger">
+                                            <?php echo $employee_id_error_msg;?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label>Position<span class="required"> *</span></label>
                                         <select name="position" id="position" class="form-control" required>
                                             <option value="">Select Position</option>
@@ -103,19 +116,19 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Department<span class="required"> *</span></label>
-                                        <select name="department" id="department" class="form-control" required>
+                                        <label>Department</label>
+                                        <select name="department" id="department" class="form-control">
                                             <option value="">Select Department</option>
                                             <?php foreach($departments as $department) {?>
                                                 <option value="<?php echo $department['id'];?>"><?php echo $department['name'];?></option>
                                             <?php } ?>
                                         </select> 
                                     </div>
-                                    <?php if(!empty($department_error_msg)){ ?>  
-                                        <div class="typography-line text-danger">
-                                            <?php echo $department_error_msg;?>
-                                        </div>
-                                    <?php } ?>
+                                    <?php //if(!empty($department_error_msg)){ ?>  
+                                        <!-- <div class="typography-line text-danger">
+                                            <?php // echo $department_error_msg;?>
+                                        </div> -->
+                                    <?php //} ?>
                                 </div>
                             </div>
                             <div class="row">
