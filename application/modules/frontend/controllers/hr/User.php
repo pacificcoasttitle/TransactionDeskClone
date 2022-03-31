@@ -35,7 +35,45 @@ class User extends MX_Controller
         $data['userInfo'] = $this->hr->getUserInfo($userdata['id']);
         $this->template->show("hr/employee", "profile", $data);
 	}
+	public function updateProfile()
+    {
+		$userdata = $this->session->userdata('hr_user');
+		$errors = array();
+        $success = array();
+		// var_dump($this->input->post());die;
+		if(!empty($userdata)) {
+			$user_id = $userdata['id'];
+			$update_data = array();
+			$update_data['address']=$this->input->post('address');
+			$update_data['city']=$this->input->post('city');
+			$update_data['state']=$this->input->post('state');
+			$update_data['zip']=$this->input->post('zip');
+			$update_data['cell_phone']=$this->input->post('cell_phone');
+			$update_data['home_phone']=$this->input->post('home_phone');
+			$update_data['birth_date']=$this->input->post('birth_date');
+			$update_data = array_filter($update_data);
+			if(count($update_data)) {
 
+				$this->load->model('hr/users_model');
+				$this->users_model->update($user_id,$update_data);
+
+				$success[] = "Profile Updates successfully.";
+                
+			}
+			else {
+				$errors[] = "Profile data not updated please try again";
+			}
+		}
+		else {
+			$errors[] = "Profile data not updated please try again";
+		}
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url('hr/profile'));
+	}
     public function updatePassword()
     {
         $userdata = $this->session->userdata('hr_user');

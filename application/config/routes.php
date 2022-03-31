@@ -335,6 +335,7 @@ $route['hr/incident-reports'] = 'frontend/hr/incidentReports/index';
 $route['hr/get-incident-reports'] = 'frontend/hr/incidentReports/getIncidentReports';
 $route['hr/save-incident-reports'] = 'frontend/hr/incidentReports/saveIncidentReports';
 $route['hr/profile'] = 'frontend/hr/user/index';
+$route['hr/update-profile'] = 'frontend/hr/user/updateProfile';
 $route['hr/update-password'] = 'frontend/hr/user/updatePassword';
 $route['hr/upload-profile-pic'] = 'frontend/hr/user/uploadProfilePic';
 $route['hr/memos'] = 'frontend/hr/memos/index';
