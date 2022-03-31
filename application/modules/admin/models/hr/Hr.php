@@ -140,6 +140,7 @@ class Hr extends CI_Model
         $this->db->from('pct_hr_users')
                  ->join('pct_hr_position', 'pct_hr_position.id = pct_hr_users.position_id')
                  ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
+                 ->join('pct_hr_branches', 'pct_hr_branches.id = pct_hr_users.branch_id')
                  ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id', 'left');
         $this->db->where('pct_hr_users.status', 1);
         if(!empty($usersIds)) {
@@ -168,6 +169,7 @@ class Hr extends CI_Model
             $this->db->from('pct_hr_users')
                  ->join('pct_hr_position', 'pct_hr_position.id = pct_hr_users.position_id')
                  ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
+                 ->join('pct_hr_branches', 'pct_hr_branches.id = pct_hr_users.branch_id')
                  ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id', 'left');
             $this->db->where('pct_hr_users.status', 1);
             if(!empty($usersIds)) {
@@ -187,10 +189,11 @@ class Hr extends CI_Model
                         ->group_end();
             }
 
-            $this->db->select('pct_hr_users.*, pct_hr_position.name as position, pct_hr_user_types.name, pct_hr_departments.name as department_name');
+            $this->db->select('pct_hr_users.*, pct_hr_position.name as position, pct_hr_user_types.name, pct_hr_departments.name as department_name, pct_hr_branches.name as branch_name');
             $this->db->from('pct_hr_users')
                     ->join('pct_hr_position', 'pct_hr_position.id = pct_hr_users.position_id')
                     ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
+                    ->join('pct_hr_branches', 'pct_hr_branches.id = pct_hr_users.branch_id')
                     ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id', 'left');
             $this->db->where('pct_hr_users.status', 1);
             if(!empty($usersIds)) {
@@ -208,10 +211,11 @@ class Hr extends CI_Model
 	        }
     	} else {    		
             $filter_total_records =  $total_records;
-            $this->db->select('pct_hr_users.*, pct_hr_position.name as position,  pct_hr_user_types.name, pct_hr_departments.name as department_name');
+            $this->db->select('pct_hr_users.*, pct_hr_position.name as position,  pct_hr_user_types.name, pct_hr_departments.name as department_name, pct_hr_branches.name as branch_name');
             $this->db->from('pct_hr_users')
                     ->join('pct_hr_position', 'pct_hr_position.id = pct_hr_users.position_id')
                     ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
+                    ->join('pct_hr_branches', 'pct_hr_branches.id = pct_hr_users.branch_id')
                     ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id', 'left');
             $this->db->where('pct_hr_users.status', 1);
             if(!empty($usersIds)) {

@@ -40,8 +40,9 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Position</th>
+							<th>Branch</th>
                             <th>User Type</th>
-							<th>Employee Id</th>
+							<!-- <th>Employee Id</th> -->
                             <th>Hire Date</th>
 							<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) { ?>
                             	<th>Action</th>
