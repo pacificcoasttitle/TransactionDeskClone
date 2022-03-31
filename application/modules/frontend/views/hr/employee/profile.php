@@ -28,7 +28,11 @@
 							<div class="col-xs-6">
 								<div class="col-xs-12">
 									<div class="col-sm-6">
-										<img class="img-responsive" src="<?php echo env('AWS_PATH').'hr/user/'.$userInfo['profile_img'];?>" alt="profile_img">
+										<?php if($userInfo['profile_img']): ?>
+											<img class="img-responsive" src="<?php echo env('AWS_PATH').'hr/user/'.$userInfo['profile_img'];?>" alt="profile image">
+										<?php else : ?>
+											<img class="img-responsive" src="<?php echo base_url('assets/frontend/hr/images/default.png') ?>" alt="profile image">
+										<?php endif; ?>
 									</div>
 									<div class="col-sm-6">
 										<h2 class="ui-title-block-3 ui-title-block-4_sm"><?php echo $userInfo['first_name']." ".$userInfo['last_name'];?></h2>
@@ -88,31 +92,65 @@
 							</div>
 
 							<div class="col-md-6">
-
+								<?php
+								$user_adderss_arr = array();
+								$user_adderss_arr[] = $userInfo['address'];
+								$user_adderss_arr[] = $userInfo['city'];
+								$user_adderss_arr[] = $userInfo['state'];
+								$user_adderss_arr[] = $userInfo['zip'];
+								$user_adderss_arr =  array_filter($user_adderss_arr);
+								?>
+								<form method="post" class="ui-form ui-form-2 ui-form-space" action="<?php echo base_url('hr/update-profile') ?>">
 								<div class="b-contact-desc">
 									<div class="b-contact-desc__item">
 										<div class="b-contact-desc__name"><i class="icon fa fa-home"></i>Home address</div>
-										<div class="b-contact-desc__info">
-                                            121 King Street, Melbourne, Victoria AU 3000
-                                            <?php //echo $userInfo['address'].", ".$userInfo['city'].", ".$userInfo['state']." ".$userInfo['zipcode'];?>
+										<div class="b-contact-desc__info profile-show-hide">
+                                            <?php echo (count($user_adderss_arr)) ? implode(",",$user_adderss_arr) : "-" ;?>
 										</div>
+											<div class="b-contact-desc__info profile-show-hide hide">
+												<input type="text" class="form-control" value="<?php echo $userInfo['address']?>" placeholder="Address line" name="address" />
+												<input type="text" class="form-control" value="<?php echo $userInfo['city']?>" placeholder="city" name="city" />
+												<input type="text" class="form-control" value="<?php echo $userInfo['state']?>" placeholder="state" name="state" />
+												<input type="text" class="form-control" value="<?php echo $userInfo['zip']?>" placeholder="zip" name="zip" />
+											</div>
 
 									</div>
 									<div class="b-contact-desc__item">
 										<div class="b-contact-desc__name"><i class="icon fa fa-phone"></i> Mobile phone</div>
-										<div class="b-contact-desc__info">
-                                            123-456-7890
-                                            <?php //echo $userInfo['mobile_num'];?>
+										<div class="b-contact-desc__info profile-show-hide">
+                                            <?php echo (!empty($userInfo['cell_phone'])) ? $userInfo['cell_phone'] : '-';?>
                                         </div>
+										
+										<div class="b-contact-desc__info profile-show-hide hide">
+												<input type="tel"  class="form-control" value="<?php echo $userInfo['cell_phone']?>" placeholder="Mobile Number" name="cell_phone" />
+										</div>
+										
 									</div>
+
 									<div class="b-contact-desc__item">
-										<div class="b-contact-desc__name"><i class="icon fa fa-envelope"></i> Email</div>
-										<div class="b-contact-desc__info"><?php echo $userInfo['email'];?></div>
+										<div class="b-contact-desc__name"><i class="icon fa fa-phone"></i> Home phone</div>
+										<div class="b-contact-desc__info profile-show-hide">
+                                            <?php echo (!empty($userInfo['home_phone'])) ? $userInfo['home_phone'] : '-';?>
+                                        </div>
+										
+										<div class="b-contact-desc__info profile-show-hide hide">
+												<input type="tel" class="form-control" value="<?php echo $userInfo['home_phone']?>" placeholder="Home phone Number" name="home_phone" />
+										</div>
+										
 									</div>
+									
 									<div class="b-contact-desc__item">
 										<div class="b-contact-desc__name"><i class="icon fa fa-birthday-cake"></i> Birthday
 										</div>
-										<div class="b-contact-desc__info">04/11/1983</div>
+										<div class="b-contact-desc__info profile-show-hide"><?php echo (!empty($userInfo['birth_date']) && strtotime($userInfo['birth_date'])) ? date("m/d/Y", strtotime($userInfo['birth_date'])) : '-';?></div>
+										<div class="b-contact-desc__info profile-show-hide hide">
+												<input type="date" class="form-control" value="<?php echo (!empty($userInfo['birth_date']) && strtotime($userInfo['birth_date'])) ? $userInfo['birth_date'] : '';?>" placeholder="Birth Date" name="birth_date" />
+										</div>
+									</div>
+									<div class="b-contact-desc__item">
+										<div class="b-contact-desc__name"><i class="icon fa fa-envelope"></i> Email</div>
+										<div class="b-contact-desc__info "><?php echo $userInfo['email'];?></div>
+										
 									</div>
 									<div class="b-contact-desc__item">
 										<div class="b-contact-desc__name"><i class="icon fa fa-calendar"></i> Hire Date
@@ -121,16 +159,25 @@
 									</div>
 									<div class="b-contact-desc__item">
 										<div class="b-contact-desc__name"><i class="icon fa fa-building"></i> Department</div>
-										<div class="b-contact-desc__info"><?php echo $userInfo['department_name'];?></div>
+										<div class="b-contact-desc__info "><?php echo $userInfo['department_name'];?></div>
 									</div>
 									<div class="b-contact-desc__item">
 										<div class="b-contact-desc__name"><i class="icon fa fa-globe"></i> Position</div>
-										<div class="b-contact-desc__info"><?php echo $userInfo['position'];?></div>
+										<div class="b-contact-desc__info "><?php echo $userInfo['position'];?></div>
 									</div>
-									<!-- <div class="col-md-6">
-                                        <button type="submit" class="btn btn-grad-1 btn-round">Edit User Info</button>
-                                    </div> -->
+									<div class="col-md-12">
+                                        <button type="button" class="btn btn-grad-1 btn-round profile-show-hide profile-show-hide-btn">Edit Profile</button>
+										<div class="row">
+												<div class="col-md-6">
+													<button type="submit" class="btn btn-grad-1 btn-round profile-show-hide hide">Update</button>
+												</div>
+												<div class="col-md-6">
+													<button type="button" class="btn btn-grad-1 btn-round profile-show-hide profile-show-hide-btn hide">Cancel</button>
+												</div>
+										</div>
+                                    </div>
 								</div>
+								</form>
 							</div>
 
 							<div class="smart-forms" style="display:none;">

@@ -590,6 +590,9 @@ $(document).ready(function() {
 	$("#show-hide-form-btn").click(function(){
 		$('.show-hide-form-div').toggleClass('hide');
 	});
+	$(".profile-show-hide-btn").click(function(){
+		$('.profile-show-hide').toggleClass('hide');
+	});
 });
 
 $(function() {
