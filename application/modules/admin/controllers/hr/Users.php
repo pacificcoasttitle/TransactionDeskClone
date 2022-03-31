@@ -81,8 +81,9 @@ class Users extends MX_Controller {
 	            $nestedData[] = $value['first_name']." ".$value['last_name'];
                 $nestedData[] = $value['email'];
                 $nestedData[] = $value['position'];
+                $nestedData[] = $value['branch_name'];
                 $nestedData[] = $value['name'];
-                $nestedData[] = $value['employee_id'];
+                //$nestedData[] = $value['employee_id'];
                 $nestedData[] = date("m/d/Y", strtotime($value['hire_date'])); 
                 if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) {
                     if(isset($_POST['draw']) && !empty($_POST['draw'])) {

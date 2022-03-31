@@ -4618,4 +4618,98 @@ class Cron extends MX_Controller {
 
 		// $data['file_number'] = $file_number;
 	}
+
+    public function insertHrUsersFromCsvFile()
+    {
+        if (empty(getenv('APP_URL'))) {
+            $url = "http://".$_SERVER['SERVER_NAME']."/";
+        } else {
+            $url = getenv('APP_URL');
+        }
+        $this->load->model('hr/hr'); 
+        $this->load->library('hr/common');
+        $this->db->select('*');
+        $this->db->from('pct_hr_users');
+        $query = $this->db->get();
+        $users = $query->result_array();
+        $usersEmails = array_column($users, 'email');
+        $files = glob("uploads/hr/*csv");    
+
+        if (is_array($files) && count($files) > 0) {
+            foreach($files as $filePath) {
+                $row = 1;
+                if (($handle = fopen($filePath, "r")) !== FALSE) {
+                    while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
+                        if($row != 1) {
+                            $email = trim($data[10]);
+                            if(!empty($email)) {
+                                if (in_array($email, $usersEmails)) {
+                                    continue;
+                                }
+                                $randomPassword = $this->common->randomPassword();
+                                $fullName = explode(",", $data[0]);
+                                $first_name = $fullName[1];
+                                $last_name = $fullName[0];
+                                $employee_id = $data[2];
+                                $hire_date = $data[11];
+                        
+                                $this->db->select('*');
+                                $this->db->from('pct_hr_position');
+                                $this->db->where('name', trim($data[12]));
+                                $query = $this->db->get();
+                                $result = $query->row_array();
+                                $position_id = $result['id'];
+    
+                                if (str_contains(strtolower($data[12]), 'manager')) {
+                                    $user_type_id = 4;
+                                } else {
+                                    $user_type_id = 3;
+                                }
+    
+                                $this->db->select('*');
+                                $this->db->from('pct_hr_branches');
+                                $this->db->where('name', trim($data[13]));
+                                $query = $this->db->get();
+                                $resultBrnach = $query->row_array();
+                                $branch_id = $resultBrnach['id'];
+    
+                                $usersData = array(
+                                    'first_name' =>  trim($first_name),
+                                    'last_name' =>  trim($last_name),
+                                    'employee_id' =>  trim($employee_id),
+                                    'email' => trim($email),
+                                    'password' => password_hash($randomPassword, PASSWORD_DEFAULT),    
+                                    'position_id' => $position_id ? $position_id : 0,
+                                    'user_type_id' => $user_type_id,
+                                    'hire_date' => date("Y-m-d", strtotime($hire_date)),
+                                    'status' => 1,
+                                    'is_tmp_password' => 1,
+                                    'department_id' =>  0,
+                                    'branch_id' => $branch_id ? $branch_id : 0
+                                );
+                                $this->hr->insert($usersData, 'pct_hr_users');
+
+                                $from_name = 'Pacific Coast Title Company';
+                                $from_mail = getenv('FROM_EMAIL');
+                                $message_body = "Hi ". $first_name." ".$last_name.", <br><br>";
+                                $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
+                                $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
+                                $message_body .= "Please click on the link below to complete your registration.<br><br> ".$url."hr/login";
+                                $subject = 'Invitation For Pacific Coast Title HR Center';
+                                $to = $email;
+                                $this->load->helper('sendemail');
+                                send_email($from_mail, $from_name, $to, $subject, $message_body);
+                            }
+                        }
+                        $row++;
+                    }
+                    fclose($handle);
+                }
+                
+            }
+        } else {
+           echo "No files found";exit;
+        }
+        echo "All data inserted successfully";exit;
+    }
 }
