@@ -57,8 +57,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label style="width:100%;">User Selection<span class="required"> *</span></label>
-										<input style="width:15px;height:15px;" <?php echo $record->user_selection == 'based_on_user_listing' ? 'checked' : '';?> class="" type="radio" name="user_selection" value="based_on_user_listing" required>&nbsp;&nbsp;&nbsp;Based On User Listing&nbsp;&nbsp;&nbsp;
-										<input style="width:15px;height:15px;" <?php echo $record->user_selection == 'based_on_position_and_department' ? 'checked' : '';?> class="" type="radio" name="user_selection" value="based_on_position_and_department" required>&nbsp;&nbsp;&nbsp;Based On Position And Department&nbsp;&nbsp;&nbsp;
+										<input style="width:15px;height:15px;" <?php echo $record->user_selection == 'based_on_user_listing' ? 'checked' : '';?> class="" type="radio" name="user_selection" value="based_on_user_listing" disabled >&nbsp;&nbsp;&nbsp;Based On User Listing&nbsp;&nbsp;&nbsp;
+										<input style="width:15px;height:15px;" <?php echo $record->user_selection == 'based_on_position_and_department' ? 'checked' : '';?> class="" type="radio" name="user_selection" value="based_on_position_and_department" disabled >&nbsp;&nbsp;&nbsp;Based On Position And Department&nbsp;&nbsp;&nbsp;
                                     </div>
                                     <?php if(!empty($user_selection_error_msg)){ ?>  
                                         <div class="typography-line text-danger">
