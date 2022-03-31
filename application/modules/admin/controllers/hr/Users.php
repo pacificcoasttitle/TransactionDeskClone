@@ -219,16 +219,16 @@ class Users extends MX_Controller {
                     }
                     
                     $successMsg = 'User added successfully.';
-                    $from_name = 'Pacific Coast Title Company';
-                    $from_mail = getenv('FROM_EMAIL');
-                    $message_body = "Hi ".$this->input->post('first_name')." ".$this->input->post('last_name').", <br><br>";
-                    $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
-                    $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-                    $message_body .= "Please click on the link below to complete your registration.<br><br> ".getenv('APP_URL')."hr/login";
-                    $subject = 'Invitation For Pacific Coast Title HR Center';
-                    $to = $this->input->post('email');
-                    $this->load->helper('sendemail');
-                    send_email($from_mail, $from_name, $to, $subject, $message_body);
+                    // $from_name = 'Pacific Coast Title Company';
+                    // $from_mail = getenv('FROM_EMAIL');
+                    // $message_body = "Hi ".$this->input->post('first_name')." ".$this->input->post('last_name').", <br><br>";
+                    // $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
+                    // $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
+                    // $message_body .= "Please click on the link below to complete your registration.<br><br> ".getenv('APP_URL')."hr/login";
+                    // $subject = 'Invitation For Pacific Coast Title HR Center';
+                    // $to = $this->input->post('email');
+                    // $this->load->helper('sendemail');
+                    // send_email($from_mail, $from_name, $to, $subject, $message_body);
                     $this->session->set_userdata('success', $successMsg);
                     redirect(base_url().'hr/admin/users'); 
                 }
