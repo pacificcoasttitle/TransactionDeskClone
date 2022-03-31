@@ -188,30 +188,33 @@ class Users extends MX_Controller {
                     $user_id = $this->hr->insert($usersData, 'pct_hr_users');
 
                     $this->load->model('hr/training_model');
-                    $trainingsList = $this->training_model->get_many_by("(position_id = {$this->input->post('position')} and department_id ={$this->input->post('department')})");
-                    $assign_trainings = array();
 
-                    if (!empty($trainingsList)) {
-                        $this->load->model('hr/training_status_model');
-                        foreach($trainingsList as $training) {
-                            $assign_trainings[] = array(
-                                'user_id' => $user_id,
-                                'training_id' => $training->id,
-                                'is_complete' => 0
-                            );
-    
-                            $message = $trainingsList->name.' training has assigned to you  by '.$userdata['name'];
-                            $notificationData = array(
-                                'sent_user_id' => $user_id,
-                                'message' => $message,
-                                'type' =>  'assigned'
-                            );
-                            $this->hr->insert($notificationData, 'pct_hr_notifications');
-                            $this->common->sendNotification($message, 'assigned', $user_id, 0);
-                        }
-    
-                        if(count($assign_trainings)) {
-                            $this->training_status_model->insert_many($assign_trainings);
+                    if (!empty($this->input->post('department'))) {
+                        $trainingsList = $this->training_model->get_many_by("(position_id = {$this->input->post('position')} and department_id ={$this->input->post('department')})");
+                        $assign_trainings = array();
+
+                        if (!empty($trainingsList)) {
+                            $this->load->model('hr/training_status_model');
+                            foreach($trainingsList as $training) {
+                                $assign_trainings[] = array(
+                                    'user_id' => $user_id,
+                                    'training_id' => $training->id,
+                                    'is_complete' => 0
+                                );
+        
+                                $message = $trainingsList->name.' training has assigned to you  by '.$userdata['name'];
+                                $notificationData = array(
+                                    'sent_user_id' => $user_id,
+                                    'message' => $message,
+                                    'type' =>  'assigned'
+                                );
+                                $this->hr->insert($notificationData, 'pct_hr_notifications');
+                                $this->common->sendNotification($message, 'assigned', $user_id, 0);
+                            }
+        
+                            if(count($assign_trainings)) {
+                                $this->training_status_model->insert_many($assign_trainings);
+                            }
                         }
                     }
                     
