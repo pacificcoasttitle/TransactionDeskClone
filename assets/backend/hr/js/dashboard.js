@@ -28,3 +28,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 	calendar.render();
 });
+
+$(document).ready(function () {
+	$("#month").on("change", function(){
+		var month = $(this).val();
+		window.location.replace(base_url+'hr/admin/dashboard/'+month);
+	});
+});

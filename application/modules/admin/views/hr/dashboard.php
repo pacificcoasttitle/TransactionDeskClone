@@ -14,13 +14,26 @@
 </style>
 
 <div class="container-fluid">
-
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
 		<h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+		<?php $userdata = $this->session->userdata('hr_admin'); 
+		if ($userdata['user_type_id'] == 4) {?>
+			<div class="form-group">
+				<select name="month" id="month" class="form-control">
+					<?php
+						$selected_month = $month ? $month : date('m'); 
+						for ($i_month = 1; $i_month <= 12; $i_month++) { 
+							$i_month = sprintf("%02d", $i_month);
+							$selected = ($selected_month == $i_month ? ' selected' : '');
+							echo '<option value="'.$i_month.'"'.$selected.'>'. date('F', mktime(0,0,0,$i_month)).'</option>'."\n";
+						}
+					?>
+				</select> 
+			</div>  
+		<?php } ?>                
 	</div>
 
-	<?php $userdata = $this->session->userdata('hr_admin'); 
-	if ($userdata['user_type_id'] == 4) {?>
+	<?php if ($userdata['user_type_id'] == 4) {?>
 		<div class="row">
 			<div class="col-xl-3 col-md-6 mb-4">
 				<div class="card border-left-primary shadow h-100 py-2">

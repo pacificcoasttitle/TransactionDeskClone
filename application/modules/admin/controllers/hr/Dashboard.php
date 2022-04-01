@@ -19,7 +19,7 @@ class Dashboard extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-    private $dashboard_js_version = '01';
+    private $dashboard_js_version = '02';
 	public function __construct()
     {
         parent::__construct();
@@ -39,10 +39,13 @@ class Dashboard extends MX_Controller {
 
     public function index()
     {
+		$val = $this->uri->segment(4); 
+		$data['month'] = '';
 		$userdata = $this->session->userdata('hr_admin');
         $data['title'] = 'HR-Center Admin Dashboard';
         $data['page_title'] = 'Dashboard';
-		if ($userdata['user_type_id'] == '4') {
+		
+        if ($userdata['user_type_id'] == '4') {
 			$usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
 			$usersIds = array_column($usersForBranchManager, 'id');
 			if (($key = array_search($userdata['id'], $usersIds)) !== false) {
@@ -54,26 +57,19 @@ class Dashboard extends MX_Controller {
 			$data['pending_report_incident_count'] = !empty($user_ids) ? $this->report_incident_model->count_by("approved_date is NULL and user_id in ($user_ids)") : 0;
 			$userid = $userdata['id'];
 			$data['pending_training_count'] = $this->training_status_model->count_by("is_complete= 0 and user_id = $userid");
-		} else {
-			$data['pending_timecard_count'] = $this->timecards_model->count_by('approved_date', null);
-			$data['pending_vacation_request_count'] = $this->vacation_request_model->count_by('approved_date', null);
-			$data['pending_report_incident_count'] = $this->report_incident_model->count_by('approved_date', null);
-			$data['pending_training_count'] = $this->training_status_model->count_by('is_complete', 0);
-		}
-        
-        if ($userdata['user_type_id'] == '4') {
-			$usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
-			if(!empty($usersForBranchManager)) {
+
+			if (!empty($usersForBranchManager)) {
 				$usersEmails = array_column($usersForBranchManager, 'email');	
 				$pctOrderUserInfo = $this->order->getUsersInfo($usersEmails);
-
 				if (!empty($pctOrderUserInfo)) {
+					$month = !empty($val) ? $val : date('m');
+					$data['month'] = $month;
 					$usersIds = array_column($pctOrderUserInfo, 'id');	
 					$workedDays = $this->order->countWorkedDaysOfMonth();
 					$workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
-					$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'), $usersIds);
+					$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $usersIds);
 					$data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-					$openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'), $usersIds);
+					$openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $usersIds);
 					$data['sale_open_count'] = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
 					$data['total_open_count'] = $data['sale_open_count'] + $data['refi_open_count'];
 
@@ -84,9 +80,9 @@ class Dashboard extends MX_Controller {
 						$numOfOpenOrderPerWorkedDays = 0;
 						$data['projected_open_count'] = 0;
 					}
-					$closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'), $usersIds);
+					$closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $usersIds);
 					$data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-					$closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $usersIds);
+					$closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $usersIds);
 					$data['sale_close_count'] =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
 					$data['total_close_count'] = $data['refi_close_count'] + $data['sale_close_count'];
 
@@ -123,6 +119,11 @@ class Dashboard extends MX_Controller {
 					}
 				}
 			} 
+		} else {
+			$data['pending_timecard_count'] = $this->timecards_model->count_by('approved_date', null);
+			$data['pending_vacation_request_count'] = $this->vacation_request_model->count_by('approved_date', null);
+			$data['pending_report_incident_count'] = $this->report_incident_model->count_by('approved_date', null);
+			$data['pending_training_count'] = $this->training_status_model->count_by('is_complete', 0);
 		}
 
         $this->admintemplate->addCSS( base_url('assets/libs/calendar/main.css'));
