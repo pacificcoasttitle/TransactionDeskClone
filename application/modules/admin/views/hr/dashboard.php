@@ -47,7 +47,7 @@
 								<div class="text-xs font-weight-bold text-warning text-uppercase mt-1 mb-1">PROJECTED  = <?Php echo $projected_open_count;?></div>
 							</div>
 							<div class="col-auto">
-								<i class="fas fa-clock fa-2x text-gray-300"></i>
+								<i class="fas fa-table fa-2x text-gray-300"></i>
 							</div>
 						</div>
 					</div>
@@ -85,7 +85,7 @@
 								<div class="text-xs font-weight-bold text-warning text-uppercase mt-1 mb-1">PROJECTED  = $<?Php echo number_format($projected_revenue);?></div>
 							</div>
 							<div class="col-auto">
-								<i class="fas fa-file fa-2x text-gray-300"></i>
+								<i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
 							</div>
 						</div>
 					</div>
@@ -104,7 +104,7 @@
 								<div class="text-xs font-weight-bold text-info text-uppercase mt-1 mb-1">PROJECTED  = 0%</div>
 							</div>
 							<div class="col-auto">
-								<i class="fas fa-sticky-note fa-2x text-gray-300"></i>
+								<i class="fas fa-percent fa-2x text-gray-300"></i>
 							</div>
 						</div>
 					</div>
