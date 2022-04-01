@@ -120,7 +120,7 @@ class Dashboard extends MX_Controller {
 						$data['sale_close_order_percetage'] = 0;
 						$data['close_order_percetage'] = 0;
 					}
-					$data['close_order_percetage'] = 0;
+					
 				}
 			} 
 		} else {
