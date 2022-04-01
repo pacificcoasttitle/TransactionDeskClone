@@ -80,6 +80,7 @@ class Dashboard extends MX_Controller {
 						$numOfOpenOrderPerWorkedDays = 0;
 						$data['projected_open_count'] = 0;
 					}
+					$data['projected_open_count'] = 0;
 					$closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $usersIds);
 					$data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
 					$closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $usersIds);
@@ -93,6 +94,7 @@ class Dashboard extends MX_Controller {
 						$numOfCloseOrderPerWorkedDays = 0;
 						$data['projected_close_count'] = 0;
 					}
+					$data['projected_close_count'] = 0;
 					$closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
 					$data['refi_total_premium'] = $closeOrderRefiTotalPremium;
 					$closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
@@ -106,6 +108,7 @@ class Dashboard extends MX_Controller {
 						$premiumWorkedDays = 0;
 						$data['projected_revenue'] = 0;
 					}
+					$data['projected_revenue'] = 0;
 					$totalCount = $data['sale_close_count'] + $data['refi_close_count'] + $data['sale_open_count'] + $data['refi_open_count'];
 
 					if($totalCount > 0) { 
@@ -117,6 +120,7 @@ class Dashboard extends MX_Controller {
 						$data['sale_close_order_percetage'] = 0;
 						$data['close_order_percetage'] = 0;
 					}
+					$data['close_order_percetage'] = 0;
 				}
 			} 
 		} else {
