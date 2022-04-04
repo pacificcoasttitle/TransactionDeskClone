@@ -29,6 +29,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="email">PCT Order Email address</label>
+                                        <input type="email" value="<?php echo $userInfo['pct_order_email'];?>" class="form-control" placeholder="Email" name="pct_order_email" id="pct_order_email">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="first_name">First Name<span class="required"> *</span></label>
                                         <input type="text" value="<?php echo $userInfo['first_name'];?>" class="form-control" placeholder="First Name" name="first_name" id="first_name" value="" required="required">
                                     </div>
