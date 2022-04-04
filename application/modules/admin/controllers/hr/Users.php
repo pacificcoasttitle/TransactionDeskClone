@@ -175,6 +175,7 @@ class Users extends MX_Controller {
                         'last_name' =>  $this->input->post('last_name'),
                         'employee_id' =>  $this->input->post('employee_id'),
                         'email' => $this->input->post('email'),
+                        'pct_order_email'  => !empty($this->input->post('pct_order_email')) ? $this->input->post('pct_order_email') : $this->input->post('email'),
                         'password' => password_hash($randomPassword, PASSWORD_DEFAULT),    
                         'position_id' => $this->input->post('position'),
                         'user_type_id' => $this->input->post('user_type'),
@@ -296,6 +297,7 @@ class Users extends MX_Controller {
                         $usersData = array(
                             'first_name' =>  $this->input->post('first_name'),
                             'last_name' =>  $this->input->post('last_name'), 
+                            'pct_order_email'  => !empty($this->input->post('pct_order_email')) ? $this->input->post('pct_order_email') : $this->input->post('email'),
                             'employee_id' =>  $this->input->post('employee_id'),
                             'position_id' => $this->input->post('position'),
                             'user_type_id' => $this->input->post('user_type'),

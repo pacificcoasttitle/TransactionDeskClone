@@ -48,9 +48,6 @@ class Dashboard extends MX_Controller {
         if ($userdata['user_type_id'] == '4') {
 			$usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
 			$usersIds = array_column($usersForBranchManager, 'id');
-			if (($key = array_search($userdata['id'], $usersIds)) !== false) {
-				unset($usersIds[$key]);
-			}
 			$user_ids = implode(',' , $usersIds);
 			$data['pending_timecard_count'] = !empty($user_ids) ? $this->timecards_model->count_by("approved_date is NULL and user_id in ($user_ids)") : 0;
 			$data['pending_vacation_request_count'] =!empty($user_ids) ? $this->vacation_request_model->count_by("approved_date is NULL and user_id in ($user_ids)") : 0;
@@ -59,7 +56,8 @@ class Dashboard extends MX_Controller {
 			$data['pending_training_count'] = $this->training_status_model->count_by("is_complete= 0 and user_id = $userid");
 
 			if (!empty($usersForBranchManager)) {
-				$usersEmails = array_column($usersForBranchManager, 'email');	
+				$usersEmails = array_column($usersForBranchManager, 'pct_order_email');	
+				$usersEmails[] = $userdata['email'];
 				$pctOrderUserInfo = $this->order->getUsersInfo($usersEmails);
 				if (!empty($pctOrderUserInfo)) {
 					$month = !empty($val) ? $val : date('m');
