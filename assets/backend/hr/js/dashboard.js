@@ -32,6 +32,21 @@ document.addEventListener('DOMContentLoaded', function () {
 $(document).ready(function () {
 	$("#month").on("change", function(){
 		var month = $(this).val();
-		window.location.replace(base_url+'hr/admin/dashboard/'+month);
+		var user = $('#user_filter').val();
+		if (user != 'all_users') {
+			window.location.replace(base_url+'hr/admin/dashboard/'+month+'/'+user);
+		} else {
+			window.location.replace(base_url+'hr/admin/dashboard/'+month);
+		}
+	});
+
+	$("#user_filter").on("change", function(){
+		var user = $(this).val();
+		var month = $('#month').val();
+		if (user != 'all_users') {
+			window.location.replace(base_url+'hr/admin/dashboard/'+month+'/'+user);
+		} else {
+			window.location.replace(base_url+'hr/admin/dashboard/'+month);
+		}
 	});
 });
