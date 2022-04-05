@@ -5,7 +5,7 @@ class Pct_hr_employee_time_tracking_model extends MY_Model
 
 	public $belongs_to = array('user' => array( 'model' => 'hr/users_model','primary_key' => 'employee_id' ));
 
-	public function track_time($user_id,$clock_event)
+	public function track_time($user_id,$clock_event,$is_break = 0)
 	{
 		$track_data = array();
 		$track_data['employee_id'] = $user_id;
@@ -19,7 +19,7 @@ class Pct_hr_employee_time_tracking_model extends MY_Model
 		else {
 			$record = $this->order_by('id','desc')->get_by($track_data);
 			if($record && empty($record->time_out)) {
-				$update_data = array('time_out'=>$converted_time);
+				$update_data = array('time_out'=>$converted_time,'is_break'=>$is_break);
 				$this->update($record->id,$update_data);
 				return true;
 			}
@@ -72,5 +72,18 @@ class Pct_hr_employee_time_tracking_model extends MY_Model
 		else {
 			return 0;
 		}
+	}
+
+	public function get_time_sheet($start_date,$end_date,$employee_id)
+	{
+		$track_data = array();
+		$track_data['employee_id'] = $employee_id;
+		$track_data["DATE(time_in) >= "] = date('Y-m-d',strtotime($start_date));
+		$track_data["DATE(time_in) <= "] = date('Y-m-d',strtotime($end_date));
+		$track_data['employee_id'] = $employee_id;
+		// $track_data['DATE(time_in)'] = date('Y-m-d');
+		$data = $this->order_by('time_in','asc')->get_many_by($track_data);
+		
+		return $data;
 	}
 }

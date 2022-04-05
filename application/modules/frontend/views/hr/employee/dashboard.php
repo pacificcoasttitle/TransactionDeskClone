@@ -107,3 +107,34 @@
 </section>
 
 
+<div class="modal fade" id="timeTrackingModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog  modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<form id="inviteForm" method="post">
+				<div class="modal-header">
+					<button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Select reason to stop the timer</h4>
+				</div>
+				<div class="modal-body ">
+					<div class="row">
+						<div class="col-sm-12">
+							
+							<div class="radio">
+    							<label><input type="radio" name="break_reason" value="1" checked> Going for Lunch</label>
+							</div>
+							<div class="radio">
+								<label><input type="radio" name="break_reason" value="0"> Other</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-danger track-time-confirm-btn time-stop" >Submit</button>
+				</div>
+			</form>
+		</div> 
+	</div>
+</div>
