@@ -19,7 +19,7 @@ class Dashboard extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-    private $dashboard_js_version = '02';
+    private $dashboard_js_version = '03';
 	public function __construct()
     {
         parent::__construct();
@@ -40,13 +40,18 @@ class Dashboard extends MX_Controller {
     public function index()
     {
 		$val = $this->uri->segment(4); 
+		$user_id = $this->uri->segment(5); 
 		$data['month'] = '';
+		$data['user_id'] = '';
 		$userdata = $this->session->userdata('hr_admin');
         $data['title'] = 'HR-Center Admin Dashboard';
         $data['page_title'] = 'Dashboard';
+		$data['usersForBranchManager'] = array();
+		$usersEmails = array();
 		
         if ($userdata['user_type_id'] == '4') {
 			$usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
+			$data['usersForBranchManager'] = $usersForBranchManager;
 			$usersIds = array_column($usersForBranchManager, 'id');
 			$user_ids = implode(',' , $usersIds);
 			$data['pending_timecard_count'] = !empty($user_ids) ? $this->timecards_model->count_by("approved_date is NULL and user_id in ($user_ids)") : 0;
@@ -54,14 +59,25 @@ class Dashboard extends MX_Controller {
 			$data['pending_report_incident_count'] = !empty($user_ids) ? $this->report_incident_model->count_by("approved_date is NULL and user_id in ($user_ids)") : 0;
 			$userid = $userdata['id'];
 			$data['pending_training_count'] = $this->training_status_model->count_by("is_complete= 0 and user_id = $userid");
+			$month = !empty($val) ? $val : date('m');
+			$data['month'] = $month;
 
 			if (!empty($usersForBranchManager)) {
-				$usersEmails = array_column($usersForBranchManager, 'pct_order_email');	
-				$usersEmails[] = $userdata['email'];
+				if (!empty($user_id)) {
+					$key = array_search($user_id, array_column($usersForBranchManager, 'id'));
+					if (isset($key) && strlen($key) > 0) {
+						$data['user_id'] = $user_id;
+						$usersEmails[] = $usersForBranchManager[$key]['pct_order_email'];
+					} else {
+						$usersEmails = array_column($usersForBranchManager, 'pct_order_email');	
+						$usersEmails[] = $userdata['email'];
+					}
+				} else {
+					$usersEmails = array_column($usersForBranchManager, 'pct_order_email');	
+					$usersEmails[] = $userdata['email'];
+				}
 				$pctOrderUserInfo = $this->order->getUsersInfo($usersEmails);
 				if (!empty($pctOrderUserInfo)) {
-					$month = !empty($val) ? $val : date('m');
-					$data['month'] = $month;
 					$usersIds = array_column($pctOrderUserInfo, 'id');	
 					$workedDays = $this->order->countWorkedDaysOfMonth();
 					$workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
@@ -118,7 +134,19 @@ class Dashboard extends MX_Controller {
 						$data['sale_close_order_percetage'] = 0;
 						$data['close_order_percetage'] = 0;
 					}
-					
+				} else {
+					$data['refi_open_count'] = 0;
+					$data['sale_open_count'] =  0;
+					$data['projected_open_count'] = 0;
+					$data['refi_close_count'] = 0;
+					$data['sale_close_count'] =  0;
+					$data['total_close_count'] = 0;
+					$data['projected_close_count'] = 0;
+					$data['total_open_count'] = 0;
+					$data['projected_revenue'] = 0;
+					$data['refi_close_order_percetage'] = 0;
+					$data['sale_close_order_percetage'] = 0;
+					$data['close_order_percetage'] = 0;
 				}
 			} 
 		} else {

@@ -1,25 +1,39 @@
 <style>
-  #calendar {
-    margin: 25px;
-	font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    font-size: 14px;
-  }
+	#calendar {
+		margin: 25px;
+		font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+		font-size: 14px;
+	}
 
-  #loading {
-    display: none;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-  }
+	#loading {
+		display: none;
+		position: absolute;
+		top: 10px;
+		right: 10px;
+	}
+
+	.filter_label {
+		padding:8px 10px 8px 25px;
+	}
 </style>
 
 <div class="container-fluid">
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
 		<h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
 		<?php $userdata = $this->session->userdata('hr_admin'); 
-		if ($userdata['user_type_id'] == 4) {?>
-			<div class="form-group">
-				<select name="month" id="month" class="form-control">
+		if ($userdata['user_type_id'] == 4) { ?>
+			<div class="d-sm-flex">
+				<?php if (!empty($usersForBranchManager)) { ?>
+					<label class="filter_label">Select User:</label>
+					<select name="user_filter" id="user_filter" class="form-control" style="width: auto !important;">
+						<option value="all_users">All Users</option>
+						<?php foreach ($usersForBranchManager as $user) { ?>
+							<option <?php echo ($user['id'] == $user_id) ? 'selected' : '';?> value="<?php echo $user['id'];?>"><?php echo $user['first_name']." ".$user['last_name'];?></option>
+						<?php } ?>
+					</select> 
+				<?php } ?>
+				<label class="filter_label">Select Month:</label>
+				<select name="month" id="month" class="form-control" style="width: auto !important;">
 					<?php
 						$selected_month = $month ? $month : date('m'); 
 						for ($i_month = 1; $i_month <= 12; $i_month++) { 

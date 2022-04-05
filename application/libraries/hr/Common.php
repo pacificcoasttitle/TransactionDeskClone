@@ -286,7 +286,7 @@ class Common
     {
         $this->CI->load->library('hr/common');
         $userInfo = $this->get_hr_user(array('id' => $user_id));
-        $this->CI->db->select('id, email, pct_order_email')
+        $this->CI->db->select('id, email, pct_order_email, first_name, last_name')
             ->from('pct_hr_users');
         $this->CI->db->where('branch_id', $userInfo['branch_id']);
         $this->CI->db->where('user_type_id', 3);

@@ -361,7 +361,7 @@ $route['hr/logout'] = 'frontend/hr/dashboard/logout';
 /* Start Route for HR-Center backend*/
 $route['hr/admin'] = 'admin/hr/login/login';
 $route['hr/admin/login/do_login'] = 'admin/hr/login/do_login';
-$route['hr/admin/dashboard(/:num)?'] = 'admin/hr/dashboard/index';
+$route['hr/admin/dashboard(/:num)?(/:num)?'] = 'admin/hr/dashboard/index';
 $route['hr/admin/get-vacation-data-for-calendar'] = 'admin/hr/dashboard/getVacationDataForCalendar';
 $route['hr/admin/admin-users'] = 'admin/hr/adminUsers/index';
 $route['hr/admin/add-admin-user'] = 'admin/hr/adminUsers/addAdminUser';
