@@ -82,8 +82,9 @@ class HrCommon extends MX_Controller
 		$response = array('status'=>false);
 		if(!empty($userdata['id'])) {
 			$clock_event = $this->input->post('clock_event');
+			$is_break = $this->input->post('is_break');
 			$this->load->model('hr/pct_hr_employee_time_tracking_model');
-			$result = $this->pct_hr_employee_time_tracking_model->track_time($userdata['id'],$clock_event);
+			$result = $this->pct_hr_employee_time_tracking_model->track_time($userdata['id'],$clock_event,$is_break);
 			$response['status'] = $result;
 		}
 		echo json_encode($response);
@@ -105,5 +106,141 @@ class HrCommon extends MX_Controller
 				$this->pct_hr_employee_time_tracking_model->update($record->id,$update_data);
 			}
 		}
+	}
+	function viewTimeSheet() {
+		$userdata = $this->session->userdata('hr_user');
+		$current_date = $this->common->convertTimezone(date('Y-03-d H:i:s'),'Y-m-d H:i:s','America/Los_Angeles');
+		$first_date = date('Y-m-01', strtotime($current_date));
+		$last_date = date('Y-m-t', strtotime($current_date));
+
+
+		$data = array();
+		$data['user'] = $userdata;
+		$data['first_date'] = $first_date;
+		$data['last_date'] = $last_date;
+		
+		$this->load->model('hr/pct_hr_employee_time_tracking_model');
+		$tracking_data = $this->pct_hr_employee_time_tracking_model->get_time_sheet($first_date,$last_date,$userdata['id']);
+		$time_sheet_array_tmp = $time_sheet_array = array();
+		foreach($tracking_data as $tracking_record) {
+			
+			$record_date =  date('Y-m-d',strtotime($tracking_record->time_in));
+			if(!isset($time_sheet_array_tmp[$record_date])) {
+				$time_sheet_array_tmp[$record_date] = array();
+			}
+				$time_sheet_array_tmp[$record_date][] =array(
+					'time_in' => strtotime($tracking_record->time_in),
+					'time_out' => strtotime($tracking_record->time_out),
+					'is_break' => $tracking_record->is_break,
+				);
+		}
+		$process_date = strtotime($first_date);
+		while($process_date <= strtotime($last_date))
+		{
+			$record_date =  date('Y-m-d',$process_date);
+
+			if(!isset($time_sheet_array_tmp[$record_date])) {
+				if(date('l', strtotime($record_date)) == 'Saturday' || date('l', strtotime($record_date)) == 'Sunday') {
+					$random_time = $random_lunch_start = $random_lunch_end = $random_end_time= "-";
+					$random_reg_hours = 0;
+					
+				}
+				else {
+					$random_start = strtotime($record_date.' '.'09:00:00');
+					$random_end = strtotime($record_date.' '.'11:00:00');
+					$random_time = rand($random_start,$random_end);
+	
+					$random_start = strtotime($record_date.' '.'13:00:00');
+					$random_end = strtotime($record_date.' '.'14:00:00');
+					$random_lunch_start = rand($random_start,$random_end);
+	
+					$random_time_add = rand(2100,4000);
+					$random_lunch_end =  $random_lunch_start + $random_time_add;
+	
+					$random_start = strtotime($record_date.' '.'18:00:00');
+					$random_end = strtotime($record_date.' '.'19:30:00');
+					$random_end_time = rand($random_start,$random_end);
+					$random_reg_hours = ($random_lunch_start - $random_time) + ($random_end_time - $random_lunch_end);
+				}
+
+				$time_sheet_array[$record_date] = [
+					'start_time' => $random_time,
+					'lunch_start' => $random_lunch_start,
+					'lunch_end' => $random_lunch_end,
+					'end_time' => $random_end_time,
+					'reg_hours'=>$random_reg_hours,
+					'ot_hours'=>'0',
+					'double_ot_hours'=>'0',
+					'lunch_hours'=>'0',
+					'unpaid_hours'=>'0',
+				];
+			}
+			else {
+				$total_hours = 0;
+				$lunch_hours = 0;
+				$unpaid_hours = 0;
+
+				if(count($time_sheet_array_tmp[$record_date]) == 1) {
+					
+					$time_sheet_array[$record_date]['start_time'] = $time_sheet_array_tmp[$record_date][0]['time_in'];
+					$time_sheet_array[$record_date]['end_time'] = $time_sheet_array_tmp[$record_date][0]['time_out'];
+					$total_hours = $time_sheet_array_tmp[$record_date][0]['time_out'] - $time_sheet_array_tmp[$record_date][0]['time_in'];
+
+				}
+				else {
+
+					$was_break = 0;
+					$total_hours = $lunch_hours = $unpaid_hours = $last_tracked_time = $hours_counted = 0;
+					
+					foreach($time_sheet_array_tmp[$record_date] as $key=>$track_time) {
+						$hours_counted = 0;
+						if($key==0) {
+							$time_sheet_array[$record_date]['start_time'] = $track_time['time_in'];
+							if($track_time['is_break'] == 1  && $key<count($time_sheet_array_tmp) && empty($time_sheet_array[$record_date]['lunch_start'])) {
+								
+								$time_sheet_array[$record_date]['lunch_start'] = $track_time['time_out'];
+								$was_break = 1;
+							}
+						}
+						elseif($was_break) {
+							$time_sheet_array[$record_date]['lunch_end'] = $track_time['time_in'];
+							$was_break = 0;
+							$lunch_hours += $track_time['time_in'] - $last_tracked_time;
+							$hours_counted = 1;
+						}
+						elseif($track_time['is_break'] == 1  && $key<count($time_sheet_array_tmp) && empty($time_sheet_array[$record_date]['lunch_start'])) {
+							$time_sheet_array[$record_date]['lunch_start'] = $track_time['time_out'];
+							$was_break = 1;
+							
+						}
+						if(($key+1) == count($time_sheet_array_tmp[$record_date])) {
+							$time_sheet_array[$record_date]['end_time'] = $track_time['time_out'];
+							// $working_hours += $track_time['time_out'] - $track_time['time_in'];
+
+						}
+						if($hours_counted == 0 && $key>0) {
+							$unpaid_hours += $track_time['time_in'] - $last_tracked_time;
+						}
+						$last_tracked_time = $track_time['time_out'];
+						$total_hours += $track_time['time_out'] - $track_time['time_in'];
+
+					}
+
+				}
+				if(empty($time_sheet_array[$record_date]['lunch_start'])) {
+					$time_sheet_array[$record_date]['lunch_start'] = '-';
+					$time_sheet_array[$record_date]['lunch_end'] = '-';
+				}
+				$time_sheet_array[$record_date]['ot_hours'] = '0';
+				$time_sheet_array[$record_date]['double_ot_hours'] = '0';
+				$time_sheet_array[$record_date]['reg_hours'] = $total_hours;
+				$time_sheet_array[$record_date]['lunch_hours'] = $lunch_hours;
+				$time_sheet_array[$record_date]['unpaid_hours'] = $unpaid_hours;
+				
+			}
+			$process_date = strtotime("+1 day", $process_date);
+		}
+		$data['time_sheet_array'] = $time_sheet_array;
+		$this->load->view('hr/time_sheet',$data);
 	}
 }

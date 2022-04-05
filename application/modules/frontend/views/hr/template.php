@@ -128,6 +128,7 @@
 				<?php if(isset($time_tracking) && isset($clock_event)) : ?>
 				var start_time = <?php echo $time_tracking ?>;
 				var storeTimeInterval = 0;
+				var call_request = 0;
 				<?php if($clock_event == 'OUT') : ?>
 					storeTimeInterval = setInterval(myTimer, 1000);
 				<?php else : ?>
@@ -144,38 +145,63 @@
 					var m = Math.floor(d % 3600 / 60);
 					var s = Math.floor(d % 3600 % 60);
 
-					var hDisplay = h > 0 ? h + (h == 1 ) : "00";
-					var mDisplay = m > 0 ? m + (m == 1 ) : "00";
-					var sDisplay = s > 0 ? s + (s == 1 ) : "00";
+					
+
+
+					var hDisplay = h > 0 ? h  : "00";
+					var mDisplay = m > 0 ? m  : "00";
+					var sDisplay = s > 0 ? s  : "00";
 					res = String(hDisplay).padStart(2, '0') +' : '+ String(mDisplay).padStart(2, '0') +' : '+ String(sDisplay).padStart(2, '0'); 
 					$("#timeClock").html(res);
 				}
 
-				$(".track-time-btn").click(function(e) {
+				$(".track-time-btn,.track-time-confirm-btn").click(function(e) {
 					$(this).attr("disabled", true);
+
 					if($(this).hasClass('time-start')) {
-						var data = {clock_event : 'IN'};
+						var data = {clock_event : 'IN',is_break:0};
 						storeTimeInterval = setInterval(myTimer, 1000);
+						call_request = 1;
 					}
 					else {
-						if(storeTimeInterval) {
-							clearInterval(storeTimeInterval);
+						call_request = 0;
+						$("#timeTrackingModal").modal("show");
+						$(".track-time-btn").attr("disabled", false);
+						if($(this).hasClass('track-time-confirm-btn')) {
+
+							var is_break = $('#timeTrackingModal input[name="break_reason"]:checked').val();
+
+							if(storeTimeInterval) {
+								clearInterval(storeTimeInterval);
+							}
+							var data = {clock_event : 'OUT',is_break:is_break};
+							call_request = 1;
+							$("#timeTrackingModal").modal("hide");
 						}
-						var data = {clock_event : 'OUT'};
 					}
-					$.ajax({
-							type: "POST",
-							url: base_url+"hr/record-time",  
-							data : data,                                      
-							success: function(response){     
-								$(".track-time-btn").toggleClass('hide');
-								$(".track-time-btn").attr("disabled", false);
-							},
-							error: function(response){	
-								$(".track-time-btn").attr("disabled", false);
-							}                                        
-						});
+					if(call_request) {
+
+						$.ajax({
+								type: "POST",
+								url: base_url+"hr/record-time",  
+								data : data,    
+								dataType: 'json',                                  
+								success: function(response){   
+									if(response.status)  {
+										$(".track-time-btn").toggleClass('hide');
+										$(".track-time-btn").attr("disabled", false);
+									}
+									else {
+										location.reload();
+									}
+								},
+								error: function(response){	
+									$(".track-time-btn").attr("disabled", false);
+								}                                        
+							});
+					}
 				});
+				
 
 				<?php endif; ?>
 				
