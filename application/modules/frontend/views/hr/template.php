@@ -190,6 +190,7 @@
 									if(response.status)  {
 										$(".track-time-btn").toggleClass('hide');
 										$(".track-time-btn").attr("disabled", false);
+										$(".track-time-confirm-btn").attr("disabled", false);
 									}
 									else {
 										location.reload();
@@ -197,6 +198,7 @@
 								},
 								error: function(response){	
 									$(".track-time-btn").attr("disabled", false);
+									$(".track-time-confirm-btn").attr("disabled", false);
 								}                                        
 							});
 					}
