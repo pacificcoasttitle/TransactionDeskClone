@@ -20,6 +20,7 @@
     </script>
 </head>
 <body id="page-top">
+    <div id="page-preloader" style="background-color: rgba(0, 0, 0, 0.5); display: none;"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
     <div id="wrapper">
         <?php echo $sidebar; ?>
         <div id="content-wrapper" class="d-flex flex-column">
@@ -46,7 +47,16 @@
 
     <?php $userdata = $this->session->userdata('hr_admin');
         if(!empty($userdata)) { ?>
-            <script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    "use strict";
+                    console.log('hi');
+                    var $preloader = $('#page-preloader'),
+                    $spinner   = $preloader.find('.spinner-loader');
+                    $spinner.fadeOut();
+                    $preloader.delay(50).fadeOut('slow');
+                });
+
                 var notificationsWrapper   = $('.admin-notifications');
                 var notificationsToggle    = notificationsWrapper.find('a[data-toggle]');
                 var notificationsCountElem = notificationsToggle.find('span[data-count]');
