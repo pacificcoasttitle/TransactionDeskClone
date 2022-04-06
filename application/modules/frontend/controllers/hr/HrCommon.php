@@ -107,11 +107,11 @@ class HrCommon extends MX_Controller
 			}
 		}
 	}
-	function viewTimeSheet() {
+	function viewTimeSheet($pay_period_start) {
 		$userdata = $this->session->userdata('hr_user');
-		$current_date = $this->common->convertTimezone(date('Y-03-d H:i:s'),'Y-m-d H:i:s','America/Los_Angeles');
-		$first_date = date('Y-m-01', strtotime($current_date));
-		$last_date = date('Y-m-t', strtotime($current_date));
+		// $current_date = $this->common->convertTimezone(date('Y-03-d H:i:s'),'Y-m-d H:i:s','America/Los_Angeles');
+		$first_date = date('Y-m-d', $pay_period_start);
+		$last_date = date('Y-m-d',strtotime("+13 day",$pay_period_start));
 
 
 		$data = array();
@@ -140,7 +140,9 @@ class HrCommon extends MX_Controller
 			$record_date =  date('Y-m-d',$process_date);
 
 			if(!isset($time_sheet_array_tmp[$record_date])) {
-				if(date('l', strtotime($record_date)) == 'Saturday' || date('l', strtotime($record_date)) == 'Sunday') {
+				$random_time = $random_lunch_start = $random_lunch_end = $random_end_time= "-";
+				$random_reg_hours = 0;
+				if(date('l', strtotime($record_date)) == 'Saturday' || date('l', strtotime($record_date)) == 'Sunday' ) {
 					$random_time = $random_lunch_start = $random_lunch_end = $random_end_time= "-";
 					$random_reg_hours = 0;
 					
@@ -161,6 +163,20 @@ class HrCommon extends MX_Controller
 					$random_end = strtotime($record_date.' '.'19:30:00');
 					$random_end_time = rand($random_start,$random_end);
 					$random_reg_hours = ($random_lunch_start - $random_time) + ($random_end_time - $random_lunch_end);
+					// $insert_tracking_tmp = [
+					// 	'employee_id'=>$userdata['id'],
+					// 	'time_in'=>date("Y-m-d H:i:s",$random_time),
+					// 	'time_out'=>date("Y-m-d H:i:s",$random_lunch_start),
+					// 	'is_break'=>1
+					// ];
+					// $this->pct_hr_employee_time_tracking_model->insert($insert_tracking_tmp);
+					// $insert_tracking_tmp = [
+					// 	'employee_id'=>$userdata['id'],
+					// 	'time_in'=>date("Y-m-d H:i:s",$random_lunch_end),
+					// 	'time_out'=>date("Y-m-d H:i:s",$random_end_time),
+					// 	'is_break'=>0
+					// ];
+					// $this->pct_hr_employee_time_tracking_model->insert($insert_tracking_tmp);
 				}
 
 				$time_sheet_array[$record_date] = [
