@@ -148,21 +148,24 @@ class HrCommon extends MX_Controller
 					
 				}
 				else {
-					$random_start = strtotime($record_date.' '.'09:00:00');
-					$random_end = strtotime($record_date.' '.'11:00:00');
-					$random_time = rand($random_start,$random_end);
+					// $random_start = strtotime($record_date.' '.'09:00:00');
+					// $random_end = strtotime($record_date.' '.'11:00:00');
+					// $random_time = rand($random_start,$random_end);
 	
-					$random_start = strtotime($record_date.' '.'13:00:00');
-					$random_end = strtotime($record_date.' '.'14:00:00');
-					$random_lunch_start = rand($random_start,$random_end);
+					// $random_start = strtotime($record_date.' '.'13:00:00');
+					// $random_end = strtotime($record_date.' '.'14:00:00');
+					// $random_lunch_start = rand($random_start,$random_end);
 	
-					$random_time_add = rand(2100,4000);
-					$random_lunch_end =  $random_lunch_start + $random_time_add;
+					// $random_time_add = rand(2100,4000);
+					// $random_lunch_end =  $random_lunch_start + $random_time_add;
 	
-					$random_start = strtotime($record_date.' '.'18:00:00');
-					$random_end = strtotime($record_date.' '.'19:30:00');
-					$random_end_time = rand($random_start,$random_end);
-					$random_reg_hours = ($random_lunch_start - $random_time) + ($random_end_time - $random_lunch_end);
+					// $random_start = strtotime($record_date.' '.'18:00:00');
+					// $random_end = strtotime($record_date.' '.'19:30:00');
+					// $random_end_time = rand($random_start,$random_end);
+					// $random_reg_hours = ($random_lunch_start - $random_time) + ($random_end_time - $random_lunch_end);
+
+
+
 					// $insert_tracking_tmp = [
 					// 	'employee_id'=>$userdata['id'],
 					// 	'time_in'=>date("Y-m-d H:i:s",$random_time),
