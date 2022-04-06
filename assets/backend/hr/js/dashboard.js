@@ -60,6 +60,8 @@ $(document).on("click", function() {
 
 function getDashboardCountBasedOnFilter(manager_id, user_id, month)
 {
+	$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+	$('#page-preloader').css('display', 'block');
 	$.ajax({
 		url: base_url + "hr/admin/get-dashboard-count", 
 		type: "post",

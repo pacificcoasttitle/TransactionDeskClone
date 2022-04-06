@@ -19,7 +19,7 @@ class Dashboard extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-    private $dashboard_js_version = '04';
+    private $dashboard_js_version = '05';
 	public function __construct()
     {
         parent::__construct();
