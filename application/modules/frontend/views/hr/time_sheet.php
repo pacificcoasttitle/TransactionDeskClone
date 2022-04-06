@@ -16,12 +16,12 @@
         </h3>
         <div class="d-float">
             <div class="float-left w-half">
-               <div><span class="min-w-130"><b>EMPLOYEE NAME:</b> </span> <input type="text" class="w35" value="<?php echo $user['name'];?>"></div>
-               <div class="mt-5"><span class="min-w-130"><small>DATE FORM COMPLETED:</small></span><input type="text" class="w35"></div>
-               <div class="mt-5"><span class="min-w-130"><small>MANAGER NAME: </small></span><input type="text" class="w35"></div>
+               <div><span class="min-w-130"><b>EMPLOYEE NAME:</b> </span> <input readonly type="text" class="w35" value="<?php echo $user['name'];?>"></div>
+               <div class="mt-5"><span class="min-w-130"><small>DATE FORM COMPLETED:</small></span><input readonly type="text" class="w35"></div>
+               <div class="mt-5"><span class="min-w-130"><small>MANAGER NAME: </small></span><input readonly type="text" class="w35"></div>
             </div>
             <div class="float-right w-half text-right">
-                PAY PERIOD: <input type="text" class="min-w-65" value="<?php echo date('m/d/Y', strtotime($first_date)); ?>"> to <input type="text" class="min-w-65" value="<?php echo date('m/d/Y', strtotime($last_date)); ?>">
+                PAY PERIOD: <input readonly type="text" class="min-w-65" value="<?php echo date('m/d/Y', strtotime($first_date)); ?>"> to <input readonly type="text" class="min-w-65" value="<?php echo date('m/d/Y', strtotime($last_date)); ?>">
             </div>
         </div>
 
@@ -52,7 +52,8 @@
 				$int_i = 0;
 				$reg_hours_sum = $unpaid_hours_sum = 0;
 				foreach($time_sheet_array as $timesheet_date=>$time_sheet_record):
-					$reg_hours_sum += $time_sheet_record['reg_hours'];
+					$reg_hours = $time_sheet_record['reg_hours']  + $time_sheet_record['lunch_hours'];
+					$reg_hours_sum += $reg_hours;
 					$unpaid_hours_sum += $time_sheet_record['unpaid_hours'];
 				?>
 				<?php if(($int_i%7) == 0) : ?>
@@ -63,13 +64,15 @@
                 </tr>
 				<?php endif; ?>
 				<tr>
+					<?php
+					?>
 					<td><b><?php echo date('l', strtotime($timesheet_date));?></b></td>
 					<td><?php echo date('m/d/Y', strtotime($timesheet_date));?></td>
                     <td><?php echo (is_int($time_sheet_record['start_time']))?date("H:i", $time_sheet_record['start_time']):'-';?></td>
                     <td><?php echo (is_int($time_sheet_record['lunch_start']))?date("H:i", $time_sheet_record['lunch_start']):'-';?></td>
                     <td><?php echo (is_int($time_sheet_record['lunch_end']))?date("H:i", $time_sheet_record['lunch_end']):'-';?></td>
                     <td><?php echo (is_int($time_sheet_record['end_time']))?date("H:i", $time_sheet_record['end_time']):'-';?></td>
-                    <td><?php echo ($time_sheet_record['reg_hours'] > 0)?gmdate("H:i", $time_sheet_record['reg_hours']):'00:00';?></td>
+                    <td><?php echo ($reg_hours > 0)?sprintf('%02d:%02d', ($reg_hours/3600),($reg_hours/60%60)):'00:00';?></td>
                     <td>00:00</td>
                     <td>00:00</td>
                     <td></td>
@@ -77,7 +80,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td><?php echo ($time_sheet_record['unpaid_hours'] > 0)?gmdate("H:i", $time_sheet_record['unpaid_hours']):'00:00';?></td>
+                    <td><?php echo ($time_sheet_record['unpaid_hours'] > 0)?sprintf('%02d:%02d', ($time_sheet_record['unpaid_hours']/3600),($time_sheet_record['unpaid_hours']/60%60)):'00:00';?></td>
                     <td></td>
 				</tr>
 				<?php if(((($int_i+1)%7) == 0) || count($time_sheet_array) == $int_i+1) : ?>

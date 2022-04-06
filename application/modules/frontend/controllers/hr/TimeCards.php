@@ -31,6 +31,8 @@ class TimeCards extends MX_Controller
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
         }
+		$data['pay_period_start'] = PAY_PERIOD_START;
+		$data['current_date'] = $this->common->convertTimezone(date('Y-m-d H:i:s'),'Y-m-d','America/Los_Angeles');
         $data['name'] = $userdata['name'];
 		$data['title'] = 'HR-Center Time Cards';
         $this->template->show("hr", "time_cards", $data);

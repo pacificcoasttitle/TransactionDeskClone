@@ -2,6 +2,9 @@
 th {
     text-align: center;
 }
+.section-type-4a .btn.btn-default:hover {
+	color : initial;
+}
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
     <div class="container">
@@ -144,7 +147,7 @@ th {
                         <div class="ui-decor-1a bg-accent"></div>
                         <h3 class="ui-title-block_light">Below is a detail of all your requests.</h3>
                     </div>
-                    <div class="typography-sectiona">
+                    <div class="">
                         <div class="table-container">
                             <table class="table table-type-3 typography-last-elem" id="time_card_listing" width="100%">
                                 <thead>
@@ -167,6 +170,65 @@ th {
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
+    <div class="container">
+        <div class="row">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="typography-section__inner">
+                        <h2 class="ui-title-block ui-title-block_light">Payroll Schedule</h2>
+                        <div class="ui-decor-1a bg-accent"></div>
+                        <h3 class="ui-title-block_light">Below is a list of Bi-weekly Payroll Schedule.</h3>
+                    </div>
+                    <div class="typography-sectiona">
+                        <div class="table-container">
+                            <table class="table table-type-3 typography-last-elem" id="payroll_schedule_listing" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Pay Period Begins</th>
+                                        <th>Pay Period Ends</th>
+                                        <th>Payroll Monday</th>
+                                        <!-- <th>Pay Day</th> -->
+                                        <th>View Time Sheet</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+									<?php
+									$pay_period_begins_time_stamp = strtotime($pay_period_start);
+									$pay_period_current_time_stamp = strtotime($current_date);
+									$int_i =1;
+									if($pay_period_begins_time_stamp && $pay_period_current_time_stamp) :
+										while($pay_period_begins_time_stamp < $pay_period_current_time_stamp):
+											$pay_period_ends_time_stamp = strtotime("+13 day",$pay_period_begins_time_stamp);
+											$pay_period_monday_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
+											?>
+											<tr>
+											<td><?php echo $int_i++; ?></td>
+											<td><?php echo date("m/d/Y",$pay_period_begins_time_stamp) ?></td>
+											<td><?php echo date("m/d/Y",$pay_period_ends_time_stamp) ?></td>
+											<td><?php echo date("m/d/Y",$pay_period_monday_time_stamp) ?></td>
+											<!-- <td> - </td> -->
+											<td><a target="_blank" href="<?php echo base_url('hr/view-time-sheet/'.$pay_period_begins_time_stamp);?>" class="btn btn-default"  >View TimeSheet</a></td>
+											</tr>
+											<?php
+											$pay_period_begins_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
+										endwhile;
+									endif;
+									?>
                                     
                                 </tbody>
                             </table>
