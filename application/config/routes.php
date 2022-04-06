@@ -447,6 +447,7 @@ $route['hr/admin/accept-memo'] = 'admin/hr/memos/acceptMemo';
 $route['hr/admin/trainings-branch-manager'] = 'admin/hr/training/trainingsBranchManager';
 $route['hr/admin/get-branch-manager-trainings'] = 'admin/hr/training/getBranchManagerTrainings';
 $route['hr/admin/send-password/(:num)'] = 'admin/hr/users/sendPassword/$1';
+$route['hr/admin/get-dashboard-count'] = 'admin/hr/dashboard/getDashboardCount';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 
