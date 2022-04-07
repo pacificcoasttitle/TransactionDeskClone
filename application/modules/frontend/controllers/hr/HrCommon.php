@@ -121,6 +121,15 @@ class HrCommon extends MX_Controller
 		
 		$this->load->model('hr/pct_hr_employee_time_tracking_model');
 		$tracking_data = $this->pct_hr_employee_time_tracking_model->get_time_sheet($first_date,$last_date,$userdata['id']);
+		$this->load->model('hr/pct_hr_employee_allowed_ot_model');
+		$ot_where = [
+			'ot_date >='=>$first_date,
+			'ot_date <='=>$last_date,
+			'employee_id' => $userdata['id'],
+			'is_approved' => 1
+		];
+		$ot_allowed_data = $this->pct_hr_employee_allowed_ot_model->get_many_by($ot_where);
+		$data['ot_approved_dates'] = array_column($ot_allowed_data,'ot_date');
 		$time_sheet_array_tmp = $time_sheet_array = array();
 		foreach($tracking_data as $tracking_record) {
 			

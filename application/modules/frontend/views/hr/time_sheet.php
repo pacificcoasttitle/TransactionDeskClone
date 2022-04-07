@@ -50,11 +50,37 @@
                 
 				<?php
 				$int_i = 0;
-				$reg_hours_sum = $unpaid_hours_sum = 0;
+				$reg_hours_sum = $unpaid_hours_sum = $ot_hours_sum = 0;
+				$lunch_hours=0;
 				foreach($time_sheet_array as $timesheet_date=>$time_sheet_record):
-					$reg_hours = $time_sheet_record['reg_hours']  + $time_sheet_record['lunch_hours'];
+					$ot_seconds = 0;
+					$ot_hours = '00:00';
+					$lunch_hours = $time_sheet_record['lunch_hours'];
+					$reg_hours = $time_sheet_record['reg_hours']  + $lunch_hours;
+					
+					if($lunch_hours > 3600) {
+						$lunch_hours = 3600;
+					}
+					if((($lunch_hours + $time_sheet_record['reg_hours']) > (9*60*60))) {
+						if(in_array(date('Y-m-d', strtotime($timesheet_date)),$ot_approved_dates)) {
+							$ot_seconds =  ($lunch_hours + $time_sheet_record['reg_hours'] ) - (9*60*60);
+						}
+						else {
+							$unpaid_hours = ($lunch_hours + $time_sheet_record['reg_hours'] ) - (9*60*60);
+							$time_sheet_record['unpaid_hours'] += $unpaid_hours;
+						}	
+
+						$reg_hours = (9*60*60);
+						
+					}
+					$unpaid_hours = ($time_sheet_record['lunch_hours'] + $time_sheet_record['reg_hours']) - ($lunch_hours + $time_sheet_record['reg_hours']);
+					$time_sheet_record['unpaid_hours'] += $unpaid_hours;
+					$time_sheet_record['reg_hours'] = $reg_hours;
 					$reg_hours_sum += $reg_hours;
 					$unpaid_hours_sum += $time_sheet_record['unpaid_hours'];
+					$ot_hours_sum += $ot_seconds;
+					$ot_hours = sprintf('%02d:%02d', ($ot_seconds/3600),($ot_seconds/60%60));
+
 				?>
 				<?php if(($int_i%7) == 0) : ?>
 				<tr class="week_title">
@@ -73,7 +99,7 @@
                     <td><?php echo (is_int($time_sheet_record['lunch_end']))?date("H:i", $time_sheet_record['lunch_end']):'-';?></td>
                     <td><?php echo (is_int($time_sheet_record['end_time']))?date("H:i", $time_sheet_record['end_time']):'-';?></td>
                     <td><?php echo ($reg_hours > 0)?sprintf('%02d:%02d', ($reg_hours/3600),($reg_hours/60%60)):'00:00';?></td>
-                    <td>00:00</td>
+                    <td><?php echo $ot_hours; ?></td>
                     <td>00:00</td>
                     <td></td>
                     <td></td>
@@ -87,8 +113,8 @@
 					<tr class="total">
                     <td colspan="6"><b>TOTAL WEEK <?php echo ceil(($int_i+1)/7) ?>	 </b></td>
                     <td><?php echo ($reg_hours_sum > 0)?sprintf('%02d:%02d', ($reg_hours_sum/3600),($reg_hours_sum/60%60)):'00:00';?></td>
-                    <td>0.00</td>
-                    <td>0.00</td>
+                    <td><?php echo ($ot_hours_sum > 0)?sprintf('%02d:%02d', ($ot_hours_sum/3600),($ot_hours_sum/60%60)):'00:00';?></td>
+                    <td>00:00</td>
                     <td>0</td>
                     <td>0</td>
                     <td>0</td>
@@ -98,7 +124,7 @@
                     <td>0</td>
                 </tr>
 				<?php 
-				$reg_hours_sum = $unpaid_hours_sum = 0;
+				$reg_hours_sum = $unpaid_hours_sum = $ot_hours_sum = 0;
 				endif; 
 				?>
 				<?php

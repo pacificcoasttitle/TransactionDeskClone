@@ -449,6 +449,10 @@ $route['hr/admin/trainings-branch-manager'] = 'admin/hr/training/trainingsBranch
 $route['hr/admin/get-branch-manager-trainings'] = 'admin/hr/training/getBranchManagerTrainings';
 $route['hr/admin/send-password/(:num)'] = 'admin/hr/users/sendPassword/$1';
 $route['hr/admin/get-dashboard-count'] = 'admin/hr/dashboard/getDashboardCount';
+$route['hr/admin/ot-hours'] = 'admin/hr/timeSheets/viewOtHours';
+$route['hr/admin/get-ot-hours'] = 'admin/hr/timeSheets/getOtHours';
+$route['hr/admin/add-ot-request'] = 'admin/hr/timeSheets/addOtRequest';
+$route['hr/admin/view-time-sheet/(:any)/(:num)'] = 'admin/hr/timeSheets/viewTimeSheet/$1/$2';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

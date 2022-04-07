@@ -42,6 +42,15 @@
 	</li>
 
 	<?php $userdata = $this->session->userdata('hr_admin');?>
+	<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) : ?>
+	<li class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/ot-hours') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'hr/admin/ot-hours'; ?>">
+			<i class="fas fa-clock"></i>
+			<span>OT Hours</span>
+		</a>
+	</li>
+	<?php endif; ?>
+
 	<li
 		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/users' || $this->uri->uri_string() == 'hr/admin/add-user' || $this->uri->segment(3) == 'edit-user' || $this->uri->uri_string() == 'hr/admin/admin-users' || $this->uri->uri_string() == 'hr/admin/add-admin-user' || $this->uri->segment(3) == 'edit-admin-user') { echo 'active'; } ?>">
 		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#users_menu" aria-expanded="true"
