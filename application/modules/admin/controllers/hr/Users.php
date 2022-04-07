@@ -73,6 +73,27 @@ class Users extends MX_Controller {
         }
 
         $data = array(); 
+		/* Time card Logic start */
+		$pay_period_start = PAY_PERIOD_START;
+		$current_date = $this->common->convertTimezone(date('Y-m-d H:i:s'),'Y-m-d','America/Los_Angeles');
+
+		$pay_period_begins_time_stamp = strtotime($pay_period_start);
+		$pay_period_current_time_stamp = strtotime($current_date);
+		$pay_range_arr = array();
+		if($pay_period_begins_time_stamp && $pay_period_current_time_stamp) {
+			while($pay_period_begins_time_stamp < $pay_period_current_time_stamp){
+				$pay_period_ends_time_stamp = strtotime("+13 day",$pay_period_begins_time_stamp);
+				// $pay_period_monday_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
+				$pay_range_arr[] = [
+					'range'=>date("m/d/Y",$pay_period_begins_time_stamp).' - '.date("m/d/Y",$pay_period_ends_time_stamp),
+					'start_date'=>$pay_period_begins_time_stamp
+				];
+				$pay_period_begins_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
+			}
+		}
+		/* Time card Logic end */
+
+
         $count = $params['start'] + 1;
 	    if (isset($users['data']) && !empty($users['data'])) {
 	    	foreach ($users['data'] as $key => $value)  {
@@ -85,6 +106,25 @@ class Users extends MX_Controller {
                 $nestedData[] = $value['name'];
                 //$nestedData[] = $value['employee_id'];
                 $nestedData[] = date("m/d/Y", strtotime($value['hire_date'])); 
+
+				/* Time card Logic start */
+				$time_sheet_var = '';
+				if(count($pay_range_arr)) {
+
+					$time_sheet_var = '<div class="dropdown ml-2">
+						<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="timeSheetDrop'.$key.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Time Sheet
+						</button>
+						<div class="dropdown-menu" aria-labelledby="timeSheetDrop'.$key.'">';
+						//<a class="dropdown-item" href="#">Action</a>
+						foreach($pay_range_arr as $pay_range_record) {
+							$pay_range_link = base_url("hr/admin/view-time-sheet/".$pay_range_record['start_date']."/".$value['id']);
+							$time_sheet_var .= '<a class="dropdown-item" href="'.$pay_range_link.'" target="_blank">'.$pay_range_record['range'].'</a>';
+						}
+					$time_sheet_var .= '</div></div>';
+				}
+				/* Time card Logic end */
+
                 if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) {
                     if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                         $editUrl = base_url().'hr/admin/edit-user/'.$value['id'];
@@ -110,10 +150,13 @@ class Users extends MX_Controller {
                                                     <i class="fas fa-trash"></i>
                                                 </span>
                                                 <span class="text">Delete</span>
-                                            </a>'.$task_list.'
+                                            </a>'.$task_list.$time_sheet_var.'
                                         </div>';
                     }
                 }
+				elseif($userdata['user_type_id'] == 4) {
+					$nestedData[] = '<div style="display:inline-flex;">'.$time_sheet_var.'</div>';
+				}
 	            $data[] = $nestedData;    
                 $count++;          
 	    	}

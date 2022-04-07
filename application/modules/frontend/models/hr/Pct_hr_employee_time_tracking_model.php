@@ -86,4 +86,24 @@ class Pct_hr_employee_time_tracking_model extends MY_Model
 		
 		return $data;
 	}
+
+	public function get_ot_hours()
+	{
+		
+		
+		// $this->db->select('employee_id,DATE(time_in) AS record_date,SUM(TIMESTAMPDIFF(SECOND,time_in,time_out)) AS time_diff');
+		// $this->db->group_by('employee_id,DATE(time_in)');
+		// $this->db->having('time_diff > 28800');
+		// $this->db->order_by('time_in','DESC');
+		// $query = $this->db->get($this->_table);
+		// $result = $query->result();
+		// var_dump($result);die;
+		$sub_query = 'CONCAT(`employee_id`,"__",DATE(`time_in`)) IN (SELECT CONCAT(`employee_id`,"__",DATE(`time_in`)) FROM `pct_hr_employee_time_tracking` GROUP BY `employee_id`,DATE(`time_in`) HAVING SUM(TIMESTAMPDIFF(SECOND,`time_in`,`time_out`))>'.(8*60*60).')';
+		
+		$this->db->where($sub_query,NULL,FALSE);
+
+		$data = $this->order_by('time_in','asc')->with('user')->get_all();
+		return $data;
+		
+	}
 }

@@ -122,10 +122,13 @@
 						<div class="col-sm-12">
 							
 							<div class="radio">
-    							<label><input type="radio" name="break_reason" value="1" checked> Going for Lunch</label>
+    							<label><input type="radio" name="break_reason" value="1" checked> Lunch</label>
 							</div>
 							<div class="radio">
-								<label><input type="radio" name="break_reason" value="0"> Other</label>
+								<label><input type="radio" name="break_reason" value="0"> Break</label>
+							</div>
+							<div class="radio">
+								<label><input type="radio" name="break_reason" value="0"> Leaving for the Day</label>
 							</div>
 						</div>
 					</div>

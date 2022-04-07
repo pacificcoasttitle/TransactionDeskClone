@@ -1394,4 +1394,17 @@ function showMemoInfo(memoId)
     return false;
 }
 
+$(document).on('click','.ot-action-btn',function(){
+	var ot_emp_id = $(this).data('user');
+	var ot_date = $(this).data('ot-date');
+	var ot_is_approved = $(this).data('is-approved');
 
+	$('#ot_employee_id').val(ot_emp_id);
+	$('#ot_date').val(ot_date);
+	$('#ot_is_approved').val(ot_is_approved);
+	$('#ot_request_type').text('Reject');
+	if(ot_is_approved) {
+		$('#ot_request_type').text('Approve');
+	}
+	$("#ot_approve_deny_popup").modal('show');
+})
