@@ -97,6 +97,7 @@ class Dashboard extends MX_Controller {
 		$data['manager_id'] = $manager_id = !empty($this->input->post('manager_id')) ? $this->input->post('manager_id') : 0;
 		$data['users'] = array();
 		$data['managers'] = array();
+		$usersEmails = array();
 
 		if ($userdata['user_type_id'] == '4') {
 			$users = $this->common->getUsersForBranchManager($userdata['id']);

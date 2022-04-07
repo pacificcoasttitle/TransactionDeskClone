@@ -50,7 +50,6 @@
             <script type="text/javascript">
                 $(document).ready(function() {
                     "use strict";
-                    console.log('hi');
                     var $preloader = $('#page-preloader'),
                     $spinner   = $preloader.find('.spinner-loader');
                     $spinner.fadeOut();
