@@ -98,6 +98,7 @@ class Pct_hr_employee_time_tracking_model extends MY_Model
 		// $query = $this->db->get($this->_table);
 		// $result = $query->result();
 		// var_dump($result);die;
+		$this->db->query("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
 		$sub_query = 'CONCAT(`employee_id`,"__",DATE(`time_in`)) IN (SELECT CONCAT(`employee_id`,"__",DATE(`time_in`)) FROM `pct_hr_employee_time_tracking` GROUP BY `employee_id`,DATE(`time_in`) HAVING SUM(TIMESTAMPDIFF(SECOND,`time_in`,`time_out`))>'.(8*60*60).')';
 		
 		$this->db->where($sub_query,NULL,FALSE);
