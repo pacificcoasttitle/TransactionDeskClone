@@ -226,7 +226,11 @@ class Users extends MX_Controller {
                     // $message_body = "Hi ".$this->input->post('first_name')." ".$this->input->post('last_name').", <br><br>";
                     // $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
                     // $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-                    // $message_body .= "Please click on the link below to complete your registration.<br><br> ".getenv('APP_URL')."hr/login";
+                    //if ($this->input->post('user_type') == 4) {
+					    //$message_body .= "Please click on the link below to complete your registration.<br><br> <a href=".base_url('hr/admin').">".base_url('hr/admin')."</a>";
+                    //} else {
+                        //$message_body .= "Please click on the link below to complete your registration.<br><br> <a href=".base_url('hr/login').">".base_url('hr/login')."</a>";
+                    //}
                     // $subject = 'Invitation For Pacific Coast Title HR Center';
                     // $to = $this->input->post('email');
                     // $this->load->helper('sendemail');

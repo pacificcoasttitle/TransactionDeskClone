@@ -115,13 +115,23 @@ class Dashboard extends MX_Controller {
 			if (!empty($user_id) && $user_id != 'all_users') {
 				$key = array_search($user_id, array_column($users, 'id'));
 				if (isset($key) && strlen($key) > 0) {
-					$usersEmails[] = $users[$key]['pct_order_email'];
+					if (str_contains($users[$key]['pct_order_email'], ',')) {
+						$usersEmails = explode(',', $users[$key]['pct_order_email']);
+					} else {
+						$usersEmails[] = $users[$key]['pct_order_email'];
+					}
 				} else {
 					$usersEmails = array_column($users, 'pct_order_email');	
+					$usersEmails = array_filter($usersEmails, function($value) {
+						return strstr($value, ',') === false;
+					});
 					$usersEmails[] = $userdata['email'];
 				}
 			} else {
 				$usersEmails = array_column($users, 'pct_order_email');	
+				$usersEmails = array_filter($usersEmails, function($value) {
+					return strstr($value, ',') === false;
+				});
 				$usersEmails[] = $userdata['email'];
 			}
 			$pctOrderUserInfo = $this->order->getUsersInfo($usersEmails);

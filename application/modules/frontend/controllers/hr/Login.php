@@ -111,14 +111,22 @@ class Login extends MX_Controller {
 					$message_body = "Hi ".$user['first_name']." ".$user['last_name'].", <br><br>";
 					$message_body .= "You have requested to redet password for the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
 					$message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-					$message_body .= "Please click on the link below.<br><br> <a href=".base_url('hr/login').">".base_url('hr/login')."</a>";
+                    if ($user['user_type_id'] == 1 || $user['user_type_id'] == 2 || $user['user_type_id'] == 4) {
+					    $message_body .= "Please click on the link below.<br><br> <a href=".base_url('hr/admin').">".base_url('hr/admin')."</a>";
+                    } else {
+                        $message_body .= "Please click on the link below.<br><br> <a href=".base_url('hr/login').">".base_url('hr/login')."</a>";
+                    }
 					$subject = 'Reset Password For Pacific Coast Title HR Center';
 					$to = $this->input->post('email');
 					$this->load->helper('sendemail');
 					send_email($from_mail, $from_name, $to, $subject, $message_body);
 					$this->session->set_flashdata('success',$successMsg);
-					redirect(base_url('hr/login'));
-                    
+
+                    if ($user['user_type_id'] == 1 || $user['user_type_id'] == 2 || $user['user_type_id'] == 4) {
+					    redirect(base_url('hr/admin'));
+                    } else {
+                        redirect(base_url('hr/login'));
+                    }
                 } else {
                     $data['password_error_msg'] = "We can't find a user with that email address.";
                 }
