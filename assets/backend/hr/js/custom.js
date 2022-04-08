@@ -840,9 +840,9 @@ $(document).ready(function () {
 			.removeData('datepicker')
 			.unbind()
 			.datepicker({
-				defaultDate: "+1w",
-				changeMonth: false,
-				numberOfMonths: 1,
+				defaultDate: -1,
+				maxDate:0,
+				minDate:-14,
 				prevText: '<i class="fa fa-chevron-left"></i>',
 				nextText: '<i class="fa fa-chevron-right"></i>',
 				beforeShow: function() {
@@ -866,9 +866,9 @@ $(document).ready(function () {
 		});
 
 		$(".exp_date").datepicker({
-			defaultDate: "-1d",
-			changeMonth: false,
-			numberOfMonths: 1,
+			defaultDate: -1,
+			maxDate:0,
+			minDate:-14,
 			prevText: '<i class="fa fa-chevron-left"></i>',
 			nextText: '<i class="fa fa-chevron-right"></i>',
 			onClose: function () {

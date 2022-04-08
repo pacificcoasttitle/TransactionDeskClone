@@ -50,13 +50,13 @@
                 
 				<?php
 				$int_i = 0;
-				$reg_hours_sum = $unpaid_hours_sum = $ot_hours_sum = 0;
+				$reg_hours_sum = $unpaid_hours_sum = $ot_hours_sum = $double_ot_sum = 0;
 				$lunch_hours=0;
 				foreach($time_sheet_array as $timesheet_date=>$time_sheet_record):
-					$ot_seconds = 0;
-					$ot_hours = '00:00';
+					$ot_seconds = $double_ot_seconds = 0;
 					$lunch_hours = $time_sheet_record['lunch_hours'];
 					$reg_hours = $time_sheet_record['reg_hours']  + $lunch_hours;
+					
 					
 					if($lunch_hours > 3600) {
 						$lunch_hours = 3600;
@@ -74,12 +74,23 @@
 						
 					}
 					$unpaid_hours = ($time_sheet_record['lunch_hours'] + $time_sheet_record['reg_hours']) - ($lunch_hours + $time_sheet_record['reg_hours']);
-					$time_sheet_record['unpaid_hours'] += $unpaid_hours;
 					$time_sheet_record['reg_hours'] = $reg_hours;
+					$time_sheet_record['unpaid_hours'] += $unpaid_hours;
+					/* TIme Card Exception logic Start*/
+					$search_key_exception = array_search(date('Y-m-d', strtotime($timesheet_date)), array_column($timecard_exception_data, 'exception_date'));
+					if($search_key_exception !== false) {
+						$timecard_exception_record = $timecard_exception_data[$search_key_exception];
+						$reg_hours = ($timecard_exception_record->reg_hours*60*60);
+						$ot_seconds = ($timecard_exception_record->ot_hours*60*60);
+						$double_ot_seconds = ($timecard_exception_record->double_ot*60*60);
+					}
+					/* TIme Card Exception logic End*/
 					$reg_hours_sum += $reg_hours;
 					$unpaid_hours_sum += $time_sheet_record['unpaid_hours'];
 					$ot_hours_sum += $ot_seconds;
+					$double_ot_sum += $double_ot_seconds;
 					$ot_hours = sprintf('%02d:%02d', ($ot_seconds/3600),($ot_seconds/60%60));
+					$double_ot_hours = sprintf('%02d:%02d', ($double_ot_seconds/3600),($double_ot_seconds/60%60));
 
 				?>
 				<?php if(($int_i%7) == 0) : ?>
@@ -100,7 +111,7 @@
                     <td><?php echo (is_int($time_sheet_record['end_time']))?date("H:i", $time_sheet_record['end_time']):'-';?></td>
                     <td><?php echo ($reg_hours > 0)?sprintf('%02d:%02d', ($reg_hours/3600),($reg_hours/60%60)):'00:00';?></td>
                     <td><?php echo $ot_hours; ?></td>
-                    <td>00:00</td>
+                    <td><?php echo $double_ot_hours; ?></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -114,7 +125,7 @@
                     <td colspan="6"><b>TOTAL WEEK <?php echo ceil(($int_i+1)/7) ?>	 </b></td>
                     <td><?php echo ($reg_hours_sum > 0)?sprintf('%02d:%02d', ($reg_hours_sum/3600),($reg_hours_sum/60%60)):'00:00';?></td>
                     <td><?php echo ($ot_hours_sum > 0)?sprintf('%02d:%02d', ($ot_hours_sum/3600),($ot_hours_sum/60%60)):'00:00';?></td>
-                    <td>00:00</td>
+                    <td><?php echo ($double_ot_sum > 0)?sprintf('%02d:%02d', ($double_ot_sum/3600),($double_ot_sum/60%60)):'00:00';?></td>
                     <td>0</td>
                     <td>0</td>
                     <td>0</td>
@@ -124,7 +135,7 @@
                     <td>0</td>
                 </tr>
 				<?php 
-				$reg_hours_sum = $unpaid_hours_sum = $ot_hours_sum = 0;
+				$reg_hours_sum = $unpaid_hours_sum = $ot_hours_sum = $double_ot_sum = 0;
 				endif; 
 				?>
 				<?php

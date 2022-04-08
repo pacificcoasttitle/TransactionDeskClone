@@ -56,14 +56,10 @@ th {
                                                             <label class="field select">
                                                                 <select id="reg_hours" name="reg_hours[]" required>
                                                                     <option value="">Reg Hours</option>
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="4">4</option>
-                                                                    <option value="5">5</option>
-                                                                    <option value="6">6</option>
-                                                                    <option value="7">7</option>
-                                                                    <option value="8">8</option>
+																	<?php for($reg_i = 1;$reg_i<=9;$reg_i++): ?>
+																		<option value="<?php echo $reg_i;?>"><?php echo $reg_i;?></option>
+																	<?php endfor; ?>
+                                                                    
                                                                 </select>
                                                                 <i class="arrow double"></i>
                                                             </label>
@@ -72,14 +68,9 @@ th {
                                                             <label class="field select">
                                                                 <select id="ot_hours" name="ot_hours[]" required>
                                                                     <option value="">OT Hours</option>
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="4">4</option>
-                                                                    <option value="5">5</option>
-                                                                    <option value="6">6</option>
-                                                                    <option value="7">7</option>
-                                                                    <option value="8">8</option>
+                                                                    <?php for($reg_i = 0;$reg_i<=9;$reg_i++): ?>
+																		<option value="<?php echo $reg_i;?>"><?php echo $reg_i;?></option>
+																	<?php endfor; ?>
                                                                 </select>
                                                                 <i class="arrow double"></i>
                                                             </label>
@@ -88,14 +79,9 @@ th {
                                                             <label class="field select">
                                                                 <select id="double_ot" name="double_ot[]" required>
                                                                     <option value="">Double OT</option>
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="4">4</option>
-                                                                    <option value="5">5</option>
-                                                                    <option value="6">6</option>
-                                                                    <option value="7">7</option>
-                                                                    <option value="8">8</option>
+                                                                    <?php for($reg_i = 0;$reg_i<=9;$reg_i++): ?>
+																		<option value="<?php echo $reg_i;?>"><?php echo $reg_i;?></option>
+																	<?php endfor; ?>
                                                                 </select>
                                                                 <i class="arrow double"></i>
                                                             </label>

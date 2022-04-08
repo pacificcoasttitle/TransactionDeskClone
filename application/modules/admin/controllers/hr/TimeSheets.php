@@ -233,6 +233,8 @@ class TimeSheets extends MX_Controller {
 		
 		$this->load->model('frontend/hr/pct_hr_employee_time_tracking_model');
 		$tracking_data = $this->pct_hr_employee_time_tracking_model->get_time_sheet($first_date,$last_date,$userdata['id']);
+
+		/* Get Approved Ot hours Start */
 		$this->load->model('frontend/hr/pct_hr_employee_allowed_ot_model');
 		$ot_where = [
 			'ot_date >='=>$first_date,
@@ -242,6 +244,20 @@ class TimeSheets extends MX_Controller {
 		];
 		$ot_allowed_data = $this->pct_hr_employee_allowed_ot_model->get_many_by($ot_where);
 		$data['ot_approved_dates'] = array_column($ot_allowed_data,'ot_date');
+		/* Get Approved Ot hours Start */
+
+		/* Get Time card Request End */
+		$this->load->model('hr/timecards_model');
+		$timecard_where = [
+			'exception_date >='=>$first_date,
+			'exception_date <='=>$last_date,
+			'user_id' => $userdata['id'],
+			'status' => 'approved',
+			'approved_by_user_id != ' => NULL
+		];
+		$timecard_exception_data = $this->timecards_model->get_many_by($timecard_where);
+		$data['timecard_exception_data'] = $timecard_exception_data;
+		/* Get Time card Request End*/
 		$time_sheet_array_tmp = $time_sheet_array = array();
 		foreach($tracking_data as $tracking_record) {
 			

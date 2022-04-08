@@ -167,7 +167,7 @@ class Timecards extends MX_Controller {
 		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery.steps.min.js') );
 		$this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
 		$this->admintemplate->addJS( base_url('assets/frontend/js/parsley.min.js') );
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=tc_0.1') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=tc_0.2') );
         $this->admintemplate->show("hr", "add_time_card", $data);
     }
 
