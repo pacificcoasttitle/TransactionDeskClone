@@ -44,7 +44,7 @@ class Login extends MX_Controller {
                 $email = $this->input->post('email');
                 $password = $this->input->post('password');
                 $user =  $this->common->get_hr_user(array('email' => $email, 'status' => 1));
-                if (!empty($user) && ($user['user_type_id'] != 1 && $user['user_type_id'] != 2 && $user['user_type_id'] != 4)) {
+                if (!empty($user) && ($user['user_type_id'] != 1 && $user['user_type_id'] != 2 && $user['user_type_id'] != 4 && $user['user_type_id'] != 6)) {
                     if($user['is_tmp_password'] == 1) {
                         if (password_verify($password, $user['password'])) {
                             $randomString = $this->common->randomPassword();
@@ -111,7 +111,7 @@ class Login extends MX_Controller {
 					$message_body = "Hi ".$user['first_name']." ".$user['last_name'].", <br><br>";
 					$message_body .= "You have requested to redet password for the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
 					$message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-                    if ($user['user_type_id'] == 1 || $user['user_type_id'] == 2 || $user['user_type_id'] == 4) {
+                    if ($user['user_type_id'] == 1 || $user['user_type_id'] == 2 || $user['user_type_id'] == 4 || $user['user_type_id'] == 6) {
 					    $message_body .= "Please click on the link below.<br><br> <a href=".base_url('hr/admin').">".base_url('hr/admin')."</a>";
                     } else {
                         $message_body .= "Please click on the link below.<br><br> <a href=".base_url('hr/login').">".base_url('hr/login')."</a>";
@@ -122,7 +122,7 @@ class Login extends MX_Controller {
 					send_email($from_mail, $from_name, $to, $subject, $message_body);
 					$this->session->set_flashdata('success',$successMsg);
 
-                    if ($user['user_type_id'] == 1 || $user['user_type_id'] == 2 || $user['user_type_id'] == 4) {
+                    if ($user['user_type_id'] == 1 || $user['user_type_id'] == 2 || $user['user_type_id'] == 4 || $user['user_type_id'] == 6) {
 					    redirect(base_url('hr/admin'));
                     } else {
                         redirect(base_url('hr/login'));
@@ -157,7 +157,7 @@ class Login extends MX_Controller {
                         "user_type_id" => isset($user['user_type_id']) && !empty($user['user_type_id']) ? $user['user_type_id'] : '',
 						"user_type" => isset($user['user_type']) && !empty($user['user_type']) ? $user['user_type'] : '',
                     );
-                    if ($user['user_type_id'] == 1 || $user['user_type_id'] == 2 || $user['user_type_id'] == 4) {
+                    if ($user['user_type_id'] == 1 || $user['user_type_id'] == 2 || $user['user_type_id'] == 4 || $user['user_type_id'] == 6) {
                         $session_data['is_hr_admin'] = 1;
                         $this->session->set_userdata('hr_admin', $session_data);
                         redirect(base_url().'hr/admin/dashboard');
