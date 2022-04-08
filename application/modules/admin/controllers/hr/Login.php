@@ -34,7 +34,7 @@ class Login extends MX_Controller {
     		$email_address = $this->input->post('email_address');
         	$password      = $this->input->post('password');
             $admin =  $this->common->get_hr_user(array('email' => $email_address, 'status' => 1));
-            if (!empty($admin) && ($admin['user_type_id'] == 1 || $admin['user_type_id'] == 2 || $admin['user_type_id'] == 4)) {
+            if (!empty($admin) && ($admin['user_type_id'] == 1 || $admin['user_type_id'] == 2 || $admin['user_type_id'] == 4 || $admin['user_type_id'] == 6)) {
                 if($admin['is_tmp_password'] == 1) {
                     if (password_verify($password, $admin['password'])) {
                         $randomString = $this->common->randomPassword();
