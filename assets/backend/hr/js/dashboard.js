@@ -31,26 +31,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
 $(document).ready(function () {
 	getDashboardCountBasedOnFilter(0, 0, 0);
-	
 });
 
 $(document).on("click", function() { 
-    $("#month").on("change", function(){
+    $("#month").unbind().on("change", function(){
 		var month = $(this).val();
 		var user = $('#user_filter').val();
 		var manager = $('#manager_filter').val();
 		getDashboardCountBasedOnFilter(manager, user, month);
 	});
 
-	$("#user_filter").on("change", function(){
-		console.log('hi');
+	$("#user_filter").unbind().on("change", function(){
 		var user = $(this).val();
 		var month = $('#month').val();
 		var manager = $('#manager_filter').val();
 		getDashboardCountBasedOnFilter(manager, user, month);
 	});
 
-	$("#manager_filter").on("change", function(){
+	$("#manager_filter").unbind().on("change", function(){
 		var manager = $(this).val();
 		var user = $('#user_filter').val();
 		var month = $('#month').val();
