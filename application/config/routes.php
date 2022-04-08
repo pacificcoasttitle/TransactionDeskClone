@@ -198,6 +198,7 @@ $route['download-aws-document'] = 'frontend/order/common/downloadAwsDocument';
 $route['import-data-from-csv-file'] = 'frontend/order/cron/importDataFromCsvFile';
 $route['send-borrower-verification-mail'] = 'frontend/order/cron/sendMailEscrowUsersForBorrowerVerification';
 $route['import-orders-using-file-number'] = 'frontend/order/cron/importOrdersUsingFileNumber';
+$route['import-escrow-fee'] = 'frontend/order/cron/importEscrowFee';
 $route['get-orders-dashboard'] = 'frontend/order/dashboard/getOrdersDashboard';
 $route['sales-production-history/:any'] = 'frontend/order/salesRep/salesProductionHistory';
 $route['password-update-all'] = 'frontend/order/cron/passwordUpdateAll';
