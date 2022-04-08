@@ -3,7 +3,7 @@
     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
     <div id="dashboard_count">
         <?php $userdata = $this->session->userdata('hr_admin'); 
-            if ($userdata['user_type_id'] == 4) { ?>
+            if ($userdata['user_type_id'] == '4' || $userdata['user_type_id'] == 6) { ?>
                 <div class="d-sm-flex">
                     <?php if (!empty($users)) { ?>
                         <label class="filter_label">Select User:</label>

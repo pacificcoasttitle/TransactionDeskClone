@@ -358,7 +358,7 @@ class Users extends MX_Controller {
                         }
                         if (!empty($this->input->post('password'))) { 
                             $usersData['password'] = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
-                            $usersData['is_tmp_password'] = 1;
+                            $usersData['is_tmp_password'] = 0;
                         }
                         $condition = array('id' => $id);
                         $this->hr->update($usersData, $condition, 'pct_hr_users');
