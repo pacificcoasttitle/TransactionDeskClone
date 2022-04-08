@@ -37,6 +37,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="text" value="" class="form-control" placeholder="Password" name="password" id="password">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="first_name">First Name<span class="required"> *</span></label>
                                         <input type="text" value="<?php echo $userInfo['first_name'];?>" class="form-control" placeholder="First Name" name="first_name" id="first_name" value="" required="required">
                                     </div>

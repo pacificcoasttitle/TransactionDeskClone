@@ -4619,101 +4619,343 @@ class Cron extends MX_Controller {
 		// $data['file_number'] = $file_number;
 	}
 
-    public function insertHrUsersFromCsvFile()
+    public function importEscrowFee()
     {
-        if (empty(getenv('APP_URL'))) {
-            $url = "http://".$_SERVER['SERVER_NAME']."/";
-        } else {
-            $url = getenv('APP_URL');
-        }
-        $this->load->model('hr/hr'); 
-        $this->load->library('hr/common');
-        $this->db->select('*');
-        $this->db->from('pct_hr_users');
-        $query = $this->db->get();
-        $users = $query->result_array();
-        $usersEmails = array_column($users, 'email');
-        $files = glob("uploads/hr/*csv");    
+        $sftp = new SFTP(env('SFTP_HOST'));
+        $username = env('SFTP_USERNAME');
+        $password = env('SFTP_PASSWORD');
 
+        if (!$sftp->login($username, $password)) {
+            exit('Login Failed');
+        }
+    
+        if (!($files = $sftp->nlist('/'.env('SFTP_FOLDER').'/escrow-orders/', true))) {
+            die("Cannot read directory contents");
+        }
+        
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..' && $file != '.protected') {
+                if (!is_dir('uploads/escrow-orders')) {
+                    mkdir('./uploads/escrow-orders', 0777, TRUE);
+                }
+                $sftp->get(env('SFTP_FOLDER').'/escrow-orders/'.$file, FCPATH.'uploads/escrow-orders/'.trim($file).".csv");
+                chmod(FCPATH.'uploads/escrow-orders/'.$file.".csv",0755);
+                $sftp->delete(env('SFTP_FOLDER').'/escrow-orders/'.$file);
+            }
+        }
+        $files = glob("uploads/escrow-orders/*csv");
+                 
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
                 $row = 1;
+                $headerColumns = array(); 
                 if (($handle = fopen($filePath, "r")) !== FALSE) {
+                    $documentName = pathinfo($filePath);
+                    $file_numbers = array();
+                    $salesRepNameArr = array();
+                    $i = 0;
+    
                     while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
-                        if($row != 1) {
-                            $email = trim($data[10]);
-                            if(!empty($email)) {
-                                if (in_array($email, $usersEmails)) {
-                                    continue;
-                                }
-                                $randomPassword = $this->common->randomPassword();
-                                $fullName = explode(",", $data[0]);
-                                $first_name = $fullName[1];
-                                $last_name = $fullName[0];
-                                $employee_id = $data[2];
-                                $hire_date = $data[11];
-                        
-                                $this->db->select('*');
-                                $this->db->from('pct_hr_position');
-                                $this->db->where('name', trim($data[12]));
-                                $query = $this->db->get();
-                                $result = $query->row_array();
-                                $position_id = $result['id'];
-    
-                                if (str_contains(strtolower($data[12]), 'manager')) {
-                                    $user_type_id = 4;
-                                } else {
-                                    $user_type_id = 3;
-                                }
-    
-                                $this->db->select('*');
-                                $this->db->from('pct_hr_branches');
-                                $this->db->where('name', trim($data[13]));
-                                $query = $this->db->get();
-                                $resultBrnach = $query->row_array();
-                                $branch_id = $resultBrnach['id'];
-    
-                                $usersData = array(
-                                    'first_name' =>  trim($first_name),
-                                    'last_name' =>  trim($last_name),
-                                    'employee_id' =>  trim($employee_id),
-                                    'email' => trim($email),
-                                    'password' => password_hash($randomPassword, PASSWORD_DEFAULT),    
-                                    'position_id' => $position_id ? $position_id : 0,
-                                    'user_type_id' => $user_type_id,
-                                    'hire_date' => date("Y-m-d", strtotime($hire_date)),
-                                    'status' => 1,
-                                    'is_tmp_password' => 1,
-                                    'department_id' =>  0,
-                                    'branch_id' => $branch_id ? $branch_id : 0
-                                );
-                                $this->hr->insert($usersData, 'pct_hr_users');
+                        $num = count($data);
+                        if($row == 1) {
+                            for ($c=0; $c < $num; $c++) {
+                                $headerColumns[] = trim($data[$c]);
+                            }
+                        }
 
-                                $from_name = 'Pacific Coast Title Company';
-                                $from_mail = getenv('FROM_EMAIL');
-                                $message_body = "Hi ". $first_name." ".$last_name.", <br><br>";
-                                $message_body .= "You have been invited to the Pacific Coast Title HR center. Please login with tempoary password and change your password.<br><br>";
-                                $message_body .= "Tempoary password: ".$randomPassword. "<br><br>";
-                                if ($user_type_id == 4) {
-                                    $message_body .= "Please click on the link below to complete your registration.<br><br> <a href=".base_url('hr/admin').">".base_url('hr/admin')."</a>";
-                                } else {
-                                    $message_body .= "Please click on the link below to complete your registration.<br><br> <a href=".base_url('hr/login').">".base_url('hr/login')."</a>";
+                        $titleOfficerId = 0;
+                        $fileKey = '';
+                        $prodkey = '';
+                        $escrowAmountKey = '';
+                        $saleskey = '';
+                        $closedDate = '';
+                        $salesRepId = 0;
+                        $sales_rep_img = '';
+                        $salesRepColumnFlag = 0;
+
+                        if(in_array('File Number', $headerColumns)) {
+                            $fileKey = array_search("File Number",$headerColumns);
+                            $file_number = $data[$fileKey];
+                        }
+
+                        if(in_array('Prod Type', $headerColumns)) {
+                            $prodkey = array_search("Prod Type",$headerColumns);
+                            $prodType = $data[$prodkey];
+                        }
+
+                        if(in_array('Amt', $headerColumns)) {
+                            $escrowAmountKey = array_search("Amt",$headerColumns);
+                            $escrowAmount = $data[$escrowAmountKey];
+                            $escrowAmount = str_replace('$', '', $escrowAmount);
+                            $escrowAmount = str_replace(',', '', $escrowAmount);
+                        }
+
+                        $salesRepName = '';
+                        if(in_array('Sales Rep', $headerColumns)) {
+                            $saleskey = array_search("Sales Rep",$headerColumns);
+                            $salesRepName = $data[$saleskey];
+                            $salesRepName = str_replace(' ', '_', $salesRepName);
+                            $salesRepName = preg_replace('/[^A-Za-z0-9\_-]/', '',  $salesRepName);
+                            $salesRepName = str_replace('_', ' ', $salesRepName);
+                            $key = array_search($salesRepName, array_column($salesRepNameArr, 'name'));
+                            if (isset($key) && !empty($key)) {
+                               $salesRepId =  $salesRepNameArr[$key]['id'];
+                               $sales_rep_img = $salesRepNameArr[$key]['sales_rep_img'];
+                            } else {
+                                $salesRepNameArr[$i]['name'] =  $salesRepName;
+                            }
+                            $salesRepColumnFlag = 1;
+                        }
+
+                        if(in_array('Sent To External Accounting', $headerColumns)) {
+                            $closedDatekey = array_search("Sent To External Accounting",$headerColumns);
+                            $closedDate = $data[$closedDatekey];
+                        }
+
+                        if($row != 1) {
+                            //echo $file_number."---".$prodType."----".$premium."----".$salesRepName."---".$closedDate;exit;
+                            $resultSales = array();
+                            if(!empty($salesRepName)) {
+                                if ($salesRepId == 0) {
+                                    $this->db->select('*');
+                                    $this->db->from('customer_basic_details');
+                                    $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
+                                    $this->db->where('is_sales_rep', 1);
+                                    $query = $this->db->get();
+                                    $resultSales = $query->row_array(); 
+                                    if (!empty($resultSales)) {
+                                        $salesRepId =  $resultSales['id'];
+                                        $sales_rep_img = isset($resultSales["sales_rep_profile_img"]) && !empty($resultSales["sales_rep_profile_img"]) ? $resultSales["sales_rep_profile_img"] : '';
+                                        if(!empty($sales_rep_img)) {
+                                            $sales_rep_img = env('AWS_PATH').str_replace('uploads/', '', $sales_rep_img);
+                                        }
+                                        $salesRepNameArr[$i]['id'] = $salesRepId;
+                                        $salesRepNameArr[$i]['sales_rep_img'] = $sales_rep_img;
+                                        $i++;
+                                    } else {
+                                        if (!empty(trim($salesRepNameArr[$i]['name']))) {
+                                            $salesRepNameArr[$i]['id'] = 0;
+                                            $i++;
+                                        }
+                                    }
                                 }
-                                $subject = 'Invitation For Pacific Coast Title HR Center';
-                                $to = $email;
-                                $this->load->helper('sendemail');
-                                send_email($from_mail, $from_name, $to, $subject, $message_body);
+                            }
+
+                            $completed_date = null;
+                            if (!empty($closedDate)) {
+                                $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
+                                $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                            }
+
+                            if(!empty($file_number)) {
+                                $condition = array(
+                                    'where' => array(
+                                        'file_number' => $file_number,
+                                    )
+                                );
+                                $order = $this->order->get_order($condition);
+                            
+                                if (!empty($order)) {
+                                    if (in_array($file_number, $file_numbers)) {
+                                        if (!empty($escrowAmount)) {
+                                            $escrowAmount = (float)$escrowAmount +  $order[0]['escrow_amount'];
+                                        }
+                                    }
+                                    $file_numbers[] = $file_number;
+                                    $orderData = array();
+
+                                    if (!empty($prodType)) {
+                                        $orderData['prod_type'] = strtolower($prodType);
+                                    }
+
+                                    if (!empty($escrowAmount)) {
+                                        $orderData['escrow_amount'] = (float)$escrowAmount;
+                                    }
+
+                                    if (!empty($completed_date)) {
+                                        $orderData['sent_to_accounting_date'] = $completed_date;
+                                    }
+
+                                    if (!empty($orderData)) {
+                                        $this->home_model->update(
+                                            $orderData, 
+                                            array(
+                                                'id' => $order[0]['id']
+                                            ), 
+                                            'order_details'
+                                        );
+                                    }
+
+                                    $orderDetails = $this->order->get_order_details($order[0]['file_id']);
+                                    if (!empty($salesRepId)) {
+                                        $this->home_model->update(
+                                            array(
+                                                'sales_representative' => $salesRepId,
+                                            ), 
+                                            array(
+                                                'id' => $orderDetails['transaction_id']
+                                            ), 
+                                            'transaction_details'
+                                        );
+                                    } else {
+                                        if ($salesRepColumnFlag == 1) {
+                                            $this->home_model->update(
+                                                array(
+                                                    'sales_representative' => 0,
+                                                ), 
+                                                array(
+                                                    'id' => $orderDetails['transaction_id']
+                                                ), 
+                                                'transaction_details'
+                                            );
+                                        }
+                                    }
+                                } else {
+                                    $file_numbers[] = $file_number;
+                                    $data = json_encode(array('FileNumber' => $file_number));
+                                    $userData = array(
+                                        'admin_api' => 1
+                                    );
+                                    $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, array(), 0, 0);
+                                    $res = $this->make_request('POST', 'files/search', $data, $userData);
+                                    $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, $res, 0, $logid);
+                                    $result = json_decode($res,TRUE);
+                                    
+                                    if (isset($result['Files']) && !empty($result['Files'])) {
+                                        foreach ($result['Files'] as $res) {
+                                            if (count($result['Files']) > 1 && strtolower($res['Status']['Name']) == 'cancelled') {
+                                                continue;
+                                            }
+                                            $partner_fname = $res['Partners'][0]['PrimaryEmployee']['FirstName'];
+                                            $partner_lname = $res['Partners'][0]['PrimaryEmployee']['LastName'];
+                                            $partner_name = $res['Partners'][0]['PartnerName'];
+                                            $condition = array(
+                                                'first_name' => $partner_fname,
+                                                'last_name' => $partner_lname,
+                                                'company_name' => $partner_name,
+                                                'is_pass' => $partner_name,
+                                            );
+                                            $user_details =  $this->home_model->get_user_by_name($condition);
+                                            $customerId = 0;
+        
+                                            if (isset($user_details) && !empty($user_details)) {
+                                                $customerId = $user_details['id'];
+                                            }
+                                            
+                                            $FullProperty = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
+                                            $address = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'];
+                                            $locale = $res['Properties'][0]['City'];
+                                            
+                                            if (($locale)) {
+                                                if (!empty($res['Properties'][0]['State'])) {
+                                                    $locale .= ', '.$res['Properties'][0]['State'];
+                                                } else {
+                                                    $locale .= ', CA';
+                                                }
+                                            }
+        
+                                            $property_details = $this->getSearchResult($address, $locale);
+                                            $property_type = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                                            $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                                            $apn = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
+                                            $propertyData = array(
+                                                'customer_id' => $customerId,
+                                                'buyer_agent_id' => 0,
+                                                'listing_agent_id' => 0,
+                                                'escrow_lender_id' => 0,
+                                                'parcel_id' => $res['Properties'][0]['ParcelID'],
+                                                'address' => $address,
+                                                'city' => $res['Properties'][0]['City'],
+                                                'state' => $res['Properties'][0]['State'],
+                                                'zip' => $res['Properties'][0]['Zip'],
+                                                'property_type' => $property_type,
+                                                'full_address' => $FullProperty,
+                                                'apn' => $apn,
+                                                'county' => $res['Properties'][0]['County'],
+                                                'legal_description' => $LegalDescription,
+                                                'status'=> 1
+                                            );
+        
+                                            $transactionData = array(
+                                                'customer_id' => $customerId,
+                                                'sales_amount' =>  !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                                                'loan_number' => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                                                'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                                                'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
+                                                'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
+                                                'sales_representative' => $salesRepId,
+                                                'title_officer' => $titleOfficerId,
+                                                'status'=> 1
+                                            );
+                
+                                            $primary_owner = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
+                                            $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
+                                            $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
+                                            $secondary_owner = ($res['Buyers'][0]['Secondary']['First'] && $res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
+                                            $secondary_owner .= ($res['Buyers'][0]['Secondary']['Middle'] && $res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
+                                            $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " ".$res['Buyers'][0]['Secondary']['Last'] : '';
+                                            $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
+                
+                                            if (strpos($ProductTypeTxt, 'Loan') !== false) {
+                                                $propertyData['primary_owner'] = $primary_owner;
+                                                $propertyData['secondary_owner'] = $secondary_owner;
+                                            } elseif(strpos($ProductTypeTxt, 'Sale') !== false) {
+                                                $transactionData['borrower'] = $primary_owner;
+                                                $transactionData['secondary_borrower'] = $secondary_owner;
+                                                $propertyData['primary_owner'] = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                                                $propertyData['secondary_owner'] = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                                            }
+                                            
+                                            $propertyId = $this->home_model->insert($propertyData,'property_details');
+                                            $transactionId = $this->home_model->insert($transactionData,'transaction_details');
+                                            $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['OpenedDate'])))/1000);
+                                            $created_date = date('Y-m-d H:i:s', $time);
+                                            $randomString = $this->order->randomPassword();
+                                            $randomString = md5($randomString);
+        
+                                            $completed_date = null;
+                                            if (empty($closedDate)) {
+                                                if (!empty($res['Dates']['FileCompletedDate'])) {
+                                                    $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['FileCompletedDate'])))/1000);
+                                                    $completed_date = date('Y-m-d H:i:s', $time);
+                                                }
+                                            }
+                                            
+                                            $orderData = array(
+                                                'customer_id' => $customerId,
+                                                'file_id' => $res['FileID'],
+                                                'file_number' => $res['FileNumber'],
+                                                'property_id' => $propertyId,
+                                                'transaction_id' => $transactionId,
+                                                'created_at' => $created_date,
+                                                'prod_type' => strtolower($prodType),
+                                                'escrow_amount' => (float)$escrowAmount,
+                                                'status'=> 1,
+                                                'is_imported'=> 1,
+                                                'is_sales_rep_order'=> 1,
+                                                'random_number' => $randomString,
+                                                'resware_closed_status_date' => $completed_date,
+                                                'resware_status'=> strtolower($res['Status']['Name']),
+                                                'sent_to_accounting_date' => $completed_date
+                                            );
+                                            $this->home_model->insert($orderData,'order_details');
+                                        }
+                                    }
+                                }
                             }
                         }
                         $row++;
                     }
                     fclose($handle);
                 }
-                
+                $documentName = pathinfo($filePath);
+                $fileName = date('YmdHis')."_".$documentName['basename'];
+		        rename(FCPATH."/uploads/escrow-orders/".$documentName['basename'], FCPATH."/uploads/escrow-orders/".$fileName);
+                $this->order->uploadDocumentOnAwsS3($fileName, 'escrow-orders', 1);  
             }
         } else {
            echo "No files found";exit;
         }
-        echo "All data inserted successfully";exit;
+        echo "All data exported successfully";exit;
     }
 }

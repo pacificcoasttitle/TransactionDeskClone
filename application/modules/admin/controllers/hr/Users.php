@@ -356,6 +356,10 @@ class Users extends MX_Controller {
                         if (!empty($document_name)) {
                             $usersData['profile_img'] = $document_name;
                         }
+                        if (!empty($this->input->post('password'))) { 
+                            $usersData['password'] = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
+                            $usersData['is_tmp_password'] = 1;
+                        }
                         $condition = array('id' => $id);
                         $this->hr->update($usersData, $condition, 'pct_hr_users');
                         $successMsg = 'User updated successfully.';
