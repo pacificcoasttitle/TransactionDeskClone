@@ -4668,7 +4668,6 @@ class Cron extends MX_Controller {
                         $prodkey = '';
                         $escrowAmountKey = '';
                         $saleskey = '';
-                        $closedDate = '';
                         $salesRepId = 0;
                         $sales_rep_img = '';
                         $salesRepColumnFlag = 0;
@@ -4707,11 +4706,6 @@ class Cron extends MX_Controller {
                             $salesRepColumnFlag = 1;
                         }
 
-                        if(in_array('Sent To External Accounting', $headerColumns)) {
-                            $closedDatekey = array_search("Sent To External Accounting",$headerColumns);
-                            $closedDate = $data[$closedDatekey];
-                        }
-
                         if($row != 1) {
                             //echo $file_number."---".$prodType."----".$premium."----".$salesRepName."---".$closedDate;exit;
                             $resultSales = array();
@@ -4741,12 +4735,6 @@ class Cron extends MX_Controller {
                                 }
                             }
 
-                            $completed_date = null;
-                            if (!empty($closedDate)) {
-                                $myDateTime = DateTime::createFromFormat('M d, Y', $closedDate);
-                                $completed_date = $myDateTime->format('Y-m-d H:i:s');
-                            }
-
                             if(!empty($file_number)) {
                                 $condition = array(
                                     'where' => array(
@@ -4770,10 +4758,6 @@ class Cron extends MX_Controller {
 
                                     if (!empty($escrowAmount)) {
                                         $orderData['escrow_amount'] = (float)$escrowAmount;
-                                    }
-
-                                    if (!empty($completed_date)) {
-                                        $orderData['sent_to_accounting_date'] = $completed_date;
                                     }
 
                                     if (!empty($orderData)) {
@@ -4935,8 +4919,7 @@ class Cron extends MX_Controller {
                                                 'is_sales_rep_order'=> 1,
                                                 'random_number' => $randomString,
                                                 'resware_closed_status_date' => $completed_date,
-                                                'resware_status'=> strtolower($res['Status']['Name']),
-                                                'sent_to_accounting_date' => $completed_date
+                                                'resware_status'=> strtolower($res['Status']['Name'])
                                             );
                                             $this->home_model->insert($orderData,'order_details');
                                         }
