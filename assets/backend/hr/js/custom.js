@@ -1408,3 +1408,12 @@ $(document).on('click','.ot-action-btn',function(){
 	}
 	$("#ot_approve_deny_popup").modal('show');
 })
+
+$(document).on('click','.timecard-action-btn',function(){
+	var req_id = $(this).data('req-id');
+
+	$('#deny_request_id').val(req_id);
+	
+	$("#timecard_deny_popup").modal('show');
+
+})

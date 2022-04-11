@@ -49,7 +49,7 @@ class Timecards extends MX_Controller {
         $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js>v=tc_0.1') );
         $this->admintemplate->show("hr", "time_cards", $data);
     }
 
@@ -76,6 +76,10 @@ class Timecards extends MX_Controller {
 		if (isset($timeCardsList['data']) && !empty($timeCardsList['data'])) {
 			$i = $params['start'] + 1;
 			foreach ($timeCardsList['data'] as $timeCard)  {
+				$denied_reason = '-';
+				if(!empty($timeCard['denied_reason'])) {
+					$denied_reason = $timeCard['denied_reason'];
+				}
 				$nestedData = array();
 				$nestedData[] = $i;
 				$nestedData[] = $timeCard['first_name']." ".$timeCard['last_name'];
@@ -89,7 +93,9 @@ class Timecards extends MX_Controller {
                     if ($timeCard['status'] == 'approved') {
                         $status = '<span class="badge badge-success">Approved</span>';
                     } else {
-                        $status = '<span class="badge badge-danger">Denied</span>';
+                        $status = '<span class="badge badge-danger">Denied</span><span role="button" class="icon" title="'.$denied_reason.'">
+						<i class="fas fa-info"></i>
+					</span>';
                     }
                 }
                 $nestedData[] = $status;
@@ -104,12 +110,12 @@ class Timecards extends MX_Controller {
                         if (!empty($timeCard['approved_by_user_id'])) {
                             if ($timeCard['status'] == 'approved') {
                                 $nestedData[] = '
-                                        <a href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                        <button type="button" class="btn btn-danger btn-icon-split btn-sm timecard-action-btn" data-req-id="'.$timeCard["id"].'">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-ban"></i>
                                             </span>
                                             <span class="text">Deny</span>
-                                        </a>';
+                                        </button>';
                             } else {
                                 $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$timeCard["id"].');" class="btn btn-success btn-icon-split btn-sm">
                                             <span class="icon text-white-50">
@@ -127,12 +133,12 @@ class Timecards extends MX_Controller {
                                                 </span>
                                                 <span class="text">Approve</span>
                                             </a>
-                                            <a style="margin-left: 5px;" href="#" onclick="return approve_deny_popup(0, '.$timeCard["id"].');" class="btn btn-danger btn-icon-split btn-sm">
-                                                <span class="icon text-white-50">
-                                                    <i class="fas fa-ban"></i>
-                                                </span>
-                                                <span class="text">Deny</span>
-                                            </a>
+											<button type="button" class="ml-2 btn btn-danger btn-icon-split btn-sm timecard-action-btn" data-req-id="'.$timeCard["id"].'">
+												<span class="icon text-white-50">
+													<i class="fas fa-ban"></i>
+												</span>
+												<span class="text">Deny</span>
+											</button>
                                         </div>'; 
                         }
                     } else {
