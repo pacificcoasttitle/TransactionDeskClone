@@ -723,8 +723,12 @@ class Common
             $data = array(
                 'status' => $type,
                 'approved_date' => date('Y-m-d'),
-                'approved_by_user_id' => $userdata['id']
+                'approved_by_user_id' => $userdata['id'],
+				'denied_reason'=>NULL
             );
+			if($type == 'denied' && !empty($this->CI->input->post('deny_reason'))) {
+				$data['denied_reason'] = $this->CI->input->post('deny_reason');
+			}
 			$this->CI->hr->update($data, $condition, 'pct_hr_time_cards');
             $timeCardInfo = $this->getTimeCardInfo($request_id);
             $exceptionDate = date("F d, Y", strtotime($timeCardInfo['exception_date']));

@@ -60,6 +60,10 @@ class TimeCards extends MX_Controller
 		if (isset($timeCardsList['data']) && !empty($timeCardsList['data'])) {
 			$i = $params['start'] + 1;
 			foreach ($timeCardsList['data'] as $timeCard)  {
+				$denied_reason = '-';
+				if(!empty($timeCard['denied_reason'])) {
+					$denied_reason = $timeCard['denied_reason'];
+				}
 				$nestedData = array();
 				$nestedData[] = $i;
 				$nestedData[] = $timeCard['first_name']." ".$timeCard['last_name'];
@@ -73,7 +77,9 @@ class TimeCards extends MX_Controller
                     if ($timeCard['status'] == 'approved') {
                         $status = '<span class="badge-new badge-new-success">Approved</span>';
                     } else {
-                        $status = '<span class="badge-new badge-new-danger">Denied</span>';
+                        $status = '<span class="badge-new badge-new-danger">Denied</span><span role="button" class="icon" title="'.$denied_reason.'">
+						<i class="fa fa-info"></i>
+					</span>';
                     }
                 }
                 $nestedData[] = $status;
