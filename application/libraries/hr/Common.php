@@ -823,6 +823,9 @@ class Common
                 'approved_date' => date('Y-m-d'),
                 'approved_by_user_id' => $userdata['id']
             );
+            if($type == 'denied' && !empty($this->CI->input->post('deny_reason'))) {
+				$data['denied_reason'] = $this->CI->input->post('deny_reason');
+			}
 			$this->CI->hr->update($data, $condition, 'pct_hr_vacation_requests'); 
             $vacationRequestInfo = $this->getVacationRequest($request_id);
             $from_date = date("F d, Y", strtotime($vacationRequestInfo['from_date']));
