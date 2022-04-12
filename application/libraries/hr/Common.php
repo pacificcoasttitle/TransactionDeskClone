@@ -1053,4 +1053,15 @@ class Common
             'data' => $notifications
         );
     }
+
+	public function mailNotification($user_id,$request_type,$request_id) {
+		$param = $user_id.' '.$request_type.' '.$request_id;
+		$command = "php ".FCPATH."index.php frontend/hr/hrCommon sendMailNotification $param";
+		if (substr(php_uname(), 0, 7) == "Windows"){
+			pclose(popen("start /B ". $command, "r")); 
+		}
+		else {
+			exec($command . " > /dev/null &");  
+		}
+	}
 }

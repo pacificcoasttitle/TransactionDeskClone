@@ -126,9 +126,11 @@ class TimeCards extends MX_Controller
                 'total_hours' => $total_hours[$i],
                 'comment' => $comment[$i]
             );
-            $ids[] = $this->hr->insert($timeCardsData, 'pct_hr_time_cards');
+            $ids[] = $last_id = $this->hr->insert($timeCardsData, 'pct_hr_time_cards');
             $exceptionDate = date("F d, Y", strtotime($exception_date));
             $message = 'Timecard request of '.$exceptionDate.' has submitted by '.$userdata['name'];
+			//Send Mail to User
+			$this->common->mailNotification($userdata['id'],'time_card',$last_id);
 
             $this->load->model('hr/users_model');
             $userInfo = $this->users_model->get($userdata['id']);
@@ -140,11 +142,15 @@ class TimeCards extends MX_Controller
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
             $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+			//Send Mail to Manager
+			$this->common->mailNotification($branchUserInfo->id,'time_card',$last_id);
     
             $superadminInfo = $this->users_model->get_by('user_type_id', 1);
             $notificationData['sent_user_id'] = $superadminInfo->id;
             $this->hr->insert($notificationData, 'pct_hr_notifications');
             $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
+			//Send Mail to Admin
+			$this->common->mailNotification($superadminInfo->id,'time_card',$last_id);
             $i++;
         }
         if(!empty($ids)) {
