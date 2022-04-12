@@ -192,6 +192,7 @@ class Timecards extends MX_Controller {
         $i = 0;
 
         foreach($exception_dates as $exception_date) {
+			$last_id = 0;
             $timeCardsData = array(
                 'user_id' =>  $this->input->post('select_employee'),
                 'exception_date' => date("Y-m-d", strtotime($exception_date)),
@@ -201,7 +202,7 @@ class Timecards extends MX_Controller {
                 'total_hours' => $total_hours[$i],
                 'comment' => $comment[$i]
             );
-            $ids[] = $this->hr->insert($timeCardsData, 'pct_hr_time_cards');
+            $ids[] = $last_id = $this->hr->insert($timeCardsData, 'pct_hr_time_cards');
             $exceptionDate = date("F d, Y", strtotime($exception_date));
             $message = 'Timecard request of '.$exceptionDate.' has submitted by '.$userdata['name'];
             $notificationData = array(
@@ -212,6 +213,9 @@ class Timecards extends MX_Controller {
             $this->hr->insert($notificationData, 'pct_hr_notifications');
             $this->common->sendNotification($message, 'submitted', $this->input->post('select_employee'), 0);
 
+			//Send Mail to User
+			$this->common->mailNotification($this->input->post('select_employee'),'time_card',$last_id);
+
             $message = 'Timecard request of '.$exceptionDate.' has submitted for employee '.$userInfo->first_name." ".$userInfo->last_name.' by '.$userdata['name'];
             $notificationData['message'] = $message;
             if ($userdata['user_type_id'] == 4) {
@@ -219,11 +223,17 @@ class Timecards extends MX_Controller {
                 $notificationData['sent_user_id'] = $superadminInfo->id;
                 $this->hr->insert($notificationData, 'pct_hr_notifications');
                 $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
+
+				//Send Mail to Admin
+				$this->common->mailNotification($superadminInfo->id,'time_card',$last_id);
             } else {
                 $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
                 $notificationData['sent_user_id'] = $branchUserInfo->id;
                 $this->hr->insert($notificationData, 'pct_hr_notifications');
                 $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+
+				//Send Mail to Manager
+				$this->common->mailNotification($branchUserInfo->id,'time_card',$last_id);
             }
             $i++;
         }

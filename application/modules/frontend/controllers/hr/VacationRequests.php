@@ -125,11 +125,14 @@ class VacationRequests extends MX_Controller
                 'is_salary_deduction' => $is_salary_deductions[$i] == 'on' ? 1 : 0,
                 'is_time_charged_vacation' => $is_time_charged_vacations[$i] == 'on' ? 1 : 0
             );
-            $ids[] = $this->hr->insert($vacationRequestsData, 'pct_hr_vacation_requests');
+            $ids[] = $last_id = $this->hr->insert($vacationRequestsData, 'pct_hr_vacation_requests');
             $from_date = date("F d, Y", strtotime($from_date));
             $to_date = date("F d, Y", strtotime($to_dates[$i]));
             $message = 'Vacation request from '.$from_date.' to '.$to_date.' has submitted by '.$userdata['name'];
 
+			//Send Mail to User
+			$this->common->mailNotification($userdata['id'],'vacation_request',$last_id);
+			
             $this->load->model('hr/users_model');
             $userInfo = $this->users_model->get($userdata['id']);
             $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
@@ -140,11 +143,18 @@ class VacationRequests extends MX_Controller
             );
             $this->hr->insert($notificationData, 'pct_hr_notifications');
             $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+
+			//Send Mail to Manager
+			$this->common->mailNotification($branchUserInfo->id,'vacation_request',$last_id);
     
             $superadminInfo = $this->users_model->get_by('user_type_id', 1);
             $notificationData['sent_user_id'] = $superadminInfo->id;
             $this->hr->insert($notificationData, 'pct_hr_notifications');
             $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
+
+			//Send Mail to Admin
+			$this->common->mailNotification($superadminInfo->id,'vacation_request',$last_id);
+
             $i++;
         }
         if(!empty($ids)) {

@@ -386,4 +386,55 @@ class HrCommon extends MX_Controller
         }
         echo "All data inserted successfully";exit;
     }
+
+	function sendMailNotification($user_id,$request_type,$request_id) {
+
+		$from_name = 'Pacific Coast Title Company';
+		$from_mail = env('FROM_EMAIL');
+
+		$this->load->model('admin/hr/users_model');
+		$user = $this->users_model->get($user_id);
+		$to = $user->email;
+		$cc = array();
+		$subject= $message = '';
+		if($request_type == 'incident_report') {
+			$this->load->model('admin/hr/report_incident_model');
+			$incident_data = $this->report_incident_model->get($request_id);
+			$incident_date = date("F d, Y",strtotime($incident_data->incident_date));
+			$subject = 'Incident Report created';
+			$message = 'Incident Report request of '.$incident_date.' has submitted';
+			if($incident_data->user_id != $user_id) {
+				$for_user = $this->users_model->get($incident_data->user_id);
+				$message .= ' for employee '.$for_user->first_name.' '.$for_user->last_name;
+			}
+		}
+		elseif($request_type == 'time_card') {
+			$this->load->model('admin/hr/timecards_model');
+			$time_card_data = $this->timecards_model->get($request_id);
+			$subject = 'TimeCard Request Submitted';
+			$exceptionDate = date("F d, Y", strtotime($time_card_data->exception_date));
+            $message = 'Timecard request of '.$exceptionDate.' has submitted';
+			if($time_card_data->user_id != $user_id) {
+				$for_user = $this->users_model->get($time_card_data->user_id);
+				$message .= ' for employee '.$for_user->first_name.' '.$for_user->last_name;
+			}
+		}
+		elseif($request_type == 'vacation_request') {
+			$this->load->model('admin/hr/vacation_request_model');
+			$vacation_data = $this->vacation_request_model->get($request_id);
+			$subject = 'Vacation Request Submitted';
+            $from_date = date("F d, Y", strtotime($vacation_data->from_date));
+            $to_date = date("F d, Y", strtotime($vacation_data->to_date));
+            $message = 'Vacation request from '.$from_date.' to '.$to_date.' has submitted';
+			if($vacation_data->user_id != $user_id) {
+				$for_user = $this->users_model->get($vacation_data->user_id);
+				$message .= ' for employee '.$for_user->first_name.' '.$for_user->last_name;
+			}
+		}
+		if(!empty($subject) && !empty($message)) {
+			
+			$this->load->helper('sendemail');
+			send_email($from_mail,$from_name, $to, $subject, $message, $cc);
+		}
+	}
 }

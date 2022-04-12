@@ -222,6 +222,9 @@ class IncidentReports extends MX_Controller {
         $this->hr->insert($notificationData, 'pct_hr_notifications');
         $this->common->sendNotification($message, 'submitted', $this->input->post('select_employee'), 0);
 
+		//Send Mail to User
+		$this->common->mailNotification($this->input->post('select_employee'),'incident_report',$id);
+
         $message = 'Incident Report request of '.$incident_date.' has submitted for employee '.$userInfo->first_name." ".$userInfo->last_name.' by '.$userdata['name'];
         $notificationData['message'] = $message;
         if ($userdata['user_type_id'] == 4) {
@@ -229,11 +232,18 @@ class IncidentReports extends MX_Controller {
             $notificationData['sent_user_id'] = $superadminInfo->id;
             $this->hr->insert($notificationData, 'pct_hr_notifications');
             $this->common->sendNotification($message, 'submitted', $superadminInfo->id, 1);
+
+			//Send Mail to Super Admin
+			$this->common->mailNotification($superadminInfo->id,'incident_report',$id);
+
         } else {
             $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
             $notificationData['sent_user_id'] = $branchUserInfo->id;
             $this->hr->insert($notificationData, 'pct_hr_notifications');
             $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+
+			//Send Mail to Manager
+			$this->common->mailNotification($branchUserInfo->id,'incident_report',$id);
         }
         
         if(!empty($id)) {
