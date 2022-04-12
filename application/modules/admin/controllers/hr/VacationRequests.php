@@ -49,7 +49,7 @@ class VacationRequests extends MX_Controller {
         $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=vr_1') );
         $this->admintemplate->show("hr", "vacation_requests", $data);
     }
 
@@ -76,6 +76,10 @@ class VacationRequests extends MX_Controller {
 		if (isset($vacationRequestsList['data']) && !empty($vacationRequestsList['data'])) {
 			$i = $params['start'] + 1;
 			foreach ($vacationRequestsList['data'] as $vacationRequestList)  {
+                $denied_reason = '-';
+				if(!empty($vacationRequestList['denied_reason'])) {
+					$denied_reason = $vacationRequestList['denied_reason'];
+				}
 				$nestedData = array();
 				$nestedData[] = $i;
 				$nestedData[] = $vacationRequestList['first_name']." ".$vacationRequestList['last_name'];
@@ -89,7 +93,9 @@ class VacationRequests extends MX_Controller {
                     if ($vacationRequestList['status'] == 'approved') {
                         $status = '<span class="badge badge-success">Approved</span>';
                     } else {
-                        $status = '<span class="badge badge-danger">Denied</span>';
+                        $status = '<span class="badge badge-danger">Denied</span><span role="button" class="icon" title="'.$denied_reason.'">
+						            <i class="fas fa-info"></i>
+					            </span>';
                     }
                 }
                 $nestedData[] = $status;
@@ -105,12 +111,12 @@ class VacationRequests extends MX_Controller {
                         if (!empty($vacationRequestList['approved_by_user_id'])) {
                             if ($vacationRequestList['status'] == 'approved') {
                                 $nestedData[] = '
-                                        <a href="#" onclick="return approve_deny_popup(0, '.$vacationRequestList["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                         <button type="button" class="btn btn-danger btn-icon-split btn-sm vacation-request-action-btn" data-req-id="'.$vacationRequestList["id"].'">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-ban"></i>
                                             </span>
                                             <span class="text">Deny</span>
-                                        </a>';
+                                        </button>';
                             } else {
                                 $nestedData[] = '<a href="" onclick="return approve_deny_popup(1, '.$vacationRequestList["id"].');" class="btn btn-success btn-icon-split btn-sm">
                                             <span class="icon text-white-50">
@@ -128,12 +134,12 @@ class VacationRequests extends MX_Controller {
                                                     </span>
                                                     <span class="text">Approve</span>
                                                 </a>
-                                                <a style="margin-left: 5px;" href="#" onclick="return approve_deny_popup(0, '.$vacationRequestList["id"].');" class="btn btn-danger btn-icon-split btn-sm">
+                                                <button type="button" class="ml-2 btn btn-danger btn-icon-split btn-sm vacation-request-action-btn" data-req-id="'.$vacationRequestList["id"].'">
                                                     <span class="icon text-white-50">
                                                         <i class="fas fa-ban"></i>
                                                     </span>
                                                     <span class="text">Deny</span>
-                                                </a>
+                                                </button>
                                             </div>'; 
                         }
                     } else {

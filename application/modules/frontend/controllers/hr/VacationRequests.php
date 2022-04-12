@@ -62,6 +62,10 @@ class VacationRequests extends MX_Controller
 		if (isset($vacationRequestsList['data']) && !empty($vacationRequestsList['data'])) {
 			$i = $params['start'] + 1;
 			foreach ($vacationRequestsList['data'] as $vacationRequestList)  {
+                $denied_reason = '-';
+				if(!empty($vacationRequestList['denied_reason'])) {
+					$denied_reason = $vacationRequestList['denied_reason'];
+				}
 				$nestedData = array();
 				$nestedData[] = $i;
 				$nestedData[] = $vacationRequestList['first_name']." ".$vacationRequestList['last_name'];
@@ -75,7 +79,9 @@ class VacationRequests extends MX_Controller
                     if ($vacationRequestList['status'] == 'approved') {
                         $status = '<span class="badge-new badge-new-success">Approved</span>';
                     } else {
-                        $status = '<span class="badge-new badge-new-danger">Denied</span>';
+                        $status = '<span class="badge-new badge-new-danger">Denied</span><span role="button" class="icon" title="'.$denied_reason.'">
+                                    <i class="fa fa-info"></i>
+                                </span>';
                     }
                 }
                 $nestedData[] = $status;

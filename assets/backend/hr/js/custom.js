@@ -1417,3 +1417,9 @@ $(document).on('click','.timecard-action-btn',function(){
 	$("#timecard_deny_popup").modal('show');
 
 })
+
+$(document).on('click','.vacation-request-action-btn',function(){
+	var req_id = $(this).data('req-id');
+	$('#deny_request_id').val(req_id);
+	$("#vacation_request_deny_popup").modal('show');
+});

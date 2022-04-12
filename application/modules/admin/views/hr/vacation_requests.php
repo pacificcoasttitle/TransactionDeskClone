@@ -93,4 +93,51 @@
 	</div>
 </div>
 
+<div class="modal fade" width="500px" id="vacation_request_deny_popup" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
+		<div class="modal-content">
+			<form method="POST" action="<?php echo base_url();?>hr/admin/approve-deny-request" enctype="multipart/form-data">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card shadow mb-4">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary" >Deny Vacation Request Confirmation</h6>
+							</div>
+							<input type="hidden"  name="request_type" value="vacation_request">
+							<input type="hidden" id="deny_request_id" name="request_id" value="">
+							<input type="hidden" name="status" value="0">
+							<div class="card-body" > Please enter reason for deny this request </div>
+							<div class="card-body"> 
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<textarea name="deny_reason"cols="30" rows="3" class="form-control" required></textarea>
+										</div>
+
+									</div>
+
+								</div>
+								<button type="submit" data-btntext-sending="Sending..."
+									class="btn btn-success btn-icon-split btn-sm">
+									<span class="icon text-white-50">
+										<i class="fas fa-check"></i>
+									</span>
+									<span class="text">Submit</span>
+								</button>
+								<button type="reset" data-dismiss="modal" aria-label="Close"
+									class="btn btn-danger btn-icon-split btn-sm">
+									<span class="icon text-white-50">
+										<i class="fas fa-ban"></i>
+									</span>
+									<span class="text">Cancel</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 
