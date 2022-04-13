@@ -40,7 +40,7 @@ class Order_model extends CI_Model
             
             $this->db->select('order_details.file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
             ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
@@ -71,7 +71,7 @@ class Order_model extends CI_Model
            
             $this->db->select('order_details.file_number, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
             ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
@@ -106,7 +106,7 @@ class Order_model extends CI_Model
             }
             $this->db->select('order_details.file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
             ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
@@ -133,7 +133,7 @@ class Order_model extends CI_Model
             
             $this->db->select('order_details.file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
             ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
