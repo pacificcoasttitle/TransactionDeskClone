@@ -360,7 +360,7 @@ class Home extends MX_Controller {
 				
 					$loan['LienPosition'] = 0;
 				
-					$loan['LoanType'] = 'Conventional';
+					$loan['LoanType'] = 'ConvIns';
 				
 				$place_order['Loans'][] = $loan;
 				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
