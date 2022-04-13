@@ -44,8 +44,7 @@ final class AddIndecInPctOrder extends AbstractMigration
             ->update();
 
         $table = $this->table('pct_order_documents');
-        $table->addIndex(['proposed_insured_document_name'])
-            ->addIndex(['order_id'])
+        $table->addIndex(['order_id'])
             ->addIndex(['is_grant_doc'])
             ->addIndex(['is_lv_doc'])
             ->addIndex(['is_tax_doc'])
