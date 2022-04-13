@@ -13,6 +13,11 @@
             color: red;
             padding: 0px;
         }
+		.form-body.without-side .form-content .form-items.form-items-login {
+			background: none;
+    		box-shadow: none;
+			margin-top: 70px;
+		}
     </style>
 </head>
 
@@ -34,9 +39,11 @@
             </div>
             <div class="form-holder">
                 <div class="form-content">
-                    <div class="form-items">
-                        <h3>PCT HUB</h3>
-                        <p>Access to the most helpful resources that we have to offer.</p>
+                    <div class="form-items form-items-login">
+						<div class="text-center">
+							<h3 class="text-center">HR DESK</h3>
+							<p class="text-center">Login to Access Your Account</p>
+						</div>
 						<?php if($this->session->flashdata('success')): ?>
 						<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success');?></div>
 						<?php
