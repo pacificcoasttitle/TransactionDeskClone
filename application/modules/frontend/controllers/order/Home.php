@@ -4,7 +4,7 @@
 
 class Home extends MX_Controller {
 
-	private $order_js_version = '01';
+	private $order_js_version = '02';
 	private $custom_js_version = '01';
 
     function __construct() {
@@ -358,13 +358,13 @@ class Home extends MX_Controller {
 					$loan['LoanNumber'] = $LoanNumber;
 				}
 				
-					$loan['LienPosition'] = 0;
-				
-					$loan['LoanType'] = 'ConvIns';
 
-					
+				if ($ProductTypeID == '4' || $ProductTypeID == '5' || $ProductTypeID == '36') {
+					$loan['LienPosition'] = 0;
+					$loan['LoanType'] = 'ConvIns';
+					$place_order['SettlementStatementVersion'] = 'HUD';
+				}
 				
-				$place_order['SettlementStatementVersion'] = $apn;
 				$place_order['Loans'][] = $loan;
 				$place_order['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$StreetNumber, 'StreetName'=> $StreetName, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'County'=> $County, 'Zip'=>$PropertyZip);
 
@@ -1143,7 +1143,7 @@ class Home extends MX_Controller {
 							}
 
 							$escrow_officer_email = '';
-							if (isset($escrowOfficer) && !empty($escrowOfficer) && ($ProductTypeID == '4' || $ProductTypeID == '5')) {
+							if (isset($escrowOfficer) && !empty($escrowOfficer) && ($ProductTypeID == '4' || $ProductTypeID == '5' || $ProductTypeID == '36')) {
 								$con = array(
 									'where' => array(
 										'partner_id' => $escrowOfficer,
