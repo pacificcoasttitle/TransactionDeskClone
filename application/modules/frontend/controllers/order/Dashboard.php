@@ -259,7 +259,7 @@ class Dashboard extends MX_Controller {
 
         $product_type = isset($orderDetails['product_type']) && !empty($orderDetails['product_type']) ? $orderDetails['product_type'] : '';
         $data['productType'] = $product_type;
-
+		$request['SettlementStatementVersion'] = 'HUD';
         if(isset($salesAmount) && !empty($salesAmount))
         {
             $request['SalesPrice'] = $salesAmount;
