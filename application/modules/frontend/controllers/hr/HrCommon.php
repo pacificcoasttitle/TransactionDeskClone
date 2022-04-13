@@ -397,41 +397,80 @@ class HrCommon extends MX_Controller
 		$to = $user->email;
 		$cc = array();
 		$subject= $message = '';
+		$data = array();
+		$request_data = array();
 		if($request_type == 'incident_report') {
+			$data['request_type'] = 'Incident Report';
 			$this->load->model('admin/hr/report_incident_model');
 			$incident_data = $this->report_incident_model->get($request_id);
 			$incident_date = date("F d, Y",strtotime($incident_data->incident_date));
 			$subject = 'Incident Report created';
 			$message = 'Incident Report request of '.$incident_date.' has submitted';
+
+			$request_data = [
+				'Incident_Date'=>date("m/d/Y",strtotime($incident_data->incident_date)),
+				'Reason'=>$incident_data->incident_reason,
+				'Action'=>$incident_data->actions,
+				'No_Of_Incidents'=>$incident_data->num_of_incidents,
+				'Details'=>$incident_data->incident_detail,
+			];
+
+
 			if($incident_data->user_id != $user_id) {
 				$for_user = $this->users_model->get($incident_data->user_id);
 				$message .= ' for employee '.$for_user->first_name.' '.$for_user->last_name;
+				$request_data['Employee_Name']=$for_user->first_name.' '.$for_user->last_name;
 			}
+
+			
 		}
 		elseif($request_type == 'time_card') {
+			$data['request_type'] = 'Time Card';
+
 			$this->load->model('admin/hr/timecards_model');
 			$time_card_data = $this->timecards_model->get($request_id);
 			$subject = 'TimeCard Request Submitted';
 			$exceptionDate = date("F d, Y", strtotime($time_card_data->exception_date));
             $message = 'Timecard request of '.$exceptionDate.' has submitted';
+			$request_data = [
+				'Exception_Date'=>date("m/d/Y", strtotime($time_card_data->exception_date)),
+				'Reg_Hours'=>$time_card_data->reg_hours,
+				'OT_Hours'=>$time_card_data->ot_hours,
+				'Double_OT'=>$time_card_data->double_ot,
+				'Comment'=>$time_card_data->comment,
+			];
 			if($time_card_data->user_id != $user_id) {
 				$for_user = $this->users_model->get($time_card_data->user_id);
 				$message .= ' for employee '.$for_user->first_name.' '.$for_user->last_name;
+				$request_data['Employee_Name']=$for_user->first_name.' '.$for_user->last_name;
 			}
 		}
 		elseif($request_type == 'vacation_request') {
+			$data['request_type'] = 'Vacation Request';
 			$this->load->model('admin/hr/vacation_request_model');
 			$vacation_data = $this->vacation_request_model->get($request_id);
 			$subject = 'Vacation Request Submitted';
             $from_date = date("F d, Y", strtotime($vacation_data->from_date));
             $to_date = date("F d, Y", strtotime($vacation_data->to_date));
             $message = 'Vacation request from '.$from_date.' to '.$to_date.' has submitted';
+			$request_data = [
+				'From_Date'=>date("m/d/Y", strtotime($vacation_data->from_date)),
+				'To_Date'=>date("m/d/Y", strtotime($vacation_data->to_date)),
+				'Comment'=>$vacation_data->comment,
+				
+			];
 			if($vacation_data->user_id != $user_id) {
 				$for_user = $this->users_model->get($vacation_data->user_id);
 				$message .= ' for employee '.$for_user->first_name.' '.$for_user->last_name;
+				$request_data['Employee_Name']=$for_user->first_name.' '.$for_user->last_name;
 			}
 		}
 		if(!empty($subject) && !empty($message)) {
+			$data['user_name'] = $user->first_name.' '.$user->last_name;
+			$data['description'] = $message;
+			$data['request_data'] = $request_data;
+
+			$message = $this->load->view('hr/emails/template',$data,TRUE);
 			
 			$this->load->helper('sendemail');
 			send_email($from_mail,$from_name, $to, $subject, $message, $cc);
