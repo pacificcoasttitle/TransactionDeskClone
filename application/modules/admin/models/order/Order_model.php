@@ -44,8 +44,7 @@ class Order_model extends CI_Model
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
-            ->where('is_imported=0');
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $total_records =  $this->db->count_all_results();
             if(isset($sales_rep) && !empty($sales_rep))
             {
@@ -76,8 +75,7 @@ class Order_model extends CI_Model
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
-            ->where('is_imported=0');
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $this->db->order_by("order_details.id", "desc");
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -112,8 +110,7 @@ class Order_model extends CI_Model
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
-            ->where('is_imported=0');
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
        
             $total_records =  $this->db->count_all_results();
            
@@ -140,8 +137,7 @@ class Order_model extends CI_Model
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
-            ->where('is_imported=0');
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 
             $this->db->order_by("order_details.id", "desc");
 
