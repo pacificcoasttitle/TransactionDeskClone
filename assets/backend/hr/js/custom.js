@@ -1423,3 +1423,10 @@ $(document).on('click','.vacation-request-action-btn',function(){
 	$('#deny_request_id').val(req_id);
 	$("#vacation_request_deny_popup").modal('show');
 });
+
+$(document).ajaxComplete(function() {
+    $('[data-toggle="popover"]').popover({
+        placement: 'top',
+        trigger: 'hover'
+    });
+});

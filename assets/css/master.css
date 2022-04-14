@@ -19,7 +19,7 @@ Primary use:
 
 /* PLUGIN CSS */
 
-@import '../libs/bootstrap/bootstrap.css';                /* bootstrap */
+@import '../libs/bootstrap/bootstrap.css?v=01';                /* bootstrap */
 @import '../plugins/bootstrap-select/css/bootstrap-select.css';   /* select customization */
 @import '../plugins/headers/header.css';                /* header */
 @import '../plugins/headers/yamm.css';                /* header */
