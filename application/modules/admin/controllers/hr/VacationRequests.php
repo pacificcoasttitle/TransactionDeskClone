@@ -93,7 +93,7 @@ class VacationRequests extends MX_Controller {
                     if ($vacationRequestList['status'] == 'approved') {
                         $status = '<span class="badge badge-success">Approved</span>';
                     } else {
-                        $status = '<span class="badge badge-danger">Denied</span><span role="button" class="icon" title="'.$denied_reason.'">
+                        $status = '<span class="badge badge-danger">Denied</span><span role="button" class="icon" data-toggle="popover" title="Denied Reason" data-content="'.$denied_reason.'">
 						            <i class="fas fa-info"></i>
 					            </span>';
                     }

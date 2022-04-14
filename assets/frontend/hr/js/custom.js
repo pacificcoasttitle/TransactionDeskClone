@@ -689,3 +689,10 @@ function showMemoInfo(memoId)
     });
     return false;
 }
+
+$(document).ajaxComplete(function() {
+    $('[data-toggle="popover"]').popover({
+        placement: 'top',
+        trigger: 'hover'
+    });
+});
