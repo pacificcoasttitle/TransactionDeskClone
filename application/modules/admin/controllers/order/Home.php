@@ -2205,12 +2205,17 @@ class Home extends MX_Controller {
                                         $underwriter = 'commonwealth';
                                     } else if (strpos(strtolower(trim($row['Underwriter'])), 'north american') !== false) {
                                         $underwriter = 'north_american';
-                                    } else {
+                                    } else if (strpos(strtolower(trim($row['Underwriter'])), 'westcor') !== false) {
                                         $underwriter = 'westcor';
+                                    } else {
+                                        $underwriter = null;
                                     }
                                     $condition = array('partner_id' => trim($row['Partner Company ID']));
-                                    $update = $this->home_model->update(array('underwriter' => $underwriter), $condition, 'pct_order_partner_company_info');
-                                    
+                                    if (strpos(strtolower(trim($row['Prod Type'])), 'sale') !== false) {
+                                        $update = $this->home_model->update(array('sales_underwriter' => $underwriter), $condition, 'pct_order_partner_company_info');
+                                    } else if (strpos(strtolower(trim($row['Prod Type'])), 'loan') !== false) {
+                                        $update = $this->home_model->update(array('loan_underwriter' => $underwriter), $condition, 'pct_order_partner_company_info');
+                                    }
                                     if ($update) {
                                         $insertCount++;
                                     }
