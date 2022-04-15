@@ -18,11 +18,22 @@
 	</li>
 
 	<li
-		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/time-cards' || $this->uri->uri_string() == 'hr/admin/add-time-card' || $this->uri->segment(3) == 'edit-time-card') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'hr/admin/time-cards'; ?>">
-			<i class="fas fa-fw fa-clock"></i>
+		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/time-sheets' || $this->uri->uri_string() == 'hr/admin/time-cards' || $this->uri->uri_string() == 'hr/admin/add-time-card' || $this->uri->segment(3) == 'edit-time-card') { echo 'active'; } ?>">
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#time_card_menu" aria-expanded="true"
+			aria-controls="time_card_menu">
+			<i class="fas fa-fw fa-users"></i>
 			<span>Time Cards</span>
 		</a>
+		
+		<div id="time_card_menu" class="collapse <?php if($this->uri->uri_string() == 'hr/admin/time-sheets' || $this->uri->uri_string() == 'hr/admin/time-cards' || $this->uri->uri_string() == 'hr/admin/add-time-card' || $this->uri->segment(3) == 'edit-time-card') { echo 'show'; } ?>" aria-labelledby="users_menu" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/time-cards' || $this->uri->uri_string() == 'hr/admin/add-time-card' || $this->uri->segment(3) == 'edit-time-card') { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/time-cards'; ?>">Exceptions</a>
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'hr/admin/time-sheets') { echo 'active'; } ?>"
+					href="<?php echo base_url().'hr/admin/time-sheets'; ?>">Time Sheets</a>
+				
+			</div>
+		</div>
 	</li>
 
 	<li

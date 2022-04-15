@@ -34,6 +34,117 @@ class TimeSheets extends MX_Controller {
         $this->common->is_hr_admin();
     }
 
+	public function index() {
+		$data['title'] = 'HR-Center Time Sheets';
+        $data['page_title'] = 'Time Sheets';
+        $data['errors'] = '';
+		$data['success'] = '';
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+        $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js>v=ts_0.1') );
+        $this->admintemplate->show("hr", "time_sheets", $data);
+	}
+	public function getTimesheets() {
+		$userdata = $this->session->userdata('hr_admin');
+
+		$this->load->model('frontend/hr/pct_hr_user_timesheet_status_model');
+		$time_sheet_data = array();
+		$usersIds = array();
+        if(!empty($userdata)) {
+            if ($userdata['user_type_id'] == 4) {
+                $usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
+                if(!empty($usersForBranchManager)) {
+                    $usersIds = array_column($usersForBranchManager, 'id');
+                } else {
+                    $usersIds[] = $userdata['id'];
+                }
+				$time_sheet_data = $this->pct_hr_user_timesheet_status_model->order_by('id','desc')->with('user')->with('updated_by_user')->get_many_by('user_id',$usersIds);
+            } 
+			else {
+				$time_sheet_data = $this->pct_hr_user_timesheet_status_model->order_by('id','desc')->with('user')->with('updated_by_user')->get_all();
+			}
+        }
+
+		
+		$data = array();
+		foreach($time_sheet_data as $key=>$time_sheet_record) {
+			$pay_period_start_time_stamp = strtotime($time_sheet_record->start_date);
+			$pay_period_ends_time_stamp = strtotime("+13 day",$pay_period_start_time_stamp);
+			$pay_period_monday_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
+			$updated_by = '';
+			if(!empty($time_sheet_record->updated_by_user)) {
+				$updated_by = $time_sheet_record->updated_by_user->first_name.' '.$time_sheet_record->updated_by_user->last_name;
+			}
+			$pay_range_link = base_url("hr/admin/view-time-sheet/".$pay_period_start_time_stamp."/".$time_sheet_record->user_id);
+			$action_btn = '<div style="display:inline-flex;">';
+			$action_btn .= '<a target="_blank" class="btn btn-secondary btn-icon-split btn-sm" href = "'.$pay_range_link.'"><span class="icon text-white-50">
+			<i class="fas fa-eye"></i>
+		</span>
+		<span class="text">View Timesheet</span></a>';
+
+			if($time_sheet_record->status == 'approved') {
+				$action_btn .= '<button type="button" class="ml-2 btn btn-danger btn-icon-split btn-sm timesheet-action-btn" data-req-id="'.$time_sheet_record->id.'">
+				<span class="icon text-white-50">
+					<i class="fas fa-ban"></i>
+				</span>
+				<span class="text">Deny</span>
+			</button>';
+			}
+			elseif($time_sheet_record->status == 'denied') {
+				$action_btn .= '<a href="" onclick="return approve_deny_popup(1, '.$time_sheet_record->id.');" class=" ml-2 btn btn-success btn-icon-split btn-sm">
+				<span class="icon text-white-50">
+					<i class="fas fa-check"></i>
+				</span>
+				<span class="text">Approve</span>
+			</a>';
+			}
+			else {
+
+				$action_btn .= '
+				<a href="" onclick="return approve_deny_popup(1, '.$time_sheet_record->id.');" class=" ml-2 btn btn-success btn-icon-split btn-sm">
+					<span class="icon text-white-50">
+						<i class="fas fa-check"></i>
+					</span>
+					<span class="text">Approve</span>
+				</a>
+				<button type="button" class="ml-2 btn btn-danger btn-icon-split btn-sm timesheet-action-btn" data-req-id="'.$time_sheet_record->id.'">
+					<span class="icon text-white-50">
+						<i class="fas fa-ban"></i>
+					</span>
+					<span class="text">Deny</span>
+				</button>';
+			}
+
+
+			$action_btn .= '</div>';
+			$data[] = [
+				($key + 1),
+				$time_sheet_record->user->first_name.' '.$time_sheet_record->user->last_name,
+				date('m/d/Y',$pay_period_start_time_stamp),
+				date('m/d/Y',$pay_period_ends_time_stamp),
+				date('m/d/Y',$pay_period_monday_time_stamp),
+				ucfirst($time_sheet_record->status),
+				$updated_by,
+				$action_btn
+
+			];
+		}
+		$json_data['recordsTotal'] = intval( count($data));
+		$json_data['recordsFiltered'] = intval( count($data));
+		$json_data['data'] = $data;
+		echo json_encode($json_data);
+
+
+	}
     public function viewOtHours()
     {
         $data['title'] = 'HR-Center Employee OT Hours';
@@ -180,6 +291,8 @@ class TimeSheets extends MX_Controller {
         $this->session->set_userdata($data);
         redirect(base_url('hr/admin/ot-hours'));
 	}
+
+	
 
 	function viewTimeSheet($pay_period_start,$emp_id) {
 		

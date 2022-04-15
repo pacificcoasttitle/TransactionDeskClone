@@ -33,6 +33,10 @@ class TimeCards extends MX_Controller
         }
 		$data['pay_period_start'] = PAY_PERIOD_START;
 		$data['current_date'] = $this->common->convertTimezone(date('Y-m-d H:i:s'),'Y-m-d','America/Los_Angeles');
+		$this->load->model('hr/pct_hr_user_timesheet_status_model');
+		$timesheet_status =  $this->pct_hr_user_timesheet_status_model->get_many_by(['user_id'=>$userdata['id']]);
+		$data['timesheet_status'] = $timesheet_status;
+
         $data['name'] = $userdata['name'];
 		$data['title'] = 'HR-Center Time Cards';
         $this->template->show("hr", "time_cards", $data);
@@ -166,5 +170,33 @@ class TimeCards extends MX_Controller
         $this->session->set_userdata($data);
         redirect(base_url().'hr/time-cards');
     }
+
+	public function submitTimesheet() {
+		$userdata = $this->session->userdata('hr_user');
+		$inserted_id= '';
+		if(!empty($userdata['id'])) {
+			$this->load->model('hr/pct_hr_user_timesheet_status_model');
+			$status_data = [
+				'user_id'=>$userdata['id'],
+				'start_date' => date('Y-m-d',$this->input->post('start_date')),
+			];
+
+			$inserted_id = $this->pct_hr_user_timesheet_status_model->insert($status_data);
+
+		}
+
+		if(!empty($inserted_id)) {
+            $success[] = "Time sheet submitted successfully.";
+        } else {
+            $errors[] = "Something went wrong. Please try again.";
+        }
+        
+        $data = array(
+            "errors" =>  $errors,
+            "success" => $success
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url().'hr/time-cards');
+	}
 
 }
