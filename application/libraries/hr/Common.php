@@ -870,6 +870,58 @@ class Common
             }
             $this->CI->session->set_userdata('success', $successMsg);
         }
+		else if ($request_type == 'time_sheet_status') {
+            $data = array(
+                'status' => $type,
+                'updated_by' => $userdata['id'],
+				'denied_reason'=>NULL
+            );
+			if($type == 'denied' && !empty($this->CI->input->post('deny_reason'))) {
+				$data['denied_reason'] = $this->CI->input->post('deny_reason');
+			}
+			$this->CI->hr->update($data, $condition, 'pct_hr_timeheet_status');
+            
+			// $timeSheetInfo = $this->getTimeCardInfo($request_id);
+            // $exceptionDate = date("F d, Y", strtotime($timeCardInfo['exception_date']));
+            // $message = 'Time sheet request of '.$exceptionDate.' '.$type.' by '.$userdata['name'].' for '.$timeCardInfo['first_name']." ".$timeCardInfo['last_name'];
+
+            // if ($userdata['user_type_id'] == 4) {
+            //     $notificationData = array(
+            //         'sent_user_id' => $timeCardInfo['user_id'],
+            //         'message' => $message,
+            //         'type' =>  $type
+            //     );
+            //     $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+            //     $this->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
+
+            //     $notificationData['sent_user_id'] = $superadminInfo->id;
+            //     $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+            //     $this->sendNotification($message, $type, $superadminInfo->id, 1);
+            // } else {
+            //     $userInfo = $this->CI->users_model->get($timeCardInfo['user_id']);
+            //     $notificationData = array(
+            //         'sent_user_id' => $timeCardInfo['user_id'],
+            //         'message' => $message,
+            //         'type' =>  $type
+            //     );
+            //     $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+            //     if ($userInfo->user_type_id == 4) {
+            //         $this->sendNotification($message, $type, $timeCardInfo['user_id'], 1);
+            //     } else {
+            //         $this->sendNotification($message, $type, $timeCardInfo['user_id'], 0);
+            //         $branchUserInfo = $this->CI->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+            //         $notificationData['sent_user_id'] = $branchUserInfo->id;
+            //         $this->CI->hr->insert($notificationData, 'pct_hr_notifications');
+            //         $this->sendNotification($message, $type, $branchUserInfo->id, 1);
+            //     } 
+            // }
+            if ($status == 1) {
+                $successMsg = 'Timesheet request approved successfully.';
+            } else {
+                $successMsg = 'Timesheet request denied successfully.';
+            }
+            $this->CI->session->set_userdata('success', $successMsg);
+        }
 	}
 
     public function getTrainings($params)

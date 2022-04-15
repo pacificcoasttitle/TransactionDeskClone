@@ -1418,6 +1418,15 @@ $(document).on('click','.timecard-action-btn',function(){
 
 })
 
+$(document).on('click','.timesheet-action-btn',function(){
+	var req_id = $(this).data('req-id');
+
+	$('#deny_request_id').val(req_id);
+	
+	$("#timesheet_deny_popup").modal('show');
+
+})
+
 $(document).on('click','.vacation-request-action-btn',function(){
 	var req_id = $(this).data('req-id');
 	$('#deny_request_id').val(req_id);

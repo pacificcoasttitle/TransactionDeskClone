@@ -29,7 +29,10 @@ class HrCommon extends MX_Controller
             redirect(base_url().'hr/admin/incident-reports');
         } else if ($request_type == 'vacation_request') {
             redirect(base_url().'hr/admin/vacation-requests');
+        } else if ($request_type == 'time_sheet_status') {
+            redirect(base_url().'hr/admin/time-sheets');
         }
+		
 	}
     
     public function markAsRead()
