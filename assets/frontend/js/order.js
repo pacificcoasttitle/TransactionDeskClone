@@ -32,7 +32,7 @@ $(document).ready(function() {
         $(this).parent().parent().children("span").html(fileName);
     });
 
-    $("#CompanyName").autocomplete({
+    $("#CompanyName, #OpenEmail").autocomplete({
         source: function(request, response) {
             $.ajax({
                 url: base_url+'getDetailsByName',
