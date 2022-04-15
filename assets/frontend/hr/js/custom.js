@@ -694,3 +694,10 @@ $(document).on('click','.submitTimesheetBtn',function(){
 	$("#ts_begin_time").val(begin_time);
 	$("#submitTimesheetModal").modal("show");
 })
+
+$(document).ajaxComplete(function() {
+    $('[data-toggle="popover"]').popover({
+        placement: 'top',
+        trigger: 'hover'
+    });
+});

@@ -2170,6 +2170,8 @@ class Home extends MX_Controller {
     {    
         $data = array();
         $successMsg = '';
+        $this->load->model('order/apiLogs');
+        $this->load->library('order/resware');
         $data['title'] = 'PCT Order: Import Underwriters';
 
         if ($this->input->post()) {
@@ -2183,7 +2185,7 @@ class Home extends MX_Controller {
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                     $this->load->library('CSVReader');
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
-                    $password = md5('Pacific1');
+                    $partnerIds = array();
 
                     if (!empty($csvData)) {
 
@@ -2205,15 +2207,67 @@ class Home extends MX_Controller {
                                         $underwriter = 'commonwealth';
                                     } else if (strpos(strtolower(trim($row['Underwriter'])), 'north american') !== false) {
                                         $underwriter = 'north_american';
-                                    } else {
+                                    } else if (strpos(strtolower(trim($row['Underwriter'])), 'westcor') !== false) {
                                         $underwriter = 'westcor';
+                                    } else {
+                                        $underwriter = null;
                                     }
                                     $condition = array('partner_id' => trim($row['Partner Company ID']));
-                                    $update = $this->home_model->update(array('underwriter' => $underwriter), $condition, 'pct_order_partner_company_info');
-                                    
+                                    if (strpos(strtolower(trim($row['Prod Type'])), 'sale') !== false) {
+                                        $update = $this->home_model->update(array('sales_underwriter' => $underwriter), $condition, 'pct_order_partner_company_info');
+                                    } else if (strpos(strtolower(trim($row['Prod Type'])), 'loan') !== false) {
+                                        $update = $this->home_model->update(array('loan_underwriter' => $underwriter), $condition, 'pct_order_partner_company_info');
+                                    }
                                     if ($update) {
                                         $insertCount++;
                                     }
+                                } else {
+                                    if (!in_array($row['Partner Company ID'], $partnerIds)) {
+                                        $userdata = $this->session->userdata('admin');
+                                        $partner_id = $row['Partner Company ID'];
+                                        $endPoint = 'admin/partners/'.$partner_id;
+                                        $userdata['email'] = $userdata['email_address'];
+                                        $userdata['admin_api'] = 1;
+                                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+                                        $result = $this->resware->make_request('GET', $endPoint, array(), $userdata);
+                                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API').$endPoint, array(), $result, 0, $logid);
+    
+                                        if (isset($result) && !empty($result)) {
+                                            $response = json_decode($result,true);
+                                            
+                                            if (isset($response['AdminPartner']) && !empty($response['AdminPartner'])) {
+                                                $companyData = array(
+                                                    'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
+                                                    'partner_name' => trim($response['AdminPartner']['PartnerName']),
+                                                    'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
+                                                    'city' => trim($response['AdminPartner']['MailingAddress']['City']),
+                                                    'state' => trim($response['AdminPartner']['MailingAddress']['State']),
+                                                    'zip' => trim($response['AdminPartner']['MailingAddress']['Zip'])
+                                                );
+                                               
+                                                if (strpos(strtolower(trim($row['Underwriter'])), 'commonwealth') !== false) {
+                                                    $underwriter = 'commonwealth';
+                                                } else if (strpos(strtolower(trim($row['Underwriter'])), 'north american') !== false) {
+                                                    $underwriter = 'north_american';
+                                                } else if (strpos(strtolower(trim($row['Underwriter'])), 'westcor') !== false) {
+                                                    $underwriter = 'westcor';
+                                                } else {
+                                                    $underwriter = null;
+                                                }
+    
+                                                if (strpos(strtolower(trim($row['Prod Type'])), 'sale') !== false) {
+                                                    $companyData['sales_underwriter'] = $underwriter;
+                                                    $companyData['loan_underwriter'] = null;
+                                                } else if (strpos(strtolower(trim($row['Prod Type'])), 'loan') !== false) {
+                                                    $companyData['loan_underwriter'] = $underwriter;
+                                                    $companyData['sales_underwriter'] = null;
+                                                }
+                                                $this->home_model->insert($companyData, 'pct_order_partner_company_info');  
+                                            } 
+                                        }
+                                        $partnerIds[] = $row['Partner Company ID']; 
+                                    }
+                                   
                                 }
                             }                              
                         }
