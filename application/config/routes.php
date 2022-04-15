@@ -329,6 +329,7 @@ $route['hr/dashboard'] = 'frontend/hr/dashboard/index';
 $route['hr/time-cards'] = 'frontend/hr/timeCards/index';
 $route['hr/get-time-cards'] = 'frontend/hr/timeCards/getTimeCards';
 $route['hr/save-time-cards'] = 'frontend/hr/timeCards/saveTimeCards';
+$route['hr/submit-timesheet'] = 'frontend/hr/timeCards/submitTimesheet';
 $route['hr/vacation-requests'] = 'frontend/hr/vacationRequests/index';
 $route['hr/get-vacation-requests'] = 'frontend/hr/vacationRequests/getVacationRequests';
 $route['hr/save-vacation-requests'] = 'frontend/hr/vacationRequests/saveVacationRequests';

@@ -5,6 +5,11 @@ th {
 .section-type-4a .btn.btn-default:hover {
 	color : initial;
 }
+.action_btn .btn {
+	display: inline;
+    width: 150px;
+    padding: 9px;
+}
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
     <div class="container">
@@ -188,7 +193,8 @@ th {
                                         <th>Pay Period Ends</th>
                                         <th>Payroll Monday</th>
                                         <!-- <th>Pay Day</th> -->
-                                        <th>View Time Sheet</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                         
                                     </tr>
                                 </thead>
@@ -198,17 +204,33 @@ th {
 									$pay_period_current_time_stamp = strtotime($current_date);
 									$int_i =1;
 									if($pay_period_begins_time_stamp && $pay_period_current_time_stamp) :
+										
 										while($pay_period_begins_time_stamp < $pay_period_current_time_stamp):
 											$pay_period_ends_time_stamp = strtotime("+13 day",$pay_period_begins_time_stamp);
 											$pay_period_monday_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
+											$status = '';
+											$submit_btn = '<button type="button" class="btn btn-default submitTimesheetBtn" data-begin-time="'.$pay_period_begins_time_stamp.'">Submit</a>';
+											$search_key_status = array_search(date('Y-m-d', $pay_period_begins_time_stamp), array_column($timesheet_status, 'start_date'));
+											
+											if($search_key_status !== false):
+												$timesheet_status_record = $timesheet_status[$search_key_status];
+												$status = ucfirst($timesheet_status_record->status);
+												$submit_btn = '';
+											endif;
 											?>
 											<tr>
 											<td><?php echo $int_i++; ?></td>
 											<td><?php echo date("m/d/Y",$pay_period_begins_time_stamp) ?></td>
 											<td><?php echo date("m/d/Y",$pay_period_ends_time_stamp) ?></td>
 											<td><?php echo date("m/d/Y",$pay_period_monday_time_stamp) ?></td>
+											
 											<!-- <td> - </td> -->
-											<td><a target="_blank" href="<?php echo base_url('hr/view-time-sheet/'.$pay_period_begins_time_stamp);?>" class="btn btn-default"  >View TimeSheet</a></td>
+											<td><?php echo $status;?></td>
+											<td class="action_btn">
+												<a target="_blank" href="<?php echo base_url('hr/view-time-sheet/'.$pay_period_begins_time_stamp);?>" class="btn btn-default"  >View TimeSheet</a>
+												&nbsp;&nbsp;
+												<?php echo $submit_btn; ?>
+											</td>
 											</tr>
 											<?php
 											$pay_period_begins_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
@@ -260,3 +282,33 @@ th {
     </div>
 </div>
 
+<div class="modal fade" width="500px" id="submitTimesheetModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="width:40%;">
+        <div class="modal-content">
+            <form method="POST" action="<?php echo base_url();?>hr/submit-timesheet" >
+                <div class="smart-forms smart-container wrap-2" style="margin:30px">
+                    <div class="modal-body search-result">
+                        <div >
+                            <div class="spacer-b20">
+                                <div class="tagline"><span >Confirmation</span></div>
+                            </div>
+                            <div class="frm-row">
+                                <div class="section colm colm12">
+                                    <label class="field prepend-icon" >
+                                       Are you sure you want to submit this?
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ts_begin_time" name="start_date" value="">
+                    <div class="" style="padding: 0px 25px 20px;">
+                        <button type="submit" data-btntext-sending="Sending..."
+                            class="button btn-primary">Yes </button>
+                        <button type="reset" data-dismiss="modal" aria-label="Close" class="button">No</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

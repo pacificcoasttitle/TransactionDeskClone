@@ -689,3 +689,8 @@ function showMemoInfo(memoId)
     });
     return false;
 }
+$(document).on('click','.submitTimesheetBtn',function(){
+	var begin_time = $(this).data('begin-time');
+	$("#ts_begin_time").val(begin_time);
+	$("#submitTimesheetModal").modal("show");
+})
