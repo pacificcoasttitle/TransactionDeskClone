@@ -44,7 +44,7 @@
                             <th>User Type</th>
 							<!-- <th>Employee Id</th> -->
                             <th>Hire Date</th>
-							<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2 || $userdata['user_type_id'] == 4) { ?>
+							<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2 /* || $userdata['user_type_id'] == 4 */ ) { ?>
                             	<th>Action</th>
 							<?php } ?>
 						</tr>

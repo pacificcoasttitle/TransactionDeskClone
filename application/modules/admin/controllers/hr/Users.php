@@ -109,20 +109,20 @@ class Users extends MX_Controller {
 
 				/* Time card Logic start */
 				$time_sheet_var = '';
-				if(count($pay_range_arr)) {
+				// if(count($pay_range_arr)) {
 
-					$time_sheet_var = '<div class="dropdown ml-2">
-						<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="timeSheetDrop'.$key.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Time Sheet
-						</button>
-						<div class="dropdown-menu" aria-labelledby="timeSheetDrop'.$key.'">';
-						//<a class="dropdown-item" href="#">Action</a>
-						foreach($pay_range_arr as $pay_range_record) {
-							$pay_range_link = base_url("hr/admin/view-time-sheet/".$pay_range_record['start_date']."/".$value['id']);
-							$time_sheet_var .= '<a class="dropdown-item" href="'.$pay_range_link.'" target="_blank">'.$pay_range_record['range'].'</a>';
-						}
-					$time_sheet_var .= '</div></div>';
-				}
+				// 	$time_sheet_var = '<div class="dropdown ml-2">
+				// 		<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="timeSheetDrop'.$key.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				// 		Time Sheet
+				// 		</button>
+				// 		<div class="dropdown-menu" aria-labelledby="timeSheetDrop'.$key.'">';
+				// 		//<a class="dropdown-item" href="#">Action</a>
+				// 		foreach($pay_range_arr as $pay_range_record) {
+				// 			$pay_range_link = base_url("hr/admin/view-time-sheet/".$pay_range_record['start_date']."/".$value['id']);
+				// 			$time_sheet_var .= '<a class="dropdown-item" href="'.$pay_range_link.'" target="_blank">'.$pay_range_record['range'].'</a>';
+				// 		}
+				// 	$time_sheet_var .= '</div></div>';
+				// }
 				/* Time card Logic end */
 
                 if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) {
@@ -154,9 +154,9 @@ class Users extends MX_Controller {
                                         </div>';
                     }
                 }
-				elseif($userdata['user_type_id'] == 4) {
-					$nestedData[] = '<div style="display:inline-flex;">'.$time_sheet_var.'</div>';
-				}
+				// elseif($userdata['user_type_id'] == 4) {
+				// 	$nestedData[] = '<div style="display:inline-flex;">'.$time_sheet_var.'</div>';
+				// }
 	            $data[] = $nestedData;    
                 $count++;          
 	    	}
