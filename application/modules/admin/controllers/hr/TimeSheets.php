@@ -84,6 +84,9 @@ class TimeSheets extends MX_Controller {
 			if(!empty($time_sheet_record->updated_by_user)) {
 				$updated_by = $time_sheet_record->updated_by_user->first_name.' '.$time_sheet_record->updated_by_user->last_name;
 			}
+			$denied_reason = $time_sheet_record->denied_reason;
+			$status = '<span class="badge badge-info">Submitted</span>';
+			
 			$pay_range_link = base_url("hr/admin/view-time-sheet/".$pay_period_start_time_stamp."/".$time_sheet_record->user_id);
 			$action_btn = '<div style="display:inline-flex;">';
 			$action_btn .= '<a target="_blank" class="btn btn-secondary btn-icon-split btn-sm" href = "'.$pay_range_link.'"><span class="icon text-white-50">
@@ -98,6 +101,7 @@ class TimeSheets extends MX_Controller {
 				</span>
 				<span class="text">Deny</span>
 			</button>';
+				$status = '<span class="badge badge-success">Approved</span>';
 			}
 			elseif($time_sheet_record->status == 'denied') {
 				$action_btn .= '<a href="" onclick="return approve_deny_popup(1, '.$time_sheet_record->id.');" class=" ml-2 btn btn-success btn-icon-split btn-sm">
@@ -106,6 +110,9 @@ class TimeSheets extends MX_Controller {
 				</span>
 				<span class="text">Approve</span>
 			</a>';
+				$status = '<span class="badge badge-danger">Denied</span><span role="button" class="icon" data-toggle="popover" title="Denied Reason" data-content="'.$denied_reason.'">
+				<i class="fas fa-info"></i>
+			</span>';
 			}
 			else {
 
@@ -132,7 +139,7 @@ class TimeSheets extends MX_Controller {
 				date('m/d/Y',$pay_period_start_time_stamp),
 				date('m/d/Y',$pay_period_ends_time_stamp),
 				date('m/d/Y',$pay_period_monday_time_stamp),
-				ucfirst($time_sheet_record->status),
+				$status,
 				$updated_by,
 				$action_btn
 
