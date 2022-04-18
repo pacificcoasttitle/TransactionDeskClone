@@ -52,8 +52,93 @@ class HrCommon extends MX_Controller
         echo json_encode($response);
     }
 
+	function randomizeTimeClockIn() {
+		$today_date = $this->common->convertTimezone(date('Y-m-d H:i:s'),'Y-m-d','America/Los_Angeles');
+
+		$this->load->model('hr/branches_model');
+		$this->load->model('hr/users_model');
+		$this->load->model('frontend/hr/pct_hr_employee_time_tracking_model');
+
+		$branch_names = [
+			'10 PCT Glendale Escr',
+			'12 PCT Glendale Titl'
+		];
+		// $branch_names = ['IT'];
+		$dept_records = $this->branches_model->get_many_by('name',$branch_names);
+		$dept_ids = array_column($dept_records,'id');
+		$user_records = $this->users_model->get_many_by('branch_id',$dept_ids);
+		$user_ids = array_column($user_records,'id');
+
+		foreach($user_ids as $user_id) {
+			
+			// Check if record already exist
+			$where_arr = [
+				'employee_id'=>$user_id,
+				'DATE(time_in)'=>$today_date,
+			];
+
+			$record_exist = $this->pct_hr_employee_time_tracking_model->get_by($where_arr);
+			if(!($record_exist)) {
+
+				$random_start = strtotime($today_date.' '.'08:30:00');
+				$random_end = strtotime($today_date.' '.'08:40:00');
+				$start_time = rand($random_start,$random_end);
+
+				$insert_tracking_tmp = [
+					'employee_id'=>$user_id,
+					'time_in'=>date("Y-m-d H:i:s",$start_time),
+					'is_break'=>0
+				];
+				
+				$this->pct_hr_employee_time_tracking_model->insert($insert_tracking_tmp);
+
+			}
+		}
+	}
+	function randomizeTimeClockOut() {
+
+		$today_date = $this->common->convertTimezone(date('Y-m-d H:i:s'),'Y-m-d','America/Los_Angeles');
+
+		$this->load->model('hr/branches_model');
+		$this->load->model('hr/users_model');
+		$this->load->model('frontend/hr/pct_hr_employee_time_tracking_model');
+
+		$branch_names = [
+			'10 PCT Glendale Escr',
+			'12 PCT Glendale Titl'
+		];
+		// $branch_names = ['IT'];
+		$dept_records = $this->branches_model->get_many_by('name',$branch_names);
+		$dept_ids = array_column($dept_records,'id');
+		$user_records = $this->users_model->get_many_by('branch_id',$dept_ids);
+		$user_ids = array_column($user_records,'id');
+
+		foreach($user_ids as $user_id) {
+			
+			// Check if record already exist
+			$where_arr = [
+				'employee_id'=>$user_id,
+				'DATE(time_in)'=>$today_date,
+			];
+
+			$record_exist = $this->pct_hr_employee_time_tracking_model->order_by('time_in','DESC')->get_by($where_arr);
+			if($record_exist && empty($record_exist->time_out)) {
+
+				
+				$end_time = strtotime($today_date.' '.'17:30:00');
+
+				$update_tracking_tmp = [
+					'time_out'=>date("Y-m-d H:i:s",$end_time)
+				];
+				
+				$this->pct_hr_employee_time_tracking_model->update($record_exist->id,$update_tracking_tmp);
+
+			}
+		}
+	}
+
+
 	function randomizeTimeSheet() {
-		die;
 		$this->load->model('hr/branches_model');
 		$this->load->model('hr/users_model');
 		$this->load->model('frontend/hr/pct_hr_employee_time_tracking_model');
@@ -68,30 +153,41 @@ class HrCommon extends MX_Controller
 		$user_ids = array_column($user_records,'id');
 		
 		$start_date = strtotime('2022-04-01');
-		$end_date = strtotime('2022-04-15');
+		$end_date = strtotime('2022-04-17');
 		$current_date = $start_date;
 		while($current_date <= $end_date) {
 			$record_date = date('Y-m-d',$current_date );
 			foreach($user_ids as $user_id) {
-				
-				//8:30am-:8:40am
-				$random_start = strtotime($record_date.' '.'08:30:00');
-				$random_end = strtotime($record_date.' '.'08:40:00');
-				$random_time = rand($random_start,$random_end);
-				$random_end = strtotime($record_date.' '.'17:30:00');
-	
-				
-	
-				
-	
-				$insert_tracking_tmp = [
+
+				// Check if record already exist
+				$where_arr = [
 					'employee_id'=>$user_id,
-					'time_in'=>date("Y-m-d H:i:s",$random_time),
-					'time_out'=>date("Y-m-d H:i:s",$random_end),
-					'is_break'=>0
+					'DATE(time_in)'=>$record_date,
 				];
+
+				$record_exist = $this->pct_hr_employee_time_tracking_model->get_by($where_arr);
+				if(!($record_exist)) {
+					
+					//8:30am-:8:40am
+					$random_start = strtotime($record_date.' '.'08:30:00');
+					$random_end = strtotime($record_date.' '.'08:40:00');
+					$random_time = rand($random_start,$random_end);
+					$random_end = strtotime($record_date.' '.'17:30:00');
+		
+					
+		
+					
+		
+					$insert_tracking_tmp = [
+						'employee_id'=>$user_id,
+						'time_in'=>date("Y-m-d H:i:s",$random_time),
+						'time_out'=>date("Y-m-d H:i:s",$random_end),
+						'is_break'=>0
+					];
+					
+					$this->pct_hr_employee_time_tracking_model->insert($insert_tracking_tmp);
+				}
 				
-				$this->pct_hr_employee_time_tracking_model->insert($insert_tracking_tmp);
 			}
 
 			$current_date = strtotime("+1 day",$current_date);
