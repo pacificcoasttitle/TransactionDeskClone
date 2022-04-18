@@ -66,6 +66,9 @@ class HrCommon extends MX_Controller
 		// $branch_names = ['IT'];
 		$dept_records = $this->branches_model->get_many_by('name',$branch_names);
 		$dept_ids = array_column($dept_records,'id');
+		if(!(count($dept_ids))) {
+			die('No department found');
+		}
 		$user_records = $this->users_model->get_many_by('branch_id',$dept_ids);
 		$user_ids = array_column($user_records,'id');
 
@@ -110,6 +113,9 @@ class HrCommon extends MX_Controller
 		// $branch_names = ['IT'];
 		$dept_records = $this->branches_model->get_many_by('name',$branch_names);
 		$dept_ids = array_column($dept_records,'id');
+		if(!(count($dept_ids))) {
+			die('No department found');
+		}
 		$user_records = $this->users_model->get_many_by('branch_id',$dept_ids);
 		$user_ids = array_column($user_records,'id');
 
@@ -149,6 +155,9 @@ class HrCommon extends MX_Controller
 		// $branch_names = ['IT'];
 		$dept_records = $this->branches_model->get_many_by('name',$branch_names);
 		$dept_ids = array_column($dept_records,'id');
+		if(!(count($dept_ids))) {
+			die('No department found');
+		}
 		$user_records = $this->users_model->get_many_by('branch_id',$dept_ids);
 		$user_ids = array_column($user_records,'id');
 		
