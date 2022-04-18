@@ -21,6 +21,7 @@ $(document).ready(function() {
     }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
         $(clone).slideToggle('slow', function () {
             $(clone).remove();
+            
         })
     });
 
