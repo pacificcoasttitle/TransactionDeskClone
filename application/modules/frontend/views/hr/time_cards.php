@@ -214,7 +214,16 @@ th {
 											
 											if($search_key_status !== false):
 												$timesheet_status_record = $timesheet_status[$search_key_status];
-												$status = ucfirst($timesheet_status_record->status);
+												// $status = ucfirst($timesheet_status_record->status);
+												$status = '<span class="badge-new badge-new-info">Submitted</span>';
+												if($timesheet_status_record->status == 'approved') {
+													$status = '<span class="badge-new badge-new-success">Approved</span>';
+												} elseif($timesheet_status_record->status == 'denied') {
+													$denied_reason = $timesheet_status_record->denied_reason;
+													$status = '<span class="badge-new badge-new-danger">Denied</span><span role="button" class="icon" data-toggle="popover" title="Denied Reason" data-content="'.$denied_reason.'">
+																<i class="fa fa-info"></i>
+															</span>';
+												}
 												$submit_btn = '';
 											endif;
 											?>

@@ -53,6 +53,7 @@ class HrCommon extends MX_Controller
     }
 
 	function randomizeTimeSheet() {
+		die;
 		$this->load->model('hr/branches_model');
 		$this->load->model('hr/users_model');
 		$this->load->model('frontend/hr/pct_hr_employee_time_tracking_model');
