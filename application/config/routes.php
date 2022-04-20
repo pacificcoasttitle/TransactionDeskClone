@@ -457,6 +457,18 @@ $route['hr/admin/view-time-sheet/(:any)/(:num)'] = 'admin/hr/timeSheets/viewTime
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 
+/* Start Route for Escrow backend*/
+$route['escrow/admin'] = 'admin/escrow/login/login';
+$route['escrow/admin/login/do_login'] = 'admin/escrow/login/do_login';
+$route['escrow/admin/dashboard(/:num)?(/:num)?'] = 'admin/escrow/dashboard/index';
+$route['escrow/admin/tasks'] = 'admin/escrow/tasks/index';
+$route['escrow/admin/get-tasks'] = 'admin/escrow/tasks/getTasks';
+$route['escrow/admin/add-task'] = 'admin/escrow/tasks/addTask';
+$route['escrow/admin/edit-task/(:num)'] = 'admin/escrow/tasks/editTask/$1';
+$route['escrow/admin/delete-task'] = 'admin/escrow/tasks/deleteTask';
+$route['escrow/admin/logout'] = 'admin/escrow/dashboard/logout';
+/* End Route for Escrow backend */
+
 $route['calculator'] = 'frontend/calc/welcome/index';  
 $route['calculator/signup'] = 'frontend/calc/welcome/signup';  
 $route['calculator/dashboard'] = 'frontend/calc/welcome/dashboard';  

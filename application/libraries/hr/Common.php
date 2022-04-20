@@ -1,9 +1,6 @@
 <?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-use ElephantIO\Client;
-use ElephantIO\Engine\SocketIO\Version1X;
-
 class Common 
 {
     public static $CI;
