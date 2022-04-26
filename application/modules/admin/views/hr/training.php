@@ -38,7 +38,7 @@
                             <th>Description</th>
                             <th>Materials</th>
 							<th>Department</th>
-							<th>POsition</th>
+							<th>Position</th>
 							<th>Status</th>
                             <th>Actions</th>
 						</tr>

@@ -73,6 +73,7 @@ class VacationRequests extends MX_Controller
                 $nestedData[] = date("m/d/Y", strtotime($vacationRequestList['to_date']));
                 $nestedData[] = $vacationRequestList['is_salary_deduction'] == 1 ? 'Yes' : 'No';
                 $nestedData[] = $vacationRequestList['is_time_charged_vacation'] == 1 ? 'Yes' : 'No';
+				$update_date = '-';
 
                 $status = '<span class="badge-new badge-new-info">Pending</span>';
                 if (!empty($vacationRequestList['approved_by_user_id'])) {
@@ -83,8 +84,15 @@ class VacationRequests extends MX_Controller
                                     <i class="fa fa-info"></i>
                                 </span>';
                     }
+					if(strtotime($vacationRequestList['approved_date'])) {
+						$update_date = $this->common->convertTimezone($vacationRequestList['approved_date'],'m/d/Y');
+					}
+					elseif(strtotime($vacationRequestList['updated_at'])) {
+						$update_date = $this->common->convertTimezone($vacationRequestList['updated_at'],'m/d/Y');
+					}
                 }
                 $nestedData[] = $status;
+                $nestedData[] = $update_date;
 
                 if (!empty($vacationRequestList['approved_by_user_id'])) {
                     $nestedData[] = $vacationRequestList['branch_manager_first_name']." ".$vacationRequestList['branch_manager_last_name'];
@@ -92,7 +100,7 @@ class VacationRequests extends MX_Controller
                     $nestedData[] = ''  ;
                 }
 
-                $nestedData[] = !empty($vacationRequestList['approved_date']) ? date("m/d/Y", strtotime($vacationRequestList['approved_date'])) : '';
+                // $nestedData[] = !empty($vacationRequestList['approved_date']) ? date("m/d/Y", strtotime($vacationRequestList['approved_date'])) : '';
 				$data[] = $nestedData; 
 				$i++; 
 			}

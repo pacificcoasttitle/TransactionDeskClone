@@ -62,12 +62,17 @@ class Trainings extends MX_Controller
 				$nestedData[] = $i;
                 $nestedData[] = $training['name'];
                 $nestedData[] = $training['description'];
+				$update_date = '-';
                 if ($training['is_complete'] == 1) {
                     $status = '<span class="badge-new badge-new-success">Completed</span>';
+					if(strtotime($training['updated_at'])) {
+						$update_date = $this->common->convertTimezone($training['updated_at']);
+					}
                 } else {
                     $status = '<span class="badge-new badge-new-info">Pending</span>';
                 }
                 $nestedData[] = $status;
+                $nestedData[] = $update_date;
                 $nestedData[] = "<div class='smart-forms'>
                                     <form action='".base_url()."hr/view-trainings-docs/".$training['id']."' method='POST'>
                                         <button style='height:29px;color: white;' class='button' type='submit'>View Documents</button>

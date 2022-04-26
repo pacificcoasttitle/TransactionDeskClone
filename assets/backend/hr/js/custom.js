@@ -15,6 +15,13 @@ var training_branch_manager = '';
 
 $(document).ready(function () {
     $('#hire_date').datepicker().datepicker("setDate", new Date());
+	var past_10_years = -(365*10);
+    $('#birth_date').datepicker({
+		defaultDate: past_10_years,
+		changeMonth: true,
+      	changeYear: true,
+		maxDate: "0"
+	});
     if ($("#hire_date_val").length != 0) {
         $('#hire_date').val($("#hire_date_val").val());
     }

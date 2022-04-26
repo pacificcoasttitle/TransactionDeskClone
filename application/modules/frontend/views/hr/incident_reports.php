@@ -30,15 +30,9 @@ th {
                                         <th>Num Of Incident</th>
                                         <th>Incident Actions</th>
                                         <th>Status</th>
-                                        <th>Approved By</th>
-                                        <?php  $userdata = $this->session->userdata('hr_user');
-                                        if ($userdata['user_type_id'] == 1) { ?>
-                                            <th>Approved Date</th> 
-                                        <?php }
-                                        if ($userdata['user_type_id'] == 2) { ?>
-                                            <th>Actions</th>
-                                        <?php } ?>
-                                    </tr>
+                                        <th>Acknowledge By</th>
+                                        <th>Acknowledge Date</th>
+                                        
                                 </thead>
                                 <tbody>
                                 </tbody>

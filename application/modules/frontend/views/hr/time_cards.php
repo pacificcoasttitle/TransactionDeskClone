@@ -134,6 +134,94 @@ th {
             <div class="row">
                 <div class="col-xs-12">
                     <div class="typography-section__inner">
+                        <h2 class="ui-title-block ui-title-block_light">Payroll Schedule</h2>
+                        <div class="ui-decor-1a bg-accent"></div>
+                        <h3 class="ui-title-block_light">Below is a list of Bi-weekly Payroll Schedule.</h3>
+                    </div>
+                    <div class="">
+                        <div class="table-container">
+                            <table class="table table-type-3 typography-last-elem" id="payroll_schedule_listing" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Pay Period Begins</th>
+                                        <th>Pay Period Ends</th>
+                                        <!-- <th>Payroll Monday</th> -->
+                                        <!-- <th>Pay Day</th> -->
+                                        <th>Status</th>
+                                        <th>Submitted On</th>
+                                        <th>Action</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+									<?php
+									$pay_period_begins_time_stamp = strtotime($pay_period_start);
+									$pay_period_current_time_stamp = strtotime($current_date);
+									$int_i =1;
+									if($pay_period_begins_time_stamp && $pay_period_current_time_stamp) :
+										
+										while($pay_period_begins_time_stamp < $pay_period_current_time_stamp):
+											$pay_period_ends_time_stamp = strtotime("+13 day",$pay_period_begins_time_stamp);
+											$pay_period_monday_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
+											$status = $submitted_on = '';
+											$submit_btn = '<button type="button" class="btn btn-default submitTimesheetBtn" data-begin-time="'.$pay_period_begins_time_stamp.'">Submit</a>';
+											$search_key_status = array_search(date('Y-m-d', $pay_period_begins_time_stamp), array_column($timesheet_status, 'start_date'));
+											
+											if($search_key_status !== false):
+												$timesheet_status_record = $timesheet_status[$search_key_status];
+												// $status = ucfirst($timesheet_status_record->status);
+												$submitted_on = $this->common->convertTimezone($timesheet_status_record->created_at,'m/d/Y');
+												$status = '<span class="badge-new badge-new-info">Submitted</span>';
+												if($timesheet_status_record->status == 'approved') {
+													$status = '<span class="badge-new badge-new-success">Approved</span>';
+												} elseif($timesheet_status_record->status == 'denied') {
+													$denied_reason = $timesheet_status_record->denied_reason;
+													$status = '<span class="badge-new badge-new-danger">Denied</span><span role="button" class="icon" data-toggle="popover" title="Denied Reason" data-content="'.$denied_reason.'">
+																<i class="fa fa-info"></i>
+															</span>';
+												}
+												$submit_btn = '';
+											endif;
+											?>
+											<tr>
+											<td><?php echo $int_i++; ?></td>
+											<td><?php echo date("m/d/Y",$pay_period_begins_time_stamp) ?></td>
+											<td><?php echo date("m/d/Y",$pay_period_ends_time_stamp) ?></td>
+											<!-- <td><?php echo date("m/d/Y",$pay_period_monday_time_stamp) ?></td> -->
+											
+											<!-- <td> - </td> -->
+											<td><?php echo $status;?></td>
+											<td><?php echo $submitted_on; ?></td>
+											<td class="action_btn">
+												<a target="_blank" href="<?php echo base_url('hr/view-time-sheet/'.$pay_period_begins_time_stamp);?>" class="btn btn-default"  >View TimeSheet</a>
+												&nbsp;&nbsp;
+												<?php echo $submit_btn; ?>
+											</td>
+											</tr>
+											<?php
+											$pay_period_begins_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
+										endwhile;
+									endif;
+									?>
+                                    
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-type-4a section-defaulta" >
+    <div class="container">
+        <div class="row">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="typography-section__inner">
                         <h2 class="ui-title-block ui-title-block_light">Timecard Submission History,</h2>
                         <div class="ui-decor-1a bg-accent"></div>
                         <h3 class="ui-title-block_light">Below is a detail of all your requests.</h3>
@@ -164,6 +252,7 @@ th {
                                     
                                 </tbody>
                             </table>
+							<div class="typography-sectionab"></div>
                         </div>
                     </div>
                 </div>
@@ -173,90 +262,7 @@ th {
 </section>
 
 
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-    <div class="container">
-        <div class="row">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="typography-section__inner">
-                        <h2 class="ui-title-block ui-title-block_light">Payroll Schedule</h2>
-                        <div class="ui-decor-1a bg-accent"></div>
-                        <h3 class="ui-title-block_light">Below is a list of Bi-weekly Payroll Schedule.</h3>
-                    </div>
-                    <div class="typography-sectiona">
-                        <div class="table-container">
-                            <table class="table table-type-3 typography-last-elem" id="payroll_schedule_listing" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Pay Period Begins</th>
-                                        <th>Pay Period Ends</th>
-                                        <th>Payroll Monday</th>
-                                        <!-- <th>Pay Day</th> -->
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-									<?php
-									$pay_period_begins_time_stamp = strtotime($pay_period_start);
-									$pay_period_current_time_stamp = strtotime($current_date);
-									$int_i =1;
-									if($pay_period_begins_time_stamp && $pay_period_current_time_stamp) :
-										
-										while($pay_period_begins_time_stamp < $pay_period_current_time_stamp):
-											$pay_period_ends_time_stamp = strtotime("+13 day",$pay_period_begins_time_stamp);
-											$pay_period_monday_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
-											$status = '';
-											$submit_btn = '<button type="button" class="btn btn-default submitTimesheetBtn" data-begin-time="'.$pay_period_begins_time_stamp.'">Submit</a>';
-											$search_key_status = array_search(date('Y-m-d', $pay_period_begins_time_stamp), array_column($timesheet_status, 'start_date'));
-											
-											if($search_key_status !== false):
-												$timesheet_status_record = $timesheet_status[$search_key_status];
-												// $status = ucfirst($timesheet_status_record->status);
-												$status = '<span class="badge-new badge-new-info">Submitted</span>';
-												if($timesheet_status_record->status == 'approved') {
-													$status = '<span class="badge-new badge-new-success">Approved</span>';
-												} elseif($timesheet_status_record->status == 'denied') {
-													$denied_reason = $timesheet_status_record->denied_reason;
-													$status = '<span class="badge-new badge-new-danger">Denied</span><span role="button" class="icon" data-toggle="popover" title="Denied Reason" data-content="'.$denied_reason.'">
-																<i class="fa fa-info"></i>
-															</span>';
-												}
-												$submit_btn = '';
-											endif;
-											?>
-											<tr>
-											<td><?php echo $int_i++; ?></td>
-											<td><?php echo date("m/d/Y",$pay_period_begins_time_stamp) ?></td>
-											<td><?php echo date("m/d/Y",$pay_period_ends_time_stamp) ?></td>
-											<td><?php echo date("m/d/Y",$pay_period_monday_time_stamp) ?></td>
-											
-											<!-- <td> - </td> -->
-											<td><?php echo $status;?></td>
-											<td class="action_btn">
-												<a target="_blank" href="<?php echo base_url('hr/view-time-sheet/'.$pay_period_begins_time_stamp);?>" class="btn btn-default"  >View TimeSheet</a>
-												&nbsp;&nbsp;
-												<?php echo $submit_btn; ?>
-											</td>
-											</tr>
-											<?php
-											$pay_period_begins_time_stamp = strtotime("+1 day",$pay_period_ends_time_stamp);
-										endwhile;
-									endif;
-									?>
-                                    
-                                </tbody>
-                            </table>
-                            <div class="typography-sectionab"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <div class="modal fade" width="500px" id="approve_deny_popup" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document" style="width:40%;">

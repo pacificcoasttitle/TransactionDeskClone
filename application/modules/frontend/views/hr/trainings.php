@@ -41,6 +41,7 @@ th {
                                         <th>Name</th>
                                         <th>Description</th>
                                         <th>Status</th>
+                                        <th>Completed At</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

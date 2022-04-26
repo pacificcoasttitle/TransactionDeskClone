@@ -24,7 +24,7 @@ class Template
         $this->addJS( base_url('assets/vendor/datatables/dataTables.bootstrap4.js') );
         $this->addJS( base_url('assets/vendor/datatables/dataTables.buttons.min.js') );
         
-        $this->addJS( base_url('assets/frontend/hr/js/custom.js?v=0.5') );
+        $this->addJS( base_url('assets/frontend/hr/js/custom.js?v=0.6') );
         $this->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
         $this->addJS( base_url('assets/frontend/js/parsley.min.js') );
         $this->addCSS( base_url('assets/css/master.css') );

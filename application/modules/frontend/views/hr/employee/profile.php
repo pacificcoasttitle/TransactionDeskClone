@@ -37,12 +37,11 @@
 									<div class="col-sm-6">
 										<h2 class="ui-title-block-3 ui-title-block-4_sm"><?php echo $userInfo['first_name']." ".$userInfo['last_name'];?></h2>
 										<div class="ui-decor-4 ui-decor-4_sm"></div>
-										<h3 class="b-sm-about__title2"><?php echo ($userInfo['user_type_id'] == 1) ? 'Employee' : 'Branch Manager';?></h3>
+										<h3 class="b-sm-about__title2"><?php echo $userInfo['position']; /* ($userInfo['user_type_id'] == 1) ? 'Employee' : 'Branch Manager'; */ ?></h3>
 									</div>
 
 								</div>
-
-								<div class="col-xs-12">
+								<!-- <div class="col-xs-12">
 									<form data-parsley-validate="" class="ui-form ui-form-2 ui-form-space" action="<?php echo base_url();?>hr/update-password" method="post" id="update-pwd-form">
 										<div class="row">
 											<div class="col-md-6">
@@ -68,8 +67,8 @@
 											</div>
 										</div>
 									</form>
-								</div>
-								<div class="col-xs-12">
+								</div> -->
+								<!-- <div class="col-xs-12">
 									<form data-parsley-validate="" class="ui-form ui-form-2 ui-form-space" action="<?php echo base_url();?>hr/upload-profile-pic" method="post" id="update-profile-img-form" enctype="multipart/form-data">
 										<div class="row">
 											<div class="col-md-6">
@@ -88,7 +87,7 @@
 											</div>
 										</div>
 									</form>
-								</div>
+								</div> -->
 							</div>
 
 							<div class="col-md-6">
@@ -102,7 +101,7 @@
 								?>
 								<form method="post" class="ui-form ui-form-2 ui-form-space" action="<?php echo base_url('hr/update-profile') ?>">
 								<div class="b-contact-desc">
-									<div class="b-contact-desc__item">
+									<!-- <div class="b-contact-desc__item">
 										<div class="b-contact-desc__name"><i class="icon fa fa-home"></i>Home address</div>
 										<div class="b-contact-desc__info profile-show-hide">
                                             <?php echo (count($user_adderss_arr)) ? implode(",",$user_adderss_arr) : "-" ;?>
@@ -114,7 +113,7 @@
 												<input type="text" class="form-control" value="<?php echo $userInfo['zip']?>" placeholder="zip" name="zip" />
 											</div>
 
-									</div>
+									</div> -->
 									<div class="b-contact-desc__item">
 										<div class="b-contact-desc__name"><i class="icon fa fa-phone"></i> Mobile phone</div>
 										<div class="b-contact-desc__info profile-show-hide">
@@ -127,7 +126,7 @@
 										
 									</div>
 
-									<div class="b-contact-desc__item">
+									<!-- <div class="b-contact-desc__item">
 										<div class="b-contact-desc__name"><i class="icon fa fa-phone"></i> Home phone</div>
 										<div class="b-contact-desc__info profile-show-hide">
                                             <?php echo (!empty($userInfo['home_phone'])) ? $userInfo['home_phone'] : '-';?>
@@ -137,7 +136,7 @@
 												<input type="tel" class="form-control" value="<?php echo $userInfo['home_phone']?>" placeholder="Home phone Number" name="home_phone" />
 										</div>
 										
-									</div>
+									</div> -->
 									
 									<div class="b-contact-desc__item">
 										<div class="b-contact-desc__name"><i class="icon fa fa-birthday-cake"></i> Birthday
@@ -165,7 +164,7 @@
 										<div class="b-contact-desc__name"><i class="icon fa fa-globe"></i> Position</div>
 										<div class="b-contact-desc__info "><?php echo $userInfo['position'];?></div>
 									</div>
-									<div class="col-md-12">
+									<!-- <div class="col-md-12">
                                         <button type="button" class="btn btn-grad-1 btn-round profile-show-hide profile-show-hide-btn">Edit Profile</button>
 										<div class="row">
 												<div class="col-md-6">
@@ -175,7 +174,7 @@
 													<button type="button" class="btn btn-grad-1 btn-round profile-show-hide profile-show-hide-btn hide">Cancel</button>
 												</div>
 										</div>
-                                    </div>
+                                    </div> -->
 								</div>
 								</form>
 							</div>

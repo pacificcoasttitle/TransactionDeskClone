@@ -67,6 +67,7 @@ class IncidentReports extends MX_Controller
                 $nestedData[] = $incidentReport['incident_reason'];
                 $nestedData[] = $incidentReport['num_of_incidents'];
                 $nestedData[] = $incidentReport['actions'];
+				$update_date = '-';
                 
                 $status = '<span class="badge-new badge-new-info">Pending</span>';
                 if (!empty($incidentReport['approved_by_user_id']) ) {
@@ -75,6 +76,12 @@ class IncidentReports extends MX_Controller
                     } else {
                         $status = '<span class="badge-new badge-new-danger">Denied</span>';
                     }
+					if(strtotime($incidentReport['approved_date'])) {
+						$update_date = $this->common->convertTimezone($incidentReport['approved_date'],'m/d/Y');
+					}
+					elseif(strtotime($incidentReport['updated_at'])) {
+						$update_date = $this->common->convertTimezone($incidentReport['updated_at'],'m/d/Y');
+					}
                 }
                 $nestedData[] = $status;
                 
@@ -83,8 +90,9 @@ class IncidentReports extends MX_Controller
                 } else {
                     $nestedData[] = ''  ;
                 }
+				$nestedData[] = $update_date;
 
-                $nestedData[] = !empty($incidentReport['approved_date']) ? date("m/d/Y", strtotime($incidentReport['approved_date'])) : '';
+                // $nestedData[] = !empty($incidentReport['approved_date']) ? date("m/d/Y", strtotime($incidentReport['approved_date'])) : '';
 				$data[] = $nestedData; 
 				$i++; 
 			}

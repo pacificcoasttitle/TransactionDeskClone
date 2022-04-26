@@ -190,6 +190,8 @@ class Users extends MX_Controller {
             $this->load->library('hr/common');
             $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
             $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+            $this->form_validation->set_rules('cell_phone', 'Mobile Number', 'required', array('required'=> 'Please Enter Mobile Number'));
+			$this->form_validation->set_rules('birth_date', 'Birth Date', 'required', array('required'=> 'Please Enter Birth Date'));
             $this->form_validation->set_rules('employee_id', 'Employee Id', 'required', array('required'=> 'Please Enter Employee Id'));
             $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[pct_hr_users.email]', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique'=>'Email already Exist'));
             $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
@@ -216,6 +218,8 @@ class Users extends MX_Controller {
                     $usersData = array(
                         'first_name' =>  $this->input->post('first_name'),
                         'last_name' =>  $this->input->post('last_name'),
+                        'cell_phone' =>  $this->input->post('cell_phone'),
+                        'birth_date' => date("Y-m-d", strtotime($this->input->post('birth_date'))),
                         'employee_id' =>  $this->input->post('employee_id'),
                         'email' => $this->input->post('email'),
                         'pct_order_email'  => !empty($this->input->post('pct_order_email')) ? $this->input->post('pct_order_email') : $this->input->post('email'),
@@ -320,6 +324,8 @@ class Users extends MX_Controller {
                 $this->load->library('hr/common');
                 $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
                 $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
+				$this->form_validation->set_rules('cell_phone', 'Mobile Number', 'required', array('required'=> 'Please Enter Mobile Number'));
+				$this->form_validation->set_rules('birth_date', 'Birth Date', 'required', array('required'=> 'Please Enter Birth Date'));
                 $this->form_validation->set_rules('employee_id', 'Employee Id', 'required', array('required'=> 'Please Enter Employee Id'));
                 $this->form_validation->set_rules('position', 'Password', 'required', array('required'=> 'Please Select Position'));
                 $this->form_validation->set_rules('hire_date', 'Hire Date', 'required', array('required'=> 'Please Enter Hire Date'));
@@ -345,6 +351,8 @@ class Users extends MX_Controller {
                             'first_name' =>  $this->input->post('first_name'),
                             'last_name' =>  $this->input->post('last_name'), 
                             'pct_order_email'  => !empty($this->input->post('pct_order_email')) ? $this->input->post('pct_order_email') : $this->input->post('email'),
+							'cell_phone' =>  $this->input->post('cell_phone'),
+                        	'birth_date' => date("Y-m-d", strtotime($this->input->post('birth_date'))),
                             'employee_id' =>  $this->input->post('employee_id'),
                             'position_id' => $this->input->post('position'),
                             'user_type_id' => $this->input->post('user_type'),
