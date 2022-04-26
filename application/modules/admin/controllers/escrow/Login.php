@@ -58,7 +58,7 @@ class Login extends MX_Controller {
                             "is_escrow_assistant" => $admin['position_id'] == 15 ? 1 : 0
                         );
                         $this->session->set_userdata('escrow_admin', $session_data);
-                        if ($admin['position_id'] == 9 || $admin['position_id'] == 22 || $admin['position_id'] == 23 || $admin['position_id']) {
+                        if ($admin['position_id'] == 9 || $admin['position_id'] == 22 || $admin['position_id'] == 23 || $admin['position_id'] == 15) {
                             redirect(base_url().'escrow/admin/orders');
                         } else {
                             redirect(base_url().'escrow/admin/dashboard');
