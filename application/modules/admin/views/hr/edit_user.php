@@ -85,7 +85,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Birth Date<span class="required"> *</span></label>
-                                        <input type="text" class="form-control" value="<?php echo date('m/d/Y',strtotime($userInfo['birth_date']));?>" placeholder="Birth Date" name="birth_date" id="birth_date" value="" required="required">
+                                        <input type="text" class="form-control" value="<?php if(strtotime($userInfo['birth_date'])) {echo date('m/d/Y',strtotime($userInfo['birth_date']));}?>" placeholder="Birth Date" name="birth_date" id="birth_date" value="" required="required">
                                     </div>
                                     <?php if(!empty($birth_date_error_msg)){ ?>  
                                         <div class="typography-line text-danger">
