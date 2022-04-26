@@ -51,7 +51,7 @@ class Dashboard extends MX_Controller {
 		$data['month'] = $month = !empty($this->input->post('month')) ? $this->input->post('month') : date('m');	
 		$usersIds = array();
 
-		if ($userdata['is_escrow_admin'] == 1) {
+		if ($userdata['is_escrow_manager'] == 1) {
 			$workedDays = $this->order->countWorkedDaysOfMonth();
 			$workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
 			$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $usersIds, 0, 1);
