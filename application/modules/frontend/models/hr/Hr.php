@@ -77,7 +77,7 @@ class Hr extends CI_Model
                         ->group_end();
             }
 
-            $this->db->select('pct_hr_memos.*, pct_hr_users.first_name, pct_hr_users.last_name');
+            $this->db->select('pct_hr_memos.*, pct_hr_users.first_name, pct_hr_users.last_name, pct_hr_assigned_memo_users.is_read, pct_hr_assigned_memo_users.updated_at as acknowledge_at');
             $this->db->from('pct_hr_memos')
                     ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_memos.created_by')
                     ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id');
@@ -95,7 +95,7 @@ class Hr extends CI_Model
 	        }
     	} else {    		
             $filter_total_records =  $total_records;
-            $this->db->select('pct_hr_memos.*, pct_hr_users.first_name, pct_hr_users.last_name');
+            $this->db->select('pct_hr_memos.*, pct_hr_users.first_name, pct_hr_users.last_name, pct_hr_assigned_memo_users.is_read, pct_hr_assigned_memo_users.updated_at as acknowledge_at');
             $this->db->from('pct_hr_memos')
                 ->join('pct_hr_users', 'pct_hr_users.id = pct_hr_memos.created_by')
                 ->join('pct_hr_assigned_memo_users', 'pct_hr_assigned_memo_users.memo_id = pct_hr_memos.id');

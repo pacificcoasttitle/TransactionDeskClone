@@ -10,7 +10,7 @@
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-sm-6">
-                <h1 class="h3 text-gray-800">Traning</h1>
+                <h1 class="h3 text-gray-800">Training</h1>
             </div>
         </div>
         <div class="row">
@@ -25,7 +25,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="traning_name">Name<span class="required"> *</span></label>
-                                        <input type="text" class="form-control" placeholder="Traning Name / Titile" name="traning_name" id="traning_name" required="required">
+                                        <input type="text" class="form-control" placeholder="Training Name / Titile" name="traning_name" id="traning_name" required="required">
                                     </div>
                                     <?php if(!empty($traning_name_error_msg)){ ?>       
                                         <div class="typography-line text-danger">
@@ -39,7 +39,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="traning_description">Description</label>
-										<textarea class="form-control" placeholder="Traning Description" name="traning_description" id="traning_description"></textarea>
+										<textarea class="form-control" placeholder="Training Description" name="traning_description" id="traning_description"></textarea>
                                     </div>
                                     <?php if(!empty($traning_description_error_msg)){ ?>       
                                         <div class="typography-line text-danger">

@@ -39,11 +39,11 @@
                     <th>DOUBLE OT HOURS</th>
                     <th>VAC HOURS</th>
                     <th>SICK HOURS</th>
-                    <th>OTHER HOURS</th>
+                    <!-- <th>OTHER HOURS</th>
                     <th>HOLIDAY HOURS</th>
-                    <th>PCH HOURS  <small>(Personal Choice Holiday)</small></th>
+                    <th>PCH HOURS  <small>(Personal Choice Holiday)</small></th> -->
                     <th>UNPAID HOURS</th>
-                    <th>EMPLOYEE COMMENTS</th>
+                    <!-- <th>EMPLOYEE COMMENTS</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -105,20 +105,20 @@
 					?>
 					<td><b><?php echo date('l', strtotime($timesheet_date));?></b></td>
 					<td><?php echo date('m/d/Y', strtotime($timesheet_date));?></td>
-                    <td><?php echo (is_int($time_sheet_record['start_time']))?date("H:i", $time_sheet_record['start_time']):'-';?></td>
-                    <td><?php echo (is_int($time_sheet_record['lunch_start']))?date("H:i", $time_sheet_record['lunch_start']):'-';?></td>
-                    <td><?php echo (is_int($time_sheet_record['lunch_end']))?date("H:i", $time_sheet_record['lunch_end']):'-';?></td>
-                    <td><?php echo (is_int($time_sheet_record['end_time']))?date("H:i", $time_sheet_record['end_time']):'-';?></td>
+                    <td><?php echo (is_int($time_sheet_record['start_time']))?date("h:i a", $time_sheet_record['start_time']):'-';?></td>
+                    <td><?php echo (is_int($time_sheet_record['lunch_start']))?date("h:i a", $time_sheet_record['lunch_start']):'-';?></td>
+                    <td><?php echo (is_int($time_sheet_record['lunch_end']))?date("h:i a", $time_sheet_record['lunch_end']):'-';?></td>
+                    <td><?php echo (is_int($time_sheet_record['end_time']))?date("h:i a", $time_sheet_record['end_time']):'-';?></td>
                     <td><?php echo ($reg_hours > 0)?sprintf('%02d:%02d', ($reg_hours/3600),($reg_hours/60%60)):'00:00';?></td>
                     <td><?php echo $ot_hours; ?></td>
                     <td><?php echo $double_ot_hours; ?></td>
                     <td></td>
                     <td></td>
+                    <!-- <td></td>
                     <td></td>
-                    <td></td>
-                    <td></td>
+                    <td></td> -->
                     <td><?php echo ($time_sheet_record['unpaid_hours'] > 0)?sprintf('%02d:%02d', ($time_sheet_record['unpaid_hours']/3600),($time_sheet_record['unpaid_hours']/60%60)):'00:00';?></td>
-                    <td></td>
+                    <!-- <td></td> -->
 				</tr>
 				<?php if(((($int_i+1)%7) == 0) || count($time_sheet_array) == $int_i+1) : ?>
 					<tr class="total">
@@ -128,11 +128,11 @@
                     <td><?php echo ($double_ot_sum > 0)?sprintf('%02d:%02d', ($double_ot_sum/3600),($double_ot_sum/60%60)):'00:00';?></td>
                     <td>0</td>
                     <td>0</td>
+                    <!-- <td>0</td>
                     <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <td>0</td> -->
                     <td><?php echo ($unpaid_hours_sum > 0)?sprintf('%02d:%02d', ($unpaid_hours_sum/3600),($unpaid_hours_sum/60%60)):'00:00';?></td>
-                    <td>0</td>
+                    <!-- <td>0</td> -->
                 </tr>
 				<?php 
 				$reg_hours_sum = $unpaid_hours_sum = $ot_hours_sum = $double_ot_sum = 0;

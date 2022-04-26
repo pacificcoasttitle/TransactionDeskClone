@@ -152,14 +152,15 @@ th {
                                         <th>Salary Deduction</th>
                                         <th>Time Charged Vacation</th>
                                         <th>Status</th>
+                                        <th>Updated On</th>
                                         <th>Approved By</th>
-                                        <?php  $userdata = $this->session->userdata('hr_user');
+                                        <?php /*  $userdata = $this->session->userdata('hr_user');
                                         if ($userdata['user_type_id'] == 1) { ?>
                                             <th>Approved Date</th> 
                                         <?php }
                                         if ($userdata['user_type_id'] == 2) { ?>
                                             <th>Actions</th>
-                                        <?php } ?>
+                                        <?php } */ ?>
                                     </tr>
                                 </thead>
                                 <tbody>

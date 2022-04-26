@@ -79,6 +79,18 @@ class Memos extends MX_Controller {
 	            $nestedData[] = $value['subject'];
                 $nestedData[] = $value['first_name']." ".$value['last_name'];
                 $nestedData[] = date("m/d/Y", strtotime($value['created_at'])); 
+				$ack_date = '-';
+				if ($value['is_read'] == '1') {
+                    $status = '<span class="badge-new badge-new-success">Acknowledge</span>';
+					if(strtotime($value['acknowledge_at'])) {
+						$ack_date = $this->common->convertTimezone($value['acknowledge_at']);
+					}
+					
+                } else {
+                    $status = '<span class="badge-new badge-new-info">Pending</span>';
+                }
+                $nestedData[] = $status;
+                $nestedData[] = $ack_date;
                 $memoId = $value['id'];
                 $nestedData[] = "<div class=''>
                         <button onclick='return showMemoInfo($memoId);' class='btn btn-grad-2a generate button-color' type='submit'>View</button>

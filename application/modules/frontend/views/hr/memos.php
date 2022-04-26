@@ -41,6 +41,8 @@ th {
                                         <th>Subject</th>
                                         <th>Created By</th>
                                         <th>Created Date</th>
+                                        <th>Status</th>
+                                        <th>Acknowledge Date</th>
                                         <th>Action</th> 
                                     </tr>
                                 </thead>
@@ -96,7 +98,7 @@ th {
 						</div>
 						<div style="margin: 0px 20px;text-align:left;">
 							<button style="margin: 0px 10px 20px 0px;" type="submit" data-btntext-sending="Sending..."
-								class="button btn-primary">Accept</button>
+								class="button btn-primary">Acknowledge</button>
 							<button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
 						</div>
 					</div>
