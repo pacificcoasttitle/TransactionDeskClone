@@ -71,12 +71,19 @@
                     cluster: '<?php echo env("PUSHER_CLUSTER"); ?>'
                 });
 
-                var channel = pusher.subscribe('admin-channel-'+'<?php echo $userdata['id'];?>');
-                channel.bind('admin-event-'+'<?php echo $userdata['id'];?>', function(data) {
+                <?php if($userdata['is_escrow_manager'] == 1)  { ?>
+                    var channel = pusher.subscribe('admin-channel');
+                    var event = 'admin-event';
+                <?php } else { ?>
+                    var channel = pusher.subscribe('user-channel-'+'<?php echo $userdata['id'];?>');
+                    var event = 'user-event-'+'<?php echo $userdata['id'];?>';
+                <?php } ?>
+                
+                channel.bind(event, function(data) {
                     var notification = data;
                     var alertClass = '';
                     var iconClass = '';
-                    if (notification.type == 'approved') {
+                    if (notification.type == 'approved' || notification.type == 'completed') {
                         alertClass = 'bg-success';
                         iconClass = 'fa-check';
                     } else if (notification.type == 'denied') {
@@ -118,7 +125,7 @@
                         if( notificationsCount > 0 ) {                            
                             $.ajax({
                                 type: "POST",
-                                url: base_url+"hr/admin/mark-as-read",  
+                                url: base_url+"escrow/admin/mark-as-read",  
                                 async: false,                                          
                                 success: function(response){     
                                     notificationClickFlag = 1; 

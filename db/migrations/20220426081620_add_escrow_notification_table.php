@@ -4,7 +4,7 @@ declare(strict_types=1);
 use Phinx\Migration\AbstractMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
 
-final class EscrowNotification extends AbstractMigration
+final class AddEscrowNotificationTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -22,11 +22,13 @@ final class EscrowNotification extends AbstractMigration
         $table = $this->table('pct_escrow_notifications');
         $table->addColumn('sent_user_id', 'integer')
             ->addColumn('message', 'text', ['limit' => MysqlAdapter::TEXT_LONG])
+            ->addColumn('is_admin', 'boolean', ['default' => 0])
             ->addColumn('is_read', 'boolean', ['default' => 0])
+            ->addColumn('is_admin_read', 'boolean', ['default' => 0])
             ->addColumn('type', 'string', ['null' => true])
             ->addColumn('created_at', 'datetime')
             ->addColumn('updated_at', 'datetime', ['null' => true])
-            ->addIndex(['sent_user_id', 'is_read'])  
+            ->addIndex(['sent_user_id', 'is_read', 'is_admin'])  
             ->create();
     }
 }

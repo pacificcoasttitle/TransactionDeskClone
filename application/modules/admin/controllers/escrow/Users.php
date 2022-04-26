@@ -19,6 +19,7 @@ class Users extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
+    private $users_js_version = '01';
 	public function __construct()
     {
         parent::__construct();
@@ -48,7 +49,7 @@ class Users extends MX_Controller {
         $this->template->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
         $this->template->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
         $this->template->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
-        $this->template->addJS( base_url('assets/backend/hr/js/custom.js') );
+        $this->template->addJS( base_url('assets/backend/escrow/js/users.js?v=users_'.$this->users_js_version) );
         $this->template->show("escrow", "users", $data);
     }
 
@@ -71,9 +72,6 @@ class Users extends MX_Controller {
         }
 
         $data = array(); 
-		
-
-
         $count = $params['start'] + 1;
 	    if (isset($users['data']) && !empty($users['data'])) {
 	    	foreach ($users['data'] as $key => $value)  {
@@ -84,43 +82,7 @@ class Users extends MX_Controller {
                 $nestedData[] = $value['position'];
                 $nestedData[] = $value['branch_name'];
                 $nestedData[] = $value['name'];
-                //$nestedData[] = $value['employee_id'];
                 $nestedData[] = date("m/d/Y", strtotime($value['hire_date'])); 
-
-				
-
-                if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) {
-                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                        $editUrl = base_url().'hr/admin/edit-user/'.$value['id'];
-                        $task_list = "";
-                        if(trim(strtolower($value['name'])) == 'employee') {
-                            $task_list_url = base_url().'hr/admin/users-tasks/'.$value['id'];
-                            $task_list = '<a style="margin-left: 5px;" href="'.$task_list_url.'" class="btn btn-info btn-icon-split btn-sm">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-clipboard-check"></i>
-                                            </span>
-                                            <span class="text">Task</span>
-                                        </a>';
-                        }
-                        $nestedData[] = '<div style="display:inline-flex;">
-                                            <a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
-                                                <span class="icon text-white-50">
-                                                    <i class="fas fa-pencil-alt"></i>
-                                                </span>
-                                                <span class="text">Edit</span>
-                                            </a>
-                                            <a style="margin-left: 5px;" href="#" onclick="deleteUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
-                                                <span class="icon text-white-50">
-                                                    <i class="fas fa-trash"></i>
-                                                </span>
-                                                <span class="text">Delete</span>
-                                            </a>'.$task_list.$time_sheet_var.'
-                                        </div>';
-                    }
-                }
-				elseif($userdata['user_type_id'] == 4) {
-					$nestedData[] = '<div style="display:inline-flex;">'.$time_sheet_var.'</div>';
-				}
 	            $data[] = $nestedData;    
                 $count++;          
 	    	}
@@ -130,66 +92,4 @@ class Users extends MX_Controller {
         $json_data['data'] = $data;
 	    echo json_encode($json_data);
     }
-
-    
-
-    
-
-    
-
-	public function getTask($id)
-	{
-		$this->load->model('hr/task_list_category');
-		$this->load->model('hr/users_tasks_model');
-		$this->load->model('hr/users_model');
-		$user_record = $this->users_model->with('type')->get($id);
-		if($user_record && trim(strtolower($user_record->type->name)) == 'employee'){
-
-			$data['title'] = 'HR-Center New Rep Checklist';
-			$data['page_title'] = 'New Rep Checklist';
-			$tasks = $this->task_list_category->with('tasks')->get_many_by('status','1');
-	
-			$this->load->model('hr/task_position');
-	
-			$hr_task_positions = $this->task_position->get_many_by('position_id',$user_record->position_id);
-			$data['hr_task_positions'] = array_column($hr_task_positions,'task_id');
-			
-			$users_tasks_all = $this->users_tasks_model->get_tasks($id);
-			$users_tasks = array_column($users_tasks_all,"task_id");
-			if ($this->input->post()) {
-				$users_tasks_add = array();
-				$task_done = $this->input->post('task_done');
-				foreach($task_done as $task_id) {
-					if(!(in_array($task_id,$users_tasks))){
-						$users_task = array();
-						$users_task['task_id'] = $task_id;
-						$users_task['employee_id'] = $id;
-						$users_tasks_add[] = $users_task;
-					}
-				}
-				if(count($users_tasks_add)) {
-					$this->users_tasks_model->insert_many($users_tasks_add);
-				}
-				//Delete records if task unchecked
-				$delete_id_array = array();
-				foreach($users_tasks_all as $users_task) {
-					if(!(in_array($users_task['task_id'],$task_done))){
-						$delete_id_array[] = $users_task['id'];
-					}
-				}
-				if(count($delete_id_array)) {
-					$this->users_tasks_model->delete_many($delete_id_array);
-				}
-				$successMsg = 'Task List Updated';
-				$this->session->set_userdata('success', $successMsg);
-				redirect(base_url().'hr/admin/users');
-			}
-	
-			// $data = array();
-			$data['tasks'] = $tasks;
-			$data['users_tasks'] = $users_tasks;
-			$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
-			$this->admintemplate->show("hr", "users_tasks", $data);
-		}
-	}
 }

@@ -1,7 +1,7 @@
 var tasks ='';
 $(document).ready(function () {
     if ($('#tasks').length > 0)  {
-        user_types = $('#tasks').DataTable({
+        tasks = $('#tasks').DataTable({
            "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "lengthChange": true,
@@ -46,13 +46,13 @@ $(document).ready(function () {
 function deleteTask(id)
 {
     if (id=='') {
-        alert('Admin ID is required.');
+        alert('Task ID is required.');
         return false;
     }
     var ready = confirm("Are you sure want to delete?");
     if (ready) {
         $.ajax({
-            url: base_url+"hr/admin/delete-admin-user",
+            url: base_url+"escrow/admin/delete-task",
             method: "POST",
             data : {
                 id : id
@@ -60,33 +60,33 @@ function deleteTask(id)
             success: function(data){
                 var result = jQuery.parseJSON(data);
                 if (result.status == 'success') {
-                    $('#admin_user_success_msg').html(result.message).show();
+                    $('#tasks_success_msg').html(result.message).show();
                     $([document.documentElement, document.body]).animate({
-                        scrollTop: $("#admin_user_success_msg").offset().top
+                        scrollTop: $("#tasks_success_msg").offset().top
                     }, 1000);
-                    adminList.ajax.reload( null, false );
+                    tasks.ajax.reload( null, false );
                     setTimeout(function () {
-                        $('#admin_user_success_msg').html('').hide();
+                        $('#tasks_success_msg').html('').hide();
                     }, 4000);
                 } else {
-                    $('#admin_user_error_msg').html(result.message).show();
+                    $('#tasks_error_msg').html(result.message).show();
                     $([document.documentElement, document.body]).animate({
-                        scrollTop: $("#admin_user_error_msg").offset().top
+                        scrollTop: $("#tasks_error_msg").offset().top
                     }, 1000);
 
                     setTimeout(function () {
-                        $('#admin_user_error_msg').html('').hide();
+                        $('#tasks_error_msg').html('').hide();
                     }, 4000);
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                $('#admin_user_error_msg').html('Something went wrong. Please try it again.').show();
+                $('#tasks_error_msg').html('Something went wrong. Please try it again.').show();
                 $([document.documentElement, document.body]).animate({
-                    scrollTop: $("#admin_user_success_msg").offset().top
+                    scrollTop: $("#tasks_error_msg").offset().top
                 }, 1000);
 
                 setTimeout(function () {
-                    $('#admin_user_error_msg').html('').hide();
+                    $('#tasks_error_msg').html('').hide();
                 }, 4000);
             }
         })

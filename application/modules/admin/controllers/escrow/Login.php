@@ -33,7 +33,7 @@ class Login extends MX_Controller {
     		$email_address = $this->input->post('email_address');
         	$password      = $this->input->post('password');
             $admin =  $this->common->get_escrow_user(array('email' => $email_address, 'status' => 1));
-            if (!empty($admin) && $admin['user_type_id'] == 6) {
+            if (!empty($admin)) {
                 if($admin['is_tmp_password'] == 1) {
                     if (password_verify($password, $admin['password'])) {
                         $randomString = $this->common->randomPassword();
@@ -51,11 +51,18 @@ class Login extends MX_Controller {
                             "name" => isset($admin['first_name']) && !empty($admin['first_name']) ? $admin['first_name']." ".$admin['last_name'] : '',
                             "email" => isset($admin['email']) && !empty($admin['email']) ? $admin['email'] : '',
                             "user_type_id" => isset($admin['user_type_id']) && !empty($admin['user_type_id']) ? $admin['user_type_id'] : '',
+                            "branch_id" => isset($admin['branch_id']) && !empty($admin['branch_id']) ? $admin['branch_id'] : '',
                             "user_type" => isset($admin['user_type']) && !empty($admin['user_type']) ? $admin['user_type'] : '',
-                            "is_escrow_admin" => 1
+                            "is_escrow_manager" => $admin['position_id'] == 7 ? 1 : 0,
+                            "is_escrow_officer" => ($admin['position_id'] == 9 || $admin['position_id'] == 22 || $admin['position_id'] == 23) ? 1 : 0,
+                            "is_escrow_assistant" => $admin['position_id'] == 15 ? 1 : 0
                         );
                         $this->session->set_userdata('escrow_admin', $session_data);
-                        redirect(base_url().'escrow/admin/dashboard');
+                        if ($admin['position_id'] == 9 || $admin['position_id'] == 22 || $admin['position_id'] == 23 || $admin['position_id']) {
+                            redirect(base_url().'escrow/admin/orders');
+                        } else {
+                            redirect(base_url().'escrow/admin/dashboard');
+                        }
                     } else {
                         $this->session->set_userdata('msg', 'Incorrect email or password');
                         redirect(base_url().'escrow/admin');

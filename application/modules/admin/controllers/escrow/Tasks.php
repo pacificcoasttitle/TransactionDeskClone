@@ -119,12 +119,12 @@ class Tasks extends MX_Controller {
             $this->form_validation->set_rules('prod_type', 'Product Type', 'required', array('required'=> 'Please Check Product Type'));
         
             if ($this->form_validation->run() == true) {
-                $userTypeData = array(
+                $taskData = array(
                     'name' =>  $this->input->post('name'),
                     'prod_type' =>  $this->input->post('prod_type'),
                     'status' =>  1
                 );
-                $this->common->insert($userTypeData, 'pct_escrow_tasks');
+                $this->common->insert($taskData, 'pct_escrow_tasks');
                 $successMsg = 'Task added successfully.';
                 $this->session->set_userdata('success', $successMsg);
                 redirect(base_url().'escrow/admin/tasks');
@@ -147,13 +147,13 @@ class Tasks extends MX_Controller {
                 $this->form_validation->set_rules('prod_type', 'Product Type', 'required', array('required'=> 'Please Check Product Type'));
             
                 if ($this->form_validation->run() == true) {
-                    $userTypeData = array(
+                    $taskData = array(
                         'name' =>  $this->input->post('name'),
-                        'prod_type' =>  $this->input->post('prod_type'),
-                        'status' =>  1
+                        'prod_type' =>  $this->input->post('prod_type')
                     );
-                    $this->common->update($userTypeData, 'pct_escrow_tasks');
-                    $successMsg = 'Task added successfully.';
+                    $condition = array('id' => $id);
+                    $this->common->update($taskData, $condition, 'pct_escrow_tasks');
+                    $successMsg = 'Task edited successfully.';
                     $this->session->set_userdata('success', $successMsg);
                     redirect(base_url().'escrow/admin/tasks');
                 } else {
@@ -168,19 +168,19 @@ class Tasks extends MX_Controller {
         $this->template->show("escrow", "edit_task", $data);
     }
 
-    public function deleteUserType()
+    public function deleteTask()
     {
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
-            $userData = array('status' => 0);
+            $taskData = array('status' => 0);
             $condition = array('id' => $id);
-            $update = $this->hr->update($userData, $condition, 'pct_hr_user_types');
+            $update = $this->common->update($taskData, $condition, 'pct_escrow_tasks');
             if ($update) {
-                $successMsg = 'User Type deleted successfully.';
+                $successMsg = 'Task deleted successfully.';
                 $response = array('status'=>'success', 'message' => $successMsg);
             }
         } else {
-            $msg = 'User Type ID is required.';
+            $msg = 'Task ID is required.';
             $response = array('status' => 'error','message'=>$msg);
         }
         echo json_encode($response);

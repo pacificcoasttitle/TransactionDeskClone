@@ -66,13 +66,17 @@ class Template
 
     public function getNotifications($limit) 
     {
-        $userdata = $this->CI->session->userdata('hr_admin');
+        $userdata = $this->CI->session->userdata('escrow_admin');
         $this->CI->db->select('*');
-        $this->CI->db->where('is_read', 0);
-        $this->CI->db->where('sent_user_id', $userdata['id']);
+        if ($userdata['is_escrow_manager'] == 1) {
+            $this->CI->db->where('is_admin_read', 0);
+            $this->CI->db->where('is_admin', 1);
+        } else {
+            $this->CI->db->where('is_read', 0);
+            $this->CI->db->where('sent_user_id', $userdata['id']);
+        }
         $query = $this->CI->db->get('pct_escrow_notifications');
-        $this->CI->db->order_by('pct_escrow_notifications.id', 'desc');
-        //$this->CI->db->limit($limit);  
+        $this->CI->db->order_by('pct_escrow_notifications.id', 'desc');  
         if ($query->num_rows() > 0)  {
             return $query->result_array();
         } else {
@@ -82,10 +86,15 @@ class Template
 
     public function getUnreadNotificationCount() 
     {
-        $userdata = $this->CI->session->userdata('hr_admin');
+        $userdata = $this->CI->session->userdata('escrow_admin');
         $this->CI->db->select('count(*) as total_unread_count');
-        $this->CI->db->where('sent_user_id', $userdata['id']);
-        $this->CI->db->where('is_read', 0);
+        if ($userdata['is_escrow_manager'] == 1) {
+            $this->CI->db->where('is_admin_read', 0);
+            $this->CI->db->where('is_admin', 1);
+        } else {
+            $this->CI->db->where('is_read', 0);
+            $this->CI->db->where('sent_user_id', $userdata['id']);
+        }
         $query = $this->CI->db->get('pct_escrow_notifications');
         if ($query->num_rows() > 0)  {
             return $query->row_array();

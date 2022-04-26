@@ -35,57 +35,23 @@ class Dashboard extends MX_Controller {
 
     public function index()
     {		
-		$userdata = $this->session->userdata('is_escrow_admin');
+		//$userdata = $this->session->userdata('escrow_admin');
         $data['title'] = 'Escrow Admin Dashboard';
         $data['page_title'] = 'Dashboard';
 	
-        if ($userdata['user_type_id'] == '6') {
-			
-		} else {
-			
-		}
-
         $this->template->addCSS( base_url('assets/libs/calendar/main.css'));
         $this->template->addJS( base_url('assets/libs/calendar/main.js'));
         $this->template->addJS( base_url('assets/backend/escrow/js/dashboard.js?v=dashboard_'.$this->dashboard_js_version) );
         $this->template->show("escrow", "dashboard", $data);
     }
 
-    public function getVacationDataForCalendar()
-    {
-        $start = date('Y-m-d', strtotime($this->input->post('start')));
-        $end = date('Y-m-d', strtotime($this->input->post('end')));
-        $vacationData = $this->common->getVacationDataForCalendar($start, $end);
-        $data = array();
-        $i = 0;
-        foreach ($vacationData as $vacation) {
-            $data[$i]['id'] = $vacation['id'];
-            $data[$i]['title'] = $vacation['first_name']." ".$vacation['last_name'];
-            $data[$i]['start'] = $vacation['from_date'];
-            $data[$i]['end'] = date('Y-m-d', strtotime($vacation['to_date'] . ' +1 day'));
-			if (!empty($vacation['approved_by_user_id'])) {
-				if ($vacation['status'] == 'approved') {
-					$data[$i]['backgroundColor'] = '#28a745';
-				} 
-			}
-            $i++;
-        }
-        $i++;
-        echo json_encode($data); 
-    }
-
 	public function getDashboardCount()
 	{
-		$userdata = $this->session->userdata('hr_admin');
-		$data['month'] = $month = !empty($this->input->post('month')) ? $this->input->post('month') : date('m');
-		$data['user_id'] = $user_id = !empty($this->input->post('user_id')) ? $this->input->post('user_id') : 0;
-		$data['manager_id'] = $manager_id = !empty($this->input->post('manager_id')) ? $this->input->post('manager_id') : 0;
-		$data['users'] = array();
-		$data['managers'] = array();
-		$usersEmails = array();
+		$userdata = $this->session->userdata('escrow_admin');
+		$data['month'] = $month = !empty($this->input->post('month')) ? $this->input->post('month') : date('m');	
 		$usersIds = array();
 
-		if ($userdata['user_type_id'] == '6') {
+		if ($userdata['is_escrow_admin'] == 1) {
 			$workedDays = $this->order->countWorkedDaysOfMonth();
 			$workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
 			$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $usersIds, 0, 1);
@@ -142,7 +108,7 @@ class Dashboard extends MX_Controller {
 				$data['close_order_percetage'] = 0;
 			}
 		} 
-		$results = $this->load->view('hr/dashboard_count', $data, TRUE);
+		$results = $this->load->view('escrow/dashboard_count', $data, TRUE);
 		echo json_encode($results, true);
 	}
 

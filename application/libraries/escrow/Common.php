@@ -40,7 +40,7 @@ class Common
     public function is_escrow_admin()
     {
         $userdata = $this->CI->session->userdata('escrow_admin');
-        if (!empty($userdata['id']) && $userdata['is_escrow_admin'] == 1) {
+        if (!empty($userdata['id']) && ($userdata['is_escrow_manager'] == 1 || $userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1)) {
             return true;
         } else {
             redirect(base_url().'escrow/admin');
@@ -121,8 +121,8 @@ class Common
     public function sendNotification($message, $type, $sent_to_user, $is_sent_admin = 0)
     {
         if ($is_sent_admin == 1) {
-            $channel = 'admin-channel-'.$sent_to_user;
-            $event = 'admin-event-'.$sent_to_user;
+            $channel = 'admin-channel';
+            $event = 'admin-event';
         }
 
         if ($is_sent_admin == 0) {
@@ -152,11 +152,14 @@ class Common
     {
         $this->CI->db->select('pct_hr_users.*,pct_hr_user_types.name as user_type');
         $this->CI->db->from('pct_hr_users');
-        $this->CI->db->join('pct_hr_user_types','pct_hr_users.user_type_id = pct_hr_user_types.id','left');
+        $this->CI->db->join('pct_hr_position', 'pct_hr_position.id = pct_hr_users.position_id');
+        $this->CI->db->join('pct_hr_user_types','pct_hr_users.user_type_id = pct_hr_user_types.id');
+        $this->CI->db->where('pct_hr_users.department_id', 4);
         foreach($params as $key => $val){
             $this->CI->db->where('pct_hr_users.'.$key, $val);
         }
         $query = $this->CI->db->get();
+        //echo $this->CI->db->last_query();exit;
         $result = $query->row_array();
         if(!empty($result)) { 
             return $result;
@@ -171,9 +174,9 @@ class Common
                  ->join('pct_hr_position', 'pct_hr_position.id = pct_hr_users.position_id')
                  ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id')
                  ->join('pct_hr_branches', 'pct_hr_branches.id = pct_hr_users.branch_id')
-                 ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id', 'left');
+                 ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id');
         $this->CI->db->where('pct_hr_users.status', 1);
-        $this->CI->db->where('pct_hr_users.status', 1);
+        $this->CI->db->where('pct_hr_users.department_id', 4);
         $total_records =  $this->CI->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -200,6 +203,7 @@ class Common
                  ->join('pct_hr_branches', 'pct_hr_branches.id = pct_hr_users.branch_id')
                  ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id', 'left');
             $this->CI->db->where('pct_hr_users.status', 1);
+            $this->CI->db->where('pct_hr_users.department_id', 4);
             if(!empty($usersIds)) {
                 $this->CI->db->where_in('pct_hr_users.id', $usersIds);
             } 
@@ -224,6 +228,7 @@ class Common
                     ->join('pct_hr_branches', 'pct_hr_branches.id = pct_hr_users.branch_id')
                     ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id', 'left');
             $this->CI->db->where('pct_hr_users.status', 1);
+            $this->CI->db->where('pct_hr_users.department_id', 4);
             if(!empty($usersIds)) {
                 $this->CI->db->where_in('pct_hr_users.id', $usersIds);
             } 
@@ -246,6 +251,7 @@ class Common
                     ->join('pct_hr_branches', 'pct_hr_branches.id = pct_hr_users.branch_id')
                     ->join('pct_hr_departments', 'pct_hr_departments.id = pct_hr_users.department_id', 'left');
             $this->CI->db->where('pct_hr_users.status', 1);
+            $this->CI->db->where('pct_hr_users.department_id', 4);
             if(!empty($usersIds)) {
                 $this->CI->db->where_in('pct_hr_users.id', $usersIds);
             } 
@@ -268,52 +274,160 @@ class Common
         );
     }
 
+    public function getEscrowOfficerInfoFromOrder($email)
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_order_partner_company_info');
+        $this->CI->db->where('email', $email);
+        $this->CI->db->where('status', 1);
+        $query = $this->CI->db->get();    
+        return $query->row_array();
+    }
+
+    public function getEscrowOfficerInfoBasedOnIdFromOrder($partner_id)
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_order_partner_company_info');
+        $this->CI->db->where('partner_id', $partner_id);
+        $this->CI->db->where('status', 1);
+        $query = $this->CI->db->get();    
+        return $query->row_array();
+    }
+
+    public function getEscrowOfficerInfoFromOrderForAssistant($branch_id)
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_hr_users');
+        $this->CI->db->where('branch_id', $branch_id);
+        $this->CI->db->where('(position_id = 9 or position_id = 22 or position_id = 23)');
+        $this->CI->db->where('department_id', 4);
+        $this->CI->db->where('status', 1);
+        $query = $this->CI->db->get();    
+        $escroeUsers = $query->result_array();
+        $escrowEmails = array_column($escroeUsers, 'email');
+
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_order_partner_company_info');
+        $this->CI->db->where_in('email', $escrowEmails);
+        $this->CI->db->where('status', 1);
+        $query = $this->CI->db->get();    
+        return $query->result_array();
+    }
+
     public function getOrders($params)
     {
+        $userdata = $this->CI->session->userdata('escrow_admin'); 
+        $orders_lists = array();
+        if ($userdata['is_escrow_officer'] == 1) {    
+            $escrowOfficerInfo = $this->getEscrowOfficerInfoFromOrder($userdata['email']);
+        }
+
+        if ($userdata['is_escrow_assistant'] == 1) {  
+            $escrowOfficersInfo = $this->getEscrowOfficerInfoFromOrderForAssistant($userdata['branch_id']);
+        }
+
         $this->CI->db->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
-                ->join('transaction_details','order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36');
+                ->join('transaction_details','order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+        $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36)');
+
+        if ($userdata['is_escrow_officer'] == 1) {
+            if (!empty($escrowOfficerInfo)) {
+                $this->CI->db->where('order_details.escrow_officer_id', $escrowOfficerInfo['partner_id']);   
+            } else {
+                return array(
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                    'data' => $orders_lists
+                );
+            }
+        }
+
+        if ($userdata['is_escrow_assistant'] == 1) {
+            if (!empty($escrowOfficersInfo)) {
+                $escrowUserIds = array_column($escrowOfficersInfo, 'partner_id');
+                $this->CI->db->where_in('order_details.escrow_officer_id', $escrowUserIds);   
+            } else {
+                return array(
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                    'data' => $orders_lists
+                );
+            }
+        }
+
         $total_records =  $this->CI->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $orders_lists = array();
-
+        
         $select = 'order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated,property_details.primary_owner';
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated,property_details.primary_owner, pct_order_product_types.product_type';
 
         if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
             if (isset($keyword) && !empty($keyword)) {
-                $this->CI->db->like('property_details.full_address', $keyword);            
-                $this->CI->db->or_like('order_details.file_number', $keyword); 
-                $this->CI->db->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword))); 
-                $this->CI->db->or_like('order_details.resware_status', $keyword); 
+                $this->CI->db->group_start()
+                    ->like('property_details.full_address', $keyword)         
+                    ->or_like('order_details.file_number', $keyword) 
+                    ->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword)))
+                    ->or_like('order_details.resware_status', $keyword)
+                ->group_end();
             } 
 
             $this->CI->db->select($select)
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
-                ->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                ->join('transaction_details','order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 
-            $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36');
+            $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36)');
 
+            if ($userdata['is_escrow_officer'] == 1) {
+                if (!empty($escrowOfficerInfo)) {
+                    $this->CI->db->where('order_details.escrow_officer_id', $escrowOfficerInfo['partner_id']);    
+                }
+            }
+    
+            if ($userdata['is_escrow_assistant'] == 1) {
+                if (!empty($escrowOfficersInfo)) {
+                    $escrowUserIds = array_column($escrowOfficersInfo, 'partner_id');
+                    $this->CI->db->where_in('order_details.escrow_officer_id', $escrowUserIds);   
+                } 
+            }
+    
             $filter_total_records =  $this->CI->db->count_all_results();
             
             if (isset($keyword) && !empty($keyword)) {
-                $this->CI->db->like('property_details.full_address', $keyword);            
-                $this->CI->db->or_like('order_details.file_number', $keyword); 
-                $this->CI->db->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword))); 
-                $this->CI->db->or_like('order_details.resware_status', $keyword); 
+                $this->CI->db->group_start()
+                    ->like('property_details.full_address', $keyword)         
+                    ->or_like('order_details.file_number', $keyword) 
+                    ->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword)))
+                    ->or_like('order_details.resware_status', $keyword)
+                ->group_end();
             } 
 
             $this->CI->db->select($select)
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
-                ->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                ->join('transaction_details','order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 
-            $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36');
+            $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36)');
+
+            if ($userdata['is_escrow_officer'] == 1) {
+                if (!empty($escrowOfficerInfo)) {
+                    $this->CI->db->where('order_details.escrow_officer_id', $escrowOfficerInfo['partner_id']);    
+                }
+            }
+    
+            if ($userdata['is_escrow_assistant'] == 1) {
+                if (!empty($escrowOfficersInfo)) {
+                    $escrowUserIds = array_column($escrowOfficersInfo, 'partner_id');
+                    $this->CI->db->where_in('order_details.escrow_officer_id', $escrowUserIds);   
+                } 
+            }
             $this->CI->db->order_by("order_details.id", "desc");
            
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -321,6 +435,7 @@ class Common
             }
 
             $query = $this->CI->db->get();
+            //echo $this->CI->db->last_query();exit;
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             }
@@ -330,15 +445,29 @@ class Common
             $this->CI->db->select($select)
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
-                ->join('transaction_details','order_details.transaction_id = transaction_details.id');
+                ->join('transaction_details','order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 
-            $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36');
+            $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36)');
+            if ($userdata['is_escrow_officer'] == 1) {
+                if (!empty($escrowOfficerInfo)) {
+                    $this->CI->db->where('order_details.escrow_officer_id', $escrowOfficerInfo['partner_id']);    
+                }
+            }
+    
+            if ($userdata['is_escrow_assistant'] == 1) {
+                if (!empty($escrowOfficersInfo)) {
+                    $escrowUserIds = array_column($escrowOfficersInfo, 'partner_id');
+                    $this->CI->db->where_in('order_details.escrow_officer_id', $escrowUserIds);   
+                } 
+            }
             $this->CI->db->order_by("order_details.id", "desc");
         
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);
             }
             $query = $this->CI->db->get();
+            //echo $this->CI->db->last_query();exit;
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             } 
@@ -366,7 +495,7 @@ class Common
     		if (isset($keyword) && !empty($keyword)) {
                 $this->CI->db->group_start()
                     ->like('pct_escrow_tasks.name', $keyword)
-                    ->like('pct_escrow_tasks.prod_type', $keyword)
+                    ->or_like('pct_escrow_tasks.prod_type', $keyword)
                     ->group_end();
             }
             
@@ -377,7 +506,7 @@ class Common
 			if (isset($keyword) && !empty($keyword)) {
                 $this->CI->db->group_start()
                     ->like('pct_escrow_tasks.name', $keyword)
-                    ->like('pct_escrow_tasks.prod_type', $keyword)
+                    ->or_like('pct_escrow_tasks.prod_type', $keyword)
                     ->group_end();
             }
 
@@ -420,4 +549,5 @@ class Common
             'data' => $tasks
         );
     }
+
 }

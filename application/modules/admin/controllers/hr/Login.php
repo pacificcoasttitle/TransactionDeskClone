@@ -52,6 +52,8 @@ class Login extends MX_Controller {
                             "name" => isset($admin['first_name']) && !empty($admin['first_name']) ? $admin['first_name']." ".$admin['last_name'] : '',
                             "email" => isset($admin['email']) && !empty($admin['email']) ? $admin['email'] : '',
                             "user_type_id" => isset($admin['user_type_id']) && !empty($admin['user_type_id']) ? $admin['user_type_id'] : '',
+                            "department_id" => isset($admin['department_id']) && !empty($admin['department_id']) ? $admin['department_id'] : '',
+                            "position_id" => isset($admin['position_id']) && !empty($admin['position_id']) ? $admin['position_id'] : '',
                             "user_type" => isset($admin['user_type']) && !empty($admin['user_type']) ? $admin['user_type'] : '',
                             "is_hr_admin" => 1
                         );

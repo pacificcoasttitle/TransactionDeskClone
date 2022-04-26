@@ -32,7 +32,7 @@
                                     <div class="form-group">
                                         <label style="width:100%;">Product Type<span class="required"> *</span></label>
                                         <input style="width:15px;height:15px;" <?php echo $taskInfo->prod_type == 'loan' ? 'checked' : '';?> class="" type="radio" name="prod_type" value="loan" required>&nbsp;&nbsp;Loan&nbsp;&nbsp;
-                                        <input style="width:15px;height:15px;" <?php echo $taskInfo->prod_type == 'prod' ? 'checked' : '';?> class="" type="radio" name="prod_type" value="prod" required>&nbsp;&nbsp;Prod&nbsp;&nbsp;
+                                        <input style="width:15px;height:15px;" <?php echo $taskInfo->prod_type == 'sale' ? 'checked' : '';?> class="" type="radio" name="prod_type" value="sale" required>&nbsp;&nbsp;Sale&nbsp;&nbsp;
                                         <input style="width:15px;height:15px;" <?php echo $taskInfo->prod_type == 'both' ? 'checked' : '';?> class="" type="radio" name="prod_type" value="both" required>&nbsp;&nbsp;Both&nbsp;&nbsp;
                                     </div>
                                     <?php if(!empty($prod_type_error_msg)){ ?>  

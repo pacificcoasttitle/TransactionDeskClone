@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class AddTaskTableForEscrow extends AbstractMigration
+final class AddEscrowOrderTaskStatus extends AbstractMigration
 {
     /**
      * Change Method.
@@ -18,10 +18,10 @@ final class AddTaskTableForEscrow extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('pct_escrow_tasks');
-        $table->addColumn('name', 'string')
-            ->addColumn('prod_type', 'enum', ['values' => ['loan', 'sale', 'both']])
-            ->addColumn('status', 'boolean', ['default'=>0])
+        $table = $this->table('pct_escrow_order_completed_task');
+        $table->addColumn('order_id', 'integer')
+            ->addColumn('task_id', 'integer')
+            ->addColumn('completed_by', 'integer', ['default' => 0, 'null' => true] )
             ->addTimestamps()
             ->create();
     }
