@@ -44,7 +44,7 @@ class Dashboard extends MX_Controller {
         $data['title'] = 'HR-Center Admin Dashboard';
         $data['page_title'] = 'Dashboard';
 	
-        if ($userdata['user_type_id'] == '4' || $userdata['user_type_id'] == '6') {
+        if ($userdata['user_type_id'] == '4' || $userdata['department_id'] == '4') {
 			$usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
 			$usersIds = array_column($usersForBranchManager, 'id');
 			$user_ids = implode(',' , $usersIds);
@@ -100,7 +100,7 @@ class Dashboard extends MX_Controller {
 		$usersEmails = array();
 		$usersIds = array();
 
-		if ($userdata['user_type_id'] == '6') {
+		if ($userdata['department_id'] == '4') {
 			$workedDays = $this->order->countWorkedDaysOfMonth();
 			$workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
 			$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $usersIds, 0, 1);

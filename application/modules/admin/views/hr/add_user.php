@@ -105,7 +105,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label style="width:100%;">User Type<span class="required"> *</span></label>
                                         <?php foreach($userTypes as $userType) {
