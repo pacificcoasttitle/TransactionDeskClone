@@ -1300,4 +1300,14 @@ class Common
             'data' => $orders_lists
         );
     }
+
+    public function getEscrowOfficerInfoBasedOnIdFromOrder($partner_id)
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_order_partner_company_info');
+        $this->CI->db->where('partner_id', $partner_id);
+        $this->CI->db->where('status', 1);
+        $query = $this->CI->db->get();    
+        return $query->row_array();
+    }
 }
