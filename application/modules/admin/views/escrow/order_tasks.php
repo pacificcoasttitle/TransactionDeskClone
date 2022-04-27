@@ -21,6 +21,12 @@
             <div class="col-sm-6">
                 <h1 class="h3 text-gray-800">Order's Tasks</h1>
             </div>
+			<div class="col-sm-6 text-right custom__task_button">
+				<button type="button" class="btn btn-primary btn-sm task_check_all"><i class="fa fa-check"></i></button>
+				<button type="button" class="btn btn-primary btn-sm task_un_check_all"><i class="fa fa-square"></i></button>
+				<button type="button" class="btn btn-primary btn-sm task_show_all"><i class="fa fa-plus"></i></button>
+				<button type="button" class="btn btn-primary btn-sm task_hide_all"><i class="fa fa-minus"></i></button>
+			</div>
         </div>
 		<form method="post" >
 			<div class="row">
@@ -51,12 +57,12 @@
 												</div>
 											</div>
 										</div>
-										<div class="collapse " id="collapseCard_<?php echo $task['id']; ?>">
+										<div class="collapse custom__task_collapse" id="collapseCard_<?php echo $task['id']; ?>">
 											<div class="card-body">
 												<?php if(empty($task['notes'])) : ?>
 													-
 												<?php else : ?>
-													<?php echo $task['notes']; ?>
+													<?php echo nl2br($task['notes']); ?>
 												<?php endif; ?>
 											</div>
 										</div>

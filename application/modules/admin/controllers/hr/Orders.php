@@ -249,6 +249,7 @@ class Orders extends MX_Controller {
         }
         $data['tasks'] = $tasks;
         $data['completedTaskIds'] = $completedTaskIds;
+		$this->admintemplate->addJS( base_url('assets/backend/escrow/js/tasks.js?v=order_tasks_'.$this->orders_js_version) );
         $this->admintemplate->show("hr", "order_tasks", $data);
 	}
 }

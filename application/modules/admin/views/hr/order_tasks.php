@@ -22,7 +22,11 @@
                 <h1 class="h3 text-gray-800">Order's Tasks</h1>
 				
             </div>
-			<div class="col-sm-6">
+			<div class="col-sm-6 text-right custom__task_button">
+				<button type="button" class="btn btn-primary btn-sm task_check_all"><i class="fa fa-check"></i></button>
+				<button type="button" class="btn btn-primary btn-sm task_un_check_all"><i class="fa fa-square"></i></button>
+				<button type="button" class="btn btn-primary btn-sm task_show_all"><i class="fa fa-plus"></i></button>
+				<button type="button" class="btn btn-primary btn-sm task_hide_all"><i class="fa fa-minus"></i></button>
 			</div>
         </div>
 		<form method="post" >
@@ -36,12 +40,12 @@
                         <div class="card-body">
                             <?php if (!empty($tasks)) {
                                 foreach($tasks as $task) { ?>
-									<div class="card">
+									<div class="card custom__task_card">
 										<div class="card-header py-3">
 											<div class="row">
 												<div class="col-sm-10">
 													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
+														<input type="checkbox" class="custom-control-input custom__task_checkbox" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
 														<label class="custom-control-label" for="check_<?php echo $task['id']; ?>"><?php echo $task['name']; ?></label>
 													</div>
 													<!-- <h6 class="m-0 font-weight-bold text-primary">Collapsable Card Example</h6> -->
@@ -54,12 +58,12 @@
 												</div>
 											</div>
 										</div>
-										<div class="collapse " id="collapseCard_<?php echo $task['id']; ?>">
+										<div class="collapse custom__task_collapse" id="collapseCard_<?php echo $task['id']; ?>">
 											<div class="card-body">
 												<?php if(empty($task['notes'])) : ?>
 													-
 												<?php else : ?>
-													<?php echo $task['notes']; ?>
+													<?php echo nl2br($task['notes']); ?>
 												<?php endif; ?>
 											</div>
 										</div>
