@@ -1,3 +1,20 @@
+<style>
+.card .card-header[data-toggle=collapse] {
+		border: none;
+	}
+.card .custom-control-label {
+	cursor: pointer;
+	width: 100%;
+}
+.custom-checkbox input[type="checkbox"]:checked+label{  text-decoration: line-through;}
+.custom-checkbox .custom-control-label::before,.custom-control-label::after {
+	left: -2rem;
+	width: 1.5rem;
+    height: 1.5rem;
+	top: 0;
+	border-radius: 0;
+}
+</style>
 <div class="content">
     <div class="container-fluid">
         <div class="row mb-3">
@@ -14,12 +31,37 @@
 						</div>
 
                         <div class="card-body">
-                            <?php if (!empty($tasks)) {
+						<?php if (!empty($tasks)) {
                                 foreach($tasks as $task) { ?>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
-                                        <label class="custom-control-label" for="check_<?php echo $task['id']; ?>"><?php echo $task['name']; ?></label>
-                                    </div>
+									<div class="card custom__task_card">
+										<div class="card-header py-3">
+											<div class="row">
+												<div class="col-sm-10">
+													<div class="custom-control custom-checkbox">
+														<input type="checkbox" class="custom-control-input custom__task_checkbox" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
+														<label class="custom-control-label" for="check_<?php echo $task['id']; ?>"><?php echo $task['name']; ?></label>
+													</div>
+													<!-- <h6 class="m-0 font-weight-bold text-primary">Collapsable Card Example</h6> -->
+												</div>
+												<div class="col-sm-2 text-right">
+													<a href="#collapseCard_<?php echo $task['id']; ?>" class=" card-header" data-toggle="collapse"
+														role="button" aria-expanded="false" aria-controls="collapseCard_<?php echo $task['id']; ?>">
+														
+													</a>
+												</div>
+											</div>
+										</div>
+										<div class="collapse " id="collapseCard_<?php echo $task['id']; ?>">
+											<div class="card-body">
+												<?php if(empty($task['notes'])) : ?>
+													-
+												<?php else : ?>
+													<?php echo $task['notes']; ?>
+												<?php endif; ?>
+											</div>
+										</div>
+									</div>
+                                    
                                 <?php } 
                             } else { ?>
                                 <div>No Task Found</div>
