@@ -23,7 +23,7 @@ $(document).ready(function () {
             "ordering": false,            
             "serverSide": true,
             "ajax": {                
-                url: base_url+"escrow/admin/get-tasks", 
+                url: base_url+"hr/admin/get-tasks", 
                 type: "post", 
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -52,7 +52,7 @@ function deleteTask(id)
     var ready = confirm("Are you sure want to delete?");
     if (ready) {
         $.ajax({
-            url: base_url+"escrow/admin/delete-task",
+            url: base_url+"hr/admin/delete-task",
             method: "POST",
             data : {
                 id : id

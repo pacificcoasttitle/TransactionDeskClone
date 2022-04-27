@@ -1,3 +1,4 @@
+<?php $userdata = $this->session->userdata('hr_admin');?>
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -41,7 +42,23 @@
 		</a>
 	</li>
 
-	<?php $userdata = $this->session->userdata('hr_admin');?>
+	<?php if($userdata['user_type_id'] == 4 && $userdata['department_id'] == 4) : ?>
+		<li class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/orders') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url().'hr/admin/orders'; ?>">
+				<i class="fas fa-list"></i>
+				<span>Orders</span>
+			</a>
+		</li>
+
+		<li
+			class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/tasks') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url().'hr/admin/tasks'; ?>">
+				<i class="fas fa-tasks fa-fw"></i>
+				<span>Task List</span>
+			</a>
+		</li>
+	<?php endif; ?>
+	
 	<?php if($userdata['user_type_id'] == 1 || $userdata['user_type_id'] == 2) : ?>
 	<li class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/ot-hours') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'hr/admin/ot-hours'; ?>">

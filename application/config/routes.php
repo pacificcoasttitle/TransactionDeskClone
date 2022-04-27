@@ -454,6 +454,14 @@ $route['hr/admin/ot-hours'] = 'admin/hr/timeSheets/viewOtHours';
 $route['hr/admin/get-ot-hours'] = 'admin/hr/timeSheets/getOtHours';
 $route['hr/admin/add-ot-request'] = 'admin/hr/timeSheets/addOtRequest';
 $route['hr/admin/view-time-sheet/(:any)/(:num)'] = 'admin/hr/timeSheets/viewTimeSheet/$1/$2';
+$route['hr/admin/orders'] = 'admin/hr/orders/index';
+$route['hr/admin/get-orders'] = 'admin/hr/orders/getOrders';
+$route['hr/admin/order-tasks/(:num)'] = 'admin/hr/orders/orderTasks/$1';
+$route['hr/admin/tasks'] = 'admin/hr/tasks/index';
+$route['hr/admin/get-tasks'] = 'admin/hr/tasks/getTasks';
+$route['hr/admin/add-task'] = 'admin/hr/tasks/addTask';
+$route['hr/admin/edit-task/(:num)'] = 'admin/hr/tasks/editTask/$1';
+$route['hr/admin/delete-task'] = 'admin/hr/tasks/deleteTask';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 
