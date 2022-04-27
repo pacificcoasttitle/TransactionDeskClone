@@ -40,6 +40,20 @@ $(document).ready(function () {
             }            
         });
     }
+	if ($('.custom__task_button').length > 0){
+		$('.task_check_all').click(function(){
+			$('.custom__task_card .custom__task_checkbox').prop('checked', true);
+		});
+		$('.task_un_check_all').click(function(){
+			$('.custom__task_card .custom__task_checkbox').prop('checked', false);
+		});
+		$('.task_show_all').click(function(){
+			$(".custom__task_card .custom__task_collapse").collapse('show');
+		});
+		$('.task_hide_all').click(function(){
+			$(".custom__task_card .custom__task_collapse").collapse('hide');
+		});
+	}
 });
 
 
