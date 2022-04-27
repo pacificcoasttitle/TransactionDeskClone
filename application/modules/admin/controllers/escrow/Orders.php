@@ -189,7 +189,7 @@ class Orders extends MX_Controller {
                     'message' => $message,
                     'type' =>  'completed'
                 );
-                $this->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->common->insert($notificationData, 'pct_hr_notifications');
                 $this->common->sendNotification($message, 'completed', $managerInfo->id, 1);
 
                 $assistantUsersInfo = $this->escrow_user_model->get_many_by(array('branch_id' => $userdata['branch_id'], 'position_id' => 15));
@@ -199,7 +199,7 @@ class Orders extends MX_Controller {
                         'message' => $message,
                         'type' =>  'completed'
                     );
-                    $this->hr->insert($notificationData, 'pct_hr_notifications');
+                    $this->common->insert($notificationData, 'pct_hr_notifications');
                     $this->common->sendNotification($message, 'completed', $assistantUser->id, 0);
                 }
             } else if ($userdata['is_escrow_assistant'] == 1) {
@@ -209,7 +209,7 @@ class Orders extends MX_Controller {
                     'message' => $message,
                     'type' =>  'completed'
                 );
-                $this->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->common->insert($notificationData, 'pct_hr_notifications');
                 $this->common->sendNotification($message, 'completed', $managerInfo->id, 1);
 
                 $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
@@ -219,7 +219,7 @@ class Orders extends MX_Controller {
                     'message' => $message,
                     'type' =>  'completed'
                 );
-                $this->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->common->insert($notificationData, 'pct_hr_notifications');
                 $this->common->sendNotification($message, 'completed', $escrowInfo->id, 0);
             }
             $successMsg = 'Order task List Updated';
