@@ -1113,4 +1113,166 @@ class Common
 			exec($command . " > /dev/null &");  
 		}
 	}
+
+    public function getTasks($params)
+    {
+        $this->CI->db->from('pct_escrow_tasks');
+        $this->CI->db->where('pct_escrow_tasks.status', 1);
+        $total_records =  $this->CI->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $tasks = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like('pct_escrow_tasks.name', $keyword)
+                    ->or_like('pct_escrow_tasks.prod_type', $keyword)
+                    ->group_end();
+            }
+            
+            $this->CI->db->from('pct_escrow_tasks');
+            $this->CI->db->where('pct_escrow_tasks.status', 1);
+			$filter_total_records =  $this->CI->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like('pct_escrow_tasks.name', $keyword)
+                    ->or_like('pct_escrow_tasks.prod_type', $keyword)
+                    ->group_end();
+            }
+
+            $this->CI->db->select('pct_escrow_tasks.*');
+            $this->CI->db->from('pct_escrow_tasks');
+            $this->CI->db->where('pct_escrow_tasks.status', 1);
+            $this->CI->db->order_by('pct_escrow_tasks.id', 'asc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }	
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $tasks = $query->result_array();
+	        }
+    	} else {    		
+    		$this->CI->db->from('pct_escrow_tasks');
+            $this->CI->db->where('pct_escrow_tasks.status', 1);
+            $filter_total_records =  $this->CI->db->count_all_results();
+
+            $this->CI->db->select('pct_escrow_tasks.*');
+            $this->CI->db->from('pct_escrow_tasks');
+            $this->CI->db->where('pct_escrow_tasks.status', 1);
+            $this->CI->db->order_by('pct_escrow_tasks.id', 'asc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+			$query = $this->CI->db->get();
+			if ($query->num_rows() > 0) {
+	            $tasks = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $tasks
+        );
+    }
+
+    public function getOrders($params)
+    {
+        $orders_lists = array();
+        $this->CI->db->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details','order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+        $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36)');
+        $total_records =  $this->CI->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        
+        $select = 'order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated,property_details.primary_owner, pct_order_product_types.product_type';
+
+        if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like('property_details.full_address', $keyword)         
+                    ->or_like('order_details.file_number', $keyword) 
+                    ->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword)))
+                    ->or_like('order_details.resware_status', $keyword)
+                ->group_end();
+            } 
+
+            $this->CI->db->select($select)
+                ->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details','order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+
+            $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36)');
+            $filter_total_records =  $this->CI->db->count_all_results();
+            
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like('property_details.full_address', $keyword)         
+                    ->or_like('order_details.file_number', $keyword) 
+                    ->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword)))
+                    ->or_like('order_details.resware_status', $keyword)
+                ->group_end();
+            } 
+
+            $this->CI->db->select($select)
+                ->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details','order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+
+            $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36)');
+            $this->CI->db->order_by("order_details.id", "desc");
+           
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+            //echo $this->CI->db->last_query();exit;
+            if ($query->num_rows() > 0)  {
+                $orders_lists = $query->result_array();
+            }
+        } else {
+
+            $filter_total_records =  $total_records;
+            $this->CI->db->select($select)
+                ->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details','order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+
+            $this->CI->db->where('(transaction_details.purchase_type = 2 or transaction_details.purchase_type = 3 or transaction_details.purchase_type = 4 or transaction_details.purchase_type = 5 or transaction_details.purchase_type = 36)');
+            $this->CI->db->order_by("order_details.id", "desc");
+        
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+            $query = $this->CI->db->get();
+            //echo $this->CI->db->last_query();exit;
+            if ($query->num_rows() > 0)  {
+                $orders_lists = $query->result_array();
+            } 
+        }
+        
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $orders_lists
+        );
+    }
 }

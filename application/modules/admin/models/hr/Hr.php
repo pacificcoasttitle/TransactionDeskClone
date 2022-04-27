@@ -120,7 +120,7 @@ class Hr extends CI_Model
         $userdata = $this->session->userdata('hr_admin');
         $usersIds = array();
         if(!empty($userdata)) {
-            if ($userdata['user_type_id'] == 4) {
+            if ($userdata['user_type_id'] == 4 && $userdata['department_id'] != 4) {
                 $usersForBranchManager = $this->common->getUsersForBranchManager($userdata['id']);
                 if(!empty($usersForBranchManager)) {
                     $usersIds = array_column($usersForBranchManager, 'id');
@@ -146,6 +146,9 @@ class Hr extends CI_Model
         if(!empty($usersIds)) {
             $this->db->where_in('pct_hr_users.id', $usersIds);
         } 
+        if ($userdata['department_id'] == '4') {
+            $this->db->where('pct_hr_users.department_id', 4);
+        }
         $total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -175,6 +178,9 @@ class Hr extends CI_Model
             if(!empty($usersIds)) {
                 $this->db->where_in('pct_hr_users.id', $usersIds);
             } 
+            if ($userdata['department_id'] == '4') {
+                $this->db->where('pct_hr_users.department_id', 4);
+            }
 			$filter_total_records =  $this->db->count_all_results();
 
 			if (isset($keyword) && !empty($keyword)) {
@@ -199,6 +205,9 @@ class Hr extends CI_Model
             if(!empty($usersIds)) {
                 $this->db->where_in('pct_hr_users.id', $usersIds);
             } 
+            if ($userdata['department_id'] == '4') {
+                $this->db->where('pct_hr_users.department_id', 4);
+            }
             $this->db->order_by('pct_hr_users.id', 'desc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -221,6 +230,9 @@ class Hr extends CI_Model
             if(!empty($usersIds)) {
                 $this->db->where_in('pct_hr_users.id', $usersIds);
             } 
+            if ($userdata['department_id'] == '4') {
+                $this->db->where('pct_hr_users.department_id', 4);
+            }
             $this->db->order_by('pct_hr_users.id', 'desc');
 
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
