@@ -182,36 +182,15 @@ class Orders extends MX_Controller {
                 }
             }
             
-            if ($userdata['is_escrow_manager'] == 1) {
-                if (!empty($orderInfo->escrow_officer_id)) {
-                    $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
-                    $escrowInfo = $this->escrow_user_model->get_by('email', $escrowInfoFromOrder['email']);
-                    $notificationData = array(
-                        'sent_user_id' => $escrowInfo->id,
-                        'message' => $message,
-                        'type' =>  'completed'
-                    );
-                    $this->common->insert($notificationData, 'pct_hr_notifications');
-                    $this->common->sendNotification($message, 'completed', $escrowInfo->id, 0);
-                    $assistantUsersInfo = $this->escrow_user_model->get_many_by(array('branch_id' => $escrowInfo->branch_id, 'position_id' => 15));
-                    foreach ($assistantUsersInfo as $assistantUser) {
-                        $notificationData = array(
-                            'sent_user_id' => $assistantUser->id,
-                            'message' => $message,
-                            'type' =>  'completed'
-                        );
-                        $this->common->insert($notificationData, 'pct_hr_notifications');
-                        $this->common->sendNotification($message, 'completed', $assistantUser->id, 0);
-                    }
-                }
-            } else if ($userdata['is_escrow_officer'] == 1) {
+            if ($userdata['is_escrow_officer'] == 1) {
+                $managerInfo = $this->escrow_user_model->get_by(array('department_id' => 4, 'user_type_id' => 4));
                 $notificationData = array(
-                    'sent_user_id' => 0,
+                    'sent_user_id' => $managerInfo->id,
                     'message' => $message,
                     'type' =>  'completed'
                 );
                 $this->common->insert($notificationData, 'pct_hr_notifications');
-                $this->common->sendNotification($message, 'completed', 0, 1);
+                $this->common->sendNotification($message, 'completed', $managerInfo->id, 1);
 
                 $assistantUsersInfo = $this->escrow_user_model->get_many_by(array('branch_id' => $userdata['branch_id'], 'position_id' => 15));
                 foreach ($assistantUsersInfo as $assistantUser) {
@@ -223,15 +202,15 @@ class Orders extends MX_Controller {
                     $this->common->insert($notificationData, 'pct_hr_notifications');
                     $this->common->sendNotification($message, 'completed', $assistantUser->id, 0);
                 }
-
             } else if ($userdata['is_escrow_assistant'] == 1) {
+                $managerInfo = $this->escrow_user_model->get_by(array('department_id' => 4, 'user_type_id' => 4));
                 $notificationData = array(
-                    'sent_user_id' => 0,
+                    'sent_user_id' => $managerInfo->id,
                     'message' => $message,
                     'type' =>  'completed'
                 );
                 $this->common->insert($notificationData, 'pct_hr_notifications');
-                $this->common->sendNotification($message, 'completed', 0, 1);
+                $this->common->sendNotification($message, 'completed', $managerInfo->id, 1);
 
                 $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
                 $escrowInfo = $this->escrow_user_model->get_by('email', $escrowInfoFromOrder['email']);

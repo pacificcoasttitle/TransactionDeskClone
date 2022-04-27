@@ -121,8 +121,8 @@ class Common
     public function sendNotification($message, $type, $sent_to_user, $is_sent_admin = 0)
     {
         if ($is_sent_admin == 1) {
-            $channel = 'admin-channel';
-            $event = 'admin-event';
+            $channel = 'admin-channel-'.$sent_to_user;
+            $event = 'admin-event-'.$sent_to_user;
         }
 
         if ($is_sent_admin == 0) {
