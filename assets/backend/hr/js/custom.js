@@ -1360,14 +1360,14 @@ $('input[name=user_selection]').on('change', function() {
         $('#department_container').addClass('d-none');
         $('#position_container').addClass('d-none');
         $('input[name=user_selection]').prop('required',true);
-        $('#traning_position').prop('required', false);
+        // $('#traning_position').prop('required', false);
         $('#traning_department').prop('required', false);
     } else if (user_selection_val == 'based_on_position_and_department') {
         $('#user_container').addClass('d-none');
         $('#department_container').removeClass('d-none');
         $('#position_container').removeClass('d-none');
         $('input[name=user_selection]').prop('required',false);
-        $('#traning_position').prop('required', true);
+        // $('#traning_position').prop('required', true);
         $('#traning_department').prop('required', true);
     }
 });

@@ -93,6 +93,8 @@
 										<label for="traning_department">Department <span class="required"> *</span></label>
 										<select class="form-control" name="traning_department" id="traning_department">
 											<option value="">Select Department</option>
+											<option value="all">All Departments</option>
+
 											<?php foreach($departments as $department): ?>
 												<option value="<?php echo $department->id;?>"><?php echo $department->name; ?></option>
 											<?php endforeach; ?>
@@ -109,7 +111,7 @@
 							<div class="row d-none" id="position_container">
                                 <div class="col-md-6">
                                     <div class="form-group">
-										<label for="traning_position">Position <span class="required"> *</span></label>
+										<label for="traning_position">Position </label>
 										<select class="form-control" name="traning_position" id="traning_position">
 											<option value="">Select Position</option>
 											<?php foreach($positions as $position): ?>

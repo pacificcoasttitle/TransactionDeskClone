@@ -102,6 +102,7 @@
 										<label for="traning_department">Department <span class="required"> *</span></label>
 										<select class="form-control" name="traning_department" id="traning_department" <?php echo $record->user_selection == 'based_on_position_and_department' ? 'required' : '';?>>
 											<option value="">Select Department</option>
+											<option value="all" <?php if($record->department_id == 0) echo 'selected';?>>All Departments</option>
 											<?php foreach($departments as $department): ?>
 												<option value="<?php echo $department->id;?>" <?php if($record->department_id == $department->id) echo 'selected';?>><?php echo $department->name; ?></option>
 											<?php endforeach; ?>
@@ -118,8 +119,8 @@
 							<div class="row <?php echo $record->user_selection == 'based_on_position_and_department' ? '' : 'd-none';?>" id="position_container">
                                 <div class="col-md-6">
                                     <div class="form-group">
-										<label for="traning_position">Position <span class="required"> *</span></label>
-										<select class="form-control" name="traning_position" id="traning_position" <?php echo $record->user_selection == 'based_on_position_and_department' ? 'required' : '';?>>
+										<label for="traning_position">Position </label>
+										<select class="form-control" name="traning_position" id="traning_position" >
 											<option value="">Select Position</option>
 											<?php foreach($positions as $position): ?>
 												<option value="<?php echo $position->id;?>" <?php if($record->position_id == $position->id) echo 'selected';?>><?php echo $position->name; ?></option>
