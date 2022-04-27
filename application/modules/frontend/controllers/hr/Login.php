@@ -61,6 +61,9 @@ class Login extends MX_Controller {
                                 "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name']." ".$user['last_name'] : '',
                                 "email" => isset($user['email']) && !empty($user['email']) ? $user['email'] : '',
                                 "user_type_id" => isset($user['user_type_id']) && !empty($user['user_type_id']) ? $user['user_type_id'] : '',
+                                "department_id" => isset($user['department_id']) && !empty($user['department_id']) ? $user['department_id'] : '',
+                                "position_id" => isset($user['position_id']) && !empty($user['position_id']) ? $user['position_id'] : '',
+                                "branch_id" => isset($user['branch_id']) && !empty($user['branch_id']) ? $user['branch_id'] : '',
                                 "user_type" => isset($user['user_type']) && !empty($user['user_type']) ? $user['user_type'] : '',
                             );
                             $this->session->set_userdata('hr_user', $session_data);

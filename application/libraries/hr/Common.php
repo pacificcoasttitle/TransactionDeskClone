@@ -295,6 +295,19 @@ class Common
         }
     }
 
+    public function getEscrowUsersForEscrowManager() 
+    {
+        $this->CI->db->select('id, email, pct_order_email, first_name, last_name')
+            ->from('pct_hr_users');
+        $this->CI->db->where('department_id', 4);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
     public function getTimeCards($params)
     { 
         if (isset($params['is_frontend']) && $params['is_frontend'] == 1) {
@@ -305,7 +318,11 @@ class Common
         $usersIds = array();
         if(!empty($userdata)) {
             if ($userdata['user_type_id'] == 4) {
-                $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                if ($userdata['department_id'] == 4) {
+                    $usersForBranchManager = $this->getEscrowUsersForEscrowManager($userdata['id']);
+                } else {
+                    $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                }
                 if(!empty($usersForBranchManager)) {
                     $usersIds = array_column($usersForBranchManager, 'id');
                 } else {
@@ -440,7 +457,11 @@ class Common
         $usersIds = array();
         if(!empty($userdata)) {
             if ($userdata['user_type_id'] == 4) {
-                $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                if ($userdata['department_id'] == 4) {
+                    $usersForBranchManager = $this->getEscrowUsersForEscrowManager($userdata['id']);
+                } else {
+                    $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                }
                 if(!empty($usersForBranchManager)) {
                     $usersIds = array_column($usersForBranchManager, 'id');
                 } else {
@@ -576,7 +597,11 @@ class Common
         $usersIds = array();
         if(!empty($userdata)) {
             if ($userdata['user_type_id'] == 4) {
-                $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                if ($userdata['department_id'] == 4) {
+                    $usersForBranchManager = $this->getEscrowUsersForEscrowManager($userdata['id']);
+                } else {
+                    $usersForBranchManager = $this->getUsersForBranchManager($userdata['id']);
+                }
                 if(!empty($usersForBranchManager)) {
                     $usersIds = array_column($usersForBranchManager, 'id');
                 } else {

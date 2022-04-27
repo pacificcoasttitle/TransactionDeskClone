@@ -81,6 +81,7 @@ class Tasks extends MX_Controller {
                 $nestedData[] = $count;
 	            $nestedData[] = $value['name'];
                 $nestedData[] = ucfirst($value['prod_type']);
+                $nestedData[] = $value['notes'];
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-task/'.$value['id'];
                     
@@ -122,6 +123,7 @@ class Tasks extends MX_Controller {
                 $taskData = array(
                     'name' =>  $this->input->post('name'),
                     'prod_type' =>  $this->input->post('prod_type'),
+                    'notes' =>  $this->input->post('notes'),
                     'status' =>  1
                 );
                 $this->hr->insert($taskData, 'pct_escrow_tasks');
@@ -149,7 +151,8 @@ class Tasks extends MX_Controller {
                 if ($this->form_validation->run() == true) {
                     $taskData = array(
                         'name' =>  $this->input->post('name'),
-                        'prod_type' =>  $this->input->post('prod_type')
+                        'prod_type' =>  $this->input->post('prod_type'),
+                        'notes' =>  $this->input->post('notes'),
                     );
                     $condition = array('id' => $id);
                     $this->hr->update($taskData, $condition, 'pct_escrow_tasks');

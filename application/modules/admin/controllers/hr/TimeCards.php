@@ -164,7 +164,11 @@ class Timecards extends MX_Controller {
 		$this->load->model('hr/users_model');
         if ($userdata['user_type_id'] == 4) {
             $userInfo = $this->users_model->get($userdata['id']);
-            $users = $this->users_model->get_many_by('branch_id', $userInfo->branch_id);
+            if ($userdata['department_id'] == 4) {
+                $users = $this->users_model->get_many_by('department_id', 4);
+            } else {
+                $users = $this->users_model->get_many_by('branch_id', $userInfo->branch_id);
+            }
         } else {
             $users = $this->users_model->get_all();
         }

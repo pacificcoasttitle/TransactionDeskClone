@@ -36,7 +36,7 @@
 						</span>
 						<span class="text">Save</span>
 					</button>
-					<a href="<?php echo base_url().'escrow/admin/orders'; ?>" class="btn btn-secondary btn-icon-split">
+					<a href="<?php echo base_url().'hr/admin/orders'; ?>" class="btn btn-secondary btn-icon-split">
 						<span class="icon text-white-50">
 							<i class="fas fa-arrow-right"></i>
 						</span>

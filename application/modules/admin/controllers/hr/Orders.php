@@ -245,10 +245,10 @@ class Orders extends MX_Controller {
             }*/
             $successMsg = 'Order task List Updated';
             $this->session->set_userdata('success', $successMsg);
-            redirect(base_url().'escrow/admin/orders');
+            redirect(base_url().'hr/admin/orders');
         }
         $data['tasks'] = $tasks;
         $data['completedTaskIds'] = $completedTaskIds;
-        $this->admintemplate->show("escrow", "order_tasks", $data);
+        $this->admintemplate->show("hr", "order_tasks", $data);
 	}
 }
