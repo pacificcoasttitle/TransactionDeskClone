@@ -4,7 +4,7 @@
 
 class Training extends MX_Controller 
 {
-	private $custom_js_version = '01';
+	private $custom_js_version = '02';
 	function __construct() 
     {
         parent::__construct();
@@ -116,7 +116,7 @@ class Training extends MX_Controller
 
 			if ($this->input->post('user_selection') == 'based_on_position_and_department') {
 				$this->form_validation->set_rules('traning_department', 'Department', 'required');
-            	$this->form_validation->set_rules('traning_position', 'Position', 'required');
+            	// $this->form_validation->set_rules('traning_position', 'Position', 'required');
 			} else if ($this->input->post('user_selection') == 'based_on_user_listing') {
 				$this->form_validation->set_rules('users[]', 'Users', 'required', array('required'=> 'Please Select atleast one user'));
 			}	
@@ -148,7 +148,7 @@ class Training extends MX_Controller
 					$trainingData = array(
 						'name' =>  $this->input->post('traning_name'),
 						'description' =>  $this->input->post('traning_description'),
-						'department_id' =>  $this->input->post('traning_department') ? $this->input->post('traning_department') : 0,
+						'department_id' =>  ($this->input->post('traning_department') && $this->input->post('traning_department') != 'all')  ? $this->input->post('traning_department') : 0,
 						'position_id' =>  $this->input->post('traning_position') ? $this->input->post('traning_position') : 0,
 						'user_selection' =>  $this->input->post('user_selection'),
 						'status' =>  $this->input->post('check_status') ? 1 : 0,
@@ -187,7 +187,20 @@ class Training extends MX_Controller
 
 						if ($this->input->post('user_selection') == 'based_on_position_and_department') {
 							$this->load->model('hr/users_model');
-							$usersList = $this->users_model->get_many_by("(position_id = {$this->input->post('traning_position')} and department_id ={$this->input->post('traning_department')})");
+							$this->load->model('hr/users_department');
+							$all_departments = $this->users_department->get_many_by('status',1);
+							$departments_ids = array_column($all_departments,'id');
+							$filter_array = array();
+							if($this->input->post('traning_position') > 0) {
+								$positions_ids = $this->input->post('traning_position');
+								$filter_array['position_id'] = $positions_ids;
+							}
+							if($this->input->post('traning_department') != 'all' && $this->input->post('traning_department') > 0) {
+								$departments_ids = $this->input->post('traning_department');
+							}
+							$filter_array['department_id'] = $departments_ids;
+							
+							$usersList = $this->users_model->get_many_by($filter_array);
 							$training_status = array();
 
 							foreach($usersList as $user) {
@@ -293,7 +306,7 @@ class Training extends MX_Controller
 
 				if ($record->user_selection == 'based_on_position_and_department') {
 					$this->form_validation->set_rules('traning_department', 'Department', 'required');
-					$this->form_validation->set_rules('traning_position', 'Position', 'required');
+					// $this->form_validation->set_rules('traning_position', 'Position', 'required');
 				} else if ($record->user_selection == 'based_on_user_listing') {
 					$this->form_validation->set_rules('users[]', 'Users', 'required', array('required'=> 'Please Select atleast one user'));
 				}	
@@ -348,7 +361,7 @@ class Training extends MX_Controller
 					$trainingData = array(
 						'name' =>  $this->input->post('traning_name'),
 						'description' =>  $this->input->post('traning_description'),
-						'department_id' =>  $this->input->post('traning_department') ? $this->input->post('traning_department') : 0,
+						'department_id' =>  $this->input->post('traning_department') && $this->input->post('traning_department') != 'all' ? $this->input->post('traning_department') : 0,
 						'position_id' =>  $this->input->post('traning_position') ? $this->input->post('traning_position') : 0,
 						// 'user_selection' =>  $this->input->post('user_selection'),
 						'status' =>  $this->input->post('check_status') ? 1 : 0,
@@ -407,9 +420,24 @@ class Training extends MX_Controller
 
 					if ($record->user_selection == 'based_on_position_and_department') {
 						$this->training_status_model->delete_by('training_id', $id);
-						$this->load->model('hr/users_model');
+						$this->load->model('hr/users_model','all_users');
+
+						$this->load->model('hr/users_department');
+						$all_departments = $this->users_department->get_many_by('status',1);
+						$departments_ids = array_column($all_departments,'id');
+						$filter_array = array();
+						if($this->input->post('traning_position') > 0) {
+							$positions_ids = $this->input->post('traning_position');
+							$filter_array['position_id'] = $positions_ids;
+						}
+						if($this->input->post('traning_department') != 'all' && $this->input->post('traning_department') > 0) {
+							$departments_ids = $this->input->post('traning_department');
+						}
+						$filter_array['department_id'] = $departments_ids;
 						
-						$usersList = $this->users_model->get_many_by("(position_id = {$this->input->post('traning_position')} and department_id ={$this->input->post('traning_department')})");
+						$usersList = $this->all_users->get_many_by($filter_array);
+						
+						// $usersList = $this->all_users->get_many_by("(position_id = {$this->input->post('traning_position')} and department_id ={$this->input->post('traning_department')})");
 						// echo "hhee";exit;
 						$training_status = array();
 
