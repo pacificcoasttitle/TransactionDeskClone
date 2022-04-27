@@ -135,14 +135,22 @@ class VacationRequests extends MX_Controller
 			
             $this->load->model('hr/users_model');
             $userInfo = $this->users_model->get($userdata['id']);
-            $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
-            $notificationData = array(
-                'sent_user_id' => $branchUserInfo->id,
-                'message' => $message,
-                'type' => 'submitted'
-            );
-            $this->hr->insert($notificationData, 'pct_hr_notifications');
-            $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+
+            if ($userdata['department_id'] == 4) {
+                $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'department_id' => 4));
+            } else {
+                $branchUserInfo = $this->users_model->get_by(array('user_type_id' => 4, 'branch_id' => $userInfo->branch_id));
+            }
+            
+            if (!empty($branchUserInfo)) {
+                $notificationData = array(
+                    'sent_user_id' => $branchUserInfo->id,
+                    'message' => $message,
+                    'type' => 'submitted'
+                );
+                $this->hr->insert($notificationData, 'pct_hr_notifications');
+                $this->common->sendNotification($message, 'submitted', $branchUserInfo->id, 1);
+            }
 
 			//Send Mail to Manager
 			$this->common->mailNotification($branchUserInfo->id,'vacation_request',$last_id);

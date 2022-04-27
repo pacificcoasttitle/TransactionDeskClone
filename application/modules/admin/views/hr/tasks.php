@@ -36,6 +36,7 @@
                             <th>No</th>
                             <th>Name</th>
                             <th>Product Type</th>
+							<th>Notes</th>
                             <th>Action</th>
 						</tr>
 					</thead>

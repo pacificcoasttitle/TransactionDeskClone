@@ -42,6 +42,15 @@
                                     <?php } ?>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email">Notes</label>
+                                        <textarea rows="5" class="form-control" placeholder="Please enter Notes....." name="notes" id="notes"><?php echo $taskInfo->notes;?></textarea>
+                                    </div>
+                                </div>
+                            </div>
                         
                             <button type="submit" class="btn btn-info btn-icon-split">
                                 <span class="icon text-white-50">
