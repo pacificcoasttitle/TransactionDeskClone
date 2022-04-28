@@ -22,7 +22,7 @@ class Orders extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-    private $orders_js_version = '01';
+    private $orders_js_version = '02';
 	public function __construct()
     {
         parent::__construct();
