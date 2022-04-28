@@ -18,11 +18,22 @@
 <div class="content">
     <div class="container-fluid">
         <div class="row mb-3">
-            <div class="col-sm-6">
-                <h1 class="h3 text-gray-800">Order's Tasks</h1>
+            <div class="col-sm-8">
+				<div class="row">
+					<div class="col-sm-4">
+						<h1 class="h3 text-gray-800">Order's Tasks</h1>
+					</div>
+					<div class="col-sm-3">
+						<div class="progress mt-1">
+							<div class="progress-bar custom__task_progress" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+						</div>
+					</div>
+
+				</div>
+                
 				
             </div>
-			<div class="col-sm-6 text-right custom__task_button">
+			<div class="col-sm-4 text-right custom__task_button">
 				<button type="button" class="btn btn-primary btn-sm task_check_all"><i class="fa fa-check"></i></button>
 				<button type="button" class="btn btn-primary btn-sm task_un_check_all"><i class="fa fa-square"></i></button>
 				<button type="button" class="btn btn-primary btn-sm task_show_all"><i class="fa fa-plus"></i></button>
