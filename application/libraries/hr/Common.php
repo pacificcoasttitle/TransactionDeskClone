@@ -1308,6 +1308,14 @@ class Common
         $this->CI->db->where('partner_id', $partner_id);
         $this->CI->db->where('status', 1);
         $query = $this->CI->db->get();    
+        $partnerInfo = $query->row_array();
+
+        $this->CI->db->select('*');
+        $this->CI->db->from('customer_basic_details');
+        $this->CI->db->where('email_address', $partnerInfo['email']);
+        $this->CI->db->where('is_escrow_officer', 1);
+        $this->CI->db->where('status', 1);
+        $query = $this->CI->db->get();    
         return $query->row_array();
     }
 }

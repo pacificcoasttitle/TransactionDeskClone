@@ -101,6 +101,8 @@ class Login extends MX_Controller {
                                     "is_sales_rep_manager" =>  $user['is_sales_rep_manager'],
                                     "is_title_officer" =>  $user['is_title_officer'],
                                     "is_payoff_user" =>  $user['is_payoff_user'],
+                                    "is_escrow_officer" =>  $user['is_escrow_officer'],
+                                    "is_escrow_assistant" =>  $user['is_escrow_assistant'],
                                     "partner_companies" =>  $user['partner_companies'],
                                     "is_special_lender" =>  isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                                 );
@@ -122,6 +124,8 @@ class Login extends MX_Controller {
                             "is_sales_rep_manager" =>  $user['is_sales_rep_manager'],
                             "is_title_officer" =>  $user['is_title_officer'],
                             "is_payoff_user" =>  $user['is_payoff_user'],
+                            "is_escrow_officer" =>  $user['is_escrow_officer'],
+                            "is_escrow_assistant" =>  $user['is_escrow_assistant'],
                             "partner_companies" =>  $user['partner_companies'],
                             "is_special_lender" =>  isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                         );
@@ -135,6 +139,8 @@ class Login extends MX_Controller {
                         $response = array('status'=>'success', 'message'=> '', 'url' => 'special-lender-dashboard');
                     } else if ($user['is_payoff_user'] == 1) {
                         $response = array('status'=>'success', 'message'=> '', 'url' => 'pay-off-dashboard');
+                    } else if ($user['is_escrow_officer'] == 1 || $user['is_escrow_assistant'] == 1) {
+                        $response = array('status'=>'success', 'message'=> '', 'url' => 'escrow-dashboard');
                     } else {
                         $response = array('status'=>'success', 'message'=> '', 'url' => 'dashboard');
                     }

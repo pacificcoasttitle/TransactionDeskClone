@@ -220,6 +220,9 @@ $route['generate-payoff'] = 'frontend/order/payOff/generatePayoff';
 $route['trends/:any'] = 'frontend/order/salesRep/trends';
 $route['sales-summary/:any'] = 'frontend/order/salesRep/summary';
 $route['mark-as-read'] = 'frontend/order/common/markAsRead';
+$route['escrow-dashboard'] = 'frontend/order/escrow/index';
+$route['order/escrow/order-tasks/(:num)'] = 'frontend/order/escrow/orderTasks/$1';
+$route['get-escrow-orders'] = 'frontend/order/escrow/get_escrow_orders';
 
 
 /* Route for PCT-Order backend*/
