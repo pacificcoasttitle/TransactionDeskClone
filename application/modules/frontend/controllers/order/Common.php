@@ -2335,23 +2335,4 @@ class Common extends MX_Controller {
         );
         echo json_encode($response);
     }
-
-	function orderTasks() {
-		$data = array();
-		$task = array();
-		for ($i=1; $i < 10 ; $i++) { 
-			$task[]=[
-				'id'=>$i,
-				'name'=>'task'.$i,
-				'notes'=>'Notes Here <br> Line 1'
-			];
-		}
-		
-		$data['tasks']=$task;
-		
-		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css') );
-		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js') );
-		$this->template->show("order", "order_tasks", $data);
-
-	}
 }
