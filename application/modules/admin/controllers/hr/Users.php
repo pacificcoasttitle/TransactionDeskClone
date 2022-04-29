@@ -265,6 +265,43 @@ class Users extends MX_Controller {
                                 $this->training_status_model->insert_many($assign_trainings);
                             }
                         }
+
+                        if ($this->input->post('department') == '4') {
+                            if ($this->input->post('user_type') == '3') {
+                                $this->load->model('hr/order_users_model');
+                                $email = $this->input->post('email');
+                                $pctOrderUserInfo = $this->order_users_model->get_by("email_address = '$email' and (is_escrow_officer = 1 or is_escrow_assistant = 1)");
+                                $userData = array(
+                                    'partner_id' => 0, 
+                                    'partner_type_id' => 10010,
+                                    'first_name' => $this->input->post('first_name'), 
+                                    'last_name' => $this->input->post('last_name'), 
+                                    'title' => '', 
+                                    'telephone_no' => $this->input->post('cell_phone'), 
+                                    'email_address' => $this->input->post('email'), 
+                                    'password' => password_hash($randomPassword, PASSWORD_DEFAULT), 
+                                    'random_password' => 'Pacific1', 
+                                    'company_name' => '', 
+                                    'is_escrow' => 0, 
+                                    'lender_type' => null, 
+                                    'status' => 1, 
+                                    'is_master' => 0, 
+                                    'is_sales_rep' => 0, 
+                                    'is_password_updated' => 1, 
+                                    'is_password_required' => 1, 
+                                    'is_mail_notification' => 0,
+                                    'sales_rep_report_image' => '',
+                                    'is_escrow_assistant' => $this->input->post('position') == 15 ? 1 : 0,
+                                    'is_escrow_officer' => $this->input->post('position')!= 15 ? 1 : 0
+                                );
+
+                                if (!empty($pctOrderUserInfo)) {
+                                    $this->order_users_model->update($pctOrderUserInfo->id, $userData);
+                                } else {
+                                    $user_id = $this->order_users_model->insert($userData);
+                                }
+                            }
+                        }
                     }
                     
                     $successMsg = 'User added successfully.';
@@ -371,6 +408,42 @@ class Users extends MX_Controller {
                         $condition = array('id' => $id);
                         $this->hr->update($usersData, $condition, 'pct_hr_users');
                         $successMsg = 'User updated successfully.';
+                        if ($this->input->post('department') == '4') {
+                            if ($this->input->post('user_type') == '3') {
+                                $this->load->model('hr/order_users_model');
+                                $email = $this->input->post('email');
+                                $pctOrderUserInfo = $this->order_users_model->get_by("email_address = '$email' and (is_escrow_officer = 1 or is_escrow_assistant = 1)");
+                                $userData = array(
+                                    'partner_id' => 0, 
+                                    'partner_type_id' => 10010,
+                                    'first_name' => $this->input->post('first_name'), 
+                                    'last_name' => $this->input->post('last_name'), 
+                                    'title' => '', 
+                                    'telephone_no' => $this->input->post('cell_phone'), 
+                                    'email_address' => $this->input->post('email'), 
+                                    'password' => !empty($this->input->post('password')) ? password_hash($this->input->post('password'), PASSWORD_DEFAULT) : '', 
+                                    'random_password' => 'Pacific1', 
+                                    'company_name' => '', 
+                                    'is_escrow' => 0, 
+                                    'lender_type' => null, 
+                                    'status' => 1, 
+                                    'is_master' => 0, 
+                                    'is_sales_rep' => 0, 
+                                    'is_password_updated' => 1, 
+                                    'is_password_required' => 1, 
+                                    'is_mail_notification' => 0,
+                                    'sales_rep_report_image' => '',
+                                    'is_escrow_assistant' => $this->input->post('position') == 15 ? 1 : 0,
+                                    'is_escrow_officer' => $this->input->post('position')!= 15 ? 1 : 0
+                                );
+
+                                if (!empty($pctOrderUserInfo)) {
+                                    $this->order_users_model->update($pctOrderUserInfo->id, $userData);
+                                } else {
+                                    $this->order_users_model->insert($userData);
+                                }
+                            }
+                        }
                         $this->session->set_userdata('success', $successMsg);
                         redirect(base_url().'hr/admin/users');
                     }
