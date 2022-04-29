@@ -2338,34 +2338,18 @@ class Common extends MX_Controller {
 
 	function orderTasks() {
 		$data = array();
-		$task = [
-			[
-				'id'=>1,
-				'name'=>'task1',
-				'notes'=>'Notes Here '
-			],
-			[
-				'id'=>2,
-				'name'=>'task2',
-				'notes'=>'Notes Here '
-			],
-			[
-				'id'=>3,
-				'name'=>'task3',
-				'notes'=>'Notes Here '
-			],
-			[
-				'id'=>4,
-				'name'=>'task4',
-				'notes'=>'Notes Here '
-			],
-			[
-				'id'=>5,
-				'name'=>'task5',
-				'notes'=>'Notes Here '
-			],
-		];
+		$task = array();
+		for ($i=1; $i < 10 ; $i++) { 
+			$task[]=[
+				'id'=>$i,
+				'name'=>'task'.$i,
+				'notes'=>'Notes Here <br> Line 1'
+			];
+		}
+		
 		$data['tasks']=$task;
+		
+		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css') );
 		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js') );
 		$this->template->show("order", "order_tasks", $data);
 
