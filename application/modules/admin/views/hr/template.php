@@ -76,7 +76,7 @@
                     var notification = data;
                     var alertClass = '';
                     var iconClass = '';
-                    if (notification.type == 'approved') {
+                    if (notification.type == 'approved' || notification.type == 'completed') {
                         alertClass = 'bg-success';
                         iconClass = 'fa-check';
                     } else if (notification.type == 'denied') {

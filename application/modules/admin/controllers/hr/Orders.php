@@ -114,6 +114,7 @@ class Orders extends MX_Controller {
         $this->load->model('escrow/order_model');
         $this->load->model('escrow/order_completed_tasks_model');
         $this->load->model('escrow/escrow_user_model');
+        $this->load->model('hr/order_users_model');
         $orderInfo = $this->order_model->get($id);
         $prod_type = $orderInfo->prod_type;
 		$tasks = json_decode(json_encode($this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )")), true);
@@ -154,7 +155,7 @@ class Orders extends MX_Controller {
                 foreach ($completedTasks as $task) {
                     if (!(in_array($task['task_id'], $task_done))){
                         $delete_id_array[] = $task['id'];
-                        $incompleteTaskKey = array_search($task['id'], array_column($tasks, 'id'));
+                        $incompleteTaskKey = array_search($task['task_id'], array_column($tasks, 'id'));
                         $incompleted_task_name[] = $tasks[$incompleteTaskKey]['name'];
                     }
                 }
@@ -181,28 +182,35 @@ class Orders extends MX_Controller {
                     $message .= '<br>'.$incompleted_task_name[0].' task of order #'.$orderInfo->file_number.' has been marked as incomplete by '.$userdata['name'];
                 }
             }
-            
-            // if (!empty($orderInfo->escrow_officer_id)) {
-            //     $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
-            //     $notificationData = array(
-            //         'sent_user_id' => $escrowInfoFromOrder['id'],
-            //         'message' => $message,
-            //         'type' =>  'completed'
-            //     );
-            //     $this->hr->insert($notificationData, 'pct_order_notifications');
-            //     $this->common->sendNotification($message, 'completed', $escrowInfoFromOrder['id'], 0);
+
+            if (!empty($orderInfo->escrow_officer_id)) {
+                $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
+                $escrowInfo = $this->order_users_model->get_by(array('email_address' => $escrowInfoFromOrder['email'], 'is_escrow_officer' => 1));
+                $notificationData = array(
+                    'sent_user_id' => $escrowInfo->id,
+                    'message' => $message,
+                    'type' =>  'completed'
+                );
+                $this->hr->insert($notificationData, 'pct_order_notifications');
+                $this->common->sendNotification($message, 'completed', $escrowInfo->id, 0);
                 
-            //     $assistantUsersInfo = $this->escrow_user_model->get_many_by(array('branch_id' => $escrowInfo->branch_id, 'position_id' => 15));
-            //     foreach ($assistantUsersInfo as $assistantUser) {
-            //         $notificationData = array(
-            //             'sent_user_id' => $assistantUser->id,
-            //             'message' => $message,
-            //             'type' =>  'completed'
-            //         );
-            //         $this->hr->insert($notificationData, 'pct_hr_notifications');
-            //         $this->common->sendNotification($message, 'completed', $assistantUser->id, 0);
-            //     }
-            // }
+                $escrowHrInfo = $this->escrow_user_model->get_by('email', $escrowInfoFromOrder['email']);
+                $assistantUsersInfo = json_decode(json_encode($this->escrow_user_model->get_many_by(array('branch_id' => $escrowHrInfo->branch_id, 'position_id' => 15))), true);
+                $assistantUserEmails = array_column($assistantUsersInfo, 'email');	
+                $assistantOrderUsersInfo = $this->common->getAssistantUsers($assistantUserEmails); 
+                
+                if (!empty($assistantOrderUsersInfo)) {
+                    foreach ($assistantOrderUsersInfo as $assistantUser) {
+                        $notificationData = array(
+                            'sent_user_id' => $assistantUser['id'],
+                            'message' => $message,
+                            'type' =>  'completed'
+                        );
+                        $this->hr->insert($notificationData, 'pct_order_notifications');
+                        $this->common->sendNotification($message, 'completed', $assistantUser['id'], 0);
+                    }
+                } 
+            }
             $successMsg = 'Order task List Updated';
             $this->session->set_userdata('success', $successMsg);
             redirect(base_url().'hr/admin/orders');

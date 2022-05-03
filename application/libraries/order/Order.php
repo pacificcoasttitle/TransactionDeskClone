@@ -1913,8 +1913,8 @@ class Order
     public function sendNotification($message, $type, $sent_to_user, $is_sent_admin = 0)
     {
         if ($is_sent_admin == 1) {
-            $channel = 'admin-channel';
-            $event = 'admin-event';
+            $channel = 'admin-channel-'.$sent_to_user;
+            $event = 'admin-event-'.$sent_to_user;
         }
 
         if(!empty($sent_to_user) && $is_sent_admin == 0) {
@@ -1962,13 +1962,13 @@ class Order
 
         $this->CI->db->select('*');
         $this->CI->db->from('pct_hr_users');
-        $this->CI->db->where('branch_id', $assistantUserInfo->branch_id);
+        $this->CI->db->where('branch_id', $assistantUserInfo['branch_id']);
         $this->CI->db->where('(position_id = 9 or position_id = 22 or position_id = 23)');
         $this->CI->db->where('department_id', 4);
         $this->CI->db->where('status', 1);
         $query = $this->CI->db->get();    
-        $escroeUsers = $query->result_array();
-        $escrowEmails = array_column($escroeUsers, 'email');
+        $escrowUsers = $query->result_array();
+        $escrowEmails = array_column($escrowUsers, 'email');
 
         $this->CI->db->select('*');
         $this->CI->db->from('pct_order_partner_company_info');
