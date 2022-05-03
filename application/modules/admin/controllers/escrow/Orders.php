@@ -22,7 +22,7 @@ class Orders extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-    private $orders_js_version = '02';
+    private $orders_js_version = '01';
 	public function __construct()
     {
         parent::__construct();
@@ -182,36 +182,7 @@ class Orders extends MX_Controller {
                 }
             }
             
-            if ($userdata['is_escrow_officer'] == 1) {
-                $managerInfo = $this->escrow_user_model->get_by(array('department_id' => 4, 'user_type_id' => 4));
-                $notificationData = array(
-                    'sent_user_id' => $managerInfo->id,
-                    'message' => $message,
-                    'type' =>  'completed'
-                );
-                $this->common->insert($notificationData, 'pct_hr_notifications');
-                $this->common->sendNotification($message, 'completed', $managerInfo->id, 1);
-
-                $assistantUsersInfo = $this->escrow_user_model->get_many_by(array('branch_id' => $userdata['branch_id'], 'position_id' => 15));
-                foreach ($assistantUsersInfo as $assistantUser) {
-                    $notificationData = array(
-                        'sent_user_id' => $assistantUser->id,
-                        'message' => $message,
-                        'type' =>  'completed'
-                    );
-                    $this->common->insert($notificationData, 'pct_hr_notifications');
-                    $this->common->sendNotification($message, 'completed', $assistantUser->id, 0);
-                }
-            } else if ($userdata['is_escrow_assistant'] == 1) {
-                $managerInfo = $this->escrow_user_model->get_by(array('department_id' => 4, 'user_type_id' => 4));
-                $notificationData = array(
-                    'sent_user_id' => $managerInfo->id,
-                    'message' => $message,
-                    'type' =>  'completed'
-                );
-                $this->common->insert($notificationData, 'pct_hr_notifications');
-                $this->common->sendNotification($message, 'completed', $managerInfo->id, 1);
-
+            if (!empty($orderInfo->escrow_officer_id)) {
                 $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
                 $escrowInfo = $this->escrow_user_model->get_by('email', $escrowInfoFromOrder['email']);
                 $notificationData = array(
@@ -219,16 +190,27 @@ class Orders extends MX_Controller {
                     'message' => $message,
                     'type' =>  'completed'
                 );
-                $this->common->insert($notificationData, 'pct_hr_notifications');
+                $this->hr->insert($notificationData, 'pct_order_notifications');
                 $this->common->sendNotification($message, 'completed', $escrowInfo->id, 0);
+                
+                $assistantUsersInfo = $this->escrow_user_model->get_many_by(array('branch_id' => $escrowInfo->branch_id, 'position_id' => 15));
+                foreach ($assistantUsersInfo as $assistantUser) {
+                    $notificationData = array(
+                        'sent_user_id' => $assistantUser->id,
+                        'message' => $message,
+                        'type' =>  'completed'
+                    );
+                    $this->hr->insert($notificationData, 'pct_order_notifications');
+                    $this->common->sendNotification($message, 'completed', $assistantUser->id, 0);
+                }
             }
+          
             $successMsg = 'Order task List Updated';
             $this->session->set_userdata('success', $successMsg);
             redirect(base_url().'escrow/admin/orders');
         }
         $data['tasks'] = $tasks;
         $data['completedTaskIds'] = $completedTaskIds;
-		$this->template->addJS( base_url('assets/backend/escrow/js/tasks.js?v=order_tasks_'.$this->orders_js_version) );
         $this->template->show("escrow", "order_tasks", $data);
 	}
 

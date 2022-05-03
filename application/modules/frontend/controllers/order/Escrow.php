@@ -97,6 +97,7 @@ class Escrow extends MX_Controller
         $this->load->model('admin/escrow/order_model');
         $this->load->model('admin/escrow/order_completed_tasks_model');
         $this->load->model('admin/escrow/escrow_user_model');
+        $this->load->model('hr/users_model');
         $orderInfo = $this->order_model->get($id);
         $prod_type = $orderInfo->prod_type;
 		$tasks = json_decode(json_encode($this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )")), true);
@@ -108,7 +109,6 @@ class Escrow extends MX_Controller
             $completedTasks = array();
             $completedTaskIds = array();
         }
-        
         if ($this->input->post()) {
             $completed_task_name = array();
             $incompleted_task_name = array();
@@ -133,16 +133,17 @@ class Escrow extends MX_Controller
             }
 
             $delete_id_array = array();
+            $incompleteTaskKey = '';
             if (!empty($completedTasks)) {
                 foreach ($completedTasks as $task) {
                     if (!(in_array($task['task_id'], $task_done))) {
                         $delete_id_array[] = $task['id'];
-                        $incompleteTaskKey = array_search($task['id'], array_column($tasks, 'id'));
+                        $incompleteTaskKey = array_search($task['task_id'], array_column($tasks, 'id'));
                         $incompleted_task_name[] = $tasks[$incompleteTaskKey]['name'];
                     }
                 }
             }
-            
+    
             if (count($delete_id_array)) {
                 $this->order_completed_tasks_model->delete_many($delete_id_array);
             }
@@ -150,42 +151,59 @@ class Escrow extends MX_Controller
             if (!empty($completed_task_name)) {
                 if (count($completed_task_name) > 1) {
                     $task_names = implode(', ', $completed_task_name);
-                    $message .= $task_names.' tasks of order #'.$orderInfo->file_number.' have been marked as complete by '.$userdata['name'];
+                    $message .= $task_names.' tasks of order #'.$orderInfo->file_number.' have been marked as complete by '.$userdata['name'].'.<br>';
                 } else {
-                    $message .= $completed_task_name[0].' task of order #'.$orderInfo->file_number.' has been marked as complete by '.$userdata['name'];
+                    $message .= $completed_task_name[0].' task of order #'.$orderInfo->file_number.' has been marked as complete by '.$userdata['name'].'.<br>';
                 }
             }
 
             if (!empty($incompleted_task_name)) {
                 if (count($incompleted_task_name) > 1) {
                     $incompleted_task_names = implode(', ', $incompleted_task_name);
-                    $message .= '<br>'.$incompleted_task_names.' tasks of order #'.$orderInfo->file_number.' have been marked as incomplete by '.$userdata['name'];
+                    $message .= '<br>'.$incompleted_task_names.' tasks of order #'.$orderInfo->file_number.' have been marked as incomplete by '.$userdata['name'].'.';
                 } else {
-                    $message .= '<br>'.$incompleted_task_name[0].' task of order #'.$orderInfo->file_number.' has been marked as incomplete by '.$userdata['name'];
+                    $message .= '<br>'.$incompleted_task_name[0].' task of order #'.$orderInfo->file_number.' has been marked as incomplete by '.$userdata['name'].'.';
                 }
             }
             
-            // if (!empty($orderInfo->escrow_officer_id)) {
-            //     $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
-            //     $notificationData = array(
-            //         'sent_user_id' => $escrowInfoFromOrder['id'],
-            //         'message' => $message,
-            //         'type' =>  'completed'
-            //     );
-            //     $this->hr->insert($notificationData, 'pct_order_notifications');
-            //     $this->common->sendNotification($message, 'completed', $escrowInfoFromOrder['id'], 0);
-                
-            //     $assistantUsersInfo = $this->escrow_user_model->get_many_by(array('branch_id' => $escrowInfo->branch_id, 'position_id' => 15));
-            //     foreach ($assistantUsersInfo as $assistantUser) {
-            //         $notificationData = array(
-            //             'sent_user_id' => $assistantUser->id,
-            //             'message' => $message,
-            //             'type' =>  'completed'
-            //         );
-            //         $this->hr->insert($notificationData, 'pct_hr_notifications');
-            //         $this->common->sendNotification($message, 'completed', $assistantUser->id, 0);
-            //     }
-            // }
+            if (!empty($orderInfo->escrow_officer_id)) {
+                $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
+                if ($userdata['is_escrow_officer'] == 1) {
+                    $escrowInfo = $this->users_model->get_by(array('email' => $escrowInfoFromOrder['email_address']));
+                    $assistantUsersInfo = json_decode(json_encode($this->escrow_user_model->get_many_by(array('branch_id' => $escrowInfo->branch_id, 'position_id' => 15))), true);
+                    $assistantUserEmails = array_column($assistantUsersInfo, 'email');	
+                    $assistantOrderUsersInfo = $this->common->getAssistantUsers($assistantUserEmails); 
+
+                    foreach ($assistantOrderUsersInfo as $assistant) {
+                        $notificationData = array(
+                            'sent_user_id' => $assistant['id'],
+                            'message' => $message,
+                            'type' =>  'completed'
+                        );
+                        $this->home_model->insert($notificationData, 'pct_order_notifications');
+                        $this->order->sendNotification($message, 'completed', $assistant['id'], 0);
+                    }
+                } else {
+                    $notificationData = array(
+                        'sent_user_id' => $escrowInfoFromOrder['id'],
+                        'message' => $message,
+                        'type' =>  'completed'
+                    );
+                    $this->home_model->insert($notificationData, 'pct_order_notifications');
+                    $this->order->sendNotification($message, 'completed', $escrowInfoFromOrder['id'], 0);
+                }
+               
+                $managersInfo = $this->users_model->get_many_by(array('user_type_id' => 4, 'department_id' => 4));
+                foreach ($managersInfo as $manager) { 
+                    $notificationData = array(
+                        'sent_user_id' => $manager->id,
+                        'message' => $message,
+                        'type' =>  'completed'
+                    );
+                    $this->home_model->insert($notificationData, 'pct_hr_notifications');
+                    $this->order->sendNotification($message, 'completed', $manager->id, 1);
+                }
+            }
             $successMsg[] = 'Order task list updated for file number '.$orderInfo->file_number;
             $this->session->set_userdata('success', $successMsg);
             redirect(base_url().'escrow-dashboard');
