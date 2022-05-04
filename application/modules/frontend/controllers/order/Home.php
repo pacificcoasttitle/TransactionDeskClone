@@ -262,10 +262,10 @@ class Home extends MX_Controller {
 					$secondaryEmp[] = array('UserID'=> $escrow_resware_user_id);
 					$secondaryEscrowPartners = array(
 							'SecondaryEmployees'=> $secondaryEmp,
-							'PartnerTypeID' => $escrowPartnerTypeID,
-							'PartnerID' => $escrow_partner_id,
+							'PartnerTypeID' => (int)$escrowPartnerTypeID,
+							'PartnerID' => (int)$escrow_partner_id,
 							'PartnerType' => array(
-								'PartnerTypeID' => $escrowPartnerTypeID
+								'PartnerTypeID' => (int)$escrowPartnerTypeID
 							)
 					);
 				}
@@ -296,10 +296,10 @@ class Home extends MX_Controller {
 					$secondaryEmp[] = array('UserID'=> $lender_resware_user_id);
 					$secondaryLenderPartners = array(
 						'SecondaryEmployees'=> $secondaryEmp,
-						'PartnerTypeID' => $lenderPartnerTypeID,
-						'PartnerID' => $lender_partner_id,
+						'PartnerTypeID' => (int)$lenderPartnerTypeID,
+						'PartnerID' => (int)$lender_partner_id,
 						'PartnerType' => array(
-							'PartnerTypeID' => $lenderPartnerTypeID
+							'PartnerTypeID' => (int)$lenderPartnerTypeID
 						)
 					);
 				}
@@ -675,7 +675,7 @@ class Home extends MX_Controller {
 									}
 									$partners[] = array(
 										'PartnerTypeID' => 10010,
-										'PartnerID' => $escrowOfficer,
+										'PartnerID' => (int)$escrowOfficer,
 										'PartnerType' => array(
 											'PartnerTypeID' => 10010
 										)
@@ -697,7 +697,7 @@ class Home extends MX_Controller {
 								}
 								$partners[] = array(
 									'PartnerTypeID' => 14,
-									'PartnerID' => $this->input->post('buyer_agent_partner_id'),
+									'PartnerID' => (int)$this->input->post('buyer_agent_partner_id'),
 									'PartnerType' => array(
 										'PartnerTypeID' => 14
 									)
@@ -718,7 +718,7 @@ class Home extends MX_Controller {
 								}
 								$partners[] = array(
 									'PartnerTypeID' => 15,
-									'PartnerID' => $this->input->post('listing_agent_partner_id'),
+									'PartnerID' => (int)$this->input->post('listing_agent_partner_id'),
 									'PartnerType' => array(
 										'PartnerTypeID' => 15
 									)
@@ -727,22 +727,22 @@ class Home extends MX_Controller {
 
 							if (!empty($salesRepDetails)) {
 								if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
-									$salesRepKey = array_search($salesRepDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
+									$salesRepKey = array_search((int)$salesRepDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
 									if(!empty($salesRepKey)) {
 										$removeSalesRepExistingPartner = array(
-											'PartnerTypeID' => $salesRepDetails['partner_type_id'],
+											'PartnerTypeID' => (int)$salesRepDetails['partner_type_id'],
 											'PartnerID' => $resPartners['Partners'][$salesRepKey]['PartnerID'],
 											'PartnerType' => array(
-												'PartnerTypeID' => $salesRepDetails['partner_type_id']
+												'PartnerTypeID' => (int)$salesRepDetails['partner_type_id']
 											)
 										);
 										$removePartners[] = $removeSalesRepExistingPartner;
 									}
 									$partners[] = array(
-										'PartnerTypeID' => $salesRepDetails['partner_type_id'],
-										'PartnerID' => $salesRepDetails['partner_id'],
+										'PartnerTypeID' => (int)$salesRepDetails['partner_type_id'],
+										'PartnerID' => (int)$salesRepDetails['partner_id'],
 										'PartnerType' => array(
-											'PartnerTypeID' => $salesRepDetails['partner_type_id']
+											'PartnerTypeID' => (int)$salesRepDetails['partner_type_id']
 										)
 									);
 								}
@@ -750,22 +750,22 @@ class Home extends MX_Controller {
 
 							if (!empty($titleOfficerDetails)) {
 								if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
-									$titleOfficerKey = array_search($titleOfficerDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
+									$titleOfficerKey = array_search((int)$titleOfficerDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
 									if(!empty($titleOfficerKey)) {
 										$removeTitleOfficerExistingPartner = array(
-											'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
+											'PartnerTypeID' => (int)$titleOfficerDetails['partner_type_id'],
 											'PartnerID' => $resPartners['Partners'][$titleOfficerKey]['PartnerID'],
 											'PartnerType' => array(
-												'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
+												'PartnerTypeID' => (int)$titleOfficerDetails['partner_type_id']
 											)
 										);
 										$removePartners[] = $removeTitleOfficerExistingPartner;
 									}
 									$partners[] = array(
-										'PartnerTypeID' => $titleOfficerDetails['partner_type_id'],
-										'PartnerID' => $titleOfficerDetails['partner_id'],
+										'PartnerTypeID' => (int)$titleOfficerDetails['partner_type_id'],
+										'PartnerID' => (int)$titleOfficerDetails['partner_id'],
 										'PartnerType' => array(
-											'PartnerTypeID' => $titleOfficerDetails['partner_type_id']
+											'PartnerTypeID' => (int)$titleOfficerDetails['partner_type_id']
 										)
 									);
 								}
