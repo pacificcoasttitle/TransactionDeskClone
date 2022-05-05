@@ -219,7 +219,7 @@ class Escrow extends MX_Controller
         }
         $data['tasks'] = $tasks;
         $data['completedTaskIds'] = $completedTaskIds;
-		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css') );
+		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=0.1') );
 		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js') );
 		$this->template->show("order/escrow", "order_tasks", $data);
 	}
