@@ -50,6 +50,18 @@
 												<textarea class="form-control" rows="4" name="body" id="body" placeholder="Note"></textarea>
 											</div>
 										</div>
+										<?php if (!empty($tasks)) { ?>
+											<div class="row">
+												<div class="col-xs-10">
+													<select class="form-control" id="task_id" name="task_id">
+														<option value="">Select Task</option>
+														<?php foreach($tasks as $task) {?>
+															<option value="<?php echo $task->id;?>"><?php echo $task->name;?></option>
+														<?php } ?>
+													</select>
+												</div>
+											</div>
+										<?php } ?>
 										<div class="row">
 											<div class="col-xs-12">
 												<button type="submit" class="btn btn-default btn-round btn-block">create</button>
@@ -71,12 +83,13 @@
 													<div class="typography-sectiona">
 														<div class="col-md-12">
 															<div class="table-container">
-																<table class="table table_primary" id="orders_listing">
+																<table class="table table_primary" id="notes_listing">
 																	<thead>
 																		<tr>
 																			<th>#</th>
 																			<th>Subject</th>
 																			<th>Note</th>
+																			<th>Task</th>
 																			<th>Created</th>
 																		</tr>
 																	</thead>
@@ -88,12 +101,13 @@
 																				<td><?php echo $i;?></td>
 																				<td><?php echo $note['subject'];?></td>
 																				<td><?php echo $note['note'];?></td>
+																				<td><?php echo $note['name'];?></td>
 																				<td><?php echo date("m/d/Y", strtotime($note['created_at']));?></td>
 																			</tr>
 																			<?php $i++; } 
 																		} else { ?>
 																			<tr>
-																				<td colspan="4">No Records Found.</td>
+																				<td colspan="5">No Records Found.</td>
 																			</tr>
 																		<?php }?>
 																	</tbody>

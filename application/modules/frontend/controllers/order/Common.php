@@ -10,6 +10,7 @@ class Common extends MX_Controller {
 	private $prelim_order_js_version = '01';
 	private $upload_doc_orders_js_version = '01';
 	private $upload_document_for_order = '01';
+	private $notes_order_js = '01';
 
 	function __construct() 
     {
@@ -2334,5 +2335,98 @@ class Common extends MX_Controller {
             'message'  => 'Notifcation marked as read.',
         );
         echo json_encode($response);
+    }
+
+	function get_notes($fileId)
+    {    
+		//echo $fileId;exit;
+		$userdata = $this->session->userdata('user');  
+		$this->load->model('admin/escrow/tasks_model');  
+		$data['errors'] = array();
+		$data['success'] = array();
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $orderDetails = $this->order->get_order_details($fileId);
+		$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+		$data['orderDetails'] = $orderDetails;
+		$prod_type = $orderDetails['prod_type'];
+		$data['notes'] = $this->order->get_order_notes($orderId);
+
+		if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+			$data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )");
+		} else {
+			$data['tasks'] = array();
+		}
+		$this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v=notes_order_js'.$this->notes_order_js) );
+		$this->template->show("order/common", "get_notes", $data);
+    }
+
+	public function create_note()
+    {
+    	$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
+		$errors = array();
+		$success = array();
+    	if (isset($fileId) && !empty($fileId)) {
+    		$userdata = $this->session->userdata('user');
+    		$subject = isset($_POST['subject']) && !empty($_POST['subject']) ? $_POST['subject'] : '';
+    		$body = isset($_POST['body']) && !empty($_POST['body']) ? $_POST['body'] : '';
+    		$orderDetails = $this->order->get_order_details($fileId);
+			$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+    		$this->load->library('order/resware');
+	        $request = array();
+	        $endPoint = 'files/'.$fileId.'/notes';
+	        $request['Subject'] = $subject;
+	        $request['Body'] = $body;
+	        $request['FileID'] = $fileId;
+	        $notes_data = json_encode($request);
+			$user_data = array();
+
+			if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1 || $userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+				$user_data['admin_api'] = 1; 
+			}
+			
+	        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
+	        $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+	        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
+			
+	        if (isset($result) && !empty($result)) {
+	            $response = json_decode($result, TRUE);
+
+	            if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+					$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+					$errors[] = $message;
+				} else {
+					$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+					$this->load->model('order/note');
+			        $notesData = array(
+			            'resware_note_id' => $noteId,
+						'subject' => $subject,
+						'note' => $body,
+			            'user_id' => $userdata['id'],
+			            'order_id' => $orderId,
+						'task_id' => isset($_POST['task_id']) && !empty($_POST['task_id']) ? $_POST['task_id'] : 0
+			        );
+			        $id = $this->note->insert($notesData);
+			        if ($noteId && $id) {
+						$success[] = 'Note created successfully.';
+			        } else {
+						$errors[] = 'Something went wrong. Please try again.';
+			        }
+				}
+	    	}
+			$data = array(
+				"errors" =>  $errors,
+				"success" => $success
+			);
+			$this->session->set_userdata($data);
+			redirect(base_url().'get-notes/'.$fileId);
+	    }
     }
 }

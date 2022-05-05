@@ -541,7 +541,7 @@ class Order
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->CI->db->where('file_id', $fileId);
          
-        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0) {
+        if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0 && $userdata['is_escrow_officer'] == 0 && $userdata['is_escrow_assistant'] == 0) {
             $this->CI->db->group_start()
                 ->where('order_details.customer_id', $userdata['id'])
                 ->or_where('property_details.escrow_lender_id', $userdata['id'])
@@ -1639,9 +1639,9 @@ class Order
 
     public function get_order_notes($orderId)
     {
-        $this->CI->db->select('*')
-            ->from('pct_order_notes');
-            
+        $this->CI->db->select('pct_order_notes.*, pct_escrow_tasks.name')
+            ->from('pct_order_notes')
+            ->join('pct_escrow_tasks', 'pct_order_notes.task_id = pct_escrow_tasks.id', 'left');
         $this->CI->db->where('order_id', $orderId);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
