@@ -451,9 +451,9 @@ class Home extends MX_Controller {
 									if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
 										$underWriter = 'north_american';
 									} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
-										$underWriter = 'commonwealth';
-									} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
 										$underWriter = 'westcor';
+									} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+										$underWriter = 'commonwealth';
 									} else {
                                         if ($key) {
                                             $underWriter = 'other';
