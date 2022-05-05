@@ -2337,6 +2337,45 @@ class Common extends MX_Controller {
         echo json_encode($response);
     }
 
+	public function SendDataToHomeDocs($fileId)
+	{
+		$orderDetails = $this->order->get_order_details($fileId);
+		$this->load->model('order/titlePointData');
+
+		$condition = array(
+			'where' => array(
+				'file_id' => $fileId,
+			)
+		);
+		$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+		// echo '<pre>';
+		/**
+		 * order_token:abcd123 (Generated from PCT; Unique for each order)
+		 * apn:8381-021-001
+		 * fips:06037
+		 * address:1358 5th St. La Verne, CA 91750
+		 * file_id:124
+		 * file_number:4213
+		 * vesting_info:HERNANDEZ GERARDO J; MENDOZA YESSICA S, JOINT TENANCY, HUSBAND AND WIFE
+		 * first_installment:{"Balance":"0.00","Amount":"3642.98","DueDate":"12\/10\/2020","Number":"1st","PaymentDate":"11\/18\/2020","Penalty":"364.30","Status":"PAID","AmountPaid":"3642.98","TaxYear":"2020","InterestAmount":"0.00"}
+		 * second_installment:{"Balance":"0.00","Amount":"3642.97","DueDate":"4\/12\/2021","Number":"2nd","PaymentDate":"11\/18\/2020","Penalty":"374.30","Status":"PAID","AmountPaid":"3642.97","TaxYear":"2020","InterestAmount":"0.00"}
+		 */
+		$this->load->helper('homedocsapi_helper');
+		$homedocs_array = [
+			'order_token'=>$orderDetails['random_number'],
+			'apn'=>$orderDetails['apn'],
+			'fips'=>$titlePointDetails[0]['fips'],
+			'address'=>$orderDetails['full_address'],
+			'file_id'=>$orderDetails['file_id'],
+			'file_number'=>$orderDetails['file_number'],
+			'vesting_info'=>$titlePointDetails[0]['vesting_information'],
+			'first_installment'=>$titlePointDetails[0]['first_installment'],
+			'second_installment'=>$titlePointDetails[0]['second_installment'],
+		];
+		$result = send_order_data($homedocs_array);
+		var_dump($result);
+	}
+
 	function get_notes($fileId)
     {    
 		//echo $fileId;exit;
