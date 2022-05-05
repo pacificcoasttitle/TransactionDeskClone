@@ -91,6 +91,7 @@ class HrCommon extends MX_Controller
 	}
 
 	function stopTimer() {
+		exit;
 		$this->load->model('hr/pct_hr_employee_time_tracking_model');
 		$where['time_out'] = NULL;
 		$data = $this->pct_hr_employee_time_tracking_model->get_many_by($where);
@@ -464,6 +465,18 @@ class HrCommon extends MX_Controller
 				$message .= ' for employee '.$for_user->first_name.' '.$for_user->last_name;
 				$request_data['Employee_Name']=$for_user->first_name.' '.$for_user->last_name;
 			}
+		}
+		elseif($request_type == 'day_end') {
+			$data['request_type'] = 'Day End';
+			
+			$subject = 'PCT HR || End of Day';
+			$data['mail_image'] = base_url('assets/frontend/images/end_of_day.jpg');;
+			$data['top_line'] = 'Congratulations The';
+			$data['main_line'] = 'Workday Has Ended';
+            
+            $message = 'Your work day has ended';
+			$request_data = [];
+			
 		}
 		if(!empty($subject) && !empty($message)) {
 			$data['user_name'] = $user->first_name.' '.$user->last_name;

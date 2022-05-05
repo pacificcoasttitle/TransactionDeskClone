@@ -100,44 +100,70 @@ class HrCommon extends MX_Controller
 	}
 	function randomizeTimeClockOut() {
 
-		$today_date = $this->common->convertTimezone(date('Y-m-d H:i:s'),'Y-m-d','America/Los_Angeles');
+		// $today_date = $this->common->convertTimezone(date('Y-m-d H:i:s'),'Y-m-d','America/Los_Angeles');
 
-		$this->load->model('hr/branches_model');
-		$this->load->model('hr/users_model');
-		$this->load->model('frontend/hr/pct_hr_employee_time_tracking_model');
+		// $this->load->model('hr/branches_model');
+		// $this->load->model('hr/users_model');
+		// $this->load->model('frontend/hr/pct_hr_employee_time_tracking_model');
 
-		$branch_names = [
-			'10 PCT Glendale Escr',
-			'12 PCT Glendale Titl'
-		];
-		// $branch_names = ['IT'];
-		$dept_records = $this->branches_model->get_many_by('name',$branch_names);
-		$dept_ids = array_column($dept_records,'id');
-		if(!(count($dept_ids))) {
-			die('No department found');
-		}
-		$user_records = $this->users_model->get_many_by('branch_id',$dept_ids);
-		$user_ids = array_column($user_records,'id');
+		// $branch_names = [
+		// 	'10 PCT Glendale Escr',
+		// 	'12 PCT Glendale Titl'
+		// ];
+		// // $branch_names = ['IT'];
+		// $dept_records = $this->branches_model->get_many_by('name',$branch_names);
+		// $dept_ids = array_column($dept_records,'id');
+		// if(!(count($dept_ids))) {
+		// 	die('No department found');
+		// }
+		// $user_records = $this->users_model->get_many_by('branch_id',$dept_ids);
+		// $user_ids = array_column($user_records,'id');
 
-		foreach($user_ids as $user_id) {
+		// foreach($user_ids as $user_id) {
 			
-			// Check if record already exist
-			$where_arr = [
-				'employee_id'=>$user_id,
-				'DATE(time_in)'=>$today_date,
-			];
+		// 	// Check if record already exist
+		// 	$where_arr = [
+		// 		'employee_id'=>$user_id,
+		// 		'DATE(time_in)'=>$today_date,
+		// 	];
 
-			$record_exist = $this->pct_hr_employee_time_tracking_model->order_by('time_in','DESC')->get_by($where_arr);
-			if($record_exist && empty($record_exist->time_out)) {
+		// 	$record_exist = $this->pct_hr_employee_time_tracking_model->order_by('time_in','DESC')->get_by($where_arr);
+		// 	if($record_exist && empty($record_exist->time_out)) {
 
 				
-				$end_time = strtotime($today_date.' '.'17:30:00');
+		// 		$end_time = strtotime($today_date.' '.'17:30:00');
 
-				$update_tracking_tmp = [
-					'time_out'=>date("Y-m-d H:i:s",$end_time)
-				];
+		// 		$update_tracking_tmp = [
+		// 			'time_out'=>date("Y-m-d H:i:s",$end_time)
+		// 		];
 				
-				$this->pct_hr_employee_time_tracking_model->update($record_exist->id,$update_tracking_tmp);
+		// 		$this->pct_hr_employee_time_tracking_model->update($record_exist->id,$update_tracking_tmp);
+
+		// 	}
+		// }
+
+		$this->load->model('frontend/hr/pct_hr_employee_time_tracking_model');
+		$this->load->model('hr/users_model','employee');
+		$where['time_out'] = NULL;
+		$data = $this->pct_hr_employee_time_tracking_model->get_many_by($where);
+		foreach($data as $record) {
+			$start_time = $record->time_in;
+			$start_date = date('Y-m-d',strtotime($start_time));
+			$end_time = $start_date.' 17:30:00'; // PST 5:30 pm
+			$current_time = $this->common->convertTimezone(date('Y-m-d H:i:s'),'Y-m-d H:i:s','America/Los_Angeles');
+			if((strtotime($start_time) < strtotime($end_time)) && (strtotime($end_time) <= strtotime($current_time))) {
+				$update_data = array();
+				$update_data['time_out'] = $end_time;
+				$update_data['is_auto'] = 1;
+				$this->pct_hr_employee_time_tracking_model->update($record->id,$update_data);
+
+				//Send mail notification to user (Temp Account Dept)
+				$employee_obj = $this->employee->with('department')->get($record->employee_id);
+				if($employee_obj && !empty($employee_obj->department) && stripos($employee_obj->department->name,'account')!== false) {
+					
+					$this->common->mailNotification($record->employee_id,'day_end',$record->id);
+				}
+
 
 			}
 		}
