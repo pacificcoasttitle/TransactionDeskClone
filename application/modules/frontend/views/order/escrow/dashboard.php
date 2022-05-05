@@ -125,7 +125,7 @@ td.dataTables_empty {
                                         <th>Property Address</th>
                                         <th>Product Type</th>
                                         <th>Created At</th>
-                                        <th>Complted %</th>
+                                        <th>Completed %</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
