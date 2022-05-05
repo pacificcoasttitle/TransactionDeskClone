@@ -124,7 +124,7 @@ u + #body a {color:inherit;text-decoration:none;font-size:inherit;font-family:in
   <!-- blue-header -->
   <tbody><tr>
     <td align="center" class="img-responsive container-padding">
-      <img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;" width="640" src="<?php echo base_url('assets/frontend/images/memo-header-image.jpg') ?>" border="0" alt="picture">
+      <img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;" width="640" src="<?php if(!empty($mail_image)): echo $mail_image ; else : echo base_url('assets/frontend/images/memo-header-image.jpg'); endif; ?>" border="0" alt="picture">
     </td>
   </tr>
   <!-- blue-header -->
@@ -140,18 +140,19 @@ u + #body a {color:inherit;text-decoration:none;font-size:inherit;font-family:in
     <td align="center" bgcolor="#FFFFFF">
       <!-- content -->
       <table border="0" align="center" cellpadding="0" cellspacing="0" role="presentation" width="100%" style="width:100%;max-width:100%;">
-        <tbody><tr>
-          <td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:24px;line-height:36px;font-weight:400;font-style:normal;color:#50C0FF;text-decoration:none;letter-spacing:1px;">
-              
-                <div mc:edit="mcs3w79gv88" style="margin: 0px; padding: 0px;"><p style="margin: 0px; padding: 0px;">You Have A</p></div>
-              
-          </td>
+        <tbody>
+					<tr>
+						<td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:24px;line-height:36px;font-weight:400;font-style:normal;color:#50C0FF;text-decoration:none;letter-spacing:1px;">
+								
+									<div mc:edit="mcs3w79gv88" style="margin: 0px; padding: 0px;"><p style="margin: 0px; padding: 0px;"><?php echo (!empty($top_line))? $top_line:'You Have A';?></p></div>
+								
+						</td>
         </tr>
         <tr>
           <td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:48px;line-height:54px;font-weight:900;font-style:normal;color:#222222;text-decoration:none;letter-spacing:0px;">
               
                 <div mc:edit="mch95tqp1dh" style="margin: 0px; padding: 0px;"><p style="margin: 0px; padding: 0px;">
-                  New <?php echo ucwords($request_type);?></p></div>
+								<?php echo (!empty($main_line))? $main_line:'New '.ucwords($request_type);?></p></div>
               
           </td>
         </tr>
