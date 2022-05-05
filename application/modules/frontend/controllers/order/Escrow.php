@@ -66,7 +66,15 @@ class Escrow extends MX_Controller
 
         if (isset($order_lists['data']) && !empty($order_lists['data'])) {
             $i = $params['start'] + 1;
+
+			$this->load->model('admin/escrow/tasks_model');
+			$this->load->model('admin/escrow/order_completed_tasks_model');
+			
             foreach ($order_lists['data'] as $order)  {
+				$prod_type = $order['prod_type'];
+				$total_tasks = $this->tasks_model->count_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )");
+				$total_task_completed = $this->order_completed_tasks_model->count_by('order_id',$order['id']);
+				$task_complete_ratio = floor((100*$total_task_completed)/$total_tasks);
 
                 $nestedData = array();
                 $nestedData[] = $i;
@@ -74,6 +82,7 @@ class Escrow extends MX_Controller
                 $nestedData[] = $order['full_address'];
                 $nestedData[] = $order['product_type'];
                 $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
+                $nestedData[] = $task_complete_ratio.' %';
                 $editUrl = base_url().'order/escrow/order-tasks/'.$order['id'];
                 $nestedData[] = "<a href='$editUrl'>
                                     <button class='btn btn-grad-2a button-color' type='button'>Tasks</button>
