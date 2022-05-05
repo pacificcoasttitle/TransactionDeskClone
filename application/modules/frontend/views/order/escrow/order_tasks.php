@@ -85,11 +85,22 @@
 										</div>
 										<div class="collapse custom__task_collapse" id="collapseCard_<?php echo $task['id']; ?>">
 											<div class="card-body">
-												<?php if(empty($task['notes'])) : ?>
+												<!-- <?php if(empty($task['notes'])) : ?>
 													-
 												<?php else : ?>
 													<?php echo nl2br($task['notes']); ?>
-												<?php endif; ?>
+												<?php endif; ?> -->
+												<ul>
+													<?php if (!empty($order_task_notes)) { 
+															foreach($order_task_notes as $order_task_note) { 
+																if($order_task_note['task_id'] == $task['id']) { ?>
+																	<li><b><?php echo $order_task_note['subject']?></b>: <?php echo $order_task_note['note']?></li>
+																	
+																<?php }
+															}
+													} ?>
+												</ul>
+												
 											</div>
 										</div>
 									</div>

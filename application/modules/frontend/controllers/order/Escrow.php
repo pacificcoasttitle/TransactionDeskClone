@@ -84,9 +84,17 @@ class Escrow extends MX_Controller
                 $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
                 $nestedData[] = $task_complete_ratio.' %';
                 $editUrl = base_url().'order/escrow/order-tasks/'.$order['id'];
-                $nestedData[] = "<a href='$editUrl'>
-                                    <button class='btn btn-grad-2a button-color' type='button'>Tasks</button>
-                                </a>";
+                $nestedData[] = '<div style="display: flex;">
+                                    <a href="'.base_url().'order/escrow/order-tasks/'.$order['id'].'">
+                                        <button class="btn btn-grad-2a button-color" style="width: auto !important;padding: 9px 15px !important;" type="button">Tasks</button>
+                                    </a>
+                                    <a href="'.base_url().'get-notes/'.$order['file_id'].'">
+                                        <button class="btn btn-grad-2a button-color button-color" style="width: auto !important;padding: 9px 15px !important;" type="button">Notes</button>
+                                    </a>
+                                    <a href="">
+                                        <button class="btn btn-grad-2a button-color button-color" style="width: auto !important;padding: 9px 15px !important;" type="button">Documents</button>
+                                    </a>
+                                </div>';
                 $data[] = $nestedData; 
                 $i++; 
 			}
@@ -219,7 +227,8 @@ class Escrow extends MX_Controller
         }
         $data['tasks'] = $tasks;
         $data['completedTaskIds'] = $completedTaskIds;
-		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=0.1') );
+        $data['order_task_notes'] = $this->order->get_order_notes($id);
+		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=02') );
 		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js') );
 		$this->template->show("order/escrow", "order_tasks", $data);
 	}

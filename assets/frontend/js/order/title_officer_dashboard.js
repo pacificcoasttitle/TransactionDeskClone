@@ -169,18 +169,6 @@ $(document).ready(function () {
         title_officer_order_list.ajax.reload();
     });
 
-    if ($('#create-note').length) {
-        $('#create-note').validate({
-            rules: {
-                subject: "required",
-                body: "required"
-            },
-            messages: {
-                subject: "Please enter subject",
-                body: "Please enter body",
-            }
-        });
-    }
 });
 
 function getPartners(fileId) 
