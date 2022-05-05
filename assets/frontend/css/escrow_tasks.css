@@ -104,8 +104,8 @@
 }
 .custom__task_progress {
 	background-color: #f2f2f2;
-	height: 22px;
-    font-size: 1.1rem;
+	height: 30px;
+    font-size: 1.5rem;
 }
 .custom__collapse_arrow .fa-angle-down {
 	display: none;
