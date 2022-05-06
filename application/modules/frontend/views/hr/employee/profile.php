@@ -1,3 +1,8 @@
+<style>
+	.img-circle {
+		border-radius: 100%;
+	}
+</style>
 <section class="section-type-4a section-default typography-section-border" style="padding-bottom:0px;">
 	<div class="container">
 		<div class="row">
@@ -29,9 +34,9 @@
 								<div class="col-xs-12">
 									<div class="col-sm-6">
 										<?php if($userInfo['profile_img']): ?>
-											<img class="img-responsive" src="<?php echo env('AWS_PATH').'hr/user/'.$userInfo['profile_img'];?>" alt="profile image">
+											<img class="img-responsive img-circle" src="<?php echo env('AWS_PATH').'hr/user/'.$userInfo['profile_img'];?>" alt="profile image">
 										<?php else : ?>
-											<img class="img-responsive" src="<?php echo base_url('assets/frontend/hr/images/default.png') ?>" alt="profile image">
+											<img class="img-responsive img-circle" src="<?php echo base_url('assets/frontend/hr/images/default.png') ?>" alt="profile image">
 										<?php endif; ?>
 									</div>
 									<div class="col-sm-6">
