@@ -2348,7 +2348,10 @@ class Common extends MX_Controller {
 			)
 		);
 		$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-		// echo '<pre>';
+		echo '<pre>';
+		// var_dump($orderDetails);
+		// var_dump($titlePointDetails[0]);
+		// die;
 		/**
 		 * order_token:abcd123 (Generated from PCT; Unique for each order)
 		 * apn:8381-021-001
@@ -2365,13 +2368,18 @@ class Common extends MX_Controller {
 			'order_token'=>$orderDetails['random_number'],
 			'apn'=>$orderDetails['apn'],
 			'fips'=>$titlePointDetails[0]['fips'],
-			'address'=>$orderDetails['full_address'],
+			'address'=>$orderDetails['address'],
+			'last_line'=>$orderDetails['property_city'].', '.$orderDetails['property_state'],
+			'full_address'=>$orderDetails['full_address'],
 			'file_id'=>$orderDetails['file_id'],
 			'file_number'=>$orderDetails['file_number'],
 			'vesting_info'=>$titlePointDetails[0]['vesting_information'],
 			'first_installment'=>$titlePointDetails[0]['first_installment'],
 			'second_installment'=>$titlePointDetails[0]['second_installment'],
 		];
+		var_dump($homedocs_array);
+		// die;
+
 		$result = send_order_data($homedocs_array);
 		var_dump($result);
 	}
