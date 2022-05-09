@@ -97,12 +97,12 @@ class AdminUsers extends MX_Controller {
                                             </span>
                                             <span class="text">Edit</span>
                                         </a>
-                                        <a style="margin-left: 5px;" href="#" onclick="deleteAdminUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
+                                        <!-- <a style="margin-left: 5px;" href="#" onclick="deleteAdminUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-trash"></i>
                                             </span>
                                             <span class="text">Delete</span>
-                                        </a>
+                                        </a> -->
                                     </div>';
                 }
 	            $data[] = $nestedData;    
