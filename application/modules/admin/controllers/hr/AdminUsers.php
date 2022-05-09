@@ -19,6 +19,7 @@ class AdminUsers extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
+    private $custom_js_version = '01'; 
 	public function __construct()
     {
         parent::__construct();
@@ -49,7 +50,7 @@ class AdminUsers extends MX_Controller {
         $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=admin_users_'.$this->custom_js_version));
         $this->admintemplate->show("hr", "admin_users", $data);
     }
 
@@ -81,7 +82,11 @@ class AdminUsers extends MX_Controller {
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email'];
                 $nestedData[] = $value['name'];
-
+                $status = '<span class="badge badge-info">In-active</span>';
+                if ($value['status'] == '1') {
+                    $status = '<span class="badge badge-success">Active</span>';
+                }
+                $nestedData[] = $status;
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-admin-user/'.$value['id'];
                     
@@ -92,12 +97,12 @@ class AdminUsers extends MX_Controller {
                                             </span>
                                             <span class="text">Edit</span>
                                         </a>
-                                        <a style="margin-left: 5px;" href="#" onclick="deleteAdminUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
+                                        <!-- <a style="margin-left: 5px;" href="#" onclick="deleteAdminUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-trash"></i>
                                             </span>
                                             <span class="text">Delete</span>
-                                        </a>
+                                        </a> -->
                                     </div>';
                 }
 	            $data[] = $nestedData;    
@@ -162,16 +167,19 @@ class AdminUsers extends MX_Controller {
             if ($this->input->post()) {
                 $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required'=> 'Please Enter First Name'));
                 $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required'=> 'Please Enter Last Name'));
-                $this->form_validation->set_rules('password', 'Password', 'required', array('required'=> 'Please Enter Password'));
+                //$this->form_validation->set_rules('password', 'Password', 'required', array('required'=> 'Please Enter Password'));
                 $this->form_validation->set_rules('user_type', 'User Type', 'required', array('required'=> 'Please Select User Type'));
 
                 if ($this->form_validation->run() == true) {
                     $adminData = array(
                         'first_name' =>  $this->input->post('first_name'),
                         'last_name' =>  $this->input->post('last_name'),
-                        'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
                         'user_type_id' => $this->input->post('user_type'),
+                        'status' => $this->input->post('status') == '1' ? 1 : 0,
                     );
+                    if(!empty($this->input->post('password'))) {
+                        $adminData['password'] =  password_hash($this->input->post('password'), PASSWORD_DEFAULT);
+                    }
                     $condition = array('id' => $id);
                     $this->hr->update($adminData, $condition, 'pct_hr_users');
                     $successMsg = 'Admin user updated successfully.';
@@ -188,6 +196,7 @@ class AdminUsers extends MX_Controller {
         } else {
             redirect(base_url().'hr/admin/admin-users');
         }
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=admin_users_'.$this->custom_js_version));
         $this->admintemplate->show("hr", "edit_admin_user", $data);
     }
 
@@ -197,7 +206,7 @@ class AdminUsers extends MX_Controller {
         if ($id) {
             $adminData = array('status' => 0);
             $condition = array('id' => $id);
-            $update = $this->hr->update($adminData, $condition, 'admin');
+            $update = $this->hr->update($adminData, $condition, 'pct_hr_users');
             if ($update) {
                 $successMsg = 'Admin User deleted successfully.';
                 $response = array('status'=>'success', 'message' => $successMsg);

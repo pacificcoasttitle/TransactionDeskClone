@@ -25,7 +25,7 @@ class Hr extends CI_Model
     {
         $this->db->from('pct_hr_users')
                 ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id');
-        $this->db->where('pct_hr_users.status', 1);
+        //$this->db->where('pct_hr_users.status', 1);
         $this->db->where('(pct_hr_users.user_type_id = 1 OR pct_hr_users.user_type_id = 2)');
         $total_records =  $this->db->count_all_results();
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -46,7 +46,7 @@ class Hr extends CI_Model
             
             $this->db->from('pct_hr_users')
                 ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id');
-            $this->db->where('pct_hr_users.status', 1);
+            //$this->db->where('pct_hr_users.status', 1);
             $this->db->where('(pct_hr_users.user_type_id = 1 OR pct_hr_users.user_type_id = 2)');
             $filter_total_records =  $this->db->count_all_results();
 
@@ -62,7 +62,7 @@ class Hr extends CI_Model
             $this->db->select('pct_hr_users.*, pct_hr_user_types.name');
             $this->db->from('pct_hr_users')
                     ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id');
-            $this->db->where('pct_hr_users.status', 1);
+            //$this->db->where('pct_hr_users.status', 1);
             $this->db->where('(pct_hr_users.user_type_id = 1 OR pct_hr_users.user_type_id = 2)');
 
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -80,7 +80,7 @@ class Hr extends CI_Model
             $this->db->select('pct_hr_users.*, pct_hr_user_types.name');
             $this->db->from('pct_hr_users')
                     ->join('pct_hr_user_types', 'pct_hr_user_types.id = pct_hr_users.user_type_id');
-            $this->db->where('pct_hr_users.status', 1);
+            //$this->db->where('pct_hr_users.status', 1);
             $this->db->where('(pct_hr_users.user_type_id = 1 OR pct_hr_users.user_type_id = 2)');
 
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
