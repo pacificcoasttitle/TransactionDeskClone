@@ -91,7 +91,7 @@ class Escrow extends MX_Controller
                                     <a href="'.base_url().'get-notes/'.$order['file_id'].'">
                                         <button class="btn btn-grad-2a button-color button-color" style="width: auto !important;padding: 9px 15px !important;" type="button">Notes</button>
                                     </a>
-                                    <a href="">
+                                    <a href="'.base_url().'upload-documents/'.$order['file_id'].'">
                                         <button class="btn btn-grad-2a button-color button-color" style="width: auto !important;padding: 9px 15px !important;" type="button">Documents</button>
                                     </a>
                                 </div>';

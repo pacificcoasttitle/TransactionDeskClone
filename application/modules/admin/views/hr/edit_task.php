@@ -18,7 +18,7 @@
                                     <div class="form-group">
                                         <label for="email">Task Name<span class="required"> *</span></label>
                                         <input type="text" class="form-control" placeholder="Task Name" value="<?php echo $taskInfo->name;?>" name="name" id="name" required="required">
-                                    </div>
+                                    </div> 
                                     <?php if(!empty($name_error_msg)){ ?>       
                                         <div class="typography-line text-danger">
                                             <?php echo $name_error_msg;?>
@@ -42,6 +42,20 @@
                                     <?php } ?>
                                 </div>
                             </div>
+
+                            <div class="row" id="tasks_container">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+										<label for="parent_task_id">Select Parent Task <span class="required"> </span></label>
+										<select class="form-control" name="parent_task_id" id="parent_task_id">
+											<option value="">Select Parent Task</option>
+											<?php foreach($tasks as $task): ?>
+												<option value="<?php echo $task->id;?>" <?php echo $taskInfo->parent_task_id == $task->id ? 'selected' : '';?>><?php echo $task->name; ?></option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+								</div>
+							</div>
 
                             <div class="row">
                                 <div class="col-md-6">

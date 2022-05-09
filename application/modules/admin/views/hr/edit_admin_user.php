@@ -55,8 +55,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Password<span class="required"> *</span></label>
-                                        <input type="password" class="form-control" placeholder="Password" name="password" id="password" value="" required="required">
+                                        <label>Password<span class="required"> </span></label>
+                                        <input type="password" class="form-control" placeholder="Password" name="password" id="password" value="">
                                     </div>
                                     <?php if(!empty($password_error_msg)){ ?>  
                                         <div class="typography-line text-danger">
@@ -81,6 +81,15 @@
                                             <?php echo $user_type_error_msg;?>
                                         </div>
                                     <?php } ?>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+									<div class="form-check form-group">
+										<input type="checkbox" class="form-check-input" id="status" name="status" value="<?php echo $adminUserInfo['status'];?>" <?php echo $adminUserInfo['status'] == 1 ? 'checked' : '';?>>
+										<label class="form-check-label" for="status">Active</label>
+									</div>
                                 </div>
                             </div>
 

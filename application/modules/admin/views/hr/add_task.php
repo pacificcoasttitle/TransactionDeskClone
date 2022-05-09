@@ -43,6 +43,20 @@
                                 </div>
                             </div>
 
+                            <div class="row" id="tasks_container">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+										<label for="parent_task_id">Select Parent Task <span class="required"> </span></label>
+										<select class="form-control" name="parent_task_id" id="parent_task_id">
+											<option value="">Select Parent Task</option>
+											<?php foreach($tasks as $task): ?>
+												<option value="<?php echo $task->id;?>"><?php echo $task->name; ?></option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+								</div>
+							</div>
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">

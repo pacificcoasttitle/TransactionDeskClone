@@ -693,7 +693,7 @@ class Common extends MX_Controller {
 		$data['documentTypes'] = $this->order->get_document_types();
 		$documents = $this->order->get_user_documents($data['orderDetails']['order_id']);
 
-		if ($userdata['is_title_officer'] == 1) {
+		if ($userdata['is_title_officer'] == 1 || $userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
             $user_data = array();
             $user_data = array(
                 'admin_api' => 1
@@ -746,7 +746,12 @@ class Common extends MX_Controller {
 					}
 				}	
 			}
-        }   
+        } 
+		$prod_type = $data['orderDetails']['prod_type'];
+		if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+			$this->load->model('admin/escrow/tasks_model');  
+			$data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )");
+		}  
 		$this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
 		$this->template->show("order/common", "upload_documents", $data);
 	}
@@ -832,6 +837,7 @@ class Common extends MX_Controller {
 						'document_size' => ($data['file_size'] * 1000),
 						'user_id' => $userdata['id'],
 						'order_id' => $orderId,
+						'task_id' => !empty($this->input->post('task_id')) ? $this->input->post('task_id') : 0,
 						'description' => $this->input->post('description_'.$i),
 						'is_sync' => 1,
 						'is_prelim_document' => 0
