@@ -20,7 +20,8 @@ $(document).ready(function () {
 		defaultDate: past_10_years,
 		changeMonth: true,
       	changeYear: true,
-		maxDate: "0"
+		maxDate: "0",
+		yearRange: "-120:+0",
 	});
     if ($("#hire_date_val").length != 0) {
         $('#hire_date').val($("#hire_date_val").val());

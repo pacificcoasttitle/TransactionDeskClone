@@ -19,7 +19,8 @@ class Users extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-	public function __construct()
+	private $custom_js_version = '01';
+	 public function __construct()
     {
         parent::__construct();
         $this->load->helper(
@@ -50,7 +51,7 @@ class Users extends MX_Controller {
         $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
         $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=users_'.$this->custom_js_version) );
         $this->admintemplate->show("hr", "users", $data);
     }
 
@@ -333,7 +334,7 @@ class Users extends MX_Controller {
                 //$data['department_error_msg'] = form_error('department');
             }                                       
         }
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=users_'.$this->custom_js_version) );
         $this->admintemplate->show("hr", "add_user", $data);
     }
 
@@ -461,7 +462,7 @@ class Users extends MX_Controller {
         } else {
             redirect(base_url().'hr/admin/users');
         }
-        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+        $this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=users_'.$this->custom_js_version) );
         $this->admintemplate->show("hr", "edit_user", $data);
     }
 
@@ -534,7 +535,7 @@ class Users extends MX_Controller {
 			// $data = array();
 			$data['tasks'] = $tasks;
 			$data['users_tasks'] = $users_tasks;
-			$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js') );
+			$this->admintemplate->addJS( base_url('assets/backend/hr/js/custom.js?v=users_'.$this->custom_js_version) );
 			$this->admintemplate->show("hr", "users_tasks", $data);
 		}
 	}
