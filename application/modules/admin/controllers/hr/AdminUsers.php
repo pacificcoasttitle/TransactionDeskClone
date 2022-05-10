@@ -97,12 +97,12 @@ class AdminUsers extends MX_Controller {
                                             </span>
                                             <span class="text">Edit</span>
                                         </a>
-                                        <!-- <a style="margin-left: 5px;" href="#" onclick="deleteAdminUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
+                                        <a style="margin-left: 5px;" href="#" onclick="deleteAdminUser('.$value["id"].')" class="btn btn-danger btn-icon-split btn-sm">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-trash"></i>
                                             </span>
                                             <span class="text">Delete</span>
-                                        </a> -->
+                                        </a> 
                                     </div>';
                 }
 	            $data[] = $nestedData;    
@@ -202,15 +202,12 @@ class AdminUsers extends MX_Controller {
 
     public function deleteAdminUser()
     {
+        $this->load->model('hr/users_model');
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
-            $adminData = array('status' => 0);
-            $condition = array('id' => $id);
-            $update = $this->hr->update($adminData, $condition, 'pct_hr_users');
-            if ($update) {
-                $successMsg = 'Admin User deleted successfully.';
-                $response = array('status'=>'success', 'message' => $successMsg);
-            }
+            $this->users_model->delete($id);
+            $successMsg = 'Admin User deleted successfully.';
+            $response = array('status'=>'success', 'message' => $successMsg);
         } else {
             $msg = 'Admin User ID is required.';
             $response = array('status' => 'error','message'=>$msg);

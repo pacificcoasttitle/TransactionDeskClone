@@ -89,6 +89,12 @@ td.dataTables_empty {
     margin-bottom: 20px;
 }
 
+.percentage {
+    font-weight: 900;
+    font-size: 21px;
+    color: #a324ec;
+}
+
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 <div class="container">
