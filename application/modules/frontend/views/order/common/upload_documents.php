@@ -47,94 +47,19 @@
 												</div>
 												<input type="hidden" id="file_id" name="file_id" value="<?php echo $orderDetails['file_id'];?>">
 												<input type="hidden" id="order_id" name="order_id" value="<?php echo $orderDetails['order_id'];?>">
-												<div class="col-md-6">
-													<blockquote class="b-blockquote b-blockquote-3">
-														<footer class="b-blockquote-3__footer">
-															<cite class="b-blockquote-3__cite"
-																title="Blockquote Title"><span
-																	class="b-blockquote-3__author">Document
-																	#1</span></cite>
-														</footer>
-														<div class="b-blockquote-3__content">
-															<div class="header-language-nav dropdown">
-																<select name="document_type_1" id="document_type_1" class="dropdown-toggle" required="required">
-																	<option value="">DOCUMENT TYPE:</option>
-																	<?php foreach($documentTypes as $documentType) { ?>
-																	<option
-																		value="<?php echo $documentType['api_id'];?>">
-																		<?php echo $documentType['name'];?></option>
-																	<?php } ?>
-																</select>
-																<span style="color:red;">*</span>
-															</div>
-															<div class="input-group" style="width: 100%;margin-left: 14%;">
-																<div class="custom-file"  style="float:left;">
-																	<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
-																		id="document_1" name="document_1" required="required">
-																</div>
-																<span style="color:red;float:left;">*</span>
-															</div>
-															<div class="header-language-nav dropdown">
-																<div class="" style="margin-top: 10px;float:left;">
-																	<textarea name="description_1" id="description_1" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
-																		class="custom-file-input dropdown-toggle" id="inputGroupFile01"
-																		style="border: 1px solid rgba(238,238,238);" required="required"></textarea>
-																</div>
-																<span style="color:red;float:left;">*</span>
-															</div>
-														</div>
-													</blockquote>
-												</div>
-												<div class="col-md-6">
-													<blockquote class="b-blockquote b-blockquote-3">
-														<footer class="b-blockquote-3__footer">
-															<cite class="b-blockquote-3__cite"
-																title="Blockquote Title"><span
-																	class="b-blockquote-3__author">Document
-																	#2</span></cite>
-														</footer>
-														<div class="b-blockquote-3__content">
-															<div class="header-language-nav dropdown">
-																<select name="document_type_2" id="document_type_2" class="dropdown-toggle">
-																	<option value="">DOCUMENT TYPE:</option>
-																	<?php foreach($documentTypes as $documentType) { ?>
-																	<option
-																		value="<?php echo $documentType['api_id'];?>">
-																		<?php echo $documentType['name'];?></option>
-																	<?php } ?>
-																</select>
-																
-															</div>
-															<div class="input-group" style="width: 100%;margin-left: 15%;">
-																<div class="custom-file"  style="float:left;">
-																	<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
-																		id="document_2" name="document_2">
-																</div>
-																
-															</div>
-															<div class="header-language-nav dropdown">
-																<div class="" style="margin-top: 10px;float:left;">
-																	<textarea name="description_2" id="description_2" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
-																		class="custom-file-input dropdown-toggle" id="inputGroupFile01"
-																		style="border: 1px solid rgba(238,238,238);"></textarea>
-																</div>
-																
-															</div>
-														</div>
-													</blockquote>
-												</div>
-												<div class="col-md-12">
+												
+												<?php for($i= 1; $i <= 4; $i++) { ?>	
 													<div class="col-md-6">
 														<blockquote class="b-blockquote b-blockquote-3">
 															<footer class="b-blockquote-3__footer">
 																<cite class="b-blockquote-3__cite"
 																	title="Blockquote Title"><span
 																		class="b-blockquote-3__author">Document
-																		#3</span></cite>
+																		#<?php echo $i;?></span></cite>
 															</footer>
 															<div class="b-blockquote-3__content">
 																<div class="header-language-nav dropdown">
-																	<select name="document_type_3" id="document_type_3" class="dropdown-toggle">
+																	<select name="document_type_<?php echo $i;?>" id="document_type_<?php echo $i;?>" class="dropdown-toggle" required="required">
 																		<option value="">DOCUMENT TYPE:</option>
 																		<?php foreach($documentTypes as $documentType) { ?>
 																		<option
@@ -142,61 +67,39 @@
 																			<?php echo $documentType['name'];?></option>
 																		<?php } ?>
 																	</select>
-																	
+																	<span style="color:red;">*</span>
 																</div>
 																<div class="input-group" style="width: 100%;margin-left: 14%;">
 																	<div class="custom-file"  style="float:left;">
 																		<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
-																			id="document_3" name="document_3">
+																			id="document_<?php echo $i;?>" name="document_<?php echo $i;?>" required="required">
 																	</div>
-																	
+																	<span style="color:red;float:left;">*</span>
 																</div>
 																<div class="header-language-nav dropdown">
 																	<div class="" style="margin-top: 10px;float:left;">
-																		<textarea name="description_3" id="description_3" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
+																		<textarea name="description_<?php echo $i;?>" id="description_<?php echo $i;?>" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
 																			class="custom-file-input dropdown-toggle" id="inputGroupFile01"
-																			style="border: 1px solid rgba(238,238,238);"></textarea>
+																			style="border: 1px solid rgba(238,238,238);" required="required"></textarea>
 																	</div>
+																	<span style="color:red;float:left;">*</span>
 																</div>
+																<?php if (!empty($tasks)) { ?>
+																	<div class="header-language-nav dropdown">
+																		<select name="task_id_<?php echo $i;?>" id="task_id_<?php echo $i;?>" class="dropdown-toggle">
+																			<option value="">Select Task:</option>
+																			<?php foreach($tasks as $task) { ?>
+																				<option value="<?php echo $task->id;?>"><?php echo $task->name;?></option>
+																			<?php } ?>
+																		</select>
+																		<!-- <span style="color:red;">*</span> -->
+																	</div>
+																<?php } ?>
 															</div>
 														</blockquote>
 													</div>
-													<div class="col-md-6">
-														<blockquote class="b-blockquote b-blockquote-3">
-															<footer class="b-blockquote-3__footer">
-																<cite class="b-blockquote-3__cite"
-																	title="Blockquote Title"><span
-																		class="b-blockquote-3__author">Document
-																		#4</span></cite>
-															</footer>
-															<div class="b-blockquote-3__content">
-																<div class="header-language-nav dropdown">
-																	<select name="document_type_4" id="document_type_4" class="dropdown-toggle">
-																		<option value="">DOCUMENT TYPE:</option>
-																		<?php foreach($documentTypes as $documentType) { ?>
-																		<option
-																			value="<?php echo $documentType['api_id'];?>">
-																			<?php echo $documentType['name'];?></option>
-																		<?php } ?>
-																	</select>
-																</div>
-																<div class="input-group" style="width: 100%;margin-left: 14%;">
-																	<div class="custom-file"  style="float:left;">
-																		<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
-																			id="document_4" name="document_4">
-																	</div>
-																</div>
-																<div class="header-language-nav dropdown">
-																	<div class="" style="margin-top: 10px;float:left;">
-																		<textarea name="description_4" id="description_4" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
-																			class="custom-file-input dropdown-toggle" id="inputGroupFile01"
-																			style="border: 1px solid rgba(238,238,238);"></textarea>
-																	</div>
-																</div>
-															</div>
-														</blockquote>
-													</div>
-												</div>
+												<?php } ?>
+												
 												<div class="col-md-12">
 													<a href="">
 														<button id="down_btn" style="color: #c7c7c7;width: 220px;" class="btn btn-grad-2a" type="submit">Upload Documents</button>

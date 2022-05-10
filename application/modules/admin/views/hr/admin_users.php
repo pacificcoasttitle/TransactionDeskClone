@@ -38,6 +38,7 @@
                             <th>Last Name</th>
                             <th>Email</th>
 							<th>User Type</th>
+							<th>Status</th>
                             <th>Action</th>
 						</tr>
 					</thead>

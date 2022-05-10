@@ -33,6 +33,14 @@ $(document).ready(function () {
 		});
 	}
 
+    $('#status').change(function() {
+        if ($(this).prop('checked')){
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
+
     if ($('#admin_users').length)  {
         adminList = $('#admin_users').DataTable({
            "paging": true,

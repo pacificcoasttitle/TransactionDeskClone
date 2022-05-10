@@ -124,6 +124,7 @@ class Tasks extends MX_Controller {
                     'name' =>  $this->input->post('name'),
                     'prod_type' =>  $this->input->post('prod_type'),
                     'notes' =>  $this->input->post('notes'),
+                    'parent_task_id' => $this->input->post('parent_task_id') ? $this->input->post('parent_task_id') : 0,
                     'status' =>  1
                 );
                 $this->hr->insert($taskData, 'pct_escrow_tasks');
@@ -135,6 +136,8 @@ class Tasks extends MX_Controller {
                 $data['prod_type_error_msg'] = form_error('prod_type');
             }                                       
         }
+        $this->load->model('escrow/tasks_model');
+		$data['tasks'] = $this->tasks_model->get_many_by("parent_task_id = 0");
         $this->admintemplate->show("hr", "add_task", $data);
     }
 
@@ -152,6 +155,7 @@ class Tasks extends MX_Controller {
                     $taskData = array(
                         'name' =>  $this->input->post('name'),
                         'prod_type' =>  $this->input->post('prod_type'),
+                        'parent_task_id' => $this->input->post('parent_task_id') ? $this->input->post('parent_task_id') : 0,
                         'notes' =>  $this->input->post('notes'),
                     );
                     $condition = array('id' => $id);
@@ -168,6 +172,8 @@ class Tasks extends MX_Controller {
         } else { 
             redirect(base_url().'hr/admin/tasks');
         }
+        $this->load->model('escrow/tasks_model');
+		$data['tasks'] = $this->tasks_model->get_many_by("parent_task_id = 0");
         $this->admintemplate->show("hr", "edit_task", $data);
     }
 
