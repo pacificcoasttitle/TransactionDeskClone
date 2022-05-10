@@ -2364,6 +2364,7 @@ class Common extends MX_Controller {
 		 * second_installment:{"Balance":"0.00","Amount":"3642.97","DueDate":"4\/12\/2021","Number":"2nd","PaymentDate":"11\/18\/2020","Penalty":"374.30","Status":"PAID","AmountPaid":"3642.97","TaxYear":"2020","InterestAmount":"0.00"}
 		 */
 		$this->load->helper('homedocsapi_helper');
+		// $time_stamp = time();
 		$homedocs_array = [
 			'order_token'=>$orderDetails['random_number'],
 			'apn'=>$orderDetails['apn'],
@@ -2376,9 +2377,12 @@ class Common extends MX_Controller {
 			'vesting_info'=>$titlePointDetails[0]['vesting_information'],
 			'first_installment'=>$titlePointDetails[0]['first_installment'],
 			'second_installment'=>$titlePointDetails[0]['second_installment'],
+			'borrower_email'=>'binita.d'.$orderDetails['file_id'].'@crestinfosystems.net',
+			'borrower_name'=>'Binita D'.$orderDetails['file_id'],
 		];
+		echo '<pre>';
 		var_dump($homedocs_array);
-		// die;
+		echo '<br><br><br><br><br>';
 
 		$result = send_order_data($homedocs_array);
 		var_dump($result);
