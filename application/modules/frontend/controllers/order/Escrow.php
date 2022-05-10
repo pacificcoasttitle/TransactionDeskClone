@@ -82,17 +82,17 @@ class Escrow extends MX_Controller
                 $nestedData[] = $order['full_address'];
                 $nestedData[] = $order['product_type'];
                 $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
-                $nestedData[] = $task_complete_ratio.' %';
+                $nestedData[] = '<div class="percentage">'.$task_complete_ratio.'%</div>';
                 $editUrl = base_url().'order/escrow/order-tasks/'.$order['id'];
                 $nestedData[] = '<div style="display: flex;">
                                     <a href="'.base_url().'order/escrow/order-tasks/'.$order['id'].'">
-                                        <button class="btn btn-grad-2a button-color" style="width: auto !important;padding: 9px 15px !important;" type="button">Tasks</button>
+                                        <button class="btn btn-grad-2a button-color" style="width: auto !important;padding: 9px 15px !important;background-color:#3e24ec;color:#fff;" type="button">Tasks</button>
                                     </a>
                                     <a href="'.base_url().'get-notes/'.$order['file_id'].'">
-                                        <button class="btn btn-grad-2a button-color button-color" style="width: auto !important;padding: 9px 15px !important;" type="button">Notes</button>
+                                        <button class="btn btn-grad-2a button-color button-color" style="width: auto !important;padding: 9px 15px !important;background-color:#7024ec;color:#fff;" type="button">Notes</button>
                                     </a>
                                     <a href="'.base_url().'upload-documents/'.$order['file_id'].'">
-                                        <button class="btn btn-grad-2a button-color button-color" style="width: auto !important;padding: 9px 15px !important;" type="button">Documents</button>
+                                        <button class="btn btn-grad-2a button-color button-color" style="width: auto !important;padding: 9px 15px !important;background-color:#a324ec;color:#fff;" type="button">Documents</button>
                                     </a>
                                 </div>';
                 $data[] = $nestedData; 
