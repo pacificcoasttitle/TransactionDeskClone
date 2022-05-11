@@ -796,6 +796,15 @@ class Home extends MX_Controller {
 										$partnerKey = array_search(7, array_column($partners, 'PartnerTypeID'));
 										if (strlen($partnerKey) > 0) {
 											array_splice($partners, $partnerKey, 1);
+											$removeParentKey = array_search(7, array_column($removePartners, 'PartnerTypeID'));
+											if (strlen($removeParentKey) > 0) {
+												array_splice($removePartners, $removeParentKey, 1);
+												$removePartnerData = json_encode(array('Partners' => $removePartners));
+												$endPoint = 'files/'.$file_id.'/partners';
+												$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
+												$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+												$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+											}
 										}
 									}
 								}
