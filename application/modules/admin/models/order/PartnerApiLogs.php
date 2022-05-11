@@ -30,8 +30,8 @@ class PartnerApiLogs extends CI_Model
             ->from('pct_order_partner_api_logs')
             ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id')
-            ->join('customer_basic_details to', 'transaction_details.title_officer = to.id');
+            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id', 'left')
+            ->join('customer_basic_details to', 'transaction_details.title_officer = to.id', 'left');
         $total_records =  $this->db->count_all_results();
 
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -61,8 +61,8 @@ class PartnerApiLogs extends CI_Model
             ->from('pct_order_partner_api_logs')
             ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id')
-            ->join('customer_basic_details to', 'transaction_details.title_officer = to.id');
+            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id', 'left')
+            ->join('customer_basic_details to', 'transaction_details.title_officer = to.id', 'left');
 
             $filter_total_records =  $this->db->count_all_results();
 
@@ -88,8 +88,8 @@ class PartnerApiLogs extends CI_Model
             ->from('pct_order_partner_api_logs')
             ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id')
-            ->join('customer_basic_details to', 'transaction_details.title_officer = to.id');
+            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id', 'left')
+            ->join('customer_basic_details to', 'transaction_details.title_officer = to.id', 'left');
             $this->db->order_by("pct_order_partner_api_logs.created_at", "desc");
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -124,8 +124,8 @@ class PartnerApiLogs extends CI_Model
             ->from('pct_order_partner_api_logs')
             ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id')
-            ->join('customer_basic_details to', 'transaction_details.title_officer = to.id');
+            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id', 'left')
+            ->join('customer_basic_details to', 'transaction_details.title_officer = to.id', 'left');
 
             $filter_total_records =  $this->db->count_all_results();
 
@@ -147,8 +147,8 @@ class PartnerApiLogs extends CI_Model
             ->from('pct_order_partner_api_logs')
             ->join('order_details', 'order_details.partner_api_log_id = pct_order_partner_api_logs.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id')
-            ->join('customer_basic_details to', 'transaction_details.title_officer = to.id');
+            ->join('customer_basic_details', 'transaction_details.sales_representative = customer_basic_details.id', 'left')
+            ->join('customer_basic_details to', 'transaction_details.title_officer = to.id', 'left');
             $this->db->order_by("pct_order_partner_api_logs.created_at", "desc");
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {

@@ -789,6 +789,16 @@ class Home extends MX_Controller {
 								$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
 								$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
 								$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+								$resultRemovePartnerRes = json_decode($resultRemovePartner,true);
+								$partnerKey = '';
+								if (isset($resultRemovePartnerRes['ResponseStatus']['Message']) && !empty($resultRemovePartnerRes['ResponseStatus']['Message'])) {
+									if (str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'North American Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Westcor Land Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Commonwealth Land Title Insurance Company')) {
+										$partnerKey = array_search(7, array_column($partners, 'PartnerTypeID'));
+										if (strlen($partnerKey) > 0) {
+											array_splice($partners, $partnerKey, 1);
+										}
+									}
+								}
 							}
 
 							$partnerData = json_encode(array('Partners' => $partners));
