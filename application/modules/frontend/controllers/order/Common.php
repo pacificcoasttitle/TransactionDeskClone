@@ -750,7 +750,7 @@ class Common extends MX_Controller {
 		$prod_type = $data['orderDetails']['prod_type'];
 		if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
 			$this->load->model('admin/escrow/tasks_model');  
-			$data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )");
+			$data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
 		}  
 		$this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
 		$this->template->show("order/common", "upload_documents", $data);
@@ -819,7 +819,7 @@ class Common extends MX_Controller {
 			mkdir('./uploads/documents', 0777, TRUE);
 		}
 
-		for ($i = 1; $i <=6 ; $i++) {
+		for ($i = 1; $i <=4 ; $i++) {
 			if (!empty($_FILES['document_'.$i]['name'])) {
 				if (! $this->upload->do_upload('document_'.$i)) {
 					$errors[$i] = "Document #".$i.": ".$this->upload->display_errors();
@@ -845,31 +845,35 @@ class Common extends MX_Controller {
 
 					$this->order->uploadDocumentOnAwsS3($document_name, 'documents');
 					$documentId = $this->document->insert($documentData);
-					$endPoint = 'files/'.$fileId.'/documents';
-					$documentApiData = array(			
-						'DocumentName' => $data['file_name'],
-						'DocumentType' => array(
-							'DocumentTypeID' => $this->input->post('document_type_'.$i),
-						),
-						'Description' => $this->input->post('description_'.$i),
-						'InternalOnly' => false,
-						'DocumentBody' => $binaryData
-					);
-					$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
-					if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
-						$user_data['admin_api'] = 1; 
-					}
-					
-					$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderId, 0);
-					$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-					$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderId, $logid);
-					$res = json_decode($result);
-					if (!empty($res->Document->DocumentID)) {
-						$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+					if (($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) && $documentId) {
 						$success[$i] = "Document #".$i.": uploaded successfully";
 					} else {
-						$errors[$i] = "Document #".$i.": Something went wrong.Please try again";
-					}
+						$endPoint = 'files/'.$fileId.'/documents';
+						$documentApiData = array(			
+							'DocumentName' => $data['file_name'],
+							'DocumentType' => array(
+								'DocumentTypeID' => $this->input->post('document_type_'.$i),
+							),
+							'Description' => $this->input->post('description_'.$i),
+							'InternalOnly' => false,
+							'DocumentBody' => $binaryData
+						);
+						$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+						if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+							$user_data['admin_api'] = 1; 
+						}
+						
+						$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderId, 0);
+						$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+						$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderId, $logid);
+						$res = json_decode($result);
+						if (!empty($res->Document->DocumentID)) {
+							$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+							$success[$i] = "Document #".$i.": uploaded successfully";
+						} else {
+							$errors[$i] = "Document #".$i.": Something went wrong.Please try again";
+						}
+					}	
 				} 
 			}
 		}
@@ -1324,7 +1328,7 @@ class Common extends MX_Controller {
                 $orderDetails['borrowers_vesting'] .=  " ".$orderDetails['vesting'];
 			} 
 		}
-		if(!empty($orderDetails['cpl_proposed_property_address'])) {
+		if (!empty($orderDetails['cpl_proposed_property_address'])) {
 			$orderDetails['property_address'] = $orderDetails['cpl_proposed_property_address'];
 			$orderDetails['property_city'] = $orderDetails['cpl_proposed_property_city'];
 			$orderDetails['property_state'] = $orderDetails['cpl_proposed_property_state'];
@@ -2413,7 +2417,7 @@ class Common extends MX_Controller {
 		$data['notes'] = $this->order->get_order_notes($orderId);
 
 		if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
-			$data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )");
+			$data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
 		} else {
 			$data['tasks'] = array();
 		}

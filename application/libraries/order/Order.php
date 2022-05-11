@@ -472,6 +472,7 @@ class Order
             order_details.premium,
             order_details.is_create_order_on_safewire,
             order_details.safewire_action_link,
+            order_details.prod_type,
             property_details.id as property_id, 
             property_details.address, 
             property_details.full_address, 
