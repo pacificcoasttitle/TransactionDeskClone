@@ -796,6 +796,10 @@ class Home extends MX_Controller {
 										$partnerKey = array_search(7, array_column($partners, 'PartnerTypeID'));
 										if (strlen($partnerKey) > 0) {
 											array_splice($partners, $partnerKey, 1);
+											$removeParentKey = array_search(7, array_column($removePartners, 'PartnerTypeID'));
+											if (strlen($removeParentKey) > 0) {
+												array_splice($removePartners, $removeParentKey, 1);
+											}
 										}
 									}
 								}
