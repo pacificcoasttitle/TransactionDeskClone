@@ -3288,6 +3288,11 @@ $(document).ready(function () {
         }); 
     }
 
+	if ($('#frm-add-sales-rep #accordionEx.accordion').length){
+		var collapse_class_id = $(".form-group .error").closest(".collapse").attr('id');
+		$('#'+collapse_class_id).collapse('show');
+	}
+
 });
 
 function updateCounty(counties,ruleId)

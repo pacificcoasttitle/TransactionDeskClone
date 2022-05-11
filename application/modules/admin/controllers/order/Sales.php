@@ -89,6 +89,9 @@ class Sales extends MX_Controller {
             $this->form_validation->set_rules('sales_rep_no_of_open_orders', 'Sales Rep No of Open Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Open Orders'));
             $this->form_validation->set_rules('sales_rep_no_of_close_orders', 'Sales Rep No of Close Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Close Orders'));
             $this->form_validation->set_rules('sales_rep_premium', 'Sales Rep Premium', 'trim|required|numeric', array('required'=> 'Sales Rep Premium'));
+            $this->form_validation->set_rules('loan_westcor', 'Loan Westcor Commission', 'trim|decimal');
+            $this->form_validation->set_rules('loan_natic', 'Loan Natic Commission', 'trim|decimal');
+            $this->form_validation->set_rules('sale_westcor', 'Sale Westcor Commission', 'trim|decimal');
               
             $config['upload_path'] = 'uploads/sales-rep/';
             $config['allowed_types'] = 'jpg|png';
@@ -165,6 +168,9 @@ class Sales extends MX_Controller {
                         'sales_rep_premium' => $_POST['sales_rep_premium'],
                         'is_password_updated' => 1,
                         'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
+						'loan_westcor_commission' => !empty($this->input->post('loan_westcor')) ? $this->input->post('loan_westcor') : 0,
+						'loan_natic_commission' => !empty($this->input->post('loan_natic')) ? $this->input->post('loan_natic') : 0,
+						'sale_westcor_commission' => !empty($this->input->post('sale_westcor')) ? $this->input->post('sale_westcor') : 0,
                     );
 
                     $insert = $this->sales_model->insert($salesRepData);
@@ -190,6 +196,9 @@ class Sales extends MX_Controller {
                 $data['sales_rep_no_of_open_orders_error_msg'] = form_error('sales_rep_no_of_open_orders');
                 $data['sales_rep_no_of_close_orders_error_msg'] = form_error('sales_rep_no_of_close_orders');
                 $data['sales_rep_premium_error_msg'] = form_error('sales_rep_premium');
+                $data['loan_westcor_error_msg'] = form_error('loan_westcor');
+                $data['loan_natic_error_msg'] = form_error('loan_natic');
+                $data['sale_westcor_error_msg'] = form_error('sale_westcor');
             }                                       
         }
         $this->load->view('order/layout/header', $data);
@@ -218,6 +227,9 @@ class Sales extends MX_Controller {
                 $this->form_validation->set_rules('sales_rep_no_of_open_orders', 'Sales Rep No of Open Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Open Orders'));
                 $this->form_validation->set_rules('sales_rep_no_of_close_orders', 'Sales Rep No of Close Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Close Orders'));
                 $this->form_validation->set_rules('sales_rep_premium', 'Sales Rep Premium', 'trim|required|numeric', array('required'=> 'Sales Rep Premium'));
+				$this->form_validation->set_rules('loan_westcor', 'Loan Westcor Commission', 'trim|decimal');
+				$this->form_validation->set_rules('loan_natic', 'Loan Natic Commission', 'trim|decimal');
+				$this->form_validation->set_rules('sale_westcor', 'Sale Westcor Commission', 'trim|decimal');
 
                 $config['upload_path'] = 'uploads/sales-rep/';
                 $config['allowed_types'] = 'jpg|png';
@@ -302,7 +314,11 @@ class Sales extends MX_Controller {
                             'sales_rep_premium' => $_POST['sales_rep_premium'],
                             'is_password_updated' => 1,
                             'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
+							'loan_westcor_commission' => !empty($this->input->post('loan_westcor')) ? $this->input->post('loan_westcor') : 0,
+							'loan_natic_commission' => !empty($this->input->post('loan_natic')) ? $this->input->post('loan_natic') : 0,
+							'sale_westcor_commission' => !empty($this->input->post('sale_westcor')) ? $this->input->post('sale_westcor') : 0,
                         );
+						// var_dump($salesRepData);die;
 
                         $condition = array('id' => $id);
                         $update = $this->sales_model->update($salesRepData, $condition);
@@ -329,6 +345,9 @@ class Sales extends MX_Controller {
                     $data['sales_rep_no_of_open_orders_error_msg'] = form_error('sales_rep_no_of_open_orders');
                     $data['sales_rep_no_of_close_orders_error_msg'] = form_error('sales_rep_no_of_close_orders');
                     $data['sales_rep_premium_error_msg'] = form_error('sales_rep_premium');
+					$data['loan_westcor_error_msg'] = form_error('loan_westcor');
+					$data['loan_natic_error_msg'] = form_error('loan_natic');
+					$data['sale_westcor_error_msg'] = form_error('sale_westcor');
                 }
             }
             $con = array('id' => $id);
