@@ -691,9 +691,9 @@ class Common extends MX_Controller {
 		$fileId = $this->uri->segment(2);  
 		$data['orderDetails'] = $this->order->get_order_details($fileId);
 		$data['documentTypes'] = $this->order->get_document_types();
-		$documents = $this->order->get_user_documents($data['orderDetails']['order_id']);
-
-		if ($userdata['is_title_officer'] == 1 || $userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+		
+		if ($userdata['is_title_officer'] == 1) {
+			$documents = $this->order->get_user_documents($data['orderDetails']['order_id']);
             $user_data = array();
             $user_data = array(
                 'admin_api' => 1
@@ -746,18 +746,20 @@ class Common extends MX_Controller {
 					}
 				}	
 			}
-        } 
-		$prod_type = $data['orderDetails']['prod_type'];
-		if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
-			$this->load->model('admin/escrow/tasks_model');  
-			$data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
-		}  
+        } else {
+			if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+				$prod_type = $data['orderDetails']['prod_type'];
+				$this->load->model('admin/escrow/tasks_model');  
+				$data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
+			}
+		}
 		$this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
 		$this->template->show("order/common", "upload_documents", $data);
 	}
 
 	function getOrderDocumentS() 
 	{
+		$userdata = $this->session->userdata('user');
 		$params = array();  $data = array();
 		$params['order_id'] = $this->input->post('order_id');
 		$params['file_id'] = $this->input->post('file_id');
@@ -782,6 +784,13 @@ class Common extends MX_Controller {
 				$nestedData = array();
 				$nestedData[] = $i;
 				$nestedData[] = $document['original_document_name'];
+				if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+					if ($document['is_uploaded_by_borrower'] == 1) {
+						$nestedData[] = 'Yes';
+					} else {
+						$nestedData[] = 'No';
+					}
+				}
 				$nestedData[] = date('m/d/Y',strtotime($document['created']));
 				$apiDocumentId = $document['api_document_id'];
 				$documentName = $document['document_name'];
@@ -829,7 +838,7 @@ class Common extends MX_Controller {
 					$binaryData   = base64_encode($contents); 
 					$document_name = date('YmdHis')."_".$data['file_name'];
 					rename(FCPATH."/uploads/documents/".$data['file_name'], FCPATH."/uploads/documents/".$document_name);
-					
+				
 					$documentData = array(
 						'document_name' => $document_name,
 						'original_document_name' => $data['file_name'],
@@ -837,7 +846,7 @@ class Common extends MX_Controller {
 						'document_size' => ($data['file_size'] * 1000),
 						'user_id' => $userdata['id'],
 						'order_id' => $orderId,
-						'task_id' => !empty($this->input->post('task_id')) ? $this->input->post('task_id') : 0,
+						'task_id' => !empty($this->input->post('task_id_'.$i)) ? $this->input->post('task_id_'.$i) : 0,
 						'description' => $this->input->post('description_'.$i),
 						'is_sync' => 1,
 						'is_prelim_document' => 0
@@ -2414,13 +2423,15 @@ class Common extends MX_Controller {
 		$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
 		$data['orderDetails'] = $orderDetails;
 		$prod_type = $orderDetails['prod_type'];
-		$data['notes'] = $this->order->get_order_notes($orderId);
-
+		
 		if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
 			$data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
+			$data['notes'] = $this->order->get_order_notes($orderId, $userdata['id']);
 		} else {
 			$data['tasks'] = array();
+			$data['notes'] = $this->order->get_order_notes($orderId);
 		}
+
 		$this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v=notes_order_js'.$this->notes_order_js) );
 		$this->template->show("order/common", "get_notes", $data);
     }
@@ -2430,60 +2441,83 @@ class Common extends MX_Controller {
     	$fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
 		$errors = array();
 		$success = array();
+		$this->load->model('order/note');
     	if (isset($fileId) && !empty($fileId)) {
     		$userdata = $this->session->userdata('user');
     		$subject = isset($_POST['subject']) && !empty($_POST['subject']) ? $_POST['subject'] : '';
     		$body = isset($_POST['body']) && !empty($_POST['body']) ? $_POST['body'] : '';
     		$orderDetails = $this->order->get_order_details($fileId);
 			$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
-    		$this->load->library('order/resware');
-	        $request = array();
-	        $endPoint = 'files/'.$fileId.'/notes';
-	        $request['Subject'] = $subject;
-	        $request['Body'] = $body;
-	        $request['FileID'] = $fileId;
-	        $notes_data = json_encode($request);
-			$user_data = array();
 
-			if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1 || $userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
-				$user_data['admin_api'] = 1; 
-			}
-			
-	        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
-	        $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-	        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
-			
-	        if (isset($result) && !empty($result)) {
-	            $response = json_decode($result, TRUE);
-
-	            if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
-					$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
-					$errors[] = $message;
+			if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+				$notesData = array(
+					'resware_note_id' => 0,
+					'subject' => $subject,
+					'note' => $body,
+					'user_id' => $userdata['id'],
+					'order_id' => $orderId,
+					'task_id' => $_POST['task_id']
+				);
+				$id = $this->note->insert($notesData);
+				if ($id) {
+					$success[] = 'Note created successfully.';
 				} else {
-					$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
-					$this->load->model('order/note');
-			        $notesData = array(
-			            'resware_note_id' => $noteId,
-						'subject' => $subject,
-						'note' => $body,
-			            'user_id' => $userdata['id'],
-			            'order_id' => $orderId,
-						'task_id' => isset($_POST['task_id']) && !empty($_POST['task_id']) ? $_POST['task_id'] : 0
-			        );
-			        $id = $this->note->insert($notesData);
-			        if ($noteId && $id) {
-						$success[] = 'Note created successfully.';
-			        } else {
-						$errors[] = 'Something went wrong. Please try again.';
-			        }
+					$errors[] = 'Something went wrong. Please try again.';
 				}
-	    	}
+			} else {
+				$this->load->library('order/resware'); 
+				$request = array();
+				$endPoint = 'files/'.$fileId.'/notes';
+				$request['Subject'] = $subject;
+				$request['Body'] = $body;
+				$request['FileID'] = $fileId;
+				$notes_data = json_encode($request);
+				$user_data = array();
+
+				if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1 ) {
+					$user_data['admin_api'] = 1; 
+				}
+				
+				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
+				$result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
+				
+				if (isset($result) && !empty($result)) {
+					$response = json_decode($result, TRUE);
+
+					if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+						$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+						$errors[] = $message;
+					} else {
+						$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+						$notesData = array(
+							'resware_note_id' => $noteId,
+							'subject' => $subject,
+							'note' => $body,
+							'user_id' => $userdata['id'],
+							'order_id' => $orderId,
+							'task_id' => 0
+						);
+						$id = $this->note->insert($notesData);
+						if ($noteId && $id) {
+							$success[] = 'Note created successfully.';
+						} else {
+							$errors[] = 'Something went wrong. Please try again.';
+						}
+					}
+				}
+			}
 			$data = array(
 				"errors" =>  $errors,
 				"success" => $success
 			);
 			$this->session->set_userdata($data);
-			redirect(base_url().'get-notes/'.$fileId);
+
+			if ($this->input->post('order_task_page') == 1) {
+				redirect(base_url().'order/escrow/order-tasks/'.$orderId);
+			} else {
+				redirect(base_url().'get-notes/'.$fileId);
+			}
 	    }
     }
 }

@@ -86,7 +86,7 @@
 																</div>
 																<?php if (!empty($tasks)) { ?>
 																	<div class="header-language-nav dropdown">
-																		<select name="task_id_<?php echo $i;?>" id="task_id_<?php echo $i;?>" class="dropdown-toggle">
+																		<select style="width:100%;" name="task_id_<?php echo $i;?>" id="task_id_<?php echo $i;?>" class="dropdown-toggle">
 																			<option value="">Select Task:</option>
 																			<?php foreach($tasks as $task) { ?>
 																				<option value="<?php echo $task->id;?>"><?php echo $task->name;?></option>
@@ -135,6 +135,10 @@
 										<tr>
 											<th>#</th>
 											<th>Document Name</th>
+											<?php $userdata = $this->session->userdata('user'); 
+												if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) { ?>
+													<th>Uploaded By Borrower</th>
+											<?php } ?>
 											<th>Created</th>
 											<th>Action</th>
 										</tr>

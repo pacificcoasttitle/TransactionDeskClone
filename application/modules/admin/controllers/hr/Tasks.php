@@ -66,21 +66,28 @@ class Tasks extends MX_Controller {
             $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
-            $userTypes = $this->common->getTasks($params);
+            $taskData = $this->common->getTasks($params);
             $json_data['draw'] = intval( $params['draw'] );
         } else {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $userTypes = $this->common->getTasks($params);            
+            $taskData = $this->common->getTasks($params);            
         }
 
         $data = array(); 
         $count = $params['start'] + 1;
-	    if (isset($userTypes['data']) && !empty($userTypes['data'])) {
-	    	foreach ($userTypes['data'] as $key => $value)  {
+	    if (isset($taskData['data']) && !empty($taskData['data'])) {
+	    	foreach ($taskData['data'] as $key => $value)  {
 	    		$nestedData=array();
                 $nestedData[] = $count;
 	            $nestedData[] = $value['name'];
                 $nestedData[] = ucfirst($value['prod_type']);
+                if ($value['parent_task_id'] > 0) {
+                    $parentTaskInfo = $this->tasks_model->get($value['parent_task_id']);
+                    $parentTaskName = $parentTaskInfo->name;
+                } else {
+                    $parentTaskName = '';
+                }
+                $nestedData[] = $parentTaskName;
                 $nestedData[] = $value['notes'];
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'hr/admin/edit-task/'.$value['id'];
@@ -104,8 +111,8 @@ class Tasks extends MX_Controller {
                 $count++;          
 	    	}
 	    }
-        $json_data['recordsTotal'] = intval( $userTypes['recordsTotal'] );
-        $json_data['recordsFiltered'] = intval( $userTypes['recordsFiltered'] );
+        $json_data['recordsTotal'] = intval( $taskData['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $taskData['recordsFiltered'] );
         $json_data['data'] = $data;
 	    echo json_encode($json_data);
     }

@@ -41,19 +41,19 @@
 										method="POST">
 										<div class="row">
 											<div class="col-xs-10">
-												<input class="form-control" type="text" name="subject" id="subject" placeholder="Subject">
+												<input class="form-control" type="text" name="subject" id="subject" placeholder="Subject" required>
 												<input type="hidden" name="fileId" id="fileId" value="<?php echo $orderDetails['file_id']; ?>">
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-xs-10">
-												<textarea class="form-control" rows="4" name="body" id="body" placeholder="Note"></textarea>
+												<textarea class="form-control" rows="4" name="body" id="body" placeholder="Note" required></textarea>
 											</div>
 										</div>
 										<?php if (!empty($tasks)) { ?>
 											<div class="row">
 												<div class="col-xs-10">
-													<select class="form-control" id="task_id" name="task_id">
+													<select class="form-control" id="task_id" name="task_id" required>
 														<option value="">Select Task</option>
 														<?php foreach($tasks as $task) {?>
 															<option value="<?php echo $task->id;?>"><?php echo $task->name;?></option>

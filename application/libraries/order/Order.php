@@ -696,7 +696,14 @@ class Order
             ->from('pct_order_documents');
          
         if ($userdata['is_title_officer'] == 0) {
-            $this->CI->db->where('user_id', $userdata['id']);
+            if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+                $this->CI->db->group_start()
+                    ->where('user_id', $userdata['id'])
+                    ->or_where('is_uploaded_by_borrower', 1)
+                    ->group_end();
+            } else {
+                $this->CI->db->where('user_id', $userdata['id']);
+            }
         }
         $this->CI->db->where('order_id', $params['order_id']);
         $total_records =  $this->CI->db->count_all_results();
@@ -713,7 +720,14 @@ class Order
             }
 
             if ($userdata['is_title_officer'] == 0) {
-                $this->CI->db->where('user_id', $userdata['id']);
+                if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+                    $this->CI->db->group_start()
+                        ->where('user_id', $userdata['id'])
+                        ->or_where('is_uploaded_by_borrower', 1)
+                        ->group_end();
+                } else {
+                    $this->CI->db->where('user_id', $userdata['id']);
+                }
             }
 
             $this->CI->db->where('order_id', $params['order_id']);
@@ -727,7 +741,14 @@ class Order
             }
 
             if ($userdata['is_title_officer'] == 0) {
-                $this->CI->db->where('user_id', $userdata['id']);
+                if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+                    $this->CI->db->group_start()
+                        ->where('user_id', $userdata['id'])
+                        ->or_where('is_uploaded_by_borrower', 1)
+                        ->group_end();
+                } else {
+                    $this->CI->db->where('user_id', $userdata['id']);
+                }
             }
 
             $this->CI->db->where('order_id', $params['order_id']);
@@ -746,7 +767,14 @@ class Order
             }
         } else {
             if ($userdata['is_title_officer'] == 0) {
-                $this->CI->db->where('user_id', $userdata['id']);
+                if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+                    $this->CI->db->group_start()
+                        ->where('user_id', $userdata['id'])
+                        ->or_where('is_uploaded_by_borrower', 1)
+                        ->group_end();
+                } else {
+                    $this->CI->db->where('user_id', $userdata['id']);
+                }
             }
 
             $this->CI->db->where('order_id', $params['order_id']);
@@ -1638,12 +1666,15 @@ class Order
 		return $count;
 	}
 
-    public function get_order_notes($orderId)
+    public function get_order_notes($orderId, $user_id = 0)
     {
         $this->CI->db->select('pct_order_notes.*, pct_escrow_tasks.name')
             ->from('pct_order_notes')
             ->join('pct_escrow_tasks', 'pct_order_notes.task_id = pct_escrow_tasks.id', 'left');
         $this->CI->db->where('order_id', $orderId);
+        if (!empty($user_id)) {
+            $this->CI->db->where('user_id', $user_id);
+        }
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();

@@ -18,6 +18,15 @@
 		</a>
 	</li>
 
+	<?php if($userdata['user_type_id'] == 4 && $userdata['department_id'] == 4) : ?>
+		<li class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/orders' || $this->uri->segment(3) == 'order-tasks') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url().'hr/admin/orders'; ?>">
+				<i class="fas fa-list"></i>
+				<span>Orders</span>
+			</a>
+		</li>
+	<?php endif; ?>
+
 	<li
 		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/time-sheets' || $this->uri->uri_string() == 'hr/admin/time-cards' || $this->uri->uri_string() == 'hr/admin/add-time-card' || $this->uri->segment(3) == 'edit-time-card') { echo 'active'; } ?>">
 		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#time_card_menu" aria-expanded="true"
@@ -54,13 +63,6 @@
 	</li>
 
 	<?php if($userdata['user_type_id'] == 4 && $userdata['department_id'] == 4) : ?>
-		<li class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/orders') { echo 'active'; } ?>">
-			<a class="nav-link" href="<?php echo base_url().'hr/admin/orders'; ?>">
-				<i class="fas fa-list"></i>
-				<span>Orders</span>
-			</a>
-		</li>
-
 		<li
 			class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/tasks') { echo 'active'; } ?>">
 			<a class="nav-link" href="<?php echo base_url().'hr/admin/tasks'; ?>">

@@ -23,10 +23,12 @@
 .custom__task_collapse .card-body {
 	padding-left: 35px;
 	font-size: 16px;
-	background: #f2f2f2;
-	margin-bottom: 15px;
+	/* background: #f2f2f2; */
+	margin-bottom: 25px;
     padding-bottom: 15px;
 	padding-top: 15px;
+	border: 1px solid #d0c9c9;
+	border-radius: 10px;
 }
 .custom__collapse_arrow {
 	padding: 15px;
