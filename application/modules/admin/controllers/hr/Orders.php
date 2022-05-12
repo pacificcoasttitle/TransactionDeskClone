@@ -22,7 +22,7 @@ class Orders extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-    private $orders_js_version = '02';
+    private $orders_js_version = '03';
 	public function __construct()
     {
         parent::__construct();
@@ -217,6 +217,8 @@ class Orders extends MX_Controller {
         }
         $data['tasks'] = $tasks;
         $data['completedTaskIds'] = $completedTaskIds;
+        $this->load->library('order/order');
+        $data['order_task_notes'] = $this->order->get_order_notes($id);
 		$this->admintemplate->addJS( base_url('assets/backend/escrow/js/tasks.js?v=order_tasks_'.$this->orders_js_version) );
         $this->admintemplate->show("hr", "order_tasks", $data);
 	}

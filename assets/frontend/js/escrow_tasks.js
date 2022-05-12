@@ -21,6 +21,10 @@ $(document).ready(function () {
 			change_progress();
 		});
 	}
+
+	$("#show-hide-form-btn").click(function(){
+		$('.show-hide-form-div').toggleClass('hide');
+	});
 });
 
 function change_progress() {

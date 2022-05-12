@@ -115,7 +115,21 @@ class Escrow extends MX_Controller
         $this->load->model('admin/escrow/order_completed_tasks_model');
         $this->load->model('admin/escrow/escrow_user_model');
         $this->load->model('hr/users_model');
+        
+        $data['errors'] = array();
+		$data['success'] = array();
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+        
         $orderInfo = $this->order_model->get($id);
+        $orderDetails = $this->order->get_order_details($orderInfo->file_id);
+		$data['orderDetails'] = $orderDetails;
         $prod_type = $orderInfo->prod_type;
 		$tasks = json_decode(json_encode($this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )")), true);
         $completedTasksInfo = $this->order_completed_tasks_model->get_many_by("(order_id = $id)");
@@ -228,8 +242,8 @@ class Escrow extends MX_Controller
         $data['tasks'] = $tasks;
         $data['completedTaskIds'] = $completedTaskIds;
         $data['order_task_notes'] = $this->order->get_order_notes($id);
-		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=02') );
-		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js') );
+		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=03') );
+		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=01') );
 		$this->template->show("order/escrow", "order_tasks", $data);
 	}
 }

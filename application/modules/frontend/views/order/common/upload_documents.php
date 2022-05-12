@@ -59,7 +59,7 @@
 															</footer>
 															<div class="b-blockquote-3__content">
 																<div class="header-language-nav dropdown">
-																	<select name="document_type_<?php echo $i;?>" id="document_type_<?php echo $i;?>" class="dropdown-toggle" required="required">
+																	<select name="document_type_<?php echo $i;?>" id="document_type_<?php echo $i;?>" class="dropdown-toggle" <?php echo $i == 1 ? 'required="required"' : '';?>>
 																		<option value="">DOCUMENT TYPE:</option>
 																		<?php foreach($documentTypes as $documentType) { ?>
 																		<option
@@ -72,7 +72,7 @@
 																<div class="input-group" style="width: 100%;margin-left: 14%;">
 																	<div class="custom-file"  style="float:left;">
 																		<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="custom-file-input"
-																			id="document_<?php echo $i;?>" name="document_<?php echo $i;?>" required="required">
+																			id="document_<?php echo $i;?>" name="document_<?php echo $i;?>" <?php echo $i == 1 ? 'required="required"' : '';?>>
 																	</div>
 																	<span style="color:red;float:left;">*</span>
 																</div>
@@ -80,13 +80,13 @@
 																	<div class="" style="margin-top: 10px;float:left;">
 																		<textarea name="description_<?php echo $i;?>" id="description_<?php echo $i;?>" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
 																			class="custom-file-input dropdown-toggle" id="inputGroupFile01"
-																			style="border: 1px solid rgba(238,238,238);" required="required"></textarea>
+																			style="border: 1px solid rgba(238,238,238);" <?php echo $i == 1 ? 'required="required"' : '';?>></textarea>
 																	</div>
 																	<span style="color:red;float:left;">*</span>
 																</div>
 																<?php if (!empty($tasks)) { ?>
 																	<div class="header-language-nav dropdown">
-																		<select name="task_id_<?php echo $i;?>" id="task_id_<?php echo $i;?>" class="dropdown-toggle">
+																		<select style="width:100%;" name="task_id_<?php echo $i;?>" id="task_id_<?php echo $i;?>" class="dropdown-toggle">
 																			<option value="">Select Task:</option>
 																			<?php foreach($tasks as $task) { ?>
 																				<option value="<?php echo $task->id;?>"><?php echo $task->name;?></option>
@@ -135,6 +135,10 @@
 										<tr>
 											<th>#</th>
 											<th>Document Name</th>
+											<?php $userdata = $this->session->userdata('user'); 
+												if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) { ?>
+													<th>Uploaded By Borrower</th>
+											<?php } ?>
 											<th>Created</th>
 											<th>Action</th>
 										</tr>
