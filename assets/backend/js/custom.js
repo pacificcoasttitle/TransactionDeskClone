@@ -3292,6 +3292,39 @@ $(document).ready(function () {
 		var collapse_class_id = $(".form-group .error").closest(".collapse").attr('id');
 		$('#'+collapse_class_id).collapse('show');
 	}
+	if($('#tbl-commission-range-listing').length) {
+		$('#tbl-commission-range-listing').DataTable({
+			"language": {
+                // searchPlaceholder: "Customer Number",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+		});
+	}
+
+	$('.delete-record-custom').click(function(){
+		var call_url = $(this).data('url');
+		if(call_url != '') {
+			confirm_msg = confirm('Are you sure to want to delete this record?')
+			if(confirm_msg){
+
+				$.ajax({
+					url: call_url,
+					method: "POST",
+					data : {action:'delete'},
+					success: function(data){
+						location.reload();
+					},
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						location.reload();
+					}
+				});
+			}
+		}
+	});
 
 });
 

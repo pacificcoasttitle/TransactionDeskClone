@@ -121,6 +121,9 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/holidays' || $this->uri->segment(3) == 'add-holiday' || $this->uri->segment(3) == 'edit-holiday') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/holidays'; ?>">
 				Holidays
 			</a>
+			<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*commission-range*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/commission-range'; ?>">
+				Commission Range
+			</a>
         </div>
 	</li>
 
