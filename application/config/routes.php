@@ -318,6 +318,10 @@ $route['update-mortgage-user'] = 'admin/order/home/updateMortgageUser';
 $route['order/admin/mortgage-brokers'] = 'admin/order/home/mortgageBrokers';
 $route['is-mortgage-primary-user'] = 'admin/order/home/isMortgagePrimaryUser';
 $route['is-password-required'] = 'admin/order/home/isPasswordRequired';
+$route['order/admin/commission-range'] = 'admin/order/commissionRange/index';
+$route['order/admin/add-commission-range'] = 'admin/order/commissionRange/add_commission_range';
+$route['order/admin/edit-commission-range/(:num)'] = 'admin/order/commissionRange/edit_commission_range/$1';
+$route['order/admin/delete-commission-range/(:num)'] = 'admin/order/commissionRange/delete_commission_range/$1';
 
 
 $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';
