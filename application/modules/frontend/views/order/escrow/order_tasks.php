@@ -112,7 +112,7 @@ td {
 													<div class="row">
 														<div class="col-xs-10">
 															<label class="custom-control custom-checkbox task__name">
-																<input type="checkbox" class="custom-control-input custom__task_checkbox" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
+																<input data-child="0" type="checkbox" class="custom-control-input custom__task_checkbox" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
 																<div class="check_box_text"> <?php echo $task['name']; ?></div>
 																<span class="checkmark"></span>
 																
@@ -141,7 +141,7 @@ td {
 															<hr style="border-top: 2px solid #d0c9c9;"/>
 															<?php foreach($keys as $key) {?>
 																<label class="custom-control custom-checkbox task__name">
-																	<input data-parent-task="<?php echo $task['id']; ?>" type="checkbox" class="custom-control-input" id="check_<?php echo $tasks[$key]['id']; ?>" name="task_done[]" value="<?php echo $tasks[$key]['id']; ?>" <?php if(in_array($tasks[$key]['id'],$completedTaskIds)) echo "checked";?>>
+																	<input data-child="1" data-parent-task="<?php echo $task['id']; ?>" type="checkbox" class="custom-control-input" id="check_<?php echo $tasks[$key]['id']; ?>" name="task_done[]" value="<?php echo $tasks[$key]['id']; ?>" <?php if(in_array($tasks[$key]['id'],$completedTaskIds)) echo "checked";?>>
 																	<div class="check_box_text"> <?php echo $tasks[$key]['name']; ?></div>
 																	<span class="checkmark"></span>
 																</label>
