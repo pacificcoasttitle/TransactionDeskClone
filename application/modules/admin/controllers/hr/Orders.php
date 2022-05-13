@@ -211,7 +211,7 @@ class Orders extends MX_Controller {
                     }
                 } 
             }
-            $successMsg = 'Order task List Updated';
+            $successMsg = 'Order task list updated for file number '.$orderInfo->file_number;
             $this->session->set_userdata('success', $successMsg);
             redirect(base_url().'hr/admin/orders');
         }
@@ -219,7 +219,49 @@ class Orders extends MX_Controller {
         $data['completedTaskIds'] = $completedTaskIds;
         $this->load->library('order/order');
         $data['order_task_notes'] = $this->order->get_order_notes($id);
+        $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($id);
 		$this->admintemplate->addJS( base_url('assets/backend/escrow/js/tasks.js?v=order_tasks_'.$this->orders_js_version) );
         $this->admintemplate->show("hr", "order_tasks", $data);
 	}
+
+    public function uploadBorrowerDocumentResware($document_id)
+    {
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->library('order/order');
+        $this->load->model('order/apiLogs');
+		$this->load->library('order/resware');
+        $this->load->model('frontend/order/document');
+        $this->load->model('admin/escrow/tasks_model');
+        $this->load->model('admin/escrow/order_model');
+        $documentDetails = $this->order->getDocumentsDetails($document_id);
+        $orderInfo = $this->order_model->get($documentDetails['order_id']);
+        $endPoint = 'files/'.$orderInfo->file_id.'/documents';
+        $documentApiData = array(			
+            'DocumentName' => $documentDetails['original_document_name'],
+            'DocumentType' => array(
+                'DocumentTypeID' => $documentDetails['document_type_id'],
+            ),
+            'Description' => 'Borrower Document',
+            'InternalOnly' => false,
+            'DocumentBody' => base64_encode(file_get_contents(env('AWS_PATH').'borrower/'.$documentDetails['document_name'])) 
+        );
+        $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+        $user_data['admin_api'] = 1; 
+       
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $documentDetails['order_id'], 0);
+        $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $documentDetails['order_id'], $logid);
+        $res = json_decode($result);
+        $taskInfo = $this->tasks_model->get($documentDetails['task_id']);
+        if (!empty($res->Document->DocumentID)) {
+            $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $document_id));
+            $success = "Document ".$documentDetails['original_document_name']." of ".$taskInfo->name." task uploaded successfully on Resware side for file number ".$orderInfo->file_number;
+        } else {
+            $errors = "Document ".$documentDetails['original_document_name']." of ".$taskInfo->name." task didn't upload on Resware side due to some error. Please try again.";
+        }
+    
+        $this->session->set_userdata('success', $success);
+        $this->session->set_userdata('errors', $errors);
+		redirect(base_url().'hr/admin/orders');
+    }
 }

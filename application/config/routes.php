@@ -223,6 +223,9 @@ $route['mark-as-read'] = 'frontend/order/common/markAsRead';
 $route['escrow-dashboard'] = 'frontend/order/escrow/index';
 $route['order/escrow/order-tasks/(:num)'] = 'frontend/order/escrow/orderTasks/$1';
 $route['get-escrow-orders'] = 'frontend/order/escrow/get_escrow_orders';
+$route['upload-documet-resware/(:any)'] = 'frontend/order/escrow/uploadBorrowerDocumentResware/$1';
+$route['borrower-document/(:any)'] = 'frontend/order/dashboardMail/uploadBorrowerDocument/$1';
+$route['borrower-document-upload'] = 'frontend/order/dashboardMail/borrower_document_upload';
 
 
 /* Route for PCT-Order backend*/
@@ -463,6 +466,7 @@ $route['hr/admin/view-time-sheet/(:any)/(:num)'] = 'admin/hr/timeSheets/viewTime
 $route['hr/admin/orders'] = 'admin/hr/orders/index';
 $route['hr/admin/get-orders'] = 'admin/hr/orders/getOrders';
 $route['hr/admin/order-tasks/(:num)'] = 'admin/hr/orders/orderTasks/$1';
+$route['hr/admin/upload-documet-resware/(:any)'] = 'admin/hr/orders/uploadBorrowerDocumentResware/$1';
 $route['hr/admin/tasks'] = 'admin/hr/tasks/index';
 $route['hr/admin/get-tasks'] = 'admin/hr/tasks/getTasks';
 $route['hr/admin/add-task'] = 'admin/hr/tasks/addTask';
