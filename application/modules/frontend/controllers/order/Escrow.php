@@ -4,7 +4,7 @@
 
 class Escrow extends MX_Controller 
 {
-    private $escrow_js_version = '01';
+    private $escrow_js_version = '02';
 	function __construct() 
     {
         parent::__construct();
@@ -244,7 +244,7 @@ class Escrow extends MX_Controller
         $data['order_task_notes'] = $this->order->get_order_notes($id);
         $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($data['orderDetails']['order_id']);
 		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=03') );
-		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=01') );
+		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=02') );
 		$this->template->show("order/escrow", "order_tasks", $data);
 	}
 

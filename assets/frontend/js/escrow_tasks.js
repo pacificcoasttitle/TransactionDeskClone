@@ -25,6 +25,21 @@ $(document).ready(function () {
 	$("#show-hide-form-btn").click(function(){
 		$('.show-hide-form-div').toggleClass('hide');
 	});
+
+	$('input[type=checkbox]').change(function(){
+		var childFlag = $(this).attr('data-child');
+		var parentTask = $(this).attr('data-parent-task');
+		if (this.checked && childFlag == '1') {
+			var lenchk = $('#collapseCard_'+parentTask).find(':checkbox');
+			var lenchkChecked = $('#collapseCard_'+parentTask).find(':checkbox:checked');
+			if (lenchk.length == lenchkChecked.length) {
+				$('#check_'+parentTask).prop('checked', true);
+			} 
+		} else {
+			$('#check_'+parentTask).prop('checked', false);
+		}
+	});
+	
 });
 
 function change_progress() {
