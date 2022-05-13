@@ -1,3 +1,14 @@
+<style>
+tr {
+	text-align: center;
+}
+td {
+	border: none !important;
+}
+.table-type-3 {
+	border-bottom: none !important;
+}
+</style>
 <section class="section-type-4a section-defaulta b-contact b-contact_mod-a" style="padding-bottom:0px;">
 	<div class="content">
 		<div class="container">
@@ -130,35 +141,74 @@
 															<hr style="border-top: 2px solid #d0c9c9;"/>
 															<?php foreach($keys as $key) {?>
 																<label class="custom-control custom-checkbox task__name">
-																	<input type="checkbox" class="custom-control-input" id="check_<?php echo $tasks[$key]['id']; ?>" name="task_done[]" value="<?php echo $tasks[$key]['id']; ?>" <?php if(in_array($tasks[$key]['id'],$completedTaskIds)) echo "checked";?>>
+																	<input data-parent-task="<?php echo $task['id']; ?>" type="checkbox" class="custom-control-input" id="check_<?php echo $tasks[$key]['id']; ?>" name="task_done[]" value="<?php echo $tasks[$key]['id']; ?>" <?php if(in_array($tasks[$key]['id'],$completedTaskIds)) echo "checked";?>>
 																	<div class="check_box_text"> <?php echo $tasks[$key]['name']; ?></div>
 																	<span class="checkmark"></span>
 																</label>
 															<?php }
 														} ?>
 														
-														<?php if (!empty($order_task_notes)) { ?>
-															<h3 class="m-0 font-weight-bold text-primary">
-																Notes
-																
-																<!-- <button type="button" class="btn button-color"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Note</button> -->
-																
-															</h3>
-															<hr style="border-top: 1px solid #d0c9c9;"/> 
-															<ul>
-																<?php $i = 0;
-																foreach($order_task_notes as $order_task_note) { 
-																	if ($order_task_note['task_id'] == $task['id']) { 
-																		$i++; ?>
-																		<li><b><?php echo $order_task_note['subject']?></b>: <?php echo $order_task_note['note']?></li>
-																	<?php }
-																} ?>
-																<?php if ($i == 0)  { ?>
-																	<li>No notes found for this task.</li>
+														<h3 class="m-0 font-weight-bold text-primary">Notes</h3>
+														<hr style="border-top: 1px solid #d0c9c9;"/> 
+														<ul>
+															<?php $i = 0;
+															foreach($order_task_notes as $order_task_note) { 
+																if ($order_task_note['task_id'] == $task['id']) { 
+																	$i++; ?>
+																	<li><b><?php echo $order_task_note['subject']?></b>: <?php echo $order_task_note['note']?></li>
+																<?php }
+															} ?>
+															<?php if ($i == 0)  { ?>
+																<li>No notes found for this task.</li>
+															<?php } ?>
+														</ul>
+													
+														<h3 class="m-0 font-weight-bold text-primary" style="margin-top:20px;">
+															Documents	
+														</h3>
+														<table class="table table-type-3 typography-last-elem no-footer">
+															<thead>
+																<tr>
+																	<th>#</th>
+																	<th>Document Name</th>
+																	<th>Action</th>
+																</tr>
+															</thead>
+															<tbody>
+																<?php $j = 1;
+																	if(!empty($borrowerDocuments)) {
+																		foreach ($borrowerDocuments as $document) {
+																			if ($document['task_id'] == $task['id']) { ?>
+																				<tr role="row" class="odd">
+																					<td><?php echo $j;?></td>
+																					<td><?php echo $document['original_document_name'];?></td>
+																					<td>
+																						<div class="custom__task_actions" style="display: inline-block;">
+																							<a target="_blank" href="<?php echo env('AWS_PATH').'borrower/'.$document['document_name'];?>" class="btn button btn-primary">
+																								<span class="text">View</span>
+																							</a>
+																							<?php if ($document['api_document_id'] > 0) { ?>
+																								<a href="#" class="btn button btn-default" style="width:auto;">
+																									<span class="text">Approved & Pushed</span>
+																								</a>
+																							<?php } else { ?>
+																								<a style="width:auto;" href="<?php echo base_url()."upload-documet-resware/".$document['id'];?>" class="btn button btn-default">
+																									<span class="text">Approve & Push</span>
+																								</a>
+																							<?php }  ?>
+																							<div class="clearfix"></div>
+																						</div>
+																					</td> 
+																				</tr>
+																			<?php $j++;
+																			} 
+																		}
+																	}
+																	if ($j == 1)  { ?>
+																		<tr role="row" class="odd"><td colspan="4" class="text-center">No documents found</td></tr>
 																<?php } ?>
-															</ul>
-														<?php } ?>
-														
+															</tbody>
+														</table>
 													</div>
 												</div>
 											</div>

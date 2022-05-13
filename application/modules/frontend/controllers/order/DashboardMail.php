@@ -1965,4 +1965,91 @@ class DashboardMail extends MX_Controller {
 			echo $res['Document']['DocumentBody'];exit;
 		}	
 	}
+
+    public function uploadBorrowerDocument($random_number)
+    {
+        $this->load->model('admin/escrow/tasks_model');
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $order = $this->getOrderInfo($random_number);
+        $fileId = $order[0]['file_id'];  
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $data['orderDetails'] = $this->order->get_order_details($fileId, 1);
+        $prod_type = $data['orderDetails']['prod_type'];
+        $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($data['orderDetails']['order_id']);
+        $data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
+        $this->load->view('layout/head_dashboard', $data);
+        $this->load->view('order/mail_borrower_document', $data);
+    }
+
+    public function borrower_document_upload() 
+	{
+        $this->load->model('order/document');
+		$success = array();
+        $errors = array();
+        $config['upload_path'] = './uploads/borrower/';
+		$config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';   
+		$config['max_size'] = 18000;
+		$this->load->library('upload', $config);
+        $fileId = $this->input->post('file_id');
+        $file_number = $this->input->post('file_number');
+
+        if (!is_dir('uploads/borrower')) {
+			mkdir('./uploads/borrower', 0777, TRUE);
+		}
+
+        if (!empty($_FILES['document_files']['name'])) {
+            foreach ($_FILES['document_files']['name'] as $key => $file) {
+                $_FILES['file']['name']= $_FILES['document_files']['name'][$key];
+                $_FILES['file']['type']= $_FILES['document_files']['type'][$key];
+                $_FILES['file']['tmp_name']= $_FILES['document_files']['tmp_name'][$key];
+                $_FILES['file']['error']= $_FILES['document_files']['error'][$key];
+                $_FILES['file']['size']= $_FILES['document_files']['size'][$key];
+               
+                if (! $this->upload->do_upload('file')) {
+                    $errors[] = $this->upload->display_errors();
+                } else { 
+                    $data = $this->upload->data();
+                    $contents = file_get_contents($data['full_path']);
+                    $binaryData   = base64_encode($contents); 
+                    $document_name = date('YmdHis')."_".$data['file_name'];
+                    rename(FCPATH."/uploads/borrower/".$data['file_name'], FCPATH."/uploads/borrower/".$document_name);
+                    $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
+
+                    $documentData = array(
+						'document_name' => $document_name,
+						'original_document_name' => $data['file_name'],
+						'document_type_id' => 1041,
+						'document_size' => ($data['file_size'] * 1000),
+						'user_id' => 0,
+						'order_id' => $this->input->post('order_id'),
+						'task_id' => $this->input->post('task_id'),
+						'description' => 'Borrower Document',
+						'is_sync' => 1,
+						'is_uploaded_by_borrower' => 1
+					);
+                    $this->document->insert($documentData);
+                    $success[] = $data['file_name']." uploaded successfully";
+                }
+            }
+        }		
+		
+		$data['errors'] = $errors;
+		$data['success'] = $success;
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'borrower-document/'.$fileId);
+	}
 }

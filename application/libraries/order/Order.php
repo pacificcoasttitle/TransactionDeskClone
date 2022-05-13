@@ -2176,4 +2176,34 @@ class Order
             'data' => $orders_lists
         );
     }
+
+    public function getBorrowerDocuments($order_id)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_documents');
+            
+        $this->CI->db->where('order_id', $order_id);
+        $this->CI->db->where('is_uploaded_by_borrower', 1);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
+
+    public function getDocumentsDetails($document_id)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_documents');
+            
+        $this->CI->db->where('id', $document_id);
+        $this->CI->db->where('is_uploaded_by_borrower', 1);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->row_array();
+        } else {
+            return array();
+        }         
+    }
 }
