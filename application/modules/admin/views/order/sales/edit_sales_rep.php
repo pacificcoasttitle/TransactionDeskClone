@@ -349,7 +349,7 @@
 					</div>
 
 
-					
+					<input type="hidden" id="commission_range_json" value='<?php echo $commission_range_json?>' />
 					<div class="pull-right">
 						<button type="submit" id="edit-sales-rep" name="add-sales-rep" class="btn btn-secondary">Update</button>
 						<a href="<?php echo site_url('order/admin/sales-rep'); ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
@@ -359,3 +359,6 @@
         </div>
     </div>
 </div>
+<script>
+
+</script>

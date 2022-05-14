@@ -271,7 +271,7 @@
 								<div class="form-group row">
 									<label for="loan_westcor" class="col-sm-4 col-form-label">Loan Westcor Commission %</label>
 									<div class="col-sm-8">
-									<input  step=".01" min="0"  type="number" class="form-control" name="loan_westcor" id="loan_westcor" class="form-control" placeholder="Enter Loan Westcor Commission" >
+									<input  step=".01" min="0"  type="number" class="form-control check_commission"  name="loan_westcor" id="loan_westcor" class="form-control" placeholder="Enter Loan Westcor Commission" >
 										<?php if(!empty($loan_westcor_error_msg)){ ?>                     
 											<span class="error"><?php echo $loan_westcor_error_msg; ?></span>
 										<?php } ?>
@@ -280,7 +280,7 @@
 								<div class="form-group row">
 									<label for="loan_natic" class="col-sm-4 col-form-label">Loan Natic Commission %</label>
 									<div class="col-sm-8">
-									<input  step=".01" min="0"  type="number" class="form-control" name="loan_natic" id="loan_natic" class="form-control" placeholder="Enter Loan Natic Commission" >
+									<input  step=".01" min="0"  type="number" class="form-control check_commission" name="loan_natic" id="loan_natic" class="form-control" placeholder="Enter Loan Natic Commission" >
 										<?php if(!empty($loan_natic_error_msg)){ ?>                     
 											<span class="error"><?php echo $loan_natic_error_msg; ?></span>
 										<?php } ?>
@@ -289,7 +289,7 @@
 								<div class="form-group row">
 									<label for="sale_westcor" class="col-sm-4 col-form-label">Sale Westcor Commission %</label>
 									<div class="col-sm-8">
-									<input  step=".01" min="0"  type="number" class="form-control" name="sale_westcor" id="sale_westcor" class="form-control" placeholder="Enter Sale Westcor Commission" >
+									<input  step=".01" min="0"  type="number" class="form-control check_commission" name="sale_westcor" id="sale_westcor" class="form-control" placeholder="Enter Sale Westcor Commission" >
 										<?php if(!empty($sale_westcor_error_msg)){ ?>                     
 											<span class="error"><?php echo $sale_westcor_error_msg; ?></span>
 										<?php } ?>
@@ -298,9 +298,6 @@
 							</div>
 						</div>
 					</div>
-
-
-
 					
 					<div class="pull-right">
 						<button type="submit" id="add-sales-rep" name="add-sales-rep" class="btn btn-secondary">Add</button>
@@ -346,7 +343,34 @@
 					}
 				},
                 submitHandler: function(form) {
-                    form.submit();  
+					//Check commission condition
+					var commission_range_json = '<?php echo $commission_range_json;?>';
+					commission_range = JSON.parse(commission_range_json);
+					var revenue_val = parseFloat($('#sales_rep_premium').val());
+
+					form_valid = true;
+
+					$(commission_range).each(function(key,val){
+						var combine_key = val.product_type + '_'+val.underwriter;
+						if($('#'+combine_key).length) {
+
+							var min_revenue = parseFloat(val.min_revenue);
+							var max_revenue = parseFloat(val.max_revenue);
+							var commissin_val = parseFloat($('#'+combine_key).val());
+							var max_commission = parseFloat(val.total_commission);
+							if(revenue_val > min_revenue && revenue_val < max_revenue && commissin_val > max_commission ) {
+								$('#'+combine_key).addClass('error');
+								error_msg_lbl = '<label for="'+combine_key+'" class="error">Commission should not exceed '+ max_commission+' %</label>';
+								$('#'+combine_key).after(error_msg_lbl);
+								$('#commissionInfo').collapse('show');
+								$('#'+combine_key).focus();
+								form_valid = false;
+							}
+						}
+					});
+					if(form_valid) {
+						form.submit();  
+					}
                 }
             }); 
         }
