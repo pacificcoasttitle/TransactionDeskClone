@@ -89,9 +89,9 @@ class Sales extends MX_Controller {
             $this->form_validation->set_rules('sales_rep_no_of_open_orders', 'Sales Rep No of Open Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Open Orders'));
             $this->form_validation->set_rules('sales_rep_no_of_close_orders', 'Sales Rep No of Close Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Close Orders'));
             $this->form_validation->set_rules('sales_rep_premium', 'Sales Rep Premium', 'trim|required|numeric', array('required'=> 'Sales Rep Premium'));
-            $this->form_validation->set_rules('loan_westcor', 'Loan Westcor Commission', 'trim|decimal');
-            $this->form_validation->set_rules('loan_natic', 'Loan Natic Commission', 'trim|decimal');
-            $this->form_validation->set_rules('sale_westcor', 'Sale Westcor Commission', 'trim|decimal');
+            $this->form_validation->set_rules('loan_westcor', 'Loan Westcor Commission', 'trim|numeric');
+            $this->form_validation->set_rules('loan_natic', 'Loan Natic Commission', 'trim|numeric');
+            $this->form_validation->set_rules('sale_westcor', 'Sale Westcor Commission', 'trim|numeric');
               
             $config['upload_path'] = 'uploads/sales-rep/';
             $config['allowed_types'] = 'jpg|png';
@@ -201,6 +201,15 @@ class Sales extends MX_Controller {
                 $data['sale_westcor_error_msg'] = form_error('sale_westcor');
             }                                       
         }
+		//Get commission range condition
+		$this->load->model('order/commission_range_model');
+		$data['commission_range_json'] = json_encode([]);
+		$commission_range = $this->commission_range_model->get_all();
+		
+		if($commission_range) {
+			$data['commission_range_json'] = json_encode($commission_range);
+		}
+		
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/add_sales_rep', $data);
         $this->load->view('order/layout/footer', $data);
@@ -227,9 +236,9 @@ class Sales extends MX_Controller {
                 $this->form_validation->set_rules('sales_rep_no_of_open_orders', 'Sales Rep No of Open Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Open Orders'));
                 $this->form_validation->set_rules('sales_rep_no_of_close_orders', 'Sales Rep No of Close Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Close Orders'));
                 $this->form_validation->set_rules('sales_rep_premium', 'Sales Rep Premium', 'trim|required|numeric', array('required'=> 'Sales Rep Premium'));
-				$this->form_validation->set_rules('loan_westcor', 'Loan Westcor Commission', 'trim|decimal');
-				$this->form_validation->set_rules('loan_natic', 'Loan Natic Commission', 'trim|decimal');
-				$this->form_validation->set_rules('sale_westcor', 'Sale Westcor Commission', 'trim|decimal');
+				$this->form_validation->set_rules('loan_westcor', 'Loan Westcor Commission', 'trim|numeric');
+				$this->form_validation->set_rules('loan_natic', 'Loan Natic Commission', 'trim|numeric');
+				$this->form_validation->set_rules('sale_westcor', 'Sale Westcor Commission', 'trim|numeric');
 
                 $config['upload_path'] = 'uploads/sales-rep/';
                 $config['allowed_types'] = 'jpg|png';
@@ -357,6 +366,14 @@ class Sales extends MX_Controller {
             redirect('order/admin/sales-rep');
         }
         $data['sales_rep_info'] = $sales_rep_info;
+		//Get commission range condition
+		$this->load->model('order/commission_range_model');
+		$data['commission_range_json'] = json_encode([]);
+		$commission_range = $this->commission_range_model->get_all();
+		
+		if($commission_range) {
+			$data['commission_range_json'] = json_encode($commission_range);
+		}
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/edit_sales_rep', $data);
         $this->load->view('order/layout/footer', $data);
