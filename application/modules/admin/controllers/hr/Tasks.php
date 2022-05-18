@@ -19,7 +19,7 @@ class Tasks extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-    private $task_js_version = '01';
+    private $task_js_version = '02';
 	public function __construct()
     {
         parent::__construct();
@@ -200,5 +200,69 @@ class Tasks extends MX_Controller {
             $response = array('status' => 'error','message'=>$msg);
         }
         echo json_encode($response);
+    }
+
+    public function loanTasksPosition() 
+    {
+        $data['errors'] = '';
+		$data['success'] = '';
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+        $this->load->model('escrow/tasks_model');
+        $data['tasks'] = json_decode(json_encode($this->tasks_model->order_by('loan_position', 'asc')->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = 'loan') )")), true);
+        $this->admintemplate->addJS( base_url('assets/backend/escrow/js/tasks.js?v=tasks_'.$this->task_js_version) );
+        $this->admintemplate->show("hr", "loan_tasks_position", $data);
+    }
+
+    public function saleTasksPosition() 
+    {
+        $data['errors'] = '';
+		$data['success'] = '';
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
+        $this->load->model('escrow/tasks_model');
+        $data['tasks'] = json_decode(json_encode($this->tasks_model->order_by('sale_position', 'asc')->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = 'sale') )")), true);
+        $this->admintemplate->addJS( base_url('assets/backend/escrow/js/tasks.js?v=tasks_'.$this->task_js_version) );
+        $this->admintemplate->show("hr", "sale_tasks_position", $data);
+    }
+
+    public function saveLoanTasksPosition() 
+    {
+        $this->load->model('escrow/tasks_model');
+        $tasks = $this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = 'loan') )");
+        foreach ($tasks as $task) {
+            $taskData = array('loan_position' => $this->input->post('task_position_'.$task->id));
+            $condition = array('id' => $task->id);
+            $this->hr->update($taskData, $condition, 'pct_escrow_tasks');
+        }
+        $successMsg = 'Loan Tasks postion updated successfully.';
+        $this->session->set_userdata('success', $successMsg);
+        redirect(base_url().'hr/admin/loan-tasks-position');
+    }
+
+    public function saveSaleTasksPosition() 
+    {
+        $this->load->model('escrow/tasks_model');
+        $tasks = $this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = 'sale') )");
+        foreach ($tasks as $task) {
+            $taskData = array('sale_position' => $this->input->post('task_position_'.$task->id));
+            $condition = array('id' => $task->id);
+            $this->hr->update($taskData, $condition, 'pct_escrow_tasks');
+        }
+        $successMsg = 'Sale Tasks postion updated successfully.';
+        $this->session->set_userdata('success', $successMsg);
+        redirect(base_url().'hr/admin/sale-tasks-position');
     }
 }

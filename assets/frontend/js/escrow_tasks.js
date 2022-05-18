@@ -4,10 +4,12 @@ $(document).ready(function () {
 		change_progress();
 		$('.task_check_all').click(function(){
 			$('.custom__task_card .custom__task_checkbox').prop('checked', true);
+			$('.custom_sub_task_checkbox').prop('checked', true);
 			change_progress();
 		});
 		$('.task_un_check_all').click(function(){
 			$('.custom__task_card .custom__task_checkbox').prop('checked', false);
+			$('.custom_sub_task_checkbox').prop('checked', false);
 			change_progress();
 		});
 		$('.task_show_all').click(function(){
