@@ -14,6 +14,9 @@
 	top: 0;
 	border-radius: 0;
 }
+.table td, .table th {
+	border-top: none !important;
+}
 </style>
 <div class="content">
     <div class="container-fluid">
@@ -28,10 +31,7 @@
 							<div class="progress-bar custom__task_progress" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
 						</div>
 					</div>
-
 				</div>
-                
-				
             </div>
 			<div class="col-sm-4 text-right custom__task_button">
 				<button type="button" class="btn btn-primary btn-sm task_check_all"><i class="fa fa-check"></i></button>
@@ -40,6 +40,10 @@
 				<button type="button" class="btn btn-primary btn-sm task_hide_all"><i class="fa fa-minus"></i></button>
 			</div>
         </div>
+
+		<div id="order_tasks_success_msg" class="btn btn-success btn-block mt-1 mb-3" style="display:none;"></div>
+		<div id="order_tasks_error_msg" class="btn btn-danger btn-block mt-1 mb-3" style="display:none;"></div>
+
 		<form method="post" >
 			<div class="row">
 				<div class="col-md-12">
@@ -47,54 +51,71 @@
 						<div class="card-header py-3">
 							<h6 class="m-0 font-weight-bold text-primary">Tasks List</h6>
 						</div>
-
+						<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id;?>">
+						<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id;?>">
                         <div class="card-body">
                             <?php if (!empty($tasks)) {
                                 foreach($tasks as $task) { 
 									if ($task['parent_task_id'] == 0) {
 										$keys = array();
 										$keys = array_keys(array_column($tasks, 'parent_task_id'), $task['id']);?>
-											<div class="card custom__task_card">
-												<div class="card-header py-3">
-													<div class="row">
-														<div class="col-sm-10">
-															<div class="custom-control custom-checkbox">
-																<input type="checkbox" class="custom-control-input custom__task_checkbox" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
-																<label class="custom-control-label" for="check_<?php echo $task['id']; ?>"><?php echo $task['name']; ?></label>
-															</div>
-															<!-- <h6 class="m-0 font-weight-bold text-primary">Collapsable Card Example</h6> -->
+										<div class="card custom__task_card">
+											<div class="card-header py-3">
+												<div class="row">
+													<div class="col-sm-10">
+														<div class="custom-control custom-checkbox">
+															<input type="checkbox" class="custom-control-input custom__task_checkbox" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
+															<label class="custom-control-label" for="check_<?php echo $task['id']; ?>"><?php echo $task['name']; ?></label>
 														</div>
-														<div class="col-sm-2 text-right">
-															<a href="#collapseCard_<?php echo $task['id']; ?>" class=" card-header" data-toggle="collapse"
-																role="button" aria-expanded="false" aria-controls="collapseCard_<?php echo $task['id']; ?>">
-																
-															</a>
-														</div>
+														<!-- <h6 class="m-0 font-weight-bold text-primary">Collapsable Card Example</h6> -->
+													</div>
+													<div class="col-sm-2 text-right">
+														<a href="#collapseCard_<?php echo $task['id']; ?>" class=" card-header" data-toggle="collapse"
+															role="button" aria-expanded="false" aria-controls="collapseCard_<?php echo $task['id']; ?>">
+															
+														</a>
 													</div>
 												</div>
-												<div class="collapse custom__task_collapse" id="collapseCard_<?php echo $task['id']; ?>">
-													<div class="card-body">
-														<!-- <?php if(empty($task['notes'])) : ?>
-																-
-																<?php else : ?>
-																<?php echo nl2br($task['notes']); ?>
-															<?php endif; ?> -->
+											</div>
+											<div class="collapse custom__task_collapse" id="collapseCard_<?php echo $task['id']; ?>">
+												<div class="card-body">
+													<!-- <?php if(empty($task['notes'])) : ?>
+															-
+															<?php else : ?>
+															<?php echo nl2br($task['notes']); ?>
+														<?php endif; ?> -->
 
-														<?php $j=0; if (!empty($keys)) { ?>
-															<h3 class="font-weight-bold text-primary">Sub Task</h3>
-															<hr style="border-top: 2px solid #d0c9c9;"/>
+													<?php $j=0; if (!empty($keys)) { ?>
+														<div class="mb-4">
+															<div class="card-header py-3 my-3">
+																<h6 class="m-0 font-weight-bold text-primary">
+																	Sub Tasks
+																</h6>
+															</div>
 															<?php foreach($keys as $key) { $j++;?>
-																<div class="custom-control custom-checkbox" style="margin: 10px 10px;">
+																<div class="custom-control custom-checkbox" style="margin: 10px 25px;">
 																	<input type="checkbox" class="custom-control-input" id="check_<?php echo $tasks[$key]['id']; ?>" name="task_done[]" value="<?php echo $tasks[$key]['id']; ?>" <?php if(in_array($tasks[$key]['id'],$completedTaskIds)) echo "checked";?>>
 																	<label class="custom-control-label" for="check_<?php echo $tasks[$key]['id']; ?>"><?php echo $tasks[$key]['name']; ?></label>
 																</div>
-															<?php }
-														} ?>
+															<?php } ?>
+														</div>
+													<?php } ?>
+													
+													<div class="mb-4">
+														<div class="card-header py-3 my-3">
+															<h6 class="m-0 font-weight-bold text-primary" style="height: 38px;">
+																Notes
+																<a href="#note_<?php echo $task['id']; ?>" data-toggle="collapse"
+																		role="button" aria-expanded="false" aria-controls="note_<?php echo $task['id']; ?>" href="#" class="btn button btn-success btn-icon-split float-right" style="width:auto;float:right;">
+																	<span class="icon text-white-50">
+																		<i class="fa fa-plus"></i>
+																	</span>
+																	<span class="text">Add Note</span>
+																</a>
+															</h6>
+														</div>
 														
-														
-														<h3 class="font-weight-bold text-primary" <?php echo $j > 0 ? 'style="margin-top: 25px !important;"' : '';?>>Notes</h3>
-														<hr style="border-top: 1px solid #d0c9c9;"/> 
-														<ul>
+														<ul id="notes_<?php echo $task['id']; ?>">
 															<?php $i = 0;
 															foreach($order_task_notes as $order_task_note) { 
 																if ($order_task_note['task_id'] == $task['id']) { 
@@ -106,12 +127,48 @@
 																<li>No notes found for this task.</li>
 															<?php } ?>
 														</ul>
-														
-														
-														<h3 class="font-weight-bold text-primary" style="margin-top:20px;margin-bottom:20px;">
-															Documents	
-														</h3>
-														<table class="table table-type-3 typography-last-elem no-footer">
+														<div class="collapse" id="note_<?php echo $task['id']; ?>" style="margin: 10px 25px;">
+															<h5 class="m-0 font-weight-bold text-primary mt-3">Create a Note</h5>
+															<div class="row mt-3">
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<label for="traning_name">Subject<span class="required"> *</span></label>
+																		<input type="text" class="form-control" placeholder="Subject" name="subject_<?php echo $task['id']; ?>" id="subject_<?php echo $task['id']; ?>">
+																	</div>
+																</div>
+															</div>
+															<input type="hidden" name="num_of_notes_<?php echo $task['id']; ?>" id="num_of_notes_<?php echo $task['id']; ?>" value="<?php echo $i; ?>">
+															<div class="row">
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<label for="traning_description">Note</label>
+																		<textarea class="form-control" placeholder="Note" name="note_desc_<?php echo $task['id']; ?>" id="note_desc_<?php echo $task['id']; ?>"></textarea>
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-md-6">
+																	<button onclick="return create_note(<?php echo $task['id']; ?>);" type="save" class="btn btn-info btn-icon-split">
+																		<span class="icon text-white-50">
+																			<i class="fas fa-save"></i>
+																		</span>
+																		<span class="text">Save</span>
+																	</button>
+																	<div class="clearfix"></div>
+																</div>
+															</div>
+														</div>
+													</div>
+													
+													<div class="mb-4">
+														<div class="card-header py-3 my-3">
+															<h6 class="m-0 font-weight-bold text-primary">
+																Documents
+															</h6>
+														</div>
+
+														<table class="table table-type-3 typography-last-elem no-footer" style="margin: 10px 15px;">
 															<thead>
 																<tr>
 																	<th>#</th>
@@ -129,15 +186,24 @@
 																					<td><?php echo $document['original_document_name'];?></td>
 																					<td>
 																						<div class="custom__task_actions" style="display: inline-block;">
-																							<a target="_blank" href="<?php echo env('AWS_PATH').'borrower/'.$document['document_name'];?>" class="btn button btn-info">
+																							<a target="_blank" href="<?php echo env('AWS_PATH').'borrower/'.$document['document_name'];?>" class="btn button btn-info btn-icon-split">
+																								<span class="icon text-white-50">
+																									<i class="fa fa-eye"></i>
+																								</span>
 																								<span class="text">View</span>
 																							</a>
 																							<?php if ($document['api_document_id'] > 0) { ?>
-																								<a href="#" class="btn button btn-success" style="width:auto;">
+																								<a href="#" class="btn button btn-success btn-icon-split" style="width:auto;">
+																									<span class="icon text-white-50">
+																										<i class="fa fa-check"></i>
+																									</span>
 																									<span class="text">Approved & Pushed</span>
 																								</a>
 																							<?php } else { ?>
-																								<a style="width:auto;" href="<?php echo base_url()."hr/admin/upload-documet-resware/".$document['id'];?>" class="btn button btn-success">
+																								<a style="width:auto;" href="<?php echo base_url()."hr/admin/upload-documet-resware/".$document['id'];?>" class="btn button btn-success btn-icon-split">
+																									<span class="icon text-white-50">
+																										<i class="fa fa-check"></i>
+																									</span>
 																									<span class="text">Approve & Push</span>
 																								</a>
 																							<?php }  ?>
@@ -157,11 +223,9 @@
 													</div>
 												</div>
 											</div>
-                                    <!-- <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
-                                        <label class="custom-control-label" for="check_<?php echo $task['id']; ?>"><?php echo $task['name']; ?></label>
-                                    </div> -->
-                                <?php } }
+										</div>
+                                	<?php } 
+								}
                             } else { ?>
                                 <div>No Task Found</div>
                             <?php } ?>

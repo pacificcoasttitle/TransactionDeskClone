@@ -116,6 +116,7 @@ class Orders extends MX_Controller {
         $this->load->model('escrow/escrow_user_model');
         $this->load->model('hr/order_users_model');
         $orderInfo = $this->order_model->get($id);
+        $data['orderInfo'] = $orderInfo;
         $prod_type = $orderInfo->prod_type;
 		$tasks = json_decode(json_encode($this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )")), true);
         $completedTasksInfo = $this->order_completed_tasks_model->get_many_by("(order_id = $id)");
@@ -263,5 +264,35 @@ class Orders extends MX_Controller {
         $this->session->set_userdata('success', $success);
         $this->session->set_userdata('errors', $errors);
 		redirect(base_url().'hr/admin/orders');
+    }
+
+    public function create_note()
+    {
+        $this->load->model('admin/escrow/tasks_model');
+    	$num_of_notes = isset($_POST['num_of_notes']) ? $_POST['num_of_notes'] : '';
+        $userdata = $this->session->userdata('hr_admin');
+        $subject = isset($_POST['subject']) && !empty($_POST['subject']) ? $_POST['subject'] : '';
+        $note = isset($_POST['note']) && !empty($_POST['note']) ? $_POST['note'] : '';
+        $order_id = isset($_POST['order_id']) && !empty($_POST['order_id']) ? $_POST['order_id'] : '';
+
+        $notesData = array(
+            'resware_note_id' => 0,
+            'subject' => $subject,
+            'note' => $note,
+            'user_id' => $userdata['id'],
+            'order_id' => $order_id,
+            'task_id' => $_POST['task_id']
+        );
+        $id = $this->hr->insert($notesData, 'pct_order_notes');
+        $taskInfo = $this->tasks_model->get($_POST['task_id']);
+        if ($id) {
+            $success = 'Note created successfully for task '.$taskInfo->name;
+            $response = array('status' => 'success', 'message' => $success, 'num_of_notes' => $num_of_notes);
+        } else {
+            $error = 'Something went wrong. Please try again.';
+            $response = array('status' => 'success', 'message' => $error, 'num_of_notes' => $num_of_notes);
+        }
+        echo json_encode($response);
+			
     }
 }

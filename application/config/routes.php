@@ -472,27 +472,14 @@ $route['hr/admin/get-tasks'] = 'admin/hr/tasks/getTasks';
 $route['hr/admin/add-task'] = 'admin/hr/tasks/addTask';
 $route['hr/admin/edit-task/(:num)'] = 'admin/hr/tasks/editTask/$1';
 $route['hr/admin/delete-task'] = 'admin/hr/tasks/deleteTask';
+$route['hr/admin/loan-tasks-position'] = 'admin/hr/tasks/loanTasksPosition';
+$route['hr/admin/sale-tasks-position'] = 'admin/hr/tasks/saleTasksPosition';
+$route['hr/admin/save-loan-tasks-position'] = 'admin/hr/tasks/saveLoanTasksPosition';
+$route['hr/admin/save-sale-tasks-position'] = 'admin/hr/tasks/saveSaleTasksPosition';
+$route['hr/admin/save-loan-tasks-position'] = 'admin/hr/tasks/saveLoanTasksPosition';
+$route['hr/admin/create-note'] = 'admin/hr/orders/create_note';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
-
-/* Start Route for Escrow backend*/
-$route['escrow/admin'] = 'admin/escrow/login/login';
-$route['escrow/admin/login/do_login'] = 'admin/escrow/login/do_login';
-$route['escrow/admin/dashboard(/:num)?(/:num)?'] = 'admin/escrow/dashboard/index';
-$route['escrow/admin/get-dashboard-count'] = 'admin/escrow/dashboard/getDashboardCount';
-$route['escrow/admin/tasks'] = 'admin/escrow/tasks/index';
-$route['escrow/admin/get-tasks'] = 'admin/escrow/tasks/getTasks';
-$route['escrow/admin/add-task'] = 'admin/escrow/tasks/addTask';
-$route['escrow/admin/edit-task/(:num)'] = 'admin/escrow/tasks/editTask/$1';
-$route['escrow/admin/delete-task'] = 'admin/escrow/tasks/deleteTask';
-$route['escrow/admin/users'] = 'admin/escrow/users/index';
-$route['escrow/admin/get-users'] = 'admin/escrow/users/getUsers';
-$route['escrow/admin/orders'] = 'admin/escrow/orders/index';
-$route['escrow/admin/get-orders'] = 'admin/escrow/orders/getOrders';
-$route['escrow/admin/order-tasks/(:num)'] = 'admin/escrow/orders/orderTasks/$1';
-$route['escrow/admin/mark-as-read'] = 'admin/escrow/orders/markAsRead';
-$route['escrow/admin/logout'] = 'admin/escrow/dashboard/logout';
-/* End Route for Escrow backend */
 
 $route['calculator'] = 'frontend/calc/welcome/index';  
 $route['calculator/signup'] = 'frontend/calc/welcome/signup';  
