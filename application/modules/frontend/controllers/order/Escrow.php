@@ -131,7 +131,11 @@ class Escrow extends MX_Controller
         $orderDetails = $this->order->get_order_details($orderInfo->file_id);
 		$data['orderDetails'] = $orderDetails;
         $prod_type = $orderInfo->prod_type;
-		$tasks = json_decode(json_encode($this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )")), true);
+        if ($prod_type == 'loan') {
+            $tasks = json_decode(json_encode($this->tasks_model->order_by('loan_position', 'asc')->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )")), true);
+        } else if ($prod_type == 'sale') {
+            $tasks = json_decode(json_encode($this->tasks_model->order_by('sale_position', 'asc')->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )")), true);
+        }
         $completedTasksInfo = $this->order_completed_tasks_model->get_many_by("(order_id = $id)");
         if (!empty($completedTasksInfo)) {
             $completedTasks = json_decode(json_encode($completedTasksInfo), true);
