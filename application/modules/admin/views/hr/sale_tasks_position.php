@@ -53,12 +53,13 @@
                         <div class="card-body" id="list">
                             <?php if (!empty($tasks)) {
 								$i = 1;
-                                foreach($tasks as $task) { ?>
+                                foreach($tasks as $task) { 
+                                    if($task['parent_task_id'] == 0) { ?> 
 									<div class="draggable" id="<?php echo $task['id']?>">				
 										<?php echo $task['name']; ?>
 										<input type="hidden" name="task_position_<?php echo $task['id']?>" id="task_position_<?php echo $task['id']?>" value="<?php echo $i;?>">
 									</div>
-                                <?php  $i++;}
+                                <?php  $i++; }}
                             } else { ?>
                                 <div>No Task Found</div>
                             <?php } ?>
