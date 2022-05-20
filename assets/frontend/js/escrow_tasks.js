@@ -4,10 +4,12 @@ $(document).ready(function () {
 		change_progress();
 		$('.task_check_all').click(function(){
 			$('.custom__task_card .custom__task_checkbox').prop('checked', true);
+			$('.custom_sub_task_checkbox').prop('checked', true);
 			change_progress();
 		});
 		$('.task_un_check_all').click(function(){
 			$('.custom__task_card .custom__task_checkbox').prop('checked', false);
+			$('.custom_sub_task_checkbox').prop('checked', false);
 			change_progress();
 		});
 		$('.task_show_all').click(function(){
@@ -34,12 +36,26 @@ $(document).ready(function () {
 			var lenchkChecked = $('#collapseCard_'+parentTask).find(':checkbox:checked');
 			if (lenchk.length == lenchkChecked.length) {
 				$('#check_'+parentTask).prop('checked', true);
+				change_progress();
 			} 
 		} else {
 			$('#check_'+parentTask).prop('checked', false);
+			change_progress();
 		}
 	});
-	
+
+	$('input[type=checkbox]').each(function () {
+		var childFlag = $(this).attr('data-child');
+		if (childFlag == 0) {
+			if ($('#sub_task_'+$(this).val()).length > 0 ) {
+				$(this).prop('disabled', true);
+			}
+		}
+	});
+
+	$("form").submit(function() {
+		$("input").removeAttr("disabled");
+	});
 });
 
 function change_progress() {
@@ -48,6 +64,83 @@ function change_progress() {
 	var progress_precent = Math.floor((100*checked_task_list)/total_task_list);
 	//linear-gradient(90deg, hsl(20deg 100% 50%) 20%, #ababab 20%)
 	$('.custom__task_progress').css('background', 'linear-gradient(90deg,hsl('+progress_precent+'deg 90% 50%) '+progress_precent+'%, #f2f2f2 '+progress_precent+'%)').attr('aria-valuenow', progress_precent).text(progress_precent+'%');    
+}
+
+function create_note(task_id)
+{
+    var subject = $('#subject_'+task_id).val();
+    var note = $('#note_desc_'+task_id).val();
+    if (subject == '') {
+       alert('Please enter the subject.');
+       $('#subject_'+task_id).focus();
+       return false;
+    }
+    if (note == '') {
+        alert('Please enter the note.');
+        $('#note_'+task_id).focus();
+        return false;
+    }
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+	$('#page-preloader').css('display', 'block');
+    
+    $.ajax({
+        url: base_url+"escrow-create-note",
+        method: "POST",
+        data : {
+            task_id: task_id,
+            subject: subject,
+            note: note,
+			file_id: $('#file_id').val(),
+            order_id: $('#order_id').val(),
+            num_of_notes: $('#num_of_notes_'+task_id).val()
+        },
+        success: function(data){
+            var result = jQuery.parseJSON(data);
+            $('#subject_'+task_id).val('');
+            $('#note_desc_'+task_id).val('');
+            $("#note_"+task_id).collapse('hide');
+            if (result.status == 'success') {
+                if (result.num_of_notes > 0) {
+                    $("#notes_"+task_id).append('<li><b>'+subject+'</b>: '+note+'</li>');
+                } else {
+                    $("#notes_"+task_id).empty(); 
+                    $("#notes_"+task_id).append('<li><b>'+subject+'</b>: '+note+'</li>'); 
+                }
+                $('#num_of_notes_'+task_id).val(result.num_of_notes+1);
+                $('#order_tasks_success_msg').html(result.message).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#order_tasks_success_msg").offset().top
+                }, 1000);
+                
+                setTimeout(function () {
+                    $('#order_tasks_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#order_tasks_error_msg').html(result.message).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#order_tasks_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#order_tasks_error_msg').html('').hide();
+                }, 4000);
+            }
+            $('#page-preloader').css('display', 'none');
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#order_tasks_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#order_tasks_error_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#order_tasks_error_msg').html('').hide();
+            }, 4000);
+
+            $('#page-preloader').css('display', 'none');
+        }
+    });
+    return false;
 }
 
 

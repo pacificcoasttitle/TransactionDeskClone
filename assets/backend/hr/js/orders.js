@@ -20,8 +20,12 @@ $(document).ready(function () {
                 $('.dataTables_paginate > .pagination a').addClass('page-link');
                 $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
             },
-            "ordering": false,            
+            "ordering": true,            
             "serverSide": true,
+            "columnDefs": [ {
+                'targets': [0, 5, 7], 
+                'orderable': false, 
+             }],
             "ajax": {                
                 url: base_url+"hr/admin/get-orders", 
                 type: "post", 

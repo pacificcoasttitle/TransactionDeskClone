@@ -1996,12 +1996,12 @@ class DashboardMail extends MX_Controller {
         $this->load->model('order/document');
 		$success = array();
         $errors = array();
+        $documentNames = array();
         $config['upload_path'] = './uploads/borrower/';
 		$config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';   
 		$config['max_size'] = 18000;
 		$this->load->library('upload', $config);
         $fileId = $this->input->post('file_id');
-        $file_number = $this->input->post('file_number');
 
         if (!is_dir('uploads/borrower')) {
 			mkdir('./uploads/borrower', 0777, TRUE);
@@ -2039,17 +2039,67 @@ class DashboardMail extends MX_Controller {
 					);
                     $this->document->insert($documentData);
                     $success[] = $data['file_name']." uploaded successfully";
+                    $documentNames[] = $data['file_name'];
                 }
             }
         }		
-		
-		$data['errors'] = $errors;
-		$data['success'] = $success;
+	
 		$data = array(
 			"errors" =>  $errors,
 			"success" => $success
 		);
+        
+        $this->load->model('admin/escrow/order_model');
+        $this->load->model('admin/escrow/escrow_user_model');
+        $this->load->library('order/common');
+        $this->load->model('admin/hr/order_users_model');
+        $this->load->model('admin/hr/users_model');
+        
+        $orderInfo = $this->order_model->get($this->input->post('order_id'));
+        if (count($documentNames) == 1 ) {
+            $message = implode(',', $documentNames)." document uploaded by borrower for file number ".$orderInfo->file_number;
+        } else {
+            $message = implode(',', $documentNames)." documents uploaded by borrower for file number ".$orderInfo->file_number;
+        }
 		$this->session->set_userdata($data);
+        if (!empty($orderInfo->escrow_officer_id)) {
+            $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
+            $notificationData = array(
+                'sent_user_id' => $escrowInfoFromOrder['id'],
+                'message' => $message,
+                'type' =>  'completed'
+            );
+            $this->home_model->insert($notificationData, 'pct_order_notifications');
+            $this->order->sendNotification($message, 'completed', $escrowInfoFromOrder['id'], 0);
+            
+            $escrowHrInfo = $this->escrow_user_model->get_by(array('email' => $escrowInfoFromOrder['email_address']));
+            $assistantUsersInfo = json_decode(json_encode($this->escrow_user_model->get_many_by(array('branch_id' => $escrowHrInfo->branch_id, 'position_id' => 15))), true);
+            $assistantUserEmails = array_column($assistantUsersInfo, 'email');	
+            $assistantOrderUsersInfo = $this->common->getAssistantUsers($assistantUserEmails); 
+            
+            if (!empty($assistantOrderUsersInfo)) {
+                foreach ($assistantOrderUsersInfo as $assistantUser) {
+                    $notificationData = array(
+                        'sent_user_id' => $assistantUser['id'],
+                        'message' => $message,
+                        'type' =>  'completed'
+                    );
+                    $this->home_model->insert($notificationData, 'pct_order_notifications');
+                    $this->order->sendNotification($message, 'completed', $assistantUser['id'], 0);
+                }
+            }
+
+            $managersInfo = $this->users_model->get_many_by(array('user_type_id' => 4, 'department_id' => 4));
+            foreach ($managersInfo as $manager) { 
+                $notificationData = array(
+                    'sent_user_id' => $manager->id,
+                    'message' => $message,
+                    'type' =>  'completed'
+                );
+                $this->home_model->insert($notificationData, 'pct_hr_notifications');
+                $this->order->sendNotification($message, 'completed', $manager->id, 1);
+            }
+        }
 		redirect(base_url().'borrower-document/'.$fileId);
 	}
 }

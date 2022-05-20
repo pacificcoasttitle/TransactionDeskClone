@@ -846,7 +846,7 @@ class Common extends MX_Controller {
 						'document_size' => ($data['file_size'] * 1000),
 						'user_id' => $userdata['id'],
 						'order_id' => $orderId,
-						'task_id' => !empty($this->input->post('task_id_'.$i)) ? $this->input->post('task_id_'.$i) : 0,
+						'task_id' => $this->input->post('task_id_'.$i) ? $this->input->post('task_id_'.$i) : 0,
 						'description' => $this->input->post('description_'.$i),
 						'is_sync' => 1,
 						'is_prelim_document' => 0
@@ -2452,76 +2452,54 @@ class Common extends MX_Controller {
     		$body = isset($_POST['body']) && !empty($_POST['body']) ? $_POST['body'] : '';
     		$orderDetails = $this->order->get_order_details($fileId);
 			$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+			$this->load->library('order/resware'); 
+			$request = array();
+			$endPoint = 'files/'.$fileId.'/notes';
+			$request['Subject'] = $subject;
+			$request['Body'] = $body;
+			$request['FileID'] = $fileId;
+			$notes_data = json_encode($request);
+			$user_data = array();
 
-			if ($userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
-				$notesData = array(
-					'resware_note_id' => 0,
-					'subject' => $subject,
-					'note' => $body,
-					'user_id' => $userdata['id'],
-					'order_id' => $orderId,
-					'task_id' => $_POST['task_id']
-				);
-				$id = $this->note->insert($notesData);
-				if ($id) {
-					$success[] = 'Note created successfully.';
+			if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1 || $userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+				$user_data['admin_api'] = 1; 
+			}
+			
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
+			$result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
+			
+			if (isset($result) && !empty($result)) {
+				$response = json_decode($result, TRUE);
+
+				if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+					$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+					$errors[] = $message;
 				} else {
-					$errors[] = 'Something went wrong. Please try again.';
-				}
-			} else {
-				$this->load->library('order/resware'); 
-				$request = array();
-				$endPoint = 'files/'.$fileId.'/notes';
-				$request['Subject'] = $subject;
-				$request['Body'] = $body;
-				$request['FileID'] = $fileId;
-				$notes_data = json_encode($request);
-				$user_data = array();
-
-				if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1 ) {
-					$user_data['admin_api'] = 1; 
-				}
-				
-				$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
-				$result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-				$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
-				
-				if (isset($result) && !empty($result)) {
-					$response = json_decode($result, TRUE);
-
-					if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
-						$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
-						$errors[] = $message;
+					$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+					$notesData = array(
+						'resware_note_id' => $noteId,
+						'subject' => $subject,
+						'note' => $body,
+						'user_id' => $userdata['id'],
+						'order_id' => $orderId,
+						'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0
+					);
+					$id = $this->note->insert($notesData);
+					if ($noteId && $id) {
+						$success[] = 'Note created successfully.';
 					} else {
-						$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
-						$notesData = array(
-							'resware_note_id' => $noteId,
-							'subject' => $subject,
-							'note' => $body,
-							'user_id' => $userdata['id'],
-							'order_id' => $orderId,
-							'task_id' => 0
-						);
-						$id = $this->note->insert($notesData);
-						if ($noteId && $id) {
-							$success[] = 'Note created successfully.';
-						} else {
-							$errors[] = 'Something went wrong. Please try again.';
-						}
+						$errors[] = 'Something went wrong. Please try again.';
 					}
 				}
 			}
+			
 			$data = array(
 				"errors" =>  $errors,
 				"success" => $success
 			);
 			$this->session->set_userdata($data);
-
-			if ($this->input->post('order_task_page') == 1) {
-				redirect(base_url().'order/escrow/order-tasks/'.$orderId);
-			} else {
-				redirect(base_url().'get-notes/'.$fileId);
-			}
+			redirect(base_url().'get-notes/'.$fileId);
 	    }
     }
 }

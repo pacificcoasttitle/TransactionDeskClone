@@ -2039,6 +2039,19 @@ class Order
     {
         $userdata = $this->CI->session->userdata('user'); 
         $orders_lists = array();
+        $orderBy = '';
+        if ($params['orderColumn'] != 0) {
+            if ($params['orderColumn'] == 1) {
+                $orderBy = 'order_details.file_number'; 
+            } else if ($params['orderColumn'] == 2) {
+                $orderBy = 'property_details.full_address'; 
+            } else if ($params['orderColumn'] == 3) {
+                $orderBy = 'pct_order_product_types.product_type'; 
+            }  else if ($params['orderColumn'] == 4) {
+                $orderBy = 'order_details.created_at'; 
+            } 
+        }
+
         if ($userdata['is_escrow_officer'] == 1) {    
             $escrowOfficerInfo = $this->getEscrowOfficerInfoFromOrder($userdata['email']);
         }
@@ -2149,7 +2162,11 @@ class Order
                     $this->CI->db->where_in('order_details.escrow_officer_id', $escrowUserIds);   
                 } 
             }
-            $this->CI->db->order_by("order_details.id", "desc");
+           if (!empty($orderBy)) {
+                $this->CI->db->order_by($orderBy, $params['orderDir']);
+            } else {
+                $this->CI->db->order_by("order_details.id", "desc");
+            }
            
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);
@@ -2182,7 +2199,11 @@ class Order
                     $this->CI->db->where_in('order_details.escrow_officer_id', $escrowUserIds);   
                 } 
             }
-            $this->CI->db->order_by("order_details.id", "desc");
+            if (!empty($orderBy)) {
+                $this->CI->db->order_by($orderBy, $params['orderDir']);
+            } else {
+                $this->CI->db->order_by("order_details.id", "desc");
+            }
         
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);

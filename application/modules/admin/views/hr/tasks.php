@@ -4,7 +4,19 @@
 			<h1 class="h3 text-gray-800">Tasks</h1>
 		</div>
 		<div class="col-sm-6">
-            <a href="<?php echo base_url().'hr/admin/add-task'; ?>" class="btn btn-success btn-icon-split float-right">
+			<a href="<?php echo base_url().'hr/admin/loan-tasks-position'; ?>" class="btn btn-info btn-icon-split float-right">
+                <span class="icon text-white-50">
+                    <i class="fas fa-tasks fa-fw"></i>
+                </span>
+                <span class="text">Set Loan Task Position</span>
+            </a>
+			<a href="<?php echo base_url().'hr/admin/sale-tasks-position'; ?>" class="btn btn-info btn-icon-split float-right mr-2">
+                <span class="icon text-white-50">
+                    <i class="fas fa-tasks fa-fw"></i>
+                </span>
+                <span class="text">Set Sale Task Position</span>
+            </a>
+            <a href="<?php echo base_url().'hr/admin/add-task'; ?>" class="btn btn-success btn-icon-split float-right mr-2">
                 <span class="icon text-white-50">
                     <i class="fa fa-plus"></i>
                 </span>
