@@ -317,39 +317,32 @@
 						</div>
 						<div id="commissionInfo" class="collapse" role="tabpanel" aria-labelledby="commissionTab" data-parent="#accordionEx">
 							<div class="card-body">
+							<?php foreach($underwriter as $key=>$underwriter_record):
+								if(count($underwriter_record) > 1):
+								?>
 								<div class="form-group row">
-									<label for="loan_westcor" class="col-sm-4 col-form-label">Loan Westcor Commission %</label>
+									<label  class="col-sm-4 col-form-label">Select <?php echo ucwords($key)?> Tier</label>
 									<div class="col-sm-8">
-									<input  step=".01" min="0"  type="number" class="form-control" name="loan_westcor" id="loan_westcor" class="form-control" placeholder="Enter Loan Westcor Commission" value="<?php echo isset($sales_rep_info['loan_westcor_commission']) && !empty($sales_rep_info['loan_westcor_commission']) ? $sales_rep_info['loan_westcor_commission'] : ''?>">
-										<?php if(!empty($loan_westcor_error_msg)){ ?>                     
-											<span class="error"><?php echo $loan_westcor_error_msg; ?></span>
-										<?php } ?>
+										<select name="underwrter[<?php echo $key;?>]"  class="selectpicker"  data-actions-box="true">
+											
+											<option value="">Select <?php echo ucwords($key)?> Tier</option>
+											<?php foreach($underwriter_record as $underwriter_tier) {?>
+												<?php $selected = '';
+													if(in_array($underwriter_tier->id, set_value('underwrter',array_column($existing_underwriter,'underwriter_tier_id'))))  {
+														$selected = 'selected';
+													} 
+												?> 
+												<option <?php echo $selected;?> value="<?php echo $underwriter_tier->id;?>"><?php echo $underwriter_tier->title;?></option>
+											<?php }?>
+										</select>
 									</div>
 								</div>
-								<div class="form-group row">
-									<label for="loan_natic" class="col-sm-4 col-form-label">Loan Natic Commission %</label>
-									<div class="col-sm-8">
-									<input step=".01" min="0" type="number" class="form-control" name="loan_natic" id="loan_natic" class="form-control" placeholder="Enter Loan Natic Commission" value="<?php echo isset($sales_rep_info['loan_natic_commission']) && !empty($sales_rep_info['loan_natic_commission']) ? $sales_rep_info['loan_natic_commission'] : ''?>">
-										<?php if(!empty($loan_natic_error_msg)){ ?>                     
-											<span class="error"><?php echo $loan_natic_error_msg; ?></span>
-										<?php } ?>
-									</div>
-								</div>
-								<div class="form-group row">
-									<label for="sale_westcor" class="col-sm-4 col-form-label">Sale Westcor Commission %</label>
-									<div class="col-sm-8">
-									<input  step=".01" min="0"  type="number" class="form-control" name="sale_westcor" id="sale_westcor" class="form-control" placeholder="Enter Sale Westcor Commission" value="<?php echo isset($sales_rep_info['sale_westcor_commission']) && !empty($sales_rep_info['sale_westcor_commission']) ? $sales_rep_info['sale_westcor_commission'] : ''?>">
-										<?php if(!empty($sale_westcor_error_msg)){ ?>                     
-											<span class="error"><?php echo $sale_westcor_error_msg; ?></span>
-										<?php } ?>
-									</div>
-								</div>
+								<?php endif;endforeach; ?>
 							</div>
 						</div>
 					</div>
 
 
-					<input type="hidden" id="commission_range_json" value='<?php echo $commission_range_json?>' />
 					<div class="pull-right">
 						<button type="submit" id="edit-sales-rep" name="add-sales-rep" class="btn btn-secondary">Update</button>
 						<a href="<?php echo site_url('order/admin/sales-rep'); ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>

@@ -3292,8 +3292,8 @@ $(document).ready(function () {
 		var collapse_class_id = $(".form-group .error").closest(".collapse").attr('id');
 		$('#'+collapse_class_id).collapse('show');
 	}
-	if($('#tbl-commission-range-listing').length) {
-		$('#tbl-commission-range-listing').DataTable({
+	if($('.cusom__common__datatable').length) {
+		$('.cusom__common__datatable').DataTable({
 			"language": {
                 // searchPlaceholder: "Customer Number",
                 paginate: {
@@ -3324,40 +3324,6 @@ $(document).ready(function () {
 				});
 			}
 		}
-	});
-
-	$('#edit-sales-rep').click(function(e) {
-		
-		var commission_range_json = $("#commission_range_json").val();
-		commission_range = JSON.parse(commission_range_json);
-		var revenue_val = parseFloat($('#sales_rep_premium').val());
-
-		form_valid = true;
-
-		$(commission_range).each(function(key,val){
-			var combine_key = val.product_type + '_'+val.underwriter;
-			if($('#'+combine_key).length) {
-
-				var min_revenue = parseFloat(val.min_revenue);
-				var max_revenue = parseFloat(val.max_revenue);
-				var commissin_val = parseFloat($('#'+combine_key).val());
-				var max_commission = parseFloat(val.total_commission);
-				if(revenue_val > min_revenue && revenue_val < max_revenue && commissin_val > max_commission ) {
-					$('#'+combine_key).addClass('error');
-					error_msg_lbl = '<label for="'+combine_key+'" class="error">Commission should not exceed '+ max_commission+' %</label>';
-					$('#'+combine_key).after(error_msg_lbl);
-					$('#commissionInfo').collapse('show');
-					$('#'+combine_key).focus();
-					form_valid = false;
-				}
-			}
-		});
-		if(form_valid == false) {
-			e.preventDefault();
-		}
-		
-		
-
 	});
 });
 

@@ -324,6 +324,11 @@ $route['order/admin/add-commission-range'] = 'admin/order/commissionRange/add_co
 $route['order/admin/edit-commission-range/(:num)'] = 'admin/order/commissionRange/edit_commission_range/$1';
 $route['order/admin/delete-commission-range/(:num)'] = 'admin/order/commissionRange/delete_commission_range/$1';
 
+$route['order/admin/underwriter-tier'] = 'admin/order/commissionRange/index_underwriter_tier';
+$route['order/admin/add-underwriter-tier'] = 'admin/order/commissionRange/add_underwriter_tier';
+$route['order/admin/edit-underwriter-tier/(:num)'] = 'admin/order/commissionRange/edit_underwriter_tier/$1';
+$route['order/admin/delete-underwriter-tier/(:num)'] = 'admin/order/commissionRange/delete_underwriter_tier/$1';
+
 
 $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';
 $route['order/admin/escrow-officers'] = 'admin/order/home/escrow_officers';

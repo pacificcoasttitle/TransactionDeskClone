@@ -81,8 +81,97 @@ class SalesRep extends MX_Controller
         $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'), $userId);
         $data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
         $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $userId);
+		// echo '<pre>';var_dump($closeSaleResult);die;
+		//calculate commission
+		$sales_commission = 0;
+
+		$this->load->model('admin/order/underwriter_user_model');
+		$this->load->model('admin/order/commission_range_model');
+		$existing_underwriter = $this->underwriter_user_model->with('underwriter_tier_obj')->get_many_by('user_id',$userId);
+		
+		
+		$underwriter_type_details = array();
+		foreach($existing_underwriter as $existing_underwriter_obj) {
+			if($existing_underwriter_obj->underwriter_tier_obj) {
+				$underwriter_type_details[$existing_underwriter_obj->underwriter_tier_obj->underwriter] = $existing_underwriter_obj;
+			}
+		}
+		
+
+		//Loan / Refi commission calculation
+		$underwriter_type = [
+			'westcor'=>'westcor',
+			'natic'=>'north_american',
+			'commonwealth'=>'commonwealth'
+		];
+		foreach($underwriter_type as $underwriter_type_key=>$underwriter_type_obj) {
+			$sum_amount = (float)$closeRefiResult['total_loan_'.$underwriter_type_obj];
+			if(isset($underwriter_type_details[$underwriter_type_key])) {
+				//Get commission
+				$underwriter_tier_id = $underwriter_type_details[$underwriter_type_key]->underwriter_tier_id;
+				$commission_range_data = $this->commission_range_model->get_many_by(['underwriter_tier'=>$underwriter_tier_id,'product_type'=>'loan']);
+				if($commission_range_data && count($commission_range_data)) {
+					foreach($commission_range_data as $commission_range_obj) {
+						if($sum_amount <= (float)$commission_range_obj->max_revenue && $sum_amount >= (float)$commission_range_obj->min_revenue) {
+							$commission_val = (float)$commission_range_obj->total_commission;
+							$temp_commission = ($sum_amount * $commission_val) / 100;
+							$temp_commission += (float)$commission_range_obj->additional_threshold;
+							$sales_commission += $temp_commission;
+						}
+					}
+				}
+
+			}
+			
+		}
+		foreach($underwriter_type as $underwriter_type_key=>$underwriter_type_obj) {
+			$sum_amount = (float)$closeSaleResult['total_sale_'.$underwriter_type_obj];
+			if(isset($underwriter_type_details[$underwriter_type_key])) {
+				//Get commission
+				$underwriter_tier_id = $underwriter_type_details[$underwriter_type_key]->underwriter_tier_id;
+				$commission_range_data = $this->commission_range_model->get_many_by(['underwriter_tier'=>$underwriter_tier_id,'product_type'=>'sale']);
+				if($commission_range_data && count($commission_range_data)) {
+					foreach($commission_range_data as $commission_range_obj) {
+						if($sum_amount <= (float)$commission_range_obj->max_revenue && $sum_amount >= (float)$commission_range_obj->min_revenue) {
+							$commission_val = (float)$commission_range_obj->total_commission;
+							$temp_commission = ($sum_amount * $commission_val) / 100;
+							$temp_commission += (float)$commission_range_obj->additional_threshold;
+							$sales_commission += $temp_commission;
+						}
+					}
+				}
+
+			}
+			
+
+		}
+		// die;
+
+		// if($sales_rep_info['sale_westcor_commission'] > 0) {
+		// 	$totoal_sales_westcor = $closeSaleResult['total_sale_westcor'];
+		// 	if($totoal_sales_westcor > 0) {
+		// 		$count_commision = ($totoal_sales_westcor * $sales_rep_info['sale_westcor_commission']) /100;
+		// 		$sales_commission += $count_commision;
+		// 	}
+		// }
+		// if($sales_rep_info['loan_westcor_commission'] > 0) {
+		// 	$totoal_loan_westcor = $closeRefiResult['total_loan_westcor'];
+		// 	if($totoal_loan_westcor > 0) {
+		// 		$count_commision = ($totoal_loan_westcor * $sales_rep_info['loan_westcor_commission']) /100;
+		// 		$sales_commission += $count_commision;
+		// 	}
+		// }
+		// if($sales_rep_info['loan_natic_commission'] > 0) {
+		// 	$totoal_loan_north_american = $closeRefiResult['total_loan_north_american'];
+		// 	if($totoal_loan_north_american > 0) {
+		// 		$count_commision = ($totoal_loan_north_american * $sales_rep_info['loan_natic_commission']) /100;
+		// 		$sales_commission += $count_commision;
+		// 	}
+		// }
+
         $data['sale_close_count'] =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
         $data['total_close_count'] = $data['refi_close_count'] + $data['sale_close_count'];
+        $data['sales_commission'] = $sales_commission;
 
         if ($data['total_close_count'] > 0) {
             $numOfCloseOrderPerWorkedDays = $data['total_close_count']/$workedDays;
@@ -119,6 +208,8 @@ class SalesRep extends MX_Controller
             $data['close_order_percetage'] = 0;
         }
         $this->template->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+		// echo "<pre>";
+		// var_dump($data);die;
 		$this->template->show("order", "sales_dashboard", $data);
 	}
 

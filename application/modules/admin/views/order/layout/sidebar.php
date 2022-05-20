@@ -121,10 +121,23 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/holidays' || $this->uri->segment(3) == 'add-holiday' || $this->uri->segment(3) == 'edit-holiday') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/holidays'; ?>">
 				Holidays
 			</a>
+			
+        </div>
+	</li>
+
+	<li class="nav-item dropdown">
+		<a class="nav-link dropdown-toggle" href="#" id="li_commissions" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fas fa-fw fa-gear"></i>
+			<span>Commissions</span>
+        </a>
+		<div class="dropdown-menu" aria-labelledby="li_commissions" id="li_commissons_list">
+			<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*underwriter-tier*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/underwriter-tier'; ?>">
+				Underwriter Tier
+			</a>
 			<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*commission-range*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/commission-range'; ?>">
 				Commission Range
 			</a>
-        </div>
+		</div>
 	</li>
 
 </ul>

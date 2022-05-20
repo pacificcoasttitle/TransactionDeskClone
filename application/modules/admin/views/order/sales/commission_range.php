@@ -26,14 +26,15 @@
 			</div>
 		<?php } ?>
             <div class="table-responsive">
-                <table class="table table-bordered" id="tbl-commission-range-listing" width="100%" cellspacing="0">
+                <table class="table table-bordered cusom__common__datatable" id="tbl-commission-range-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Product Type</th>
-                            <th>Underwriter</th>
+                            <th>Underwriter Tier</th>
                             <th>Minimum Revenue</th>
                             <th>Maximum Revenue</th>
                             <th>Total Commission</th>
+                            <th>Additional Threshold</th>
                             <th>Action</th>
                         </tr>
 						
@@ -42,10 +43,11 @@
 					<?php foreach($commission_details as $commission_record): ?>
 						<tr>
 							<td><?php echo ucfirst($commission_record->product_type); ?></td>
-							<td><?php echo ucfirst($commission_record->underwriter); ?></td>
+							<td><?php echo ($commission_record->underwriter_tier_obj) ? $commission_record->underwriter_tier_obj->title : '-' ?></td>
 							<td><?php echo $commission_record->min_revenue; ?></td>
 							<td><?php echo $commission_record->max_revenue; ?></td>
 							<td><?php echo $commission_record->total_commission; ?> %</td>
+							<td><?php echo $commission_record->additional_threshold; ?></td>
 							<td> <a href="<?php echo base_url('order/admin/edit-commission-range/'.$commission_record->id)?>" class='btn btn-action 'title ='Edit Commission Range'><span class='fa fa-edit' aria-hidden='true'></span></a>
 								<button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-commission-range/'.$commission_record->id)?>" title ='Delete Commission Range'><span class='fa fa-trash' aria-hidden='true'></span></button>
 							</td>

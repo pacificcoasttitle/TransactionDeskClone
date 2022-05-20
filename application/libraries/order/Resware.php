@@ -31,7 +31,7 @@ class Resware
             $password = $userdata['random_password'];
         }
 
-        $ch = curl_init(env('RESWARE_ORDER_API').$endpoint);                                    
+	$ch = curl_init(env('RESWARE_ORDER_API').$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
