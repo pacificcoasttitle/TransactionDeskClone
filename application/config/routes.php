@@ -226,6 +226,7 @@ $route['get-escrow-orders'] = 'frontend/order/escrow/get_escrow_orders';
 $route['upload-documet-resware/(:any)'] = 'frontend/order/escrow/uploadBorrowerDocumentResware/$1';
 $route['borrower-document/(:any)'] = 'frontend/order/dashboardMail/uploadBorrowerDocument/$1';
 $route['borrower-document-upload'] = 'frontend/order/dashboardMail/borrower_document_upload';
+$route['escrow-create-note'] = 'frontend/order/escrow/create_note';
 
 
 /* Route for PCT-Order backend*/

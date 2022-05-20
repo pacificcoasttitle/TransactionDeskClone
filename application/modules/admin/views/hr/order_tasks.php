@@ -41,6 +41,13 @@
 			</div>
         </div>
 
+		<?php if(!empty($success)) {?>
+			<a href="#" class="btn btn-success btn-block mt-1 mb-3"><?php echo $success;?></a>
+		<?php }   
+		if(!empty($errors)) {?>
+			<a href="#" class="btn btn-danger btn-block mt-1 mb-3"><?php echo $errors;?></a>
+		<?php } ?>
+
 		<div id="order_tasks_success_msg" class="btn btn-success btn-block mt-1 mb-3" style="display:none;"></div>
 		<div id="order_tasks_error_msg" class="btn btn-danger btn-block mt-1 mb-3" style="display:none;"></div>
 
@@ -64,7 +71,7 @@
 												<div class="row">
 													<div class="col-sm-10">
 														<div class="custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input custom__task_checkbox" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
+															<input data-child="0" type="checkbox" class="custom-control-input custom__task_checkbox" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
 															<label class="custom-control-label" for="check_<?php echo $task['id']; ?>"><?php echo $task['name']; ?></label>
 														</div>
 														<!-- <h6 class="m-0 font-weight-bold text-primary">Collapsable Card Example</h6> -->
@@ -86,7 +93,7 @@
 														<?php endif; ?> -->
 
 													<?php $j=0; if (!empty($keys)) { ?>
-														<div class="mb-4">
+														<div class="mb-4" id="sub_task_<?php echo $task['id']; ?>">
 															<div class="card-header py-3 my-3">
 																<h6 class="m-0 font-weight-bold text-primary">
 																	Sub Tasks
@@ -94,7 +101,7 @@
 															</div>
 															<?php foreach($keys as $key) { $j++;?>
 																<div class="custom-control custom-checkbox" style="margin: 10px 25px;">
-																	<input type="checkbox" class="custom-control-input" id="check_<?php echo $tasks[$key]['id']; ?>" name="task_done[]" value="<?php echo $tasks[$key]['id']; ?>" <?php if(in_array($tasks[$key]['id'],$completedTaskIds)) echo "checked";?>>
+																	<input data-child="1" data-parent-task="<?php echo $task['id']; ?>" type="checkbox" class="custom-control-input" id="check_<?php echo $tasks[$key]['id']; ?>" name="task_done[]" value="<?php echo $tasks[$key]['id']; ?>" <?php if(in_array($tasks[$key]['id'],$completedTaskIds)) echo "checked";?>>
 																	<label class="custom-control-label" for="check_<?php echo $tasks[$key]['id']; ?>"><?php echo $tasks[$key]['name']; ?></label>
 																</div>
 															<?php } ?>

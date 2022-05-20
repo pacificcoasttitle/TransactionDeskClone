@@ -22,7 +22,8 @@ class Orders extends MX_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-    private $orders_js_version = '03';
+    private $orders_js_version = '04';
+    private $tasks_js_version = '01';
 	public function __construct()
     {
         parent::__construct();
@@ -60,6 +61,8 @@ class Orders extends MX_Controller {
 
     public function getOrders()
     {
+        $this->load->model('escrow/tasks_model');
+        $this->load->model('escrow/order_completed_tasks_model');
         $params = array();
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -80,11 +83,18 @@ class Orders extends MX_Controller {
 	    if (isset($userTypes['data']) && !empty($userTypes['data'])) {
 	    	foreach ($userTypes['data'] as $key => $value)  {
 	    		$nestedData=array();
+                $prod_type = $value['prod_type'];
+                $total_tasks = $this->tasks_model->count_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )");
+				$total_task_completed = $this->order_completed_tasks_model->count_by('order_id',$value['id']);
+				$task_complete_ratio = floor((100*$total_task_completed)/$total_tasks);
+
                 $nestedData[] = $count;
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['full_address'];
                 $nestedData[] = $value['product_type'];
-                $nestedData[] = $value['created_at'];
+                $nestedData[] = $value['partner_name'];
+                $nestedData[] = '<div class="percentage">'.$task_complete_ratio.'%</div>';
+                $nestedData[] = date("m/d/Y", strtotime($value['created_at'])); 
                 $editUrl = base_url().'hr/admin/order-tasks/'.$value['id'];
                 $nestedData[] = '<div style="display:inline-flex;">
                     <a href="'.$editUrl.'" class="btn btn-info btn-icon-split btn-sm">
@@ -107,6 +117,16 @@ class Orders extends MX_Controller {
 
     public function orderTasks($id)
 	{
+        $data['errors'] = '';
+		$data['success'] = '';
+		if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
         $userdata = $this->session->userdata('hr_admin');
         $data['title'] = 'Escrow Order Tasks';
         $data['page_title'] = 'Order Tasks';
@@ -118,7 +138,11 @@ class Orders extends MX_Controller {
         $orderInfo = $this->order_model->get($id);
         $data['orderInfo'] = $orderInfo;
         $prod_type = $orderInfo->prod_type;
-		$tasks = json_decode(json_encode($this->tasks_model->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )")), true);
+        if ($prod_type == 'loan') {
+            $tasks = json_decode(json_encode($this->tasks_model->order_by('loan_position', 'asc')->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )")), true);
+        } else if ($prod_type == 'sale') {
+            $tasks = json_decode(json_encode($this->tasks_model->order_by('sale_position', 'asc')->get_many_by("(status = 1 and (prod_type = 'both' or prod_type = '$prod_type') )")), true);
+        }
         $completedTasksInfo = $this->order_completed_tasks_model->get_many_by("(order_id = $id)");
         if (!empty($completedTasksInfo)) {
             $completedTasks = json_decode(json_encode($completedTasksInfo), true);
@@ -214,14 +238,14 @@ class Orders extends MX_Controller {
             }
             $successMsg = 'Order task list updated for file number '.$orderInfo->file_number;
             $this->session->set_userdata('success', $successMsg);
-            redirect(base_url().'hr/admin/orders');
+            redirect(base_url().'hr/admin/order-tasks/'.$id);
         }
         $data['tasks'] = $tasks;
         $data['completedTaskIds'] = $completedTaskIds;
         $this->load->library('order/order');
         $data['order_task_notes'] = $this->order->get_order_notes($id);
         $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($id);
-		$this->admintemplate->addJS( base_url('assets/backend/escrow/js/tasks.js?v=order_tasks_'.$this->orders_js_version) );
+		$this->admintemplate->addJS( base_url('assets/backend/escrow/js/tasks.js?v=order_tasks_'.$this->tasks_js_version) );
         $this->admintemplate->show("hr", "order_tasks", $data);
 	}
 
@@ -256,43 +280,68 @@ class Orders extends MX_Controller {
         $taskInfo = $this->tasks_model->get($documentDetails['task_id']);
         if (!empty($res->Document->DocumentID)) {
             $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $document_id));
-            $success = "Document ".$documentDetails['original_document_name']." of ".$taskInfo->name." task uploaded successfully on Resware side for file number ".$orderInfo->file_number;
+            $success = "Document ".$documentDetails['original_document_name']." of ".$taskInfo->name." task approved and uploaded successfully on Resware side for file number ".$orderInfo->file_number;
         } else {
-            $errors = "Document ".$documentDetails['original_document_name']." of ".$taskInfo->name." task didn't upload on Resware side due to some error. Please try again.";
+            $errors = "Document ".$documentDetails['original_document_name']." of ".$taskInfo->name." task didn't approve and upload on Resware side due to some error. Please try again.";
         }
     
         $this->session->set_userdata('success', $success);
         $this->session->set_userdata('errors', $errors);
-		redirect(base_url().'hr/admin/orders');
+        redirect(base_url().'hr/admin/order-tasks/'.$documentDetails['order_id']);
     }
 
     public function create_note()
     {
-        $this->load->model('admin/escrow/tasks_model');
+        $user_data = array();
+        $this->load->model('escrow/tasks_model');
+        $this->load->library('order/resware'); 
+        $this->load->model('order/apiLogs');
+
     	$num_of_notes = isset($_POST['num_of_notes']) ? $_POST['num_of_notes'] : '';
         $userdata = $this->session->userdata('hr_admin');
         $subject = isset($_POST['subject']) && !empty($_POST['subject']) ? $_POST['subject'] : '';
         $note = isset($_POST['note']) && !empty($_POST['note']) ? $_POST['note'] : '';
         $order_id = isset($_POST['order_id']) && !empty($_POST['order_id']) ? $_POST['order_id'] : '';
+        $file_id = isset($_POST['file_id']) && !empty($_POST['file_id']) ? $_POST['file_id'] : '';
 
-        $notesData = array(
-            'resware_note_id' => 0,
-            'subject' => $subject,
-            'note' => $note,
-            'user_id' => $userdata['id'],
-            'order_id' => $order_id,
-            'task_id' => $_POST['task_id']
-        );
-        $id = $this->hr->insert($notesData, 'pct_order_notes');
-        $taskInfo = $this->tasks_model->get($_POST['task_id']);
-        if ($id) {
-            $success = 'Note created successfully for task '.$taskInfo->name;
-            $response = array('status' => 'success', 'message' => $success, 'num_of_notes' => $num_of_notes);
-        } else {
-            $error = 'Something went wrong. Please try again.';
-            $response = array('status' => 'success', 'message' => $error, 'num_of_notes' => $num_of_notes);
+        $request = array();
+        $endPoint = 'files/'.$file_id.'/notes';
+        $request['Subject'] = $subject;
+        $request['Body'] = $note;
+        $request['FileID'] = $file_id;
+        $notes_data = json_encode($request);
+        $user_data['admin_api'] = 1; 
+        
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $order_id, 0);        
+        $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $order_id, $logid);
+        
+        if (isset($result) && !empty($result)) {
+            $response = json_decode($result, TRUE);
+            if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+                $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+                $response = array('status' => 'error', 'message' => $message, 'num_of_notes' => $num_of_notes);
+            } else {
+                $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+                $notesData = array(
+                    'resware_note_id' => $noteId,
+                    'subject' => $subject,
+                    'note' => $note,
+                    'user_id' => $userdata['id'],
+                    'order_id' => $order_id,
+                    'task_id' => $_POST['task_id']
+                );
+                $id = $this->hr->insert($notesData, 'pct_order_notes');
+                $taskInfo = $this->tasks_model->get($_POST['task_id']);
+                if ($id) {
+                    $success = 'Note created successfully for task '.$taskInfo->name;
+                    $response = array('status' => 'success', 'message' => $success, 'num_of_notes' => $num_of_notes);
+                } else {
+                    $error = 'Something went wrong. Please try again.';
+                    $response = array('status' => 'error', 'message' => $error, 'num_of_notes' => $num_of_notes);
+                }
+            }
         }
-        echo json_encode($response);
-			
+        echo json_encode($response);	
     }
 }
