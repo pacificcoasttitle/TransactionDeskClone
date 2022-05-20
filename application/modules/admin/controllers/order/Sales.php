@@ -3,6 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Sales extends MX_Controller {
 
+	private $underwriter_type = [
+		'westcor'=>'Westcor',
+		'natic'=>'Natic',
+		'commonwealth'=>'Commonwealth'
+	];
+
     public function __construct()
     {
         parent::__construct();
@@ -89,9 +95,7 @@ class Sales extends MX_Controller {
             $this->form_validation->set_rules('sales_rep_no_of_open_orders', 'Sales Rep No of Open Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Open Orders'));
             $this->form_validation->set_rules('sales_rep_no_of_close_orders', 'Sales Rep No of Close Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Close Orders'));
             $this->form_validation->set_rules('sales_rep_premium', 'Sales Rep Premium', 'trim|required|numeric', array('required'=> 'Sales Rep Premium'));
-            $this->form_validation->set_rules('loan_westcor', 'Loan Westcor Commission', 'trim|numeric');
-            $this->form_validation->set_rules('loan_natic', 'Loan Natic Commission', 'trim|numeric');
-            $this->form_validation->set_rules('sale_westcor', 'Sale Westcor Commission', 'trim|numeric');
+            
               
             $config['upload_path'] = 'uploads/sales-rep/';
             $config['allowed_types'] = 'jpg|png';
@@ -168,15 +172,28 @@ class Sales extends MX_Controller {
                         'sales_rep_premium' => $_POST['sales_rep_premium'],
                         'is_password_updated' => 1,
                         'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
-						'loan_westcor_commission' => !empty($this->input->post('loan_westcor')) ? $this->input->post('loan_westcor') : 0,
-						'loan_natic_commission' => !empty($this->input->post('loan_natic')) ? $this->input->post('loan_natic') : 0,
-						'sale_westcor_commission' => !empty($this->input->post('sale_westcor')) ? $this->input->post('sale_westcor') : 0,
+						
                     );
 
                     $insert = $this->sales_model->insert($salesRepData);
                     
                     if ($insert) {
+						$this->load->model('order/underwriter_user_model');
                         $data['success_msg'] = 'Sales Rep. added successfully.';
+
+						$underwriters = $this->input->post('underwrter');
+						$underwriters = array_filter($underwriters);
+						if(!empty($underwriters)){
+							foreach ($underwriters as $key => $value) {
+								$underwriter_data =[
+									'user_id'=>$insert,
+									'underwriter_tier_id'=>$value,
+								];
+
+								$this->underwriter_user_model->insert($underwriter_data);
+							}
+						}
+							
                     } else {
                         $data['error_msg'] = 'Sales Rep. not added.';
                     }
@@ -196,19 +213,18 @@ class Sales extends MX_Controller {
                 $data['sales_rep_no_of_open_orders_error_msg'] = form_error('sales_rep_no_of_open_orders');
                 $data['sales_rep_no_of_close_orders_error_msg'] = form_error('sales_rep_no_of_close_orders');
                 $data['sales_rep_premium_error_msg'] = form_error('sales_rep_premium');
-                $data['loan_westcor_error_msg'] = form_error('loan_westcor');
-                $data['loan_natic_error_msg'] = form_error('loan_natic');
-                $data['sale_westcor_error_msg'] = form_error('sale_westcor');
+                
             }                                       
         }
-		//Get commission range condition
-		$this->load->model('order/commission_range_model');
-		$data['commission_range_json'] = json_encode([]);
-		$commission_range = $this->commission_range_model->get_all();
+		$this->load->model('order/underwriter_tier_model');
 		
-		if($commission_range) {
-			$data['commission_range_json'] = json_encode($commission_range);
+		
+		$underwriter_types = $this->underwriter_type;
+		$data['underwriter'] = array();
+		foreach ($underwriter_types as $key=>$underwriter_type) {
+			$data['underwriter'][$key]=$this->underwriter_tier_model->get_many_by('underwriter',$underwriter_type);
 		}
+		
 		
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/add_sales_rep', $data);
@@ -225,6 +241,10 @@ class Sales extends MX_Controller {
         if (isset($id) && !empty($id)) {
             $con = array('id' => $id);
             $sales_rep_info = $this->sales_model->getSalesRep($con);
+
+			$this->load->model('order/underwriter_user_model');
+			$existing_underwriter = $this->underwriter_user_model->get_many_by('user_id',$id);
+
             if (isset($_POST) && !empty($_POST)) {
                
                 $this->form_validation->set_rules('sales_rep_first_name', 'Sales Rep. First Name', 'required', array('required'=> 'Please Enter Sales Rep. First Name'));
@@ -236,9 +256,7 @@ class Sales extends MX_Controller {
                 $this->form_validation->set_rules('sales_rep_no_of_open_orders', 'Sales Rep No of Open Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Open Orders'));
                 $this->form_validation->set_rules('sales_rep_no_of_close_orders', 'Sales Rep No of Close Orders', 'trim|required|numeric', array('required'=> 'Please Enter Sales Rep No of Close Orders'));
                 $this->form_validation->set_rules('sales_rep_premium', 'Sales Rep Premium', 'trim|required|numeric', array('required'=> 'Sales Rep Premium'));
-				$this->form_validation->set_rules('loan_westcor', 'Loan Westcor Commission', 'trim|numeric');
-				$this->form_validation->set_rules('loan_natic', 'Loan Natic Commission', 'trim|numeric');
-				$this->form_validation->set_rules('sale_westcor', 'Sale Westcor Commission', 'trim|numeric');
+				
 
                 $config['upload_path'] = 'uploads/sales-rep/';
                 $config['allowed_types'] = 'jpg|png';
@@ -323,9 +341,7 @@ class Sales extends MX_Controller {
                             'sales_rep_premium' => $_POST['sales_rep_premium'],
                             'is_password_updated' => 1,
                             'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
-							'loan_westcor_commission' => !empty($this->input->post('loan_westcor')) ? $this->input->post('loan_westcor') : 0,
-							'loan_natic_commission' => !empty($this->input->post('loan_natic')) ? $this->input->post('loan_natic') : 0,
-							'sale_westcor_commission' => !empty($this->input->post('sale_westcor')) ? $this->input->post('sale_westcor') : 0,
+							
                         );
 						// var_dump($salesRepData);die;
 
@@ -334,6 +350,34 @@ class Sales extends MX_Controller {
                             
                         if ($update) {
                             $data['success_msg'] = 'Sales Rep. updated successfully.';
+
+							//$existing_underwriter;
+							$existing_underwriter_tier_ids = array_column($existing_underwriter,'underwriter_tier_id');
+							
+							$underwriters = $this->input->post('underwrter');
+							$underwriters = array_filter($underwriters);
+							if(!empty($underwriters)){
+								foreach ($underwriters as $key => $value) {
+									if(!in_array($value,$existing_underwriter_tier_ids)) {
+
+										$underwriter_data =[
+											'user_id'=>$id,
+											'underwriter_tier_id'=>$value,
+										];
+	
+										$this->underwriter_user_model->insert($underwriter_data);
+									}
+								}
+								foreach ($existing_underwriter as $value) {
+									if(!in_array($value->underwriter_tier_id,$underwriters)) {
+										$this->underwriter_user_model->delete($value->id);
+									}
+								}
+							}
+							elseif(count($existing_underwriter_tier_ids)) {
+								$this->underwriter_user_model->delete_by('user_id',$id);
+							}
+							
                         } else {
                             $data['error_msg'] = 'Error occurred while updating Sales Rep.';
                         }
@@ -354,9 +398,7 @@ class Sales extends MX_Controller {
                     $data['sales_rep_no_of_open_orders_error_msg'] = form_error('sales_rep_no_of_open_orders');
                     $data['sales_rep_no_of_close_orders_error_msg'] = form_error('sales_rep_no_of_close_orders');
                     $data['sales_rep_premium_error_msg'] = form_error('sales_rep_premium');
-					$data['loan_westcor_error_msg'] = form_error('loan_westcor');
-					$data['loan_natic_error_msg'] = form_error('loan_natic');
-					$data['sale_westcor_error_msg'] = form_error('sale_westcor');
+					
                 }
             }
             $con = array('id' => $id);
@@ -367,13 +409,18 @@ class Sales extends MX_Controller {
         }
         $data['sales_rep_info'] = $sales_rep_info;
 		//Get commission range condition
-		$this->load->model('order/commission_range_model');
-		$data['commission_range_json'] = json_encode([]);
-		$commission_range = $this->commission_range_model->get_all();
+		$this->load->model('order/underwriter_tier_model');
 		
-		if($commission_range) {
-			$data['commission_range_json'] = json_encode($commission_range);
+		
+		$underwriter_types = $this->underwriter_type;
+		$data['underwriter'] = array();
+		foreach ($underwriter_types as $key=>$underwriter_type) {
+			$data['underwriter'][$key]=$this->underwriter_tier_model->get_many_by('underwriter',$underwriter_type);
 		}
+		
+		// var_dump(array_column($data['existing_underwriter'],'underwriter_tier_id'));die;
+		$data['existing_underwriter'] = $existing_underwriter;
+
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/edit_sales_rep', $data);
         $this->load->view('order/layout/footer', $data);

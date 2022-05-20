@@ -54,6 +54,7 @@
 		margin-bottom: 50px;
 		padding-bottom: 35px;
 		padding-top: 15px;
+		border-radius: 5px;
 	}
 
 	.order-count-cotainer {
@@ -116,6 +117,18 @@
 		float:right;
 		margin-right: 25px;
 	}
+	.custom-select {
+		border-radius: 5px;
+	}
+	.ui-title-block {
+		font-size: 36px;
+	}
+	.section-type-4a .btn {
+		border-radius: 5px;
+	}
+	.pagination > li > a {
+		border-radius: 5px;
+	}
 
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
@@ -123,22 +136,34 @@
 		<div class="row">
 			<div class="row">
 				<div class="col-xs-12">
+					
 					<div class="typography-section__inner">
-						<h2 class="ui-title-block ui-title-block_light">Welcome Back <?php echo $name; ?>,</h2>
-						<div class="ui-decor-1a bg-accent"></div>
-						<?php if(!empty($salesUsers) && $is_sales_rep_manager == 1) { ?>
-							<div id="sales_user_listing">
-								<label>
-									<select style="width:auto;" name="sales_user_filter" id="sales_user_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
-										<!-- <option value="all"> All Sales Rep Users </option> -->
-										<?php foreach($salesUsers as $salesUser) { ?>
-											<option <?Php echo ($user_id == $salesUser['id']) ? 'selected' : '';?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
-										<?php }?>
-									</select>
-								</label>
+						<div class="row">
+							<div class="col-sm-7">
+								<h2 class="ui-title-block ui-title-block_light">Welcome <?php echo $name; ?>,</h2>
+								<div class="ui-decor-1a bg-accent"></div>
+								<?php if(!empty($salesUsers) && $is_sales_rep_manager == 1) { ?>
+									<div id="sales_user_listing">
+										<label>
+											<select style="width:auto;" name="sales_user_filter" id="sales_user_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
+												<!-- <option value="all"> All Sales Rep Users </option> -->
+												<?php foreach($salesUsers as $salesUser) { ?>
+													<option <?Php echo ($user_id == $salesUser['id']) ? 'selected' : '';?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
+												<?php }?>
+											</select>
+										</label>
+									</div>
+								<?php } ?>
+								<h4 class="ui-title-block_light">Production figures for the current month of <b><?php echo date('F');?></b></h3>
 							</div>
-						<?php } ?>
-						<h4 class="ui-title-block_light">Below is your production figures for the current month of <b><?php echo date('F');?></b></h3>
+
+							<div class="col-sm-5 text-right">
+								<h2 class="ui-title-block ui-title-block_light">$<?php echo number_format($sales_commission); ?></h2>
+								<div class="ui-decor-1a bg-accent"></div>
+								<h4 class="ui-title-block_light">Estimated commission for the month of <b><?php echo date('F');?></b></h3>
+							</div>
+
+						</div>
 					</div>
 					
 					<div class="order-count-cotainer">
@@ -153,7 +178,7 @@
 							<div class="sales_loan_section">Sales = <span id="sale_open_count"><?Php echo $sale_open_count;?></span></div>
 							<div class="sales_loan_section">Refi's = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
 							</div>
-							<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="projected_open_section"><?Php echo $projected_open_count;?></span></div>
+						<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span id="projected_open_section"><?Php echo $projected_open_count;?></span></div>
 							<?php if($sales_rep_info['sales_rep_no_of_open_orders'] > 0) { ?>
 								<div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div>
 							<?php } else { ?>
