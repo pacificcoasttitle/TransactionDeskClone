@@ -30,8 +30,12 @@ $(document).ready(function () {
             "drawCallback": function () {
 
             },
-            "ordering": false,
+            "ordering": true,
             "serverSide": true,
+            "columnDefs": [ {
+                'targets': [0, 5, 6], 
+                'orderable': false, 
+             }],
             "ajax": {
                 url: base_url + "get-escrow-orders", // json datasource
                 type: "post", // method  , by default get

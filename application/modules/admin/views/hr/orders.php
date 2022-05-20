@@ -1,3 +1,11 @@
+<style>
+.percentage {
+    font-weight: 900;
+    font-size: 21px;
+    color: #a324ec;
+}
+</style>
+
 <div class="container-fluid">	
 	<div class="row mb-3">
 		<div class="col-sm-6">
@@ -29,6 +37,8 @@
                             <th>File Number</th>
                             <th>Property Address</th>
                             <th>Product Type</th>
+							<th>Escrow Officer</th>
+							<th>Completed %</th>
 							<th>Created At</th>
                             <th>Action</th>
 						</tr>

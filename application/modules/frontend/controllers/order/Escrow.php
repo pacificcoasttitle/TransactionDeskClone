@@ -4,7 +4,7 @@
 
 class Escrow extends MX_Controller 
 {
-    private $escrow_js_version = '02';
+    private $escrow_js_version = '03';
 	function __construct() 
     {
         parent::__construct();
@@ -241,14 +241,14 @@ class Escrow extends MX_Controller
             }
             $successMsg[] = 'Order task list updated for file number '.$orderInfo->file_number;
             $this->session->set_userdata('success', $successMsg);
-            redirect(base_url().'escrow-dashboard');
+            redirect(base_url().'order/escrow/order-tasks/'.$id);
         }
         $data['tasks'] = $tasks;
         $data['completedTaskIds'] = $completedTaskIds;
         $data['order_task_notes'] = $this->order->get_order_notes($id);
         $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($data['orderDetails']['order_id']);
-		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=03') );
-		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=03') );
+		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=04') );
+		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=04') );
 		$this->template->show("order/escrow", "order_tasks", $data);
 	}
 
@@ -292,5 +292,59 @@ class Escrow extends MX_Controller
 		);
 		$this->session->set_userdata($data);
 		redirect(base_url().'order/escrow/order-tasks/'.$documentDetails['order_id']);
+    }
+
+    public function create_note()
+    {
+        $user_data = array();
+        $this->load->model('admin/escrow/tasks_model');
+        $this->load->library('order/resware'); 
+
+    	$num_of_notes = isset($_POST['num_of_notes']) ? $_POST['num_of_notes'] : '';
+        $userdata = $this->session->userdata('user');
+        $subject = isset($_POST['subject']) && !empty($_POST['subject']) ? $_POST['subject'] : '';
+        $note = isset($_POST['note']) && !empty($_POST['note']) ? $_POST['note'] : '';
+        $order_id = isset($_POST['order_id']) && !empty($_POST['order_id']) ? $_POST['order_id'] : '';
+        $file_id = isset($_POST['file_id']) && !empty($_POST['file_id']) ? $_POST['file_id'] : '';
+
+        $request = array();
+        $endPoint = 'files/'.$file_id.'/notes';
+        $request['Subject'] = $subject;
+        $request['Body'] = $note;
+        $request['FileID'] = $file_id;
+        $notes_data = json_encode($request);
+        $user_data['admin_api'] = 1; 
+        
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $order_id, 0);        
+        $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $order_id, $logid);
+        
+        if (isset($result) && !empty($result)) {
+            $response = json_decode($result, TRUE);
+            if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+                $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+                $response = array('status' => 'error', 'message' => $message, 'num_of_notes' => $num_of_notes);
+            } else {
+                $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+                $notesData = array(
+                    'resware_note_id' => $noteId,
+                    'subject' => $subject,
+                    'note' => $note,
+                    'user_id' => $userdata['id'],
+                    'order_id' => $order_id,
+                    'task_id' => $_POST['task_id']
+                );
+                $id = $this->home_model->insert($notesData, 'pct_order_notes');
+                $taskInfo = $this->tasks_model->get($_POST['task_id']);
+                if ($id) {
+                    $success = 'Note created successfully for task '.$taskInfo->name;
+                    $response = array('status' => 'success', 'message' => $success, 'num_of_notes' => $num_of_notes);
+                } else {
+                    $error = 'Something went wrong. Please try again.';
+                    $response = array('status' => 'error', 'message' => $error, 'num_of_notes' => $num_of_notes);
+                }
+            }
+        }
+        echo json_encode($response);	
     }
 }

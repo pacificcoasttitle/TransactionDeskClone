@@ -2043,9 +2043,7 @@ class DashboardMail extends MX_Controller {
                 }
             }
         }		
-		
-		$data['errors'] = $errors;
-		$data['success'] = $success;
+	
 		$data = array(
 			"errors" =>  $errors,
 			"success" => $success
@@ -2066,17 +2064,16 @@ class DashboardMail extends MX_Controller {
 		$this->session->set_userdata($data);
         if (!empty($orderInfo->escrow_officer_id)) {
             $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
-            $escrowInfo = $this->order_users_model->get_by(array('email_address' => $escrowInfoFromOrder['email'], 'is_escrow_officer' => 1));
             $notificationData = array(
-                'sent_user_id' => $escrowInfo->id,
+                'sent_user_id' => $escrowInfoFromOrder['id'],
                 'message' => $message,
                 'type' =>  'completed'
             );
             $this->home_model->insert($notificationData, 'pct_order_notifications');
-            $this->order->sendNotification($message, 'completed', $escrowInfo->id, 0);
+            $this->order->sendNotification($message, 'completed', $escrowInfoFromOrder['id'], 0);
             
-            $escrowHrInfo = $this->escrow_user_model->get_by('email', $escrowInfoFromOrder['email']);
-            $assistantUsersInfo = json_decode(json_encode($this->escrow_user_model->get_many_by(array('b100101010101010101010001000000000101ranch_id' => $escrowHrInfo->branch_id, 'position_id' => 15))), true);
+            $escrowHrInfo = $this->escrow_user_model->get_by(array('email' => $escrowInfoFromOrder['email_address']));
+            $assistantUsersInfo = json_decode(json_encode($this->escrow_user_model->get_many_by(array('branch_id' => $escrowHrInfo->branch_id, 'position_id' => 15))), true);
             $assistantUserEmails = array_column($assistantUsersInfo, 'email');	
             $assistantOrderUsersInfo = $this->common->getAssistantUsers($assistantUserEmails); 
             
