@@ -86,6 +86,8 @@ class Sales extends MX_Controller {
         $data['salesUsers'] = $this->order->get_sales_users();
 
         if ($this->input->post()) {
+			
+			
             $this->form_validation->set_rules('sales_rep_first_name', 'Sales Rep. First Name', 'required', array('required'=> 'Please Enter Sales Rep. First Name'));
             $this->form_validation->set_rules('sales_rep_last_name', 'Sales Rep. Last Name', 'required', array('required'=> 'Please Enter Sales Rep. Last Name'));
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
@@ -181,14 +183,25 @@ class Sales extends MX_Controller {
 						$this->load->model('order/underwriter_user_model');
                         $data['success_msg'] = 'Sales Rep. added successfully.';
 
+						
+
 						$underwriters = $this->input->post('underwrter');
 						$underwriters = array_filter($underwriters);
 						if(!empty($underwriters)){
 							foreach ($underwriters as $key => $value) {
-								$underwriter_data =[
-									'user_id'=>$insert,
-									'underwriter_tier_id'=>$value,
-								];
+								if(!empty($value['tier_id']) && $value['tier_id'] > 0) {
+									$underwriter_data =[
+										'user_id'=>$insert,
+										'underwriter_tier_id'=>$value['tier_id'],
+									];
+									if($value['threshold_enabled'] == 1 && $value['threshold_amount'] >= 0 && $value['threshold_commission'] > 0) {
+										$underwriter_data['allow_threshold'] = 1;
+										$underwriter_data['threshold_amount'] = $value['threshold_amount'];
+										$underwriter_data['threshold_commission'] = $value['threshold_commission'];
+
+									}
+									
+								}
 
 								$this->underwriter_user_model->insert($underwriter_data);
 							}
@@ -358,18 +371,41 @@ class Sales extends MX_Controller {
 							$underwriters = array_filter($underwriters);
 							if(!empty($underwriters)){
 								foreach ($underwriters as $key => $value) {
-									if(!in_array($value,$existing_underwriter_tier_ids)) {
-
+									if(!in_array($value['tier_id'],$existing_underwriter_tier_ids)) {
 										$underwriter_data =[
 											'user_id'=>$id,
-											'underwriter_tier_id'=>$value,
+											'underwriter_tier_id'=>$value['tier_id'],
+											'allow_threshold' => 0,
+											'threshold_amount' => 0,
+											'threshold_commission' => 0,
 										];
+
+										if($value['threshold_enabled'] == 1 && $value['threshold_amount'] >= 0 && $value['threshold_commission'] > 0) {
+											$underwriter_data['allow_threshold'] = 1;
+											$underwriter_data['threshold_amount'] = $value['threshold_amount'];
+											$underwriter_data['threshold_commission'] = $value['threshold_commission'];
+	
+										}
 	
 										$this->underwriter_user_model->insert($underwriter_data);
 									}
 								}
+								$underwriters = array_values($underwriters);
 								foreach ($existing_underwriter as $value) {
-									if(!in_array($value->underwriter_tier_id,$underwriters)) {
+									$check_underwriter_key = array_search($value->underwriter_tier_id, array_column($underwriters, 'tier_id'));
+									
+									if($check_underwriter_key !== false) {
+										$check_underwriter_val = $underwriters[$check_underwriter_key];
+										$underwriter_data =[
+											'underwriter_tier_id'=>$check_underwriter_val['tier_id'],
+											'allow_threshold' => $check_underwriter_val['threshold_enabled'],
+											'threshold_amount' => $check_underwriter_val['threshold_enabled'] ? $check_underwriter_val['threshold_amount'] : 0,
+											'threshold_commission' => $check_underwriter_val['threshold_enabled'] ? $check_underwriter_val['threshold_commission'] : 0,
+										];
+										$this->underwriter_user_model->update($value->id,$underwriter_data);
+
+									}
+									else {
 										$this->underwriter_user_model->delete($value->id);
 									}
 								}
@@ -377,6 +413,8 @@ class Sales extends MX_Controller {
 							elseif(count($existing_underwriter_tier_ids)) {
 								$this->underwriter_user_model->delete_by('user_id',$id);
 							}
+
+							redirect('order/admin/edit-sales-rep/'.$id);
 							
                         } else {
                             $data['error_msg'] = 'Error occurred while updating Sales Rep.';
