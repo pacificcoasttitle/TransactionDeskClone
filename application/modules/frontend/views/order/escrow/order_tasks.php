@@ -27,6 +27,13 @@ td {
 .mt-105 {
 	margin-top: 105px;
 }
+.radio {
+	top: 5px !important;
+	margin: 0px 10px !important;
+}
+.radio:before {
+	background: none !important;
+}
 </style>
 <section class="section-type-4a section-defaulta b-contact b-contact_mod-a" style="padding-bottom:0px;">
 	<div class="content">
@@ -105,9 +112,7 @@ td {
 																<input data-child="0" type="checkbox" class="custom-control-input custom__task_checkbox" id="check_<?php echo $task['id']; ?>" name="task_done[]" value="<?php echo $task['id']; ?>" <?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
 																<div class="check_box_text"> <?php echo $task['name']; ?></div>
 																<span class="checkmark"></span>
-																
 															</label>
-															<!-- <h6 class="m-0 font-weight-bold text-primary">Collapsable Card Example</h6> -->
 														</div>
 														<div class="col-xs-2 text-right">
 															<a href="#collapseCard_<?php echo $task['id']; ?>" class="custom__collapse_arrow collapsed" data-toggle="collapse"
@@ -129,7 +134,13 @@ td {
 														<?php if (!empty($keys)) { ?>
 															<div class="" id="sub_task_<?php echo $task['id']; ?>">
 																<div class="smart-forms spacer-b30 spacer-t30">
-																	<div class="tagline"><span>Sub Task </span></div>
+																	<div class="tagline" style="<?php echo $task['id'] == 4 ? 'width:80%;' : '';?>"><span>Sub Task </span></div>
+																	<?php if ($task['id'] == 4) { ?>
+																		<a href="#borrower_information" data-toggle="collapse"
+																			role="button" aria-expanded="false" aria-controls="borrower_information" href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
+																			<span class="text">Send Package</span>
+																		</a>
+																	<?php } ?>
 																</div>
 																
 																<?php foreach($keys as $key) {?>
@@ -270,3 +281,55 @@ td {
 	</div>
 
 </section>
+
+<div class="modal fade" width="500px" id="borrower_information" tabindex="-1" role="dialog"
+	aria-labelledby="Borrower Infromation" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
+		<div class="modal-content">
+			<form method="POST" action="<?php echo base_url();?>add-borrower-on-order" enctype="multipart/form-data">
+				<div class="smart-forms smart-container wrap-2" style="margin:30px">
+					<div class="modal-body search-result">
+						<div id="lender-details-fields" >
+							<div class="spacer-b20">
+								<div class="tagline"><span>Select Package</span></div>
+							</div>
+
+							<div class="frm-row spacer-b25">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
+										<input class="radio" type="radio" name="package_type" id="buyer" value="buyer" required>Buyer
+										<input class="radio" type="radio" name="package_type" id="seller" value="seller">Seller
+									</label>
+								</div>
+							</div>
+
+							<div class="spacer-b25">
+								<div class="tagline"><span>Borrower Email Address</span></div>
+							</div>
+
+							<div class="frm-row">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
+										<input type="text" name="LenderCompany" id="LenderCompany" class="gui-input ui-autocomplete-input"
+											placeholder="Enter Borrower Email Address" required="required">
+										<span class="field-icon"><i class="fa fa-user"></i></span>
+										<input type="hidden" name="partner_id" id="partner_id" value="">
+									</label>
+								</div>
+							</div>							
+						</div>
+					</div>
+
+					<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
+					<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id'];?>">
+
+					<div class="form-footer" style="padding-top:0px;">
+						<button type="submit" data-btntext-sending="Sending..."
+							class="button btn-primary">Submit</button>
+						<button type="button" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

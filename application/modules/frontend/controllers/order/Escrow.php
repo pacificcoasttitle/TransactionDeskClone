@@ -347,4 +347,9 @@ class Escrow extends MX_Controller
         }
         echo json_encode($response);	
     }
+
+    public function addBorrowerOnOrder()
+    {
+        
+    }
 }
