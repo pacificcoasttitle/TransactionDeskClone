@@ -201,9 +201,9 @@ class Sales extends MX_Controller {
 
 									}
 									
+									$this->underwriter_user_model->insert($underwriter_data);
 								}
 
-								$this->underwriter_user_model->insert($underwriter_data);
 							}
 						}
 							
@@ -371,7 +371,7 @@ class Sales extends MX_Controller {
 							$underwriters = array_filter($underwriters);
 							if(!empty($underwriters)){
 								foreach ($underwriters as $key => $value) {
-									if(!in_array($value['tier_id'],$existing_underwriter_tier_ids)) {
+									if($value['tier_id'] && !in_array($value['tier_id'],$existing_underwriter_tier_ids)) {
 										$underwriter_data =[
 											'user_id'=>$id,
 											'underwriter_tier_id'=>$value['tier_id'],
