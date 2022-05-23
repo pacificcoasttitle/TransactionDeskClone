@@ -317,18 +317,30 @@
 						</div>
 						<div id="commissionInfo" class="collapse" role="tabpanel" aria-labelledby="commissionTab" data-parent="#accordionEx">
 							<div class="card-body">
-							<?php foreach($underwriter as $key=>$underwriter_record):
+							<?php 
+								$underwriter_existing_ids = array();
+								foreach($underwriter as $key=>$underwriter_record):
+									$check_underwriter_val = null;
 								if(count($underwriter_record) > 1):
 								?>
+								<div class="show_hide_threshold_main_div">
 								<div class="form-group row">
 									<label  class="col-sm-4 col-form-label">Select <?php echo ucwords($key)?> Tier</label>
 									<div class="col-sm-8">
-										<select name="underwrter[<?php echo $key;?>]"  class="selectpicker"  data-actions-box="true">
+										<select name="underwrter[<?php echo $key;?>][tier_id]"  class="selectpicker"  data-actions-box="true">
 											
 											<option value="">Select <?php echo ucwords($key)?> Tier</option>
 											<?php foreach($underwriter_record as $underwriter_tier) {?>
 												<?php $selected = '';
-													if(in_array($underwriter_tier->id, set_value('underwrter',array_column($existing_underwriter,'underwriter_tier_id'))))  {
+													$check_underwriter_key = array_search($underwriter_tier->id, array_column($existing_underwriter, 'underwriter_tier_id'));
+													
+													if($check_underwriter_key !== false) {
+														$check_underwriter_val = $existing_underwriter[$check_underwriter_key];
+													}
+													if(!empty(set_value('underwrter')[$key]) && set_value('underwrter')[$key]['tier_id'] == $underwriter_tier->id) {
+														$selected = 'selected';
+													}
+													elseif($check_underwriter_val && $underwriter_tier->id == $check_underwriter_val->underwriter_tier_id)  {
 														$selected = 'selected';
 													} 
 												?> 
@@ -336,6 +348,30 @@
 											<?php }?>
 										</select>
 									</div>
+								</div>
+								<div class="form-group row">
+									<label  class="col-sm-4 col-form-label">Enable Threshold</label>
+									<div class="col-sm-8">
+										<select name="underwrter[<?php echo $key;?>][threshold_enabled]"  class="selectpicker show_hide_threshold_select"  data-actions-box="true" >
+											<option value="0" <?php if(set_value('underwrter')[$key]['threshold_enabled'] && 0 ==  set_value('underwrter')[$key]['threshold_enabled']): echo 'selected'; elseif($check_underwriter_val && 0 == $check_underwriter_val->allow_threshold): echo 'selected';endif;?>>No</option>
+											<option value="1" <?php if(set_value('underwrter')[$key]['threshold_enabled'] && 1 ==  set_value('underwrter')[$key]['threshold_enabled']): echo 'selected'; elseif($check_underwriter_val && 1 == $check_underwriter_val->allow_threshold): echo 'selected';endif;?>>Yes</option>
+										</select>
+									</div>
+								
+								</div>
+								<div class="form-group row show_hide_threshold">
+									<label  class="col-sm-4 col-form-label">Threshold Amount</label>
+									<div class="col-sm-8">
+										<input  step="0.1" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_amount]"  class="form-control" placeholder="Threshold Amount" value="<?php  if(!empty(set_value('underwrter')[$key])) : echo set_value('underwrter')[$key]['threshold_amount']; elseif($check_underwriter_val): echo $check_underwriter_val->threshold_amount; endif; ?>">
+									</div>
+								</div>
+								<div class="form-group row show_hide_threshold">
+									<label  class="col-sm-4 col-form-label">Commission</label>
+									<div class="col-sm-8">
+										<input  step="0.1" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_commission]"  class="form-control" placeholder="Threshold commision" value="<?php  if(!empty(set_value('underwrter')[$key])) : echo set_value('underwrter')[$key]['threshold_commission']; elseif($check_underwriter_val): echo $check_underwriter_val->threshold_commission; endif; ?>">
+									</div>
+								</div>
+								<div class="col-xs-12"><hr></div>
 								</div>
 								<?php endif;endforeach; ?>
 							</div>

@@ -3325,7 +3325,25 @@ $(document).ready(function () {
 			}
 		}
 	});
+
+	if(('.show_hide_threshold_select').length) {
+		show_hide_threshold();
+		$('.show_hide_threshold_select').on('change', function() {
+			show_hide_threshold();
+		});
+	}
 });
+
+function show_hide_threshold() {
+	$('.show_hide_threshold_select').each(function(){
+		if($(this).val() == 1) {
+			$(this).parents('.show_hide_threshold_main_div').find('.show_hide_threshold').show();
+		}
+		else {
+			$(this).parents('.show_hide_threshold_main_div').find('.show_hide_threshold').hide();
+		}
+	});
+}
 
 function updateCounty(counties,ruleId)
 {
