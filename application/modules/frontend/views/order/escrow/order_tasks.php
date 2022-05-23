@@ -47,7 +47,6 @@ td {
 				</div>
 				<div class="col-sm-4 text-right custom__task_button  mt-20">
 					<div class="typography-section__inner">
-						<button type="button" class="btn button-color task_show_all"><i class="fa fa-plus"></i>Add Note</button>
 						<button type="button" class="btn button-color task_check_all"><i class="fa fa-check"></i></button>
 						<button type="button" class="btn button-color task_un_check_all"><i class="fa fa-square"></i></button>
 						<button type="button" class="btn button-color task_show_all"><i class="fa fa-plus"></i></button>
