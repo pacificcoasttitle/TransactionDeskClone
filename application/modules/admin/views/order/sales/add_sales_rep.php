@@ -269,7 +269,7 @@
 						<div id="commissionInfo" class="collapse" role="tabpanel" aria-labelledby="commissionTab" data-parent="#accordionEx">
 							<div class="card-body">
 								<?php foreach($underwriter as $key=>$underwriter_record):
-								if(count($underwriter_record) > 1):
+								if(count($underwriter_record) > 0):
 								?>
 								<div class="show_hide_threshold_main_div">
 								<div class="form-group row">

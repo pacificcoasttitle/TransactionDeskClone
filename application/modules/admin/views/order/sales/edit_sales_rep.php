@@ -321,7 +321,7 @@
 								$underwriter_existing_ids = array();
 								foreach($underwriter as $key=>$underwriter_record):
 									$check_underwriter_val = null;
-								if(count($underwriter_record) > 1):
+								if(count($underwriter_record) > 0):
 								?>
 								<div class="show_hide_threshold_main_div">
 								<div class="form-group row">
