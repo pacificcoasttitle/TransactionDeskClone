@@ -3331,8 +3331,23 @@ $(document).ready(function () {
 		$('.show_hide_threshold_select').on('change', function() {
 			show_hide_threshold();
 		});
+
+		$('.threshold-add-btn').click(function(){
+			var clone_div = $(this).parents('.threshold__amounts').find('.clone-main-div').clone();
+			clone_div.find('input').val("");
+			clone_div.removeClass('clone-main-div')
+			console.log(clone_div);
+			$(this).parents('.threshold__amounts').find('.clone-to-threshold').append(clone_div);
+			
+		})
 	}
 });
+
+if(('.threshold-remove-btn').length) {
+	$(document).on('click','.threshold-remove-btn',function(){
+		$(this).parents('.clone-this-threshold').remove();
+	})
+}
 
 function show_hide_threshold() {
 	$('.show_hide_threshold_select').each(function(){

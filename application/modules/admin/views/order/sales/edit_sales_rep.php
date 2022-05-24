@@ -14,6 +14,24 @@
 .accordion > .card.managerInfoCard {
 	overflow: initial;
 }
+.remove-btn-holder {
+	position: absolute;
+    right: -20px;
+    top: -30px;
+}
+.remove-btn-holder .threshold-remove-btn {
+    border-radius: 50%;
+}
+.accordion .threshold__amounts .card,.accordion .show_hide_threshold_main_div.card{
+	border-bottom: 1px solid rgba(0,0,0,.125) !important;
+	border-bottom-left-radius: 0.25rem !important;
+	border-bottom-right-radius: 0.25rem !important;
+	margin-bottom:25px;
+}
+
+.threshold__amounts .clone-main-div .remove-btn-holder {
+	display: none;
+}
 </style>
 <div class="container">
     <?php if(!empty($success_msg)){ ?>
@@ -323,55 +341,134 @@
 									$check_underwriter_val = null;
 								if(count($underwriter_record) > 0):
 								?>
-								<div class="show_hide_threshold_main_div">
-								<div class="form-group row">
-									<label  class="col-sm-4 col-form-label">Select <?php echo ucwords($key)?> Tier</label>
-									<div class="col-sm-8">
-										<select name="underwrter[<?php echo $key;?>][tier_id]"  class="selectpicker"  data-actions-box="true">
-											
-											<option value="">Select <?php echo ucwords($key)?> Tier</option>
-											<?php foreach($underwriter_record as $underwriter_tier) {?>
-												<?php $selected = '';
-													$check_underwriter_key = array_search($underwriter_tier->id, array_column($existing_underwriter, 'underwriter_tier_id'));
+								<div class="show_hide_threshold_main_div card">
+									<div class="card-body">
+										<div class="form-group row">
+											<label  class="col-sm-4 col-form-label">Select <?php echo ucwords($key)?> Tier</label>
+											<div class="col-sm-8">
+												<select name="underwrter[<?php echo $key;?>][tier_id]"  class="selectpicker"  data-actions-box="true">
 													
-													if($check_underwriter_key !== false) {
-														$check_underwriter_val = $existing_underwriter[$check_underwriter_key];
+													<option value="">Select <?php echo ucwords($key)?> Tier</option>
+													<?php foreach($underwriter_record as $underwriter_tier) {?>
+														<?php $selected = '';
+															$check_underwriter_key = array_search($underwriter_tier->id, array_column($existing_underwriter, 'underwriter_tier_id'));
+															
+															if($check_underwriter_key !== false) {
+																$check_underwriter_val = $existing_underwriter[$check_underwriter_key];
+															}
+															if(!empty(set_value('underwrter')[$key]) && set_value('underwrter')[$key]['tier_id'] == $underwriter_tier->id) {
+																$selected = 'selected';
+															}
+															elseif($check_underwriter_val && $underwriter_tier->id == $check_underwriter_val->underwriter_tier_id)  {
+																$selected = 'selected';
+															} 
+														?> 
+														<option <?php echo $selected;?> value="<?php echo $underwriter_tier->id;?>"><?php echo $underwriter_tier->title;?></option>
+													<?php }?>
+												</select>
+											</div>
+										</div>
+										<div class="form-group row">
+											<label  class="col-sm-4 col-form-label">Enable Threshold</label>
+											<div class="col-sm-8">
+												<select name="underwrter[<?php echo $key;?>][threshold_enabled]"  class="selectpicker show_hide_threshold_select"  data-actions-box="true" >
+													<option value="0" <?php if(set_value('underwrter')[$key]['threshold_enabled'] && 0 ==  set_value('underwrter')[$key]['threshold_enabled']): echo 'selected'; elseif($check_underwriter_val && 0 == $check_underwriter_val->allow_threshold): echo 'selected';endif;?>>No</option>
+													<option value="1" <?php if(set_value('underwrter')[$key]['threshold_enabled'] && 1 ==  set_value('underwrter')[$key]['threshold_enabled']): echo 'selected'; elseif($check_underwriter_val && 1 == $check_underwriter_val->allow_threshold): echo 'selected';endif;?>>Yes</option>
+												</select>
+											</div>
+										</div>
+										<div class='threshold__amounts show_hide_threshold'>
+											<?php
+											$min_range_val = "";
+											$max_range_val = "";
+											$commission_val = "";
+											if($check_underwriter_val && count($check_underwriter_val->underwriter_user_threshold_obj) && isset($check_underwriter_val->underwriter_user_threshold_obj[0])) {
+												$min_range_val = $check_underwriter_val->underwriter_user_threshold_obj[0]->threshold_amount_min;
+												$max_range_val = $check_underwriter_val->underwriter_user_threshold_obj[0]->threshold_amount_max;
+												$commission_val = $check_underwriter_val->underwriter_user_threshold_obj[0]->threshold_commission;
+												unset($check_underwriter_val->underwriter_user_threshold_obj[0]);
+											}
+											?>
+											<div class='clone-this-threshold card clone-main-div' >
+												<div class="card-body">
+													<div class = "form-group row">
+														<div class="col-sm-12">
+															<div class="remove-btn-holder"><button type="button" class="btn btn-danger threshold-remove-btn"><i class="fa fa-times"></i></button></div>
+														</div>
+													</div>
+													<div class="form-group row show_hide_threshold">
+														<label  class="col-sm-4 col-form-label">Threshold Amount Range</label>
+														<div class="col-sm-4">
+															<input  step="01" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_amount_min][]"  class="form-control" placeholder="Minimum Amount" value="<?php echo $min_range_val ?>">
+														</div>
+														<div class="col-sm-4">
+															<input  step="01" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_amount_max][]"  class="form-control" placeholder="Maximum Amount" value="<?php echo $max_range_val ?>">
+														</div>
+													</div>
+													<div class="form-group row show_hide_threshold">
+														<label  class="col-sm-4 col-form-label">Commission %</label>
+														<div class="col-sm-8">
+															<input  step="0.1" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_commission][]"  class="form-control" placeholder="Threshold commision %" value="<?php echo $commission_val ?>">
+														</div>
+													</div>
+													
+
+												</div>
+											</div>
+											<div class='clone-to-threshold'>
+												<?php
+												foreach($check_underwriter_val->underwriter_user_threshold_obj as $underwriter_user_threshold_obj): 
+													$min_range_val = "";
+													$max_range_val = "";
+													$commission_val = "";
+													if(count($underwriter_user_threshold_obj)) {
+														$min_range_val = $underwriter_user_threshold_obj->threshold_amount_min;
+														$max_range_val = $underwriter_user_threshold_obj->threshold_amount_max;
+														$commission_val = $underwriter_user_threshold_obj->threshold_commission;
 													}
-													if(!empty(set_value('underwrter')[$key]) && set_value('underwrter')[$key]['tier_id'] == $underwriter_tier->id) {
-														$selected = 'selected';
-													}
-													elseif($check_underwriter_val && $underwriter_tier->id == $check_underwriter_val->underwriter_tier_id)  {
-														$selected = 'selected';
-													} 
-												?> 
-												<option <?php echo $selected;?> value="<?php echo $underwriter_tier->id;?>"><?php echo $underwriter_tier->title;?></option>
-											<?php }?>
-										</select>
+												?>
+													<div class='clone-this-threshold card' >
+														<div class="card-body">
+															<div class = "form-group row">
+																<div class="col-sm-12">
+																	<div class="remove-btn-holder"><button type="button" class="btn btn-danger threshold-remove-btn"><i class="fa fa-times"></i></button></div>
+																</div>
+															</div>
+															<div class="form-group row show_hide_threshold">
+																<label  class="col-sm-4 col-form-label">Threshold Amount Range</label>
+																<div class="col-sm-4">
+																	<input  step="01" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_amount_min][]"  class="form-control" placeholder="Minimum Amount" value="<?php echo $min_range_val ?>">
+																</div>
+																<div class="col-sm-4">
+																	<input  step="01" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_amount_max][]"  class="form-control" placeholder="Maximum Amount" value="<?php echo $max_range_val ?>">
+																</div>
+															</div>
+															<div class="form-group row show_hide_threshold">
+																<label  class="col-sm-4 col-form-label">Commission %</label>
+																<div class="col-sm-8">
+																	<input  step="0.1" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_commission][]"  class="form-control" placeholder="Threshold commision %" value="<?php echo $commission_val ?>">
+																</div>
+															</div>
+															
+
+														</div>
+													</div>
+												<?php
+												endforeach;
+												?>
+											</div>
+
+											<div class="clearfix">
+												<div class="form-group">
+													<button type="button" class="btn btn-success pull-right threshold-add-btn">
+														<i class="fa fa-plus"></i>
+													</button>
+
+												</div>
+											</div>
+										</div>
+									
 									</div>
-								</div>
-								<div class="form-group row">
-									<label  class="col-sm-4 col-form-label">Enable Threshold</label>
-									<div class="col-sm-8">
-										<select name="underwrter[<?php echo $key;?>][threshold_enabled]"  class="selectpicker show_hide_threshold_select"  data-actions-box="true" >
-											<option value="0" <?php if(set_value('underwrter')[$key]['threshold_enabled'] && 0 ==  set_value('underwrter')[$key]['threshold_enabled']): echo 'selected'; elseif($check_underwriter_val && 0 == $check_underwriter_val->allow_threshold): echo 'selected';endif;?>>No</option>
-											<option value="1" <?php if(set_value('underwrter')[$key]['threshold_enabled'] && 1 ==  set_value('underwrter')[$key]['threshold_enabled']): echo 'selected'; elseif($check_underwriter_val && 1 == $check_underwriter_val->allow_threshold): echo 'selected';endif;?>>Yes</option>
-										</select>
-									</div>
-								
-								</div>
-								<div class="form-group row show_hide_threshold">
-									<label  class="col-sm-4 col-form-label">Threshold Amount</label>
-									<div class="col-sm-8">
-										<input  step="0.1" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_amount]"  class="form-control" placeholder="Threshold Amount" value="<?php  if(!empty(set_value('underwrter')[$key])) : echo set_value('underwrter')[$key]['threshold_amount']; elseif($check_underwriter_val): echo $check_underwriter_val->threshold_amount; endif; ?>">
-									</div>
-								</div>
-								<div class="form-group row show_hide_threshold">
-									<label  class="col-sm-4 col-form-label">Commission</label>
-									<div class="col-sm-8">
-										<input  step="0.1" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_commission]"  class="form-control" placeholder="Threshold commision" value="<?php  if(!empty(set_value('underwrter')[$key])) : echo set_value('underwrter')[$key]['threshold_commission']; elseif($check_underwriter_val): echo $check_underwriter_val->threshold_commission; endif; ?>">
-									</div>
-								</div>
-								<div class="col-xs-12"><hr></div>
 								</div>
 								<?php endif;endforeach; ?>
 							</div>
