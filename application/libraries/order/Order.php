@@ -473,6 +473,8 @@ class Order
             order_details.is_create_order_on_safewire,
             order_details.safewire_action_link,
             order_details.prod_type,
+            order_details.resware_status,
+            order_details.borrower_email,
             property_details.id as property_id, 
             property_details.address, 
             property_details.full_address, 

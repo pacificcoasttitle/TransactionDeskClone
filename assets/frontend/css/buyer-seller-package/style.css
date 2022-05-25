@@ -1,0 +1,211 @@
+
+body{
+    font-family: 'Poppins', sans-serif;
+}
+.container{
+    max-width: 1200px;
+}
+header {
+    box-shadow: 0 3px 9px rgb(0 0 0 / 10%);
+    padding: 10px 0;
+}
+.img_logo {
+    width: 270px;
+}
+.lang_selection{
+    width: auto;
+    margin-left: auto;
+    padding: 6px 50px 6px 15px;
+}
+select {
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background: url(../img/down-arrow.png) no-repeat;
+    background-position: right 10px center;
+}
+.form_content {
+    padding: 80px 0;
+}
+.blue_title {
+    background: #04415D;
+    color: #fff;
+    text-align: center;
+    padding: 20px 15px;
+    margin: 20px 0;
+}
+small.small_label {
+    position: absolute;
+    background: #fff;
+    bottom: -15px;
+    left: 15px;
+    padding: 5px;
+    font-size: 12px;
+}
+.form-control{
+    height: 45px;
+}
+.position-relative input {
+    padding-bottom: 12px;
+}
+.otherAddress,.mailAddress{
+    max-width: 500px;
+    margin-bottom: 30px;
+}
+input[type="file"] + label span {
+    display: block;
+    width: 224px;
+    background: #04415D;
+    height: 40px;
+    border-radius: 4px;
+    color: #fff;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.trustee2 .numberOfTrustee::after{
+    content: "nd";
+}
+.trustee3 .numberOfTrustee::after{
+    content: "rd";
+}
+.trustee4 .numberOfTrustee::after{
+    content: "th";
+}
+.list-unstyled li {
+    margin-bottom: 5px;
+}
+.table_fee_table th {
+    padding-left: 15px;
+}
+label span{
+    color: red;
+}
+.h-auto{
+    height: auto !important;
+}
+.accordion-button{
+    font-weight: 700;
+}
+.btn-primary.btn {
+    background: #04415D;
+    border-color: #04415D;
+}
+.sellerInfoPack header{
+    background: #04415D;
+    color: #fff;
+}
+.logo_img{
+    width: 100px;
+    /*filter: brightness(50);*/
+}
+.sellerInfoPack .accordion-button:not(.collapsed) {
+    color: #04415D;
+    background-color: #f1fbff;
+}
+.sellerInfoPack .accordion-button:focus {
+    border-color: #04415D;
+    box-shadow: 0 0 0 0.25rem rgb(181 78 158 / 25%);
+}
+.buyerInfoPack header {
+    background: #04415D;
+    color: #fff;
+}
+.fieldset {
+    position: relative;
+    padding: 1.5rem 1rem 1rem;
+    border: 1px solid #ced4da;
+    margin-top: 30px;
+}
+.legend {
+    position: absolute;
+    font-weight: 700;
+    background: #fff;
+    top: -14px;
+    padding: 0 10px;
+    font-size: 18px;
+}
+.sign_pad canvas{
+    border: 1px solid #ced4da;
+}
+.clearSign {
+    cursor: pointer;
+    color: #04415D;
+    font-weight: 700;
+    margin-top: 5px;
+    display: inline-block;
+}
+.zandgar__wizard {
+    display: block;
+    height: 100%;
+    position: relative;
+}
+.zandgar__wizard .zandgar__step {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: 0;
+    opacity: 0;
+    z-index: -1;
+    transform: translateY(20px);
+}
+.zandgar__wizard .zandgar__step.zandgar__step__active {
+    opacity: 1;
+    z-index: 1;
+    transform: translateY(0);
+    transition: 
+      opacity .5s ease-out, 
+      transform .5s ease-out;
+}
+.form-input-hint {
+    display: none;
+}
+.form-input-hint.is-visible {
+    display: block;
+}
+  
+
+
+
+
+
+
+
+
+
+@media(max-width:767px){
+    .sign_pad canvas{
+        width: 100% !important;
+    }
+    .accordion-body,
+    .accordion-button {
+        padding: 1rem;
+        font-size: 14px;
+    }
+    .blue_title {
+        padding: 15px 10px;
+        font-size: 18px;
+    }
+    body{
+        font-size: 14px;
+    }
+    small.small_label {
+        position: relative;
+        background: transparent;
+        bottom: auto;
+        left: auto;
+        font-size: 10px;
+        display: block;
+    }
+    h5 {
+        font-size: 1rem;
+    }
+    h3 {
+        font-size: 18px;
+    }
+    .form_content {
+        padding: 50px 0;
+    }
+}

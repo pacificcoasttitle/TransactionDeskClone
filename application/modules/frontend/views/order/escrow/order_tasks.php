@@ -136,8 +136,8 @@ td {
 																<div class="smart-forms spacer-b30 spacer-t30">
 																	<div class="tagline" style="<?php echo $task['id'] == 4 ? 'width:80%;' : '';?>"><span>Sub Task </span></div>
 																	<?php if ($task['id'] == 4) { ?>
-																		<a href="#borrower_information" data-toggle="collapse"
-																			role="button" aria-expanded="false" aria-controls="borrower_information" href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
+																		<a data-target="#borrower_information" data-toggle="modal"
+																			role="button"  href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
 																			<span class="text">Send Package</span>
 																		</a>
 																	<?php } ?>
@@ -310,7 +310,7 @@ td {
 							<div class="frm-row">
 								<div class="section colm colm12">
 									<label class="field prepend-icon">
-										<input type="text" name="LenderCompany" id="LenderCompany" class="gui-input ui-autocomplete-input"
+										<input type="text" name="borrower_email" id="borrower_email" class="gui-input ui-autocomplete-input"
 											placeholder="Enter Borrower Email Address" required="required">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 										<input type="hidden" name="partner_id" id="partner_id" value="">
