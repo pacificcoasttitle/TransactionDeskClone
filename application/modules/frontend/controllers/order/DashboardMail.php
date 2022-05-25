@@ -2102,4 +2102,20 @@ class DashboardMail extends MX_Controller {
         }
 		redirect(base_url().'borrower-document/'.$fileId);
 	}
+
+    public function borrowerSellerForm($random_number)
+    {
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $order = $this->getOrderInfo($random_number);
+        $this->load->view('order/borrower_seller', $data);
+    }
+
+    public function borrowerBuyerForm($random_number)
+    {
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $order = $this->getOrderInfo($random_number);
+        $this->load->view('order/borrower_buyer', $data);
+    }
 }

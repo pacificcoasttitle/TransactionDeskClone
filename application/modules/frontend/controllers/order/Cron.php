@@ -4958,4 +4958,36 @@ class Cron extends MX_Controller {
         }
         echo "All data exported successfully";exit;
     }
+
+     public function sendDataToHomeDocs($fileId)
+	{
+		$orderDetails = $this->order->get_order_details($fileId);
+		$this->load->model('order/titlePointData');
+		$condition = array(
+			'where' => array(
+				'file_id' => $fileId,
+			)
+		);
+		$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+		$this->load->helper('homedocsapi_helper');
+		$homedocs_array = [
+			'order_token'=>$orderDetails['random_number'],
+			'apn'=>$orderDetails['apn'],
+			'fips'=>$titlePointDetails[0]['fips'],
+			'address'=>$orderDetails['address'],
+			'last_line'=>$orderDetails['property_city'].', '.$orderDetails['property_state'],
+			'full_address'=>$orderDetails['full_address'],
+			'file_id'=>$orderDetails['file_id'],
+			'file_number'=>$orderDetails['file_number'],
+			'vesting_info'=>$titlePointDetails[0]['vesting_information'],
+			'first_installment'=>$titlePointDetails[0]['first_installment'],
+			'second_installment'=>$titlePointDetails[0]['second_installment'],
+			'borrower_email'=> $orderDetails['borrower_email'],
+			'borrower_name'=> $orderDetails['primary_owner'],
+		];
+		
+        $logid = $this->apiLogs->syncLogs(0, 'homedocs', 'send_order_info', env('HOMEDOCS_URL').'api/store-property-detail', json_encode($homedocs_array, JSON_UNESCAPED_SLASHES), array(), $orderDetails['order_id'], 0);
+        $result = send_order_data($homedocs_array);
+        $this->apiLogs->syncLogs(0, 'homedocs', 'send_order_info', env('HOMEDOCS_URL').'api/store-property-detail', json_encode($homedocs_array, JSON_UNESCAPED_SLASHES), $result, $orderDetails['order_id'], $logid);
+	}
 }

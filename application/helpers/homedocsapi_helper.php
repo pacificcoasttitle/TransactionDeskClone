@@ -28,7 +28,8 @@ if(!function_exists('call_homedocs_api')){
 
     }
 
-	function send_order_data($data) {
+	function send_order_data($data) 
+    {
 		$api_base_url = 'http://dev.homedocs.io/';
 		$api_token = 'ubya07bfi4agd4uih0qs';
         if(!empty(env('HOMEDOCS_URL'))) {
