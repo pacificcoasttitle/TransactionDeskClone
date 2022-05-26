@@ -344,4 +344,178 @@ class Orders extends MX_Controller {
         }
         echo json_encode($response);	
     }
+
+    
+    public function addBorrowerOnOrder()
+    {
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->library('order/order');
+        $this->load->model('order/apiLogs');
+        $file_id = $this->input->post('file_id');
+		$order_id = $this->input->post('order_id');
+		$borrower_email = $this->input->post('borrower_email');
+		$package_type = $this->input->post('package_type');
+        $orderDetails = $this->order->get_order_details($file_id);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $errors = array();
+        $success = array();
+
+        $this->hr->update(array('borrower_email' => $borrower_email), array('file_id' => $file_id), 'order_details');
+
+        if ($package_type == 'seller') {
+            $form_url = base_url().'borrower-seller-form/'.$orderDetails['random_number'];
+        } else {
+            $form_url = base_url().'borrower-buyer-form/'.$orderDetails['random_number'];
+        }
+
+        $email_data = array(
+            'file_number'=> $orderDetails['file_number'],
+            'property_address'=> $orderDetails['full_address'],
+            'random_number'=>  $orderDetails['random_number'],
+            'borrrower'=> $orderDetails['primary_owner'],
+            'form_url' => $form_url,
+            'escrow_officer' => ''
+        );
+        
+        $borrower_message_body = $this->load->view('frontend/emails/borrower_buyer_seller.php', $email_data, TRUE);
+        $message_body = $borrower_message_body; 
+        $subject = $orderDetails['file_number']. ' - Borrower';
+        
+        $mailParams = array(
+            'from_mail' => $from_mail, 
+            'from_name' => $from_name, 
+            'subject' => $subject,
+            'message'=>json_encode($email_data)
+        );
+        
+        if (!empty($borrower_email)) {
+            $to = $borrower_email;
+            $mailParams['to'] = $to;
+            $this->load->helper('sendemail');
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_borrower', '', $mailParams, array(), $order_id, 0);
+            $borrower_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+            $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_borrower', '', $mailParams, array('status'=>$borrower_mail_result), $order_id, $logid);
+        }
+
+        if ($orderDetails['resware_status'] == 'closed') {
+            $param = $file_id;
+            $command = "php ".FCPATH."index.php frontend/order/cron sendDataToHomeDocs $param";
+            if (substr(php_uname(), 0, 7) == "Windows") {
+                pclose(popen("start /B ". $command, "r")); 
+            } else {
+                exec($command . " > /dev/null &");  
+            }
+        } 
+        $errors = '';
+        $success = "Mail sent succesfully to borrower.";
+        $this->session->set_userdata('success', $success);
+        $this->session->set_userdata('errors', $errors);
+        redirect(base_url().'hr/admin/order-tasks/'.$orderDetails['order_id']);
+    }
+
+    public function addBorrowerOnOrderForPayoff()
+    {
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->library('order/order');
+        $this->load->model('order/apiLogs');
+        $userdata = $this->session->userdata('user');
+        $file_id = $this->input->post('file_id');
+		$order_id = $this->input->post('order_id');
+		$borrower_email = $this->input->post('borrower_email');
+        $orderDetails = $this->order->get_order_details($file_id);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $errors = array();
+        $success = array();
+
+        //$this->home_model->update(array('borrower_email' => $borrower_email), array('file_id' => $file_id), 'order_details');        
+        $form_url = base_url().'borrower-document/'.$orderDetails['random_number'];
+        
+        $email_data = array(
+            'file_number'=> $orderDetails['file_number'],
+            'property_address'=> $orderDetails['full_address'],
+            'random_number'=>  $orderDetails['random_number'],
+            'borrrower'=> $orderDetails['primary_owner'],
+            'form_url' => $form_url,
+            'escrow_officer' => $userdata['name']
+        );
+        
+        $borrower_message_body = $this->load->view('frontend/emails/borrower_buyer_seller.php', $email_data, TRUE);
+        $message_body = $borrower_message_body; 
+        $subject = $orderDetails['file_number']. ' - Borrower';
+        
+        $mailParams = array(
+            'from_mail' => $from_mail, 
+            'from_name' => $from_name, 
+            'subject' => $subject,
+            'message'=>json_encode($email_data)
+        );
+        
+        if (!empty($borrower_email)) {
+            $to = $borrower_email;
+            $mailParams['to'] = $to;
+            $this->load->helper('sendemail');
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_borrower_payoff', '', $mailParams, array(), $order_id, 0);
+            $borrower_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+            $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_borrower_payoff', '', $mailParams, array('status'=>$borrower_mail_result), $order_id, $logid);
+        }
+        $errors = '';
+        $success = "Mail sent succesfully to borrower for order payoff";
+        $this->session->set_userdata('success', $success);
+        $this->session->set_userdata('errors', $errors);
+        redirect(base_url().'hr/admin/order-tasks/'.$orderDetails['order_id']);
+    }
+
+    public function addLenderOnOrder()
+    {
+        $userdata = $this->session->userdata('hr_admin');
+        $this->load->library('order/order');
+        $this->load->model('order/apiLogs');
+        $file_id = $this->input->post('file_id');
+		$order_id = $this->input->post('order_id');
+		$lender_email = $this->input->post('lender_email');
+        $orderDetails = $this->order->get_order_details($file_id);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $errors = array();
+        $success = array();
+
+        //$this->home_model->update(array('borrower_email' => $borrower_email), array('file_id' => $file_id), 'order_details');        
+        $form_url = base_url().'borrower-document/'.$orderDetails['random_number'];
+        
+        $email_data = array(
+            'file_number'=> $orderDetails['file_number'],
+            'property_address'=> $orderDetails['full_address'],
+            'random_number'=>  $orderDetails['random_number'],
+            'borrrower'=> $orderDetails['primary_owner'],
+            'form_url' => $form_url,
+            'escrow_officer' => ''
+        );
+        
+        $borrower_message_body = $this->load->view('frontend/emails/borrower_buyer_seller.php', $email_data, TRUE);
+        $message_body = $borrower_message_body; 
+        $subject = $orderDetails['file_number']. ' - Lender';
+        
+        $mailParams = array(
+            'from_mail' => $from_mail, 
+            'from_name' => $from_name, 
+            'subject' => $subject,
+            'message'=>json_encode($email_data)
+        );
+        
+        if (!empty($lender_email)) {
+            $to = $lender_email;
+            $mailParams['to'] = $to;
+            $this->load->helper('sendemail');
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_lender', '', $mailParams, array(), $order_id, 0);
+            $borrower_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+            $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_lender', '', $mailParams, array('status'=>$borrower_mail_result), $order_id, $logid);
+        }
+        $errors = '';
+        $success = "Mail sent succesfully to lender.";
+        $this->session->set_userdata('success', $success);
+        $this->session->set_userdata('errors', $errors);
+        redirect(base_url().'hr/admin/order-tasks/'.$orderDetails['order_id']);
+    }
 }
