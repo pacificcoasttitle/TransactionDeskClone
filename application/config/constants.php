@@ -100,5 +100,8 @@ define('CSV_FILE_NAME', "formcsv.csv");
 define('AUTORESPONDER', "FALSE");
 define('CURRENT_YEAR', date("Y"));
 defined('PAY_PERIOD_START')  OR define('PAY_PERIOD_START', '2022-03-21'); // no errors
+
+defined('UNDERWRITERS')  OR define('UNDERWRITERS', ['westcor'=>'westcor','natic'=>'north_american','commonwealth'=>'commonwealth']); 
+defined('PRODUCT_TYPE')  OR define('PRODUCT_TYPE', ['loan','sale']); 
 /* settings.php */
 

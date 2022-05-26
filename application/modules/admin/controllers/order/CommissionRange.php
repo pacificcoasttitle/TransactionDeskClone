@@ -2,13 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CommissionRange extends MX_Controller {
-
-	private $underwriter_type = [
-		'westcor'=>'Westcor',
-		'natic'=>'Natic',
-		'commonwealth'=>'Commonwealth'
-	];
-
+	
     public function __construct()
     {
         parent::__construct();
@@ -86,6 +80,7 @@ class CommissionRange extends MX_Controller {
 		
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
+		$data['product_types'] = PRODUCT_TYPE;
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/add_commission_range', $data);
         $this->load->view('order/layout/footer', $data);
@@ -142,6 +137,7 @@ class CommissionRange extends MX_Controller {
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
         $data['record'] = $record;
+		$data['product_types'] = PRODUCT_TYPE;
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/edit_commission_range', $data);
         $this->load->view('order/layout/footer', $data);
@@ -214,7 +210,7 @@ class CommissionRange extends MX_Controller {
                 
             }                                       
         }
-		$data['underwriter_types'] = $this->underwriter_type;
+		$data['underwriter_types'] = UNDERWRITERS;
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
         $this->load->view('order/layout/header', $data);
@@ -259,7 +255,7 @@ class CommissionRange extends MX_Controller {
         } else {
             redirect('order/admin/underwriter-tier');
         }
-		$data['underwriter_types'] = $this->underwriter_type;
+		$data['underwriter_types'] = UNDERWRITERS;
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
         $data['record'] = $record;

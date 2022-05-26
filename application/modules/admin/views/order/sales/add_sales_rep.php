@@ -286,77 +286,103 @@
 						</div>
 						<div id="commissionInfo" class="collapse" role="tabpanel" aria-labelledby="commissionTab" data-parent="#accordionEx">
 							<div class="card-body">
-								<?php foreach($underwriter as $key=>$underwriter_record):
-								if(count($underwriter_record) > 0):
+								<?php
+								foreach($product_types as $product_type): 
 								?>
-								<div class="show_hide_threshold_main_div card">
+								<div class="card">
+									<div class="card-header" role="tab" id="commissionTab">
+										<?php echo ucwords($product_type); ?>
+									</div>
 									<div class="card-body">
-										<div class="form-group row">
-											<label  class="col-sm-4 col-form-label">Select <?php echo ucwords($key)?> Tier</label>
-											<div class="col-sm-8">
-												<select name="underwrter[<?php echo $key;?>][tier_id]"  class="selectpicker"  data-actions-box="true">
-													
-													<option value="">Select <?php echo ucwords($key)?> Tier</option>
-													<?php foreach($underwriter_record as $underwriter_tier) {?>
-														<?php $selected = '';
-															if(set_value('underwrter')[$key]['tier_id'] && $underwriter_tier->id ==  set_value('underwrter')[$key]['tier_id'])  {
-																$selected = 'selected';
-															} 
-														?> 
-														<option <?php echo $selected;?> value="<?php echo $underwriter_tier->id;?>"><?php echo $underwriter_tier->title;?></option>
-													<?php }?>
-												</select>
-											</div>
-										</div>
-										<div class="form-group row">
-											<label  class="col-sm-4 col-form-label">Enable Threshold</label>
-											<div class="col-sm-8">
-												<select name="underwrter[<?php echo $key;?>][threshold_enabled]"  class="selectpicker show_hide_threshold_select"  data-actions-box="true" >
-													<option value="0" <?php if(set_value('underwrter')[$key]['threshold_enabled'] && 0 ==  set_value('underwrter')[$key]['threshold_enabled']): echo 'selected'; endif;?>>No</option>
-													<option value="1" <?php if(set_value('underwrter')[$key]['threshold_enabled'] && 1 ==  set_value('underwrter')[$key]['threshold_enabled']): echo 'selected'; endif;?>>Yes</option>
-												</select>
-											</div>
-										
-										</div>
-										<div class='threshold__amounts show_hide_threshold'>
-											<div class='clone-this-threshold card clone-main-div' >
-												<div class="card-body">
-												<div class = "form-group row"><div class="col-sm-12"><div class="remove-btn-holder"><button type="button" class="btn btn-danger threshold-remove-btn"><i class="fa fa-times"></i></button></div></div></div>
-													<div class="form-group row show_hide_threshold">
-														<label  class="col-sm-4 col-form-label">Threshold Amount Range</label>
-														<div class="col-sm-4">
-															<input  step="01" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_amount_min][]"  class="form-control" placeholder="Minimum Amount" value="">
-														</div>
-														<div class="col-sm-4">
-															<input  step="01" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_amount_max][]"  class="form-control" placeholder="Maximum Amount" value="">
-														</div>
+										<?php
+										foreach($underwriter_types as $underwriter_type_key=>$underwriter_type):
+										?>
+										<div class="card">
+											<div class="card-body underwriters-div">
+												<div class="form-group row">
+													<label  class="col-sm-4 col-form-label"><?php echo ucwords($underwriter_type_key)?> Commission Type</label>
+													<div class="col-sm-8">
+														<select name="commission[<?php echo $product_type;?>][<?php echo $underwriter_type_key;?>][type]"  class="selectpicker show_hide_commissiontypes_select"  data-actions-box="true">
+															
+															<option value="">Select <?php echo ucwords($underwriter_type_key)?> Commission Type</option>
+															<?php foreach($commission_types as $commission_type) {?>
+																<option <?php echo set_select('commission['.$product_type.']['.$underwriter_type_key.'][type]', $commission_type);?>  value="<?php echo $commission_type;?>"><?php echo ucwords($commission_type);?></option>
+															<?php }?>
+														</select>
 													</div>
-													<div class="form-group row show_hide_threshold">
-														<label  class="col-sm-4 col-form-label">Commission %</label>
+												</div>
+												<div class="show_hide_commissiontypes show_hide_commissiontypes-global">
+													<div class="form-group row">
+														<label  class="col-sm-4 col-form-label"><?php echo ucwords($underwriter_type_key)?> Tier</label>
 														<div class="col-sm-8">
-															<input  step="0.1" min="0"  type="number" class="form-control" name="underwrter[<?php echo $key;?>][threshold_commission][]"  class="form-control" placeholder="Threshold commision %" value="">
+															<select name="commission[<?php echo $product_type;?>][<?php echo $underwriter_type_key;?>][tire]"  class="selectpicker"  data-actions-box="true">
+																
+																<option value="">Select <?php echo ucwords($underwriter_type_key)?> Tire</option>
+																<?php foreach($underwriter_tires[$underwriter_type_key] as $underwriter_tire) {?>
+																	<option <?php echo set_select('commission['.$product_type.']['.$underwriter_type_key.'][tire]', $underwriter_tire->id);?>  value="<?php echo $underwriter_tire->id;?>"><?php echo ucwords($underwriter_tire->title);?></option>
+																<?php }?>
+															</select>
 														</div>
 													</div>
-													
-
 												</div>
-											</div>
-											<div class='clone-to-threshold'>
+												<div class="show_hide_commissiontypes show_hide_commissiontypes-override">
+													<div class='threshold__amounts show_hide_threshold'>
+														<div class='clone-this-threshold card clone-main-div' >
+															<div class="card-body">
+															<div class = "form-group row"><div class="col-sm-12"><div class="remove-btn-holder"><button type="button" class="btn btn-danger threshold-remove-btn"><i class="fa fa-times"></i></button></div></div></div>
+																<div class="form-group row show_hide_threshold">
+																	<label  class="col-sm-4 col-form-label">Threshold Amount Range</label>
+																	<div class="col-sm-4">
+																		<input  step="01" min="0"  type="number" class="form-control" name="commission[<?php echo $product_type;?>][<?php echo $underwriter_type_key;?>][threshold_amount_min][]"  class="form-control" placeholder="Minimum Amount" value="">
+																	</div>
+																	<div class="col-sm-4">
+																		<input  step="01" min="0"  type="number" class="form-control" name="commission[<?php echo $product_type;?>][<?php echo $underwriter_type_key;?>][threshold_amount_max][]"  class="form-control" placeholder="Maximum Amount" value="">
+																	</div>
+																</div>
+																<div class="form-group row show_hide_threshold">
+																	<label  class="col-sm-4 col-form-label">Commission %</label>
+																	<div class="col-sm-8">
+																		<input  step="0.1" min="0"  type="number" class="form-control" name="commission[<?php echo $product_type;?>][<?php echo $underwriter_type_key;?>][threshold_commission][]"  class="form-control" placeholder="Threshold commision %" value="">
+																	</div>
+																</div>
+																
 
-											</div>
+															</div>
+														</div>
+														<div class='clone-to-threshold'>
+														</div>
 
-											<div class="clearfix">
-												<div class="form-group">
-													<button type="button" class="btn btn-success pull-right threshold-add-btn">
-														<i class="fa fa-plus"></i>
-													</button>
+														<div class="clearfix">
+															<div class="form-group">
+																<button type="button" class="btn btn-success pull-right threshold-add-btn">
+																	<i class="fa fa-plus"></i>
+																</button>
 
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="show_hide_commissiontypes show_hide_commissiontypes-fix">
+													<div class="form-group row">
+														<label  class="col-sm-4 col-form-label"> Commission %</label>
+														<div class="col-sm-8">
+															<input  step="0.1" min="0"  type="number" class="form-control" name="commission[<?php echo $product_type;?>][<?php echo $underwriter_type_key;?>][fix_commission]"  class="form-control" placeholder="Threshold commision %" value="<?php echo set_value('commission['.$product_type.']['.$underwriter_type_key.'][fix_commission]') ?>">
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
+										<?php
+										endforeach;
+										?>
+
 									</div>
 								</div>
-								<?php endif;endforeach; ?>
+									
+								<?php
+								endforeach;
+								?>
+								
 							</div>
 						</div>
 					</div>

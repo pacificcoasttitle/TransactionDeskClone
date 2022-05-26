@@ -3326,10 +3326,10 @@ $(document).ready(function () {
 		}
 	});
 
-	if(('.show_hide_threshold_select').length) {
-		show_hide_threshold();
-		$('.show_hide_threshold_select').on('change', function() {
-			show_hide_threshold();
+	if(('.show_hide_commissiontypes_select').length) {
+		show_hide_commission_div();
+		$('.show_hide_commissiontypes_select').on('change', function() {
+			show_hide_commission_div();
 		});
 
 		$('.threshold-add-btn').click(function(){
@@ -3349,14 +3349,13 @@ if(('.threshold-remove-btn').length) {
 	})
 }
 
-function show_hide_threshold() {
-	$('.show_hide_threshold_select').each(function(){
-		if($(this).val() == 1) {
-			$(this).parents('.show_hide_threshold_main_div').find('.show_hide_threshold').show();
-		}
-		else {
-			$(this).parents('.show_hide_threshold_main_div').find('.show_hide_threshold').hide();
-		}
+function show_hide_commission_div() {
+	$('.show_hide_commissiontypes_select').each(function(){
+		$(this).parents('.underwriters-div').find('.show_hide_commissiontypes').hide();
+		var select_comission_type_val = $(this).val();
+		var shown_class = '.show_hide_commissiontypes-'+select_comission_type_val;
+		$(this).parents('.underwriters-div').find(shown_class).show();
+		
 	});
 }
 
