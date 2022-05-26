@@ -228,7 +228,9 @@ $route['borrower-document/(:any)'] = 'frontend/order/dashboardMail/uploadBorrowe
 $route['borrower-document-upload'] = 'frontend/order/dashboardMail/borrower_document_upload';
 $route['escrow-create-note'] = 'frontend/order/escrow/create_note';
 $route['add-borrower-on-order'] = 'frontend/order/escrow/addBorrowerOnOrder';
-$route['borrower-seller-form/(:any)'] = 'frontend/order/dashboardMail/borrowerSellerForm/$1';
+$route['add-borrower-on-order-for-payoff'] = 'frontend/order/escrow/addBorrowerOnOrderForPayoff';
+$route['add-lender-on-order'] = 'frontend/order/escrow/addLenderOnOrder';
+$route['borrower-seller-form/(:any)'] = 'frontend/order/dashboardMail/borrowerSellerForm/$1';            
 $route['borrower-buyer-form/(:any)'] = 'frontend/order/dashboardMail/borrowerBuyerForm/$1';
 
 
@@ -491,6 +493,9 @@ $route['hr/admin/save-loan-tasks-position'] = 'admin/hr/tasks/saveLoanTasksPosit
 $route['hr/admin/save-sale-tasks-position'] = 'admin/hr/tasks/saveSaleTasksPosition';
 $route['hr/admin/save-loan-tasks-position'] = 'admin/hr/tasks/saveLoanTasksPosition';
 $route['hr/admin/create-note'] = 'admin/hr/orders/create_note';
+$route['hr/admin/add-borrower-on-order'] = 'admin/hr/orders/addBorrowerOnOrder';
+$route['hr/admin/add-borrower-on-order-for-payoff'] = 'admin/hr/orders/addBorrowerOnOrderForPayoff';
+$route['hr/admin/add-lender-on-order'] = 'admin/hr/orders/addLenderOnOrder';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

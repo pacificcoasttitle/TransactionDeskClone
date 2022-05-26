@@ -393,9 +393,9 @@ class Escrow extends MX_Controller
             $to = $borrower_email;
             $mailParams['to'] = $to;
             $this->load->helper('sendemail');
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array(), $order_id, 0);
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_borrower', '', $mailParams, array(), $order_id, 0);
             $borrower_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
-            $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array('status'=>$borrower_mail_result), $order_id, $logid);
+            $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_borrower', '', $mailParams, array('status'=>$borrower_mail_result), $order_id, $logid);
         }
 
         if ($orderDetails['resware_status'] == 'closed') {
@@ -409,6 +409,116 @@ class Escrow extends MX_Controller
         }  
         
         $success[] = "Mail sent succesfully to borrower";
+        $data['errors'] = $errors;
+		$data['success'] = $success;
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'order/escrow/order-tasks/'.$orderDetails['order_id']);
+    }
+
+    public function addBorrowerOnOrderForPayoff()
+    {
+        $userdata = $this->session->userdata('user');
+        $file_id = $this->input->post('file_id');
+		$order_id = $this->input->post('order_id');
+		$borrower_email = $this->input->post('borrower_email');
+        $orderDetails = $this->order->get_order_details($file_id);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $errors = array();
+        $success = array();
+
+        //$this->home_model->update(array('borrower_email' => $borrower_email), array('file_id' => $file_id), 'order_details');        
+        $form_url = base_url().'borrower-document/'.$orderDetails['random_number'];
+        
+        $email_data = array(
+            'file_number'=> $orderDetails['file_number'],
+            'property_address'=> $orderDetails['full_address'],
+            'random_number'=>  $orderDetails['random_number'],
+            'borrrower'=> $orderDetails['primary_owner'],
+            'form_url' => $form_url,
+            'escrow_officer' => $userdata['name']
+        );
+        
+        $borrower_message_body = $this->load->view('emails/borrower_buyer_seller.php', $email_data, TRUE);
+        $message_body = $borrower_message_body; 
+        $subject = $orderDetails['file_number']. ' - Borrower';
+        
+        $mailParams = array(
+            'from_mail' => $from_mail, 
+            'from_name' => $from_name, 
+            'subject' => $subject,
+            'message'=>json_encode($email_data)
+        );
+        
+        if (!empty($borrower_email)) {
+            $to = $borrower_email;
+            $mailParams['to'] = $to;
+            $this->load->helper('sendemail');
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_borrower_payoff', '', $mailParams, array(), $order_id, 0);
+            $borrower_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+            $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_borrower_payoff', '', $mailParams, array('status'=>$borrower_mail_result), $order_id, $logid);
+        }
+
+        $success[] = "Mail sent succesfully to borrower for order payoff";
+        $data['errors'] = $errors;
+		$data['success'] = $success;
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'order/escrow/order-tasks/'.$orderDetails['order_id']);
+    }
+
+    public function addLenderOnOrder()
+    {
+        $userdata = $this->session->userdata('user');
+        $file_id = $this->input->post('file_id');
+		$order_id = $this->input->post('order_id');
+		$lender_email = $this->input->post('lender_email');
+        $orderDetails = $this->order->get_order_details($file_id);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $errors = array();
+        $success = array();
+
+        //$this->home_model->update(array('borrower_email' => $borrower_email), array('file_id' => $file_id), 'order_details');        
+        $form_url = base_url().'borrower-document/'.$orderDetails['random_number'];
+        
+        $email_data = array(
+            'file_number'=> $orderDetails['file_number'],
+            'property_address'=> $orderDetails['full_address'],
+            'random_number'=>  $orderDetails['random_number'],
+            'borrrower'=> $orderDetails['primary_owner'],
+            'form_url' => $form_url,
+            'escrow_officer' => $userdata['name']
+        );
+        
+        $borrower_message_body = $this->load->view('emails/borrower_buyer_seller.php', $email_data, TRUE);
+        $message_body = $borrower_message_body; 
+        $subject = $orderDetails['file_number']. ' - Lender';
+        
+        $mailParams = array(
+            'from_mail' => $from_mail, 
+            'from_name' => $from_name, 
+            'subject' => $subject,
+            'message'=>json_encode($email_data)
+        );
+        
+        if (!empty($lender_email)) {
+            $to = $lender_email;
+            $mailParams['to'] = $to;
+            $this->load->helper('sendemail');
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_lender', '', $mailParams, array(), $order_id, 0);
+            $borrower_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+            $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_lender', '', $mailParams, array('status'=>$borrower_mail_result), $order_id, $logid);
+        }
+
+        $success[] = "Mail sent succesfully to lender.";
         $data['errors'] = $errors;
 		$data['success'] = $success;
 		$data = array(
