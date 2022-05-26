@@ -32,7 +32,7 @@
 									$selected = 'selected';
 								} 
 							?> 
-							<option <?php echo $selected;?> value="<?php echo $key;?>"><?php echo $underwriter_type;?></option>
+							<option <?php echo $selected;?> value="<?php echo $key;?>"><?php echo ucwords($key); ?></option>
 						<?php }?>
 					</select>
 					<?php if(!empty(form_error('underwriter_type'))){ ?>                     

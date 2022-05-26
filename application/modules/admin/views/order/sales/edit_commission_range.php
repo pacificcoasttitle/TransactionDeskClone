@@ -19,30 +19,18 @@
         <div class="card-body">        
             <form id="frm-add-commission-range" method="POST" >
 
-			<?php
-			$product_types = [
-				'loan'=>'Loan',
-				'sale'=>'Sale',
-			];
-
-			$underwriter_types = [
-				'westcor'=>'Westcor',
-				'natic'=>'Natic',
-				'commonwealth'=>'Commonwealth'
-			];
-			?>
 			<div class="form-group row">
 				<label for="zipcode" class="col-sm-4 col-form-label">Product Type</label>
 				<div class="col-sm-8">
 					<select name="product_type"  class="selectpicker" data-actions-box="true">
 						<option value="">Select Product Type</option>
-						<?php foreach($product_types as $key=>$product_type) {?>
+						<?php foreach($product_types as $product_type) {?>
 							<?php $selected = '';
-								if( ($key == set_value('product_type',$record->product_type)))  {
+								if( ($product_type == set_value('product_type',$record->product_type)))  {
 									$selected = 'selected';
 								} 
 							?> 
-							<option <?php echo $selected;?> value="<?php echo $key;?>"><?php echo $product_type;?></option>
+							<option <?php echo $selected;?> value="<?php echo $product_type;?>"><?php echo ucwords($product_type);?></option>
 						<?php }?>
 					</select>
 					<?php if(!empty(form_error('product_type'))){ ?>                     
@@ -114,7 +102,7 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
+			<div class="form-group row"style="display: none !important;">
 				<label for="additional_threshold" class="col-sm-4 col-form-label">Additional Threshold Amount</label>
 				<div class="col-sm-8">
 				<input  step=".01" min="0"  type="number" class="form-control" name="additional_threshold" id="additional_threshold" class="form-control" placeholder="Enter Additional Threshold Amount" value="<?php echo set_value('additional_threshold',$record->additional_threshold)?>">

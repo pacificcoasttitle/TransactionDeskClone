@@ -34,7 +34,7 @@
                             <th>Minimum Revenue</th>
                             <th>Maximum Revenue</th>
                             <th>Total Commission</th>
-                            <th>Additional Threshold</th>
+                            <!-- <th>Additional Threshold</th> -->
                             <th>Action</th>
                         </tr>
 						
@@ -47,7 +47,7 @@
 							<td><?php echo $commission_record->min_revenue; ?></td>
 							<td><?php echo $commission_record->max_revenue; ?></td>
 							<td><?php echo $commission_record->total_commission; ?> %</td>
-							<td><?php echo $commission_record->additional_threshold; ?></td>
+							<!-- <td><?php echo $commission_record->additional_threshold; ?></td> -->
 							<td> <a href="<?php echo base_url('order/admin/edit-commission-range/'.$commission_record->id)?>" class='btn btn-action 'title ='Edit Commission Range'><span class='fa fa-edit' aria-hidden='true'></span></a>
 								<button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-commission-range/'.$commission_record->id)?>" title ='Delete Commission Range'><span class='fa fa-trash' aria-hidden='true'></span></button>
 							</td>
