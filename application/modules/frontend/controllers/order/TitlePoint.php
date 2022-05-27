@@ -44,7 +44,7 @@ class TitlePoint extends MX_Controller {
             'userID' => env('TP_USERNAME'),
             'password' => env('TP_PASSWORD'),
             'orderNo' =>  '',
-            'customerRef'=>  56746745674,
+            'customerRef'=>  567467456743213,
             'company'=>  '',
             'department'=>  '',
             'titleOfficer'=>  '',
