@@ -22,8 +22,8 @@
 								<div id="timeClock" class="col-sm-6"></div>
 								<div class="col-sm-6">
 
-									<button type="button" class="btn btn-warning time-start track-time-btn <?php echo $clock_in_cls; ?>">Start Timer</button>
-									<button type="button" class="btn btn-warning time-stop track-time-btn <?php echo $clock_out_cls; ?>">Stop Timer</button>
+									<button type="button" class="btn btn-warning time-start track-time-btn <?php echo $clock_in_cls; ?>">Clock In</button>
+									<button type="button" class="btn btn-warning time-stop track-time-btn <?php echo $clock_out_cls; ?>">Clock Out</button>
 								</div>
 							</div>
 							</div>
