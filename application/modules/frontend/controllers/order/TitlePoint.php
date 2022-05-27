@@ -64,6 +64,7 @@ class TitlePoint extends MX_Controller {
 			$requestParams['county'] = $county;
 			$requestUrl= env('TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT');
 			$request_type= 'create_service_3';
+			
 		}
 		else if($methodId == 4)
 		{
