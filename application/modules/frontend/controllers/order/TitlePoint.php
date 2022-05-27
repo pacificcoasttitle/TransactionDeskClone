@@ -59,7 +59,7 @@ class TitlePoint extends MX_Controller {
 			$state = isset($_POST['state']) && !empty($_POST['state']) ? $_POST['state'] : '';
 			$county = isset($_POST['county']) && !empty($_POST['county']) ? $_POST['county'] : '';
 			$requestParams['serviceType'] = env('TAX_SEARCH_SERVICE_TYPE');
-			$requestParams['parameters'] = 'Tax.APN='.$apn.';General.AutoSearchTaxes=true;General.AutoSearchProperty=false';
+			$requestParams['parameters'] = 'General.EnableOrderMonitoring=True;Tax.APN='.$apn.';General.AutoSearchTaxes=true;General.AutoSearchProperty=false';
 			$requestParams['state'] = $state;
 			$requestParams['county'] = $county;
 			$requestUrl= env('TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT');
@@ -77,7 +77,7 @@ class TitlePoint extends MX_Controller {
 				$unitinfo =  'UnitNumber '.$unit_no.', '; 
 			}
 			$requestParams['serviceType'] = env('SERVICE_TYPE');
-			$requestParams['parameters'] = 'Address1='.$address.';City='.$city.';Pin='.$apn.';LvLookup=Address;LvLookupValue='.$address.', '.$unitinfo.$city.';LvReportFormat=LV;IncludeTaxAssessor=true';
+			$requestParams['parameters'] = 'General.EnableOrderMonitoring=True;Address1='.$address.';City='.$city.';Pin='.$apn.';LvLookup=Address;LvLookupValue='.$address.', '.$unitinfo.$city.';LvReportFormat=LV;IncludeTaxAssessor=true';
 			$requestParams['fipsCode'] = $fipsCode;
 			$requestUrl= env('TP_CREATE_SERVICE_ENDPOINT');
 			$request_type= 'create_service_4';
