@@ -22,7 +22,7 @@
 			<div class="form-group row">
 				<label for="zipcode" class="col-sm-4 col-form-label">Product Type</label>
 				<div class="col-sm-8">
-					<select name="product_type"  class="selectpicker" data-actions-box="true">
+					<select name="product_type"  class="selectpicker show_hide_underwriter_tier_select" data-actions-box="true" required>
 						<option value="">Select Product Type</option>
 						<?php foreach($product_types as $product_type) {?>
 							<?php $selected = '';
@@ -42,36 +42,43 @@
 			<div class="form-group row">
 				<label for="zipcode" class="col-sm-4 col-form-label">Underwriter</label>
 				<div class="col-sm-8">
-					<select name="underwriter_tier"  class="selectpicker" data-actions-box="true">
-						<option value="">Select Underwriter Tiers</option>
-						<?php $last_label = ''; ?>
-						<?php foreach($underwriter_tiers as $underwriter_tier) {?>
-							<?php if($last_label == '') : ?>
-							<optgroup label="<?php echo ucwords( $underwriter_tier->underwriter); ?>">
-							<?php
-							elseif ($last_label != $underwriter_tier->underwriter) : ?>
-							</optgroup>
-							<optgroup label="<?php echo ucwords($underwriter_tier->underwriter); ?>">
-							<?php 
-							endif;
-							$last_label = $underwriter_tier->underwriter; 
-							?>
-							
-							<?php $selected = '';
-								if(set_value('underwriter_tier') && ($underwriter_tier->id == set_value('underwriter_tier')))  {
-									$selected = 'selected';
-								} 
-							?> 
-							<option <?php echo $selected;?> value="<?php echo $underwriter_tier->id;?>"><?php echo $underwriter_tier->title;?></option>
-							
-						<?php }?>
-						<?php if($last_label != '') : ?>
-							</optgroup>
-						<?php endif; ?>
+				<div class="show_hide_underwriter_tier show_hide_underwriter_tier-" >
+					<select  class="selectpicker" data-actions-box="true">
+					<option value="">Select Product Type First</option>
 					</select>
-					<?php if(!empty(form_error('underwriter_tier'))){ ?>                     
-						<span class="error"><?php echo form_error('underwriter_tier'); ?></span>
-					<?php } ?>
+				</div>
+					<?php foreach($underwriter_tiers as $underwriter_tier_key=>$underwriter_tier_obj) :?>
+						<div class="show_hide_underwriter_tier show_hide_underwriter_tier-<?php echo $underwriter_tier_key; ?>" >
+							<select name="underwriter_tier[<?php echo $underwriter_tier_key; ?>]"  class="selectpicker" data-actions-box="true">
+								<option value="">Select Underwriter Tier</option>
+								<?php $last_label = ''; ?>
+								<?php foreach($underwriter_tier_obj as $underwriter_tier) {?>
+									<?php
+									if ($last_label != $underwriter_tier->underwriter) : ?>
+										<?php if($last_label != '') : ?>
+											</optgroup>
+										<?php endif; ?>
+										<optgroup label="<?php echo ucwords($underwriter_tier->underwriter); ?>" class="opt_group_<?php echo $underwriter_tier->product_type; ?>">
+										<?php 
+										endif;
+										$last_label = $underwriter_tier->underwriter; 
+										$selected = '';
+										if(set_value('underwriter_tier['.$underwriter_tier_key.']') && ($underwriter_tier->id == set_value('underwriter_tier['.$underwriter_tier_key.']')))  {
+											$selected = 'selected';
+										} 
+									?> 
+									<option <?php echo $selected;?> value="<?php echo $underwriter_tier->id;?>"><?php echo $underwriter_tier->title;?></option>
+									
+								<?php }?>
+								<?php if($last_label != '') : ?>
+									</optgroup>
+								<?php endif; ?>
+							</select>
+						</div>
+						<?php if(!empty(form_error('underwriter_tier['.$underwriter_tier_key.']'))){ ?>                     
+							<span class="error"><?php echo form_error('underwriter_tier['.$underwriter_tier_key.']'); ?></span>
+						<?php } ?>
+					<?php endforeach; ?>
 				</div>
 			</div>
 
@@ -93,6 +100,18 @@
 			</div>
 
 			<div class="form-group row">
+				<label for="premium" class="col-sm-4 col-form-label">Premium</label>
+				<div class="col-sm-8">
+					<input  step="1" min="0"  type="number" class="form-control" name="premium" id="premium" class="form-control" placeholder="Enter Premium" value="<?php echo set_value('premium') ?>">
+					<?php if(!empty(form_error('premium'))){ ?>                     
+						<span class="error"><?php echo form_error('premium'); ?></span>
+					<?php } ?>
+				</div>
+				
+				
+			</div>
+
+			<div class="form-group row">
 				<label for="total_commission" class="col-sm-4 col-form-label">Total Commission %</label>
 				<div class="col-sm-8">
 				<input  step=".01" min="0"  type="number" class="form-control" name="total_commission" id="total_commission" class="form-control" placeholder="Enter Total Commission %" value="<?php echo set_value('total_commission')?>">
@@ -102,20 +121,12 @@
 				</div>
 			</div>
 
-			<div class="form-group row" style="display: none !important;">
-				<label for="additional_threshold" class="col-sm-4 col-form-label">Additional Threshold Amount</label>
-				<div class="col-sm-8">
-				<input  step=".01" min="0"  type="number" class="form-control" name="additional_threshold" id="additional_threshold" class="form-control" placeholder="Enter Additional Threshold Amount" value="<?php echo set_value('additional_threshold',0)?>">
-				<?php if(!empty(form_error('additional_threshold'))){ ?>                     
-					<span class="error"><?php echo form_error('additional_threshold'); ?></span>
-				<?php } ?>
-				</div>
-			</div>
+			
 
-					<div class="pull-right">
-						<button type="submit" class="btn btn-secondary">Add</button>
-						<a href="<?php echo site_url('order/admin/commission-range'); ?>" class="btn btn-secondary">Cancel</a>
-					</div>
+			<div class="pull-right">
+				<button type="submit" class="btn btn-secondary">Add</button>
+				<a href="<?php echo site_url('order/admin/commission-range'); ?>" class="btn btn-secondary">Cancel</a>
+			</div>
 				
             </form>
         </div>

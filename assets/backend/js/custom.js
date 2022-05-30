@@ -3341,6 +3341,12 @@ $(document).ready(function () {
 			
 		})
 	}
+	if(('.show_hide_underwriter_tier_select').length) {
+		show_hide_underwriter_tier_div();
+		$('.show_hide_underwriter_tier_select').on('change', function() {
+			show_hide_underwriter_tier_div();
+		});
+	}
 });
 
 if(('.threshold-remove-btn').length) {
@@ -3357,6 +3363,15 @@ function show_hide_commission_div() {
 		$(this).parents('.underwriters-div').find(shown_class).show();
 		
 	});
+}
+function show_hide_underwriter_tier_div() {
+	
+		$('.show_hide_underwriter_tier').hide();
+		var select_comission_type_val = $('.selectpicker.show_hide_underwriter_tier_select').val();
+		var shown_class = '.show_hide_underwriter_tier-'+select_comission_type_val;
+		$(shown_class).show();
+		
+	
 }
 
 function updateCounty(counties,ruleId)

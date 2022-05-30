@@ -29,6 +29,7 @@
                 <table class="table table-bordered cusom__common__datatable" id="tbl-underwriter-tier-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+							<th>Product Type</th>
                             <th>Underwriter</th>
                             <th>Title</th>
                             <th>Description</th>
@@ -39,6 +40,7 @@
                     <tbody>
 					<?php foreach($underwriter_tier_details as $underwriter_tier_record): ?>
 						<tr>
+							<td><?php echo ucfirst($underwriter_tier_record->product_type); ?></td>
 							<td><?php echo ucfirst($underwriter_tier_record->underwriter); ?></td>
 							<td><?php echo $underwriter_tier_record->title; ?></td>
 							<td><?php echo substr($underwriter_tier_record->description,0,60); ?></td>
