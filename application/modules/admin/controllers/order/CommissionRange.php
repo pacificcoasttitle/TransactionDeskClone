@@ -42,23 +42,27 @@ class CommissionRange extends MX_Controller {
 
         if ($this->input->post()) {
             
-            
             $this->form_validation->set_rules('product_type', 'Product Type', 'trim|required');
-            $this->form_validation->set_rules('underwriter_tier', 'Underwriter Tier', 'trim|required');
-            $this->form_validation->set_rules('total_commission', 'Total commission %', 'trim|required|numeric');
+            // $this->form_validation->set_rules('underwriter_tier', 'Underwriter Tier', 'trim|required');
+            $this->form_validation->set_rules('total_commission', 'Commission %', 'trim|required|numeric');
+            $this->form_validation->set_rules('premium', 'Premium', 'trim|required|numeric');
             $this->form_validation->set_rules('revenue_range_min', 'Minimum Revenue Range', 'trim|required|numeric');
             $this->form_validation->set_rules('revenue_range_max', 'Maximum Revenue Range', 'trim|required|numeric');
+
+			if(!empty($this->input->post('product_type'))) {
+				$this->form_validation->set_rules('underwriter_tier['.$this->input->post('product_type').']', 'Underwriter Tier', 'trim|required');
+			}
               
            
             if ($this->form_validation->run() == true) {
                 
                     $commissionData = array(
 						'product_type' =>$this->input->post('product_type') ,
-						'underwriter_tier' =>$this->input->post('underwriter_tier') ,
+						'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
 						'total_commission' => !empty($this->input->post('total_commission')) ? $this->input->post('total_commission') : 0,
+						'premium' => !empty($this->input->post('premium')) ? $this->input->post('premium') : 0,
 						'min_revenue' => !empty($this->input->post('revenue_range_min')) ? $this->input->post('revenue_range_min') : 0,
 						'max_revenue' => !empty($this->input->post('revenue_range_max')) ? $this->input->post('revenue_range_max') : 0,
-						'additional_threshold' => !empty($this->input->post('additional_threshold')) ? $this->input->post('additional_threshold') : 0,
                     );
 					
                     $insert = $this->commission_range_model->insert($commissionData);
@@ -75,8 +79,12 @@ class CommissionRange extends MX_Controller {
                 
             }                                       
         }
-
-		$data['underwriter_tiers'] = $this->underwriter_tier_model->order_by('underwriter')->get_all();
+		$product_types = PRODUCT_TYPE;
+		foreach ($product_types as $product_type) {
+			$data['underwriter_tiers'][$product_type] = $this->underwriter_tier_model->order_by('underwriter')->get_many_by('product_type',$product_type);
+			
+		}
+		// $data['underwriter_tiers_sale'] = $this->underwriter_tier_model->order_by('underwriter')->get_all();
 		
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
@@ -98,21 +106,26 @@ class CommissionRange extends MX_Controller {
             
             
 			$this->form_validation->set_rules('product_type', 'Product Type', 'trim|required');
-            $this->form_validation->set_rules('underwriter_tier', 'Underwriter Tier', 'trim|required');
+            // $this->form_validation->set_rules('underwriter_tier', 'Underwriter Tier', 'trim|required');
+			$this->form_validation->set_rules('premium', 'Premium', 'trim|required|numeric');
             $this->form_validation->set_rules('total_commission', 'Total commission %', 'trim|required|numeric');
             $this->form_validation->set_rules('revenue_range_min', 'Minimum Revenue Range', 'trim|required|numeric');
             $this->form_validation->set_rules('revenue_range_max', 'Maximum Revenue Range', 'trim|required|numeric');
+
+			if(!empty($this->input->post('product_type'))) {
+				$this->form_validation->set_rules('underwriter_tier['.$this->input->post('product_type').']', 'Underwriter Tier', 'trim|required');
+			}
 				  
 			   
 				if ($this->form_validation->run() == true) {
 					
 						$commissionData = array(
 							'product_type' =>$this->input->post('product_type') ,
-							'underwriter_tier' =>$this->input->post('underwriter_tier') ,
+							'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
 							'total_commission' => !empty($this->input->post('total_commission')) ? $this->input->post('total_commission') : 0,
+							'premium' => !empty($this->input->post('premium')) ? $this->input->post('premium') : 0,
 							'min_revenue' => !empty($this->input->post('revenue_range_min')) ? $this->input->post('revenue_range_min') : 0,
 							'max_revenue' => !empty($this->input->post('revenue_range_max')) ? $this->input->post('revenue_range_max') : 0,
-							'additional_threshold' => !empty($this->input->post('additional_threshold')) ? $this->input->post('additional_threshold') : 0,
 						);
 						
 						$update = $this->commission_range_model->update($id,$commissionData);
@@ -136,8 +149,14 @@ class CommissionRange extends MX_Controller {
 		$data['underwriter_tiers'] = $this->underwriter_tier_model->order_by('underwriter')->get_all();
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
+		$product_types = PRODUCT_TYPE;
+		foreach ($product_types as $product_type) {
+			$data['underwriter_tiers'][$product_type] = $this->underwriter_tier_model->order_by('underwriter')->get_many_by('product_type',$product_type);
+			
+		}
         $data['record'] = $record;
 		$data['product_types'] = PRODUCT_TYPE;
+		
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/edit_commission_range', $data);
         $this->load->view('order/layout/footer', $data);
@@ -185,12 +204,14 @@ class CommissionRange extends MX_Controller {
         if ($this->input->post()) {
             
             $this->form_validation->set_rules('underwriter_type', 'Underwriter', 'trim|required');
+            $this->form_validation->set_rules('product_type', 'Product Type', 'trim|required');
             $this->form_validation->set_rules('title', 'Tier Title', 'trim|required');
               
            
             if ($this->form_validation->run() == true) {
                 
                     $underwriterData = array(
+						'product_type' =>$this->input->post('product_type') ,
 						'underwriter' =>$this->input->post('underwriter_type') ,
 						'title' =>$this->input->post('title') ,
 						'description' =>!empty($this->input->post('description'))?$this->input->post('description'):null ,
@@ -211,6 +232,7 @@ class CommissionRange extends MX_Controller {
             }                                       
         }
 		$data['underwriter_types'] = UNDERWRITERS;
+		$data['product_types'] = PRODUCT_TYPE;
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
         $this->load->view('order/layout/header', $data);
@@ -229,11 +251,13 @@ class CommissionRange extends MX_Controller {
 			if ($this->input->post()) {
             
 				$this->form_validation->set_rules('underwriter_type', 'Underwriter', 'trim|required');
+				$this->form_validation->set_rules('product_type', 'Product Type', 'trim|required');
             	$this->form_validation->set_rules('title', 'Tier Title', 'trim|required');  
 			   
 				if ($this->form_validation->run() == true) {
 					
 						$underwriterData = array(
+							'product_type' =>$this->input->post('product_type') ,
 							'underwriter' =>$this->input->post('underwriter_type') ,
 							'title' =>$this->input->post('title') ,
 							'description' =>!empty($this->input->post('description'))?$this->input->post('description'):null ,
@@ -256,6 +280,7 @@ class CommissionRange extends MX_Controller {
             redirect('order/admin/underwriter-tier');
         }
 		$data['underwriter_types'] = UNDERWRITERS;
+		$data['product_types'] = PRODUCT_TYPE;
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
         $data['record'] = $record;

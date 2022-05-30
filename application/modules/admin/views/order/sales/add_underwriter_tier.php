@@ -19,6 +19,27 @@
         <div class="card-body">        
             <form id="frm-add-commission-range" method="POST" >
 
+
+			<div class="form-group row">
+				<label for="zipcode" class="col-sm-4 col-form-label">Product Type<span class="required"> *</span></label>
+				<div class="col-sm-8">
+					<select name="product_type"  class="selectpicker" data-actions-box="true" required>
+						<option value="">Select Product Type</option>
+						<?php foreach($product_types as $product_type) {?>
+							<?php $selected = '';
+								if(set_value('product_type') && ($product_type == set_value('product_type')))  {
+									$selected = 'selected';
+								} 
+							?> 
+							<option <?php echo $selected;?> value="<?php echo $product_type;?>"><?php echo ucwords($product_type);?></option>
+						<?php }?>
+					</select>
+					<?php if(!empty(form_error('product_type'))){ ?>                     
+						<span class="error"><?php echo form_error('product_type'); ?></span>
+					<?php } ?>
+				</div>
+			</div>
+
 			
 
 			<div class="form-group row">
