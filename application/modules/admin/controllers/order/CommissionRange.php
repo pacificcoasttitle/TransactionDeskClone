@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CommissionRange extends MX_Controller {
 	
+	public $commission_headers = ['min_value','max_value','premium','commission'];
     public function __construct()
     {
         parent::__construct();
@@ -93,6 +94,192 @@ class CommissionRange extends MX_Controller {
         $this->load->view('order/sales/add_commission_range', $data);
         $this->load->view('order/layout/footer', $data);
     }
+
+
+
+	public function import_commission_range()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Import Commission Range';
+
+        if ($this->input->post()) {
+			if (empty($_FILES['file']['name'])){
+				$this->form_validation->set_rules('file', 'CSV file', 'required');
+			}
+			else {
+				$allowed_mime_types = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain');
+				
+				$mime = get_mime_by_extension($_FILES['file']['name']);
+				$fileAr = explode('.', $_FILES['file']['name']);
+				$ext = end($fileAr);
+				if(($ext == 'csv') && in_array($mime, $allowed_mime_types)){
+
+				}else{
+					$this->form_validation->set_rules('file', 'CSV file', 'required',
+								array('required' => 'Please select only CSV file to upload.')
+						);
+				}
+			
+			}
+            
+            $this->form_validation->set_rules('product_type', 'Product Type', 'trim|required');
+            
+
+			if(!empty($this->input->post('product_type'))) {
+				$this->form_validation->set_rules('underwriter_tier['.$this->input->post('product_type').']', 'Underwriter Tier', 'trim|required');
+			} 
+           
+            if ($this->form_validation->run() == true) {
+                if(is_uploaded_file($_FILES['file']['tmp_name']))
+                {
+                    // Load CSV reader library
+                    $this->load->library('CSVReader');
+                    
+                    // Parse data from CSV file
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+                    // Insert/update CSV data into database
+					$insert = false;
+                    if(!empty($csvData))
+                    {
+                        foreach($csvData as $row)
+                        {
+                            if(isset($row['min_value']) && (isset($row['max_value'])) &&  !(empty($row['premium']))  &&  !(empty($row['commission'])))
+                            {
+								$check_condition = [
+									'product_type' =>$this->input->post('product_type') ,
+									'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
+									'premium' => !empty($row['premium']) ? $row['premium'] : 0,
+								];
+								$exist_record = $this->commission_range_model->get_by($check_condition);
+								if($exist_record && $exist_record->id) {
+									$commissionData = array(
+										'total_commission' => !empty($row['commission']) ? $row['commission'] : 0,
+										'min_revenue' => !empty($row['min_value']) ? $row['min_value'] : 0,
+										'max_revenue' => !empty($row['max_value']) ? $row['max_value'] : 0,
+									);
+									$insert = $this->commission_range_model->update($exist_record->id,$commissionData);
+								}
+								else {
+									$commissionData = array(
+										'product_type' =>$this->input->post('product_type') ,
+										'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
+										'total_commission' => !empty($row['commission']) ? $row['commission'] : 0,
+										'premium' => !empty($row['premium']) ? $row['premium'] : 0,
+										'min_revenue' => !empty($row['min_value']) ? $row['min_value'] : 0,
+										'max_revenue' => !empty($row['max_value']) ? $row['max_value'] : 0,
+									);
+									
+									$insert = $this->commission_range_model->insert($commissionData);
+								}
+
+							}
+						}
+					}
+				}  
+                    
+				if ($insert) {
+					$flash_data['success'] = 'Commission Range imported successfully.';
+				} else {
+					$flash_data['error'] = 'Commission Range not added.';
+				}
+				
+				$this->session->set_flashdata($flash_data);
+				redirect(base_url('order/admin/commission-range'));
+                
+                
+            }                                    
+        }
+		$product_types = PRODUCT_TYPE;
+		foreach ($product_types as $product_type) {
+			$data['underwriter_tiers'][$product_type] = $this->underwriter_tier_model->order_by('underwriter')->get_many_by('product_type',$product_type);
+			
+		}
+
+		$data['success_msg'] = $this->session->flashdata('success');
+		$data['error_msg'] = $this->session->flashdata('error');
+		$data['product_types'] = PRODUCT_TYPE;
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/sales/import_commission_range', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+	public function template_commission_range()
+    {
+		$filename = 'commission_range.csv';
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=$filename");
+		header("Content-Type: application/csv; ");
+
+		// file creation
+		$file = fopen('php://output', 'w');
+
+		$header = $this->commission_headers;
+		fputcsv($file, $header);
+		fputcsv($file, [0,50000,350,10]);
+		fclose($file);
+		exit;
+
+	}
+	public function export_commission_range()
+    {
+
+		$data = array();
+        $data['title'] = 'PCT Order: Export Commission Range';
+
+        if ($this->input->post()) {
+			
+            $this->form_validation->set_rules('product_type', 'Product Type', 'trim|required');
+
+			if(!empty($this->input->post('product_type'))) {
+				$this->form_validation->set_rules('underwriter_tier['.$this->input->post('product_type').']', 'Underwriter Tier', 'trim|required');
+			} 
+           
+            if ($this->form_validation->run() == true) {
+                
+					$check_condition = [
+						'product_type' =>$this->input->post('product_type') ,
+						'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
+					];
+					$exist_records = $this->commission_range_model->order_by('min_revenue','ASC')->get_many_by($check_condition);
+					$filename = $this->input->post('product_type').'_'.$this->input->post('underwriter_tier['.$this->input->post('product_type').']').'.csv';
+					header("Content-Description: File Transfer");
+					header("Content-Disposition: attachment; filename=$filename");
+					header("Content-Type: application/csv; ");
+			
+					// file creation
+					$file = fopen('php://output', 'w');
+			
+					$header = $this->commission_headers;
+					fputcsv($file, $header);
+			
+					foreach ($exist_records as $line){
+						fputcsv($file,array($line->min_revenue,$line->max_revenue,$line->premium,$line->total_commission));
+					}
+			
+					fclose($file);
+					exit;
+					
+				 
+                    
+				
+				redirect(base_url('order/admin/commission-range'));
+                
+                
+            }                                    
+        }
+		$product_types = PRODUCT_TYPE;
+		foreach ($product_types as $product_type) {
+			$data['underwriter_tiers'][$product_type] = $this->underwriter_tier_model->order_by('underwriter')->get_many_by('product_type',$product_type);
+			
+		}
+
+		$data['success_msg'] = $this->session->flashdata('success');
+		$data['error_msg'] = $this->session->flashdata('error');
+		$data['product_types'] = PRODUCT_TYPE;
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/sales/export_commission_range', $data);
+        $this->load->view('order/layout/footer', $data);
+
+	}
     
     public function edit_commission_range($id)
     {
