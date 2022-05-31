@@ -10,7 +10,9 @@
             <i class="fas fa-table"></i>
             Sales Rep
             <div class="float-right">
-                <a href="<?php echo base_url('order/admin/add-commission-range')?>" class="btn btn-secondary">Add Commission Range</a>
+			<a href="<?php echo base_url('order/admin/add-commission-range')?>" class="btn btn-secondary">Add Commission Range</a>
+                <a href="<?php echo base_url('order/admin/import-commission-range')?>" class="btn btn-secondary">Import</a>
+                <a href="<?php echo base_url('order/admin/export-commission-range')?>" class="btn btn-secondary">Export</a>
             </div>
         </div>
      
