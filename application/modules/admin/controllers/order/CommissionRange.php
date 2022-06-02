@@ -141,36 +141,29 @@ class CommissionRange extends MX_Controller {
 					$insert = false;
                     if(!empty($csvData))
                     {
+						//Delete existing records
+						$check_condition = [
+							'product_type' =>$this->input->post('product_type') ,
+							'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
+						];
+						$this->commission_range_model->delete_by($check_condition);
+
                         foreach($csvData as $row)
                         {
                             if(isset($row['min_value']) && (isset($row['max_value'])) &&  !(empty($row['premium']))  &&  !(empty($row['commission'])))
                             {
-								$check_condition = [
+								 
+								$commissionData = array(
 									'product_type' =>$this->input->post('product_type') ,
 									'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
+									'total_commission' => !empty($row['commission']) ? $row['commission'] : 0,
 									'premium' => !empty($row['premium']) ? $row['premium'] : 0,
-								];
-								$exist_record = $this->commission_range_model->get_by($check_condition);
-								if($exist_record && $exist_record->id) {
-									$commissionData = array(
-										'total_commission' => !empty($row['commission']) ? $row['commission'] : 0,
-										'min_revenue' => !empty($row['min_value']) ? $row['min_value'] : 0,
-										'max_revenue' => !empty($row['max_value']) ? $row['max_value'] : 0,
-									);
-									$insert = $this->commission_range_model->update($exist_record->id,$commissionData);
-								}
-								else {
-									$commissionData = array(
-										'product_type' =>$this->input->post('product_type') ,
-										'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
-										'total_commission' => !empty($row['commission']) ? $row['commission'] : 0,
-										'premium' => !empty($row['premium']) ? $row['premium'] : 0,
-										'min_revenue' => !empty($row['min_value']) ? $row['min_value'] : 0,
-										'max_revenue' => !empty($row['max_value']) ? $row['max_value'] : 0,
-									);
-									
-									$insert = $this->commission_range_model->insert($commissionData);
-								}
+									'min_revenue' => !empty($row['min_value']) ? $row['min_value'] : 0,
+									'max_revenue' => !empty($row['max_value']) ? $row['max_value'] : 0,
+								);
+								
+								$insert = $this->commission_range_model->insert($commissionData);
+								
 
 							}
 						}
@@ -234,13 +227,15 @@ class CommissionRange extends MX_Controller {
 			} 
            
             if ($this->form_validation->run() == true) {
-                
+					$tier_id = $this->input->post('underwriter_tier['.$this->input->post('product_type').']');
+					
+					$underwriter_tire = $this->underwriter_tier_model->get($tier_id);
 					$check_condition = [
 						'product_type' =>$this->input->post('product_type') ,
-						'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
+						'underwriter_tier' =>$tier_id,
 					];
 					$exist_records = $this->commission_range_model->order_by('min_revenue','ASC')->get_many_by($check_condition);
-					$filename = $this->input->post('product_type').'_'.$this->input->post('underwriter_tier['.$this->input->post('product_type').']').'.csv';
+					$filename = $underwriter_tire->product_type.'_'.$underwriter_tire->underwriter.'_'.$underwriter_tire->title.'.csv';
 					header("Content-Description: File Transfer");
 					header("Content-Disposition: attachment; filename=$filename");
 					header("Content-Type: application/csv; ");
