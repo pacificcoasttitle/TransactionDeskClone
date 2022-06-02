@@ -1436,7 +1436,27 @@ class Order
             return false;
         }
     }
+	public function getOrdersForUser($user_id,$year = 0,$month = 0) {
+		if($year == 0) {
+			$year = date('Y');
+		}
+		if($month == 0) {
+			$month = date('m');
+		}
 
+		$this->CI->db->select(' premium, escrow_amount,underwriter,prod_type,transaction_details.sales_amount,transaction_details.loan_amount')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
+		$this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year); 
+		$this->CI->db->where('transaction_details.sales_representative', $user_id); 
+		$this->CI->db->where('order_details.underwriter != ', NULL); 
+
+        $query = $this->CI->db->get();
+        $result = $query->result_array();
+        return $result;
+
+	}
     public function getOpenOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0)
     {
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders, sum(escrow_amount) as total_escrow_amount_for_refi_open_orders')
@@ -1512,19 +1532,10 @@ class Order
     }
 
     public function getClosedOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0)
-    {
-		$underwriters = ['westcor','north_american','commonwealth'];
-		$product_types = ['loan'];
-		$sum_dynamic_arr = array();
-		for ($i=0; $i <count($underwriters) ; $i++) { 
-			for ($j=0; $j <count($product_types) ; $j++) {
-				$sum_dynamic_arr[]= 'Sum(Case When underwriter = "'.$underwriters[$i].'" AND prod_type = "'.$product_types[$j].'" Then premium Else 0 End) total_'.$product_types[$j].'_'.$underwriters[$i];
-			}
-		}
-		$fieds_sum_str = implode(' , ',$sum_dynamic_arr);
+    {	
 
-        // $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders')
-        $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders, '.$fieds_sum_str)
+        // $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders, '.$fieds_sum_str)
+        $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
@@ -1560,21 +1571,9 @@ class Order
     }
 
     public function getClosedOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0)
-    {
-        // $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders')
-		
-		$underwriters = ['westcor','north_american','commonwealth'];
-		$product_types = ['sale'];
-		$sum_dynamic_arr = array();
-		for ($i=0; $i <count($underwriters) ; $i++) { 
-			for ($j=0; $j <count($product_types) ; $j++) {
-				$sum_dynamic_arr[]= 'Sum(Case When underwriter = "'.$underwriters[$i].'" AND prod_type = "'.$product_types[$j].'" Then premium Else 0 End) total_'.$product_types[$j].'_'.$underwriters[$i];
-			}
-		}
-		$fieds_sum_str = implode(' , ',$sum_dynamic_arr);
-		// echo $fieds_sum_str;die;
-		
-        $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders , '.$fieds_sum_str)
+    {	
+        // $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders , '.$fieds_sum_str)
+        $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'sale');

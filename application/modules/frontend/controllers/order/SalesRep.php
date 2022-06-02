@@ -81,97 +81,115 @@ class SalesRep extends MX_Controller
         $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'), $userId);
         $data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
         $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $userId);
-		// echo '<pre>';var_dump($closeSaleResult);die;
-		//calculate commission
+		
+		//Commission Logic
+		$all_order_data = $this->order->getOrdersForUser($userId);
+		// echo '<pre>';var_dump($all_order_data);die;
 		$sales_commission = 0;
-
-		$this->load->model('admin/order/underwriter_user_model');
 		$this->load->model('admin/order/commission_range_model');
-		$existing_underwriter = $this->underwriter_user_model->with('underwriter_tier_obj')->get_many_by('user_id',$userId);
-		
-		
-		$underwriter_type_details = array();
-		foreach($existing_underwriter as $existing_underwriter_obj) {
-			if($existing_underwriter_obj->underwriter_tier_obj) {
-				$underwriter_type_details[$existing_underwriter_obj->underwriter_tier_obj->underwriter] = $existing_underwriter_obj;
+		$commission_range = $this->commission_range_model->with('underwriter_tier_obj')->get_all();
+		$commission_range_data = array();
+		foreach($commission_range as $commission_range_obj) {
+			if($commission_range_obj->underwriter_tier_obj) {
+				$underwriter_tier_obj = $commission_range_obj->underwriter_tier_obj;
+				if(!isset($commission_range_data[$underwriter_tier_obj->product_type][$underwriter_tier_obj->underwriter][$commission_range_obj->premium])) {
+					$commission_range_data[$underwriter_tier_obj->product_type][$underwriter_tier_obj->underwriter][$commission_range_obj->premium] = array();
+				}
+				$commission_range_data[$underwriter_tier_obj->product_type][$underwriter_tier_obj->underwriter][$commission_range_obj->premium][] = [
+					'premium' => $commission_range_obj->premium,
+					'min_range' => $commission_range_obj->min_revenue,
+					'max_range' => $commission_range_obj->max_revenue,
+					'commission'=>$commission_range_obj->total_commission,
+					'tier_id'=>$commission_range_obj->underwriter_tier
+				];
+			}
+		}
+		// echo '<pre>';var_dump($commission_range_data);die;
+		$this->load->model('admin/order/underwriter_user_model');
+		$existing_comission_data = $this->underwriter_user_model->with('underwriter_tier_obj')->with('underwriter_user_threshold_obj')->get_many_by('user_id',$userId);
+		$user_specific_commission = array();
+		foreach ($existing_comission_data as $existing_comission_record) {
+			if($existing_comission_record->underwriter_tier_obj) {
+				$pord_type = $existing_comission_record->underwriter_tier_obj->product_type;
+				$underwriter_type = $existing_comission_record->underwriter_tier_obj->underwriter;
+				$user_specific_commission[$existing_comission_record->underwriter_tier_id] = $existing_comission_record;
 			}
 		}
 		
+		$underwriters = UNDERWRITERS;
+		foreach ($all_order_data as $all_order_record) {
+			$product_type = $all_order_record['prod_type'];
+			$underwriter = $all_order_record['underwriter'];
 
-		//Loan / Refi commission calculation
-		$underwriter_type = [
-			'westcor'=>'westcor',
-			'natic'=>'north_american',
-			'commonwealth'=>'commonwealth'
-		];
-		foreach($underwriter_type as $underwriter_type_key=>$underwriter_type_obj) {
-			$sum_amount = (float)$closeRefiResult['total_loan_'.$underwriter_type_obj];
-			if(isset($underwriter_type_details[$underwriter_type_key])) {
-				//Get commission
-				$underwriter_tier_id = $underwriter_type_details[$underwriter_type_key]->underwriter_tier_id;
-				$commission_range_data = $this->commission_range_model->get_many_by(['underwriter_tier'=>$underwriter_tier_id,'product_type'=>'loan']);
-				if($commission_range_data && count($commission_range_data)) {
-					foreach($commission_range_data as $commission_range_obj) {
-						if($sum_amount <= (float)$commission_range_obj->max_revenue && $sum_amount >= (float)$commission_range_obj->min_revenue) {
-							$commission_val = (float)$commission_range_obj->total_commission;
-							$temp_commission = ($sum_amount * $commission_val) / 100;
-							$temp_commission += (float)$commission_range_obj->additional_threshold;
-							$sales_commission += $temp_commission;
-						}
+			$underwriter_type = $underwriter;
+			$check_key = array_search($underwriter,$underwriters);
+			if($check_key !== false) {
+				$underwriter_type =$check_key;
+			}
+			$premium =  $all_order_record['premium'];
+			$check_amount = 0;
+			if($product_type == 'loan') {
+				$check_amount = $all_order_record['loan_amount'];
+			}
+			else {
+				$check_amount = $all_order_record['sale_amount'];
+			}
+
+			//Find Tier
+			if(isset($commission_range_data[$product_type][$underwriter_type][$premium])) {
+				$check_tiers = $commission_range_data[$product_type][$underwriter_type][$premium];
+				$default_tier_value = null;
+				foreach ($check_tiers as $check_tier) {
+					$check_min = $check_tier['min_range'];
+					$check_max = $check_tier['max_range'];
+					if($check_amount >= $check_min && $check_amount <=  $check_max) {
+						$default_tier_value = $check_tier;
+						break;
 					}
 				}
+				//Check if we found tier
+				if($default_tier_value) {;
+					$commission_val = $default_tier_value['commission'];
+					$tier_id = $default_tier_value['tier_id'];
+					//Check if its override
+					if(isset($user_specific_commission[$tier_id]) && !empty($user_specific_commission[$tier_id])) {
+						$user_specific_commission_obj = $user_specific_commission[$tier_id];
+						if($user_specific_commission_obj->allow_threshold == 0 && $user_specific_commission_obj->fix_commission) {
+							$commission_val = $user_specific_commission_obj->fix_commission;
+						}
+						elseif($user_specific_commission_obj->allow_threshold == 1 && $user_specific_commission_obj->underwriter_user_threshold_obj) {
+							$threshold_data = $user_specific_commission_obj->underwriter_user_threshold_obj;
+							usort($threshold_data, function($a, $b) {
+								return $a->threshold_amount_min <=> $b->threshold_amount_min;
+							});
+							// $remaining_amount 
+							foreach($threshold_data as $threshold_obj) {
 
+								if($check_amount >= $threshold_obj->threshold_amount_min && $check_amount <=  $threshold_obj->threshold_amount_max) {
+									$commission_val = $threshold_obj->threshold_commission;
+									break;
+								}
+
+							}
+							// $commission_val
+						}
+						
+					}
+					$sales_commission += ((float)$commission_val * (float)$premium) / 100;
+
+				}
 			}
 			
 		}
-		foreach($underwriter_type as $underwriter_type_key=>$underwriter_type_obj) {
-			$sum_amount = (float)$closeSaleResult['total_sale_'.$underwriter_type_obj];
-			if(isset($underwriter_type_details[$underwriter_type_key])) {
-				//Get commission
-				$underwriter_tier_id = $underwriter_type_details[$underwriter_type_key]->underwriter_tier_id;
-				$commission_range_data = $this->commission_range_model->get_many_by(['underwriter_tier'=>$underwriter_tier_id,'product_type'=>'sale']);
-				if($commission_range_data && count($commission_range_data)) {
-					foreach($commission_range_data as $commission_range_obj) {
-						if($sum_amount <= (float)$commission_range_obj->max_revenue && $sum_amount >= (float)$commission_range_obj->min_revenue) {
-							$commission_val = (float)$commission_range_obj->total_commission;
-							$temp_commission = ($sum_amount * $commission_val) / 100;
-							$temp_commission += (float)$commission_range_obj->additional_threshold;
-							$sales_commission += $temp_commission;
-						}
-					}
-				}
 
-			}
-			
+        $data['sales_commission'] = $sales_commission;
+		//Commission Logic Ends
 
-		}
-		// die;
-
-		// if($sales_rep_info['sale_westcor_commission'] > 0) {
-		// 	$totoal_sales_westcor = $closeSaleResult['total_sale_westcor'];
-		// 	if($totoal_sales_westcor > 0) {
-		// 		$count_commision = ($totoal_sales_westcor * $sales_rep_info['sale_westcor_commission']) /100;
-		// 		$sales_commission += $count_commision;
-		// 	}
-		// }
-		// if($sales_rep_info['loan_westcor_commission'] > 0) {
-		// 	$totoal_loan_westcor = $closeRefiResult['total_loan_westcor'];
-		// 	if($totoal_loan_westcor > 0) {
-		// 		$count_commision = ($totoal_loan_westcor * $sales_rep_info['loan_westcor_commission']) /100;
-		// 		$sales_commission += $count_commision;
-		// 	}
-		// }
-		// if($sales_rep_info['loan_natic_commission'] > 0) {
-		// 	$totoal_loan_north_american = $closeRefiResult['total_loan_north_american'];
-		// 	if($totoal_loan_north_american > 0) {
-		// 		$count_commision = ($totoal_loan_north_american * $sales_rep_info['loan_natic_commission']) /100;
-		// 		$sales_commission += $count_commision;
-		// 	}
-		// }
-
+		
+		
+		
         $data['sale_close_count'] =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
         $data['total_close_count'] = $data['refi_close_count'] + $data['sale_close_count'];
-        $data['sales_commission'] = $sales_commission;
 
         if ($data['total_close_count'] > 0) {
             $numOfCloseOrderPerWorkedDays = $data['total_close_count']/$workedDays;
