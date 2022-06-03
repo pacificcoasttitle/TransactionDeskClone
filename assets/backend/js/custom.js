@@ -3326,7 +3326,7 @@ $(document).ready(function () {
 		}
 	});
 
-	if(('.show_hide_commissiontypes_select').length) {
+	if($('.show_hide_commissiontypes_select').length) {
 		show_hide_commission_div();
 		$('.show_hide_commissiontypes_select').on('change', function() {
 			show_hide_commission_div();
@@ -3341,11 +3341,26 @@ $(document).ready(function () {
 			
 		})
 	}
-	if(('.show_hide_underwriter_tier_select').length) {
+	if($('.show_hide_underwriter_tier_select').length) {
 		show_hide_underwriter_tier_div();
 		$('.show_hide_underwriter_tier_select').on('change', function() {
 			show_hide_underwriter_tier_div();
 		});
+	}
+
+	if($('select.filter__commission_range_tier').length) {
+		$('select.filter__commission_range_tier').on('change', function() {
+			var prod_type = $('#filter__commission_range_type').val();
+			var tier = $(this).val();
+			var redirect_url = $(this).attr('data-url');
+			window.location = redirect_url+'/'+prod_type+'/'+tier;
+
+
+		});
+		$('select#filter__commission_range_type').on('change', function() {
+			var select_val = $(this).val();
+			$('.show_hide_underwriter_tier-'+select_val+' select.filter__commission_range_tier').val(0).trigger('change')
+		});	
 	}
 });
 
