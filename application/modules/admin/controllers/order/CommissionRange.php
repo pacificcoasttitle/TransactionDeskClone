@@ -19,15 +19,33 @@ class CommissionRange extends MX_Controller {
         $this->common->is_admin();
     }
 
-    public function index()
+    public function index($product_type_name = 'all',$underwriter_tire = 0)
     {
         $data = array();
         
         $data['title'] = 'PCT Order: Commission Range.';
-
-		$data['commission_details'] = $this->commission_range_model->with('underwriter_tier_obj')->get_all();
+		
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
+
+		$data['product_types'] = PRODUCT_TYPE;
+		$product_types = PRODUCT_TYPE;
+		foreach ($product_types as $product_type) {
+			$data['underwriter_tiers'][$product_type] = $this->underwriter_tier_model->order_by('underwriter')->get_many_by('product_type',$product_type);
+			
+		}
+		$data['filter_product'] = $product_type_name;
+		$data['filter_underwriter'] = $underwriter_tire;
+
+		if($underwriter_tire > 0) {
+			$data['commission_details'] = $this->commission_range_model->with('underwriter_tier_obj')->get_many_by('underwriter_tier',$underwriter_tire);
+		}
+		elseif(in_array($product_type_name,$product_types)) {
+			$data['commission_details'] = $this->commission_range_model->with('underwriter_tier_obj')->get_many_by('product_type',$product_type_name);
+		}
+		else {
+			$data['commission_details'] = $this->commission_range_model->with('underwriter_tier_obj')->get_all();
+		}
 
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/commission_range', $data);
