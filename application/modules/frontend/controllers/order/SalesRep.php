@@ -115,6 +115,8 @@ class SalesRep extends MX_Controller
 				$user_specific_commission[$existing_comission_record->underwriter_tier_id] = $existing_comission_record;
 			}
 		}
+
+		$order_tier_group = array();
 		
 		$underwriters = UNDERWRITERS;
 		foreach ($all_order_data as $all_order_record) {
@@ -148,38 +150,84 @@ class SalesRep extends MX_Controller
 					}
 				}
 				//Check if we found tier
-				if($default_tier_value) {;
-					$commission_val = $default_tier_value['commission'];
+				if($default_tier_value) {
+					// $commission_val = $default_tier_value['commission'];
 					$tier_id = $default_tier_value['tier_id'];
-					//Check if its override
-					if(isset($user_specific_commission[$tier_id]) && !empty($user_specific_commission[$tier_id])) {
-						$user_specific_commission_obj = $user_specific_commission[$tier_id];
-						if($user_specific_commission_obj->allow_threshold == 0 && $user_specific_commission_obj->fix_commission) {
-							$commission_val = $user_specific_commission_obj->fix_commission;
-						}
-						elseif($user_specific_commission_obj->allow_threshold == 1 && $user_specific_commission_obj->underwriter_user_threshold_obj) {
-							$threshold_data = $user_specific_commission_obj->underwriter_user_threshold_obj;
-							usort($threshold_data, function($a, $b) {
-								return $a->threshold_amount_min <=> $b->threshold_amount_min;
-							});
-							// $remaining_amount 
-							foreach($threshold_data as $threshold_obj) {
-
-								if($check_amount >= $threshold_obj->threshold_amount_min && $check_amount <=  $threshold_obj->threshold_amount_max) {
-									$commission_val = $threshold_obj->threshold_commission;
-									break;
-								}
-
-							}
-							// $commission_val
-						}
-						
+					if(!is_array($order_tier_group[$tier_id][$premium])) {
+						$order_tier_group[$tier_id][$premium]['default'] = $default_tier_value;
+						$order_tier_group[$tier_id][$premium]['data'] = array();
 					}
-					$sales_commission += ((float)$commission_val * (float)$premium) / 100;
+					$order_tier_group[$tier_id][$premium]['data'][]=$all_order_record;
+					
 
 				}
 			}
 			
+		}
+
+		
+		$sales_commission = 0;
+		foreach ($order_tier_group as $tier_id=>$order_tier_record) {
+			foreach ($order_tier_record as $premium_amount=>$order_record) {
+				$commission_val = $order_record['default']['commission'];
+				$total_premium = $premium_amount*count($order_record['data']);
+				//Check if its override
+				if(isset($user_specific_commission[$tier_id]) && !empty($user_specific_commission[$tier_id])) {
+					$user_specific_commission_obj = $user_specific_commission[$tier_id];
+					if($user_specific_commission_obj->allow_threshold == 0 && $user_specific_commission_obj->fix_commission) {
+						$commission_val = $user_specific_commission_obj->fix_commission;
+						$sales_commission += ((float)$commission_val * (float)$total_premium) / 100;
+					}
+					elseif($user_specific_commission_obj->allow_threshold == 1 && $user_specific_commission_obj->underwriter_user_threshold_obj) {
+						$threshold_data = $user_specific_commission_obj->underwriter_user_threshold_obj;
+						usort($threshold_data, function($a, $b) {
+							return $a->threshold_amount_min <=> $b->threshold_amount_min;
+						});
+						$remaining_amount = $total_premium;
+						$threshold_i = 0;
+						$threshold_cnt = count($threshold_data);
+						$commission_calculated = false;
+						if(isset($threshold_data[0]) && !empty($threshold_data[0])) {
+							$check_min = $threshold_data[0]->threshold_amount_min;
+							if($check_min > 1 && $remaining_amount >= $check_min) {
+								$remaining_amount -= $check_min;
+								$sales_commission += ((float)$commission_val * (float)$check_min) / 100;
+								$commission_calculated = true;
+
+							}
+						}
+						foreach($threshold_data as $threshold_obj) {
+							// if($threshold_obj->threshold_amount_min < 1)
+							if($remaining_amount >= $threshold_obj->threshold_amount_min) {
+								$calculate_value = $threshold_obj->threshold_amount_max;
+								$commission_val = $threshold_obj->threshold_commission;
+								$commission_calculated = true;
+								if($remaining_amount <= $threshold_obj->threshold_amount_max || $threshold_i == ($threshold_cnt -1)) {
+									$calculate_value = $remaining_amount;
+									$sales_commission += ((float)$commission_val * (float)$calculate_value) / 100;
+									break;
+								} else {
+									$sales_commission += ((float)$commission_val * (float)$calculate_value) / 100;
+								}
+								$remaining_amount -= $calculate_value;
+								$threshold_i++;
+							}
+						}
+
+						if(!$commission_calculated) {
+							$sales_commission += ((float)$commission_val * (float)$total_premium) / 100;
+						}
+					}
+					else {
+						$sales_commission += ((float)$commission_val * (float)$total_premium) / 100;
+					}
+				}
+				else {
+					$sales_commission += ((float)$commission_val * (float)$total_premium) / 100;
+				}
+				
+				
+			}	
 		}
 
         $data['sales_commission'] = $sales_commission;
