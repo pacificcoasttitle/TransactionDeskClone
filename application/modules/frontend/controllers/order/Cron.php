@@ -4990,4 +4990,58 @@ class Cron extends MX_Controller {
         $result = send_order_data($homedocs_array);
         $this->apiLogs->syncLogs(0, 'homedocs', 'send_order_info', env('HOMEDOCS_URL').'api/store-property-detail', json_encode($homedocs_array, JSON_UNESCAPED_SLASHES), $result, $orderDetails['order_id'], $logid);
 	}
+
+	public function update_underwriters_data()
+    {
+		$table = 'order_details';
+		$this->load->library('order/resware');
+		
+		$this->db->select('id,file_id');
+		$this->db->from($table);   
+		$this->db->where('is_underwriter_updated', 0);
+		$this->db->order_by('id','DESC');
+		$this->db->limit(500);
+		$query = $this->db->get();
+        $result = $query->result();
+		$user_data = array();
+		$user_data['admin_api'] = 1; 
+		foreach($result as $record) {
+			$file_id = $record->file_id;
+			$endPoint = 'files/'. $file_id .'/partners';
+			$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+			$resPartners = json_decode($resultPartners, true);
+
+			$underWriter = '';
+			if(!empty($resPartners)) {
+				$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+				if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+					$underWriter = 'north_american';
+				} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
+					$underWriter = 'westcor';
+				} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+					$underWriter = 'commonwealth';
+				} else {
+					if ($key) {
+						$underWriter = 'other';
+					} else {
+						$underWriter = 'not_set';
+					}
+				}
+			}
+			//Update Underwriter
+			$order_details = [
+				'underwriter'=>$underWriter,
+				'is_underwriter_updated'=>1
+
+			];
+			$condition = [
+				'file_id'=>$file_id
+			];
+			$this->db->update($table, $order_details, $condition);
+		
+		}
+
+
+
+	}
 }
