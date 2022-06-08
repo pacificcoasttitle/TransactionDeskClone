@@ -1,10 +1,210 @@
-
-
-
-
 $(document).on('change','input[type="radio"]',function(){
     var $this = $(this);
     var selectedvalue = $this.val();
+
+    if ($this.attr('id') == 'coSellerYes') {
+        $('#co_seller_first_name').prop('required',true);
+        $('#co_seller_middle_name').prop('required',true);
+        $('#co_seller_last_name').prop('required',true);
+        $('#co_seller_expiration_date').prop('required',true);
+        $('input:radio[name=coSellermaritalStatus]').prop('required',true);
+        $('#co_seller_ssn').prop('required',true);
+        $('#co_seller_email').prop('required',true);
+        $('#co_seller_phone_number').prop('required',true);
+        $('input:radio[name=co_seller_phone_number_type]').prop('required',true);
+        $('input:radio[name=co_seller_foreign_resident]').prop('required',true);
+    } else if($this.attr('id') == 'coSellerNo') {
+        $('#co_seller_first_name').prop('required',false);
+        $('#co_seller_middle_name').prop('required',false);
+        $('#co_seller_last_name').prop('required',false);
+        $('#co_seller_expiration_date').prop('required',false);
+        $('input:radio[name=coSellermaritalStatus]').prop('required',false);
+        $('#co_seller_ssn').prop('required',false);
+        $('#co_seller_email').prop('required',false);
+        $('#co_seller_phone_number').prop('required',false);
+        $('input:radio[name=co_seller_phone_number_type]').prop('required',false);
+        $('input:radio[name=co_seller_foreign_resident]').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'noCorrectPropertyAddress') {
+        $('#property_street_address').prop('required',true);
+        $('#property_city').prop('required',true);
+        $('#property_state').prop('required',true);
+        $('#property_zip_code').prop('required',true);
+    } else if($this.attr('id') == 'yesCorrectPropertyAddress') {
+        $('#property_street_address').prop('required',false);
+        $('#property_city').prop('required',false);
+        $('#property_state').prop('required',false);
+        $('#property_zip_code').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'noCorrectPropertyAddressAsCurrentAddress') {
+        $('#current_street_address').prop('required',true);
+        $('#current_city').prop('required',true);
+        $('#current_state').prop('required',true);
+        $('#current_zip_code').prop('required',true);
+    } else if($this.attr('id') == 'yesCorrectPropertyAddressAsCurrentAddress') {
+        $('#current_street_address').prop('required',false);
+        $('#current_city').prop('required',false);
+        $('#current_state').prop('required',false);
+        $('#current_zip_code').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'yesForwarding') {
+        $('#forwarding_street_address').prop('required',true);
+        $('#forwarding_city').prop('required',true);
+        $('#forwarding_state').prop('required',true);
+        $('#forwarding_zip_code').prop('required',true);
+    } else if($this.attr('id') == 'noForwarding') {
+        $('#forwarding_street_address').prop('required',false);
+        $('#forwarding_city').prop('required',false);
+        $('#forwarding_state').prop('required',false);
+        $('#forwarding_zip_code').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'yesinsurance') {
+        $('#insuranceFile').prop('required',true);
+    } else if($this.attr('id') == 'noinsurance') {
+        $('#insuranceFile').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'yesmortgage') {
+        $('input:radio[name=is_mortgage_credit]').prop('required',true);
+        $('#mortgage_holder').prop('required',true);
+        $('#loan_amount').prop('required',true);
+        $('#mortgage_phone').prop('required',true);
+        $('#loan_number').prop('required',true);
+        $('#loan_balance').prop('required',true);
+        $('#account_holder_name').prop('required',true);
+        $('input:radio[name=is_second_mortgage]').prop('required',true);
+    } else if($this.attr('id') == 'nomortgage') {
+        $('input:radio[name=is_mortgage_credit]').prop('required',false);
+        $('#mortgage_holder').prop('required',false);
+        $('#loan_amount').prop('required',false);
+        $('#mortgage_phone').prop('required',false);
+        $('#loan_number').prop('required',false);
+        $('#loan_balance').prop('required',false);
+        $('#account_holder_name').prop('required',false);
+        $('input:radio[name=is_second_mortgage]').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'yesRealEstate') {
+        $('#agent_first_name').prop('required',true);
+        $('#agent_middle_name').prop('required',true);
+        $('#agent_last_name').prop('required',true);
+        $('#agent_company').prop('required',true);
+        $('#agent_company_address').prop('required',true);
+        $('#agent_company_city').prop('required',true);
+        $('#agent_company_state').prop('required',true);
+        $('#agent_company_zip_code').prop('required',true);
+        $('#amount_percent_commission').prop('required',true);
+        $('#amount_deduction').prop('required',true);
+        $('#agent_phone').prop('required',true);
+        $('#agent_email').prop('required',true);
+    } else if($this.attr('id') == 'noRealEstate') {
+        $('#agent_first_name').prop('required',false);
+        $('#agent_middle_name').prop('required',false);
+        $('#agent_last_name').prop('required',false);
+        $('#agent_company').prop('required',false);
+        $('#agent_company_address').prop('required',false);
+        $('#agent_company_city').prop('required',false);
+        $('#agent_company_state').prop('required',false);
+        $('#agent_company_zip_code').prop('required',false);
+        $('#amount_percent_commission').prop('required',false);
+        $('#amount_deduction').prop('required',false);
+        $('#agent_phone').prop('required',false);
+        $('#agent_email').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'yesCreditCard') {
+        $('input:radio[name=CreditCardLock]').prop('required',true);
+    } else if($this.attr('id') == 'noCreditCard') {
+        $('input:radio[name=CreditCardLock]').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'yesmortgage2') {
+        $('input:radio[name=is_second_mortgage_credit]').prop('required',true);
+        $('#second_mortgage_holder').prop('required',true);
+        $('#second_loan_amount').prop('required',true);
+        $('#second_mortgage_phone').prop('required',true);
+        $('#second_loan_number').prop('required',true);
+        $('#second_loan_balance').prop('required',true);
+        $('#second_account_holder_name').prop('required',true);
+        
+    } else if($this.attr('id') == 'nomortgage2') {
+        $('input:radio[name=is_second_mortgage_credit]').prop('required',false);
+        $('#second_mortgage_holder').prop('required',false);
+        $('#second_loan_amount').prop('required',false);
+        $('#second_mortgage_phone').prop('required',false);
+        $('#second_loan_number').prop('required',false);
+        $('#second_loan_balance').prop('required',false);
+        $('#second_account_holder_name').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'yesCreditCard2') {
+        $('input:radio[name=is_second_creditcard_lock]').prop('required',true);
+    } else if($this.attr('id') == 'noCreditCard2') {
+        $('input:radio[name=is_second_creditcard_lock]').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'otherAttorney') {
+        $('#firm_name').prop('required',true);
+        $('#firm_phone_number').prop('required',true);
+        $('#attorney_name').prop('required',true);
+        $('#attorney_phone_number').prop('required',true);
+        $('#attorney_email').prop('required',true);
+    } else if($this.attr('id') == 'attorney') {
+        $('#firm_name').prop('required',false);
+        $('#firm_phone_number').prop('required',false);
+        $('#attorney_name').prop('required',false);
+        $('#attorney_phone_number').prop('required',false);
+        $('#attorney_email').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'yesHOA') {
+        $('#hoa_management_company_name').prop('required',true);
+        $('#hoa_contact_person').prop('required',true);
+        $('#hoa_email').prop('required',true);
+        $('#hoa_phone').prop('required',true);
+        $('#hoa_dues').prop('required',true);
+        $('input:radio[name=hoa_dues_per]').prop('required',true);
+        $('#hoa_notes').prop('required',true);
+        $('input:radio[name=is_property_second_hoa]').prop('required',true);
+    } else if($this.attr('id') == 'noHOA') {
+        $('#hoa_management_company_name').prop('required',false);
+        $('#hoa_contact_person').prop('required',false);
+        $('#hoa_email').prop('required',false);
+        $('#hoa_phone').prop('required',false);
+        $('#hoa_dues').prop('required',false);
+        $('input:radio[name=hoa_dues_per]').prop('required',false);
+        $('#hoa_notes').prop('required',false);
+        $('input:radio[name=is_property_second_hoa]').prop('required',false);
+    }
+
+    if ($this.attr('id') == 'yesHOA2') {
+        $('#second_hoa_management_company_name').prop('required',true);
+        $('#second_hoa_contact_person').prop('required',true);
+        $('#second_hoa_email').prop('required',true);
+        $('#second_hoa_phone').prop('required',true);
+        $('#second_hoa_dues').prop('required',true);
+        $('input:radio[name=second_hoa_dues_per]').prop('required',true);
+        $('#second_hoa_notes').prop('required',true);
+    } else if($this.attr('id') == 'noHOA2') {
+        $('#second_hoa_management_company_name').prop('required',false);
+        $('#second_hoa_contact_person').prop('required',false);
+        $('#second_hoa_email').prop('required',false);
+        $('#second_hoa_phone').prop('required',false);
+        $('#second_hoa_dues').prop('required',false);
+        $('input:radio[name=second_hoa_dues_per]').prop('required',false);
+        $('#second_hoa_notes').prop('required',false);
+    }
+
+    if (selectedvalue == 'other') {
+        $this.parents(".form-group").find('.otherAddress').removeClass('d-none')
+    } else {
+        $this.parents(".form-group").find('.otherAddress').addClass('d-none')
+    }
+
 
     if(selectedvalue == 'other'){
         $this.parents(".form-group").find('.otherAddress').removeClass('d-none')
@@ -18,8 +218,44 @@ $(document).on('change','input[type="radio"]',function(){
     }else{
         $this.parents('.col-md-4').siblings().find(".spouseName").addClass("d-none")
     }
-
 })
+
+$("#borrower_seller_form").validate({
+    ignore: false,
+    errorClass: "error text-danger",
+    validClass: "success text-success",
+    highlight: function (element, errorClass) {
+        //alert('em');
+       // $(element).fadeOut(function () {
+           // $(element).fadeIn();
+        //});
+    },
+    rules: {
+        name: "required",
+        email: {
+            required: true,
+            email: true,
+        },
+    },
+    submitHandler: function (form) {
+         alert('Form Submitted');
+    },
+    invalidHandler: function(e,validator) {
+        for (var i=0;i<validator.errorList.length;i++){   
+            $(validator.errorList[i].element).closest('.accordion-collapse').addClass('show');
+            return false;
+        }
+    },
+    errorPlacement: function(error, element) {
+        var placement = $(element).data('error');
+        if (placement) {
+          $(placement).append(error)
+        } else {
+          error.insertAfter(element);
+        }
+    }
+});
+
 
 $('input[name="maritalStatus"]').change(function(){
     if(selectedvalue == 'marriedOtherSeller' && $this.attr("id") == "marriedOtherSeller"){
@@ -197,10 +433,9 @@ $('input[name="Co-Seller"]').change(function(){
 $('input[name="insurance"]').change(function(){
     var $this = $(this);
     var selectedvalue = $this.val();
-    if(selectedvalue == 'yes'){
+    if(selectedvalue == 'yes') {
         $(".insuranceFile").removeClass("d-none")
-    }
-    else{
+    } else {
         $(".insuranceFile").addClass("d-none")
     }
 })
@@ -215,13 +450,13 @@ $('input[name="RealEstate"]').change(function(){
     }
 })
 
-$('input[name="payInvoice"]').change(function(){
+$('input[name="payInvoice[]"]').change(function(){
     var $this = $(this);
     var selectedvalue = $this.val();
-    if($this.is(":checked") && selectedvalue !== 'none'){
+    console.log(selectedvalue);
+    if ($this.is(":checked") && selectedvalue !== 'none') {
         $(".insuranceFile").removeClass("d-none")
-    }
-    else{
+    } else {
         $(".insuranceFile").addClass("d-none")
     }
 })
@@ -381,49 +616,49 @@ $('.buyer2 input.lastName').blur(function(){
 // signature
 
 
-$(function () {
-    window.signaturePad1 = new SignaturePad($('#canvas1').get(0), {
-    });
+// $(function () {
+//     window.signaturePad1 = new SignaturePad($('#canvas1').get(0), {
+//     });
     
-    window.signaturePad2 = new SignaturePad($('#canvas2').get(0), {
-    });
+//     window.signaturePad2 = new SignaturePad($('#canvas2').get(0), {
+//     });
     
-    window.signaturePad3 = new SignaturePad($('#canvas3').get(0), {
-    });
+//     window.signaturePad3 = new SignaturePad($('#canvas3').get(0), {
+//     });
     
-    window.signaturePad4 = new SignaturePad($('#canvas4').get(0), {
-    });
-})
+//     window.signaturePad4 = new SignaturePad($('#canvas4').get(0), {
+//     });
+// })
   
-var clear1 = function () {
-    window.signaturePad1.clear()
-}  
-var clear2 = function () {
-    window.signaturePad2.clear()
-}
-var clear3 = function () {
-    window.signaturePad3.clear()
-}
-var clear4 = function () {
-    window.signaturePad4.clear()
-}
+// var clear1 = function () {
+//     window.signaturePad1.clear()
+// }  
+// var clear2 = function () {
+//     window.signaturePad2.clear()
+// }
+// var clear3 = function () {
+//     window.signaturePad3.clear()
+// }
+// var clear4 = function () {
+//     window.signaturePad4.clear()
+// }
 
 
 
-function printContent(el) {
-    var restorepage = document.body.innerHTML; // save original page html to variable
-    var printcontent = document.querySelector(el).innerHTML; // save content to be printed to variable
-    document.body.innerHTML = printcontent; // display only content to be printed in document body
-    window.print(); // print commands
-    document.body.innerHTML = restorepage; // restore original page content
-  }
+// function printContent(el) {
+//     var restorepage = document.body.innerHTML; // save original page html to variable
+//     var printcontent = document.querySelector(el).innerHTML; // save content to be printed to variable
+//     document.body.innerHTML = printcontent; // display only content to be printed in document body
+//     window.print(); // print commands
+//     document.body.innerHTML = restorepage; // restore original page content
+//   }
   
-  document.querySelector('.print').addEventListener('click', function() { // bind event to print button
+//   document.querySelector('.print').addEventListener('click', function() { // bind event to print button
     
-    $(".tab-pane").show()
-   setTimeout(function(){
-    $(".tab-pane:not(.active)").hide()
-   },2000)
-    printContent('.wizard'); // initial print function on selector for content to be printed
+//     $(".tab-pane").show()
+//    setTimeout(function(){
+//     $(".tab-pane:not(.active)").hide()
+//    },2000)
+//     printContent('.wizard'); // initial print function on selector for content to be printed
 
-  });
+//   });

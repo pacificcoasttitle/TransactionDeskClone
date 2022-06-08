@@ -2107,6 +2107,135 @@ class DashboardMail extends MX_Controller {
     {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
+
+        if ($this->input->post()) {
+            $borrowerSellerInfoData = array(
+                'order_id' => $this->input->post('order_id'),
+                'first_name' => $this->input->post('first_name'),
+                'middle_name' => $this->input->post('middle_name'),
+                'last_name' => $this->input->post('last_name'),
+                'phone_number' => $this->input->post('phone_number'),
+                'phone_number_type' => $this->input->post('phone_number_type'),
+                'foreign_resident' => $this->input->post('foreign_resident'),
+                'co_seller' => $this->input->post('co_seller'),
+                'co_seller_first_name' => $this->input->post('co_seller_first_name') ? $this->input->post('co_seller_first_name') : null,
+                'co_seller_middle_name' => $this->input->post('co_seller_middle_name') ? $this->input->post('co_seller_middle_name') : null,
+                'co_seller_last_name' => $this->input->post('co_seller_last_name') ? $this->input->post('co_seller_last_name') : null,
+                'co_seller_expiration_date' => $this->input->post('co_seller_expiration_date') ? $this->input->post('co_seller_expiration_date') : null,
+                'co_seller_marital_status' => $this->input->post('co_seller_marital_status') ? $this->input->post('co_seller_marital_status') : null,
+                'co_seller_ssn' => $this->input->post('co_seller_ssn') ? $this->input->post('co_seller_ssn') : null,
+                'co_seller_email' => $this->input->post('co_seller_email') ? $this->input->post('co_seller_email') : null,
+                'co_seller_phone_number' => $this->input->post('co_seller_phone_number') ? $this->input->post('co_seller_phone_number') : null,
+                'co_seller_phone_number_type' => $this->input->post('co_seller_phone_number_type') ? $this->input->post('co_seller_phone_number_type') : null,
+                'co_seller_foreign_resident' => $this->input->post('co_seller_foreign_resident') ? $this->input->post('co_seller_foreign_resident') : null,
+                'attending' => $this->input->post('attending'),
+            );
+            $this->home_model->insert($borrowerSellerInfoData,'pct_order_borrower_selller_info');
+
+            $borrowerSellerPropertyInfoData = array(
+                'order_id' => $this->input->post('order_id'),
+                'property_address' => $this->input->post('property_address'),
+                'is_correct_property_address' => $this->input->post('is_correct_property_address'),
+                'property_street_address' => $this->input->post('property_street_address') ? $this->input->post('property_street_address') : null,
+                'property_city' => $this->input->post('property_city') ? $this->input->post('property_city') : null,
+                'property_state' => $this->input->post('property_state') ? $this->input->post('property_state') : null,
+                'property_zip_code' => $this->input->post('property_zip_code') ? $this->input->post('property_zip_code') : null,
+                'is_property_address_as_current_address' => $this->input->post('is_property_address_as_current_address'),
+                'current_street_address' => $this->input->post('current_street_address') ? $this->input->post('current_street_address') : null,
+                'current_city' => $this->input->post('current_city') ? $this->input->post('current_city') : null,
+                'current_state' => $this->input->post('current_state') ? $this->input->post('current_state') : null,
+                'current_zip_code' => $this->input->post('current_zip_code') ? $this->input->post('current_zip_code') : null,
+                'is_forwarding_address_different_from_current_address' => $this->input->post('is_forwarding_address_different_from_current_address'),
+                'forwarding_street_address' => $this->input->post('forwarding_street_address') ? $this->input->post('forwarding_street_address') : null,
+                'forwarding_city' => $this->input->post('forwarding_city') ? $this->input->post('forwarding_city') : null,
+                'forwarding_state' => $this->input->post('forwarding_state') ? $this->input->post('forwarding_state') : null,
+                'forwarding_zip_code' => $this->input->post('forwarding_zip_code') ? $this->input->post('forwarding_zip_code') : null,
+                'residence' => $this->input->post('residence'),
+                'is_insurance_policy' => $this->input->post('insurance'),
+                'insurance_policy_file_name' => $this->input->post('insurance_policy_file_name') ? $this->input->post('insurance_policy_file_name') : null,
+            );
+            $this->home_model->insert($borrowerSellerPropertyInfoData, 'pct_order_borrower_selller_property_info');
+
+            $borrowerSellerAgentInfoData = array(
+                'order_id' => $this->input->post('order_id'),
+                'is_real_estate' => $this->input->post('is_real_estate'),
+                'agent_first_name' => $this->input->post('agent_first_name') ? $this->input->post('agent_first_name') : null,
+                'agent_middle_name' => $this->input->post('agent_middle_name') ? $this->input->post('agent_middle_name') : null,
+                'agent_last_name' => $this->input->post('agent_last_name') ? $this->input->post('agent_last_name') : null,
+                'agent_company' => $this->input->post('agent_company') ? $this->input->post('agent_company') : null,
+                'agent_company_address' => $this->input->post('agent_company_address') ? $this->input->post('agent_company_address') : null,
+                'agent_company_city' => $this->input->post('agent_company_city') ? $this->input->post('agent_company_city') : null,
+                'agent_company_state' => $this->input->post('agent_company_state') ? $this->input->post('agent_company_state') : null,
+                'agent_company_zip_code' => $this->input->post('agent_company_zip_code') ? $this->input->post('agent_company_zip_code') : null,
+                'amount_percent_commission' => $this->input->post('amount_percent_commission') ? $this->input->post('amount_percent_commission') : null,
+                'amount_deduction' => $this->input->post('amount_deduction') ? $this->input->post('amount_deduction') : null,
+                'agent_phone' => $this->input->post('agent_phone') ? $this->input->post('agent_phone') : null,
+                'agent_email' => $this->input->post('agent_email') ? $this->input->post('agent_email') : null,
+                'seller_invoices' => $this->input->post('seller_invoices') ? $this->input->post('seller_invoices') : null,
+            );
+            $this->home_model->insert($borrowerSellerAgentInfoData, 'pct_order_borrower_selller_agent_info');
+
+            $borrowerSellerMortgageInfoData = array(
+                'order_id' => $this->input->post('order_id'),
+                'is_mortgage' => $this->input->post('is_mortgage'),
+                'is_mortgage_credit' => $this->input->post('is_mortgage_credit') ? $this->input->post('is_mortgage_credit') : null,
+                'mortgage_holder' => $this->input->post('mortgage_holder') ? $this->input->post('mortgage_holder') : null,
+                'loan_amount' => $this->input->post('loan_amount') ? $this->input->post('loan_amount') : null,
+                'mortgage_phone' => $this->input->post('mortgage_phone') ? $this->input->post('mortgage_phone') : null,
+                'loan_number' => $this->input->post('loan_number') ? $this->input->post('loan_number') : null,
+                'loan_balance' => $this->input->post('loan_balance') ? $this->input->post('loan_balance') : null,
+                'account_holder_name' => $this->input->post('account_holder_name') ? $this->input->post('account_holder_name') : null,
+                'is_creditcard_lock' => $this->input->post('is_creditcard_lock') ? $this->input->post('is_creditcard_lock') : null,
+                'is_second_mortgage' => $this->input->post('is_second_mortgage') ? $this->input->post('is_second_mortgage') : null,
+                'is_second_mortgage_credit' => $this->input->post('is_second_mortgage_credit') ? $this->input->post('is_second_mortgage_credit') : null,
+                'second_mortgage_holder' => $this->input->post('second_mortgage_holder') ? $this->input->post('second_mortgage_holder') : null,
+                'second_loan_amount' => $this->input->post('second_loan_amount') ? $this->input->post('second_loan_amount') : null,
+                'second_mortgage_phone' => $this->input->post('second_mortgage_phone') ? $this->input->post('second_mortgage_phone') : null,
+                'second_loan_number' => $this->input->post('second_loan_number') ? $this->input->post('second_loan_number') : null,
+                'second_loan_balance' => $this->input->post('second_loan_balance') ? $this->input->post('second_loan_balance') : null,
+                'second_account_holder_name' => $this->input->post('second_account_holder_name') ? $this->input->post('second_account_holder_name') : null,
+                'is_second_creditcard_lock' => $this->input->post('is_second_creditcard_lock') ? $this->input->post('is_second_creditcard_lock') : null,
+            );
+            $this->home_model->insert($borrowerSellerMortgageInfoData, 'pct_order_borrower_selller_mortgage_info');    
+  
+            $borrowerSellerOtherInfoData = array(
+                'order_id' => $this->input->post('order_id'),
+                'is_exchange_residence' => $this->input->post('is_exchange_residence'),
+                'is_not_exchange_residence' => $this->input->post('is_not_exchange_residence'),
+                'is_former_spouse' => $this->input->post('is_former_spouse'),
+                'is_married' => $this->input->post('is_married'),
+                'is_period' => $this->input->post('is_period'),
+                'is_revenue' => $this->input->post('is_revenue'),
+                'is_attorney' => $this->input->post('is_attorney'),
+                'firm_name' => $this->input->post('firm_name') ? $this->input->post('firm_name') : null,
+                'firm_phone_number' => $this->input->post('firm_phone_number') ? $this->input->post('firm_phone_number') : null,
+                'attorney_name' => $this->input->post('attorney_name') ? $this->input->post('attorney_name') : null,
+                'attorney_phone_number' => $this->input->post('attorney_phone_number') ? $this->input->post('attorney_phone_number') : null,
+                'attorney_email' => $this->input->post('attorney_email') ? $this->input->post('attorney_email') : null,
+            );
+            $this->home_model->insert($borrowerSellerOtherInfoData, 'pct_order_borrower_selller_other_info');    
+
+            $borrowerSellerHoaInfoData = array(
+                'order_id' => $this->input->post('order_id'),
+                'is_property_hoa' => $this->input->post('is_property_hoa'),
+                'hoa_management_company_name' => $this->input->post('hoa_management_company_name') ? $this->input->post('hoa_management_company_name') : null,
+                'hoa_contact_person' => $this->input->post('hoa_contact_person') ? $this->input->post('hoa_contact_person') : null,
+                'hoa_email' => $this->input->post('hoa_email') ? $this->input->post('hoa_email') : null,
+                'hoa_phone' => $this->input->post('hoa_phone') ? $this->input->post('hoa_phone') : null,
+                'hoa_dues' => $this->input->post('hoa_dues') ? $this->input->post('hoa_dues') : null,
+                'hoa_dues_per' => $this->input->post('hoa_dues_per') ? $this->input->post('hoa_dues_per') : null,
+                'hoa_notes' => $this->input->post('hoa_notes') ? $this->input->post('hoa_notes') : null,
+                'is_property_second_hoa' => $this->input->post('is_property_second_hoa') ? $this->input->post('is_property_second_hoa') : null,
+                'second_hoa_management_company_name' => $this->input->post('second_hoa_management_company_name') ? $this->input->post('second_hoa_management_company_name') : null,
+                'second_hoa_contact_person' => $this->input->post('second_hoa_contact_person') ? $this->input->post('second_hoa_contact_person') : null,
+                'second_hoa_email' => $this->input->post('second_hoa_email') ? $this->input->post('second_hoa_email') : null,
+                'second_hoa_phone' => $this->input->post('second_hoa_phone') ? $this->input->post('second_hoa_phone') : null,
+                'second_hoa_dues' => $this->input->post('second_hoa_dues') ? $this->input->post('second_hoa_dues') : null,
+                'second_hoa_dues_per' => $this->input->post('second_hoa_dues_per') ? $this->input->post('second_hoa_dues_per') : null,
+                'second_hoa_notes' => $this->input->post('second_hoa_notes') ? $this->input->post('second_hoa_notes') : null,
+            );
+            $this->home_model->insert($borrowerSellerHoaInfoData, 'pct_order_borrower_selller_hoa_info');    
+        }
         $order = $this->getOrderInfo($random_number);
         $this->load->view('order/borrower_seller', $data);
     }
