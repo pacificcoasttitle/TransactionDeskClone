@@ -46,9 +46,7 @@ td {
 	margin-right:5px;
 	border: 1px solid rgba(0, 0, 0, 0.2);
 }
-.card-header {
-	padding: 5px;
-}
+
 </style>
 <section class="section-type-4a section-defaulta b-contact b-contact_mod-a" style="padding-bottom:0px;">
 	<div class="content">
@@ -89,22 +87,22 @@ td {
 							<div class="card custom__task_card" style="background-color: #f2f2f2;">
 								<div class="card-header py-3">
 									<div class="row">
-										<div class="col-xs-3">
+										<div class="col-xs-3" style="padding-left: 40px;margin-top: 15px;">
 											<label class="custom-control custom-checkbox task__name">
 												<div class="check_box_text title_text"> SALES REP</div>
 											</label>
 										</div>
-										<div class="col-xs-5">
+										<div class="col-xs-5" style="padding-left: 40px;margin-top: 15px;">
 											<label class="custom-control custom-checkbox task__name">
 												<div class="check_box_text title_text"> COMPANY NAME</div>
 											</label>
 										</div>
-										<div class="col-xs-2">
+										<div class="col-xs-2" style="padding-left: 40px;margin-top: 15px;">
 											<label class="custom-control custom-checkbox task__name">
 												<div class="check_box_text title_text"> # OF DEALS</div>
 											</label>
 										</div>
-										<div class="col-xs-2 text-right">
+										<div class="col-xs-2 text-right" style="padding-left: 40px;margin-top: 15px;">
 											<a href="#collapseCard_<?php echo $summary['company_id']; ?>" class="custom__collapse_arrow collapsed" data-toggle="collapse"
 												role="button" aria-expanded="false" aria-controls="collapseCard_<?php echo $summary['company_id']; ?>">
 												<i class="fa fa-angle-down"></i>
@@ -123,22 +121,22 @@ td {
 										<div class="card custom__task_card">
 											<div class="card-header py-3">
 												<div class="row">
-													<div class="col-xs-3">
+													<div class="col-xs-3" style="padding-left: 40px;margin-top: 15px;">
 														<label class="custom-control custom-checkbox task__name">
 															<div class="check_box_text"> <?php echo $summary['sales_name']; ?></div>
 														</label>
 													</div>
-													<div class="col-xs-5">
+													<div class="col-xs-5" style="padding-left: 40px;margin-top: 15px;">
 														<label class="custom-control custom-checkbox task__name">
 															<div class="check_box_text"> <?php echo $summary['company_name']; ?></div>
 														</label>
 													</div>
-													<div class="col-xs-2">
+													<div class="col-xs-2" style="padding-left: 40px;margin-top: 15px;">
 														<label class="custom-control custom-checkbox task__name">
 															<div class="check_box_text"> <?php echo $summary['num_of_deals']; ?></div>
 														</label>
 													</div>
-													<div class="col-xs-2 text-right">
+													<div class="col-xs-2 text-right" style="padding-left: 40px;margin-top: 15px;">
 														<a href="#collapseCard_<?php echo $summary['company_id']; ?>" class="custom__collapse_arrow collapsed" data-toggle="collapse"
 															role="button" aria-expanded="false" aria-controls="collapseCard_<?php echo $summary['company_id']; ?>">
 															<i class="fa fa-angle-down"></i>
