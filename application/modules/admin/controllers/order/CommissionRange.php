@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CommissionRange extends MX_Controller {
 	
-	public $commission_headers = ['min_value','max_value','premium','commission'];
+	public $commission_headers = ['min_value','max_value','premium'];
     public function __construct()
     {
         parent::__construct();
@@ -62,8 +62,6 @@ class CommissionRange extends MX_Controller {
         if ($this->input->post()) {
             
             $this->form_validation->set_rules('product_type', 'Product Type', 'trim|required');
-            // $this->form_validation->set_rules('underwriter_tier', 'Underwriter Tier', 'trim|required');
-            $this->form_validation->set_rules('total_commission', 'Commission %', 'trim|required|numeric');
             $this->form_validation->set_rules('premium', 'Premium', 'trim|required|numeric');
             $this->form_validation->set_rules('revenue_range_min', 'Minimum Revenue Range', 'trim|required|numeric');
             $this->form_validation->set_rules('revenue_range_max', 'Maximum Revenue Range', 'trim|required|numeric');
@@ -78,7 +76,6 @@ class CommissionRange extends MX_Controller {
                     $commissionData = array(
 						'product_type' =>$this->input->post('product_type') ,
 						'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
-						'total_commission' => !empty($this->input->post('total_commission')) ? $this->input->post('total_commission') : 0,
 						'premium' => !empty($this->input->post('premium')) ? $this->input->post('premium') : 0,
 						'min_revenue' => !empty($this->input->post('revenue_range_min')) ? $this->input->post('revenue_range_min') : 0,
 						'max_revenue' => !empty($this->input->post('revenue_range_max')) ? $this->input->post('revenue_range_max') : 0,
@@ -168,13 +165,12 @@ class CommissionRange extends MX_Controller {
 
                         foreach($csvData as $row)
                         {
-                            if(isset($row['min_value']) && (isset($row['max_value'])) &&  !(empty($row['premium']))  &&  !(empty($row['commission'])))
+                            if(isset($row['min_value']) && (isset($row['max_value'])) &&  !(empty($row['premium'])))
                             {
 								 
 								$commissionData = array(
 									'product_type' =>$this->input->post('product_type') ,
 									'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
-									'total_commission' => !empty($row['commission']) ? $row['commission'] : 0,
 									'premium' => !empty($row['premium']) ? $row['premium'] : 0,
 									'min_revenue' => !empty($row['min_value']) ? $row['min_value'] : 0,
 									'max_revenue' => !empty($row['max_value']) ? $row['max_value'] : 0,
@@ -265,7 +261,7 @@ class CommissionRange extends MX_Controller {
 					fputcsv($file, $header);
 			
 					foreach ($exist_records as $line){
-						fputcsv($file,array($line->min_revenue,$line->max_revenue,$line->premium,$line->total_commission));
+						fputcsv($file,array($line->min_revenue,$line->max_revenue,$line->premium));
 					}
 			
 					fclose($file);
@@ -308,7 +304,6 @@ class CommissionRange extends MX_Controller {
 			$this->form_validation->set_rules('product_type', 'Product Type', 'trim|required');
             // $this->form_validation->set_rules('underwriter_tier', 'Underwriter Tier', 'trim|required');
 			$this->form_validation->set_rules('premium', 'Premium', 'trim|required|numeric');
-            $this->form_validation->set_rules('total_commission', 'Total commission %', 'trim|required|numeric');
             $this->form_validation->set_rules('revenue_range_min', 'Minimum Revenue Range', 'trim|required|numeric');
             $this->form_validation->set_rules('revenue_range_max', 'Maximum Revenue Range', 'trim|required|numeric');
 
@@ -322,7 +317,6 @@ class CommissionRange extends MX_Controller {
 						$commissionData = array(
 							'product_type' =>$this->input->post('product_type') ,
 							'underwriter_tier' =>$this->input->post('underwriter_tier['.$this->input->post('product_type').']') ,
-							'total_commission' => !empty($this->input->post('total_commission')) ? $this->input->post('total_commission') : 0,
 							'premium' => !empty($this->input->post('premium')) ? $this->input->post('premium') : 0,
 							'min_revenue' => !empty($this->input->post('revenue_range_min')) ? $this->input->post('revenue_range_min') : 0,
 							'max_revenue' => !empty($this->input->post('revenue_range_max')) ? $this->input->post('revenue_range_max') : 0,
@@ -406,6 +400,7 @@ class CommissionRange extends MX_Controller {
             $this->form_validation->set_rules('underwriter_type', 'Underwriter', 'trim|required');
             $this->form_validation->set_rules('product_type', 'Product Type', 'trim|required');
             $this->form_validation->set_rules('title', 'Tier Title', 'trim|required');
+			$this->form_validation->set_rules('commission', 'Commission %', 'trim|required|numeric');
               
            
             if ($this->form_validation->run() == true) {
@@ -414,6 +409,7 @@ class CommissionRange extends MX_Controller {
 						'product_type' =>$this->input->post('product_type') ,
 						'underwriter' =>$this->input->post('underwriter_type') ,
 						'title' =>$this->input->post('title') ,
+						'commission' => !empty($this->input->post('commission'))?$this->input->post('commission'):0 ,
 						'description' =>!empty($this->input->post('description'))?$this->input->post('description'):null ,
                     );
 					
@@ -453,6 +449,7 @@ class CommissionRange extends MX_Controller {
 				$this->form_validation->set_rules('underwriter_type', 'Underwriter', 'trim|required');
 				$this->form_validation->set_rules('product_type', 'Product Type', 'trim|required');
             	$this->form_validation->set_rules('title', 'Tier Title', 'trim|required');  
+				$this->form_validation->set_rules('commission', 'Commission %', 'trim|required|numeric');
 			   
 				if ($this->form_validation->run() == true) {
 					
@@ -460,6 +457,7 @@ class CommissionRange extends MX_Controller {
 							'product_type' =>$this->input->post('product_type') ,
 							'underwriter' =>$this->input->post('underwriter_type') ,
 							'title' =>$this->input->post('title') ,
+							'commission' => !empty($this->input->post('commission'))?$this->input->post('commission'):0 ,
 							'description' =>!empty($this->input->post('description'))?$this->input->post('description'):null ,
 						);
 						
