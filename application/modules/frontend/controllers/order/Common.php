@@ -1289,6 +1289,7 @@ class Common extends MX_Controller {
 		$resPartners = json_decode($resultPartners, true);
 		if(!empty($resPartners)) {
 			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+			$underWriter = 'westcor';
  			if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
 				$orderDetails['cpl_api'] = 'natic';
 				$branchesData = $this->natic->getBranches();
@@ -1296,6 +1297,7 @@ class Common extends MX_Controller {
 					$branchesData = $this->natic->getBranchesFromApi();
 				}
 				$orderDetails['agents_data'] = $branchesData;
+				$underWriter = 'north_american';
 			} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
 				$orderDetails['cpl_api'] = 'westcor';
 				$this->load->library('order/westcor');
@@ -1304,6 +1306,7 @@ class Common extends MX_Controller {
 					$branchesData = $this->westcor->getBranchesFromApi();
 				}
 				$orderDetails['agents_data'] = $branchesData;
+				$underWriter = 'westcor';
 			} else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
 				$orderDetails['cpl_api'] = 'fnf';
 				$agentsData = $this->fnf->getAgents();
@@ -1312,6 +1315,7 @@ class Common extends MX_Controller {
 					$agentsData = $this->fnf->getAgentsFromApi($orderDetails);
 				}
 				$orderDetails['agents_data'] = $agentsData;
+				$underWriter = 'commonwealth';
 			} else {
 				$orderDetails['cpl_api'] = 'westcor';
 				$this->load->library('order/westcor');
@@ -1321,6 +1325,13 @@ class Common extends MX_Controller {
 				}
 				$orderDetails['agents_data'] = $branchesData;
 			}
+			$underwriter_data = [
+				'underwriter' =>$underWriter
+			];
+			$update_condition = [
+				'file_id'=>$fileId
+			];
+			$this->order->update($underwriter_data, $update_condition);
 		} 
 		if(!empty($orderDetails['borrowers_vesting'])) {
 			$orderDetails['borrowers_vesting'] = $orderDetails['borrowers_vesting'];
