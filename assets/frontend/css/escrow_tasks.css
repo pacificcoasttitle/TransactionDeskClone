@@ -15,8 +15,6 @@
 	font-weight: normal;
 }
 
-.card-header {padding: 5px;}
-
 .card.custom__task_card {
 	border-top: 1px solid rgba(0, 0, 0, 0.2);
 }
@@ -52,7 +50,7 @@
 	height: 20px;
 	width: 20px;
 	/* background-color: #eee; */
-	border: 1px solid #da7047;
+	border: 3px solid #da7047;
 }
 
 	
@@ -70,8 +68,8 @@
 
 /* Style the checkmark/indicator */
 .task__info label .checkmark:after {
-	left: 5px;
-	top: 2px;
+	left: 3px;
+	top: 0px;
 	width: 7px;
 	height: 12px;
 	border: solid #da7047;

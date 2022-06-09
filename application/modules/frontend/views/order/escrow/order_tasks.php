@@ -9,7 +9,7 @@ td {
 	border-bottom: none !important;
 }
 .card.custom__task_card {
-	background: #f2f2f2;
+	background: #ffffff;
 }
 .custom__task_collapse {
 	background: #fff;
