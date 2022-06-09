@@ -86,25 +86,15 @@ class SalesRep extends MX_Controller
 		$all_order_data = $this->order->getOrdersForUser($userId);
 		// echo '<pre>';var_dump($all_order_data);die;
 		$sales_commission = 0;
-		$this->load->model('admin/order/commission_range_model');
-		$commission_range = $this->commission_range_model->with('underwriter_tier_obj')->get_all();
-		$commission_range_data = array();
-		foreach($commission_range as $commission_range_obj) {
-			if($commission_range_obj->underwriter_tier_obj) {
-				$underwriter_tier_obj = $commission_range_obj->underwriter_tier_obj;
-				if(!isset($commission_range_data[$underwriter_tier_obj->product_type][$underwriter_tier_obj->underwriter][$commission_range_obj->premium])) {
-					$commission_range_data[$underwriter_tier_obj->product_type][$underwriter_tier_obj->underwriter][$commission_range_obj->premium] = array();
-				}
-				$commission_range_data[$underwriter_tier_obj->product_type][$underwriter_tier_obj->underwriter][$commission_range_obj->premium][] = [
-					'premium' => $commission_range_obj->premium,
-					'min_range' => $commission_range_obj->min_revenue,
-					'max_range' => $commission_range_obj->max_revenue,
-					'commission'=>$commission_range_obj->total_commission,
-					'tier_id'=>$commission_range_obj->underwriter_tier
-				];
-			}
+		$this->load->model('admin/order/underwriter_tier_model');
+		$underwriter_tiers = $this->underwriter_tier_model->with('commision_range_obj')->get_all();
+		$underwriter_tier_data = array();
+		foreach($underwriter_tiers as $underwriter_tier_obj) {
+			$underwriter_tier_data[$underwriter_tier_obj->product_type][$underwriter_tier_obj->underwriter][$underwriter_tier_obj->id] = $underwriter_tier_obj;
+			// if($underwriter_tier_obj->commision_range_obj) {
+			// }
 		}
-		// echo '<pre>';var_dump($commission_range_data);die;
+		// echo '<pre>';var_dump($underwriter_tier_data);die;
 		$this->load->model('admin/order/underwriter_user_model');
 		$existing_comission_data = $this->underwriter_user_model->with('underwriter_tier_obj')->with('underwriter_user_threshold_obj')->get_many_by('user_id',$userId);
 		$user_specific_commission = array();
@@ -138,21 +128,38 @@ class SalesRep extends MX_Controller
 			}
 
 			//Find Tier
-			if(isset($commission_range_data[$product_type][$underwriter_type][$premium])) {
-				$check_tiers = $commission_range_data[$product_type][$underwriter_type][$premium];
+			if(isset($underwriter_tier_data[$product_type][$underwriter_type])) {
+				// echo "in";die;
 				$default_tier_value = null;
-				foreach ($check_tiers as $check_tier) {
-					$check_min = $check_tier['min_range'];
-					$check_max = $check_tier['max_range'];
-					if($check_amount >= $check_min && $check_amount <=  $check_max) {
-						$default_tier_value = $check_tier;
-						break;
+				//Check if Underwriter has single tier
+				if(count($underwriter_tier_data[$product_type][$underwriter_type]) <= 1) {
+					$default_tier_value = reset($underwriter_tier_data[$product_type][$underwriter_type]);
+				} else {
+					//Find Tier
+					$tires = $underwriter_tier_data[$product_type][$underwriter_type];
+					$found_tier = false;
+					foreach($tires as $tire){
+						$commission_range_data = $tire->commision_range_obj;
+						foreach($commission_range_data as $commission_range_obj ) {
+							$check_premium = $commission_range_obj->premium;
+							$check_min = $commission_range_obj->min_revenue;
+							$check_max = $commission_range_obj->max_revenue;
+							if($check_premium == $premium && $check_amount >= $check_min && $check_amount <=  $check_max) {
+								$default_tier_value = $tire;
+								$found_tier = true;
+								break;
+							}
+						}
+						if($found_tier) {
+							break;
+						}
 					}
 				}
+
 				//Check if we found tier
 				if($default_tier_value) {
 					// $commission_val = $default_tier_value['commission'];
-					$tier_id = $default_tier_value['tier_id'];
+					$tier_id = $default_tier_value->id;
 					if(!is_array($order_tier_group[$tier_id][$premium])) {
 						$order_tier_group[$tier_id][$premium]['default'] = $default_tier_value;
 						$order_tier_group[$tier_id][$premium]['data'] = array();
@@ -161,15 +168,16 @@ class SalesRep extends MX_Controller
 					
 
 				}
+
+
 			}
-			
 		}
 
 		
 		$sales_commission = 0;
 		foreach ($order_tier_group as $tier_id=>$order_tier_record) {
 			foreach ($order_tier_record as $premium_amount=>$order_record) {
-				$commission_val = $order_record['default']['commission'];
+				$commission_val = $order_record['default']->commission;
 				$total_premium = $premium_amount*count($order_record['data']);
 				//Check if its override
 				if(isset($user_specific_commission[$tier_id]) && !empty($user_specific_commission[$tier_id])) {

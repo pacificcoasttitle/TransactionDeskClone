@@ -72,6 +72,16 @@
 			</div>
 
 			<div class="form-group row">
+				<label for="commission" class="col-sm-4 col-form-label">Total Commission %</label>
+				<div class="col-sm-8">
+				<input  step=".01" min="0"  type="number" class="form-control" name="commission" id="commission" class="form-control" placeholder="Enter Total Commission" value="<?php echo set_value('commission',$record->commission)?>">
+				<?php if(!empty(form_error('commission'))){ ?>                     
+					<span class="error"><?php echo form_error('commission'); ?></span>
+				<?php } ?>
+				</div>
+			</div>
+
+			<div class="form-group row">
 				<label for="description" class="col-sm-4 col-form-label">Description</label>
 				<div class="col-sm-8">
 					<textarea class="form-control" name="description" id="description" placeholder="Enter Description"><?php echo set_value('description',$record->description);?></textarea>

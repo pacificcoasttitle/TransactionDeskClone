@@ -109,18 +109,6 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label for="total_commission" class="col-sm-4 col-form-label">Total Commission %</label>
-				<div class="col-sm-8">
-				<input  step=".01" min="0"  type="number" class="form-control" name="total_commission" id="total_commission" class="form-control" placeholder="Enter Total Commission" value="<?php echo set_value('total_commission',$record->total_commission)?>">
-				<?php if(!empty(form_error('total_commission'))){ ?>                     
-					<span class="error"><?php echo form_error('total_commission'); ?></span>
-				<?php } ?>
-				</div>
-			</div>
-
-			
-
 					<div class="pull-right">
 						<button type="submit"  class="btn btn-secondary">Update</button>
 						<a href="<?php echo site_url('order/admin/commission-range'); ?>"class="btn btn-secondary">Cancel</a>

@@ -32,6 +32,7 @@
 							<th>Product Type</th>
                             <th>Underwriter</th>
                             <th>Title</th>
+                            <th>Commission</th>
                             <th>Description</th>
                             <th>Action</th>
                         </tr>
@@ -43,6 +44,7 @@
 							<td><?php echo ucfirst($underwriter_tier_record->product_type); ?></td>
 							<td><?php echo ucfirst($underwriter_tier_record->underwriter); ?></td>
 							<td><?php echo $underwriter_tier_record->title; ?></td>
+							<td><?php echo $underwriter_tier_record->commission; ?> %</td>
 							<td><?php echo substr($underwriter_tier_record->description,0,60); ?></td>
 							<td> <a href="<?php echo base_url('order/admin/edit-underwriter-tier/'.$underwriter_tier_record->id)?>" class='btn btn-action 'title ='Edit Underwriter Tier'><span class='fa fa-edit' aria-hidden='true'></span></a>
 								<button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-underwriter-tier/'.$underwriter_tier_record->id)?>" title ='Delete Underwriter Tier'><span class='fa fa-trash' aria-hidden='true'></span></button>
