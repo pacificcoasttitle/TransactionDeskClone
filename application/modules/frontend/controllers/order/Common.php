@@ -1289,7 +1289,7 @@ class Common extends MX_Controller {
 		$resPartners = json_decode($resultPartners, true);
 		if(!empty($resPartners)) {
 			$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-			$underWriter = '';
+			$underWriter = 'westcor';
  			if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
 				$orderDetails['cpl_api'] = 'natic';
 				$branchesData = $this->natic->getBranches();
@@ -1324,11 +1324,6 @@ class Common extends MX_Controller {
 					$branchesData = $this->westcor->getBranchesFromApi();
 				}
 				$orderDetails['agents_data'] = $branchesData;
-				if ($key) {
-					$underWriter = 'other';
-				} else {
-					$underWriter = 'not_set';
-				}
 			}
 			$underwriter_data = [
 				'underwriter' =>$underWriter
