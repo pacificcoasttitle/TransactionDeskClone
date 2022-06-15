@@ -3362,6 +3362,17 @@ $(document).ready(function () {
 			$('.show_hide_underwriter_tier-'+select_val+' select.filter__commission_range_tier').val(0).trigger('change')
 		});	
 	}
+
+	if($('select.filter-commission-files').length) {
+		$('select.filter-commission-files').on('change', function() {
+			var comm_year = $('#commission-file-year-filter').val();
+			var comm_month = $('#commission-file-month-filter').val();
+			var redirect_url = $(this).attr('data-url');
+			window.location = redirect_url+'/'+comm_year+'/'+comm_month;
+
+
+		});
+	}
 });
 
 if(('.threshold-remove-btn').length) {

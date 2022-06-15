@@ -505,6 +505,134 @@ class CommissionRange extends MX_Controller {
 		echo json_encode(['status'=>$status]);
     }
 
+
+	public function commission_files($year = 0,$month =0,$sales_rep=0)
+    {
+		$this->load->model('order/user_monthly_commission_model');
+        if ($this->input->server('REQUEST_METHOD') === 'POST') {
+            if (!is_dir('uploads/file_document')) {
+                mkdir('./uploads/file_document', 0777, TRUE);
+            }
+            $error = '';
+            if (!empty($_FILES['file']['name'])) {
+                $document_name = 'commission_'.time();
+                $config['upload_path'] = './uploads/file_document/';
+                $config['allowed_types'] = 'pdf';   
+                $config['max_size'] = 12000;
+                // $userdata = $this->session->userdata('user');
+                $config['file_name'] = $document_name;
+                $this->load->library('upload', $config);
+                if (! $this->upload->do_upload('file')) {
+                    $error = $this->upload->display_errors();
+                } else { 
+                    $data = $this->upload->data();
+                    $document_name = $data['file_name'];
+
+					$this->load->library('order/order');
+					$this->order->uploadDocumentOnAwsS3($document_name, 'file_document');
+					//Check for existing record
+					$check_condition = [
+						'user_id' => $this->input->post('sales_rep'),
+                        'commission_month' => $this->input->post('commission_month'),
+                        'commission_year' => $this->input->post('commission_year'),
+					];
+
+					$is_exist = $this->user_monthly_commission_model->get_by($check_condition);
+					if($is_exist) {
+						$fileData = array(
+							'pdf_name' => $this->input->post('name'),
+							'commisssion_pdf' => $document_name
+						);
+						$inserted = $this->user_monthly_commission_model->update($is_exist->id,$fileData);
+					}
+					else {
+
+						$fileData = array(
+							'user_id' => $this->input->post('sales_rep'),
+							'pdf_name' => $this->input->post('name'),
+							'commission_month' => $this->input->post('commission_month'),
+							'commission_year' => $this->input->post('commission_year'),
+							'commisssion_pdf' => $document_name
+						);
+	
+						
+						$inserted = $this->user_monthly_commission_model->insert($fileData);
+					}
+                    
+                    if($inserted) {
+						$this->session->set_flashdata('success','File uploaded.');
+                        redirect('order/admin/commission-files');
+                    }
+                } 
+            } else {
+                $error = 'Please slect file to uplaod';
+            }
+            if($error == '') {
+                $error = 'Something went wrong. Please try again';
+            }
+            $this->session->set_flashdata('error',$error);
+            redirect('order/admin/commission-files');
+        }
+        $data = array();
+        $data['title'] = 'PCT Order: Commission Files';
+        
+		
+		
+		if($year == 0) {
+			$year = date('Y');
+		}
+		if($month == 0) {
+			$month = date('m');
+		}
+		$data['filter_month'] = $month;
+		$data['filter_year'] = $year;
+		$where_array = [
+			'commission_month' => $month,
+			'commission_year' => $year,
+			'commisssion_pdf !='=> null,
+		];
+		if($sales_rep > 0) {
+			$where_array['user_id'] = $sales_rep;
+		}
+		
+		
+		$data['commission_files'] = $this->user_monthly_commission_model->with('sales_rep_obj')->get_many_by($where_array);
+
+		$this->load->model('order/customer_basic_details_model');
+        $data['sales_reps'] = $this->customer_basic_details_model->get_many_by(['status'=>1,'is_sales_rep'=>1]);
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/sales/commssion_files', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function delete_commission_file($id)
+    {
+
+		
+
+		$status = false;
+		if($this->input->post('action') == 'delete') {
+			$this->load->model('order/user_monthly_commission_model');
+			$fileData = array(
+				'pdf_name' => null,
+				'commisssion_pdf' => null
+			);
+			$delete_status = $this->user_monthly_commission_model->update($id,$fileData);
+			if ($delete_status) {
+				$flash_data['success'] = 'Commission File deleted successfully.';
+				$status = true;
+			} else {
+				$flash_data['error'] = 'Commission File not deleted.';
+			}
+			
+			$this->session->set_flashdata($flash_data);
+
+		}
+		echo json_encode(['status'=>$status]);
+
+        
+    }
+
 	
 
 }
