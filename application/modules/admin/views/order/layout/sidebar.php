@@ -137,6 +137,9 @@
 			<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*commission-range*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/commission-range'; ?>">
 				Commission Range
 			</a>
+			<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*commission-file*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/commission-files'; ?>">
+				Commission Files
+			</a>
 		</div>
 	</li>
 
