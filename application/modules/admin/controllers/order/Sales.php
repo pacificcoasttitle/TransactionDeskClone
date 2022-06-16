@@ -184,6 +184,7 @@ class Sales extends MX_Controller {
 
 						$this->load->model('order/underwriter_user_model');
 						$this->load->model('order/underwriter_user_threshold_model');
+						$call_procedure = FALSE;
 
 						$commission_array = $this->input->post('commission');
 						foreach($commission_array as $product_key=>$product_type_array) {
@@ -201,6 +202,7 @@ class Sales extends MX_Controller {
 											];
 	
 											$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
+											$call_procedure = TRUE;
 										}
 									}
 									elseif($product_underwriter_tier['type'] == 'override') {
@@ -230,13 +232,17 @@ class Sales extends MX_Controller {
 												];
 	
 												$this->underwriter_user_threshold_model->insert($underwriter_threshold_data);
+												$call_procedure = TRUE;
 											}
 										}
 									}
 								}
 							}
 						}
-						
+							if($call_procedure) {
+								$stored_pocedure = "CALL calculate_commission(?)";
+								$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$insert));
+							}
 							$flash_data['success'] = 'Sales Rep added successfully.';
 							$this->session->set_flashdata($flash_data);
 							redirect(base_url('order/admin/add-sales-rep'));
@@ -412,6 +418,8 @@ class Sales extends MX_Controller {
 							$this->load->model('order/underwriter_user_threshold_model');
 
 							//$existing_underwriter;
+
+							$call_procedure = FALSE;
 							
 							$existing_underwriter_array = array();
 							$commission_array = $this->input->post('commission');
@@ -431,6 +439,7 @@ class Sales extends MX_Controller {
 										if($product_underwriter_tier['type'] == 'global') {
 											if($existing_underwriter_val) {
 												$this->underwriter_user_model->delete($existing_underwriter_val->id);
+												$call_procedure = TRUE;
 											}
 										}
 										elseif($product_underwriter_tier['type'] == 'fix') {
@@ -444,6 +453,9 @@ class Sales extends MX_Controller {
 														'allow_threshold'=>0,
 													];
 													$this->underwriter_user_model->update($underwriter_user_id,$underwriter_data);
+													if($existing_underwriter_val->fix_commission != $fix_commission || $existing_underwriter_val->allow_threshold != 0) {
+														$call_procedure = TRUE;
+													}
 
 												}
 												else {
@@ -455,6 +467,7 @@ class Sales extends MX_Controller {
 													];
 		
 													$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
+													$call_procedure = TRUE;
 												}
 											}
 										}
@@ -468,6 +481,7 @@ class Sales extends MX_Controller {
 													'allow_threshold'=>1,
 												];
 												$this->underwriter_user_model->update($underwriter_user_id,$underwriter_data);
+												
 
 											}
 											else {
@@ -498,11 +512,19 @@ class Sales extends MX_Controller {
 												}
 											}
 
+											$call_procedure = TRUE;
+
 
 										}
 									}
 								}
 							}
+
+							if($call_procedure) {
+								$stored_pocedure = "CALL calculate_commission(?)";
+								$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$id));
+							}
+							
 							$flash_data['success'] = 'Sales Rep Updated successfully.';
 							$this->session->set_flashdata($flash_data);
 

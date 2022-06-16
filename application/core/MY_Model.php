@@ -937,4 +937,12 @@ class MY_Model extends CI_Model
         $method = ($multi) ? 'result' : 'row';
         return $this->_temporary_return_type == 'array' ? $method . '_array' : $method;
     }
+
+	/**
+     * EXecute Stored SP
+     */
+	public function call_sp($sp_name,$params)
+    {
+		$this->_database->query($sp_name,$params);
+    }
 }

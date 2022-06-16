@@ -119,6 +119,11 @@ $(document).ready(function () {
         window.location.replace(base_url+'trends/'+user_id);
     });
 
+	$("#sales_user_commission_filter").on("change", function(){
+        var user_id = $(this).val();
+        window.location.replace(base_url+'sales-commission/'+user_id);
+    });
+
     if ($('.custom__task_button').length > 0){
 		$('.task_show_all').click(function(){
 			$(".custom__task_card .custom__task_collapse").collapse('show');

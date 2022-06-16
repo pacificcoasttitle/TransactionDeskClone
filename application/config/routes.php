@@ -232,6 +232,7 @@ $route['add-borrower-on-order-for-payoff'] = 'frontend/order/escrow/addBorrowerO
 $route['add-lender-on-order'] = 'frontend/order/escrow/addLenderOnOrder';
 $route['borrower-seller-form/(:any)'] = 'frontend/order/dashboardMail/borrowerSellerForm/$1';            
 $route['borrower-buyer-form/(:any)'] = 'frontend/order/dashboardMail/borrowerBuyerForm/$1';
+$route['sales-commission/(:num)'] = 'frontend/order/salesRep/commission/$1';
 
 
 /* Route for PCT-Order backend*/
