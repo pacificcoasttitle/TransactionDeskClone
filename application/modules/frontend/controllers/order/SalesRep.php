@@ -4,7 +4,7 @@
 
 class SalesRep extends MX_Controller 
 {
-    private $sales_dashboard_js_version = '02';
+    private $sales_dashboard_js_version = '03';
 
 	function __construct() 
     {
@@ -578,4 +578,60 @@ class SalesRep extends MX_Controller
         $this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=05') );
 		$this->template->show("order", "sales_summary", $data);
     }
+
+	function commission($userId) {
+		$userdata = $this->session->userdata('user');
+		// $userId = $this->uri->segment(2);
+		$data['sales_user_id']  = $userId;
+		$data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+		if ($userdata['is_sales_rep_manager'] == 1) {
+            //echo "hehe";exit;
+            $salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
+            if (!empty($salesUser['sales_rep_users'])) {
+                $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userdata['id'], $salesRepUsers)) {
+                    $salesRepUsers[] = $userdata['id'];
+                }
+                if (!in_array($userId, $salesRepUsers)) {
+                    redirect(base_url().'sales-commission/'.$userdata['id']);
+                }
+                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
+            } else {
+                $data['salesUsers'] = $this->order->get_sales_users();
+            }
+		} else {
+            if ($userId != $userdata['id']) {
+                redirect(base_url().'sales-commission/'.$userdata['id']);
+            }
+			$data['salesUsers'] = array();
+		}
+		$data['title'] = 'Sales Production History | Pacific Coast Title Company';
+		$commissionHistory = array();
+		$current_year = date('Y');
+		$this->load->model('admin/order/user_monthly_commission_model');
+		for ($iM = 1; $iM <= (int)date('m'); $iM++) {
+			$dateObj   = DateTime::createFromFormat('!m', $iM);
+			$monthName = $dateObj->format('F'); 
+			$commissionHistory[$iM-1]['month'] = $monthName;
+			$get_month_conditon = [
+				'user_id'=>$userId,
+				'commission_year'=>$current_year,
+				'commission_month'=>$iM,
+			];
+			$commisson_data = $this->user_monthly_commission_model->get_by($get_month_conditon);
+			if($iM == date('m') && (!($commisson_data) || empty($commisson_data->commission))) {
+				//Call procedure
+				$stored_pocedure = "CALL calculate_commission(?)";
+				$this->user_monthly_commission_model->call_sp($stored_pocedure,array('id'=>$userId));
+				$commisson_data = $this->user_monthly_commission_model->get_by($get_month_conditon);
+			}
+			$commissionHistory[$iM-1]['commission_data'] = $commisson_data;
+
+			
+
+		}
+		$data['commissionHistory'] = $commissionHistory;
+        $this->template->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+		$this->template->show("order", "sales_commission_history", $data);
+	}
 }
