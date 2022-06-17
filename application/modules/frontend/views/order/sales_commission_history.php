@@ -31,7 +31,7 @@
 									<thead>
 										<tr>
 											<th align="center">Month</th>
-											<th>Commission %</th>
+											<th>Commission</th>
 											<th>File Name</th>
 											<th>Action</th>
 										</tr>
@@ -41,7 +41,7 @@
 											<?php foreach($commissionHistory as $commissionRecord) { ?>
 												<tr>
 													<td><?php echo $commissionRecord['month'];?></td>
-													<th><?php echo ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->commission : '0.00';?> % </th>
+													<th><?php echo ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->commission : '0.00';?> $ </th>
 													<td><?php echo ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->pdf_name : '';?></td>
 													<td>
 													<?php
