@@ -2462,7 +2462,7 @@ class DashboardMail extends MX_Controller {
             
             $html = $this->load->view('order/borrower_buyer_pdf', $pdfData, true);
             $this->load->library('m_pdf');
-           
+            ob_clean(); 
             $stylesheet = file_get_contents('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap');
             $stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
             $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
@@ -2471,9 +2471,9 @@ class DashboardMail extends MX_Controller {
             $combinedCss = $stylesheet . $stylesheet1 . $stylesheet2 . $customCss;
            
             $this->m_pdf->pdf->WriteHTML($combinedCss, 1); 
-            
+            echo $html;exit;
             $this->m_pdf->pdf->WriteHTML($html,2);
-            echo $combinedCss."dsdsd";exit;
+            
             $this->load->model('order/document');
             
             $borrowerDocumentCount = $this->document->countBorrowerDocument($data['orderDetails']['id']);
