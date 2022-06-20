@@ -38,6 +38,7 @@ final class CreateBorrowerSellerInfoTable extends AbstractMigration
             ->addColumn('co_seller_phone_number_type', 'string', ['null' => true])
             ->addColumn('co_seller_foreign_resident', 'enum', ['values' => ['yes','no'], 'null' => true])
             ->addColumn('attending', 'enum', ['values' => ['yes','no'], 'null' => true])
+            ->addTimestamps()
             ->create();
 
         $table = $this->table('pct_order_borrower_selller_property_info');
@@ -61,6 +62,7 @@ final class CreateBorrowerSellerInfoTable extends AbstractMigration
             ->addColumn('residence', 'string')
             ->addColumn('is_insurance_policy', 'enum', ['values' => ['yes','no']])
             ->addColumn('insurance_policy_file_name', 'string', ['null' => true])
+            ->addTimestamps()
             ->create();
         
         $table = $this->table('pct_order_borrower_selller_agent_info');
@@ -79,6 +81,7 @@ final class CreateBorrowerSellerInfoTable extends AbstractMigration
             ->addColumn('agent_phone', 'string', ['null' => true])
             ->addColumn('agent_email', 'string', ['null' => true])
             ->addColumn('seller_invoices', 'string', ['null' => true])
+            ->addTimestamps()
             ->create();
         
         $table = $this->table('pct_order_borrower_selller_mortgage_info');
@@ -101,6 +104,7 @@ final class CreateBorrowerSellerInfoTable extends AbstractMigration
             ->addColumn('second_loan_balance', 'string', ['null' => true])
             ->addColumn('second_account_holder_name', 'string', ['null' => true])
             ->addColumn('is_second_creditcard_lock', 'enum', ['values' => ['yes','no'], 'null' => true])
+            ->addTimestamps()
             ->create();
 
         $table = $this->table('pct_order_borrower_selller_other_info');
@@ -117,6 +121,7 @@ final class CreateBorrowerSellerInfoTable extends AbstractMigration
             ->addColumn('attorney_name', 'string', ['null' => true])
             ->addColumn('attorney_phone_number', 'string', ['null' => true])
             ->addColumn('attorney_email', 'string', ['null' => true])
+            ->addTimestamps()
             ->create();
 
         $table = $this->table('pct_order_borrower_selller_hoa_info');
@@ -137,6 +142,7 @@ final class CreateBorrowerSellerInfoTable extends AbstractMigration
             ->addColumn('second_hoa_dues', 'string', ['null' => true])
             ->addColumn('second_hoa_dues_per', 'string', ['null' => true])
             ->addColumn('second_hoa_notes', 'string', ['null' => true])
+            ->addTimestamps()
             ->create();
     }
 }

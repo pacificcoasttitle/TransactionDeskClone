@@ -1825,7 +1825,7 @@
 
 						<p class="my-4">
 							Signing below indicates that the information included here is correct and complete to the
-							best of my knowledge and ackowledges and accepts the information included in this documen
+							best of my knowledge and ackowledges and accepts the information included in this document
 						</p>
 						<h4 class="text-orange text-center mb-5">
 							You must click SUBMIT below to securely send your completed forms to<br> Pacific Coast Title
