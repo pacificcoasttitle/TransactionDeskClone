@@ -163,7 +163,7 @@
 											for ($month_i=1; $month_i <= 12; $month_i++) : 
 												$dt = DateTime::createFromFormat('!m', $month_i);
 											?>
-												<option value="<?php echo $month_i ;?>"><?php echo $dt->format('F') ;?></option>
+												<option  <?php echo  (date('m') == $month_i) ? 'selected' :""; ?> value="<?php echo $month_i ;?>"><?php echo $dt->format('F') ;?></option>
 											<?php 
 											endfor;
 										?>
@@ -179,7 +179,7 @@
 											$current_year = date('Y');
 											for ($year_i=($current_year-5); $year_i <= $current_year; $year_i++) : 
 											?>
-												<option value="<?php echo $year_i ;?>"><?php echo $year_i ;?></option>
+												<option <?php echo  (date('Y') == $year_i) ? 'selected' :""; ?> value="<?php echo $year_i ;?>"><?php echo $year_i ;?></option>
 											<?php 
 											endfor;
 										?>
