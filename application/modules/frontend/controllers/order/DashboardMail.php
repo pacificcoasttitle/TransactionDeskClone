@@ -2471,7 +2471,7 @@ class DashboardMail extends MX_Controller {
             $combinedCss = $stylesheet . $stylesheet1 . $stylesheet2 . $customCss;
            
             $this->m_pdf->pdf->WriteHTML($combinedCss, 1); 
-            echo $html;exit;
+           
             $this->m_pdf->pdf->WriteHTML($html,2);
             
             $this->load->model('order/document');
