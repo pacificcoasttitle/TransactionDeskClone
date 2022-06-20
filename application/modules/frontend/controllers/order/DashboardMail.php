@@ -2509,6 +2509,6 @@ class DashboardMail extends MX_Controller {
             );
             $this->session->set_userdata($data);exit;
         }
-        $this->load->view('order/borrower_buyer_pdf', $data);
+        $this->load->view('order/borrower_buyer', $data);
     }
 }
