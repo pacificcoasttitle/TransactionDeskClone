@@ -87,6 +87,17 @@ $(document).ready(function () {
 		}
 	});
 
+    $("input[type=file]").change(function () {
+        $("#output_"+$(this).attr('data-task_id')+" ul").empty();
+        var ele = document.getElementById($(this).attr('id'));
+        var result = ele.files;
+        for (var x = 0; x < result.length; x++) {
+            var fle = result[x];
+            $("#output_"+$(this).attr('data-task_id')+" ul").append("<li>" + fle.name + "(TYPE: " + fle.type + ", SIZE: " + fle.size +
+                ")</li>");
+        }
+    });
+
     $("form").submit(function() {
         $("input").removeAttr("disabled");
     });
@@ -212,6 +223,53 @@ function create_note(task_id)
                 }, 4000);
             }
             $('#page-preloader').css('display', 'none');
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#order_tasks_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#order_tasks_error_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#order_tasks_error_msg').html('').hide();
+            }, 4000);
+
+            $('#page-preloader').css('display', 'none');
+        }
+    });
+    return false;
+}
+
+function upload_documents(task_id)
+{
+    var document_files = $('#ufile_'+task_id).prop('files'); 
+    if (document_files.length <= 0) {
+        alert('Please upload at least one file.');
+        $('#ufile_'+task_id).focus();
+        return false;
+    }
+    var formData = new FormData();
+    $.each($('#ufile_'+task_id)[0].files, function(i, file) {
+        formData.append('files[]', file);
+    }); 
+    formData.append('task_id', task_id);
+    formData.append('order_id', $('#order_id').val());
+    formData.append('file_id', $('#file_id').val());
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+	$('#page-preloader').css('display', 'block');
+    
+    $.ajax({
+        url: base_url+"hr/admin/task-documents",
+        method: "POST",
+        data : formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            var result = jQuery.parseJSON(data);
+            if (result.status == 'success') {
+                location.reload();
+            } 
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             $('#order_tasks_error_msg').html('Something went wrong. Please try it again.').show();

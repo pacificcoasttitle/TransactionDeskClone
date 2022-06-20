@@ -34,6 +34,94 @@ td {
 .radio:before {
 	background: none !important;
 }
+.btnFile {
+	display: inline-block;
+	margin-bottom: 0;
+	font-weight: 400;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	background-image: none;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	border-radius: 4px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.glyphicon {
+	position: relative;
+	top: 1px;
+	display: inline-block;
+	font-family: 'Glyphicons Halflings';
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.glyphicon-plus:before {
+	content: "\2b";
+}
+
+.btnFile-success {
+	color: #fff;
+	font-weight: bold;
+	text-align: center;
+	padding: 5em 22em;
+	margin: 10px 0px 0px 0px;
+	color: #555;
+	border: 2px dashed #cbd2d6;
+	border-radius: 7px;
+	margin-bottom: 20px;
+}
+
+.fileinput-button input {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	margin: 0;
+	opacity: 0;
+	-ms-filter: 'alpha(opacity=0)';
+	font-size: 112px;
+	direction: ltr;
+	cursor: pointer;
+}
+
+input[type=file] {
+	display: block;
+}
+
+input[type="file"] {
+	align-items: baseline;
+	color: inherit;
+	text-align: start;
+}
+
+input[type="file"] {
+	-webkit-appearance: initial;
+	padding: initial;
+	background-color: initial;
+	border: initial;
+}
+    
+user agent stylesheet input, textarea, keygen, select, button, meter, progress {
+	-webkit-writing-mode: horizontal-tb;
+}
+
+
+.ui-form-1 .form-control {
+	border: 1px solid #cbd2d6;
+	border-radius: 25px;
+	color: #555;
+}
 </style>
 <section class="section-type-4a section-defaulta b-contact b-contact_mod-a" style="padding-bottom:0px;">
 	<div class="content">
@@ -216,9 +304,35 @@ td {
 													
 														<div class="" id="">
 															<div class="smart-forms spacer-b30 spacer-t30">
-																<div class="tagline"><span>Documents</span></div>
+																<div class="tagline" style="width:80%;"><span>Documents</span></div>
+																<a href="#documents_<?php echo $task['id']; ?>" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="documents_<?php echo $task['id']; ?>" href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
+																	<span class="text">Upload Documents</span>
+																</a>
 															</div>
-															<table class="table table-type-3 typography-last-elem no-footer">
+
+															<div class="form-reply ui-form-1 collapse" id="documents_<?php echo $task['id']; ?>">
+																<div class="row">
+																	<div class="col-xs-12">
+																		<span class="btnFile btnFile-success fileinput-button" style="margin-top:10px;position:relative;">
+																			<i class="glyphicon glyphicon-plus"></i>
+																			<span>Drag and Drop files...</span>
+																			<input data-task_id="<?php echo $task['id']; ?>" type="file" name="document_files_<?php echo $task['id']; ?>[]" id="ufile_<?php echo $task['id']; ?>" multiple>
+																		</span>
+																		<div id="output_<?php echo $task['id']; ?>">
+																			<ul></ul>
+																		</div>
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col-xs-12 smart-forms">
+																		<a onclick="return upload_documents(<?php echo $task['id']; ?>);"  href="#" class="btn button btn-primary" style="height: 35px;line-height:35px;">
+																			<span class="text">Upload Documents</span>
+																		</a>
+																	</div>
+																</div>
+															</div>
+
+															<table class="table table-type-3 typography-last-elem no-footer spacer-t30">
 																<thead>
 																	<tr>
 																		<th>#</th>
