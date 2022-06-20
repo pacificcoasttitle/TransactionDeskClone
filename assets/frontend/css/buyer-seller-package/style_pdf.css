@@ -2,6 +2,9 @@
 body{
     font-family: 'Poppins', sans-serif;
 }
+h1, h2, h3, h4, h5 {
+    font-weight: bold;
+}
 .container{
     max-width: 1200px;
 }
@@ -43,7 +46,8 @@ small.small_label {
     font-size: 12px;
 }
 .form-control{
-    height: 45px;
+    height: 60px;
+    padding: 5px !important;
 }
 .position-relative input {
     padding-bottom: 12px;
@@ -261,7 +265,7 @@ input.signature {
     text-align: center;
 }
 .yesno_table input[type="radio"] {
-    margin-top: 5px;
+    margin: 5px 0 0 5px;
 }
 .w-small {
     width: 40px !important;
@@ -350,4 +354,12 @@ input.signature {
     overflow-anchor: none;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,border-radius .15s ease;
 	letter-spacing: 0.5px;
+}
+
+td {
+    line-height: 1.5;
+}
+
+.escrow_radio {
+    margin: 0 5px !important;
 }
