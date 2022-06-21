@@ -2462,4 +2462,30 @@ class Common extends MX_Controller {
 			redirect(base_url().'get-notes/'.$fileId);
 	    }
     }
+
+	public function update_commisssion_calculation() {
+		//Get SalesRep whose order close on current month
+
+		$for_month = date('m');
+		$for_year = date('Y');
+		$table = 'transaction_details';
+		$this->db->select('sales_representative');
+		$this->db->from($table);   
+		$this->db->join('order_details','order_details.transaction_id = transaction_details.id');   
+		$this->db->where('MONTH(sent_to_accounting_date)',$for_month);
+		$this->db->where('YEAR(sent_to_accounting_date)',$for_year);
+		$this->db->where('sales_representative  >',$for_year);
+		$this->db->group_by('sales_representative');
+		$query = $this->db->get();
+        $result = $query->result();
+
+		$this->load->model('admin/order/customer_basic_details_model');
+		
+		foreach($result as $record) {
+			$sales_rep_id = $record->sales_representative;
+			$stored_pocedure = "CALL calculate_commission(?)";
+			$this->customer_basic_details_model->call_sp($stored_pocedure,array('id'=>$sales_rep_id));
+		}
+
+	}
 }

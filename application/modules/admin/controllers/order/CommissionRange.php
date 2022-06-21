@@ -85,6 +85,7 @@ class CommissionRange extends MX_Controller {
                     
                     if ($insert) {
                         $flash_data['success'] = 'Commission Range added successfully.';
+						$this->common->updateCommisssionCalculation();
                     } else {
                         $flash_data['error'] = 'Commission Range not added.';
                     }
@@ -186,6 +187,7 @@ class CommissionRange extends MX_Controller {
                     
 				if ($insert) {
 					$flash_data['success'] = 'Commission Range imported successfully.';
+					$this->common->updateCommisssionCalculation();
 				} else {
 					$flash_data['error'] = 'Commission Range not added.';
 				}
@@ -325,6 +327,10 @@ class CommissionRange extends MX_Controller {
 						$update = $this->commission_range_model->update($id,$commissionData);
 						
 						if ($update) {
+							//Check data before call function
+							
+							$this->common->updateCommisssionCalculation();
+							
 							$flash_data['success'] = 'Commission Range updated successfully.';
 						} else {
 							$flash_data['error'] = 'Commission Range not updated.';
@@ -363,6 +369,7 @@ class CommissionRange extends MX_Controller {
 			$delete_status = $this->commission_range_model->delete($id);
 			if ($delete_status) {
 				$flash_data['success'] = 'Commission Range deleted successfully.';
+				$this->common->updateCommisssionCalculation();
 				$status = true;
 			} else {
 				$flash_data['error'] = 'Commission Range not deleted.';
@@ -417,12 +424,14 @@ class CommissionRange extends MX_Controller {
                     
                     if ($insert) {
                         $flash_data['success'] = 'Underwriter Tier added successfully.';
+						$this->common->updateCommisssionCalculation();
                     } else {
                         $flash_data['error'] = 'Underwriter Tier not added.';
                     }
 					
 					$this->session->set_flashdata($flash_data);
 					redirect(base_url('order/admin/underwriter-tier'));
+					
                 
                 
             }                                       
@@ -464,6 +473,10 @@ class CommissionRange extends MX_Controller {
 						$update = $this->underwriter_tier_model->update($id,$underwriterData);
 						
 						if ($update) {
+							//Check data before call function
+							if($record->product_type != $underwriterData['product_type'] || $record->underwriter != $underwriterData['underwriter'] || $record->commission != $underwriterData['commission']) {
+								$this->common->updateCommisssionCalculation();
+							}
 							$flash_data['success'] = 'Underwriter Tier updated successfully.';
 						} else {
 							$flash_data['error'] = 'Underwriter Tier not updated.';
@@ -494,6 +507,7 @@ class CommissionRange extends MX_Controller {
 			$delete_status = $this->underwriter_tier_model->delete($id);
 			if ($delete_status) {
 				$flash_data['success'] = 'Underwriter Tier deleted successfully.';
+				$this->common->updateCommisssionCalculation();
 				$status = true;
 			} else {
 				$flash_data['error'] = 'Underwriter Tier not deleted.';
@@ -560,7 +574,26 @@ class CommissionRange extends MX_Controller {
 					}
                     
                     if($inserted) {
+						
 						$this->session->set_flashdata('success','File uploaded.');
+
+						//Send notification
+						$user_id = $this->input->post('sales_rep');
+						$month_i = $this->input->post('commission_month');
+						$dt = DateTime::createFromFormat('!m', $month_i);
+						$month_i = $dt->format('F') ;
+						$year_i = $this->input->post('commission_year');
+						$message = 'Commission File is uploaded for '.$month_i.' '.$year_i;
+						$notificationData = array(
+							'sent_user_id' => $user_id,
+							'message' => $message,
+							'is_admin' => 0,
+							'type' =>  'created'
+						);
+						$this->load->model('order/home_model');
+						$this->home_model->insert($notificationData, 'pct_order_notifications');
+						$this->order->sendNotification($message, 'created', $user_id, 0);
+						//Send notification
                         redirect('order/admin/commission-files');
                     }
                 } 

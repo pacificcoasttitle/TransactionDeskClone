@@ -153,4 +153,14 @@ class Common
         $query = $this->CI->db->get();    
         return $query->result_array();
     }
+
+	public function updateCommisssionCalculation() {
+		$command = "php ".FCPATH."index.php frontend/order/common update_commisssion_calculation";
+		if (substr(php_uname(), 0, 7) == "Windows"){
+			pclose(popen("start /B ". $command, "r")); 
+		}
+		else {
+			exec($command . " > /dev/null &");  
+		}
+	}
 }
