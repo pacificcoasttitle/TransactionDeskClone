@@ -109,12 +109,12 @@ final class CreateBorrowerSellerInfoTable extends AbstractMigration
 
         $table = $this->table('pct_order_borrower_selller_other_info');
         $table->addColumn('order_id', 'integer')
-            ->addColumn('is_exchange_residence', 'enum', ['values' => ['yes','no']])
-            ->addColumn('is_not_exchange_residence', 'enum', ['values' => ['yes','no']])
-            ->addColumn('is_former_spouse', 'enum', ['values' => ['yes','no']])
-            ->addColumn('is_married', 'enum', ['values' => ['yes','no']])
-            ->addColumn('is_period', 'enum', ['values' => ['yes','no']])
-            ->addColumn('is_revenue', 'enum', ['values' => ['yes','no']])
+            ->addColumn('is_exchange_residence', 'enum', ['values' => ['true','false']])
+            ->addColumn('is_not_exchange_residence', 'enum', ['values' => ['true','false']])
+            ->addColumn('is_former_spouse', 'enum', ['values' => ['true','false']])
+            ->addColumn('is_married', 'enum', ['values' => ['true','false']])
+            ->addColumn('is_period', 'enum', ['values' => ['true','false']])
+            ->addColumn('is_revenue', 'enum', ['values' => ['true','false', 'n/a']])
             ->addColumn('is_attorney', 'enum', ['values' => ['yes','no']])
             ->addColumn('firm_name', 'string', ['null' => true])
             ->addColumn('firm_phone_number', 'string', ['null' => true])
