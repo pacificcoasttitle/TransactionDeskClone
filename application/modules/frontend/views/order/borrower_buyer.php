@@ -210,7 +210,7 @@
                                             </ul>
                                             <label id="is_same_property_address_as_forwarding_address-error" class="error text-danger" for="is_same_property_address_as_forwarding_address"></label>
                                             
-                                            <div class="otherAddress d-none">
+                                            <div class="otherFowardingAddressClose d-none">
                                                 <div class="form-group position-relative mb-3">
                                                     <label for="" class="mb-2"><b>Enter Forwarding Address After Closing </b></label>
                                                     <input type="text" class="form-control" id="forwarding_street_address" name="forwarding_street_address" data-error="#forwarding_street_address-error">

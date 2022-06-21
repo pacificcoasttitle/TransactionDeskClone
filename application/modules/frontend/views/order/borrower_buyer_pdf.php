@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -5,30 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
 
-
 <body class="">
-
     <header>
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-6">
-                    <a href="#"><img src="<?php echo base_url();?>assets/frontend/images/buyer-seller-package/alanna-logo.png" alt="..." class="img-fluid img_logo"></a>
+                    <a href="#"></a>
                 </div>
                 
             </div>
         </div>
     </header>
-
     <section class="form_content">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <!-- <p class="mb-5">
-                        This is an example of a Buyer Welcome Package.
-                    </p> -->
-                    
                     <form name="borrower_buyer_form" id="borrower_buyer_form">
-                        <h2 class="blue_title">Buyer Opening Package<br><span style="font-size:16px; padding-top:15px;">Property Address: <?php echo $orderDetails['full_address'];?></span><br><span style="font-size:16px; padding-top:15px;">APN:<?php echo $orderDetails['apn'];?></span></h2>
+                        <h2 class="blue_title">Buyer Opening Package<br><span style="font-size:16px; padding-top:15px;">Property Address: <?php echo $full_address;?></span><br><span style="font-size:16px; padding-top:15px;">APN:<?php echo $apn;?></span></h2>
                         <div class="accordion" id="accordionExample">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingOne">
@@ -39,34 +33,26 @@
                                         <div class="row mb-3">
                                             <div class="col-md-12">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b>Property Address Being Purchased</b></label>
+                                                    <label for="property_address" class="mb-2"><b>Property Address Being Purchased</b></label>
                                                     <input type="text" class="form-control" id="property_address" name="property_address" value="<?php echo $property_address;?>">
                                                     <small class="small_label">Street Address</small>
                                                 </div>
-
-                                               
-
                                                 <div class="form-group position-relative mb-3">
                                                     <input type="text" class="form-control" id="property_address2" name="property_address2" value="<?php echo $property_address2;?>">
                                                     <small  class="small_label">Street Address Line 2</small>
                                                 </div>
-                                                
-
 												<div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3">
-                                                            <input type="text" class="form-control" id="property_city" name="property_city" id="property_city" name="property_city" value="<?php echo $property_city;?>">
+                                                            <input type="text" class="form-control" id="property_city" name="property_city" value="<?php echo $property_city;?>">
                                                             <small  class="small_label">City</small>
                                                         </div>
-                                                        
                                                     </div>
-
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3 ">
                                                             <input type="text" class="form-control" id="property_zipcode" name="property_zipcode" value="<?php echo $property_zip_code;?>">
                                                             <small  class="small_label">Zip Code</small>
                                                         </div>
-                                                        
                                                     </div>
 												</div>	
                                             </div>
@@ -87,38 +73,32 @@
                                                     <div class="row">
                                                         <div class="col-md-4">
                                                             <div class="form-group">
-                                                                <label for="" class="mb-2">First Name</label>
+                                                                <label for="first_name" class="mb-2">First Name</label>
                                                                 <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $first_name;?>">
                                                             </div>
-                                                            
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
-                                                                <label for="" class="mb-2">Middle Name</label>
+                                                                <label for="middle_name" class="mb-2">Middle Name</label>
                                                                 <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo $middle_name;?>">
                                                             </div>
-                                                            
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
-                                                                <label for="" class="mb-2">Last Name</label>
+                                                                <label for="last_name" class="mb-2">Last Name</label>
                                                                 <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $last_name;?>">
                                                             </div>
-                                                            
                                                         </div>
-                                                    
                                                         <div class="col-md-6 mt-2">
                                                             <div class="form-group position-relative">
                                                                 <label for="" class="mb-2">Phone Number</label>
                                                                 <input type="text" class="form-control" id="phone_number" name="phone_number" value="<?php echo $phone_number;?>">
-                                                                
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 mt-2">
                                                             <div class="form-group position-relative">
                                                                 <label for="" class="mb-2">Email Address</label>
                                                                 <input type="text" class="form-control" id="email" name="email" value="<?php echo $email;?>">
-                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -133,42 +113,35 @@
                                                                 <label for="" class="mb-2">First Name</label>
                                                                 <input type="text" class="form-control" id="second_buyer_first_name" name="second_buyer_first_name" value="<?php echo $second_buyer_first_name;?>">
                                                             </div>
-                                                            
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">Middle Name</label>
                                                                 <input type="text" class="form-control" id="second_buyer_middle_name" name="second_buyer_middle_name" value="<?php echo $second_buyer_middle_name;?>">
                                                             </div>
-                                                            
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">Last Name</label>
                                                                 <input type="text" class="form-control" id="second_buyer_last_name" name="second_buyer_last_name" value="<?php echo $second_buyer_last_name;?>">
                                                             </div>
-                                                            
                                                         </div>
-                                                    
                                                         <div class="col-md-6 mt-2">
                                                             <div class="form-group position-relative mb-4">
                                                                 <label for="" class="mb-2">Phone Number</label>
                                                                 <input type="text" class="form-control" id="second_buyer_phone_number" name="second_buyer_phone_number" value="<?php echo $second_buyer_phone_number;?>">
-                                                                
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 mt-2">
                                                             <div class="form-group position-relative mb-4">
                                                                 <label for="" class="mb-2">Email Address</label>
                                                                 <input type="email" class="form-control" id="second_buyer_email" name="second_buyer_email" value="<?php echo $second_buyer_email;?>">
-                                                                
                                                             </div>
                                                         </div>
                                                     </div>
 												</div>
                                             </div>
                                         </div>
-										
                                         <div class="form-group mb-3">
                                             <label for="" class="mb-2"><b>Forwarding Address after Closing</b></label>
                                             <ul class="list-inline">
@@ -181,14 +154,12 @@
                                                     <label for="option12">   Other Address</label>
                                                 </li>
                                             </ul>
-                                            
                                             <div class="otherAddress <?php echo ($is_same_property_address_as_forwarding_address == 'other') ? '' : 'd-none';?>">
                                                 <div class="form-group position-relative mb-3">
                                                     <label for="" class="mb-2"><b>Enter Forwarding Address After Closing </b></label>
                                                     <input type="text" class="form-control" id="forwarding_street_address" name="forwarding_street_address" value="<?php echo $forwarding_street_address;?>">
                                                     <small class="small_label">Street Address</small>
                                                 </div>
-                                                
                                                 <div class="form-group position-relative mb-3">
                                                     <input type="text" class="form-control" id="forwarding_street_address2" name="forwarding_street_address2" value="<?php echo $forwarding_street_address2;?>">
                                                     <small  class="small_label">Street Address Line 2</small>
@@ -200,7 +171,6 @@
                                                             <input type="text" class="form-control" id="forwarding_city" name="forwarding_city" value="<?php echo $forwarding_city;?>">
                                                             <small  class="small_label">City</small>
                                                         </div>
-                                                        
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3">
@@ -214,13 +184,11 @@
                                                     <input type="text" class="form-control" id="forwarding_zip_code" name="forwarding_zip_code" value="<?php echo $forwarding_zip_code;?>">
                                                     <small  class="small_label">Zip Code</small>
                                                 </div>
-                                               
                                             </div>
                                         </div>
                                     </div>   
                                 </div>
                             </div>
-                        
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingTwo">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">(3) Escrow Instructions</button>
@@ -239,7 +207,6 @@
                                                     <label class="escrow_radio" for="noMortgage">No</label>
                                                 </li>
                                             </ul>
-                                            
                                         </div> 
                                         <div class="form-group mb-4">
                                             <label for="" class="mb-2"><b>Are there any other Liens on the Property?</b></label>
@@ -1836,13 +1803,10 @@ Los Angeles, CA 90036
                                 </div>
                             </div>
                         </div>
-                       
                     </form>
                 </div>
             </div>
         </div>
     </section>
-
-    
 </body>
 </html>

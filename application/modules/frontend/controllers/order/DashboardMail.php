@@ -2107,9 +2107,21 @@ class DashboardMail extends MX_Controller {
     {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
+        $order = $this->getOrderInfo($random_number);
+        $data['orderDetails'] = $this->order->get_order_details($order[0]['file_id'], 1);
+        $errors = array();
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
 
         if ($this->input->post()) {
-            
             $borrowerSellerInfoData = array(
                 'order_id' => $this->input->post('order_id'),
                 'first_name' => $this->input->post('first_name'),
@@ -2152,7 +2164,7 @@ class DashboardMail extends MX_Controller {
                 'forwarding_state' => $this->input->post('forwarding_state') ? $this->input->post('forwarding_state') : null,
                 'forwarding_zip_code' => $this->input->post('forwarding_zip_code') ? $this->input->post('forwarding_zip_code') : null,
                 'residence' => $this->input->post('residence'),
-                'is_insurance_policy' => $this->input->post('insurance'),
+                'is_insurance_policy' => $this->input->post('is_insurance_policy'),
                 'insurance_policy_file_name' => $this->input->post('insurance_policy_file_name') ? $this->input->post('insurance_policy_file_name') : null,
             );
             $this->home_model->insert($borrowerSellerPropertyInfoData, 'pct_order_borrower_selller_property_info');
@@ -2172,7 +2184,7 @@ class DashboardMail extends MX_Controller {
                 'amount_deduction' => $this->input->post('amount_deduction') ? $this->input->post('amount_deduction') : null,
                 'agent_phone' => $this->input->post('agent_phone') ? $this->input->post('agent_phone') : null,
                 'agent_email' => $this->input->post('agent_email') ? $this->input->post('agent_email') : null,
-                'seller_invoices' => $this->input->post('seller_invoices') ? $this->input->post('seller_invoices') : null,
+                'seller_invoices' => $this->input->post('seller_invoices') ? implode(',', $this->input->post('seller_invoices')) : null,
             );
             $this->home_model->insert($borrowerSellerAgentInfoData, 'pct_order_borrower_selller_agent_info');
 
@@ -2235,9 +2247,63 @@ class DashboardMail extends MX_Controller {
                 'second_hoa_dues_per' => $this->input->post('second_hoa_dues_per') ? $this->input->post('second_hoa_dues_per') : null,
                 'second_hoa_notes' => $this->input->post('second_hoa_notes') ? $this->input->post('second_hoa_notes') : null,
             );
-            $this->home_model->insert($borrowerSellerHoaInfoData, 'pct_order_borrower_selller_hoa_info');    
+            $this->home_model->insert($borrowerSellerHoaInfoData, 'pct_order_borrower_selller_hoa_info');   
+            
+            $pdfData = array_merge($borrowerSellerInfoData, $borrowerSellerPropertyInfoData, $borrowerSellerAgentInfoData, $borrowerSellerMortgageInfoData, $borrowerSellerOtherInfoData, $borrowerSellerHoaInfoData);
+            $pdfData['seller_invoices'] = $this->input->post('seller_invoices');
+            $pdfData['full_address'] = $data['orderDetails']['full_address'];
+            $pdfData['apn'] = $data['orderDetails']['apn'];
+
+            $this->load->model('order/document');
+            $borrowerDocumentCount = $this->document->countBorrowerDocument($data['orderDetails']['id']);
+            $document_name = "borrower_seller_".$borrowerDocumentCount."_".$order[0]['file_id'].".pdf";
+            if (!is_dir('uploads/borrower')) {
+                mkdir('./uploads/borrower', 0777, TRUE);
+            }
+            $pdfFilePath = './uploads/borrower/'.$document_name;
+
+            ob_clean(); 
+            try {
+                $mpdf = new \Mpdf\Mpdf();
+                ini_set("pcre.backtrack_limit", "5000000");
+                $html = $this->load->view('order/borrower_seller_pdf', $pdfData, true);
+                $stylesheet = file_get_contents('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap');
+                $mpdf->WriteHTML($stylesheet, 1);
+                $stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
+                $mpdf->WriteHTML($stylesheet1, 1);
+                $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
+                $mpdf->WriteHTML($stylesheet2, 1);
+                $mpdf->WriteHTML($html,2);
+                $mpdf->Output($pdfFilePath,'F');
+                ob_end_flush();
+            } catch (\Mpdf\MpdfException $e) {
+                echo $e->getMessage();
+            }
+
+            $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
+            $documentData = array(
+                'document_name' => $document_name,
+                'original_document_name' => $document_name,
+                'document_type_id' => 1041,
+                'document_size' => 0,
+                'user_id' => 0,
+                'order_id' => $data['orderDetails']['order_id'],
+                'task_id' => 4,
+                'description' => 'Borrower Seller Document',
+                'is_sync' => 1,
+                'is_uploaded_by_borrower' => 1
+            );
+            $this->document->insert($documentData);
+            $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
+
+            $success[] = "Borrower seller info saved successfully and sent to Escrow officer/assistant users to verify data.";
+            $data = array(
+                "errors" =>  $errors,
+                "success" => $success
+            );
+            $this->session->set_userdata($data);
+            redirect(base_url().'borrower-seller-form/'.$random_number);
         }
-        $order = $this->getOrderInfo($random_number);
         $this->load->view('order/borrower_seller', $data);
     }
 
@@ -2459,55 +2525,60 @@ class DashboardMail extends MX_Controller {
             $this->home_model->insert($borrowerBuyerPurchaseSaleInfoData, 'pct_order_borrower_buyer_purchase_sale_info');   
             
             $pdfData = array_merge($borrowerBuyerInfoData, $borrowerBuyerEscrowInsData, $borrowerBuyerStatementInfoData, $borrowerBuyerPreliminaryInfoData, $borrowerBuyerTransferInfoData, $borrowerBuyerPurchaseSaleInfoData);
-            
-            $html = $this->load->view('order/borrower_buyer_pdf', $pdfData, true);
-            $this->load->library('m_pdf');
-            ob_clean(); 
-            $stylesheet = file_get_contents('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap');
-            $stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
-            $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
-            
-            $customCss = '@media print { @page { size: auto; } }';
-            $combinedCss = $stylesheet . $stylesheet1 . $stylesheet2 . $customCss;
-           
-            $this->m_pdf->pdf->WriteHTML($combinedCss, 1); 
-           
-            $this->m_pdf->pdf->WriteHTML($html,2);
+            $pdfData['full_address'] = $data['orderDetails']['full_address'];
+            $pdfData['types_of_transfer'] = $this->input->post('types_of_transfer');
+            $pdfData['first_deed_payment_types'] = $this->input->post('first_deed_payment_types') ? $this->input->post('first_deed_payment_types') : array();
+            $pdfData['types_of_property_transferred'] = $this->input->post('types_of_property_transferred') ? $this->input->post('types_of_property_transferred') : array();
+            $pdfData['second_deed_payment_types'] = $this->input->post('second_deed_payment_types') ? $this->input->post('second_deed_payment_types') : array();
             
             $this->load->model('order/document');
-            
             $borrowerDocumentCount = $this->document->countBorrowerDocument($data['orderDetails']['id']);
             $document_name = "borrower_buyer_".$borrowerDocumentCount."_".$order[0]['file_id'].".pdf";
-            if (!is_dir('uploads/borrower-buyer-information')) {
-                mkdir('./uploads/borrower-buyer-information', 0777, TRUE);
+            if (!is_dir('uploads/borrower')) {
+                mkdir('./uploads/borrower', 0777, TRUE);
             }
-    
-            $pdfFilePath = './uploads/borrower-buyer-information/'.$document_name;
-            $this->m_pdf->pdf->Output($pdfFilePath,'F');
-            $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
+            $pdfFilePath = './uploads/borrower/'.$document_name;
 
-            $this->load->model('order/document');
+            try {
+                ob_clean(); 
+                $mpdf = new \Mpdf\Mpdf();
+                ini_set("pcre.backtrack_limit", "5000000");
+                $html = $this->load->view('order/borrower_buyer_pdf', $pdfData, true);
+                $stylesheet = file_get_contents('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap');
+                $mpdf->WriteHTML($stylesheet, 1);
+                //$stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
+                //$mpdf->WriteHTML($stylesheet1, 1);
+                $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
+                $mpdf->WriteHTML($stylesheet2, 1);
+                $mpdf->WriteHTML($html,2);
+                $mpdf->Output($pdfFilePath,'F');
+                ob_end_flush();exit;
+            } catch (\Mpdf\MpdfException $e) { 
+                echo $e->getMessage();
+            }
+
+            $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
             $documentData = array(
                 'document_name' => $document_name,
                 'original_document_name' => $document_name,
                 'document_type_id' => 1041,
                 'document_size' => 0,
                 'user_id' => 0,
-                'order_id' => $data['orderDetails']['id'],
+                'order_id' => $data['orderDetails']['order_id'],
                 'task_id' => 4,
                 'description' => 'Borrower Buyer Document',
                 'is_sync' => 1,
                 'is_uploaded_by_borrower' => 1
             );
             $this->document->insert($documentData);
-            $this->order->uploadDocumentOnAwsS3($document_name, 'borrower-buyer-information');
-
-            $success[] = "Borrower buyer info saved successfully";
+            $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
+            $success[] = "Borrower buyer info saved successfully and sent to Escrow officer/assistant users to verify data.";
             $data = array(
                 "errors" =>  $errors,
                 "success" => $success
             );
-            $this->session->set_userdata($data);exit;
+            $this->session->set_userdata($data);
+            redirect(base_url().'borrower-buyer-form/'.$random_number);
         }
         $this->load->view('order/borrower_buyer', $data);
     }
