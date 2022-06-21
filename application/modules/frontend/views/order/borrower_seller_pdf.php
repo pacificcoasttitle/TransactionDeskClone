@@ -1,30 +1,10 @@
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><?php echo $title;?></title>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link
-		href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap"
-		rel="stylesheet">
-	<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/css/buyer-seller-package/bootstrap.min.css">
-	<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/css/buyer-seller-package/style.css">
 </head>
-
-<style>
-	.error2 {
-		margin-top: 10px;
-	}
-</style>
-
 <body class="">
-
-
-	<!-- header -->
-
 	<header>
 		<div class="container">
 			<div class="row align-items-center">
@@ -37,31 +17,15 @@
 			</div>
 		</div>
 	</header>
-
-	<!-- form content -->
-
 	<section class="form_content">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<?php if(!empty($success)) {?>
-                        <div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-                            <?php foreach($success as $sucess) {
-                                    echo $sucess."<br \>";	
-                                }?>
-                        </div>
-                    <?php } 
-                    if(!empty($errors)) {?>
-                        <div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-                            <?php foreach($errors as $error) {
-                                    echo $error."<br \>";	
-                                }?>
-                        </div>
-                    <?php } ?>
-					<form action="<?php echo base_url().'borrower-seller-form/'.$orderDetails['file_id']; ?>" method="post" name="borrower_seller_form" id="borrower_seller_form">
+					<form action="" method="post" name="borrower_seller_form" id="borrower_seller_form">
 						<h2 class="blue_title">Seller Opening Package<br><span
-								style="font-size:16px; padding-top:15px;">Property Address: <?php echo $orderDetails['full_address'];?></span><br><span
-								style="font-size:16px; padding-top:15px;">APN:<?php echo $orderDetails['apn'];?></span></h2>
+								style="font-size:16px; padding-top:15px;">Property Address: 13321 Success Ave, Success
+								City, CA 91253</span><br><span
+								style="font-size:16px; padding-top:15px;">APN:000-000-0000</span></h2>
 						<div class="accordion mt-4" id="accordionExample">
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="headingOne">
@@ -79,28 +43,23 @@
 											<div class="row">
 												<div class="col-md-4">
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="first_name"
-															name="first_name" required data-error="#first_name-error">
+														<input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $first_name;?>">
 														<small class="small_label">First Name</small>
 													</div>
-													<label id="first_name-error" class="error text-danger error2" for="first_name"></label>
 												</div>
-												<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
 												<div class="col-md-4">
 													<div class="form-group position-relative">
 														<input type="text" class="form-control" id="middle_name"
-															name="middle_name" required data-error="#middle_name-error">
+															name="middle_name" value="<?php echo $middle_name;?>">
 														<small class="small_label">Middle Name</small>
 													</div>
-													<label id="middle_name-error" class="error text-danger error2" for="middle_name"></label>
 												</div>
 												<div class="col-md-4">
 													<div class="form-group position-relative">
 														<input type="text" class="form-control" id="last_name"
-															name="last_name" required data-error="#last_name-error">
+															name="last_name" value="<?php echo $last_name;?>">
 														<small class="small_label">Last Name</small>
 													</div>
-													<label id="last_name-error" class="error text-danger error2" for="last_name"></label>
 												</div>
 											</div>
 										</div>
@@ -111,7 +70,7 @@
 													<div class="form-group position-relative">
 														<label for="" class="mb-2"><b>Seller 1 Preferred Phone Number
 														<span>*</span></b></label>
-														<input type="text" class="form-control" id="phone_number" name="phone_number" required>
+														<input type="text" class="form-control" id="phone_number" name="phone_number" value="<?php echo $phone_number;?>">
 													</div>
 												</div>
 												<div class="col-md-4">
@@ -120,20 +79,19 @@
 																<span>*</span></b></label>
 														<ul class="list-unstyled">
 															<li>
-																<input type="radio" name="phone_number_type" value="Home" id="Home" required data-error="#phone_number_type-error">
+																<input type="radio" name="phone_number_type" value="Home" id="Home" <?php echo ($phone_number_type == 'Home') ? 'checked="checked"' : '';?>>
 																<label for="Home">Home Number</label>
 															</li>
 															<li>
-																<input type="radio" name="phone_number_type" value="Cell" id="Cell">
+																<input type="radio" name="phone_number_type" value="Cell" id="Cell" <?php echo ($phone_number_type == 'Cell') ? 'checked="checked"' : '';?>>
 																<label for="Cell">Cell</label>
 															</li>
 															<li>
-																<input type="radio" name="phone_number_type" value="Business" id="Business">
+																<input type="radio" name="phone_number_type" value="Business" id="Business" <?php echo ($phone_number_type == 'Business') ? 'checked="checked"' : '';?>>
 																<label for="Business">Business Phone</label>
 															</li>
 														</ul>
 													</div>
-													<label id="phone_number_type-error" class="error text-danger" for="phone_number_type"></label>
 												</div>
 											</div>
 										</div>
@@ -142,15 +100,14 @@
 											<label for="" class="mb-2"><b>Is Seller a citizen or resident of a foreign country? <span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" value="yes" id="foreignYes" name="foreign_resident" required data-error="#foreign_resident-error">
+													<input type="radio" value="yes" id="foreignYes" name="foreign_resident" <?php echo ($foreign_resident == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="foreignYes">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" value="no" id="foreignNo" name="foreign_resident">
+													<input type="radio" value="no" id="foreignNo" name="foreign_resident" <?php echo ($foreign_resident == 'no') ? 'checked="checked"' : '';?>>
 													<label for="foreignNo">No</label>
 												</li>
 											</ul>
-											<label id="foreign_resident-error" class="error text-danger" for="foreign_resident"></label>
 										</div>
 
 
@@ -158,18 +115,17 @@
 											<label for="" class="mb-2"><b>Is there a Co-Seller for this property?<span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" value="yes" id="coSellerYes" name="co_seller" required data-error="#co_seller-error">
+													<input type="radio" value="yes" id="coSellerYes" name="co_seller" <?php echo ($co_seller == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="coSellerYes">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" value="no" id="coSellerNo" name="co_seller">
+													<input type="radio" value="no" id="coSellerNo" name="co_seller" <?php echo ($co_seller == 'no') ? 'checked="checked"' : '';?>>
 													<label for="coSellerNo">No</label>
 												</li>
 											</ul>
-											<label id="co_seller-error" class="error text-danger" for="co_seller"></label>
 										</div>
 
-										<div class="coSellerInfo d-none">
+										<div class="coSellerInfo <?php echo ($co_seller == 'yes') ? '' : 'd-none';?>">
 											<div class="form-group sellerName mb-5">
 												<label for="" class="mb-2"><b>Spouse/Co-Seller's Name exactly as shown
 														on their Driver's License or other government issued ID:
@@ -177,26 +133,23 @@
 												<div class="row">
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_first_name" name="co_seller_first_name" data-error="#co_seller_first_name-error">
+															<input type="text" class="form-control" id="co_seller_first_name" name="co_seller_first_name" value="<?php echo $co_seller_first_name;?>">
 															<small class="small_label">First Name</small>
 														</div>
-														<label id="co_seller_first_name-error" class="error text-danger error2" for="co_seller_first_name"></label>
 													</div>
 													
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_middle_name" name="co_seller_middle_name" data-error="#co_seller_middle_name-error">
+															<input type="text" class="form-control" id="co_seller_middle_name" name="co_seller_middle_name" value="<?php echo $co_seller_middle_name;?>">
 															<small class="small_label">Middle Name</small>
 														</div>
-														<label id="co_seller_middle_name-error" class="error text-danger error2" for="co_seller_middle_name"></label>
 													</div>
 													
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_last_name" name="co_seller_last_name" data-error="#co_seller_last_name-error">
+															<input type="text" class="form-control" id="co_seller_last_name" name="co_seller_last_name" value="<?php echo $co_seller_last_name;?>">
 															<small class="small_label">Last Name</small>
 														</div>
-														<label id="co_seller_last_name-error" class="error text-danger error2" for="co_seller_last_name"></label>
 													</div>
 													
 												</div>
@@ -208,10 +161,9 @@
 														<span>*</span></b></label>
 												<div class="col-md-4">
 													<div class="form-group position-relative">
-														<input type="date" class="form-control" id="co_seller_expiration_date" name="co_seller_expiration_date" data-error="#co_seller_expiration_date-error">
+														<input type="date" class="form-control" id="co_seller_expiration_date" name="co_seller_expiration_date" value="<?php echo $co_seller_expiration_date;?>">
 														<small class="small_label">Date</small>
 													</div>
-													<label id="co_seller_expiration_date-error" class="error text-danger error2" for="co_seller_expiration_date"></label>
 												</div>
 											</div>
 
@@ -220,21 +172,20 @@
 														<span>*</span></b></label>
 												<ul class="list-unstyled">
 													<li>
-														<input type="radio" value="single" id="singlecoSeller" name="co_seller_marital_status" data-error="#co_seller_marital_status-error">
+														<input type="radio" value="single" id="singlecoSeller" name="co_seller_marital_status" <?php echo ($co_seller_marital_status == 'single') ? 'checked="checked"' : '';?>>
 														<label for="singlecoSeller">Single</label>
 													</li>
 													<li>
-														<input type="radio" value="married" id="marriedcoSeller" name="co_seller_marital_status">
+														<input type="radio" value="married" id="marriedcoSeller" name="co_seller_marital_status" <?php echo ($co_seller_marital_status == 'married') ? 'checked="checked"' : '';?>>
 														<label for="marriedcoSeller">Married</label>
 													</li>
 												</ul>
-												<label id="co_seller_marital_status-error" class="error text-danger" for="co_seller_marital_status"></label>
 											</div>
 
 											<div class="form-group mb-4 row">
 												<label for="" class="mb-2 col-md-12"><b>Seller's Social Security/Tax ID:<span>*</span></b></label>
 												<div class="col-md-4">
-													<input type="text" class="form-control" id="co_seller_ssn" name="co_seller_ssn">
+													<input type="text" class="form-control" id="co_seller_ssn" name="co_seller_ssn" value="<?php echo $co_seller_ssn;?>">
 												</div>
 											</div>
 
@@ -242,10 +193,9 @@
 												<label for="" class="mb-2 col-md-12"><b>Email</b></label>
 												<div class="col-md-6">
 													<div class="form-group position-relative">
-														<input type="email" class="form-control" id="co_seller_email" name="co_seller_email" data-error="#co_seller_email-error">
+														<input type="email" class="form-control" id="co_seller_email" name="co_seller_email" value="<?php echo $co_seller_email;?>">
 														<small class="small_label"> example@example.com</small>
 													</div>
-													<label id="co_seller_email-error" class="error text-danger error2" for="co_seller_email"></label>
 												</div>
 											</div>
 
@@ -255,7 +205,7 @@
 														<div class="form-group position-relative">
 															<label for="" class="mb-2"><b>Preferred Phone Number
 																	<span>*</span></b></label>
-															<input type="text" class="form-control" id="co_seller_phone_number" name="co_seller_phone_number">
+															<input type="text" class="form-control" id="co_seller_phone_number" name="co_seller_phone_number" value="<?php echo $co_seller_phone_number;?>">
 														</div>
 													</div>
 													<div class="col-md-4">
@@ -264,19 +214,18 @@
 																	<span>*</span></b></label>
 															<ul class="list-unstyled">
 																<li>
-																	<input type="radio" name="co_seller_phone_number_type" value="Home" id="HomecoSeller" data-error="#co_seller_phone_number_type-error">
+																	<input type="radio" name="co_seller_phone_number_type" value="Home" id="HomecoSeller" <?php echo ($co_seller_phone_number_type == 'Home') ? 'checked="checked"' : '';?>>
 																	<label for="HomecoSeller">Home Number</label>
 																</li>
 																<li>
-																	<input type="radio" name="co_seller_phone_number_type" value="Cell" id="CellcoSeller">
+																	<input type="radio" name="co_seller_phone_number_type" value="Cell" id="CellcoSeller" <?php echo ($co_seller_phone_number_type == 'Cell') ? 'checked="checked"' : '';?>>
 																	<label for="CellcoSeller">Cell</label>
 																</li>
 																<li>
-																	<input type="radio" name="co_seller_phone_number_type" value="Business" id="BusinesscoSeller">
+																	<input type="radio" name="co_seller_phone_number_type" value="Business" id="BusinesscoSeller" <?php echo ($co_seller_phone_number_type == 'Business') ? 'checked="checked"' : '';?>>
 																	<label for="BusinesscoSeller">Business Phone</label>
 																</li>
 															</ul>
-															<label id="co_seller_phone_number_type-error" class="error text-danger" for="co_seller_phone_number_type"></label>
 														</div>
 													</div>
 												</div>
@@ -287,15 +236,14 @@
 														foreign country? * <span>*</span></b></label>
 												<ul class="list-inline">
 													<li class="list-inline-item me-md-5">
-														<input type="radio" value="yes" id="coSellerforeignYes" name="co_seller_foreign_resident" data-error="#co_seller_foreign_resident-error">
+														<input type="radio" value="yes" id="coSellerforeignYes" name="co_seller_foreign_resident" <?php echo ($co_seller_foreign_resident == 'yes') ? 'checked="checked"' : '';?>>
 														<label for="coSellerforeignYes">Yes</label>
 													</li>
 													<li class="list-inline-item">
-														<input type="radio" value="no" id="coSellerforeignNo" name="co_seller_foreign_resident">
+														<input type="radio" value="no" id="coSellerforeignNo" name="co_seller_foreign_resident" <?php echo ($co_seller_foreign_resident == 'no') ? 'checked="checked"' : '';?>>
 														<label for="coSellerforeignNo">No</label>
 													</li>
 												</ul>
-												<label id="co_seller_foreign_resident-error" class="error text-danger" for="co_seller_foreign_resident"></label>
 											</div>
 										</div>
 
@@ -304,15 +252,14 @@
 													<span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" value="yes" id="attendingYes" name="attending" required data-error="#attending-error">
+													<input type="radio" value="yes" id="attendingYes" name="attending" <?php echo ($attending == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="attendingYes">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" value="no" id="attendingNo" name="attending">
+													<input type="radio" value="no" id="attendingNo" name="attending" <?php echo ($attending == 'no') ? 'checked="checked"' : '';?>>
 													<label for="attendingNo">No</label>
 												</li>
 											</ul>
-											<label id="attending-error" class="error text-danger" for="attending"></label>
 										</div>
 									</div>
 								</div>
@@ -328,55 +275,50 @@
 									<div class="accordion-body">
 										<div class="form-group mb-4">
 											<label for="" class="mb-2"><b>Property Address being sold: </b></label>
-											<input type="text" class="form-control" name="property_address" id="property_address" required>
+											<input type="text" class="form-control" name="property_address" id="property_address" value="<?php echo $property_address;?>">
 										</div>
 										<div class="form-group mb-4">
 											<label for="" class="mb-2"><b>Is the above address the correct address of
 													the property being sold? <span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesCorrectPropertyAddress" value="yes" name="is_correct_property_address" required data-error="#is_correct_property_address-error">
+													<input type="radio" id="yesCorrectPropertyAddress" value="yes" name="is_correct_property_address" <?php echo ($is_correct_property_address == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="yesCorrect">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noCorrectPropertyAddress" value="no" name="is_correct_property_address">
+													<input type="radio" id="noCorrectPropertyAddress" value="no" name="is_correct_property_address" <?php echo ($is_correct_property_address == 'no') ? 'checked="checked"' : '';?>>
 													<label for="noCorrect">No</label>
 												</li>
 											</ul>
-											<label id="is_correct_property_address-error" class="error text-danger" for="is_correct_property_address"></label>
-											<div class="otherPropertyAddress d-none">
+											<div class="otherAddress <?php echo ($is_correct_property_address == 'no') ? '' : 'd-none';?>">
 												<div class="form-group position-relative mb-3">
 													<label for="" class="mb-2"><b>Enter the property address being sold
 															<span>*</span> </b></label>
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="property_street_address" name="property_street_address" data-error="#property_street_address-error">
+														<input type="text" class="form-control" id="property_street_address" name="property_street_address" value="<?php echo $property_street_address;?>">
 														<small class="small_label">Street Address</small>
 													</div>
-													<label id="property_street_address-error" class="error text-danger error2" for="property_street_address"></label>
 												</div>
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<input type="text" class="form-control" id="property_city" name="property_city" data-error="#property_city-error">
+															<input type="text" class="form-control" id="property_city" name="property_city" value="<?php echo $property_city;?>">
 															<small class="small_label">City</small>
 														</div>
-														<label id="property_city-error" class="error text-danger error2" for="property_city"></label>
 													</div>
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<select class="form-control" id="property_state" name="property_state" data-error="#property_state-error">
+															<select class="form-control" id="property_state" name="property_state">
 																<option value="CA" selected>CA</option>
 															</select>
 															<small class="small_label">State</small>
 														</div>
-														<label id="property_state-error" class="error text-danger error2" for="property_state"></label>
 													</div>
 												</div>
 												<div class="form-group position-relative mb-3 col-md-6">
-													<input type="text" class="form-control" id="property_zip_code" name="property_zip_code" data-error="#property_zip_code-error">
+													<input type="text" class="form-control" id="property_zip_code" name="property_zip_code" value="<?php echo $property_zip_code;?>">
 													<small class="small_label">Zip Code</small>
 												</div>
-												<label id="property_zip_code-error" class="error text-danger error2" for="property_zip_code"></label>
 											</div>
 										</div>
 										<div class="form-group mb-4">
@@ -384,48 +326,43 @@
 													address? <span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesCorrectPropertyAddressAsCurrentAddress" value="yes" name="is_property_address_as_current_address" required data-error="#is_property_address_as_current_address-error">
+													<input type="radio" id="yesCorrectPropertyAddressAsCurrentAddress" value="yes" name="is_property_address_as_current_address" <?php echo ($is_property_address_as_current_address == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="yesCurrent">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noCorrectPropertyAddressAsCurrentAddress" value="no" name="is_property_address_as_current_address">
+													<input type="radio" id="noCorrectPropertyAddressAsCurrentAddress" value="no" name="is_property_address_as_current_address" <?php echo ($is_property_address_as_current_address == 'no') ? 'checked="checked"' : '';?>>
 													<label for="noCurrent">No</label>
 												</li>
 											</ul>
-											<label id="is_property_address_as_current_address-error" class="error text-danger" for="is_property_address_as_current_address"></label>
-											<div class="otherCurrentAddress d-none">
+											<div class="otherAddress <?php echo ($is_property_address_as_current_address == 'no') ? '' : 'd-none';?>">
 												<div class="form-group position-relative mb-3">
 													<label for="" class="mb-2"><b>Current Address
 															<span>*</span> </b></label>
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="current_street_address" name="current_street_address" data-error="#current_street_address-error">
+														<input type="text" class="form-control" id="current_street_address" name="current_street_address" value="<?php echo $current_street_address;?>">
 														<small class="small_label">Street Address</small>
 													</div>
-													<label id="current_street_address-error" class="error text-danger error2" for="current_street_address"></label>
 												</div>
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<input type="text" class="form-control" id="current_city" name="current_city" data-error="#current_city-error">
+															<input type="text" class="form-control" id="current_city" name="current_city" value="<?php echo $current_city;?>">
 															<small class="small_label">City</small>
 														</div>
-														<label id="current_city-error" class="error text-danger error2" for="current_city"></label>
 													</div>
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<select class="form-control" id="current_state" name="current_state" data-error="#current_state-error">
+															<select class="form-control" id="current_state" name="current_state">
 																<option value="CA" selected>CA</option>
 															</select>
 															<small class="small_label">State</small>
 														</div>
-														<label id="current_state-error" class="error text-danger error2" for="current_state"></label>
 													</div>
 												</div>
 												<div class="form-group position-relative mb-3 col-md-6">
-													<input type="text" class="form-control" id="current_zip_code" name="current_zip_code" data-error="#current_zip_code-error">
+													<input type="text" class="form-control" id="current_zip_code" name="current_zip_code" value="<?php echo $current_zip_code;?>">
 													<small class="small_label">Zip Code</small>
 												</div>
-												<label id="current_zip_code-error" class="error text-danger error2" for="current_zip_code"></label>											
 											</div>
 										</div>
 										<div class="form-group mb-4">
@@ -433,47 +370,42 @@
 													Current Address? <span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesForwarding" value="yes" name="is_forwarding_address_different_from_current_address" required data-error="#is_forwarding_address_different_from_current_address-error">
+													<input type="radio" id="yesForwarding" value="yes" name="is_forwarding_address_different_from_current_address" <?php echo ($is_forwarding_address_different_from_current_address == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="yesForwarding">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noForwarding" value="no" name="is_forwarding_address_different_from_current_address">
+													<input type="radio" id="noForwarding" value="no" name="is_forwarding_address_different_from_current_address" <?php echo ($is_forwarding_address_different_from_current_address == 'no') ? 'checked="checked"' : '';?>>
 													<label for="noForwarding">No</label>
 												</li>
 											</ul>
-											<label id="is_forwarding_address_different_from_current_address-error" class="error text-danger" for="is_forwarding_address_different_from_current_address"></label>
-											<div class="otherForwardAddress d-none">
+											<div class="otherAddress <?php echo ($is_forwarding_address_different_from_current_address == 'yes') ? '' : 'd-none';?>">
 												<div class="form-group position-relative mb-3">
 													<label for="" class="mb-2"><b>Forwarding Address<span>*</span> </b></label>
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="forwarding_street_address" name="forwarding_street_address" data-error="#forwarding_street_address-error">
+														<input type="text" class="form-control" id="forwarding_street_address" name="forwarding_street_address" value="<?php echo $forwarding_street_address;?>">
 														<small class="small_label">Street Address</small>
 													</div>
-													<label id="forwarding_street_address-error" class="error text-danger error2" for="forwarding_street_address"></label>
 												</div>
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<input type="text" class="form-control" id="forwarding_city" name="forwarding_city" data-error="#forwarding_city-error">
+															<input type="text" class="form-control" id="forwarding_city" name="forwarding_city" value="<?php echo $forwarding_city;?>">
 															<small class="small_label">City</small>
 														</div>
-														<label id="forwarding_city-error" class="error text-danger error2" for="forwarding_city"></label>
 													</div>
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<select class="form-control" id="forwarding_state" name="forwarding_state" data-error="#forwarding_state-error">
+															<select class="form-control" id="forwarding_state" name="forwarding_state">
 																<option value="CA" selected>CA</option>
 															</select>
 															<small class="small_label">State</small>
 														</div>
-														<label id="forwarding_state-error" class="error text-danger error2" for="forwarding_state"></label>
 													</div>
 												</div>
 												<div class="form-group position-relative mb-3 col-md-6">
-													<input type="text" class="form-control" id="forwarding_zip_code" name="forwarding_zip_code" data-error="#forwarding_zip_code-error">
+													<input type="text" class="form-control" id="forwarding_zip_code" name="forwarding_zip_code" value="<?php echo $forwarding_zip_code;?>">
 													<small class="small_label">Zip Code</small>
 												</div>
-												<label id="forwarding_zip_code-error" class="error text-danger error2" for="forwarding_zip_code"></label>	
 											</div>
 										</div>
 
@@ -481,19 +413,18 @@
 											<label for="" class="mb-2"><b>This property was our<span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="primary" value="primary" name="residence" required data-error="#residence-error">
+													<input type="radio" id="primary" value="primary" name="residence" <?php echo ($residence == 'primary') ? 'checked="checked"' : '';?>>
 													<label for="primary">Primary Residence</label>
 												</li>
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="secondary" value="secondary" name="residence">
+													<input type="radio" id="secondary" value="secondary" name="residence" <?php echo ($residence == 'secondary') ? 'checked="checked"' : '';?>>
 													<label for="secondary">Second Home</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="investment" value="investment" name="residence">
+													<input type="radio" id="investment" value="investment" name="residence" <?php echo ($residence == 'investment') ? 'checked="checked"' : '';?>>
 													<label for="investment">Investment Property</label>
 												</li>
 											</ul>
-											<label id="residence-error" class="error text-danger" for="residence"></label>
 										</div>
 
 										<div class="form-group mb-4">
@@ -503,23 +434,21 @@
 													policy.)</b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesinsurance" value="yes" name="is_insurance_policy" required data-error="#is_insurance_policy-error">
+													<input type="radio" id="yesinsurance" value="yes" name="is_insurance_policy" <?php echo ($is_insurance_policy == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="yesinsurance">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noinsurance" value="no" name="is_insurance_policy">
+													<input type="radio" id="noinsurance" value="no" name="is_insurance_policy" <?php echo ($is_insurance_policy == 'no') ? 'checked="checked"' : '';?>>
 													<label for="noinsurance">No</label>
 												</li>
 											</ul>
-											<label id="is_insurance_policy-error" class="error text-danger" for="is_insurance_policy"></label>
 											<div class="insurance_policy_file_name d-none mb-4">
-												<input type="file" name="insurance_policy_file_name" class="d-none" id="insurance_policy_file_name" data-error="#insurance_policy_file_name-error">
+												<input type="file" name="insurance_policy_file_name" class="d-none" id="insurance_policy_file_name">
 												<label for="insurance_policy_file_name">
 													<b>Please upload your prior title insurance policy</b>
 													<span>Browse Files</span>
 												</label>
 											</div>
-											<label id="insurance_policy_file_name-error" class="error text-danger" for="insurance_policy_file_name"></label>
 										</div>
 									</div>
 								</div>
@@ -539,18 +468,17 @@
 													Agent? <span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesRealEstate" value="yes" name="is_real_estate" required data-error="#is_real_estate-error">
+													<input type="radio" id="yesRealEstate" value="yes" name="is_real_estate" <?php echo ($is_real_estate == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="yesRealEstate">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noRealEstate" value="no" name="is_real_estate">
+													<input type="radio" id="noRealEstate" value="no" name="is_real_estate" <?php echo ($is_real_estate == 'no') ? 'checked="checked"' : '';?>>
 													<label for="noRealEstate">No</label>
 												</li>
 											</ul>
-											<label id="is_real_estate-error" class="error text-danger" for="is_real_estate"></label>
 										</div>
 
-										<div class="RealEstateInfo d-none">
+										<div class="RealEstateInfo <?php echo ($is_real_estate == 'yes') ? '' : 'd-none';?>">
 											<h3 class="text-center"><b>Real Estate Agent Information:</b></h3>
 											<hr>
 											<div class="form-group sellerName mb-5">
@@ -559,24 +487,21 @@
 												<div class="row">
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_first_name" name="agent_first_name" data-error="#agent_first_name-error">
+															<input type="text" class="form-control" id="agent_first_name" name="agent_first_name" value="<?php echo $agent_first_name;?>">
 															<small class="small_label">First Name</small>
 														</div>
-														<label id="agent_first_name-error" class="error text-danger error2" for="agent_first_name"></label>
 													</div>
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_middle_name" name="agent_middle_name" data-error="#agent_middle_name-error">
+															<input type="text" class="form-control" id="agent_middle_name" name="agent_middle_name" value="<?php echo $agent_middle_name;?>">
 															<small class="small_label">Middle Name</small>
 														</div>
-														<label id="agent_middle_name-error" class="error text-danger error2" for="agent_middle_name"></label>
 													</div>
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_last_name" name="agent_last_name" data-error="#agent_last_name-error">
+															<input type="text" class="form-control" id="agent_last_name" name="agent_last_name" value="<?php echo $agent_last_name;?>">
 															<small class="small_label">Last Name</small>
 														</div>
-														<label id="agent_last_name-error" class="error text-danger error2" for="agent_last_name"></label>
 													</div>
 												</div>
 											</div>
@@ -584,80 +509,71 @@
 											<div class="form-group row mb-4">
 												<label for="" class="mb-2 col-12"><b>Agent's Company:<span>*</span></b></label>
 												<div class="col-md-8">
-													<input type="text" class="form-control" id="agent_company" name="agent_company" data-error="#agent_company-error">
+													<input type="text" class="form-control" id="agent_company" name="agent_company" value="<?php echo $agent_company;?>">
 												</div>
-												<label id="agent_company-error" class="error text-danger" for="agent_company"></label>
 											</div>
 
 											<div class="otherAddress mb-5">
 												<div class="form-group position-relative mb-3">
 													<label for="" class="mb-2"><b>Agent's Company Address </b></label>
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="agent_company_address" name="agent_company_address" data-error="#agent_company_address-error">
+														<input type="text" class="form-control" id="agent_company_address" name="agent_company_address" value="<?php echo $agent_company_address;?>">
 														<small class="small_label">Street Address</small>
 													</div>
-													<label id="agent_company_address-error" class="error text-danger error2" for="agent_company_address"></label>
 												</div>
 								
 												<div class="row mb-3">
 													<div class="col-md-6">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_company_city" name="agent_company_city" data-error="#agent_company_city-error">
+															<input type="text" class="form-control" id="agent_company_city" name="agent_company_city" value="<?php echo $agent_company_city;?>"> 
 															<small class="small_label">City</small>
 														</div>
-														<label id="agent_company_city-error" class="error text-danger error2" for="agent_company_city"></label>
 													</div>
 													
 													<div class="col-md-6">
 														<div class="form-group position-relative">
-															<select name="state" class="form-control" id="agent_company_state" name="agent_company_state" data-error="#agent_company_state-error">
-																<option value="CA" selected>CA</option>
+															<select name="state" class="form-control" id="agent_company_state" name="agent_company_state">
+                                                                <option value="CA" selected>CA</option>
 															</select>
 															<small class="small_label">State</small>
 														</div>
-														<label id="agent_company_state-error" class="error text-danger error2" for="agent_company_state"></label>
 													</div>
 												</div>
 												<div class="form-group position-relative col-md-6">
-													<input type="text" class="form-control" id="agent_company_zip_code" name="agent_company_zip_code" data-error="#agent_company_zip_code-error">
+													<input type="text" class="form-control" id="agent_company_zip_code" name="agent_company_zip_code" value="<?php echo $agent_company_zip_code;?>">
 													<small class="small_label">Zip Code</small>
 												</div>
-												<label id="agent_company_zip_code-error" class="error text-danger error2" for="agent_company_zip_code"></label>
 											</div>
 
 											<div class="row">
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for=""><b>Amount/Percent of Commission:</b></label>
-														<input type="text" class="form-control" id="amount_percent_commission" name="amount_percent_commission" data-error="#amount_percent_commission-error">
+														<input type="text" class="form-control" id="amount_percent_commission" name="amount_percent_commission" value="<?php echo $amount_percent_commission;?>">
 													</div>
-													<label id="amount_percent_commission-error" class="error text-danger" for="amount_percent_commission"></label>
 												</div>
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for=""><b>Amount of Any Deductions from Commission:
 															</b></label>
-														<input type="text" class="form-control" id="amount_deduction" name="amount_deduction" data-error="#amount_deduction-error">
+														<input type="text" class="form-control" id="amount_deduction" name="amount_deduction" value="<?php echo $amount_deduction;?>">
 													</div>
-													<label id="amount_deduction-error" class="error text-danger" for="amount_deduction"></label>
 												</div>
 												<div class="col-md-6 mb-3">
 													<div class="form-group position-relative">
 														<label for=""><b>Agent Phone</b></label>
-														<input type="text" class="form-control"  id="agent_phone" name="agent_phone" data-error="#agent_phone-error">
+														<input type="text" class="form-control"  id="agent_phone" name="agent_phone" value="<?php echo $agent_phone;?>">
 														<small class="small_label">Cell Phone or Email is required</small>
 													</div>
-													<label id="agent_phone-error" class="error text-danger error2" for="agent_phone"></label>
 												</div>
 											</div>
 
 											<div class="form-group position-relative row mb-3">
 												<label for="" class="mb-2 col-12"><b>Email<span></span></b></label>
 												<div class="form-group position-relative col-md-8">
-													<input type="text" class="form-control" id="agent_email" name="agent_email" data-error="#agent_email-error">
+													<input type="text" class="form-control" id="agent_email" name="agent_email" value="<?php echo $agent_email;?>">
 													<small class="small_label">Cell Phone or Email is required</small>
 												</div>
-												<label id="agent_email-error" class="error text-danger error2" for="agent_email"></label>
 											</div>
 										</div>
 
@@ -666,23 +582,22 @@
 											<label for="" class="mb-2"><b>Seller Will be Paying and providing invoices for</b></label>
 											<ul class="list-unstyled">
 												<li>
-													<input type="checkbox" id="repair" value="repairs" name="seller_invoices[]" required data-error="#seller_invoices-error">
+													<input type="checkbox" id="repair" value="repairs" name="seller_invoices[]" <?php echo (in_array('repairs', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													<label for="repair">Repairs</label>
 												</li>
 												<li>
-													<input type="checkbox" id="warranty" value="warranty" name="seller_invoices[]">
+													<input type="checkbox" id="warranty" value="warranty" name="seller_invoices[]" <?php echo (in_array('warranty', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													<label for="warranty">Home Warranty</label>
 												</li>
 												<li>
-													<input type="checkbox" id="other" value="other" name="seller_invoices[]">
+													<input type="checkbox" id="other" value="other" name="seller_invoices[]" <?php echo (in_array('other', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													<label for="other">Other</label>
 												</li>
 												<li>
-													<input type="checkbox" id="none" value="none" name="seller_invoices[]">
+													<input type="checkbox" id="none" value="none" name="seller_invoices[]" <?php echo (in_array('none', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													<label for="none"> None</label>
 												</li>
 											</ul>
-											<label id="seller_invoices-error" class="error text-danger" for="seller_invoices"></label>
 											<div class="seller_invoices_files d-none mb-4">
 												<input type="file" name="seller_invoices_files" class="d-none" id="seller_invoices_files">
 												<label for="seller_invoices_files">
@@ -709,87 +624,81 @@
 											<label for="" class="mb-2"><b> Is there a mortgage on the property?</b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesmortgage" value="yes" name="is_mortgage" required data-error="#is_mortgage-error">
+													<input type="radio" id="yesmortgage" value="yes" name="is_mortgage" <?php echo ($is_mortgage == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="yesmortgage">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="nomortgage" value="no" name="is_mortgage">
+													<input type="radio" id="nomortgage" value="no" name="is_mortgage" <?php echo ($is_mortgage == 'no') ? 'checked="checked"' : '';?>>
 													<label for="nomortgage">No</label>
 												</li>
 											</ul>
-											<label id="is_mortgage-error" class="error text-danger" for="is_mortgage"></label>
 										</div>
 
-										<div class="d-none" id="mortgage">
+										<div class="<?php echo ($is_mortgage == 'yes') ? '' : 'd-none';?>" id="mortgage">
 											<div class="form-group mb-4">
 												<label for="" class="mb-2"><b>Is this mortgage/loan a Line of Credit?</b></label>
 												<ul class="list-inline">
 													<li class="list-inline-item me-md-5">
-														<input type="radio" id="yesCreditCard" value="yes" name="is_mortgage_credit" data-error="#is_mortgage_credit-error">
+														<input type="radio" id="yesCreditCard" value="yes" name="is_mortgage_credit" <?php echo ($is_mortgage_credit == 'yes') ? 'checked="checked"' : '';?>>
 														<label for="yesCreditCard">Yes</label>
 													</li>
 													<li class="list-inline-item">
-														<input type="radio" id="noCreditCard" value="no" name="is_mortgage_credit">
+														<input type="radio" id="noCreditCard" value="no" name="is_mortgage_credit" <?php echo ($is_mortgage_credit == 'no') ? 'checked="checked"' : '';?>>
 														<label for="noCreditCard">No</label>
 													</li>
 												</ul>
-												<label id="is_mortgage_credit-error" class="error text-danger" for="CreditCard"></label>
-												<div class="form-group CreditCardLock d-none mb-4">
+												<div class="form-group CreditCardLock <?php echo ($is_mortgage_credit == 'yes') ? '' : 'd-none';?> mb-4">
 													<label for="" class="mb-2"><b>Do you want to close and lock this Line of Credit?</b></label>
 													<ul class="list-inline">
 														<li class="list-inline-item me-md-5">
-															<input type="radio" id="yesCreditCardLock" value="yes" name="is_creditcard_lock" data-error="#is_creditcard_lock-error">
+															<input type="radio" id="yesCreditCardLock" value="yes" name="is_creditcard_lock" <?php echo ($is_creditcard_lock == 'yes') ? 'checked="checked"' : '';?>>
 															<label for="yesCreditCardLock">Yes</label>
 														</li>
 														<li class="list-inline-item">
-															<input type="radio" id="noCreditCardLock" value="no" name="is_creditcard_lock">
+															<input type="radio" id="noCreditCardLock" value="no" name="is_creditcard_lock" <?php echo ($is_creditcard_lock == 'no') ? 'checked="checked"' : '';?>>
 															<label for="noCreditCardLock">No</label>
 														</li>
 													</ul>
-													<label id="is_creditcard_lock-error" class="error text-danger" for="is_creditcard_lock"></label>
 												</div>
 											</div>
 											<div class="form-group mb-4">
 												<label for="" class="mb-2"><b>Lender/Mortgage Holder:</b></label>
-												<input type="text" class="form-control" id="mortgage_holder" name="mortgage_holder" data-error="#mortgage_holder-error">
-												<label id="mortgage_holder-error" class="error text-danger" for="mortgage_holder"></label>
+												<input type="text" class="form-control" id="mortgage_holder" name="mortgage_holder" value="<?php echo $mortgage_holder;?>">
 											</div>
 											
 											<div class="row">
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Original Loan Amount:</b></label>
-														<input type="text" class="form-control" id="loan_amount" name="loan_amount" data-error="#loan_amount-error">
+														<input type="text" class="form-control" id="loan_amount" name="loan_amount" value="<?php echo $loan_amount;?>">
 													</div>
-													<label id="loan_amount-error" class="error text-danger" for="loan_amount"></label>
 												</div>
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Lender/Mortgage Holder Phone:</b></label>
-														<input type="text" class="form-control" id="mortgage_phone" name="mortgage_phone" data-error="#mortgage_phone-error">
+														<input type="text" class="form-control" id="mortgage_phone" name="mortgage_phone" value="<?php echo $propmortgage_phoneerty_address;?>">
 													</div>
-													<label id="mortgage_phone-error" class="error text-danger" for="mortgage_phone"></label>
 												</div>
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Loan Number:</b></label>
-														<input type="text" class="form-control" id="loan_number" name="loan_number" data-error="#loan_number-error">
+														<input type="text" class="form-control" id="loan_number" name="loan_number" value="<?php echo $loan_number;?>">
 													</div>
-													<label id="loan_number-error" class="error text-danger" for="loan_number"></label>
+													
 												</div>
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Approximate Loan
 																Balance:</b></label>
-														<input type="text" class="form-control" id="loan_balance" name="loan_balance" data-error="#loan_balance-error">
+														<input type="text" class="form-control" id="loan_balance" name="loan_balance" value="<?php echo $loan_balance;?>">
 													</div>
-													<label id="loan_balance-error" class="error text-danger" for="loan_balance"></label>
+													
 												</div>
 											</div>
 											<div class="form-group mb-4">
 												<label for="" class="mb-2"><b>Account Holder's Name:</b></label>
-												<input type="text" class="form-control" id="account_holder_name" name="account_holder_name" data-error="#account_holder_name-error">
-												<label id="account_holder_name-error" class="error text-danger" for="account_holder_name"></label>
+												<input type="text" class="form-control" id="account_holder_name" name="account_holder_name" value="<?php echo $account_holder_name;?>">
+												
 											</div>
 									        
 											<div class="form-group mb-3">
@@ -797,85 +706,85 @@
 														property?</b></label>
 												<ul class="list-inline">
 													<li class="list-inline-item me-md-5">
-														<input type="radio" id="yesmortgage2" value="yes" name="is_second_mortgage" data-error="#is_second_mortgage-error">
+														<input type="radio" id="yesmortgage2" value="yes" name="is_second_mortgage" <?php echo ($is_second_mortgage == 'yes') ? 'checked="checked"' : '';?>>
 														<label for="yesmortgage2">Yes</label>
 													</li>
 													<li class="list-inline-item">
-														<input type="radio" id="nomortgage2" value="no" name="is_second_mortgage">
+														<input type="radio" id="nomortgage2" value="no" name="is_second_mortgage" <?php echo ($is_second_mortgage == 'no') ? 'checked="checked"' : '';?>>
 														<label for="nomortgage2">No</label>
 													</li>
 												</ul>
-												<label id="is_second_mortgage-error" class="error text-danger" for="is_second_mortgage"></label>
-												<div class="secondMortgage d-none">
+												
+												<div class="secondMortgage <?php echo ($is_second_mortgage == 'yes') ? '' : 'd-none';?>">
 													<div class="form-group mb-4">
 														<label for="" class="mb-2"><b>Is the 2nd mortgage a Line of
 																Credit?</b></label>
 														<ul class="list-inline">
 															<li class="list-inline-item me-md-5">
-																<input type="radio" id="yesCreditCard2" value="yes" name="is_second_mortgage_credit" data-error="#is_second_mortgage_credit-error">
+																<input type="radio" id="yesCreditCard2" value="yes" name="is_second_mortgage_credit" <?php echo ($is_second_mortgage_credit == 'yes') ? 'checked="checked"' : '';?>>
 																<label for="yesCreditCard2">Yes</label>
 															</li>
 															<li class="list-inline-item">
-																<input type="radio" id="noCreditCard2" value="no" name="is_second_mortgage_credit">
+																<input type="radio" id="noCreditCard2" value="no" name="is_second_mortgage_credit" <?php echo ($is_second_mortgage_credit == 'no') ? 'checked="checked"' : '';?>>
 																<label for="noCreditCard2">No</label>
 															</li>
 														</ul>
-														<label id="is_second_mortgage_credit-error" class="error text-danger" for="is_second_mortgage_credit"></label>
-														<div class="form-group CreditCardLock d-none mb-4">
+														
+														<div class="form-group CreditCardLock <?php echo ($is_second_mortgage_credit == 'yes') ? '' : 'd-none';?> mb-4">
 															<label for="" class="mb-2"><b>Do you want to close and lock this Line of Credit?</b></label>
 															<ul class="list-inline">
 																<li class="list-inline-item me-md-5">
-																	<input type="radio" id="yesCreditCardLock2" value="yes" name="is_second_creditcard_lock" data-error="#is_second_creditcard_lock-error">
+																	<input type="radio" id="yesCreditCardLock2" value="yes" name="is_second_creditcard_lock" <?php echo ($is_second_creditcard_lock == 'yes') ? 'checked="checked"' : '';?>>
 																	<label for="yesCreditCardLock2">Yes</label>
 																</li>
 																<li class="list-inline-item">
-																	<input type="radio" id="noCreditCardLock2" value="no" name="is_second_creditcard_lock">
+																	<input type="radio" id="noCreditCardLock2" value="no" name="is_second_creditcard_lock" <?php echo ($is_second_creditcard_lock == 'no') ? 'checked="checked"' : '';?>>
 																	<label for="noCreditCardLock2">No</label>
 																</li>
 															</ul>
-															<label id="is_second_creditcard_lock-error" class="error text-danger" for="is_second_creditcard_lock"></label>
+															
 														</div>
 													</div>
 													<div class="form-group mb-4">
 														<label for="" class="mb-2"><b>2nd Lender/Mortgage Holder:</b></label>
-														<input type="text" class="form-control" id="second_mortgage_holder" name="second_mortgage_holder" data-error="#second_mortgage_holder-error">
-														<label id="second_mortgage_holder-error" class="error text-danger" for="second_mortgage_holder"></label>
+														<input type="text" class="form-control" id="second_mortgage_holder" name="second_mortgage_holder" value="<?php echo $second_mortgage_holder;?>">
+														
 													</div>
 													<div class="row">
 														<div class="col-md-6 mb-4">
 															<div class="form-group">
 																<label for="" class="mb-2"><b>2nd Original Loan Amount:</b></label>
-																<input type="text" class="form-control" id="second_loan_amount" name="second_loan_amount" data-error="#second_loan_amount-error">
+																<input type="text" class="form-control" id="second_loan_amount" name="second_loan_amount" value="<?php echo $second_loan_amount;?>">
 															</div>
-															<label id="second_loan_amount-error" class="error text-danger" for="second_loan_amount"></label>
+															
 														</div>
 														<div class="col-md-6 mb-4">
 															<div class="form-group">
 																<label for="" class="mb-2"><b>2nd Lender/Mortgage Holder Phone:</b></label>
-																<input type="text" class="form-control" id="second_mortgage_phone" name="second_mortgage_phone" data-error="#second_mortgage_phone-error">
+																<input type="text" class="form-control" id="second_mortgage_phone" name="second_mortgage_phone" value="<?php echo $second_mortgage_phone;?>">
 															</div>
-															<label id="second_mortgage_phone-error" class="error text-danger" for="second_mortgage_phone"></label>
+															
 														</div>
 														<div class="col-md-6 mb-4">
 															<div class="form-group">
 																<label for="" class="mb-2"><b>2nd Loan Number:</b></label>
-																<input type="text" class="form-control" id="second_loan_number" name="second_loan_number" data-error="#second_loan_number-error">
+																<input type="text" class="form-control" id="second_loan_number" name="second_loan_number" value="<?php echo $second_loan_number;?>">
 															</div>
-															<label id="second_loan_number-error" class="error text-danger" for="second_loan_number"></label>
+															
 														</div>
 														<div class="col-md-6 mb-4">
 															<div class="form-group">
 																<label for="" class="mb-2"><b> 2nd Approximate Loan
 																		Balance:</b></label>
-																<input type="text" class="form-control" id="second_loan_balance" name="second_loan_balance" data-error="#second_loan_balance-error">
+																<input type="text" class="form-control" id="second_loan_balance" name="second_loan_balance" value="<?php echo $second_loan_balance;?>">
 															</div>
-															<label id="second_loan_balance-error" class="error text-danger" for="second_loan_balance"></label>
+															
 														</div>
 													</div>
 													<div class="form-group mb-4">
 														<label for="" class="mb-2"><b>2nd Account Holder's Name:</b></label>
-														<input type="text" class="form-control" id="second_account_holder_name" name="second_account_holder_name" data-error="#second_account_holder_name-error">
-														<label id="second_account_holder_name-error" class="error text-danger" for="second_account_holder_name"></label>
+														<input type="text" class="form-control" id="second_account_holder_name" name="second_account_holder_name" value="<?php echo $second_account_holder_name;?>">
+														
 													</div>
 												</div>
 											</div>
@@ -999,10 +908,10 @@
 										</div>
 
 										<div class="form-group mb-2">
-											<input type="checkbox" id="is_agree_593_c" name="is_agree_593_c" required data-error="#is_agree_593_c-error">
+											<input type="checkbox" id="is_agree_593_c" name="is_agree_593_c" checked="checked">
 											<label for="agree">I/We have read and agree to <span>*</span></label>
 										</div>
-										<label id="is_agree_593_c-error" class="error text-danger" for="is_agree_593_c"></label>
+										
 										<div class="border p-3">
 											the above payoff authorization as indicated by signing below.
 										</div>
@@ -1030,15 +939,15 @@
 															exchange of the residence.</b></label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="exchangeeResidenceTrue" name="is_exchange_residence" value="true" required data-error="#is_exchange_residence-error">
+															<input type="radio" id="exchangeeResidenceTrue" name="is_exchange_residence" value="true" <?php echo ($is_exchange_residence == 'true') ? 'checked="checked"' : '';?>>
 															<label for="exchangeeResidenceTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="exchangeeResidenceFalse" value="false" name="is_exchange_residence">
+															<input type="radio" id="exchangeeResidenceFalse" value="false" name="is_exchange_residence" <?php echo ($is_exchange_residence == 'false') ? 'checked="checked"' : '';?>>
 															<label for="exchangeeResidenceFalse">False</label>
 														</li>
 													</ul>
-													<label id="is_exchange_residence-error" class="error text-danger" for="is_exchange_residence"></label>
+													
 												</div>
 											</li>
 											<li>
@@ -1048,15 +957,15 @@
 															date of the sale or exchange of the residence.</b></label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="NotexchangeeResidenceTrue" name="is_not_exchange_residence" value="true" required data-error="#is_not_exchange_residence-error">
+															<input type="radio" id="NotexchangeeResidenceTrue" name="is_not_exchange_residence" value="true" <?php echo ($is_not_exchange_residence == 'true') ? 'checked="checked"' : '';?>>
 															<label for="NotexchangeeResidenceTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="NotexchangeeResidenceFalse" name="is_not_exchange_residence" value="false">
+															<input type="radio" id="NotexchangeeResidenceFalse" name="is_not_exchange_residence" value="false" <?php echo ($is_not_exchange_residence == 'false') ? 'checked="checked"' : '';?>>
 															<label for="NotexchangeeResidenceFalse">False</label>
 														</li>
 													</ul>
-													<label id="is_not_exchange_residence-error" class="error text-danger" for="is_not_exchange_residence"></label>
+													
 												</div>
 											</li>
 											<li>
@@ -1068,15 +977,15 @@
 															after May 6, 1997..</b></label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="formerSpouseTrue" name="is_former_spouse" value="true" required data-error="#is_former_spouse-error">
+															<input type="radio" id="formerSpouseTrue" name="is_former_spouse" value="true" <?php echo ($is_former_spouse == 'true') ? 'checked="checked"' : '';?>>
 															<label for="formerSpouseTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="formerSpouseFalse" name="is_former_spouse" value="false">
+															<input type="radio" id="formerSpouseFalse" name="is_former_spouse" value="false" <?php echo ($is_former_spouse == 'false') ? 'checked="checked"' : '';?>>
 															<label for="formerSpouseFalse">False</label>
 														</li>
 													</ul>
-													<label id="is_former_spouse-error" class="error text-danger" for="is_former_spouse"></label>
+													
 												</div>
 											</li>
 											<li>
@@ -1109,15 +1018,15 @@
 													</label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="marriedTrue" name="is_married" value="true" required data-error="#is_married-error">
+															<input type="radio" id="marriedTrue" name="is_married" value="true" <?php echo ($is_married == 'true') ? 'checked="checked"' : '';?>>
 															<label for="marriedTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="marriedFalse" name="is_married" value="false">
+															<input type="radio" id="marriedFalse" name="is_married" value="false" <?php echo ($is_married == 'false') ? 'checked="checked"' : '';?>>
 															<label for="marriedFalse">False</label>
 														</li>
 													</ul>
-													<label id="is_married-error" class="error text-danger" for="is_married"></label>
+													
 												</div>
 											</li>
 											<li>
@@ -1128,15 +1037,15 @@
 															of the Internal Revenue Code applied.</b></label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="periodTrue" name="is_period" value="true" required data-error="#is_period-error">
+															<input type="radio" id="periodTrue" name="is_period" value="true" <?php echo ($is_period == 'true') ? 'checked="checked"' : '';?>>
 															<label for="periodTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="periodFalse" name="is_period" value="false">
+															<input type="radio" id="periodFalse" name="is_period" value="false" <?php echo ($is_period == 'false') ? 'checked="checked"' : '';?>>
 															<label for="periodFalse">False</label>
 														</li>
 													</ul>
-													<label id="is_period-error" class="error text-danger" for="is_period"></label>
+													
 												</div>
 											</li>
 											<li>
@@ -1150,19 +1059,19 @@
 															residence.</b></label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="RevenueTrue" name="is_revenue"  value="true" required data-error="#is_revenue-error">
+															<input type="radio" id="RevenueTrue" name="is_revenue"  value="true" <?php echo ($is_revenue == 'true') ? 'checked="checked"' : '';?>>
 															<label for="RevenueTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="RevenueFalse" name="is_revenue" value="false">
+															<input type="radio" id="RevenueFalse" name="is_revenue" value="false" <?php echo ($is_revenue == 'false') ? 'checked="checked"' : '';?>>
 															<label for="RevenueFalse">False</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="RevenueNA" name="is_revenue" value="n/a">
+															<input type="radio" id="RevenueNA" name="is_revenue" value="n/a" <?php echo ($is_revenue == 'n/a') ? 'checked="checked"' : '';?>>
 															<label for="RevenueNA">N/A</label>
 														</li>
 													</ul>
-													<label id="is_revenue-error" class="error text-danger" for="is_revenue"></label>
+													
 												</div>
 											</li>
 										</ul>
@@ -1273,61 +1182,60 @@
 											<label for="" class="mb-2"><b>Select One: <span>*</span></b></label>
 											<ul class="list-unstyled">
 												<li>
-													<input type="radio" id="attorney" value="no" name="is_attorney" required data-error="#is_attorney-error">
+													<input type="radio" id="attorney" value="no" name="is_attorney" <?php echo ($is_attorney == 'no') ? 'checked="checked"' : '';?>>
 													<label for="attorney">I would like THIS ATTORNEY to prepare a deed
 														and lien waiver for me pursuant to the understanding
 														above.</label>
 												</li>
 												<li>
-													<input type="radio" id="otherAttorney" value="yes" name="is_attorney">
+													<input type="radio" id="otherAttorney" value="yes" name="is_attorney" <?php echo ($is_attorney == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="otherAttorney">The following attorney will draft my deed
 														and lien waiver and secure cancellation of all deeds of trust
 														and other exceptions to title.</label>
 												</li>
 											</ul>
-											<label id="is_attorney-error" class="error text-danger" for="is_attorney"></label>
 										</div>
 
 
-										<div class="attorneyInfo d-none">
+										<div class="attorneyInfo <?php echo ($is_attorney == 'yes') ? '' : 'd-none';?>">
 											<div class="row">
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Firm Name:</b></label>
-														<input type="text" class="form-control" id="firm_name" name="firm_name" data-error="#firm_name-error">
+														<input type="text" class="form-control" id="firm_name" name="firm_name" value="<?php echo $firm_name;?>">
 													</div>
-													<label id="firm_name-error" class="error text-danger" for="firm_name"></label>
+													
 												</div>
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Phone Number:</b></label>
-														<input type="text" class="form-control" id="firm_phone_number" name="firm_phone_number" data-error="#firm_phone_number-error">
+														<input type="text" class="form-control" id="firm_phone_number" name="firm_phone_number" value="<?php echo $firm_phone_number;?>">
 													</div>
-													<label id="firm_phone_number-error" class="error text-danger" for="firm_phone_number"></label>
+													
 												</div>
 											</div>
 											<div class="row">
 												<div class="col-md-4 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Attorney Name:</b></label>
-														<input type="text" class="form-control" id="attorney_name" name="attorney_name" data-error="#attorney_name-error">
+														<input type="text" class="form-control" id="attorney_name" name="attorney_name" value="<?php echo $attorney_name;?>">
 													</div>
-													<label id="attorney_name-error" class="error text-danger" for="attorney_name"></label>
+													
 												</div>
 												<div class="col-md-4 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Attorney Phone No.:</b></label>
-														<input type="text" class="form-control" id="attorney_phone_number" name="attorney_phone_number" data-error="#attorney_phone_number-error">
+														<input type="text" class="form-control" id="attorney_phone_number" name="attorney_phone_number" value="<?php echo $attorney_phone_number;?>">
 													</div>
-													<label id="attorney_phone_number-error" class="error text-danger" for="attorney_phone_number"></label>
+													
 												</div>
 												<div class="col-md-4 mb-4">
 													<div class="form-group position-relative">
 														<label for="" class="mb-2"><b>Attorney Email:</b></label>
-														<input type="text" class="form-control" id="attorney_email" name="attorney_email" data-error="#attorney_email-error">
+														<input type="text" class="form-control" id="attorney_email" name="attorney_email" value="<?php echo $attorney_email;?>">
 														<small class="small_label">example@example.com</small>
 													</div>
-													<label id="attorney_email-error" class="error text-danger error2" for="attorney_email"></label>
+													
 												</div>
 											</div>
 										</div>
@@ -1407,69 +1315,13 @@
 										</ul>
 
 										<div class="form-group mb-2">
-											<input type="checkbox" id="sign" name="sign" required data-error="#sign-error">
+											<input type="checkbox" id="sign" name="sign" checked="checked">
 											<label for="sign">My/Our Signature(s) below <span>*</span></label>
 										</div>
-										<label id="sign-error" class="error text-danger error2" for="sign"></label>
+										
 										<div class="border p-3">
 											CERTIFIES OUR RECEIPT, ACKNOWLEDGMENT, AND CONSENT TO THE TERMS OF OUR
 											REPRESENTATION BY TITLE COMPANY NAME
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="accordion-item d-none" id="association">
-								<h2 class="accordion-header" id="headingSeven">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseSeven" aria-expanded="false"
-										aria-controls="collapseSeven">
-										Association Information
-									</button>
-								</h2>
-								<div id="collapseSeven" class="accordion-collapse collapse"
-									aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
-									<div class="accordion-body">
-										<div class="row">z
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Condominium / Homeowners Association
-														1</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Property Management Company</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Property Management Number</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Condominium / Homeowners Association
-														2</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Property Management Company</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Property Management Number</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
 										</div>
 									</div>
 								</div>
@@ -1522,11 +1374,11 @@
 
 
 										<div class="form-group mb-2 d-flex">
-											<input type="checkbox" id="agreementSign" name="agreementSign" class="me-2 mt-1" required data-error="#agreementSign-error">
+											<input type="checkbox" id="agreementSign" name="agreementSign" class="me-2 mt-1" <?php echo ($agreementSign == 'on') ? 'checked="checked"' : '';?>>
 											<label for="agreementSign" class="mb-2">By checking and signing below
 												<span>*</span></label>
 										</div>
-										<label id="agreementSign-error" class="error text-danger error2" for="agreementSign"></label>
+										
 
 										<div class="border p-3">
 											we agree that a copy of this authorization may be accepted as an original.
@@ -1551,18 +1403,18 @@
 													<span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesHOA" value="yes" name="is_property_hoa" required data-error="#is_property_hoa-error">
+													<input type="radio" id="yesHOA" value="yes" name="is_property_hoa" <?php echo ($is_property_hoa == 'yes') ? 'checked="checked"' : '';?>>
 													<label for="yesHOA">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noHOA" value="no" name="is_property_hoa">
+													<input type="radio" id="noHOA" value="no" name="is_property_hoa" <?php echo ($is_property_hoa == 'no') ? 'checked="checked"' : '';?>>
 													<label for="noHOA">No</label>
 												</li>
 											</ul>
-											<label id="is_property_hoa-error" class="error text-danger error2" for="is_property_hoa"></label>
+											
 										</div>
 
-										<div class="homeOwner d-none">
+										<div class="homeOwner <?php echo ($is_property_hoa == 'yes') ? '' : 'd-none';?>">
 											<h3 class="mb-4 text-center"><b>Homeowners Association Management
 													Information:</b></h3>
 
@@ -1570,72 +1422,72 @@
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for="" class="mb-2">Name of Management Company:</label>
-														<input type="text" class="form-control" id="hoa_management_company_name" name="hoa_management_company_name" data-error="#hoa_management_company_name-error">
+														<input type="text" class="form-control" id="hoa_management_company_name" name="hoa_management_company_name" value="<?php echo $hoa_management_company_name;?>">
 													</div>
-													<label id="hoa_management_company_name-error" class="error text-danger" for="hoa_management_company_name"></label>
+													
 												</div>
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for="" class="mb-2">Contact Person:</label>
-														<input type="text" class="form-control" id="hoa_contact_person" name="hoa_contact_person" data-error="#hoa_contact_person-error">
+														<input type="text" class="form-control" id="hoa_contact_person" name="hoa_contact_person" value="<?php echo $hoa_contact_person;?>">
 													</div>
-													<label id="hoa_management_company_name-error" class="error text-danger" for="hoa_management_company_name"></label>
+													
 												</div>
 											</div>
 											<div class="row">
 												<div class="col-md-6 mb-3">
 													<div class="form-group position-relative">
 														<label for="" class="mb-2">Email:</label>
-														<input type="text" class="form-control" id="hoa_email" name="hoa_email" data-error="#hoa_email-error">
+														<input type="text" class="form-control" id="hoa_email" name="hoa_email" value="<?php echo $hoa_email;?>">
 														<small class="small_label">example@example.com</small>
 													</div>
-													<label id="hoa_email-error" class="error text-danger error2" for="hoa_email"></label>
+													
 												</div>
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for="" class="mb-2">Phone:</label>
-														<input type="text" class="form-control" id="hoa_phone" name="hoa_phone" data-error="#hoa_phone-error">
+														<input type="text" class="form-control" id="hoa_phone" name="hoa_phone" value="<?php echo $hoa_phone;?>">
 													</div>
-													<label id="hoa_phone-error" class="error text-danger" for="hoa_phone"></label>
+													
 												</div>
 											</div>
 											<div class="row">
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for="" class="mb-2">HOA Dues:</label>
-														<input type="text" class="form-control" id="hoa_dues" name="hoa_dues" data-error="#hoa_dues-error">
+														<input type="text" class="form-control" id="hoa_dues" name="hoa_dues" value="<?php echo $hoa_dues;?>">
 													</div>
-													<label id="hoa_dues-error" class="error text-danger" for="hoa_dues"></label>
+													
 												</div>
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for="" class="mb-2">Dues Per</label>
 														<ul class="list-unstyled">
 															<li>
-																<input type="radio" id="month" name="hoa_dues_per" value="month" data-error="#hoa_dues_per-error">
+																<input type="radio" id="month" name="hoa_dues_per" value="month" <?php echo ($hoa_dues_per == 'month') ? 'checked="checked"' : '';?>>
 																<label for="month">Month</label>
 															</li>
 															<li>
-																<input type="radio" id="Quarter" value="quarter" name="hoa_dues_per">
+																<input type="radio" id="Quarter" value="quarter" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'quarter') ? 'checked="checked"' : '';?>>
 																<label for="Quarter">Quarter</label>
 															</li>
 															<li>
-																<input type="radio" id="Semi-Annually" value="semi-annually" name="hoa_dues_per">
+																<input type="radio" id="Semi-Annually" value="semi-annually" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'semi-annually') ? 'checked="checked"' : '';?>>
 																<label for="Semi-Annually">Semi-Annually</label>
 															</li>
 															<li>
-																<input type="radio" id="Annually" value="annually" name="hoa_dues_per">
+																<input type="radio" id="Annually" value="annually" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'annually') ? 'checked="checked"' : '';?>>
 																<label for="Annually">Annually</label>
 															</li>
 														</ul>
-														<label id="hoa_dues_per-error" class="error text-danger" for="hoa_dues_per"></label>
+														
 													</div>
 												</div>
 											</div>
 											<div class="form-group mb-3">
 												<label for="" class="mb-2">Notes:</label>
-												<input type="text" class="form-control" id="hoa_notes" name="hoa_notes" data-error="#hoa_notes-error">
-												<label id="hoa_notes-error" class="error text-danger" for="hoa_notes"></label>
+												<input type="text" class="form-control" id="hoa_notes" name="hoa_notes" value="<?php echo $hoa_notes;?>">
+												
 											</div>
 											
 
@@ -1644,89 +1496,89 @@
 														Association? <span>*</span></b></label>
 												<ul class="list-inline">
 													<li class="list-inline-item me-md-5">
-														<input type="radio" id="yesHOA2" value="yes" name="is_property_second_hoa" data-error="#is_property_second_hoa-error">
+														<input type="radio" id="yesHOA2" value="yes" name="is_property_second_hoa" <?php echo ($is_property_second_hoa == 'yes') ? 'checked="checked"' : '';?>>
 														<label for="yesHOA2">Yes</label>
 													</li>
 													<li class="list-inline-item">
-														<input type="radio" id="noHOA2" value="no" name="is_property_second_hoa">
+														<input type="radio" id="noHOA2" value="no" name="is_property_second_hoa" <?php echo ($is_property_second_hoa == 'no') ? 'checked="checked"' : '';?>>
 														<label for="noHOA2">No</label>
 													</li>
 												</ul>
-												<label id="is_property_second_hoa-error" class="error text-danger" for="is_property_second_hoa"></label>
+												
 											</div>
 
-											<div class="homeOwner2 d-none">
+											<div class="homeOwner2 <?php echo ($is_property_second_hoa == 'yes') ? '' : 'd-none';?>">
 												<h3 class="mb-4 text-center"><b>2nd Homeowners Association Management Information:</b></h3>
 												<div class="row">
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label for="" class="mb-2">Name of 2nd Management Company:</label>
-															<input type="text" class="form-control" id="second_hoa_management_company_name" name="second_hoa_management_company_name" data-error="#second_hoa_management_company_name-error">
+															<input type="text" class="form-control" id="second_hoa_management_company_name" name="second_hoa_management_company_name" value="<?php echo $second_hoa_management_company_name;?>">
 														</div>
-														<label id="second_hoa_management_company_name-error" class="error text-danger" for="second_hoa_management_company_name"></label>
+														
 													</div>
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label for="" class="mb-2">Contact Person:</label>
-															<input type="text" class="form-control" id="second_hoa_contact_person" name="second_hoa_contact_person" data-error="#second_hoa_contact_person-error">
+															<input type="text" class="form-control" id="second_hoa_contact_person" name="second_hoa_contact_person" value="<?php echo $second_hoa_contact_person;?>">
 														</div>
-														<label id="second_hoa_contact_person-error" class="error text-danger" for="second_hoa_contact_person"></label>
+														
 													</div>
 												</div>
 												<div class="row">
 													<div class="col-md-6 mb-3">
 														<div class="form-group position-relative">
 															<label for="" class="mb-2">Email:</label>
-															<input type="text" class="form-control" id="second_hoa_email" name="second_hoa_email" data-error="#second_hoa_email-error">
+															<input type="text" class="form-control" id="second_hoa_email" name="second_hoa_email" value="<?php echo $second_hoa_email;?>">
 															<small class="small_label">example@example.com</small>
 														</div>
-														<label id="second_hoa_email-error" class="error text-danger error2" for="second_hoa_email"></label>
+														
 													</div>
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label for="" class="mb-2">Phone:</label>
-															<input type="text" class="form-control" id="second_hoa_phone" name="second_hoa_phone" data-error="#second_hoa_phone-error">
+															<input type="text" class="form-control" id="second_hoa_phone" name="second_hoa_phone" value="<?php echo $second_hoa_phone;?>">
 														</div>
-														<label id="second_hoa_phone-error" class="error text-danger" for="second_hoa_phone"></label>
+														
 													</div>
 												</div>
 												<div class="row">
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label for="" class="mb-2">2nd HOA Dues:</label>
-															<input type="text" class="form-control" id="second_hoa_dues" name="second_hoa_dues" data-error="#second_hoa_dues-error">
+															<input type="text" class="form-control" id="second_hoa_dues" name="second_hoa_dues" value="<?php echo $second_hoa_dues;?>">
 														</div>
-														<label id="second_hoa_dues-error" class="error text-danger" for="second_hoa_dues"></label>
+														
 													</div>
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label for="" class="mb-2">Dues Per</label>
 															<ul class="list-unstyled">
 																<li>
-																	<input type="radio" id="month" name="second_hoa_dues_per" value="month" data-error="#second_hoa_dues_per-error">
+																	<input type="radio" id="month" name="second_hoa_dues_per" value="month" <?php echo ($second_hoa_dues_per == 'month') ? 'checked="checked"' : '';?>>
 																	<label for="month">Month</label>
 																</li>
 																<li>
-																	<input type="radio" id="Quarter" name="second_hoa_dues_per" value="quarter">
+																	<input type="radio" id="Quarter" name="second_hoa_dues_per" value="quarter" <?php echo ($second_hoa_dues_per == 'quarter') ? 'checked="checked"' : '';?>>
 																	<label for="Quarter">Quarter</label>
 																</li>
 																<li>
-																	<input type="radio" id="Semi-Annually" name="second_hoa_dues_per" value="semi-annually">
+																	<input type="radio" id="Semi-Annually" name="second_hoa_dues_per" value="semi-annually" <?php echo ($second_hoa_dues_per == 'semi-annually') ? 'checked="checked"' : '';?>>
 																	<label for="Semi-Annually">Semi-Annually</label>
 																</li>
 																<li>
-																	<input type="radio" id="Annually" name="second_hoa_dues_per" value="annually">
+																	<input type="radio" id="Annually" name="second_hoa_dues_per" value="annually" <?php echo ($second_hoa_dues_per == 'annually') ? 'checked="checked"' : '';?>>
 																	<label for="Annually">Annually</label>
 																</li>
 															</ul>
-															<label id="second_hoa_dues_per-error" class="error text-danger" for="second_hoa_dues_per"></label>
+															
 														</div>
 													</div>
 												</div>
 												<div class="form-group mb-3">
 													<label for="" class="mb-2">2nd Notes:</label>
-													<input type="text" class="form-control" id="second_hoa_notes" name="second_hoa_notes" data-error="#second_hoa_notes-error">
-													<label id="second_hoa_notes-error" class="error text-danger" for="second_hoa_notes"></label>
+													<input type="text" class="form-control" id="second_hoa_notes" name="second_hoa_notes" value="<?php echo $second_hoa_notes;?>">
+													
 												</div>
 												
 											</div>
@@ -1814,11 +1666,10 @@
 
 
 										<div class="form-group mb-2 d-flex">
-											<input type="checkbox" id="readAgree" name="readAgree" class="me-2 mt-1" required data-error="#readAgree-error">
+											<input type="checkbox" id="readAgree" name="readAgree" class="me-2 mt-1" checked="checked">
 											<label for="readAgree" class="mb-2">I/We have read and agree to
 												<span>*</span></label>
 										</div>
-										<label id="readAgree-error" class="error text-danger error2" for="readAgree"></label>
 										<div class="border p-3">
 											the above requirements for Closing Day.
 										</div>
@@ -1828,15 +1679,7 @@
 							</div>
 						</div>
 
-						<p class="my-4">
-							Signing below indicates that the information included here is correct and complete to the
-							best of my knowledge and ackowledges and accepts the information included in this document
-						</p>
-						<h4 class="text-orange text-center mb-5">
-							You must click SUBMIT below to securely send your completed forms to<br> Pacific Coast Title
-							Company.
-						</h4>
-						<div class="text-center"><button type="submit" class="btn btn-primary">Submit</button></div>
+						
 					</form>
 				</div>
 			</div>

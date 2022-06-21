@@ -7,7 +7,7 @@ $(document).on('change','input[type="radio"]',function(){
         $('#co_seller_middle_name').prop('required',true);
         $('#co_seller_last_name').prop('required',true);
         $('#co_seller_expiration_date').prop('required',true);
-        $('input:radio[name=coSellermaritalStatus]').prop('required',true);
+        $('input:radio[name=co_seller_marital_status]').prop('required',true);
         $('#co_seller_ssn').prop('required',true);
         $('#co_seller_email').prop('required',true);
         $('#co_seller_phone_number').prop('required',true);
@@ -18,7 +18,7 @@ $(document).on('change','input[type="radio"]',function(){
         $('#co_seller_middle_name').prop('required',false);
         $('#co_seller_last_name').prop('required',false);
         $('#co_seller_expiration_date').prop('required',false);
-        $('input:radio[name=coSellermaritalStatus]').prop('required',false);
+        $('input:radio[name=co_seller_marital_status]').prop('required',false);
         $('#co_seller_ssn').prop('required',false);
         $('#co_seller_email').prop('required',false);
         $('#co_seller_phone_number').prop('required',false);
@@ -63,9 +63,9 @@ $(document).on('change','input[type="radio"]',function(){
     }
 
     if ($this.attr('id') == 'yesinsurance') {
-        $('#insuranceFile').prop('required',true);
+        $('#insurance_policy_file_name').prop('required',true);
     } else if($this.attr('id') == 'noinsurance') {
-        $('#insuranceFile').prop('required',false);
+        $('#insurance_policy_file_name').prop('required',false);
     }
 
     if ($this.attr('id') == 'yesmortgage') {
@@ -211,12 +211,6 @@ $(document).on('change','input[type="radio"]',function(){
         $('#forwarding_city').prop('required',false);
         $('#forwarding_state').prop('required',false);
         $('#forwarding_zip_code').prop('required',false);
-    }
-
-    if (selectedvalue == 'other') {
-        $this.parents(".form-group").find('.otherAddress').removeClass('d-none')
-    } else {
-        $this.parents(".form-group").find('.otherAddress').addClass('d-none')
     }
 
     if(selectedvalue == 'marriedToOther'){
@@ -404,7 +398,7 @@ $('input[name="sale_proceeds"]').change(function(){
     }
 })
 
-$('input[name="Co-Seller"]').change(function(){
+$('input[name="co_seller"]').change(function(){
     var $this = $(this);
     var selectedvalue = $this.val();
     if(selectedvalue == 'yes'){
@@ -415,13 +409,55 @@ $('input[name="Co-Seller"]').change(function(){
     }
 })
 
-$('input[name="insurance"]').change(function(){
+$('input[name="is_correct_property_address"]').change(function(){
+    var $this = $(this);
+    var selectedvalue = $this.val();
+    if (selectedvalue == 'no'){
+        $(".otherPropertyAddress").removeClass("d-none")
+    } else {
+        $(".otherPropertyAddress").addClass("d-none")
+    }
+})
+
+$('input[name="is_property_address_as_current_address"]').change(function(){
+    var $this = $(this);
+    var selectedvalue = $this.val();
+    console.log(selectedvalue);
+    if(selectedvalue == 'no'){
+        console.log(selectedvalue);
+        $(".otherCurrentAddress").removeClass("d-none")
+    } else {
+        $(".otherCurrentAddress").addClass("d-none")
+    }
+})
+
+$('input[name="is_forwarding_address_different_from_current_address"]').change(function(){
+    var $this = $(this);
+    var selectedvalue = $this.val();
+    if (selectedvalue == 'yes'){
+        $(".otherForwardAddress").removeClass("d-none")
+    } else {
+        $(".otherForwardAddress").addClass("d-none")
+    }
+})
+
+$('input[name="is_same_property_address_as_forwarding_address"]').change(function(){
+    var $this = $(this);
+    var selectedvalue = $this.val();
+    if (selectedvalue == 'other'){
+        $(".otherFowardingAddressClose").removeClass("d-none")
+    } else {
+        $(".otherFowardingAddressClose").addClass("d-none")
+    }
+})
+
+$('input[name="is_insurance_policy"]').change(function(){
     var $this = $(this);
     var selectedvalue = $this.val();
     if(selectedvalue == 'yes') {
-        $(".insuranceFile").removeClass("d-none")
+        $(".insurance_policy_file_name").removeClass("d-none")
     } else {
-        $(".insuranceFile").addClass("d-none")
+        $(".insurance_policy_file_name").addClass("d-none")
     }
 })
 
@@ -436,14 +472,14 @@ $('input[name="is_real_estate"]').change(function(){
     }
 })
 
-$('input[name="payInvoice[]"]').change(function(){
+$('input[name="seller_invoices[]"]').change(function(){
     var $this = $(this);
     var selectedvalue = $this.val();
     console.log(selectedvalue);
     if ($this.is(":checked") && selectedvalue !== 'none') {
-        $(".insuranceFile").removeClass("d-none")
+        $(".seller_invoices_files").removeClass("d-none")
     } else {
-        $(".insuranceFile").addClass("d-none")
+        $(".seller_invoices_files").addClass("d-none")
     }
 })
 
