@@ -58,7 +58,7 @@
                                 }?>
                         </div>
                     <?php } ?>
-					<form action="<?php echo base_url().'borrower-seller-form/'.$orderDetails['file_id']; ?>" method="post" name="borrower_seller_form" id="borrower_seller_form">
+					<form action="<?php echo base_url().'borrower-seller-form/'.$orderDetails['file_id']; ?>" onsubmit="if (validateForm()) { document.forms['borrower_seller_form'].submit(); }" method="post" name="borrower_seller_form" id="borrower_seller_form">
 						<h2 class="blue_title">Seller Opening Package<br><span
 								style="font-size:16px; padding-top:15px;">Property Address: <?php echo $orderDetails['full_address'];?></span><br><span
 								style="font-size:16px; padding-top:15px;">APN:<?php echo $orderDetails['apn'];?></span></h2>
@@ -69,7 +69,7 @@
 										data-bs-target="#collapseOne" aria-expanded="true"
 										aria-controls="collapseOne">(1) Seller Information</button>
 								</h2>
-								<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+								<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
 									data-bs-parent="#accordionExample">
 									<div class="accordion-body">
 
