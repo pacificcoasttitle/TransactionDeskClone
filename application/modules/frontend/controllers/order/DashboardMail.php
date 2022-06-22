@@ -2543,7 +2543,7 @@ class DashboardMail extends MX_Controller {
             $pdfFilePath = './uploads/borrower/'.$document_name;
 
             //try {
-                ob_clean(); 
+                //ob_clean(); 
                 $mpdf = new \Mpdf\Mpdf();
                 echo "hehe";
                 //ini_set("pcre.backtrack_limit", "5000000");
@@ -2567,27 +2567,27 @@ class DashboardMail extends MX_Controller {
             //     echo $e->getMessage();
             // }
 
-            $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
-            $documentData = array(
-                'document_name' => $document_name,
-                'original_document_name' => $document_name,
-                'document_type_id' => 1041,
-                'document_size' => 0,
-                'user_id' => 0,
-                'order_id' => $data['orderDetails']['order_id'],
-                'task_id' => 4,
-                'description' => 'Borrower Buyer Document',
-                'is_sync' => 1,
-                'is_uploaded_by_borrower' => 1
-            );
-            $this->document->insert($documentData);
-            $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
-            $success[] = "Borrower buyer info saved successfully and sent to Escrow officer/assistant users to verify data.";
-            $data = array(
-                "errors" =>  $errors,
-                "success" => $success
-            );
-            $this->session->set_userdata($data);
+            // $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
+            // $documentData = array(
+            //     'document_name' => $document_name,
+            //     'original_document_name' => $document_name,
+            //     'document_type_id' => 1041,
+            //     'document_size' => 0,
+            //     'user_id' => 0,
+            //     'order_id' => $data['orderDetails']['order_id'],
+            //     'task_id' => 4,
+            //     'description' => 'Borrower Buyer Document',
+            //     'is_sync' => 1,
+            //     'is_uploaded_by_borrower' => 1
+            // );
+            // $this->document->insert($documentData);
+            // $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
+            // $success[] = "Borrower buyer info saved successfully and sent to Escrow officer/assistant users to verify data.";
+            // $data = array(
+            //     "errors" =>  $errors,
+            //     "success" => $success
+            // );
+            // $this->session->set_userdata($data);
             redirect(base_url().'borrower-buyer-form/'.$random_number);exit;
         }
         $this->load->view('order/borrower_buyer', $data);
