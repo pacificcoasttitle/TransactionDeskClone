@@ -2274,10 +2274,10 @@ class DashboardMail extends MX_Controller {
                 $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
                 $mpdf->WriteHTML($stylesheet2, 1);
                 $mpdf->WriteHTML($html,2);
-                $mpdf->Output($pdfFilePath,'F');
+                $mpdf->Output($pdfFilePath,'d');
                 ob_end_flush();
             } catch (\Mpdf\MpdfException $e) {
-                echo $e->getMessage();
+                echo $e->getMessage();exit;
             }
 
             $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
@@ -2302,7 +2302,7 @@ class DashboardMail extends MX_Controller {
                 "success" => $success
             );
             $this->session->set_userdata($data);
-            redirect(base_url().'borrower-seller-form/'.$random_number);
+            redirect(base_url().'borrower-seller-form/'.$random_number);exit;
         }
         $this->load->view('order/borrower_seller', $data);
     }
@@ -2578,7 +2578,7 @@ class DashboardMail extends MX_Controller {
                 "success" => $success
             );
             $this->session->set_userdata($data);
-            redirect(base_url().'borrower-buyer-form/'.$random_number);
+            redirect(base_url().'borrower-buyer-form/'.$random_number);exit;
         }
         $this->load->view('order/borrower_buyer', $data);
     }
