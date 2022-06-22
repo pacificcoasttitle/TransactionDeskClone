@@ -2523,7 +2523,7 @@ class DashboardMail extends MX_Controller {
                 'signature_corporate_officer_date' => $this->input->post('signature_corporate_officer_date'),
                 'corporate_officer_telephone' => $this->input->post('corporate_officer_telephone'),
                 'corporate_officer_name' => $this->input->post('corporate_officer_name'),
-                'corporate_officer_email' => $this->input->post('corporate_officer_email'),
+                'corporate_officer_email' => 'test@test.com',
             );
             $this->home_model->insert($borrowerBuyerPurchaseSaleInfoData, 'pct_order_borrower_buyer_purchase_sale_info');   
             
@@ -2551,8 +2551,8 @@ class DashboardMail extends MX_Controller {
                 $stylesheet = file_get_contents('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap');
                 $mpdf->WriteHTML($stylesheet, 1);
                 echo "hehe1";
-                $stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
-                $mpdf->WriteHTML($stylesheet1, 1);
+                //$stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
+                //$mpdf->WriteHTML($stylesheet1, 1);
                 echo "hehe2";
                 $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
                 $mpdf->WriteHTML($stylesheet2, 1);
