@@ -1885,7 +1885,7 @@
     <script src="<?php echo base_url();?>assets/frontend/js/order/jquery.min.js"></script>
     <script src="<?php echo base_url();?>assets/frontend/js/jquery.validate.min.js"></script>
     <script src="<?php echo base_url();?>assets/frontend/js/order/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo base_url();?>assets/frontend/js/order/script.js"></script>
+    <script src="<?php echo base_url();?>assets/frontend/js/order/script.js?v=01"></script>
     <script src="<?php echo base_url();?>assets/frontend/js/order/signature_pad.min.js"></script>
 </body>
 </html>
