@@ -2262,8 +2262,9 @@ class DashboardMail extends MX_Controller {
             }
             $pdfFilePath = './uploads/borrower/'.$document_name;
 
-            ob_clean(); 
+            
             try {
+                ob_clean(); 
                 $mpdf = new \Mpdf\Mpdf();
                 ini_set("pcre.backtrack_limit", "5000000");
                 $html = $this->load->view('order/borrower_seller_pdf', $pdfData, true);
@@ -2277,7 +2278,7 @@ class DashboardMail extends MX_Controller {
                 $mpdf->Output($pdfFilePath,'d');
                 ob_end_flush();
             } catch (\Mpdf\MpdfException $e) {
-                echo $e->getMessage();exit;
+                echo "here".$e->getMessage();exit;
             }
 
             $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
