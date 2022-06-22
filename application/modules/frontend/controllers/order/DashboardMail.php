@@ -2543,18 +2543,25 @@ class DashboardMail extends MX_Controller {
             try {
                 ob_clean(); 
                 $mpdf = new \Mpdf\Mpdf();
+                echo "hehe";
                 ini_set("pcre.backtrack_limit", "5000000");
                 $html = $this->load->view('order/borrower_buyer_pdf', $pdfData, true);
                 $stylesheet = file_get_contents('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap');
                 $mpdf->WriteHTML($stylesheet, 1);
+                echo "hehe1";
                 $stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
                 $mpdf->WriteHTML($stylesheet1, 1);
+                echo "hehe2";
                 $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
                 $mpdf->WriteHTML($stylesheet2, 1);
+                echo "hehe3";
                 $mpdf->WriteHTML($html,2);
+                echo "hehe4";
                 $mpdf->Output($pdfFilePath,'F');
                 ob_end_flush();
+                echo "hehe5";
             } catch (\Mpdf\MpdfException $e) { 
+                echo "hehe6";
                 echo $e->getMessage();
             }
 
