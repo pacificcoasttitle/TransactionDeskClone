@@ -2263,7 +2263,7 @@ class DashboardMail extends MX_Controller {
             $pdfFilePath = './uploads/borrower/'.$document_name;
 
             try {
-                ob_clean(); 
+                //ob_clean(); 
                 $mpdf = new \Mpdf\Mpdf();
                 ini_set("pcre.backtrack_limit", "5000000");
                 $html = $this->load->view('order/borrower_seller_pdf', $pdfData, true);
@@ -2275,7 +2275,7 @@ class DashboardMail extends MX_Controller {
                 $mpdf->WriteHTML($stylesheet2, 1);
                 $mpdf->WriteHTML($html,2);
                 $mpdf->Output($pdfFilePath,'F');
-                ob_end_flush();
+                //ob_end_flush();
             } catch (\Mpdf\MpdfException $e) {
                 echo $e->getMessage();
             }
@@ -2309,9 +2309,6 @@ class DashboardMail extends MX_Controller {
 
     public function borrowerBuyerForm($random_number)
     {
-        echo "heheh1";
-        error_reporting(E_ALL);
-ini_set('display_errors', '1');
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
@@ -2545,43 +2542,43 @@ ini_set('display_errors', '1');
             try {
                 //ob_clean(); 
                 $mpdf = new \Mpdf\Mpdf();
-                // ini_set("pcre.backtrack_limit", "5000000");
-                // $html = $this->load->view('order/borrower_buyer_pdf', $pdfData, true);
-                // $stylesheet = file_get_contents('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap');
-                // $mpdf->WriteHTML($stylesheet, 1);
-                // //$stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
-                // //$mpdf->WriteHTML($stylesheet1, 1);
-                // $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
-                // $mpdf->WriteHTML($stylesheet2, 1);
-                // $mpdf->WriteHTML($html,2);
-                // $mpdf->Output($pdfFilePath,'F');
-                // ob_end_flush();
+                ini_set("pcre.backtrack_limit", "5000000");
+                $html = $this->load->view('order/borrower_buyer_pdf', $pdfData, true);
+                $stylesheet = file_get_contents('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap');
+                $mpdf->WriteHTML($stylesheet, 1);
+                //$stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
+                //$mpdf->WriteHTML($stylesheet1, 1);
+                $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
+                $mpdf->WriteHTML($stylesheet2, 1);
+                $mpdf->WriteHTML($html,2);
+                $mpdf->Output($pdfFilePath,'F');
+                //ob_end_flush();
             } catch (\Mpdf\MpdfException $e) { 
-                //echo $e->getMessage();
+                echo $e->getMessage();
             }
 
-            // $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
-            // $documentData = array(
-            //     'document_name' => $document_name,
-            //     'original_document_name' => $document_name,
-            //     'document_type_id' => 1041,
-            //     'document_size' => 0,
-            //     'user_id' => 0,
-            //     'order_id' => $data['orderDetails']['order_id'],
-            //     'task_id' => 4,
-            //     'description' => 'Borrower Buyer Document',
-            //     'is_sync' => 1,
-            //     'is_uploaded_by_borrower' => 1
-            // );
-            // $this->document->insert($documentData);
-            // $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
-            // $success[] = "Borrower buyer info saved successfully and sent to Escrow officer/assistant users to verify data.";
-            // $data = array(
-            //     "errors" =>  $errors,
-            //     "success" => $success
-            // );
-            // $this->session->set_userdata($data);
-            //redirect(base_url().'borrower-buyer-form/'.$random_number);exit;
+            $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
+            $documentData = array(
+                'document_name' => $document_name,
+                'original_document_name' => $document_name,
+                'document_type_id' => 1041,
+                'document_size' => 0,
+                'user_id' => 0,
+                'order_id' => $data['orderDetails']['order_id'],
+                'task_id' => 4,
+                'description' => 'Borrower Buyer Document',
+                'is_sync' => 1,
+                'is_uploaded_by_borrower' => 1
+            );
+            $this->document->insert($documentData);
+            $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
+            $success[] = "Borrower buyer info saved successfully and sent to Escrow officer/assistant users to verify data.";
+            $data = array(
+                "errors" =>  $errors,
+                "success" => $success
+            );
+            $this->session->set_userdata($data);
+            redirect(base_url().'borrower-buyer-form/'.$random_number);exit;
         }
         $this->load->view('order/borrower_buyer', $data);
     }
