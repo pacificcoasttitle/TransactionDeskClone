@@ -2262,7 +2262,6 @@ class DashboardMail extends MX_Controller {
             }
             $pdfFilePath = './uploads/borrower/'.$document_name;
 
-            
             try {
                 ob_clean(); 
                 $mpdf = new \Mpdf\Mpdf();
@@ -2547,8 +2546,8 @@ class DashboardMail extends MX_Controller {
                 $html = $this->load->view('order/borrower_buyer_pdf', $pdfData, true);
                 $stylesheet = file_get_contents('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap');
                 $mpdf->WriteHTML($stylesheet, 1);
-                $stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
-                $mpdf->WriteHTML($stylesheet1, 1);
+                //$stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
+                //$mpdf->WriteHTML($stylesheet1, 1);
                 $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
                 $mpdf->WriteHTML($stylesheet2, 1);
                 $mpdf->WriteHTML($html,2);

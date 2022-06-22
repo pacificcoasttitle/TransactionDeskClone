@@ -27,10 +27,6 @@
                     <a href="#"><img src="<?php echo base_url();?>assets/frontend/images/buyer-seller-package/alanna-logo.png" alt="..." class="img-fluid img_logo"></a>
                 </div>
                 <div class="col-6 text-end">
-                    <!-- <select class="lang_selection form-control">
-                        <option>English</option>
-                        <option>Español</option>
-                    </select> -->
                 </div>
             </div>
         </div>
