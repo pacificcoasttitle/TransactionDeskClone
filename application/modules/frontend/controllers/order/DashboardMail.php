@@ -2309,6 +2309,8 @@ class DashboardMail extends MX_Controller {
 
     public function borrowerBuyerForm($random_number)
     {
+        error_reporting(E_ALL);
+ini_set('display_errors', '1');
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
@@ -2578,7 +2580,7 @@ class DashboardMail extends MX_Controller {
             //     "success" => $success
             // );
             // $this->session->set_userdata($data);
-            redirect(base_url().'borrower-buyer-form/'.$random_number);exit;
+            //redirect(base_url().'borrower-buyer-form/'.$random_number);exit;
         }
         $this->load->view('order/borrower_buyer', $data);
     }
