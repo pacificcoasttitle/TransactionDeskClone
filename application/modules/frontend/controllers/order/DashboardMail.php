@@ -2310,6 +2310,8 @@ class DashboardMail extends MX_Controller {
 
     public function borrowerBuyerForm($random_number)
     {
+        error_reporting(E_ALL);
+        ini_set('display_errors', '1');
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
@@ -2540,7 +2542,7 @@ class DashboardMail extends MX_Controller {
             }
             $pdfFilePath = './uploads/borrower/'.$document_name;
 
-            try {
+            //try {
                 ob_clean(); 
                 $mpdf = new \Mpdf\Mpdf();
                 echo "hehe";
@@ -2560,10 +2562,10 @@ class DashboardMail extends MX_Controller {
                 $mpdf->Output($pdfFilePath,'F');
                 ob_end_flush();
                 echo "hehe5";
-            } catch (\Mpdf\MpdfException $e) { 
-                echo "hehe6";
-                echo $e->getMessage();
-            }
+            // } catch (\Mpdf\MpdfException $e) { 
+            //     echo "hehe6";
+            //     echo $e->getMessage();
+            // }
 
             $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
             $documentData = array(
