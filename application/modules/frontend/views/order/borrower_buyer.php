@@ -57,7 +57,7 @@
                                 <h2 class="accordion-header" id="headingOne">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">(1) Property Information</button>
                                 </h2>
-                                <div id="collapseOne" class="accordion-collapsed collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="row mb-3">
                                             <div class="col-md-12">
@@ -885,9 +885,9 @@
                                                     NAME AND MAILING ADDRESS OF BUYER/TRANSFEREE <br> (Make necessary corrections to the printed name and mailing address)
                                                 </small>
                                                 <textarea name="address" rows="6" id="address" class="form-control mt-3" style="height:auto !important" readonly>
-Mordechai Citronenbaum  
-48 Hauser Blvd. #1-110 
-Los Angeles, CA 90036
+                                                        Mordechai Citronenbaum  
+                                                        48 Hauser Blvd. #1-110 
+                                                        Los Angeles, CA 90036
                                                 </textarea>
                                             </div>
                                             <div class="col-md-6">
@@ -1008,7 +1008,7 @@ Los Angeles, CA 90036
                                                 <td><input type="radio" name="is_transfer_between_spouses" id="checkNo2" value="no"></td>
                                                 <td>
                                                     This transfer is solely between spouses (addition or removal of a spouse, death of a spouse, divorce settlement, etc.).
-                                                    <label id="is_disabled_veteran-error" class="error text-danger d-flex" for="is_disabled_veteran"></label>
+                                                    <label id="is_transfer_between_spouses-error" class="error text-danger d-flex" for="is_transfer_between_spouses"></label>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1061,8 +1061,9 @@ Los Angeles, CA 90036
                                                     This transaction is to replace a principal residence owned by a person 55 years of age or older.<br>
                                                     <label id="is_replace_principal_residence_own-error" class="error text-danger d-flex" for="is_replace_principal_residence_own"></label>
                                                     Within the same county?  &nbsp;
-                                                    <input type="radio" name="is_replace_principal_residence_own_in_same_county" id="sameCountry1" class="me-2" value="yes"> <label for="sameCountry1">YES</label>
+                                                    <input type="radio" name="is_replace_principal_residence_own_in_same_county" id="sameCountry1" class="me-2" value="yes" required data-error="#is_replace_principal_residence_own_in_same_county-error"> <label for="sameCountry1">YES</label>
                                                     <input type="radio" name="is_replace_principal_residence_own_in_same_county" id="sameCountry2" class="me-2" value="no"> <label for="sameCountry2">NO</label>
+                                                    <label id="is_replace_principal_residence_own_in_same_county-error" class="error text-danger d-flex" for="is_replace_principal_residence_own_in_same_county"></label>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1073,8 +1074,9 @@ Los Angeles, CA 90036
                                                     This transaction is to replace a principal residence by a person who is severely disabled.<br>
                                                     <label id="is_replace_principal_residence_person_disabled-error" class="error text-danger d-flex" for="is_replace_principal_residence_person_disabled"></label>
                                                     Within the same county?  &nbsp;
-                                                    <input type="radio" name="is_replace_principal_residence_person_disabled_in_same_county" id="severeDisabled1" class="me-2" value="yes"> <label for="severeDisabled1">YES</label>
+                                                    <input type="radio" name="is_replace_principal_residence_person_disabled_in_same_county" id="severeDisabled1" class="me-2" value="yes" required data-error="#is_replace_principal_residence_person_disabled_in_same_county-error"> <label for="severeDisabled1">YES</label>
                                                     <input type="radio" name="is_replace_principal_residence_person_disabled_in_same_county" id="severeDisabled2" class="me-2" value="no"> <label for="severeDisabled2">NO</label>
+                                                    <label id="is_replace_principal_residence_person_disabled_in_same_county-error" class="error text-danger d-flex" for="is_replace_principal_residence_person_disabled_in_same_county"></label>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1085,8 +1087,9 @@ Los Angeles, CA 90036
                                                     This transaction is to replace a principal residence substantially damaged or destroyed by a wildfire or natural disaster for which the Governor proclaimed a state of emergency. <br>
                                                     <label id="is_replace_principal_residence_damaged-error" class="error text-danger d-flex" for="is_replace_principal_residence_damaged"></label>
                                                     Within the same county?  &nbsp;
-                                                    <input type="radio" name="is_replace_principal_residence_damaged_in_same_county" id="damage1" class="me-2" value="yes"> <label for="damage1">YES</label>
+                                                    <input type="radio" name="is_replace_principal_residence_damaged_in_same_county" id="damage1" class="me-2" value="yes" required data-error="#is_replace_principal_residence_damaged_in_same_county-error"> <label for="damage1">YES</label>
                                                     <input type="radio" name="is_replace_principal_residence_damaged_in_same_county" id="damage2" class="me-2" value="no"> <label for="damage2">NO</label>
+                                                    <label id="is_replace_principal_residence_damaged_in_same_county-error" class="error text-danger d-flex" for="is_replace_principal_residence_damaged_in_same_county"></label>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1231,7 +1234,7 @@ Los Angeles, CA 90036
                                                     <div class="row">
                                                         <div class="col-lg-2 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="purchase" value="purchase" name="types_of_transfer[]">
+                                                                <input type="checkbox" class="mt-2 me-2" id="purchase" value="purchase" name="types_of_transfer[]" required data-error="#types_of_transfer-error">
                                                                 <label for="purchase">Purchase</label>
                                                             </div>
                                                         </div>
@@ -1301,6 +1304,7 @@ Los Angeles, CA 90036
                                                          Remaining term in years (including written options):   
                                                          <input type="text"  class="input_single w-small" id="remaining_terms_in_year" name="remaining_terms_in_year">
                                                     </div>
+                                                    <label id="types_of_transfer-error" class="error text-danger d-flex" for="types_of_transfer"></label>
                                                 </td>
                                             </tr>
                                             <tr>

@@ -63,7 +63,7 @@ $(document).on('change','input[type="radio"]',function(){
     }
 
     if ($this.attr('id') == 'yesinsurance') {
-        $('#insurance_policy_file_name').prop('required',true);
+        $('#insurance_policy_file_name').prop('required',false);
     } else if($this.attr('id') == 'noinsurance') {
         $('#insurance_policy_file_name').prop('required',false);
     }
@@ -228,11 +228,10 @@ $("#borrower_seller_form").validate({
         
     },
     rules: {
-        name: "required",
-        email: {
+        types_of_transfer: {
             required: true,
-            email: true,
-        },
+            minlength: 1,
+        }
     },
     submitHandler: function (form) {
         document.forms["borrower_seller_form"].submit();

@@ -79,16 +79,16 @@
 																<span>*</span></b></label>
 														<ul class="list-unstyled">
 															<li>
-																<input type="radio" name="phone_number_type" value="Home" id="Home" <?php echo ($phone_number_type == 'Home') ? 'checked="checked"' : '';?>>
-																<label for="Home">Home Number</label>
+																&nbsp;<input type="radio" name="phone_number_type" value="Home" id="Home" <?php echo ($phone_number_type == 'Home') ? 'checked="checked"' : '';?>>
+																&nbsp;&nbsp;<label for="Home">Home Number</label>
 															</li>
 															<li>
-																<input type="radio" name="phone_number_type" value="Cell" id="Cell" <?php echo ($phone_number_type == 'Cell') ? 'checked="checked"' : '';?>>
-																<label for="Cell">Cell</label>
+                                                                &nbsp;<input type="radio" name="phone_number_type" value="Cell" id="Cell" <?php echo ($phone_number_type == 'Cell') ? 'checked="checked"' : '';?>>
+																&nbsp;&nbsp;<label for="Cell">Cell</label>
 															</li>
 															<li>
-																<input type="radio" name="phone_number_type" value="Business" id="Business" <?php echo ($phone_number_type == 'Business') ? 'checked="checked"' : '';?>>
-																<label for="Business">Business Phone</label>
+                                                                &nbsp;<input type="radio" name="phone_number_type" value="Business" id="Business" <?php echo ($phone_number_type == 'Business') ? 'checked="checked"' : '';?>>
+																&nbsp;&nbsp;<label for="Business">Business Phone</label>
 															</li>
 														</ul>
 													</div>
@@ -100,12 +100,12 @@
 											<label for="" class="mb-2"><b>Is Seller a citizen or resident of a foreign country? <span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" value="yes" id="foreignYes" name="foreign_resident" <?php echo ($foreign_resident == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="foreignYes">Yes</label>
+                                                    &nbsp;<input type="radio" value="yes" id="foreignYes" name="foreign_resident" <?php echo ($foreign_resident == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="foreignYes">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" value="no" id="foreignNo" name="foreign_resident" <?php echo ($foreign_resident == 'no') ? 'checked="checked"' : '';?>>
-													<label for="foreignNo">No</label>
+                                                    &nbsp;<input type="radio" value="no" id="foreignNo" name="foreign_resident" <?php echo ($foreign_resident == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="foreignNo">No</label>
 												</li>
 											</ul>
 										</div>
@@ -115,12 +115,12 @@
 											<label for="" class="mb-2"><b>Is there a Co-Seller for this property?<span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" value="yes" id="coSellerYes" name="co_seller" <?php echo ($co_seller == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="coSellerYes">Yes</label>
+                                                    &nbsp;<input type="radio" value="yes" id="coSellerYes" name="co_seller" <?php echo ($co_seller == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="coSellerYes">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" value="no" id="coSellerNo" name="co_seller" <?php echo ($co_seller == 'no') ? 'checked="checked"' : '';?>>
-													<label for="coSellerNo">No</label>
+                                                    &nbsp;<input type="radio" value="no" id="coSellerNo" name="co_seller" <?php echo ($co_seller == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="coSellerNo">No</label>
 												</li>
 											</ul>
 										</div>
@@ -172,12 +172,12 @@
 														<span>*</span></b></label>
 												<ul class="list-unstyled">
 													<li>
-														<input type="radio" value="single" id="singlecoSeller" name="co_seller_marital_status" <?php echo ($co_seller_marital_status == 'single') ? 'checked="checked"' : '';?>>
-														<label for="singlecoSeller">Single</label>
+                                                        &nbsp;<input type="radio" value="single" id="singlecoSeller" name="co_seller_marital_status" <?php echo ($co_seller_marital_status == 'single') ? 'checked="checked"' : '';?>>
+														&nbsp;&nbsp;<label for="singlecoSeller">Single</label>
 													</li>
 													<li>
-														<input type="radio" value="married" id="marriedcoSeller" name="co_seller_marital_status" <?php echo ($co_seller_marital_status == 'married') ? 'checked="checked"' : '';?>>
-														<label for="marriedcoSeller">Married</label>
+                                                        &nbsp;<input type="radio" value="married" id="marriedcoSeller" name="co_seller_marital_status" <?php echo ($co_seller_marital_status == 'married') ? 'checked="checked"' : '';?>>
+														&nbsp;&nbsp;<label for="marriedcoSeller">Married</label>
 													</li>
 												</ul>
 											</div>
@@ -214,16 +214,16 @@
 																	<span>*</span></b></label>
 															<ul class="list-unstyled">
 																<li>
-																	<input type="radio" name="co_seller_phone_number_type" value="Home" id="HomecoSeller" <?php echo ($co_seller_phone_number_type == 'Home') ? 'checked="checked"' : '';?>>
-																	<label for="HomecoSeller">Home Number</label>
+                                                                    &nbsp;<input type="radio" name="co_seller_phone_number_type" value="Home" id="HomecoSeller" <?php echo ($co_seller_phone_number_type == 'Home') ? 'checked="checked"' : '';?>>
+																	&nbsp;&nbsp;<label for="HomecoSeller">Home Number</label>
 																</li>
 																<li>
-																	<input type="radio" name="co_seller_phone_number_type" value="Cell" id="CellcoSeller" <?php echo ($co_seller_phone_number_type == 'Cell') ? 'checked="checked"' : '';?>>
-																	<label for="CellcoSeller">Cell</label>
+                                                                    &nbsp;<input type="radio" name="co_seller_phone_number_type" value="Cell" id="CellcoSeller" <?php echo ($co_seller_phone_number_type == 'Cell') ? 'checked="checked"' : '';?>>
+																	&nbsp;&nbsp;<label for="CellcoSeller">Cell</label>
 																</li>
 																<li>
-																	<input type="radio" name="co_seller_phone_number_type" value="Business" id="BusinesscoSeller" <?php echo ($co_seller_phone_number_type == 'Business') ? 'checked="checked"' : '';?>>
-																	<label for="BusinesscoSeller">Business Phone</label>
+                                                                    &nbsp;<input type="radio" name="co_seller_phone_number_type" value="Business" id="BusinesscoSeller" <?php echo ($co_seller_phone_number_type == 'Business') ? 'checked="checked"' : '';?>>
+																	&nbsp;&nbsp;<label for="BusinesscoSeller">Business Phone</label>
 																</li>
 															</ul>
 														</div>
@@ -236,12 +236,12 @@
 														foreign country? * <span>*</span></b></label>
 												<ul class="list-inline">
 													<li class="list-inline-item me-md-5">
-														<input type="radio" value="yes" id="coSellerforeignYes" name="co_seller_foreign_resident" <?php echo ($co_seller_foreign_resident == 'yes') ? 'checked="checked"' : '';?>>
-														<label for="coSellerforeignYes">Yes</label>
+                                                        &nbsp;<input type="radio" value="yes" id="coSellerforeignYes" name="co_seller_foreign_resident" <?php echo ($co_seller_foreign_resident == 'yes') ? 'checked="checked"' : '';?>>
+														&nbsp;&nbsp;<label for="coSellerforeignYes">Yes</label>
 													</li>
 													<li class="list-inline-item">
-														<input type="radio" value="no" id="coSellerforeignNo" name="co_seller_foreign_resident" <?php echo ($co_seller_foreign_resident == 'no') ? 'checked="checked"' : '';?>>
-														<label for="coSellerforeignNo">No</label>
+                                                        &nbsp;<input type="radio" value="no" id="coSellerforeignNo" name="co_seller_foreign_resident" <?php echo ($co_seller_foreign_resident == 'no') ? 'checked="checked"' : '';?>>
+														&nbsp;&nbsp;<label for="coSellerforeignNo">No</label>
 													</li>
 												</ul>
 											</div>
@@ -252,12 +252,12 @@
 													<span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" value="yes" id="attendingYes" name="attending" <?php echo ($attending == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="attendingYes">Yes</label>
+                                                    &nbsp;<input type="radio" value="yes" id="attendingYes" name="attending" <?php echo ($attending == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="attendingYes">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" value="no" id="attendingNo" name="attending" <?php echo ($attending == 'no') ? 'checked="checked"' : '';?>>
-													<label for="attendingNo">No</label>
+                                                    &nbsp;<input type="radio" value="no" id="attendingNo" name="attending" <?php echo ($attending == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="attendingNo">No</label>
 												</li>
 											</ul>
 										</div>
@@ -282,12 +282,12 @@
 													the property being sold? <span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesCorrectPropertyAddress" value="yes" name="is_correct_property_address" <?php echo ($is_correct_property_address == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="yesCorrect">Yes</label>
+                                                    &nbsp;<input type="radio" id="yesCorrectPropertyAddress" value="yes" name="is_correct_property_address" <?php echo ($is_correct_property_address == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="yesCorrect">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noCorrectPropertyAddress" value="no" name="is_correct_property_address" <?php echo ($is_correct_property_address == 'no') ? 'checked="checked"' : '';?>>
-													<label for="noCorrect">No</label>
+                                                    &nbsp;<input type="radio" id="noCorrectPropertyAddress" value="no" name="is_correct_property_address" <?php echo ($is_correct_property_address == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="noCorrect">No</label>
 												</li>
 											</ul>
 											<div class="otherAddress <?php echo ($is_correct_property_address == 'no') ? '' : 'd-none';?>">
@@ -326,12 +326,12 @@
 													address? <span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesCorrectPropertyAddressAsCurrentAddress" value="yes" name="is_property_address_as_current_address" <?php echo ($is_property_address_as_current_address == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="yesCurrent">Yes</label>
+                                                    &nbsp;<input type="radio" id="yesCorrectPropertyAddressAsCurrentAddress" value="yes" name="is_property_address_as_current_address" <?php echo ($is_property_address_as_current_address == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="yesCurrent">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noCorrectPropertyAddressAsCurrentAddress" value="no" name="is_property_address_as_current_address" <?php echo ($is_property_address_as_current_address == 'no') ? 'checked="checked"' : '';?>>
-													<label for="noCurrent">No</label>
+                                                    &nbsp;<input type="radio" id="noCorrectPropertyAddressAsCurrentAddress" value="no" name="is_property_address_as_current_address" <?php echo ($is_property_address_as_current_address == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="noCurrent">No</label>
 												</li>
 											</ul>
 											<div class="otherAddress <?php echo ($is_property_address_as_current_address == 'no') ? '' : 'd-none';?>">
@@ -370,12 +370,12 @@
 													Current Address? <span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesForwarding" value="yes" name="is_forwarding_address_different_from_current_address" <?php echo ($is_forwarding_address_different_from_current_address == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="yesForwarding">Yes</label>
+                                                    &nbsp;<input type="radio" id="yesForwarding" value="yes" name="is_forwarding_address_different_from_current_address" <?php echo ($is_forwarding_address_different_from_current_address == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="yesForwarding">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noForwarding" value="no" name="is_forwarding_address_different_from_current_address" <?php echo ($is_forwarding_address_different_from_current_address == 'no') ? 'checked="checked"' : '';?>>
-													<label for="noForwarding">No</label>
+                                                    &nbsp;<input type="radio" id="noForwarding" value="no" name="is_forwarding_address_different_from_current_address" <?php echo ($is_forwarding_address_different_from_current_address == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="noForwarding">No</label>
 												</li>
 											</ul>
 											<div class="otherAddress <?php echo ($is_forwarding_address_different_from_current_address == 'yes') ? '' : 'd-none';?>">
@@ -413,16 +413,16 @@
 											<label for="" class="mb-2"><b>This property was our<span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="primary" value="primary" name="residence" <?php echo ($residence == 'primary') ? 'checked="checked"' : '';?>>
-													<label for="primary">Primary Residence</label>
+                                                    &nbsp;<input type="radio" id="primary" value="primary" name="residence" <?php echo ($residence == 'primary') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="primary">Primary Residence</label>
 												</li>
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="secondary" value="secondary" name="residence" <?php echo ($residence == 'secondary') ? 'checked="checked"' : '';?>>
-													<label for="secondary">Second Home</label>
+                                                    &nbsp;<input type="radio" id="secondary" value="secondary" name="residence" <?php echo ($residence == 'secondary') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="secondary">Second Home</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="investment" value="investment" name="residence" <?php echo ($residence == 'investment') ? 'checked="checked"' : '';?>>
-													<label for="investment">Investment Property</label>
+                                                    &nbsp;<input type="radio" id="investment" value="investment" name="residence" <?php echo ($residence == 'investment') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="investment">Investment Property</label>
 												</li>
 											</ul>
 										</div>
@@ -434,12 +434,12 @@
 													policy.)</b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesinsurance" value="yes" name="is_insurance_policy" <?php echo ($is_insurance_policy == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="yesinsurance">Yes</label>
+                                                    &nbsp;<input type="radio" id="yesinsurance" value="yes" name="is_insurance_policy" <?php echo ($is_insurance_policy == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="yesinsurance">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noinsurance" value="no" name="is_insurance_policy" <?php echo ($is_insurance_policy == 'no') ? 'checked="checked"' : '';?>>
-													<label for="noinsurance">No</label>
+                                                    &nbsp;<input type="radio" id="noinsurance" value="no" name="is_insurance_policy" <?php echo ($is_insurance_policy == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="noinsurance">No</label>
 												</li>
 											</ul>
 											<div class="insurance_policy_file_name d-none mb-4">
@@ -468,12 +468,12 @@
 													Agent? <span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesRealEstate" value="yes" name="is_real_estate" <?php echo ($is_real_estate == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="yesRealEstate">Yes</label>
+                                                    &nbsp;<input type="radio" id="yesRealEstate" value="yes" name="is_real_estate" <?php echo ($is_real_estate == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="yesRealEstate">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noRealEstate" value="no" name="is_real_estate" <?php echo ($is_real_estate == 'no') ? 'checked="checked"' : '';?>>
-													<label for="noRealEstate">No</label>
+                                                    &nbsp;<input type="radio" id="noRealEstate" value="no" name="is_real_estate" <?php echo ($is_real_estate == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="noRealEstate">No</label>
 												</li>
 											</ul>
 										</div>
@@ -582,20 +582,20 @@
 											<label for="" class="mb-2"><b>Seller Will be Paying and providing invoices for</b></label>
 											<ul class="list-unstyled">
 												<li>
-													<input type="checkbox" id="repair" value="repairs" name="seller_invoices[]" <?php echo (in_array('repairs', $seller_invoices)) ? 'checked="checked"' : '';?>>
-													<label for="repair">Repairs</label>
+                                                    &nbsp;<input type="checkbox" id="repair" value="repairs" name="seller_invoices[]" <?php echo (in_array('repairs', $seller_invoices)) ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="repair">Repairs</label>
 												</li>
 												<li>
-													<input type="checkbox" id="warranty" value="warranty" name="seller_invoices[]" <?php echo (in_array('warranty', $seller_invoices)) ? 'checked="checked"' : '';?>>
-													<label for="warranty">Home Warranty</label>
+                                                    &nbsp;<input type="checkbox" id="warranty" value="warranty" name="seller_invoices[]" <?php echo (in_array('warranty', $seller_invoices)) ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="warranty">Home Warranty</label>
 												</li>
 												<li>
-													<input type="checkbox" id="other" value="other" name="seller_invoices[]" <?php echo (in_array('other', $seller_invoices)) ? 'checked="checked"' : '';?>>
-													<label for="other">Other</label>
+                                                    &nbsp;<input type="checkbox" id="other" value="other" name="seller_invoices[]" <?php echo (in_array('other', $seller_invoices)) ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="other">Other</label>
 												</li>
 												<li>
-													<input type="checkbox" id="none" value="none" name="seller_invoices[]" <?php echo (in_array('none', $seller_invoices)) ? 'checked="checked"' : '';?>>
-													<label for="none"> None</label>
+                                                    &nbsp;<input type="checkbox" id="none" value="none" name="seller_invoices[]" <?php echo (in_array('none', $seller_invoices)) ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="none"> None</label>
 												</li>
 											</ul>
 											<div class="seller_invoices_files d-none mb-4">
@@ -624,12 +624,12 @@
 											<label for="" class="mb-2"><b> Is there a mortgage on the property?</b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesmortgage" value="yes" name="is_mortgage" <?php echo ($is_mortgage == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="yesmortgage">Yes</label>
+                                                    &nbsp;<input type="radio" id="yesmortgage" value="yes" name="is_mortgage" <?php echo ($is_mortgage == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="yesmortgage">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="nomortgage" value="no" name="is_mortgage" <?php echo ($is_mortgage == 'no') ? 'checked="checked"' : '';?>>
-													<label for="nomortgage">No</label>
+                                                    &nbsp;<input type="radio" id="nomortgage" value="no" name="is_mortgage" <?php echo ($is_mortgage == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="nomortgage">No</label>
 												</li>
 											</ul>
 										</div>
@@ -639,24 +639,24 @@
 												<label for="" class="mb-2"><b>Is this mortgage/loan a Line of Credit?</b></label>
 												<ul class="list-inline">
 													<li class="list-inline-item me-md-5">
-														<input type="radio" id="yesCreditCard" value="yes" name="is_mortgage_credit" <?php echo ($is_mortgage_credit == 'yes') ? 'checked="checked"' : '';?>>
-														<label for="yesCreditCard">Yes</label>
+                                                        &nbsp;<input type="radio" id="yesCreditCard" value="yes" name="is_mortgage_credit" <?php echo ($is_mortgage_credit == 'yes') ? 'checked="checked"' : '';?>>
+                                                        &nbsp;&nbsp;<label for="yesCreditCard">Yes</label>
 													</li>
 													<li class="list-inline-item">
-														<input type="radio" id="noCreditCard" value="no" name="is_mortgage_credit" <?php echo ($is_mortgage_credit == 'no') ? 'checked="checked"' : '';?>>
-														<label for="noCreditCard">No</label>
+                                                        &nbsp;<input type="radio" id="noCreditCard" value="no" name="is_mortgage_credit" <?php echo ($is_mortgage_credit == 'no') ? 'checked="checked"' : '';?>>
+														&nbsp;&nbsp;<label for="noCreditCard">No</label>
 													</li>
 												</ul>
 												<div class="form-group CreditCardLock <?php echo ($is_mortgage_credit == 'yes') ? '' : 'd-none';?> mb-4">
 													<label for="" class="mb-2"><b>Do you want to close and lock this Line of Credit?</b></label>
 													<ul class="list-inline">
 														<li class="list-inline-item me-md-5">
-															<input type="radio" id="yesCreditCardLock" value="yes" name="is_creditcard_lock" <?php echo ($is_creditcard_lock == 'yes') ? 'checked="checked"' : '';?>>
-															<label for="yesCreditCardLock">Yes</label>
+                                                            &nbsp;<input type="radio" id="yesCreditCardLock" value="yes" name="is_creditcard_lock" <?php echo ($is_creditcard_lock == 'yes') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="yesCreditCardLock">Yes</label>
 														</li>
 														<li class="list-inline-item">
-															<input type="radio" id="noCreditCardLock" value="no" name="is_creditcard_lock" <?php echo ($is_creditcard_lock == 'no') ? 'checked="checked"' : '';?>>
-															<label for="noCreditCardLock">No</label>
+                                                            &nbsp;<input type="radio" id="noCreditCardLock" value="no" name="is_creditcard_lock" <?php echo ($is_creditcard_lock == 'no') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="noCreditCardLock">No</label>
 														</li>
 													</ul>
 												</div>
@@ -706,12 +706,12 @@
 														property?</b></label>
 												<ul class="list-inline">
 													<li class="list-inline-item me-md-5">
-														<input type="radio" id="yesmortgage2" value="yes" name="is_second_mortgage" <?php echo ($is_second_mortgage == 'yes') ? 'checked="checked"' : '';?>>
-														<label for="yesmortgage2">Yes</label>
+                                                        &nbsp;<input type="radio" id="yesmortgage2" value="yes" name="is_second_mortgage" <?php echo ($is_second_mortgage == 'yes') ? 'checked="checked"' : '';?>>
+														&nbsp;&nbsp;<label for="yesmortgage2">Yes</label>
 													</li>
 													<li class="list-inline-item">
-														<input type="radio" id="nomortgage2" value="no" name="is_second_mortgage" <?php echo ($is_second_mortgage == 'no') ? 'checked="checked"' : '';?>>
-														<label for="nomortgage2">No</label>
+                                                        &nbsp;<input type="radio" id="nomortgage2" value="no" name="is_second_mortgage" <?php echo ($is_second_mortgage == 'no') ? 'checked="checked"' : '';?>>
+														&nbsp;&nbsp;<label for="nomortgage2">No</label>
 													</li>
 												</ul>
 												
@@ -721,12 +721,12 @@
 																Credit?</b></label>
 														<ul class="list-inline">
 															<li class="list-inline-item me-md-5">
-																<input type="radio" id="yesCreditCard2" value="yes" name="is_second_mortgage_credit" <?php echo ($is_second_mortgage_credit == 'yes') ? 'checked="checked"' : '';?>>
-																<label for="yesCreditCard2">Yes</label>
+                                                                &nbsp;<input type="radio" id="yesCreditCard2" value="yes" name="is_second_mortgage_credit" <?php echo ($is_second_mortgage_credit == 'yes') ? 'checked="checked"' : '';?>>
+																&nbsp;&nbsp;<label for="yesCreditCard2">Yes</label>
 															</li>
 															<li class="list-inline-item">
-																<input type="radio" id="noCreditCard2" value="no" name="is_second_mortgage_credit" <?php echo ($is_second_mortgage_credit == 'no') ? 'checked="checked"' : '';?>>
-																<label for="noCreditCard2">No</label>
+                                                                &nbsp;<input type="radio" id="noCreditCard2" value="no" name="is_second_mortgage_credit" <?php echo ($is_second_mortgage_credit == 'no') ? 'checked="checked"' : '';?>>
+																&nbsp;&nbsp;<label for="noCreditCard2">No</label>
 															</li>
 														</ul>
 														
@@ -734,12 +734,12 @@
 															<label for="" class="mb-2"><b>Do you want to close and lock this Line of Credit?</b></label>
 															<ul class="list-inline">
 																<li class="list-inline-item me-md-5">
-																	<input type="radio" id="yesCreditCardLock2" value="yes" name="is_second_creditcard_lock" <?php echo ($is_second_creditcard_lock == 'yes') ? 'checked="checked"' : '';?>>
-																	<label for="yesCreditCardLock2">Yes</label>
+                                                                    &nbsp;<input type="radio" id="yesCreditCardLock2" value="yes" name="is_second_creditcard_lock" <?php echo ($is_second_creditcard_lock == 'yes') ? 'checked="checked"' : '';?>>
+																	&nbsp;&nbsp;<label for="yesCreditCardLock2">Yes</label>
 																</li>
 																<li class="list-inline-item">
-																	<input type="radio" id="noCreditCardLock2" value="no" name="is_second_creditcard_lock" <?php echo ($is_second_creditcard_lock == 'no') ? 'checked="checked"' : '';?>>
-																	<label for="noCreditCardLock2">No</label>
+                                                                    &nbsp;<input type="radio" id="noCreditCardLock2" value="no" name="is_second_creditcard_lock" <?php echo ($is_second_creditcard_lock == 'no') ? 'checked="checked"' : '';?>>
+																	&nbsp;&nbsp;<label for="noCreditCardLock2">No</label>
 																</li>
 															</ul>
 															
@@ -908,8 +908,8 @@
 										</div>
 
 										<div class="form-group mb-2">
-											<input type="checkbox" id="is_agree_593_c" name="is_agree_593_c" checked="checked">
-											<label for="agree">I/We have read and agree to <span>*</span></label>
+                                            &nbsp;<input type="checkbox" id="is_agree_593_c" name="is_agree_593_c" checked="checked">
+											&nbsp;&nbsp;<label for="agree">I/We have read and agree to <span>*</span></label>
 										</div>
 										
 										<div class="border p-3">
@@ -939,12 +939,12 @@
 															exchange of the residence.</b></label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="exchangeeResidenceTrue" name="is_exchange_residence" value="true" <?php echo ($is_exchange_residence == 'true') ? 'checked="checked"' : '';?>>
-															<label for="exchangeeResidenceTrue">True</label>
+                                                            &nbsp;<input type="radio" id="exchangeeResidenceTrue" name="is_exchange_residence" value="true" <?php echo ($is_exchange_residence == 'true') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="exchangeeResidenceTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="exchangeeResidenceFalse" value="false" name="is_exchange_residence" <?php echo ($is_exchange_residence == 'false') ? 'checked="checked"' : '';?>>
-															<label for="exchangeeResidenceFalse">False</label>
+                                                            &nbsp;<input type="radio" id="exchangeeResidenceFalse" value="false" name="is_exchange_residence" <?php echo ($is_exchange_residence == 'false') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="exchangeeResidenceFalse">False</label>
 														</li>
 													</ul>
 													
@@ -957,12 +957,12 @@
 															date of the sale or exchange of the residence.</b></label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="NotexchangeeResidenceTrue" name="is_not_exchange_residence" value="true" <?php echo ($is_not_exchange_residence == 'true') ? 'checked="checked"' : '';?>>
-															<label for="NotexchangeeResidenceTrue">True</label>
+                                                            &nbsp;<input type="radio" id="NotexchangeeResidenceTrue" name="is_not_exchange_residence" value="true" <?php echo ($is_not_exchange_residence == 'true') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="NotexchangeeResidenceTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="NotexchangeeResidenceFalse" name="is_not_exchange_residence" value="false" <?php echo ($is_not_exchange_residence == 'false') ? 'checked="checked"' : '';?>>
-															<label for="NotexchangeeResidenceFalse">False</label>
+                                                            &nbsp;<input type="radio" id="NotexchangeeResidenceFalse" name="is_not_exchange_residence" value="false" <?php echo ($is_not_exchange_residence == 'false') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="NotexchangeeResidenceFalse">False</label>
 														</li>
 													</ul>
 													
@@ -977,12 +977,12 @@
 															after May 6, 1997..</b></label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="formerSpouseTrue" name="is_former_spouse" value="true" <?php echo ($is_former_spouse == 'true') ? 'checked="checked"' : '';?>>
-															<label for="formerSpouseTrue">True</label>
+                                                            &nbsp;<input type="radio" id="formerSpouseTrue" name="is_former_spouse" value="true" <?php echo ($is_former_spouse == 'true') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="formerSpouseTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="formerSpouseFalse" name="is_former_spouse" value="false" <?php echo ($is_former_spouse == 'false') ? 'checked="checked"' : '';?>>
-															<label for="formerSpouseFalse">False</label>
+                                                            &nbsp;<input type="radio" id="formerSpouseFalse" name="is_former_spouse" value="false" <?php echo ($is_former_spouse == 'false') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="formerSpouseFalse">False</label>
 														</li>
 													</ul>
 													
@@ -1018,12 +1018,12 @@
 													</label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="marriedTrue" name="is_married" value="true" <?php echo ($is_married == 'true') ? 'checked="checked"' : '';?>>
-															<label for="marriedTrue">True</label>
+                                                            &nbsp;<input type="radio" id="marriedTrue" name="is_married" value="true" <?php echo ($is_married == 'true') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="marriedTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="marriedFalse" name="is_married" value="false" <?php echo ($is_married == 'false') ? 'checked="checked"' : '';?>>
-															<label for="marriedFalse">False</label>
+                                                            &nbsp;<input type="radio" id="marriedFalse" name="is_married" value="false" <?php echo ($is_married == 'false') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="marriedFalse">False</label>
 														</li>
 													</ul>
 													
@@ -1037,12 +1037,12 @@
 															of the Internal Revenue Code applied.</b></label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="periodTrue" name="is_period" value="true" <?php echo ($is_period == 'true') ? 'checked="checked"' : '';?>>
-															<label for="periodTrue">True</label>
+                                                            &nbsp;<input type="radio" id="periodTrue" name="is_period" value="true" <?php echo ($is_period == 'true') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="periodTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="periodFalse" name="is_period" value="false" <?php echo ($is_period == 'false') ? 'checked="checked"' : '';?>>
-															<label for="periodFalse">False</label>
+                                                            &nbsp;<input type="radio" id="periodFalse" name="is_period" value="false" <?php echo ($is_period == 'false') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="periodFalse">False</label>
 														</li>
 													</ul>
 													
@@ -1059,16 +1059,16 @@
 															residence.</b></label>
 													<ul class="list-inline">
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="RevenueTrue" name="is_revenue"  value="true" <?php echo ($is_revenue == 'true') ? 'checked="checked"' : '';?>>
-															<label for="RevenueTrue">True</label>
+                                                            &nbsp;<input type="radio" id="RevenueTrue" name="is_revenue"  value="true" <?php echo ($is_revenue == 'true') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="RevenueTrue">True</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="RevenueFalse" name="is_revenue" value="false" <?php echo ($is_revenue == 'false') ? 'checked="checked"' : '';?>>
-															<label for="RevenueFalse">False</label>
+                                                            &nbsp;<input type="radio" id="RevenueFalse" name="is_revenue" value="false" <?php echo ($is_revenue == 'false') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="RevenueFalse">False</label>
 														</li>
 														<li class="list-inline item me-md-5">
-															<input type="radio" id="RevenueNA" name="is_revenue" value="n/a" <?php echo ($is_revenue == 'n/a') ? 'checked="checked"' : '';?>>
-															<label for="RevenueNA">N/A</label>
+                                                            &nbsp;<input type="radio" id="RevenueNA" name="is_revenue" value="n/a" <?php echo ($is_revenue == 'n/a') ? 'checked="checked"' : '';?>>
+															&nbsp;&nbsp;<label for="RevenueNA">N/A</label>
 														</li>
 													</ul>
 													
@@ -1182,14 +1182,14 @@
 											<label for="" class="mb-2"><b>Select One: <span>*</span></b></label>
 											<ul class="list-unstyled">
 												<li>
-													<input type="radio" id="attorney" value="no" name="is_attorney" <?php echo ($is_attorney == 'no') ? 'checked="checked"' : '';?>>
-													<label for="attorney">I would like THIS ATTORNEY to prepare a deed
+                                                    &nbsp;<input type="radio" id="attorney" value="no" name="is_attorney" <?php echo ($is_attorney == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="attorney">I would like THIS ATTORNEY to prepare a deed
 														and lien waiver for me pursuant to the understanding
 														above.</label>
 												</li>
 												<li>
-													<input type="radio" id="otherAttorney" value="yes" name="is_attorney" <?php echo ($is_attorney == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="otherAttorney">The following attorney will draft my deed
+                                                    &nbsp;<input type="radio" id="otherAttorney" value="yes" name="is_attorney" <?php echo ($is_attorney == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="otherAttorney">The following attorney will draft my deed
 														and lien waiver and secure cancellation of all deeds of trust
 														and other exceptions to title.</label>
 												</li>
@@ -1315,8 +1315,8 @@
 										</ul>
 
 										<div class="form-group mb-2">
-											<input type="checkbox" id="sign" name="sign" checked="checked">
-											<label for="sign">My/Our Signature(s) below <span>*</span></label>
+                                            &nbsp;<input type="checkbox" id="sign" name="sign" checked="checked">
+											&nbsp;&nbsp;<label for="sign">My/Our Signature(s) below <span>*</span></label>
 										</div>
 										
 										<div class="border p-3">
@@ -1374,8 +1374,8 @@
 
 
 										<div class="form-group mb-2 d-flex">
-											<input type="checkbox" id="agreementSign" name="agreementSign" class="me-2 mt-1" <?php echo ($agreementSign == 'on') ? 'checked="checked"' : '';?>>
-											<label for="agreementSign" class="mb-2">By checking and signing below
+                                            &nbsp;<input type="checkbox" id="agreementSign" name="agreementSign" class="me-2 mt-1" <?php echo ($agreementSign == 'on') ? 'checked="checked"' : '';?>>
+											&nbsp;&nbsp;<label for="agreementSign" class="mb-2">By checking and signing below
 												<span>*</span></label>
 										</div>
 										
@@ -1403,12 +1403,12 @@
 													<span>*</span></b></label>
 											<ul class="list-inline">
 												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesHOA" value="yes" name="is_property_hoa" <?php echo ($is_property_hoa == 'yes') ? 'checked="checked"' : '';?>>
-													<label for="yesHOA">Yes</label>
+                                                    &nbsp;<input type="radio" id="yesHOA" value="yes" name="is_property_hoa" <?php echo ($is_property_hoa == 'yes') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="yesHOA">Yes</label>
 												</li>
 												<li class="list-inline-item">
-													<input type="radio" id="noHOA" value="no" name="is_property_hoa" <?php echo ($is_property_hoa == 'no') ? 'checked="checked"' : '';?>>
-													<label for="noHOA">No</label>
+                                                    &nbsp;<input type="radio" id="noHOA" value="no" name="is_property_hoa" <?php echo ($is_property_hoa == 'no') ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="noHOA">No</label>
 												</li>
 											</ul>
 											
@@ -1464,20 +1464,20 @@
 														<label for="" class="mb-2">Dues Per</label>
 														<ul class="list-unstyled">
 															<li>
-																<input type="radio" id="month" name="hoa_dues_per" value="month" <?php echo ($hoa_dues_per == 'month') ? 'checked="checked"' : '';?>>
-																<label for="month">Month</label>
+                                                                &nbsp;<input type="radio" id="month" name="hoa_dues_per" value="month" <?php echo ($hoa_dues_per == 'month') ? 'checked="checked"' : '';?>>
+                                                                &nbsp;&nbsp;<label for="month">Month</label>
 															</li>
 															<li>
-																<input type="radio" id="Quarter" value="quarter" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'quarter') ? 'checked="checked"' : '';?>>
-																<label for="Quarter">Quarter</label>
+                                                                &nbsp;<input type="radio" id="Quarter" value="quarter" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'quarter') ? 'checked="checked"' : '';?>>
+																&nbsp;&nbsp;<label for="Quarter">Quarter</label>
 															</li>
 															<li>
-																<input type="radio" id="Semi-Annually" value="semi-annually" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'semi-annually') ? 'checked="checked"' : '';?>>
+                                                                &nbsp;<input type="radio" id="Semi-Annually" value="semi-annually" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'semi-annually') ? 'checked="checked"' : '';?>>
 																<label for="Semi-Annually">Semi-Annually</label>
 															</li>
 															<li>
-																<input type="radio" id="Annually" value="annually" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'annually') ? 'checked="checked"' : '';?>>
-																<label for="Annually">Annually</label>
+                                                                &nbsp;<input type="radio" id="Annually" value="annually" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'annually') ? 'checked="checked"' : '';?>>
+																&nbsp;&nbsp;<label for="Annually">Annually</label>
 															</li>
 														</ul>
 														
@@ -1496,12 +1496,12 @@
 														Association? <span>*</span></b></label>
 												<ul class="list-inline">
 													<li class="list-inline-item me-md-5">
-														<input type="radio" id="yesHOA2" value="yes" name="is_property_second_hoa" <?php echo ($is_property_second_hoa == 'yes') ? 'checked="checked"' : '';?>>
-														<label for="yesHOA2">Yes</label>
+                                                        &nbsp;<input type="radio" id="yesHOA2" value="yes" name="is_property_second_hoa" <?php echo ($is_property_second_hoa == 'yes') ? 'checked="checked"' : '';?>>
+														&nbsp;&nbsp;<label for="yesHOA2">Yes</label>
 													</li>
 													<li class="list-inline-item">
-														<input type="radio" id="noHOA2" value="no" name="is_property_second_hoa" <?php echo ($is_property_second_hoa == 'no') ? 'checked="checked"' : '';?>>
-														<label for="noHOA2">No</label>
+                                                        &nbsp;<input type="radio" id="noHOA2" value="no" name="is_property_second_hoa" <?php echo ($is_property_second_hoa == 'no') ? 'checked="checked"' : '';?>>
+														&nbsp;&nbsp;<label for="noHOA2">No</label>
 													</li>
 												</ul>
 												
@@ -1555,20 +1555,20 @@
 															<label for="" class="mb-2">Dues Per</label>
 															<ul class="list-unstyled">
 																<li>
-																	<input type="radio" id="month" name="second_hoa_dues_per" value="month" <?php echo ($second_hoa_dues_per == 'month') ? 'checked="checked"' : '';?>>
-																	<label for="month">Month</label>
+                                                                    &nbsp;<input type="radio" id="month" name="second_hoa_dues_per" value="month" <?php echo ($second_hoa_dues_per == 'month') ? 'checked="checked"' : '';?>>
+																	&nbsp;&nbsp;<label for="month">Month</label>
 																</li>
 																<li>
-																	<input type="radio" id="Quarter" name="second_hoa_dues_per" value="quarter" <?php echo ($second_hoa_dues_per == 'quarter') ? 'checked="checked"' : '';?>>
-																	<label for="Quarter">Quarter</label>
+                                                                    &nbsp;<input type="radio" id="Quarter" name="second_hoa_dues_per" value="quarter" <?php echo ($second_hoa_dues_per == 'quarter') ? 'checked="checked"' : '';?>>
+																	&nbsp;&nbsp;<label for="Quarter">Quarter</label>
 																</li>
 																<li>
-																	<input type="radio" id="Semi-Annually" name="second_hoa_dues_per" value="semi-annually" <?php echo ($second_hoa_dues_per == 'semi-annually') ? 'checked="checked"' : '';?>>
-																	<label for="Semi-Annually">Semi-Annually</label>
+                                                                    &nbsp;<input type="radio" id="Semi-Annually" name="second_hoa_dues_per" value="semi-annually" <?php echo ($second_hoa_dues_per == 'semi-annually') ? 'checked="checked"' : '';?>>
+																	&nbsp;&nbsp;<label for="Semi-Annually">Semi-Annually</label>
 																</li>
 																<li>
-																	<input type="radio" id="Annually" name="second_hoa_dues_per" value="annually" <?php echo ($second_hoa_dues_per == 'annually') ? 'checked="checked"' : '';?>>
-																	<label for="Annually">Annually</label>
+                                                                    &nbsp;<input type="radio" id="Annually" name="second_hoa_dues_per" value="annually" <?php echo ($second_hoa_dues_per == 'annually') ? 'checked="checked"' : '';?>>
+																	&nbsp;&nbsp;<label for="Annually">Annually</label>
 																</li>
 															</ul>
 															
@@ -1666,8 +1666,8 @@
 
 
 										<div class="form-group mb-2 d-flex">
-											<input type="checkbox" id="readAgree" name="readAgree" class="me-2 mt-1" checked="checked">
-											<label for="readAgree" class="mb-2">I/We have read and agree to
+                                            &nbsp;<input type="checkbox" id="readAgree" name="readAgree" class="me-2 mt-1" checked="checked">
+											&nbsp;&nbsp;<label for="readAgree" class="mb-2">I/We have read and agree to
 												<span>*</span></label>
 										</div>
 										<div class="border p-3">
