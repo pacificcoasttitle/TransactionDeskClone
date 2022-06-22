@@ -272,7 +272,6 @@ $("#borrower_buyer_form").validate({
     },
     invalidHandler: function(e,validator) {
         for (var i=0;i<validator.errorList.length;i++){   
-            console.log(validator.errorList[i].element);
             $(validator.errorList[i].element).closest('.accordion-collapse').addClass('show');
             return false;
         }
