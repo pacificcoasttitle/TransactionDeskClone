@@ -3,13 +3,13 @@
 	th {
 		text-align: center;
 	}
-	.custom__collapse_arrow .fa-angle-down {
+	.custom__collapse_arrow .div__expand {
     display: none;
 }
-	.custom__collapse_arrow.collapsed .fa-angle-down {
+	.custom__collapse_arrow.collapsed .div__expand {
 	display: inline-block;
 }
-.custom__collapse_arrow.collapsed .fa-angle-up {
+.custom__collapse_arrow.collapsed .div__collapse {
 	display: none;
 }
 .table > tbody > tr.custom__total > th ,.table > tbody > tr.custom__total > td {
@@ -18,12 +18,13 @@
 .custom__task_collapse .card-body {
     padding-left: 35px;
     font-size: 16px;
-    /* background: #f2f2f2; */
+    background: #f2f2f2;
     margin-bottom: 25px;
-    padding-bottom: 15px;
-    padding-top: 15px;
-    border: 1px solid #d0c9c9;
-    border-radius: 10px;
+    padding-bottom: 20px;
+    padding-top: 30px;
+    /* border: 1px solid #d0c9c9; */
+    /* border-radius: 10px; */
+    padding-right: 30px;
 }
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
@@ -63,7 +64,7 @@
 											<?php foreach($commissionHistory as $key=>$commissionRecord) { ?>
 												<tr>
 													<td><?php echo $commissionRecord['month'];?></td>
-													<th>$ <?php echo ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->commission : '0.00';?> </th>
+													<th>$ <?php echo ($commissionRecord['commission_data']) ? number_format($commissionRecord['commission_data']->commission,2) : '0.00';?> </th>
 													<td><?php echo ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->pdf_name : '';?></td>
 													<td>
 													<?php
@@ -75,9 +76,10 @@
 													else : ?>
 														 &nbsp;
 													<?php endif; ?>
-													<a href="#collapseCard_<?php echo $key; ?>" class="custom__collapse_arrow collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCard_<?php echo $key; ?>">
-															<i class="fa fa-angle-down"></i>
-															<i class="fa fa-angle-up"></i>
+													
+													<a style="background-color: buttonface;color:black" href="#collapseCard_<?php echo $key; ?>" class="btn custom__collapse_arrow collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCard_<?php echo $key; ?>">
+															<span class="div__expand">Expand</span>
+															<span class="div__collapse">Collapse</span>
 														</a>
 													</td>
 												</tr> 

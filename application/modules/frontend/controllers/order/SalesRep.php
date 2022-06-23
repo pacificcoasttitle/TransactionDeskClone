@@ -584,27 +584,28 @@ class SalesRep extends MX_Controller
 		// $userId = $this->uri->segment(2);
 		$data['sales_user_id']  = $userId;
 		$data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
-		if ($userdata['is_sales_rep_manager'] == 1) {
-            //echo "hehe";exit;
-            $salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
-            if (!empty($salesUser['sales_rep_users'])) {
-                $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
-                if (!in_array($userdata['id'], $salesRepUsers)) {
-                    $salesRepUsers[] = $userdata['id'];
-                }
-                if (!in_array($userId, $salesRepUsers)) {
-                    redirect(base_url().'sales-commission/'.$userdata['id']);
-                }
-                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
-            } else {
-                $data['salesUsers'] = $this->order->get_sales_users();
-            }
-		} else {
-            if ($userId != $userdata['id']) {
-                redirect(base_url().'sales-commission/'.$userdata['id']);
-            }
-			$data['salesUsers'] = array();
-		}
+		// if ($userdata['is_sales_rep_manager'] == 1) {
+        //     //echo "hehe";exit;
+        //     $salesUser =  $this->home_model->get_user(array('id' => $userdata['id']));
+        //     if (!empty($salesUser['sales_rep_users'])) {
+        //         $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+        //         if (!in_array($userdata['id'], $salesRepUsers)) {
+        //             $salesRepUsers[] = $userdata['id'];
+        //         }
+        //         if (!in_array($userId, $salesRepUsers)) {
+        //             redirect(base_url().'sales-commission/'.$userdata['id']);
+        //         }
+        //         $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
+        //     } else {
+        //         $data['salesUsers'] = $this->order->get_sales_users();
+        //     }
+		// } else {
+        //     if ($userId != $userdata['id']) {
+        //         redirect(base_url().'sales-commission/'.$userdata['id']);
+        //     }
+		// 	$data['salesUsers'] = array();
+		// }
+		$data['salesUsers'] = array();
 		$data['title'] = 'Sales Production History | Pacific Coast Title Company';
 		$commissionHistory = array();
 		$current_year = date('Y');
