@@ -2108,7 +2108,66 @@ class DashboardMail extends MX_Controller {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
-        $data['orderDetails'] = $this->order->get_order_details($order[0]['file_id'], 1);
+        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+
+        if (!empty($orderDetails['borrower'])) {
+            $orderDetails['primary_owner_name'] = $orderDetails['borrower'];
+        } else {
+            $orderDetails['primary_owner_name'] = '';
+        }
+
+        if (!empty($orderDetails['secondary_borrower'])) {
+            $orderDetails['secondary_owner_name'] = $orderDetails['secondary_borrower'];
+        } else {
+            $orderDetails['secondary_owner_name'] = '';
+        }
+
+        //echo "<pre>";
+        //print_r($orderDetails);exit;
+
+        if (!empty($orderDetails['borrower'])) {
+            $seller_owner_names = explode(' ', $orderDetails['borrower']);
+            if(count($seller_owner_names) == 3) {
+                $orderDetails['seller_first_name'] = $seller_owner_names[0];
+                $orderDetails['seller_middle_name'] = $seller_owner_names[1];
+                $orderDetails['seller_last_name'] = $seller_owner_names[2];
+            } else if(count($seller_owner_names) == 2) {
+                $orderDetails['seller_first_name'] = $seller_owner_names[0];
+                $orderDetails['seller_middle_name'] = '' ;
+                $orderDetails['seller_last_name'] = $seller_owner_names[1];
+            } else {
+                $orderDetails['seller_first_name'] = $seller_owner_names[0];
+                $orderDetails['seller_middle_name'] = '' ;
+                $orderDetails['seller_last_name'] = '' ;
+            }
+        } else {
+            $orderDetails['seller_first_name'] = '' ;
+            $orderDetails['seller_middle_name'] = '' ;
+            $orderDetails['seller_last_name'] = '' ;
+        }
+
+        if (!empty($orderDetails['secondary_borrower'])) {
+            $second_seller_owner_names =  explode(' ', $orderDetails['secondary_borrower']);
+            if(count($second_seller_owner_names) == 3) {
+                $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
+                $orderDetails['second_seller_middle_name'] = $second_seller_owner_names[1];
+                $orderDetails['second_seller_last_name'] = $second_seller_owner_names[2];
+            } else if(count($second_seller_owner_names) == 2) {
+                $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
+                $orderDetails['second_seller_middle_name'] = '' ;
+                $orderDetails['second_seller_last_name'] = $second_seller_owner_names[1];
+            } else {
+                $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
+                $orderDetails['second_seller_middle_name'] = '' ;
+                $orderDetails['second_seller_last_name'] = '' ;
+            }
+        } else {
+            $orderDetails['second_seller_first_name'] = '' ;
+            $orderDetails['second_seller_middle_name'] = '' ;
+            $orderDetails['second_seller_last_name'] = '' ;
+        }
+        $data['orderDetails'] = $orderDetails;
+
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();
@@ -2312,7 +2371,51 @@ class DashboardMail extends MX_Controller {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
-        $data['orderDetails'] = $this->order->get_order_details($order[0]['file_id'], 1);
+        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+
+        if (!empty($orderDetails['primary_owner'])) {
+            $buyer_owner_names = explode(' ', $orderDetails['primary_owner']);
+            if(count($buyer_owner_names) == 3) {
+                $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
+                $orderDetails['buyer_middle_name'] = $buyer_owner_names[1];
+                $orderDetails['buyer_last_name'] = $buyer_owner_names[2];
+            } else if(count($buyer_owner_names) == 2) {
+                $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
+                $orderDetails['buyer_middle_name'] = '' ;
+                $orderDetails['buyer_last_name'] = $buyer_owner_names[1];
+            } else {
+                $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
+                $orderDetails['buyer_middle_name'] = '' ;
+                $orderDetails['buyer_last_name'] = '' ;
+            }
+        } else {
+            $orderDetails['buyer_first_name'] = '' ;
+            $orderDetails['buyer_middle_name'] = '' ;
+            $orderDetails['buyer_last_name'] = '' ;
+        }
+
+        if (!empty($orderDetails['secondary_owner'])) {
+            $second_buyer_owner_names =  explode(' ', $orderDetails['secondary_owner']);
+            if(count($second_buyer_owner_names) == 3) {
+                $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
+                $orderDetails['second_buyer_middle_name'] = $second_buyer_owner_names[1];
+                $orderDetails['second_buyer_last_name'] = $second_buyer_owner_names[2];
+            } else if(count($buyer_owner_names) == 2) {
+                $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
+                $orderDetails['second_buyer_middle_name'] = '' ;
+                $orderDetails['second_buyer_last_name'] = $second_buyer_owner_names[1];
+            } else {
+                $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
+                $orderDetails['second_buyer_middle_name'] = '' ;
+                $orderDetails['second_buyer_last_name'] = '' ;
+            }
+        } else {
+            $orderDetails['second_buyer_first_name'] = '' ;
+            $orderDetails['second_buyer_middle_name'] = '' ;
+            $orderDetails['second_buyer_last_name'] = '' ;
+        }
+		
+        $data['orderDetails'] = $orderDetails;
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();
@@ -2366,7 +2469,7 @@ class DashboardMail extends MX_Controller {
                 'is_changed' => $this->input->post('is_changed') ,
                 'is_death' => $this->input->post('is_death'),
                 'is_survey' => $this->input->post('is_survey'),
-                'is_structural' => $this->input->post('is_structural') ? $this->input->post('is_structural') : null,
+                'is_structural' => $this->input->post('is_structural') ? $this->input->post('is_structural') : 'no',
                 'is_insurance' => $this->input->post('is_insurance'),
                 'water_service' => $this->input->post('water_service'),
                 'other_water_service_name' => $this->input->post('other_water_service_name') ? $this->input->post('other_water_service_name') : null,

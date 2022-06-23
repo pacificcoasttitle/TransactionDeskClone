@@ -63,14 +63,14 @@
                                             <div class="col-md-12">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b>Property Address Being Purchased</b></label>
-                                                    <input type="text" class="form-control" id="property_address" name="property_address" required data-error="#property_address-error">
+                                                    <input type="text" class="form-control" id="property_address" value="<?php echo $orderDetails['address'];?>" name="property_address" required data-error="#property_address-error">
                                                     <small class="small_label">Street Address</small>
                                                 </div>
                                                 <input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
                                                 <label id="property_address-error" class="error text-danger error2" for="property_address"></label>
 
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="property_address2" name="property_address2" required data-error="#property_address2-error">
+                                                    <input type="text" class="form-control" id="property_address2" value="" name="property_address2" required data-error="#property_address2-error">
                                                     <small  class="small_label">Street Address Line 2</small>
                                                 </div>
                                                 <label id="property_address2-error" class="error text-danger error2" for="property_address2"></label>
@@ -78,7 +78,7 @@
 												<div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3">
-                                                            <input type="text" class="form-control" id="property_city" name="property_city" id="property_city" name="property_city" required data-error="#property_city-error">
+                                                            <input type="text" class="form-control" id="property_city" value="<?php echo $orderDetails['property_city'];?>" name="property_city" id="property_city" name="property_city" required data-error="#property_city-error">
                                                             <small  class="small_label">City</small>
                                                         </div>
                                                         <label id="property_city-error" class="error text-danger error2" for="property_city"></label>
@@ -86,7 +86,7 @@
 
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3 ">
-                                                            <input type="text" class="form-control" id="property_zipcode" name="property_zipcode" required data-error="#property_zipcode-error">
+                                                            <input type="text" class="form-control" id="property_zipcode" value="<?php echo $orderDetails['property_zip'];?>" name="property_zipcode" required data-error="#property_zipcode-error">
                                                             <small  class="small_label">Zip Code</small>
                                                         </div>
                                                         <label id="property_zipcode-error" class="error text-danger error2" for="property_zipcode"></label>
@@ -111,21 +111,21 @@
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">First Name</label>
-                                                                <input type="text" class="form-control" id="first_name" name="first_name" required data-error="#first_name-error">
+                                                                <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $orderDetails['buyer_first_name'];?>" required data-error="#first_name-error">
                                                             </div>
                                                             <label id="first_name-error" class="error text-danger" for="first_name"></label>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">Middle Name</label>
-                                                                <input type="text" class="form-control" id="middle_name" name="middle_name" required data-error="#middle_name-error">
+                                                                <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo $orderDetails['buyer_middle_name'];?>" required data-error="#middle_name-error">
                                                             </div>
                                                             <label id="middle_name-error" class="error text-danger" for="middle_name"></label>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">Last Name</label>
-                                                                <input type="text" class="form-control" id="last_name" name="last_name" required data-error="#last_name-error">
+                                                                <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $orderDetails['buyer_last_name'];?>" required data-error="#last_name-error">
                                                             </div>
                                                             <label id="last_name-error" class="error text-danger" for="last_name"></label>
                                                         </div>
@@ -154,21 +154,21 @@
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">First Name</label>
-                                                                <input type="text" class="form-control" id="second_buyer_first_name" name="second_buyer_first_name" required data-error="#second_buyer_first_name-error">
+                                                                <input type="text" class="form-control" id="second_buyer_first_name" name="second_buyer_first_name" value="<?php echo $orderDetails['second_buyer_first_name'];?>" required data-error="#second_buyer_first_name-error">
                                                             </div>
                                                             <label id="second_buyer_first_name-error" class="error text-danger" for="second_buyer_first_name"></label>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">Middle Name</label>
-                                                                <input type="text" class="form-control" id="second_buyer_middle_name" name="second_buyer_middle_name" required data-error="#second_buyer_middle_name-error">
+                                                                <input type="text" class="form-control" id="second_buyer_middle_name" name="second_buyer_middle_name" value="<?php echo $orderDetails['second_buyer_middle_name'];?>" required data-error="#second_buyer_middle_name-error">
                                                             </div>
                                                             <label id="second_buyer_middle_name-error" class="error text-danger" for="second_buyer_middle_name"></label>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">Last Name</label>
-                                                                <input type="text" class="form-control" id="second_buyer_last_name" name="second_buyer_last_name" required data-error="#second_buyer_last_name-error">
+                                                                <input type="text" class="form-control" id="second_buyer_last_name" name="second_buyer_last_name" value="<?php echo $orderDetails['second_buyer_last_name'];?>" required data-error="#second_buyer_last_name-error">
                                                             </div>
                                                             <label id="second_buyer_last_name-error" class="error text-danger" for="second_buyer_last_name"></label>
                                                         </div>
