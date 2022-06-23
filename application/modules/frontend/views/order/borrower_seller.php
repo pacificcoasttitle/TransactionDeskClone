@@ -80,7 +80,7 @@
 												<div class="col-md-4">
 													<div class="form-group position-relative">
 														<input type="text" class="form-control" id="first_name"
-															name="first_name" required data-error="#first_name-error">
+															name="first_name" value="<?php echo $orderDetails['seller_first_name'];?>" required data-error="#first_name-error">
 														<small class="small_label">First Name</small>
 													</div>
 													<label id="first_name-error" class="error text-danger error2" for="first_name"></label>
@@ -89,7 +89,7 @@
 												<div class="col-md-4">
 													<div class="form-group position-relative">
 														<input type="text" class="form-control" id="middle_name"
-															name="middle_name" required data-error="#middle_name-error">
+															name="middle_name" value="<?php echo $orderDetails['seller_middle_name'];?>" required data-error="#middle_name-error">
 														<small class="small_label">Middle Name</small>
 													</div>
 													<label id="middle_name-error" class="error text-danger error2" for="middle_name"></label>
@@ -97,7 +97,7 @@
 												<div class="col-md-4">
 													<div class="form-group position-relative">
 														<input type="text" class="form-control" id="last_name"
-															name="last_name" required data-error="#last_name-error">
+															name="last_name" value="<?php echo $orderDetails['seller_last_name'];?>" required data-error="#last_name-error">
 														<small class="small_label">Last Name</small>
 													</div>
 													<label id="last_name-error" class="error text-danger error2" for="last_name"></label>
@@ -177,7 +177,7 @@
 												<div class="row">
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_first_name" name="co_seller_first_name" data-error="#co_seller_first_name-error">
+															<input type="text" class="form-control" id="co_seller_first_name" name="co_seller_first_name" value="<?php echo $orderDetails['second_seller_first_name'];?>" data-error="#co_seller_first_name-error">
 															<small class="small_label">First Name</small>
 														</div>
 														<label id="co_seller_first_name-error" class="error text-danger error2" for="co_seller_first_name"></label>
@@ -185,7 +185,7 @@
 													
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_middle_name" name="co_seller_middle_name" data-error="#co_seller_middle_name-error">
+															<input type="text" class="form-control" id="co_seller_middle_name" name="co_seller_middle_name" value="<?php echo $orderDetails['second_seller_middle_name'];?>" data-error="#co_seller_middle_name-error">
 															<small class="small_label">Middle Name</small>
 														</div>
 														<label id="co_seller_middle_name-error" class="error text-danger error2" for="co_seller_middle_name"></label>
@@ -193,7 +193,7 @@
 													
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_last_name" name="co_seller_last_name" data-error="#co_seller_last_name-error">
+															<input type="text" class="form-control" id="co_seller_last_name" name="co_seller_last_name" value="<?php echo $orderDetails['second_seller_last_name'];?>" data-error="#co_seller_last_name-error">
 															<small class="small_label">Last Name</small>
 														</div>
 														<label id="co_seller_last_name-error" class="error text-danger error2" for="co_seller_last_name"></label>
@@ -328,7 +328,7 @@
 									<div class="accordion-body">
 										<div class="form-group mb-4">
 											<label for="" class="mb-2"><b>Property Address being sold: </b></label>
-											<input type="text" class="form-control" name="property_address" id="property_address" required>
+											<input type="text" class="form-control" name="property_address" id="property_address" value="<?php echo $orderDetails['full_address'];?>" required>
 										</div>
 										<div class="form-group mb-4">
 											<label for="" class="mb-2"><b>Is the above address the correct address of
