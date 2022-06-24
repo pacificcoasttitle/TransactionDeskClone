@@ -3383,8 +3383,11 @@ $(document).ready(function () {
 						depends: function(element) {
 							return $("#formId").val() == "";
 						  },
-                        url: base_url+"order/admin/admin_users_email",
-                        type: "post"
+						  param: {
+							  url: base_url+"order/admin/admin_users_email",
+							  type: "post"
+
+						  }
                      }
 				},
                 first_name:"required",
