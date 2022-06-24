@@ -1,3 +1,6 @@
+<?php 
+$role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->userdata('admin')['role_id'] : 0;
+?>
 <ul class="sidebar navbar-nav">
 	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/dashboard' || $this->uri->segment(3) == 'order-details') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'order/admin/dashboard'; ?>">
@@ -29,11 +32,16 @@
 			<span>Users</span>
         </a>
 		<div class="dropdown-menu" aria-labelledby="usersDropdown" id="users">
+			<?php if($role_id == 1) : ?>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/admin_users' ) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/admin_users'; ?>">Admin</a>
+			<?php endif; ?>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/escrow' || $this->uri->uri_string() == 'order/admin/import') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/escrow'; ?>">Escrow</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/agents' || $this->uri->uri_string() == 'order/admin/import-agents' || $this->uri->segment(3) == 'edit-agent') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/agents'; ?>">Agents</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/lenders' || $this->uri->uri_string() == 'order/admin/import-lenders' || $this->uri->segment(3) == 'edit-lender') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lenders'; ?>">Lenders</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/mortgage-brokers') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/mortgage-brokers'; ?>">Mortgage Brokers</a>
+			
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/sales-rep'; ?>">Sales Rep.</a>
+			
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/title-officers' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/title-officers'; ?>">Title Officer</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/new-users'; ?>">New Users</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user' || $this->uri->segment(3) == 'edit-master-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/master-users'; ?>">Master Users</a>
@@ -124,7 +132,8 @@
 			
         </div>
 	</li>
-
+	<?php 
+	if($role_id == 1) : ?>
 	<li class="nav-item dropdown">
 		<a class="nav-link dropdown-toggle" href="#" id="li_commissions" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-gear"></i>
@@ -142,5 +151,6 @@
 			</a>
 		</div>
 	</li>
+	<?php endif; ?>
 
 </ul>

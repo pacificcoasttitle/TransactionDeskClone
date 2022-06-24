@@ -10,17 +10,24 @@ class Home_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->where('email_id', $email);
-        $this->db->where('password', md5($password));
+        // $this->db->where('password', md5($password));
         $this->db->where('status', 1);
         $query = $this->db->get('admin');
 
         if ($query->num_rows() > 0) 
         {
-            return $query->row_array();
+			$admin_record = $query->row_array();
+			//Check password
+			$hashed_pasasword = $admin_record['password'];
+			if (password_verify($password, $hashed_pasasword)) {
+				return $query->row_array();
+			} else {
+				return false;
+			}
         } 
         else 
         {
-            return false;
+			return false;
         }
     }
 

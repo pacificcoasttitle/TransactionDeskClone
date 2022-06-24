@@ -3373,6 +3373,49 @@ $(document).ready(function () {
 
 		});
 	}
+	if($('#add-edit-admin-form').length) {
+		$('#add-edit-admin-form').validate({ 
+            rules: {
+                email_id:{
+					required:true,
+					email: true,
+					remote: {
+						depends: function(element) {
+							return $("#formId").val() == "";
+						  },
+                        url: base_url+"order/admin/admin_users_email",
+                        type: "post"
+                     }
+				},
+                first_name:"required",
+                last_name:"required",
+                password:{
+					required:"#password-edit:visible",
+					minlength : 6
+				},
+                confirm_password:{
+					equalTo : "#admin_password"
+				},
+                role_id:"required",
+            },
+            messages: {
+				email_id: {
+                    remote: "Email already in use!"
+                }
+            },
+            submitHandler: function(form) {
+                form.submit();
+                
+            }
+        }); 
+
+		$('#addAdminModal').on('hidden.bs.modal', function () {
+			$('#add-edit-admin-form').trigger("reset");
+			$('#password-edit').show();
+			$('#email_id').attr("readonly",false);
+			$('#formId').val("");
+		});
+	}
 });
 
 if(('.threshold-remove-btn').length) {

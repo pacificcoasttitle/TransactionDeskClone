@@ -38,7 +38,8 @@ class Login extends MX_Controller {
                     "id" => isset($admin['id']) && !empty($admin['id']) ? $admin['id'] : '',
                     "name" => isset($admin['user_name']) && !empty($admin['user_name']) ? $admin['user_name'] : '',
                     "email_address" => isset($admin['email_id']) && !empty($admin['email_id']) ? $admin['email_id'] : '',
-                    "is_admin" => 1
+                    "is_admin" => 1,
+					"role_id" => isset($admin['role_id']) && !empty($admin['role_id']) ? $admin['role_id'] : '',
                 );
 
                 $this->session->set_userdata('admin', $session_data);

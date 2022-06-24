@@ -16,7 +16,8 @@ class CommissionRange extends MX_Controller {
         $this->load->library('order/common');
 		$this->load->model('order/commission_range_model');
 		$this->load->model('order/underwriter_tier_model');
-        $this->common->is_admin();
+        // $this->common->is_admin();
+		$this->common->is_super_admin();
     }
 
     public function index($product_type_name = 'all',$underwriter_tire = 0)
