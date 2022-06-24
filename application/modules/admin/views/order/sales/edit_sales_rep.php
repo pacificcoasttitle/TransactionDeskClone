@@ -336,7 +336,7 @@
 							</div>
 						</div>
 					</div>
-
+					<?php if($is_super_admin) : ?>
 					<div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
 						<div class="card-header" role="tab" id="commissionTab">
 							<a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#commissionInfo" 
@@ -532,7 +532,7 @@
 						</div>
 					</div>
 
-
+					<?php endif; ?>
 					<div class="pull-right">
 						<button type="submit" id="edit-sales-rep" name="add-sales-rep" class="btn btn-secondary">Update</button>
 						<a href="<?php echo site_url('order/admin/sales-rep'); ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>

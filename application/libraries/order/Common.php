@@ -25,6 +25,26 @@ class Common
         }
     }
 
+	public function is_super_admin()
+    {
+        $userdata = $this->CI->session->userdata('admin');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 1 && $userdata['role_id'] == 1) {
+            return true;
+        } else {
+            redirect(base_url().'order/admin');
+        }
+    }
+	public function if_super_admin()
+    {
+        $userdata = $this->CI->session->userdata('admin');
+        if (!empty($userdata['id']) && $userdata['is_admin'] == 1 && $userdata['role_id'] == 1) {
+            return true;
+        } else {
+			return false;
+            // redirect(base_url().'order/admin');
+        }
+    }
+
     public function is_title_officer_user()
     {
         $userdata = $this->CI->session->userdata('user');
