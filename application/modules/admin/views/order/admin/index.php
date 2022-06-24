@@ -4,10 +4,6 @@
 		float: left;
 	}
 
-	#addAdminModal .form-control {
-		height: auto;
-	}
-
     .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
         width: 100% !important;
     }
@@ -19,7 +15,7 @@
 			Admins
 			<div class="float-right">
 				<a href="javascript:void(0);" class="btn btn-secondary" data-toggle="modal"
-					data-target="#addAdminModal"> Add </a>
+					data-target="#addAdminModal"> Add Admin</a>
 			</div>
 		</div>
 
@@ -104,22 +100,7 @@
 							</div>
 						</div>
 					</div>
-					<div id="password-edit">
-						<div class="form-group">
-							<div class="row">
-								<div class="col-sm-6">
-									<label for="admin_password" class="col-form-label">Password:</label>
-									<input name="password" required="" type="password" class="form-control" id="admin_password">
-								</div>
-								<div class="col-sm-6">
-									<label for="confirm-password" class="col-form-label">Confirm Password:</label>
-									<input name="confirm_password" required="" type="password" class="form-control" id="confirm-password">
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-					</div>
+					
 					<div class="form-group">
 						<div class="row">
 							<div class="col-sm-12">
@@ -134,6 +115,33 @@
 									</select>
 								</div>
 							<!-- </div> -->
+						</div>
+					</div>
+
+					<div id="password-check" style="display: none;">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="password_update" class="col-form-label">Update Password</label>
+								</div>
+								<div class="col-sm-8 text-left">
+									<input name="password_update" value="1" type="checkbox" class="form-control" id="password_update" style="width: 35px;height: 35px;">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="password-edit">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-sm-6">
+									<label for="admin_password" class="col-form-label">Password:</label>
+									<input name="password" required="" type="password" class="form-control" id="admin_password">
+								</div>
+								<div class="col-sm-6">
+									<label for="confirm-password" class="col-form-label">Confirm Password:</label>
+									<input name="confirm_password" required="" type="password" class="form-control" id="confirm-password">
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -155,6 +163,7 @@
         $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
         $('#page-preloader').css('display', 'block');
 		$("#password-edit").hide();
+		$("#password-check").show();
         $.ajax({
             url: base_url + "order/admin/get_admin_details",
             type: "post",

@@ -3415,9 +3415,23 @@ $(document).ready(function () {
 		$('#addAdminModal').on('hidden.bs.modal', function () {
 			$('#add-edit-admin-form').trigger("reset");
 			$('#password-edit').show();
+			$("#password-check").hide();
 			$('#email_id').attr("readonly",false);
 			$('#formId').val("");
+			$("#add-edit-admin-form label.error").remove();
+			$("#add-edit-admin-form.error").removeClass("error");
 		});
+
+		$('#password_update').on('change', function() {
+			if($(this).is(":checked")) {
+				$('#password-edit').show();
+			}
+			else {
+				$('#password-edit').hide();
+			}
+		});
+
+
 	}
 });
 

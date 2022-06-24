@@ -30,6 +30,10 @@ class AdminUsers extends MX_Controller {
 					'role_id'=> $this->input->post('role_id'),
 					'updated_at'=>date('Y-m-d H:i:s')
 				];
+				$is_password_updated = $this->input->post('password_update');
+				if($is_password_updated) {
+					$admin_data['password'] = password_hash($this->input->post('password'),PASSWORD_DEFAULT);
+				}
 				$updated_id = $this->admin_user_model->update($admin_id,$admin_data);
 			}
 			else {
