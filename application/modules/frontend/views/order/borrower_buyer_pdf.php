@@ -11,7 +11,9 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-6">
-                    <a href="#"></a>
+                    <a href="#">
+                        <img src="<?php echo base_url();?>assets/frontend/images/buyer-seller-package/alanna-logo.png" alt="" class="img-fluid img_logo">
+                    </a>
                 </div>
                 
             </div>
@@ -34,23 +36,23 @@
                                             <div class="col-md-12">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="property_address" class="mb-2"><b>Property Address Being Purchased</b></label>
-                                                    <input type="text" class="form-control" id="property_address" name="property_address" value="<?php echo $property_address;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="property_address" name="property_address" value="<?php echo $property_address;?>">
                                                     <small class="small_label">Street Address</small>
                                                 </div>
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="property_address2" name="property_address2" value="<?php echo $property_address2;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="property_address2" name="property_address2" value="<?php echo $property_address2;?>">
                                                     <small  class="small_label">Street Address Line 2</small>
                                                 </div>
 												<div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3">
-                                                            <input type="text" class="form-control" id="property_city" name="property_city" value="<?php echo $property_city;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="property_city" name="property_city" value="<?php echo $property_city;?>">
                                                             <small  class="small_label">City</small>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3 ">
-                                                            <input type="text" class="form-control" id="property_zipcode" name="property_zipcode" value="<?php echo $property_zip_code;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="property_zipcode" name="property_zipcode" value="<?php echo $property_zip_code;?>">
                                                             <small  class="small_label">Zip Code</small>
                                                         </div>
                                                     </div>
@@ -74,31 +76,31 @@
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="first_name" class="mb-2">First Name</label>
-                                                                <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $first_name;?>">
+                                                                <input type="text" style='width: 100%;' class="form-control" id="first_name" name="first_name" value="<?php echo $first_name;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="middle_name" class="mb-2">Middle Name</label>
-                                                                <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo $middle_name;?>">
+                                                                <input type="text" style='width: 100%;' class="form-control" id="middle_name" name="middle_name" value="<?php echo $middle_name;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="last_name" class="mb-2">Last Name</label>
-                                                                <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $last_name;?>">
+                                                                <input type="text" style='width: 100%;' class="form-control" id="last_name" name="last_name" value="<?php echo $last_name;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 mt-2">
                                                             <div class="form-group position-relative">
                                                                 <label for="" class="mb-2">Phone Number</label>
-                                                                <input type="text" class="form-control" id="phone_number" name="phone_number" value="<?php echo $phone_number;?>">
+                                                                <input type="text" style='width: 100%;' class="form-control" id="phone_number" name="phone_number" value="<?php echo $phone_number;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 mt-2">
                                                             <div class="form-group position-relative">
                                                                 <label for="" class="mb-2">Email Address</label>
-                                                                <input type="text" class="form-control" id="email" name="email" value="<?php echo $email;?>">
+                                                                <input type="text" style='width: 100%;' class="form-control" id="email" name="email" value="<?php echo $email;?>">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -111,31 +113,31 @@
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">First Name</label>
-                                                                <input type="text" class="form-control" id="second_buyer_first_name" name="second_buyer_first_name" value="<?php echo $second_buyer_first_name;?>">
+                                                                <input type="text" style='width: 100%;' class="form-control" id="second_buyer_first_name" name="second_buyer_first_name" value="<?php echo $second_buyer_first_name;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">Middle Name</label>
-                                                                <input type="text" class="form-control" id="second_buyer_middle_name" name="second_buyer_middle_name" value="<?php echo $second_buyer_middle_name;?>">
+                                                                <input type="text" style='width: 100%;' class="form-control" id="second_buyer_middle_name" name="second_buyer_middle_name" value="<?php echo $second_buyer_middle_name;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="" class="mb-2">Last Name</label>
-                                                                <input type="text" class="form-control" id="second_buyer_last_name" name="second_buyer_last_name" value="<?php echo $second_buyer_last_name;?>">
+                                                                <input type="text" style='width: 100%;' class="form-control" id="second_buyer_last_name" name="second_buyer_last_name" value="<?php echo $second_buyer_last_name;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 mt-2">
                                                             <div class="form-group position-relative mb-4">
                                                                 <label for="" class="mb-2">Phone Number</label>
-                                                                <input type="text" class="form-control" id="second_buyer_phone_number" name="second_buyer_phone_number" value="<?php echo $second_buyer_phone_number;?>">
+                                                                <input type="text" style='width: 100%;' class="form-control" id="second_buyer_phone_number" name="second_buyer_phone_number" value="<?php echo $second_buyer_phone_number;?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 mt-2">
                                                             <div class="form-group position-relative mb-4">
                                                                 <label for="" class="mb-2">Email Address</label>
-                                                                <input type="email" class="form-control" id="second_buyer_email" name="second_buyer_email" value="<?php echo $second_buyer_email;?>">
+                                                                <input type="email" style='width: 100%;' class="form-control" id="second_buyer_email" name="second_buyer_email" value="<?php echo $second_buyer_email;?>">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -146,42 +148,42 @@
                                             <label for="" class="mb-2"><b>Forwarding Address after Closing</b></label>
                                             <ul class="list-inline">
                                                 <li class="list-inline-item me-md-5">
-                                                    <input type="radio" id="sameAddress" <?php echo ($is_same_property_address_as_forwarding_address == 'same') ? 'checked="checked"' : '';?> value="same" name="is_same_property_address_as_forwarding_address"> 
-                                                    <label for="option11">   Same as Property Address</label>
+                                                    &nbsp;<input type="radio" id="sameAddress" <?php echo ($is_same_property_address_as_forwarding_address == 'same') ? 'checked="checked"' : '';?> value="same" name="is_same_property_address_as_forwarding_address"> 
+                                                    &nbsp;<label for="option11">Same as Property Address</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <input type="radio" id="otherAddress" <?php echo ($is_same_property_address_as_forwarding_address == 'other') ? 'checked="checked"' : '';?> value="other" name="is_same_property_address_as_forwarding_address"> 
-                                                    <label for="option12">   Other Address</label>
+                                                    &nbsp;<input type="radio" id="otherAddress" <?php echo ($is_same_property_address_as_forwarding_address == 'other') ? 'checked="checked"' : '';?> value="other" name="is_same_property_address_as_forwarding_address"> 
+                                                    &nbsp;<label for="option12">Other Address</label>
                                                 </li>
                                             </ul>
                                             <div class="otherAddress <?php echo ($is_same_property_address_as_forwarding_address == 'other') ? '' : 'd-none';?>">
                                                 <div class="form-group position-relative mb-3">
                                                     <label for="" class="mb-2"><b>Enter Forwarding Address After Closing </b></label>
-                                                    <input type="text" class="form-control" id="forwarding_street_address" name="forwarding_street_address" value="<?php echo $forwarding_street_address;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="forwarding_street_address" name="forwarding_street_address" value="<?php echo $forwarding_street_address;?>">
                                                     <small class="small_label">Street Address</small>
                                                 </div>
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="forwarding_street_address2" name="forwarding_street_address2" value="<?php echo $forwarding_street_address2;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="forwarding_street_address2" name="forwarding_street_address2" value="<?php echo $forwarding_street_address2;?>">
                                                     <small  class="small_label">Street Address Line 2</small>
                                                 </div>
                                                 
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3">
-                                                            <input type="text" class="form-control" id="forwarding_city" name="forwarding_city" value="<?php echo $forwarding_city;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="forwarding_city" name="forwarding_city" value="<?php echo $forwarding_city;?>">
                                                             <small  class="small_label">City</small>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3">
-                                                            <input type="text" class="form-control" id="forwarding_state" name="forwarding_state" value="<?php echo $forwarding_state;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="forwarding_state" name="forwarding_state" value="<?php echo $forwarding_state;?>">
                                                             <small  class="small_label">State</small>
                                                         </div>
                                                         
                                                     </div>    
                                                 </div>
                                                 <div class="form-group position-relative mb-3 col-md-6">
-                                                    <input type="text" class="form-control" id="forwarding_zip_code" name="forwarding_zip_code" value="<?php echo $forwarding_zip_code;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="forwarding_zip_code" name="forwarding_zip_code" value="<?php echo $forwarding_zip_code;?>">
                                                     <small  class="small_label">Zip Code</small>
                                                 </div>
                                             </div>
@@ -199,11 +201,11 @@
                                             <label for="" class="mb-2"><b>Is there a Mortgage or equity line on the Property?</b></label>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item me-md-5">
-                                                    <input  type="radio" id="yesMortgage" value="yes" <?php echo ($is_mortgage == 'yes') ? 'checked="checked"' : '';?> name="is_mortgage">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input  type="radio" id="yesMortgage" value="yes" <?php echo ($is_mortgage == 'yes') ? 'checked="checked"' : '';?> name="is_mortgage">&nbsp;&nbsp;&nbsp;
                                                     <label class="escrow_radio" for="yesMortgage">Yes</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <input  type="radio" id="noMortgage" <?php echo ($is_mortgage == 'no') ? 'checked="checked"' : '';?> value="no" name="is_mortgage">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input  type="radio" id="noMortgage" <?php echo ($is_mortgage == 'no') ? 'checked="checked"' : '';?> value="no" name="is_mortgage">&nbsp;&nbsp;&nbsp;
                                                     <label class="escrow_radio" for="noMortgage">No</label>
                                                 </li>
                                             </ul>
@@ -212,11 +214,11 @@
                                             <label for="" class="mb-2"><b>Are there any other Liens on the Property?</b></label>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item me-md-5">
-                                                    <input type="radio" id="yesLiens" <?php echo ($is_liens == 'yes') ? 'checked="checked"' : '';?> value="yes" name="is_liens">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="yesLiens" <?php echo ($is_liens == 'yes') ? 'checked="checked"' : '';?> value="yes" name="is_liens">&nbsp;&nbsp;&nbsp;
                                                     <label for="yesLiens">Yes</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <input type="radio" id="noLiens" <?php echo ($is_liens == 'no') ? 'checked="checked"' : '';?> value="no" name="is_liens">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="noLiens" <?php echo ($is_liens == 'no') ? 'checked="checked"' : '';?> value="no" name="is_liens">&nbsp;&nbsp;&nbsp;
                                                     <label for="noLiens">No</label>
                                                 </li>
                                             </ul>
@@ -226,11 +228,11 @@
                                             <label for="" class="mb-2"><b>Are there mandatory Homeowners or Condominium Associations?</b></label>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item me-md-5">
-                                                    <input type="radio" id="yesCondominium" <?php echo ($is_condominium == 'yes') ? 'checked="checked"' : '';?> value="yes" name="is_condominium">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="yesCondominium" <?php echo ($is_condominium == 'yes') ? 'checked="checked"' : '';?> value="yes" name="is_condominium">&nbsp;&nbsp;&nbsp;
                                                     <label for="yesCondominium">Yes</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <input type="radio" id="noCondominium" <?php echo ($is_condominium == 'no') ? 'checked="checked"' : '';?> value="no" name="is_condominium">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="noCondominium" <?php echo ($is_condominium == 'no') ? 'checked="checked"' : '';?> value="no" name="is_condominium">&nbsp;&nbsp;&nbsp;
                                                     <label for="noCondominium">No</label>
                                                 </li>
                                             </ul>
@@ -240,11 +242,11 @@
                                             <label for="" class="mb-2"><b>Is this your primary residence / homestead property for tax purposes?</b></label>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item me-md-5">
-                                                    <input type="radio" id="yesresidence" <?php echo ($is_residence == 'yes') ? 'checked="checked"' : '';?> value="yes" name="is_residence">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="yesresidence" <?php echo ($is_residence == 'yes') ? 'checked="checked"' : '';?> value="yes" name="is_residence">&nbsp;&nbsp;&nbsp;
                                                     <label for="yesresidence">Yes</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <input type="radio" id="noresidence" <?php echo ($is_residence == 'no') ? 'checked="checked"' : '';?> value="no" name="is_residence"> &nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="noresidence" <?php echo ($is_residence == 'no') ? 'checked="checked"' : '';?> value="no" name="is_residence"> &nbsp;&nbsp;&nbsp;
                                                     <label for="noresidence">No</label>
                                                 </li>
                                             </ul>
@@ -254,11 +256,11 @@
                                             <label for="" class="mb-2"><b>Has there been a divorce since the purchase of the property or are you currently in the process of getting divorced?</b></label>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item me-md-5">
-                                                    <input type="radio" id="yesdivorced" <?php echo ($is_divorced == 'yes') ? 'checked="checked"' : '';?> value="yes" name="is_divorced">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="yesdivorced" <?php echo ($is_divorced == 'yes') ? 'checked="checked"' : '';?> value="yes" name="is_divorced">&nbsp;&nbsp;&nbsp;
                                                     <label for="yesdivorced">Yes</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <input type="radio" id="nodivorced" <?php echo ($is_divorced == 'no') ? 'checked="checked"' : '';?> value="no" name="is_divorced">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="nodivorced" <?php echo ($is_divorced == 'no') ? 'checked="checked"' : '';?> value="no" name="is_divorced">&nbsp;&nbsp;&nbsp;
                                                     <label for="nodivorced">No</label>
                                                 </li>
                                             </ul>
@@ -270,11 +272,11 @@
                                             </b></label>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item me-md-5">
-                                                    <input type="radio" id="yeschanged" <?php echo ($is_changed == 'yes') ? 'checked="checked"' : '';?> value="yes" name="is_changed">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="yeschanged" <?php echo ($is_changed == 'yes') ? 'checked="checked"' : '';?> value="yes" name="is_changed">&nbsp;&nbsp;&nbsp;
                                                     <label for="yeschanged">Yes</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <input type="radio" id="nochanged" <?php echo ($is_changed == 'no') ? 'checked="checked"' : '';?> value="no" name="is_changed">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="nochanged" <?php echo ($is_changed == 'no') ? 'checked="checked"' : '';?> value="no" name="is_changed">&nbsp;&nbsp;&nbsp;
                                                     <label for="nochanged">No</label>
                                                 </li>
                                             </ul>
@@ -286,11 +288,11 @@
                                             </b></label>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item me-md-5">
-                                                    <input type="radio" id="yesdeath" value="yes" <?php echo ($is_death == 'yes') ? 'checked="checked"' : '';?> name="is_death">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="yesdeath" value="yes" <?php echo ($is_death == 'yes') ? 'checked="checked"' : '';?> name="is_death">&nbsp;&nbsp;&nbsp;
                                                     <label for="yesdeath">Yes</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <input type="radio" id="nodeath" value="no" <?php echo ($is_death == 'no') ? 'checked="checked"' : '';?> name="is_death">&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="nodeath" value="no" <?php echo ($is_death == 'no') ? 'checked="checked"' : '';?> name="is_death">&nbsp;&nbsp;&nbsp;
                                                     <label for="nodeath">No</label>
                                                 </li>
                                             </ul>
@@ -302,15 +304,15 @@
                                             <label for="" class="mb-2"><b>Do you have an existing survey for the Property?</b></label>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item me-md-5">
-                                                    <input type="radio" id="yessurvey" value="yes" name="is_survey" <?php echo ($is_survey == 'yes') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="yessurvey" value="yes" name="is_survey" <?php echo ($is_survey == 'yes') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                     <label for="yessurvey">Yes</label>
                                                 </li>
                                                 <li class="list-inline-item me-md-5">
-                                                    <input type="radio" id="nosurvey" value="no" name="is_survey" <?php echo ($is_survey == 'no') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="nosurvey" value="no" name="is_survey" <?php echo ($is_survey == 'no') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                     <label for="nosurvey">No</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <input type="radio" id="na" value="n/a" name="is_survey" <?php echo ($is_survey == 'n/a') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="na" value="n/a" name="is_survey" <?php echo ($is_survey == 'n/a') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                     <label for="na">N/A - Property is a Condominium</label>
                                                 </li>
                                             </ul>
@@ -320,11 +322,11 @@
                                                 <label for="" class="mb-2"><b>Has there been any structural changes or improvements to the Property since the date of the Survey (such as new construction, fences, pools, driveways, etc.)?</b></label>
                                                 <ul class="list-inline mb-0">
                                                     <li class="list-inline-item me-md-5">
-                                                        <input type="radio" id="yesstructural" value="yes" name="is_structural" <?php echo ($is_structural == 'yes') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                        &nbsp;<input type="radio" id="yesstructural" value="yes" name="is_structural" <?php echo ($is_structural == 'yes') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                         <label for="yesstructural">Yes</label>
                                                     </li>
                                                     <li class="list-inline-item">
-                                                        <input type="radio" id="nostructural" value="no" name="is_structural" <?php echo ($is_structural == 'no') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                        &nbsp;<input type="radio" id="nostructural" value="no" name="is_structural" <?php echo ($is_structural == 'no') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                         <label for="nostructural">No</label>
                                                     </li>
                                                 </ul>
@@ -335,11 +337,11 @@
                                             <label for="" class="mb-2"><b>Do you have an existing Owner's Title Insurance Policy for the Property? (Note: Depending on your Sales Contract, the Seller could be penalized $150.00 for not delivering their current owner's title insurance policy to the Buyer within 10 days of the effective date of the Sales Contract.)</b></label>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item me-md-5">
-                                                    <input type="radio" id="yesInsurance" value="yes" name="is_insurance" <?php echo ($is_insurance == 'yes') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
+                                                    &nbsp;<input type="radio" id="yesInsurance" value="yes" name="is_insurance" <?php echo ($is_insurance == 'yes') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
                                                     <label for="yesInsurance">Yes</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <input type="radio" id="noInsurance" value="no" name="is_insurance" <?php echo ($is_insurance == 'no') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="noInsurance" value="no" name="is_insurance" <?php echo ($is_insurance == 'no') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                     <label for="noInsurance">No</label>
                                                 </li>
                                             </ul>
@@ -353,24 +355,24 @@
                                                     <label for="" class="mb-2"><b>Water Service (Please Check One): </b></label>
                                                     <ul class="list-unstyled">
                                                         <li>
-                                                            <input type="radio" id="City" value="City" name="water_service" <?php echo ($water_service == 'City') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                            &nbsp;<input type="radio" id="City" value="City" name="water_service" <?php echo ($water_service == 'City') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                             <label for="City">City</label>
                                                         </li>
                                                         <li>
-                                                            <input type="radio" id="County" value="County" name="water_service" <?php echo ($water_service == 'County') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                            &nbsp;<input type="radio" id="County" value="County" name="water_service" <?php echo ($water_service == 'County') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                             <label for="County">County</label>
                                                         </li>
                                                         <li>
-                                                            <input type="radio" id="FGUA" value="FGUA" name="water_service" <?php echo ($water_service == 'FGUA') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                            &nbsp;<input type="radio" id="FGUA" value="FGUA" name="water_service" <?php echo ($water_service == 'FGUA') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                             <label for="FGUA">FGUA</label>
                                                         </li>
                                                         <li>
-                                                            <input type="radio" id="Septic" value="Septic" name="water_service" <?php echo ($water_service == 'Septic') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                            &nbsp;<input type="radio" id="Septic" value="Septic" name="water_service" <?php echo ($water_service == 'Septic') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                             <label for="Septic">Well / Septic</label>
                                                         </li>
                                                         <li>
-                                                            <input type="radio" id="other" value="other" name="water_service" <?php echo ($water_service == 'other') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp; 
-                                                            <label for="County"><input type="text" class="form-control" placeholder="Other" id="other_water_service_name" name="other_water_service_name" value="<?php echo $other_water_service_name;?>"></label>
+                                                            &nbsp;<input type="radio" id="other" value="other" name="water_service" <?php echo ($water_service == 'other') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp; 
+                                                            <label for="County"><input type="text" style='width: auto;' class="form-control" placeholder="Other" id="other_water_service_name" name="other_water_service_name" value="<?php echo $other_water_service_name;?>"></label>
                                                         </li>
                                                         
                                                     </ul>
@@ -380,7 +382,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Water Service Provider Name</label>
-                                                    <input type="text" class="form-control" id="water_service_provider_name" name="water_service_provider_name" value="<?php echo $water_service_provider_name;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="water_service_provider_name" name="water_service_provider_name" value="<?php echo $water_service_provider_name;?>">
                                                     
                                                 </div>
                                             </div>
@@ -406,7 +408,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">1st Bank / Mortgage Company</label>
-                                                    <input type="text" class="form-control" id="first_mortgage_company" name="first_mortgage_company" value="<?php echo $first_mortgage_company;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="first_mortgage_company" name="first_mortgage_company" value="<?php echo $first_mortgage_company;?>">
                                                     
                                                 </div>
                                             </div>
@@ -415,7 +417,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Loan Number</label>
-                                                    <input type="text" class="form-control" id="first_mortgage_loan_number" name="first_mortgage_loan_number" value="<?php echo $first_mortgage_loan_number;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="first_mortgage_loan_number" name="first_mortgage_loan_number" value="<?php echo $first_mortgage_loan_number;?>">
                                                     
                                                 </div>
                                             </div>
@@ -424,12 +426,12 @@
                                                     <label for="" class="mb-2">Phone Number</label>
                                                     <div class="row">
                                                         <div class="col-4 position-relative mb-3">
-                                                            <input type="text" class="form-control" id="first_mortgage_area_code" name="first_mortgage_area_code" value="<?php echo $first_mortgage_area_code;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="first_mortgage_area_code" name="first_mortgage_area_code" value="<?php echo $first_mortgage_area_code;?>">
                                                             <small class="small_label">Area Code</small>
                                                         </div>
                                                         
                                                         <div class="col-8 position-relative mb-3">
-                                                            <input type="text" class="form-control" id="first_mortgage_phone_number" name="first_mortgage_phone_number" value="<?php echo $first_mortgage_phone_number;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="first_mortgage_phone_number" name="first_mortgage_phone_number" value="<?php echo $first_mortgage_phone_number;?>">
                                                             <small class="small_label">Phone Number</small>
                                                         </div>
                                                         
@@ -444,7 +446,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">2nd Bank / Mortgage Company</label>
-                                                    <input type="text" class="form-control" id="second_mortgage_company" name="second_mortgage_company" value="<?php echo $second_mortgage_company;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="second_mortgage_company" name="second_mortgage_company" value="<?php echo $second_mortgage_company;?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -452,7 +454,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Loan Number</label>
-                                                    <input type="text" class="form-control" id="second_mortgage_loan_number" name="second_mortgage_loan_number" value="<?php echo $second_mortgage_loan_number;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="second_mortgage_loan_number" name="second_mortgage_loan_number" value="<?php echo $second_mortgage_loan_number;?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -460,11 +462,11 @@
                                                     <label for="" class="mb-2">Phone Number</label>
                                                     <div class="row">
                                                         <div class="col-4 position-relative">
-                                                            <input type="text" class="form-control" id="second_mortgage_area_code" name="second_mortgage_area_code" value="<?php echo $second_mortgage_area_code;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="second_mortgage_area_code" name="second_mortgage_area_code" value="<?php echo $second_mortgage_area_code;?>">
                                                             <small class="small_label">Area Code</small>
                                                         </div>
                                                         <div class="col-8 position-relative">
-                                                            <input type="text" class="form-control" id="second_mortgage_phone_number" name="second_mortgage_phone_number" value="<?php echo $second_mortgage_phone_number;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="second_mortgage_phone_number" name="second_mortgage_phone_number" value="<?php echo $second_mortgage_phone_number;?>">
                                                             <small class="small_label">Phone Number</small>
                                                         </div>
                                                     </div>
@@ -478,7 +480,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">3rd Bank / Mortgage Company</label>
-                                                    <input type="text" class="form-control" id="third_mortgage_company" name="third_mortgage_company" value="<?php echo $third_mortgage_company;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="third_mortgage_company" name="third_mortgage_company" value="<?php echo $third_mortgage_company;?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -486,7 +488,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Loan Number</label>
-                                                    <input type="text" class="form-control" id="third_mortgage_loan_number" name="third_mortgage_loan_number" value="<?php echo $third_mortgage_loan_number;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="third_mortgage_loan_number" name="third_mortgage_loan_number" value="<?php echo $third_mortgage_loan_number;?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -494,11 +496,11 @@
                                                     <label for="" class="mb-2">Phone Number</label>
                                                     <div class="row">
                                                         <div class="col-4 position-relative">
-                                                            <input type="text" class="form-control" id="third_mortgage_area_code" name="third_mortgage_area_code" value="<?php echo $third_mortgage_area_code;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="third_mortgage_area_code" name="third_mortgage_area_code" value="<?php echo $third_mortgage_area_code;?>">
                                                             <small class="small_label">Area Code</small>
                                                         </div>
                                                         <div class="col-8 position-relative">
-                                                            <input type="text" class="form-control" id="third_mortgage_phone_number" name="third_mortgage_phone_number" value="<?php echo $third_mortgage_phone_number;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="third_mortgage_phone_number" name="third_mortgage_phone_number" value="<?php echo $third_mortgage_phone_number;?>">
                                                             <small class="small_label">Phone Number</small>
                                                         </div>
                                                     </div>
@@ -522,26 +524,26 @@
                                             <div class="col-md-6">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Lienholder Name 1</label>
-                                                    <input type="text" class="form-control" id="first_lien_holder_name" name="first_lien_holder_name" value="<?php echo $first_lien_holder_name;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="first_lien_holder_name" name="first_lien_holder_name" value="<?php echo $first_lien_holder_name;?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Amount Owed 1</label>
-                                                    <input type="text" class="form-control" id="first_amount_owed" name="first_amount_owed" value="<?php echo $first_amount_owed;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="first_amount_owed" name="first_amount_owed" value="<?php echo $first_amount_owed;?>">
                                                     
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Lienholder Name 2</label>
-                                                    <input type="text" class="form-control" id="second_lien_holder_name" name="second_lien_holder_name" value="<?php echo $second_lien_holder_name;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="second_lien_holder_name" name="second_lien_holder_name" value="<?php echo $second_lien_holder_name;?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Amount Owed 2</label>
-                                                    <input type="text" class="form-control" id="second_amount_owed" name="second_amount_owed" value="<?php echo $second_amount_owed;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="second_amount_owed" name="second_amount_owed" value="<?php echo $second_amount_owed;?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -561,21 +563,21 @@
                                             <div class="col-md-4">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Condominium / Homeowners Association 1</label>
-                                                    <input type="text" class="form-control" id="first_homeowners_association" name="first_homeowners_association" value="<?php echo $first_homeowners_association;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="first_homeowners_association" name="first_homeowners_association" value="<?php echo $first_homeowners_association;?>">
                                                     
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Property Management Company</label>
-                                                    <input type="text" class="form-control" id="first_property_management_company" name="first_property_management_company" value="<?php echo $first_property_management_company;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="first_property_management_company" name="first_property_management_company" value="<?php echo $first_property_management_company;?>">
                                                     
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Property Management Number</label>
-                                                    <input type="text" class="form-control" id="first_property_management_number" name="first_property_management_number" value="<?php echo $first_property_management_number;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="first_property_management_number" name="first_property_management_number" value="<?php echo $first_property_management_number;?>">
                                                     
                                                 </div>
                                             </div>
@@ -584,19 +586,19 @@
                                             <div class="col-md-4">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Condominium / Homeowners Association 2</label>
-                                                    <input type="text" class="form-control" id="second_homeowners_association" name="second_homeowners_association" value="<?php echo $second_homeowners_association;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="second_homeowners_association" name="second_homeowners_association" value="<?php echo $second_homeowners_association;?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Property Management Company</label>
-                                                    <input type="text" class="form-control" id="second_property_management_company" name="second_property_management_company" value="<?php echo $second_property_management_company;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="second_property_management_company" name="second_property_management_company" value="<?php echo $second_property_management_company;?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group mb-4">
                                                     <label for="" class="mb-2">Property Management Number</label>
-                                                    <input type="text" class="form-control" id="second_property_management_number" name="second_property_management_number" value="<?php echo $second_property_management_number;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="second_property_management_number" name="second_property_management_number" value="<?php echo $second_property_management_number;?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -614,15 +616,15 @@
                                             <label for="" class="mb-2"><b>How would you like to receive the sale proceeds after closing?</b></label>
                                             <ul class="list-unstyled">
                                                 <li>
-                                                    <input type="radio" id="wire" value="wire" name="sale_proceeds" <?php echo ($sale_proceeds == 'wire') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
+                                                    &nbsp;<input type="radio" id="wire" value="wire" name="sale_proceeds" <?php echo ($sale_proceeds == 'wire') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
                                                     <label for="wire">Wire Funds</label>
                                                 </li>
                                                 <li>
-                                                    <input type="radio" id="pickUp" value="pickUp" name="sale_proceeds" <?php echo ($sale_proceeds == 'pickUp') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
+                                                    &nbsp;<input type="radio" id="pickUp" value="pickUp" name="sale_proceeds" <?php echo ($sale_proceeds == 'pickUp') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
                                                     <label for="pickUp">Pick Up Check</label>
                                                 </li>
                                                 <li>
-                                                    <input type="radio" id="mailCheck" value="mailCheck" name="sale_proceeds" <?php echo ($sale_proceeds == 'mailCheck') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
+                                                    &nbsp;<input type="radio" id="mailCheck" value="mailCheck" name="sale_proceeds" <?php echo ($sale_proceeds == 'mailCheck') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
                                                     <label for="mailCheck">Mail Check</label>
                                                 </li>
                                             </ul>
@@ -631,33 +633,33 @@
                                                 <div class="form-group position-relative mb-3">
                                                     <label for="" class="mb-2"><b>Address Closing Proceeds to be Mailed To
                                                     </b></label>
-                                                    <input type="text" class="form-control" id="closing_proceeds_street_address" name="closing_proceeds_street_address" value="<?php echo $closing_proceeds_street_address;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="closing_proceeds_street_address" name="closing_proceeds_street_address" value="<?php echo $closing_proceeds_street_address;?>">
                                                     <small class="small_label">Street Address</small>
                                                 </div>
                                                 
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="closing_proceeds_street_address2" name="closing_proceeds_street_address2" value="<?php echo $closing_proceeds_street_address2;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="closing_proceeds_street_address2" name="closing_proceeds_street_address2" value="<?php echo $closing_proceeds_street_address2;?>">
                                                     <small  class="small_label">Street Address Line 2</small>
                                                 </div>
                                                 
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3">
-                                                            <input type="text" class="form-control" id="closing_proceeds_city" name="closing_proceeds_city" value="<?php echo $closing_proceeds_city;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="closing_proceeds_city" name="closing_proceeds_city" value="<?php echo $closing_proceeds_city;?>">
                                                             <small  class="small_label">City</small>
                                                         </div>
                                                         
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group position-relative mb-3">
-                                                            <input type="text" class="form-control" id="closing_proceeds_state" name="closing_proceeds_state" value="<?php echo $closing_proceeds_state;?>">
+                                                            <input type="text" style='width: 100%;' class="form-control" id="closing_proceeds_state" name="closing_proceeds_state" value="<?php echo $closing_proceeds_state;?>">
                                                             <small  class="small_label">State / Province</small>
                                                         </div>
                                                         
                                                     </div>    
                                                 </div>
                                                 <div class="form-group position-relative mb-3 col-md-6">
-                                                    <input type="text" class="form-control" id="closing_proceeds_zipcode" name="closing_proceeds_zipcode" value="<?php echo $closing_proceeds_zipcode;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="closing_proceeds_zipcode" name="closing_proceeds_zipcode" value="<?php echo $closing_proceeds_zipcode;?>">
                                                     <small  class="small_label">Postal / Zip Code</small>
                                                 </div>
                                                 
@@ -678,21 +680,21 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="" class="mb-2">Name On Account</label>
-                                                    <input type="text" class="form-control" id="name_on_account" name="name_on_account" value="<?php echo $name_on_account;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="name_on_account" name="name_on_account" value="<?php echo $name_on_account;?>">
                                                 </div>
                                                 
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="" class="mb-2">Bank Name</label>
-                                                    <input type="text" class="form-control" id="bank_name" name="bank_name" value="<?php echo $bank_name;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="bank_name" name="bank_name" value="<?php echo $bank_name;?>">
                                                 </div>
                                                 
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="" class="mb-2">Bank City</label>
-                                                    <input type="text" class="form-control" id="bank_city" name="bank_city" value="<?php echo $bank_city;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="bank_city" name="bank_city" value="<?php echo $bank_city;?>">
                                                 </div>
                                                 
                                             </div>
@@ -701,21 +703,21 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="" class="mb-2">Bank State</label>
-                                                    <input type="text" class="form-control" id="bank_state" name="bank_state" value="<?php echo $bank_state;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="bank_state" name="bank_state" value="<?php echo $bank_state;?>">
                                                 </div>
                                                 
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="" class="mb-2">Account Number</label>
-                                                    <input type="text" class="form-control" id="account_number" name="account_number" value="<?php echo $account_number;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="account_number" name="account_number" value="<?php echo $account_number;?>">
                                                 </div>
                                                 
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="" class="mb-2">Routing Number</label>
-                                                    <input type="text" class="form-control" id="routing_number" name="routing_number" value="<?php echo $routing_number;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control" id="routing_number" name="routing_number" value="<?php echo $routing_number;?>">
                                                 </div>
                                                 
                                             </div>
@@ -724,33 +726,33 @@
                                             <div class="form-group position-relative mb-3">
                                                 <label for="" class="mb-2"><b>Address Associated with Account Number
                                                 </b></label>
-                                                <input type="text" class="form-control" id="street_address_for_account" name="street_address_for_account" value="<?php echo $street_address_for_account;?>">
+                                                <input type="text" style='width: 100%;' class="form-control" id="street_address_for_account" name="street_address_for_account" value="<?php echo $street_address_for_account;?>">
                                                 <small class="small_label">Street Address</small>
                                             </div>
                                             
                                             <div class="form-group position-relative mb-3">
-                                                <input type="text" class="form-control" id="street_address2_for_account" name="street_address2_for_account" value="<?php echo $street_address2_for_account;?>">
+                                                <input type="text" style='width: 100%;' class="form-control" id="street_address2_for_account" name="street_address2_for_account" value="<?php echo $street_address2_for_account;?>">
                                                 <small  class="small_label">Street Address Line 2</small>
                                             </div>
                                             
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group position-relative mb-3">
-                                                        <input type="text" class="form-control" id="city_for_account" name="city_for_account" value="<?php echo $city_for_account;?>">
+                                                        <input type="text" style='width: 100%;' class="form-control" id="city_for_account" name="city_for_account" value="<?php echo $city_for_account;?>">
                                                         <small  class="small_label">City</small>
                                                     </div>
                                                     
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group position-relative mb-3">
-                                                        <input type="text" class="form-control" id="state_for_account" name="state_for_account" value="<?php echo $state_for_account;?>">
+                                                        <input type="text" style='width: 100%;' class="form-control" id="state_for_account" name="state_for_account" value="<?php echo $state_for_account;?>">
                                                         <small  class="small_label">State / Province</small>
                                                     </div>
                                                     
                                                 </div>    
                                             </div>
                                             <div class="form-group position-relative mb-3 col-md-6">
-                                                <input type="text" class="form-control" id="zipcode_for_account" name="zipcode_for_account" value="<?php echo $zipcode_for_account;?>">
+                                                <input type="text" style='width: 100%;' class="form-control" id="zipcode_for_account" name="zipcode_for_account" value="<?php echo $zipcode_for_account;?>">
                                                 <small  class="small_label">Postal / Zip Code</small>
                                             </div>
                                             
@@ -826,7 +828,7 @@
                                                 <small>
                                                     NAME AND MAILING ADDRESS OF BUYER/TRANSFEREE <br> (Make necessary corrections to the printed name and mailing address)
                                                 </small>
-                                                <textarea name="address" rows="6" id="address" class="form-control mt-3" style="height:auto !important" readonly>
+                                                <textarea name="address" rows="6" id="address" class="form-control mt-3" style="height:auto !important;width: 100%;" readonly>
 Mordechai Citronenbaum  
 48 Hauser Blvd. #1-110 
 Los Angeles, CA 90036
@@ -834,22 +836,22 @@ Los Angeles, CA 90036
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control f700 f12" value="" id="assessors_parcel_number" name="assessors_parcel_number" value="<?php echo $assessors_parcel_number;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control f700 f12" value="" id="assessors_parcel_number" name="assessors_parcel_number" value="<?php echo $assessors_parcel_number;?>">
                                                     <small class="small_label">ASSESSOR'S PARCEL NUMBER</small>
                                                 </div>
                                                 
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control f700 f12" id="transferor" name="transferor" value="<?php echo $transferor;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control f700 f12" id="transferor" name="transferor" value="<?php echo $transferor;?>">
                                                     <small class="small_label">SELLER/TRANSFEROR</small>
                                                 </div>
                                                 
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control f700 f12" id="buyer_daytime_phone_number" name="buyer_daytime_phone_number" value="<?php echo $buyer_daytime_phone_number;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control f700 f12" id="buyer_daytime_phone_number" name="buyer_daytime_phone_number" value="<?php echo $buyer_daytime_phone_number;?>">
                                                     <small class="small_label">BUYER'S DAYTIME TELEPHONE NUMBER</small>
                                                 </div>
                                                 
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control f700 f12" id="buyer_email_address" name="buyer_email_address" value="<?php echo $buyer_email_address;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control f700 f12" id="buyer_email_address" name="buyer_email_address" value="<?php echo $buyer_email_address;?>">
                                                     <small class="small_label">BUYER'S EMAIL ADDRESS</small>
                                                 </div>
                                                 
@@ -857,7 +859,7 @@ Los Angeles, CA 90036
                                         </div>
                                         
                                         <div class="form-group position-relative mb-3">
-                                            <input type="text" class="form-control f700 f12" value="" id="real_property_addres" name="real_property_addres" value="<?php echo $real_property_addres;?>">
+                                            <input type="text" style='width: 100%;' class="form-control f700 f12" value="" id="real_property_addres" name="real_property_addres" value="<?php echo $real_property_addres;?>">
                                             <small class="small_label">STREET ADDRESS OR PHYSICAL LOCATION OF REAL PROPERTY </small>
                                         </div>
                                         
@@ -869,8 +871,8 @@ Los Angeles, CA 90036
                                                 <th></th>
                                             </tr>
                                             <tr>
-                                                <td><input type="radio" name="is_principal_residence" id="checkYes0" value="yes" <?php echo ($is_principal_residence == 'yes') ? 'checked="checked"' : '';?>></td> 
-                                                <td><input type="radio" name="is_principal_residence" id="checkNo0" value="no" <?php echo ($is_principal_residence == 'no') ? 'checked="checked"' : '';?>></td>
+                                                <td><input style='margin-top: 5px;' type="radio" name="is_principal_residence" id="checkYes0" value="yes" <?php echo ($is_principal_residence == 'yes') ? 'checked="checked"' : '';?>></td> 
+                                                <td><input style='margin-top: 5px;' type="radio" name="is_principal_residence" id="checkNo0" value="no" <?php echo ($is_principal_residence == 'no') ? 'checked="checked"' : '';?>></td>
                                                 <td>
                                                     This property is intended as my principal residence. If YES, please indicate the date of occupancy or intended occupancy.
                                                     <div class="d-flex date_group">
@@ -892,7 +894,7 @@ Los Angeles, CA 90036
                                         </table>
 
                                         <div class="form-group position-relative mb-3">
-                                            <input type="text" class="form-control f700 f12" value="" id="mail_property_tax_name" name="mail_property_tax_name" value="<?php echo $mail_property_tax_name;?>">
+                                            <input type="text" style='width: 100%;' class="form-control f700 f12" value="" id="mail_property_tax_name" name="mail_property_tax_name" value="<?php echo $mail_property_tax_name;?>">
                                             <small class="small_label">MAIL PROPERTY TAX INFORMATION TO (NAME)</small>
                                         </div>
                                         
@@ -900,28 +902,28 @@ Los Angeles, CA 90036
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control f700 f12" value="" id="mail_property_tax_address" name="mail_property_tax_address" value="<?php echo $mail_property_tax_address;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control f700 f12" value="" id="mail_property_tax_address" name="mail_property_tax_address" value="<?php echo $mail_property_tax_address;?>">
                                                     <small class="small_label">MAIL PROPERTY TAX INFORMATION TO (ADDRESS)</small>
                                                 </div>
                                                 
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control f700 f12" value="" id="mail_property_tax_city" name="mail_property_tax_city" value="<?php echo $mail_property_tax_city;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control f700 f12" value="" id="mail_property_tax_city" name="mail_property_tax_city" value="<?php echo $mail_property_tax_city;?>">
                                                     <small class="small_label">CITY </small>
                                                 </div>
                                                 
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control f700 f12" value="" id="mail_property_tax_state" name="mail_property_tax_state" value="<?php echo $mail_property_tax_state;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control f700 f12" value="" id="mail_property_tax_state" name="mail_property_tax_state" value="<?php echo $mail_property_tax_state;?>">
                                                     <small class="small_label">STATE </small>
                                                 </div>
                                                 
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control f700 f12" value="" id="mail_property_tax_zipcode" name="mail_property_tax_zipcode" value="<?php echo $mail_property_tax_zipcode;?>">
+                                                    <input type="text" style='width: 100%;' class="form-control f700 f12" value="" id="mail_property_tax_zipcode" name="mail_property_tax_zipcode" value="<?php echo $mail_property_tax_zipcode;?>">
                                                     <small class="small_label">ZIP CODE</small>
                                                 </div>
                                                 
@@ -1058,7 +1060,7 @@ Los Angeles, CA 90036
                                                 <td>
                                                     This transaction is recorded only as a requirement for financing purposes or to create, terminate, or reconvey a security
                                                     interest (e.g., cosigner). If YES, please explain:  &nbsp;
-                                                    <input type="text" class="input_single" name="financing_purpose_reason" id="financing_purpose_reason" value="<?php echo $financing_purpose_reason;?>">
+                                                    <input type="text" class="input_single form-control" name="financing_purpose_reason" id="financing_purpose_reason" value="<?php echo $financing_purpose_reason;?>">
                                                     
                                                 </td>
                                             </tr>
@@ -1136,7 +1138,7 @@ Los Angeles, CA 90036
                                                 <td><input type="radio" name="is_transfer_other" id="checkNo18" value="no" <?php echo ($is_transfer_other == 'no') ? 'checked="checked"' : '';?>></td>
                                                 <td>
                                                     Other. This transfer is to 
-                                                    <input type="text" class="input_single" name="other_transfer" id="other_transfer" value="<?php echo $other_transfer;?>">
+                                                    <input type="text" class="input_single form-control" name="other_transfer" id="other_transfer" value="<?php echo $other_transfer;?>">
                                                 </td>
                                             </tr>
                                         </table>
@@ -1237,9 +1239,9 @@ Los Angeles, CA 90036
 
                                                     <div class="mt-3">
                                                         Original term in years (including written options): 
-                                                         <input type="text" class="input_single w-small" id="original_terms_in_year" name="original_terms_in_year" value="<?php echo $original_terms_in_year;?>"> 
+                                                         <input type="text" class="input_single form-control" id="original_terms_in_year" name="original_terms_in_year" value="<?php echo $original_terms_in_year;?>"> 
                                                          Remaining term in years (including written options):   
-                                                         <input type="text"  class="input_single w-small" id="remaining_terms_in_year" name="remaining_terms_in_year" value="<?php echo $remaining_terms_in_year;?>">
+                                                         <input type="text"  class="input_single form-control" id="remaining_terms_in_year" name="remaining_terms_in_year" value="<?php echo $remaining_terms_in_year;?>">
                                                     </div>
                                                 </td>
                                             </tr>
@@ -1250,8 +1252,8 @@ Los Angeles, CA 90036
                                                     <input type="radio" name="is_partial_interest" id="propertYes" value="yes" <?php echo ($is_partial_interest == 'yes') ? 'checked="checked"' : '';?>>&nbsp;<label for="propertYes">YES</label> &nbsp;
                                                     <input type="radio" name="is_partial_interest" id="propertNo" value="no" <?php echo ($is_partial_interest == 'no') ? 'checked="checked"' : '';?>>&nbsp;<label for="propertNo">NO</label>&nbsp;
                                                     If YES, indicate the percentage transferred: 
-                                                    <input type="text" class="input_single w-medium" id="start_percentage_range" name="start_percentage_range" value="<?php echo $start_percentage_range;?>"> % 
-                                                    <input type="text" class="input_single w-medium" id="end_percentage_range" name="end_percentage_range" value="<?php echo $end_percentage_range;?>">
+                                                    <input type="text" class="input_single form-control" id="start_percentage_range" name="start_percentage_range" value="<?php echo $start_percentage_range;?>"> % 
+                                                    <input type="text" class="input_single form-control" id="end_percentage_range" name="end_percentage_range" value="<?php echo $end_percentage_range;?>">
                                                     
                                                 </td>
                                             </tr>
@@ -1274,7 +1276,7 @@ Los Angeles, CA 90036
                                                 <td>
                                                     <div class="d-flex justify-content-between">
                                                         Total purchase price   <div>$ 
-                                                            <input type="text" class="input_single" id="total_purchase_price" name="total_purchase_price" value="<?php echo $total_purchase_price;?>"></div>
+                                                            <input type="text" class="input_single form-control" id="total_purchase_price" name="total_purchase_price" value="<?php echo $total_purchase_price;?>"></div>
                                                             
                                                     </div>
                                                     
@@ -1285,7 +1287,7 @@ Los Angeles, CA 90036
                                                 <td>
                                                     <div class="d-flex justify-content-between">
                                                         Cash down payment or value of trade or exchange excluding closing costs  <div>Amount $ 
-                                                            <input type="text" class="input_single" id="cash_down_payment" name="cash_down_payment" value="<?php echo $cash_down_payment;?>"></div>
+                                                            <input type="text" class="input_single form-control" id="cash_down_payment" name="cash_down_payment" value="<?php echo $cash_down_payment;?>"></div>
                                                             
                                                     </div>
                                                     
@@ -1295,10 +1297,10 @@ Los Angeles, CA 90036
                                                 <td>C.</td>
                                                 <td>
                                                     First deed of trust @ &nbsp;
-                                                   <input type="text" class="input_single w-small" id="first_deed_of_trust_interest" name="first_deed_of_trust_interest" value="<?php echo $first_deed_of_trust_interest;?>"> % interest for 
-                                                   <input type="text" class="input_single w-small" id="first_deed_of_trust_years" name="first_deed_of_trust_years" value="<?php echo $first_deed_of_trust_years;?>">years. 
+                                                   <input type="text" class="input_single form-control" id="first_deed_of_trust_interest" name="first_deed_of_trust_interest" value="<?php echo $first_deed_of_trust_interest;?>"> % interest for 
+                                                   <input type="text" class="input_single form-control" id="first_deed_of_trust_years" name="first_deed_of_trust_years" value="<?php echo $first_deed_of_trust_years;?>">years. 
                                                    Monthly payment $ 
-                                                   <input type="text" class="input_single" id="first_deed_of_trust_monthly_payment" name="first_deed_of_trust_monthly_payment" value="<?php echo $first_deed_of_trust_monthly_payment;?>">
+                                                   <input type="text" class="input_single form-control" id="first_deed_of_trust_monthly_payment" name="first_deed_of_trust_monthly_payment" value="<?php echo $first_deed_of_trust_monthly_payment;?>">
                                                    
                                                     <div class="row mt-3">
                                                         <div class="col-lg-3 col-md-6">
@@ -1322,7 +1324,7 @@ Los Angeles, CA 90036
                                                         <div class="col-lg-3 col-md-6">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="fix_rate" value="fix_rate" name="first_deed_payment_types[]" <?php echo (in_array('fix_rate', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
-                                                                <label for="fix_rate"> Fixed rate </label>
+                                                                <label for="fix_rate">Fixed rate </label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1330,13 +1332,13 @@ Los Angeles, CA 90036
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="var_rate" value="var_rate" name="first_deed_payment_types[]" <?php echo (in_array('var_rate', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
-                                                                <label for="var_rate"> Variable rate</label>
+                                                                <label for="var_rate">Variable rate</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="loan" value="loan" name="first_deed_payment_types[]" <?php echo (in_array('loan', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
-                                                                <label for="loan"> Bank/Savings & Loan/Credit Union </label>
+                                                                <label for="loan">Bank/Savings & Loan/Credit Union </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -1366,22 +1368,22 @@ Los Angeles, CA 90036
                                                 <td>D.</td>
                                                 <td>
                                                     <div>
-                                                        Second deed of trust @  <input type="text" class="input_single w-small" id="second_deed_of_trust_interest" name="second_deed_of_trust_interest" value="<?php echo $second_deed_of_trust_interest;?>"> % interest for 
-                                                        <input type="text" class="input_single w-small" id="second_deed_of_trust_years" name="second_deed_of_trust_years" value="<?php echo $second_deed_of_trust_years;?>"> years.   
-                                                        Monthly payment $ <input type="text" class="input_single" id="second_deed_of_trust_monthly_payment" name="second_deed_of_trust_monthly_payment" value="<?php echo $second_deed_of_trust_monthly_payment;?>">  
-                                                        Amount $ <input type="text" class="input_single" id="second_deed_of_trust_amount" name="second_deed_of_trust_amount" value="<?php echo $second_deed_of_trust_amount;?>">
+                                                        Second deed of trust @  <input type="text" class="input_single form-control" id="second_deed_of_trust_interest" name="second_deed_of_trust_interest" value="<?php echo $second_deed_of_trust_interest;?>"> % interest for 
+                                                        <input type="text" class="input_single form-control" id="second_deed_of_trust_years" name="second_deed_of_trust_years" value="<?php echo $second_deed_of_trust_years;?>"> years.   
+                                                        Monthly payment $ <input type="text" class="input_single form-control" id="second_deed_of_trust_monthly_payment" name="second_deed_of_trust_monthly_payment" value="<?php echo $second_deed_of_trust_monthly_payment;?>">  
+                                                        Amount $ <input type="text" class="input_single form-control" id="second_deed_of_trust_amount" name="second_deed_of_trust_amount" value="<?php echo $second_deed_of_trust_amount;?>">
                                                     </div>
                                                     <div class="mt-3 row">
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="fixed_rate" value="fixed_rate" name="second_deed_payment_types[]" <?php echo (in_array('fixed_rate', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
-                                                                <label for="fixed_rate"> Fixed rate</label>
+                                                                <label for="fixed_rate">Fixed rate</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="second_var_rate" value="second_var_rate" name="second_deed_payment_types[]" <?php echo (in_array('second_var_rate', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
-                                                                <label for="variable_rate"> Variable rate</label>
+                                                                <label for="variable_rate">Variable rate</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -1401,13 +1403,13 @@ Los Angeles, CA 90036
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="second_ballon_payment" value="second_ballon_payment" name="second_deed_payment_types[]" <?php echo (in_array('second_ballon_payment', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
-                                                                <label for="ballon_pay">Balloon payment $ <input type="text" id="ballon_payment" name="ballon_payment" class="input_single w-small" value="<?php echo $ballon_payment;?>"></label>
+                                                                <label for="ballon_pay">Balloon payment $ <input type="text" id="ballon_payment" name="ballon_payment" class="input_single form-control" value="<?php echo $ballon_payment;?>"></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="second_due_date" value="second_due_date" name="second_deed_payment_types[]" <?php echo (in_array('second_due_date', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
-                                                                <label for="date_due"> Due date: <input type="date" class="input_single" id="second_deed_due_date" name="second_deed_due_date" value="<?php echo $second_deed_due_date;?>"></label>
+                                                                <label for="date_due">Due date:<input type="date" class="input_single form-control" id="second_deed_due_date" name="second_deed_due_date" value="<?php echo $second_deed_due_date;?>"></label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1419,7 +1421,7 @@ Los Angeles, CA 90036
                                                     Was an Improvement Bond or other public financing assumed by the buyer?    &nbsp;
                                                     <input type="radio" name="is_financing" id="financingYes" value="yes" <?php echo ($is_financing == 'yes') ? 'checked="checked"' : '';?>>&nbsp;<label for="financingYes">YES</label> &nbsp;
                                                     <input type="radio" name="is_financing" id="financingNo" value="no" <?php echo ($is_financing == 'no') ? 'checked="checked"' : '';?>>&nbsp;<label for="financingNo">NO</label>&nbsp;
-                                                    Outstanding balance $ <input type="text" class="input_single w-medium" id="outstanding_balance" name="outstanding_balance" value="<?php echo $outstanding_balance;?>">
+                                                    Outstanding balance $ <input type="text" class="input_single form-control" id="outstanding_balance" name="outstanding_balance" value="<?php echo $outstanding_balance;?>">
                                                     
                                                 </td>
                                             </tr>
@@ -1427,7 +1429,7 @@ Los Angeles, CA 90036
                                                 <td>F.</td>
                                                 <td>
                                                     Amount, if any, of real estate commission fees paid by the buyer which are not included in the purchase price $ 
-                                                    <input type="text" class="input_single w-medium" id="real_estate_commission" name="real_estate_commission" value="<?php echo $real_estate_commission;?>">
+                                                    <input type="text" class="input_single form-control" id="real_estate_commission" name="real_estate_commission" value="<?php echo $real_estate_commission;?>">
                                                     
                                                 </td>
                                             </tr>
@@ -1438,18 +1440,18 @@ Los Angeles, CA 90036
                                                     <div class="mt-3">
                                                         <input type="radio" name="property_purchase_via" id="real_estate" value="real_estate" <?php echo ($property_purchase_via == 'yes') ? 'real_estate' : '';?>>&nbsp;&nbsp;&nbsp;
                                                         <label for="broker_name">Through real estate broker.</label> 
-                                                        Broker name: <input type="text" class="input_single" id="broker_name" name="broker_name" value="<?php echo $broker_name;?>"> 
-                                                        Phone number: <input type="text" class="input_single" id="broker_phone_number" name="broker_phone_number" value="<?php echo $broker_phone_number;?>">
+                                                        Broker name: <input type="text" class="input_single form-control" id="broker_name" name="broker_name" value="<?php echo $broker_name;?>"> 
+                                                        Phone number: <input type="text" class="input_single form-control" id="broker_phone_number" name="broker_phone_number" value="<?php echo $broker_phone_number;?>">
                                                     </div>
                                                     <div class="mt-3">
-                                                        <input type="radio" name="property_purchase_via" id="direct" value="direct_from_seller" <?php echo ($property_purchase_via == 'direct_from_seller') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp; <label for="direct">Direct from seller</label>  &nbsp;
-                                                        <input type="radio" name="property_purchase_via" id="direct" value="family_member_relationship" <?php echo ($property_purchase_via == 'family_member_relationship') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp; <label for="family">From a family member-Relationship  &nbsp;
-                                                        <input type="text" class="input_single" id="property_purchase_via_name" name="property_purchase_via_name" value="<?php echo $property_purchase_via_name;?>"></label>  
+                                                        &nbsp;<input type="radio" name="property_purchase_via" id="direct" value="direct_from_seller" <?php echo ($property_purchase_via == 'direct_from_seller') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp; <label for="direct">Direct from seller</label>  &nbsp;
+                                                        &nbsp;<input type="radio" name="property_purchase_via" id="direct" value="family_member_relationship" <?php echo ($property_purchase_via == 'family_member_relationship') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp; <label for="family">From a family member-Relationship  &nbsp;
+                                                        <input type="text" class="input_single form-control" id="property_purchase_via_name" name="property_purchase_via_name" value="<?php echo $property_purchase_via_name;?>"></label>  
                                                     </div>
                                                     <div class="mt-3">
-                                                        <input type="radio" name="property_purchase_via" id="other" value="other" <?php echo ($property_purchase_via == 'other') ? 'checked="checked"' : '';?>> 
-                                                        <label for="Other">Other. Please explain: 
-                                                            <input type="text" class="input_single" id="other_through" name="other_through" value="<?php echo $other_through;?>">
+                                                        &nbsp;<input type="radio" name="property_purchase_via" id="other" value="other" <?php echo ($property_purchase_via == 'other') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp; 
+                                                        <label for="Other"> Other. Please explain: 
+                                                            <input type="text" class="input_single form-control" id="other_through" name="other_through" value="<?php echo $other_through;?>">
                                                         </label>  
                                                     </div>
                                                     
@@ -1480,12 +1482,12 @@ Los Angeles, CA 90036
                                             <tr>
                                                 <td>A.</td>
                                                 <td>
-                                                    Type of property transferred
+                                                    &nbsp;Type of property transferred
                                                     <div class="row mt-3">
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="single" name="types_of_property_transferred[]" value="single" <?php echo (in_array('single', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
-                                                                <label for="single"> Single-family residence</label>
+                                                                <label for="single">Single-family residence</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -1505,8 +1507,8 @@ Los Angeles, CA 90036
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="multiple" name="types_of_property_transferred[]" value="multiple" <?php echo (in_array('multiple', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
-                                                                <label for="multiple"> Multiple-family residence. Number of units: 
-                                                                <input type="text" class="input_single" id="num_of_units" name="num_of_units" value="<?php echo $num_of_units;?>"></label>
+                                                                <label for="multiple">Multiple-family residence. Number of units: 
+                                                                <input type="text" class="input_single form-control" id="num_of_units" name="num_of_units" value="<?php echo $num_of_units;?>"></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -1526,7 +1528,7 @@ Los Angeles, CA 90036
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="timber" name="types_of_property_transferred[]" value="timber" <?php echo (in_array('timber', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
-                                                                <label for="timber"> Other. Description: (i.e., timber, mineral, water rights, etc.)</label>
+                                                                <label for="timber">Other. Description: (i.e., timber, mineral, water rights, etc.)</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -1538,7 +1540,7 @@ Los Angeles, CA 90036
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
                                                                 <input type="checkbox" class="mt-2 me-2" id="commercial" name="types_of_property_transferred[]" value="commercial" <?php echo (in_array('commercial', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
-                                                                <label for="commercial"> Commercial/Industrial</label>
+                                                                <label for="commercial">Commercial/Industrial</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1549,8 +1551,8 @@ Los Angeles, CA 90036
                                                 <td>
                                                     <div class="d-flex">
                                                         <div class="me-3">
-                                                            <input type="radio" name="is_personal_property" id="bpropertyYes" value="yes" <?php echo ($is_personal_property == 'yes') ? 'checked="checked"' : '';?>>&nbsp; <label for="bpropertyYes">YES</label>&nbsp;
-                                                            <input type="radio" name="is_personal_property" id="bpropertyNo" value="no" <?php echo ($is_personal_property == 'no') ? 'checked="checked"' : '';?>>&nbsp; <label for="bpropertyNo">NO</label> &nbsp;
+                                                            &nbsp;<input type="radio" name="is_personal_property" id="bpropertyYes" value="yes" <?php echo ($is_personal_property == 'yes') ? 'checked="checked"' : '';?>>&nbsp; <label for="bpropertyYes"> YES</label>&nbsp;
+                                                            &nbsp;<input type="radio" name="is_personal_property" id="bpropertyNo" value="no" <?php echo ($is_personal_property == 'no') ? 'checked="checked"' : '';?>>&nbsp; <label for="bpropertyNo"> NO</label> &nbsp;
                                                         </div>
                                                         <div>
                                                             Personal/business property, or incentives, provided by seller to buyer are included in the purchase price. Examples of personal property are furniture, farm equipment, machinery, etc. Examples of incentives are club memberships, etc. Attach list if available.
@@ -1558,8 +1560,8 @@ Los Angeles, CA 90036
                                                     </div>
                                                     
 
-                                                    If YES, enter the value of the personal/business property: $ <input type="text" class="input_single w-medium" id="peronal_property_value" name="peronal_property_value"> 
-                                                    Incentives $ <input type="text" class="input_single w-medium" id="incentives" name="incentives" value="<?php echo $incentives;?>">
+                                                    If YES, enter the value of the personal/business property: $ <input type="text" class="input_single form-control" id="peronal_property_value" name="peronal_property_value" value="<?php echo $peronal_property_value;?>"> 
+                                                    Incentives $ <input type="text" class="input_single form-control" id="incentives" name="incentives" value="<?php echo $incentives;?>">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1567,8 +1569,8 @@ Los Angeles, CA 90036
                                                 <td>
                                                     <div class="d-flex">
                                                         <div class="me-3">
-                                                            <input type="radio" name="is_manufacture_home_included_in_purchase_price" id="purchasePriceYes" value="yes" <?php echo ($is_manufacture_home_included_in_purchase_price == 'yes') ? 'checked="checked"' : '';?>>&nbsp; <label for="purchasePriceYes">YES</label>&nbsp;
-                                                            <input type="radio" name="is_manufacture_home_included_in_purchase_price" id="purchasePriceNo" value="no" <?php echo ($is_manufacture_home_included_in_purchase_price == 'no') ? 'checked="checked"' : '';?>>&nbsp; <label for="purchasePriceNo">NO</label> &nbsp;
+                                                            &nbsp;<input type="radio" name="is_manufacture_home_included_in_purchase_price" id="purchasePriceYes" value="yes" <?php echo ($is_manufacture_home_included_in_purchase_price == 'yes') ? 'checked="checked"' : '';?>>&nbsp; <label for="purchasePriceYes"> YES</label>&nbsp;
+                                                            &nbsp;<input type="radio" name="is_manufacture_home_included_in_purchase_price" id="purchasePriceNo" value="no" <?php echo ($is_manufacture_home_included_in_purchase_price == 'no') ? 'checked="checked"' : '';?>>&nbsp; <label for="purchasePriceNo"> NO</label> &nbsp;
                                                         </div>
                                                         <div>
                                                             A manufactured home is included in the purchase price.
@@ -1577,16 +1579,16 @@ Los Angeles, CA 90036
                                                     </div>
                                                     <div class=" mt-3">
                                                         If YES, enter the value attributed to the manufactured home: $  
-                                                        <input type="text" class="input_single w-medium" id="value_manufacture_home" name="value_manufacture_home" value="<?php echo $value_manufacture_home;?>">
+                                                        <input type="text" class="input_single form-control" id="value_manufacture_home" name="value_manufacture_home" value="<?php echo $value_manufacture_home;?>">
                                                     </div>
                                                     <div class="d-flex mt-3">
                                                         <div class="me-3">
-                                                            <input type="radio" name="is_manufacture_home_tax" id="manufacturedPriceYes" value="yes" <?php echo ($is_manufacture_home_tax == 'yes') ? 'checked="checked"' : '';?>>&nbsp; <label for="manufacturedPriceYes">YES</label>&nbsp;
-                                                            <input type="radio" name="is_manufacture_home_tax" id="manufacturedPriceNo" value="no" <?php echo ($is_manufacture_home_tax == 'no') ? 'checked="checked"' : '';?>>&nbsp; <label for="manufacturedPriceNo">NO</label> &nbsp;
+                                                            &nbsp;<input type="radio" name="is_manufacture_home_tax" id="manufacturedPriceYes" value="yes" <?php echo ($is_manufacture_home_tax == 'yes') ? 'checked="checked"' : '';?>>&nbsp; <label for="manufacturedPriceYes"> YES</label>&nbsp;
+                                                            &nbsp;<input type="radio" name="is_manufacture_home_tax" id="manufacturedPriceNo" value="no" <?php echo ($is_manufacture_home_tax == 'no') ? 'checked="checked"' : '';?>>&nbsp; <label for="manufacturedPriceNo"> NO</label> &nbsp;
                                                         </div>
                                                         <div>
                                                             The manufactured home is subject to local property tax. If NO, enter decal number  
-                                                            <input type="text" class="input_single w-medium" id="deal_number" name="deal_number" value="<?php echo $deal_number;?>">
+                                                            <input type="text" class="input_single form-control" id="deal_number" name="deal_number" value="<?php echo $deal_number;?>">
                                                         </div>
                                                         
                                                     </div>
@@ -1597,8 +1599,8 @@ Los Angeles, CA 90036
                                                 <td>
                                                     <div class="d-flex">
                                                         <div class="me-3">
-                                                            <input type="radio" name="is_property_produce_income" id="purchasePriceYes" value="yes" <?php echo ($is_property_produce_income == 'yes') ? 'checked="checked"' : '';?>>&nbsp; <label for="purchasePriceYes">YES</label>&nbsp;
-                                                            <input type="radio" name="is_property_produce_income" id="purchasePriceNo" value="no" <?php echo ($is_property_produce_income == 'no') ? 'checked="checked"' : '';?>>&nbsp; <label for="purchasePriceNo">NO</label> &nbsp;
+                                                            &nbsp;<input type="radio" name="is_property_produce_income" id="purchasePriceYes" value="yes" <?php echo ($is_property_produce_income == 'yes') ? 'checked="checked"' : '';?>>&nbsp; <label for="purchasePriceYes"> YES</label>&nbsp;
+                                                            &nbsp;<input type="radio" name="is_property_produce_income" id="purchasePriceNo" value="no" <?php echo ($is_property_produce_income == 'no') ? 'checked="checked"' : '';?>>&nbsp; <label for="purchasePriceNo"> NO</label> &nbsp;
                                                         </div>
                                                         <div>
                                                             The property produces rental or other income.
@@ -1607,11 +1609,11 @@ Los Angeles, CA 90036
                                                     </div>
                                                     <div class="mt-3">
                                                         If YES, the income is from: &nbsp;
-                                                        <input type="radio" name="income_type" id="rent" value="rent" <?php echo ($income_type == 'rent') ? 'checked="checked"' : '';?>> &nbsp; <label for="rent">Lease/rent</label>&nbsp;
-                                                        <input type="radio" name="income_type" id="contract" value="contract" <?php echo ($income_type == 'contract') ? 'checked="checked"' : '';?>> &nbsp; <label for="contract">Contract</label> &nbsp;
-                                                        <input type="radio" name="income_type" id="mineral" value="mineral" <?php echo ($income_type == 'mineral') ? 'checked="checked"' : '';?>>&nbsp;<label for="mineral">Mineral rights</label>&nbsp;
-                                                        <input type="radio" name="income_type" id="other_income" value="other_income" <?php echo ($income_type == 'other_income') ? 'checked="checked"' : '';?>>&nbsp;<label for="other_income">Other:&nbsp;
-                                                        <input type="text" class="input_single" id="other_income_type" name="other_income_type" value="<?php echo $other_income_type;?>"></label> &nbsp;
+                                                        <input type="radio" name="income_type" id="rent" value="rent" <?php echo ($income_type == 'rent') ? 'checked="checked"' : '';?>> &nbsp; <label for="rent">Lease/rent</label>&nbsp;&nbsp;
+                                                        <input type="radio" name="income_type" id="contract" value="contract" <?php echo ($income_type == 'contract') ? 'checked="checked"' : '';?>> &nbsp; <label for="contract">Contract</label>&nbsp;&nbsp;
+                                                        <input type="radio" name="income_type" id="mineral" value="mineral" <?php echo ($income_type == 'mineral') ? 'checked="checked"' : '';?>> &nbsp; <label for="mineral">Mineral rights</label>&nbsp;&nbsp;
+                                                        <input type="radio" name="income_type" id="other_income" value="other_income" <?php echo ($income_type == 'other_income') ? 'checked="checked"' : '';?>> &nbsp; <label for="other_income">Other:&nbsp;&nbsp;
+                                                        <input type="text" class="input_single form-control" id="other_income_type" name="other_income_type" value="<?php echo $other_income_type;?>"></label> &nbsp;
                                                     </div>
                                                 </td>
                                             </tr>
@@ -1625,7 +1627,7 @@ Los Angeles, CA 90036
                                                         <input type="radio" name="property_condition" id="fair" value="fair" <?php echo ($property_condition == 'fair') ? 'checked="checked"' : '';?>> &nbsp; <label for="fair">Fair   </label> &nbsp;
                                                         <input type="radio" name="property_condition" id="poor" value="poor"<?php echo ($property_condition == 'poor') ? 'checked="checked"' : '';?>> &nbsp; <label for="poor">Poor</label> &nbsp;
                                                     </div>
-                                                    <div class="mt-2"> Please describe: <input type="text" class="input_single" id="property_condition_describe" name="property_condition_describe" value="<?php echo $property_condition_describe;?>"></div>
+                                                    <div class="mt-2"> Please describe: <input type="text" class="input_single form-control" id="property_condition_describe" name="property_condition_describe" value="<?php echo $property_condition_describe;?>"></div>
                                                     
                                                 </td>
                                             </tr>
@@ -1644,7 +1646,7 @@ Los Angeles, CA 90036
                                         <div class="row mt-2">
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="date" class="form-control" id="signature_corporate_officer_date" name="signature_corporate_officer_date" value="<?php echo $signature_corporate_officer_date;?>">
+                                                    <input type="date" style="width:100%;" class="form-control" id="signature_corporate_officer_date" name="signature_corporate_officer_date" value="<?php echo $signature_corporate_officer_date;?>">
                                                     <small class="small_label">DATE </small>
                                                          
                                                 </div>
@@ -1652,7 +1654,7 @@ Los Angeles, CA 90036
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="corporate_officer_telephone" name="corporate_officer_telephone" value="<?php echo $corporate_officer_telephone;?>">
+                                                    <input type="text" style="width:100%;" class="form-control" id="corporate_officer_telephone" name="corporate_officer_telephone" value="<?php echo $corporate_officer_telephone;?>">
                                                     <small class="small_label">TELEPHONE</small>
                                                     
                                                 </div>
@@ -1663,7 +1665,7 @@ Los Angeles, CA 90036
                                         <div class="row mt-2">
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="corporate_officer_name" name="corporate_officer_name" value="<?php echo $corporate_officer_name;?>">
+                                                    <input type="text" style="width:100%;" class="form-control" id="corporate_officer_name" name="corporate_officer_name" value="<?php echo $corporate_officer_name;?>">
                                                     <small class="small_label">TITLE  </small>
                                                    
                                                 </div>
@@ -1671,7 +1673,7 @@ Los Angeles, CA 90036
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="email" class="form-control" id="corporate_officer_email" name="corporate_officer_email" value="<?php echo $corporate_officer_email;?>">
+                                                    <input type="email" style="width:100%;" class="form-control" id="corporate_officer_email" name="corporate_officer_email" value="<?php echo $corporate_officer_email;?>">
                                                     <small class="small_label">EMAIL ADDRESS</small>
                                                     
                                                 </div>
@@ -1787,14 +1789,14 @@ Los Angeles, CA 90036
                                             <div class="col-md-4">
                                                 <div class="form-group mb-3">
                                                     <label for="" class="mb-2"><b>TenantID</b></label>
-                                                    <input type="text" class="form-control" id="tenant_id" name="tenant_id" value="<?php echo $tenant_id;?>">
+                                                    <input type="text" style="width:100%;" class="form-control" id="tenant_id" name="tenant_id" value="<?php echo $tenant_id;?>">
                                                 </div>
                                                 
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group mb-3">
                                                     <label for="" class="mb-2"><b>DocType</b></label>
-                                                    <input type="text" class="form-control" id="doc_type" name="doc_type" value="<?php echo $doc_type;?>">
+                                                    <input type="text" style="width:100%;" class="form-control" id="doc_type" name="doc_type" value="<?php echo $doc_type;?>">
                                                 </div>
                                                 
                                             </div>
