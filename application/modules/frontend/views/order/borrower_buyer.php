@@ -16,6 +16,9 @@
 		margin: 5px 0;
 	}
     input[type="radio"] { margin: 10px !important; }
+    .form-control {
+        width: 100%;
+    }
 </style>
 
 <body class="">

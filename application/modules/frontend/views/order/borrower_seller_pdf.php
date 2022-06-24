@@ -43,20 +43,20 @@
 											<div class="row">
 												<div class="col-md-4">
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $first_name;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="first_name" name="first_name" value="<?php echo $first_name;?>">
 														<small class="small_label">First Name</small>
 													</div>
 												</div>
 												<div class="col-md-4">
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="middle_name"
+														<input type="text" style='width: 100%;' class="form-control" id="middle_name"
 															name="middle_name" value="<?php echo $middle_name;?>">
 														<small class="small_label">Middle Name</small>
 													</div>
 												</div>
 												<div class="col-md-4">
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="last_name"
+														<input type="text" style='width: 100%;' class="form-control" id="last_name"
 															name="last_name" value="<?php echo $last_name;?>">
 														<small class="small_label">Last Name</small>
 													</div>
@@ -70,7 +70,7 @@
 													<div class="form-group position-relative">
 														<label for="" class="mb-2"><b>Seller 1 Preferred Phone Number
 														<span>*</span></b></label>
-														<input type="text" class="form-control" id="phone_number" name="phone_number" value="<?php echo $phone_number;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="phone_number" name="phone_number" value="<?php echo $phone_number;?>">
 													</div>
 												</div>
 												<div class="col-md-4">
@@ -133,21 +133,21 @@
 												<div class="row">
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_first_name" name="co_seller_first_name" value="<?php echo $co_seller_first_name;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="co_seller_first_name" name="co_seller_first_name" value="<?php echo $co_seller_first_name;?>">
 															<small class="small_label">First Name</small>
 														</div>
 													</div>
 													
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_middle_name" name="co_seller_middle_name" value="<?php echo $co_seller_middle_name;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="co_seller_middle_name" name="co_seller_middle_name" value="<?php echo $co_seller_middle_name;?>">
 															<small class="small_label">Middle Name</small>
 														</div>
 													</div>
 													
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_last_name" name="co_seller_last_name" value="<?php echo $co_seller_last_name;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="co_seller_last_name" name="co_seller_last_name" value="<?php echo $co_seller_last_name;?>">
 															<small class="small_label">Last Name</small>
 														</div>
 													</div>
@@ -161,7 +161,7 @@
 														<span>*</span></b></label>
 												<div class="col-md-4">
 													<div class="form-group position-relative">
-														<input type="date" class="form-control" id="co_seller_expiration_date" name="co_seller_expiration_date" value="<?php echo $co_seller_expiration_date;?>">
+														<input type="date" style='width: 100%;' class="form-control" id="co_seller_expiration_date" name="co_seller_expiration_date" value="<?php echo $co_seller_expiration_date;?>">
 														<small class="small_label">Date</small>
 													</div>
 												</div>
@@ -185,7 +185,7 @@
 											<div class="form-group mb-4 row">
 												<label for="" class="mb-2 col-md-12"><b>Seller's Social Security/Tax ID:<span>*</span></b></label>
 												<div class="col-md-4">
-													<input type="text" class="form-control" id="co_seller_ssn" name="co_seller_ssn" value="<?php echo $co_seller_ssn;?>">
+													<input type="text" style='width: 100%;' class="form-control" id="co_seller_ssn" name="co_seller_ssn" value="<?php echo $co_seller_ssn;?>">
 												</div>
 											</div>
 
@@ -205,7 +205,7 @@
 														<div class="form-group position-relative">
 															<label for="" class="mb-2"><b>Preferred Phone Number
 																	<span>*</span></b></label>
-															<input type="text" class="form-control" id="co_seller_phone_number" name="co_seller_phone_number" value="<?php echo $co_seller_phone_number;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="co_seller_phone_number" name="co_seller_phone_number" value="<?php echo $co_seller_phone_number;?>">
 														</div>
 													</div>
 													<div class="col-md-4">
@@ -275,7 +275,7 @@
 									<div class="accordion-body">
 										<div class="form-group mb-4">
 											<label for="" class="mb-2"><b>Property Address being sold: </b></label>
-											<input type="text" class="form-control" name="property_address" id="property_address" value="<?php echo $property_address;?>">
+											<input type="text" style='width: 100%;' class="form-control" name="property_address" id="property_address" value="<?php echo $property_address;?>">
 										</div>
 										<div class="form-group mb-4">
 											<label for="" class="mb-2"><b>Is the above address the correct address of
@@ -295,28 +295,26 @@
 													<label for="" class="mb-2"><b>Enter the property address being sold
 															<span>*</span> </b></label>
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="property_street_address" name="property_street_address" value="<?php echo $property_street_address;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="property_street_address" name="property_street_address" value="<?php echo $property_street_address;?>">
 														<small class="small_label">Street Address</small>
 													</div>
 												</div>
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<input type="text" class="form-control" id="property_city" name="property_city" value="<?php echo $property_city;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="property_city" name="property_city" value="<?php echo $property_city;?>">
 															<small class="small_label">City</small>
 														</div>
 													</div>
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<select class="form-control" id="property_state" name="property_state">
-																<option value="CA" selected>CA</option>
-															</select>
+															<input type="text" style='width: 100%;' class="form-control" id="property_city" name="property_city" value="CA">
 															<small class="small_label">State</small>
 														</div>
 													</div>
 												</div>
 												<div class="form-group position-relative mb-3 col-md-6">
-													<input type="text" class="form-control" id="property_zip_code" name="property_zip_code" value="<?php echo $property_zip_code;?>">
+													<input type="text" style='width: 100%;' class="form-control" id="property_zip_code" name="property_zip_code" value="<?php echo $property_zip_code;?>">
 													<small class="small_label">Zip Code</small>
 												</div>
 											</div>
@@ -339,28 +337,26 @@
 													<label for="" class="mb-2"><b>Current Address
 															<span>*</span> </b></label>
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="current_street_address" name="current_street_address" value="<?php echo $current_street_address;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="current_street_address" name="current_street_address" value="<?php echo $current_street_address;?>">
 														<small class="small_label">Street Address</small>
 													</div>
 												</div>
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<input type="text" class="form-control" id="current_city" name="current_city" value="<?php echo $current_city;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="current_city" name="current_city" value="<?php echo $current_city;?>">
 															<small class="small_label">City</small>
 														</div>
 													</div>
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<select class="form-control" id="current_state" name="current_state">
-																<option value="CA" selected>CA</option>
-															</select>
+															<input type="text" style='width: 100%;' class="form-control" id="property_city" name="property_city" value="CA">
 															<small class="small_label">State</small>
 														</div>
 													</div>
 												</div>
 												<div class="form-group position-relative mb-3 col-md-6">
-													<input type="text" class="form-control" id="current_zip_code" name="current_zip_code" value="<?php echo $current_zip_code;?>">
+													<input type="text" style='width: 100%;' class="form-control" id="current_zip_code" name="current_zip_code" value="<?php echo $current_zip_code;?>">
 													<small class="small_label">Zip Code</small>
 												</div>
 											</div>
@@ -382,28 +378,26 @@
 												<div class="form-group position-relative mb-3">
 													<label for="" class="mb-2"><b>Forwarding Address<span>*</span> </b></label>
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="forwarding_street_address" name="forwarding_street_address" value="<?php echo $forwarding_street_address;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="forwarding_street_address" name="forwarding_street_address" value="<?php echo $forwarding_street_address;?>">
 														<small class="small_label">Street Address</small>
 													</div>
 												</div>
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<input type="text" class="form-control" id="forwarding_city" name="forwarding_city" value="<?php echo $forwarding_city;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="forwarding_city" name="forwarding_city" value="<?php echo $forwarding_city;?>">
 															<small class="small_label">City</small>
 														</div>
 													</div>
 													<div class="col-md-6">
 														<div class="form-group position-relative mb-3">
-															<select class="form-control" id="forwarding_state" name="forwarding_state">
-																<option value="CA" selected>CA</option>
-															</select>
+															<input type="text" style='width: 100%;' class="form-control" id="property_city" name="property_city" value="CA">
 															<small class="small_label">State</small>
 														</div>
 													</div>
 												</div>
 												<div class="form-group position-relative mb-3 col-md-6">
-													<input type="text" class="form-control" id="forwarding_zip_code" name="forwarding_zip_code" value="<?php echo $forwarding_zip_code;?>">
+													<input type="text" style='width: 100%;' class="form-control" id="forwarding_zip_code" name="forwarding_zip_code" value="<?php echo $forwarding_zip_code;?>">
 													<small class="small_label">Zip Code</small>
 												</div>
 											</div>
@@ -487,19 +481,19 @@
 												<div class="row">
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_first_name" name="agent_first_name" value="<?php echo $agent_first_name;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="agent_first_name" name="agent_first_name" value="<?php echo $agent_first_name;?>">
 															<small class="small_label">First Name</small>
 														</div>
 													</div>
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_middle_name" name="agent_middle_name" value="<?php echo $agent_middle_name;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="agent_middle_name" name="agent_middle_name" value="<?php echo $agent_middle_name;?>">
 															<small class="small_label">Middle Name</small>
 														</div>
 													</div>
 													<div class="col-md-4">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_last_name" name="agent_last_name" value="<?php echo $agent_last_name;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="agent_last_name" name="agent_last_name" value="<?php echo $agent_last_name;?>">
 															<small class="small_label">Last Name</small>
 														</div>
 													</div>
@@ -509,7 +503,7 @@
 											<div class="form-group row mb-4">
 												<label for="" class="mb-2 col-12"><b>Agent's Company:<span>*</span></b></label>
 												<div class="col-md-8">
-													<input type="text" class="form-control" id="agent_company" name="agent_company" value="<?php echo $agent_company;?>">
+													<input type="text" style='width: 100%;' class="form-control" id="agent_company" name="agent_company" value="<?php echo $agent_company;?>">
 												</div>
 											</div>
 
@@ -517,7 +511,7 @@
 												<div class="form-group position-relative mb-3">
 													<label for="" class="mb-2"><b>Agent's Company Address </b></label>
 													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="agent_company_address" name="agent_company_address" value="<?php echo $agent_company_address;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="agent_company_address" name="agent_company_address" value="<?php echo $agent_company_address;?>">
 														<small class="small_label">Street Address</small>
 													</div>
 												</div>
@@ -525,22 +519,20 @@
 												<div class="row mb-3">
 													<div class="col-md-6">
 														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_company_city" name="agent_company_city" value="<?php echo $agent_company_city;?>"> 
+															<input type="text" style='width: 100%;' class="form-control" id="agent_company_city" name="agent_company_city" value="<?php echo $agent_company_city;?>"> 
 															<small class="small_label">City</small>
 														</div>
 													</div>
 													
 													<div class="col-md-6">
 														<div class="form-group position-relative">
-															<select name="state" class="form-control" id="agent_company_state" name="agent_company_state">
-                                                                <option value="CA" selected>CA</option>
-															</select>
+															<input type="text" style='width: 100%;' class="form-control" id="property_city" name="property_city" value="CA">
 															<small class="small_label">State</small>
 														</div>
 													</div>
 												</div>
 												<div class="form-group position-relative col-md-6">
-													<input type="text" class="form-control" id="agent_company_zip_code" name="agent_company_zip_code" value="<?php echo $agent_company_zip_code;?>">
+													<input type="text" style='width: 100%;' class="form-control" id="agent_company_zip_code" name="agent_company_zip_code" value="<?php echo $agent_company_zip_code;?>">
 													<small class="small_label">Zip Code</small>
 												</div>
 											</div>
@@ -549,20 +541,20 @@
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for=""><b>Amount/Percent of Commission:</b></label>
-														<input type="text" class="form-control" id="amount_percent_commission" name="amount_percent_commission" value="<?php echo $amount_percent_commission;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="amount_percent_commission" name="amount_percent_commission" value="<?php echo $amount_percent_commission;?>">
 													</div>
 												</div>
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for=""><b>Amount of Any Deductions from Commission:
 															</b></label>
-														<input type="text" class="form-control" id="amount_deduction" name="amount_deduction" value="<?php echo $amount_deduction;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="amount_deduction" name="amount_deduction" value="<?php echo $amount_deduction;?>">
 													</div>
 												</div>
 												<div class="col-md-6 mb-3">
 													<div class="form-group position-relative">
 														<label for=""><b>Agent Phone</b></label>
-														<input type="text" class="form-control"  id="agent_phone" name="agent_phone" value="<?php echo $agent_phone;?>">
+														<input type="text" style='width: 100%;' class="form-control"  id="agent_phone" name="agent_phone" value="<?php echo $agent_phone;?>">
 														<small class="small_label">Cell Phone or Email is required</small>
 													</div>
 												</div>
@@ -571,7 +563,7 @@
 											<div class="form-group position-relative row mb-3">
 												<label for="" class="mb-2 col-12"><b>Email<span></span></b></label>
 												<div class="form-group position-relative col-md-8">
-													<input type="text" class="form-control" id="agent_email" name="agent_email" value="<?php echo $agent_email;?>">
+													<input type="text" style='width: 100%;' class="form-control" id="agent_email" name="agent_email" value="<?php echo $agent_email;?>">
 													<small class="small_label">Cell Phone or Email is required</small>
 												</div>
 											</div>
@@ -582,20 +574,20 @@
 											<label for="" class="mb-2"><b>Seller Will be Paying and providing invoices for</b></label>
 											<ul class="list-unstyled">
 												<li>
-                                                    &nbsp;<input type="checkbox" id="repair" value="repairs" name="seller_invoices[]" <?php echo (in_array('repairs', $seller_invoices)) ? 'checked="checked"' : '';?>>
+                                                    &nbsp;<input class="form-check-input" type="checkbox" id="repair" value="repairs" name="repairs" <?php echo (in_array('repairs', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													&nbsp;&nbsp;<label for="repair">Repairs</label>
 												</li>
 												<li>
-                                                    &nbsp;<input type="checkbox" id="warranty" value="warranty" name="seller_invoices[]" <?php echo (in_array('warranty', $seller_invoices)) ? 'checked="checked"' : '';?>>
+                                                    &nbsp;<input class="form-check-input" type="checkbox" id="warranty" value="warranty" name="warranty" <?php echo (in_array('warranty', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													&nbsp;&nbsp;<label for="warranty">Home Warranty</label>
 												</li>
 												<li>
-                                                    &nbsp;<input type="checkbox" id="other" value="other" name="seller_invoices[]" <?php echo (in_array('other', $seller_invoices)) ? 'checked="checked"' : '';?>>
+                                                    &nbsp;<input class="form-check-input" type="checkbox" id="other" value="other" name="other" <?php echo (in_array('other', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													&nbsp;&nbsp;<label for="other">Other</label>
 												</li>
 												<li>
-                                                    &nbsp;<input type="checkbox" id="none" value="none" name="seller_invoices[]" <?php echo (in_array('none', $seller_invoices)) ? 'checked="checked"' : '';?>>
-													&nbsp;&nbsp;<label for="none"> None</label>
+                                                    &nbsp;<input class="form-check-input" type="checkbox" id="none" value="none" name="none" <?php echo (in_array('none', $seller_invoices)) ? 'checked="checked"' : '';?>>
+													&nbsp;&nbsp;<label for="none">None1</label>
 												</li>
 											</ul>
 											<div class="seller_invoices_files d-none mb-4">
@@ -663,26 +655,26 @@
 											</div>
 											<div class="form-group mb-4">
 												<label for="" class="mb-2"><b>Lender/Mortgage Holder:</b></label>
-												<input type="text" class="form-control" id="mortgage_holder" name="mortgage_holder" value="<?php echo $mortgage_holder;?>">
+												<input type="text" style='width: 100%;' class="form-control" id="mortgage_holder" name="mortgage_holder" value="<?php echo $mortgage_holder;?>">
 											</div>
 											
 											<div class="row">
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Original Loan Amount:</b></label>
-														<input type="text" class="form-control" id="loan_amount" name="loan_amount" value="<?php echo $loan_amount;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="loan_amount" name="loan_amount" value="<?php echo $loan_amount;?>">
 													</div>
 												</div>
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Lender/Mortgage Holder Phone:</b></label>
-														<input type="text" class="form-control" id="mortgage_phone" name="mortgage_phone" value="<?php echo $propmortgage_phoneerty_address;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="mortgage_phone" name="mortgage_phone" value="<?php echo $propmortgage_phoneerty_address;?>">
 													</div>
 												</div>
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Loan Number:</b></label>
-														<input type="text" class="form-control" id="loan_number" name="loan_number" value="<?php echo $loan_number;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="loan_number" name="loan_number" value="<?php echo $loan_number;?>">
 													</div>
 													
 												</div>
@@ -690,14 +682,14 @@
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Approximate Loan
 																Balance:</b></label>
-														<input type="text" class="form-control" id="loan_balance" name="loan_balance" value="<?php echo $loan_balance;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="loan_balance" name="loan_balance" value="<?php echo $loan_balance;?>">
 													</div>
 													
 												</div>
 											</div>
 											<div class="form-group mb-4">
 												<label for="" class="mb-2"><b>Account Holder's Name:</b></label>
-												<input type="text" class="form-control" id="account_holder_name" name="account_holder_name" value="<?php echo $account_holder_name;?>">
+												<input type="text" style='width: 100%;' class="form-control" id="account_holder_name" name="account_holder_name" value="<?php echo $account_holder_name;?>">
 												
 											</div>
 									        
@@ -747,28 +739,28 @@
 													</div>
 													<div class="form-group mb-4">
 														<label for="" class="mb-2"><b>2nd Lender/Mortgage Holder:</b></label>
-														<input type="text" class="form-control" id="second_mortgage_holder" name="second_mortgage_holder" value="<?php echo $second_mortgage_holder;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="second_mortgage_holder" name="second_mortgage_holder" value="<?php echo $second_mortgage_holder;?>">
 														
 													</div>
 													<div class="row">
 														<div class="col-md-6 mb-4">
 															<div class="form-group">
 																<label for="" class="mb-2"><b>2nd Original Loan Amount:</b></label>
-																<input type="text" class="form-control" id="second_loan_amount" name="second_loan_amount" value="<?php echo $second_loan_amount;?>">
+																<input type="text" style='width: 100%;' class="form-control" id="second_loan_amount" name="second_loan_amount" value="<?php echo $second_loan_amount;?>">
 															</div>
 															
 														</div>
 														<div class="col-md-6 mb-4">
 															<div class="form-group">
 																<label for="" class="mb-2"><b>2nd Lender/Mortgage Holder Phone:</b></label>
-																<input type="text" class="form-control" id="second_mortgage_phone" name="second_mortgage_phone" value="<?php echo $second_mortgage_phone;?>">
+																<input type="text" style='width: 100%;' class="form-control" id="second_mortgage_phone" name="second_mortgage_phone" value="<?php echo $second_mortgage_phone;?>">
 															</div>
 															
 														</div>
 														<div class="col-md-6 mb-4">
 															<div class="form-group">
 																<label for="" class="mb-2"><b>2nd Loan Number:</b></label>
-																<input type="text" class="form-control" id="second_loan_number" name="second_loan_number" value="<?php echo $second_loan_number;?>">
+																<input type="text" style='width: 100%;' class="form-control" id="second_loan_number" name="second_loan_number" value="<?php echo $second_loan_number;?>">
 															</div>
 															
 														</div>
@@ -776,14 +768,14 @@
 															<div class="form-group">
 																<label for="" class="mb-2"><b> 2nd Approximate Loan
 																		Balance:</b></label>
-																<input type="text" class="form-control" id="second_loan_balance" name="second_loan_balance" value="<?php echo $second_loan_balance;?>">
+																<input type="text" style='width: 100%;' class="form-control" id="second_loan_balance" name="second_loan_balance" value="<?php echo $second_loan_balance;?>">
 															</div>
 															
 														</div>
 													</div>
 													<div class="form-group mb-4">
 														<label for="" class="mb-2"><b>2nd Account Holder's Name:</b></label>
-														<input type="text" class="form-control" id="second_account_holder_name" name="second_account_holder_name" value="<?php echo $second_account_holder_name;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="second_account_holder_name" name="second_account_holder_name" value="<?php echo $second_account_holder_name;?>">
 														
 													</div>
 												</div>
@@ -1202,14 +1194,14 @@
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Firm Name:</b></label>
-														<input type="text" class="form-control" id="firm_name" name="firm_name" value="<?php echo $firm_name;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="firm_name" name="firm_name" value="<?php echo $firm_name;?>">
 													</div>
 													
 												</div>
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Phone Number:</b></label>
-														<input type="text" class="form-control" id="firm_phone_number" name="firm_phone_number" value="<?php echo $firm_phone_number;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="firm_phone_number" name="firm_phone_number" value="<?php echo $firm_phone_number;?>">
 													</div>
 													
 												</div>
@@ -1218,21 +1210,21 @@
 												<div class="col-md-4 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Attorney Name:</b></label>
-														<input type="text" class="form-control" id="attorney_name" name="attorney_name" value="<?php echo $attorney_name;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="attorney_name" name="attorney_name" value="<?php echo $attorney_name;?>">
 													</div>
 													
 												</div>
 												<div class="col-md-4 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Attorney Phone No.:</b></label>
-														<input type="text" class="form-control" id="attorney_phone_number" name="attorney_phone_number" value="<?php echo $attorney_phone_number;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="attorney_phone_number" name="attorney_phone_number" value="<?php echo $attorney_phone_number;?>">
 													</div>
 													
 												</div>
 												<div class="col-md-4 mb-4">
 													<div class="form-group position-relative">
 														<label for="" class="mb-2"><b>Attorney Email:</b></label>
-														<input type="text" class="form-control" id="attorney_email" name="attorney_email" value="<?php echo $attorney_email;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="attorney_email" name="attorney_email" value="<?php echo $attorney_email;?>">
 														<small class="small_label">example@example.com</small>
 													</div>
 													
@@ -1422,14 +1414,14 @@
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for="" class="mb-2">Name of Management Company:</label>
-														<input type="text" class="form-control" id="hoa_management_company_name" name="hoa_management_company_name" value="<?php echo $hoa_management_company_name;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="hoa_management_company_name" name="hoa_management_company_name" value="<?php echo $hoa_management_company_name;?>">
 													</div>
 													
 												</div>
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for="" class="mb-2">Contact Person:</label>
-														<input type="text" class="form-control" id="hoa_contact_person" name="hoa_contact_person" value="<?php echo $hoa_contact_person;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="hoa_contact_person" name="hoa_contact_person" value="<?php echo $hoa_contact_person;?>">
 													</div>
 													
 												</div>
@@ -1438,7 +1430,7 @@
 												<div class="col-md-6 mb-3">
 													<div class="form-group position-relative">
 														<label for="" class="mb-2">Email:</label>
-														<input type="text" class="form-control" id="hoa_email" name="hoa_email" value="<?php echo $hoa_email;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="hoa_email" name="hoa_email" value="<?php echo $hoa_email;?>">
 														<small class="small_label">example@example.com</small>
 													</div>
 													
@@ -1446,7 +1438,7 @@
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for="" class="mb-2">Phone:</label>
-														<input type="text" class="form-control" id="hoa_phone" name="hoa_phone" value="<?php echo $hoa_phone;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="hoa_phone" name="hoa_phone" value="<?php echo $hoa_phone;?>">
 													</div>
 													
 												</div>
@@ -1455,7 +1447,7 @@
 												<div class="col-md-6 mb-3">
 													<div class="form-group">
 														<label for="" class="mb-2">HOA Dues:</label>
-														<input type="text" class="form-control" id="hoa_dues" name="hoa_dues" value="<?php echo $hoa_dues;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="hoa_dues" name="hoa_dues" value="<?php echo $hoa_dues;?>">
 													</div>
 													
 												</div>
@@ -1473,7 +1465,7 @@
 															</li>
 															<li>
                                                                 &nbsp;<input type="radio" id="Semi-Annually" value="semi-annually" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'semi-annually') ? 'checked="checked"' : '';?>>
-																<label for="Semi-Annually">Semi-Annually</label>
+																&nbsp;&nbsp;<label for="Semi-Annually">Semi-Annually</label>
 															</li>
 															<li>
                                                                 &nbsp;<input type="radio" id="Annually" value="annually" name="hoa_dues_per" <?php echo ($hoa_dues_per == 'annually') ? 'checked="checked"' : '';?>>
@@ -1486,7 +1478,7 @@
 											</div>
 											<div class="form-group mb-3">
 												<label for="" class="mb-2">Notes:</label>
-												<input type="text" class="form-control" id="hoa_notes" name="hoa_notes" value="<?php echo $hoa_notes;?>">
+												<input type="text" style='width: 100%;' class="form-control" id="hoa_notes" name="hoa_notes" value="<?php echo $hoa_notes;?>">
 												
 											</div>
 											
@@ -1513,14 +1505,14 @@
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label for="" class="mb-2">Name of 2nd Management Company:</label>
-															<input type="text" class="form-control" id="second_hoa_management_company_name" name="second_hoa_management_company_name" value="<?php echo $second_hoa_management_company_name;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="second_hoa_management_company_name" name="second_hoa_management_company_name" value="<?php echo $second_hoa_management_company_name;?>">
 														</div>
 														
 													</div>
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label for="" class="mb-2">Contact Person:</label>
-															<input type="text" class="form-control" id="second_hoa_contact_person" name="second_hoa_contact_person" value="<?php echo $second_hoa_contact_person;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="second_hoa_contact_person" name="second_hoa_contact_person" value="<?php echo $second_hoa_contact_person;?>">
 														</div>
 														
 													</div>
@@ -1529,7 +1521,7 @@
 													<div class="col-md-6 mb-3">
 														<div class="form-group position-relative">
 															<label for="" class="mb-2">Email:</label>
-															<input type="text" class="form-control" id="second_hoa_email" name="second_hoa_email" value="<?php echo $second_hoa_email;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="second_hoa_email" name="second_hoa_email" value="<?php echo $second_hoa_email;?>">
 															<small class="small_label">example@example.com</small>
 														</div>
 														
@@ -1537,7 +1529,7 @@
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label for="" class="mb-2">Phone:</label>
-															<input type="text" class="form-control" id="second_hoa_phone" name="second_hoa_phone" value="<?php echo $second_hoa_phone;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="second_hoa_phone" name="second_hoa_phone" value="<?php echo $second_hoa_phone;?>">
 														</div>
 														
 													</div>
@@ -1546,7 +1538,7 @@
 													<div class="col-md-6 mb-3">
 														<div class="form-group">
 															<label for="" class="mb-2">2nd HOA Dues:</label>
-															<input type="text" class="form-control" id="second_hoa_dues" name="second_hoa_dues" value="<?php echo $second_hoa_dues;?>">
+															<input type="text" style='width: 100%;' class="form-control" id="second_hoa_dues" name="second_hoa_dues" value="<?php echo $second_hoa_dues;?>">
 														</div>
 														
 													</div>
@@ -1577,7 +1569,7 @@
 												</div>
 												<div class="form-group mb-3">
 													<label for="" class="mb-2">2nd Notes:</label>
-													<input type="text" class="form-control" id="second_hoa_notes" name="second_hoa_notes" value="<?php echo $second_hoa_notes;?>">
+													<input type="text" style='width: 100%;' class="form-control" id="second_hoa_notes" name="second_hoa_notes" value="<?php echo $second_hoa_notes;?>">
 													
 												</div>
 												
