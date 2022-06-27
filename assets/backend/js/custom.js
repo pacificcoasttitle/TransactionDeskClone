@@ -3433,6 +3433,25 @@ $(document).ready(function () {
 
 
 	}
+	if($('#add-edit-role-form').length) {
+		$('#addRoleModal').on('hidden.bs.modal', function () {
+			$('#add-edit-role-form').trigger("reset");
+			$('#formId').val("");
+			$("#add-edit-role-form label.error").remove();
+			$("#add-edit-role-form.error").removeClass("error");
+		});
+
+		$('#add-edit-role-form').validate({ 
+            rules: {
+                
+                title:"required",
+            },
+            submitHandler: function(form) {
+                form.submit();
+                
+            }
+        }); 
+	}
 });
 
 if(('.threshold-remove-btn').length) {
