@@ -18,6 +18,9 @@
 	.error2 {
 		margin-top: 10px;
 	}
+	.form-control {
+        width: 100%;
+    }
 </style>
 
 <body class="">

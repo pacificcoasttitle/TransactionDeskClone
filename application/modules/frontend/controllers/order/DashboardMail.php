@@ -2122,9 +2122,6 @@ class DashboardMail extends MX_Controller {
             $orderDetails['secondary_owner_name'] = '';
         }
 
-        //echo "<pre>";
-        //print_r($orderDetails);exit;
-
         if (!empty($orderDetails['borrower'])) {
             $seller_owner_names = explode(' ', $orderDetails['borrower']);
             if(count($seller_owner_names) == 3) {
@@ -2314,15 +2311,14 @@ class DashboardMail extends MX_Controller {
             $pdfData['apn'] = $data['orderDetails']['apn'];
 
             $this->load->model('order/document');
-            $borrowerDocumentCount = $this->document->countBorrowerDocument($data['orderDetails']['id']);
-            $document_name = "borrower_seller_".$borrowerDocumentCount."_".$order[0]['file_id'].".pdf";
+            $document_name = "borrower_seller_".date('YmdHis')."_".$order[0]['file_id'].".pdf";
             if (!is_dir('uploads/borrower')) {
                 mkdir('./uploads/borrower', 0777, TRUE);
             }
             $pdfFilePath = './uploads/borrower/'.$document_name;
 
             try {
-                //ob_clean(); 
+                ob_clean(); 
                 $mpdf = new \Mpdf\Mpdf();
                 ini_set("pcre.backtrack_limit", "5000000");
                 $html = $this->load->view('order/borrower_seller_pdf', $pdfData, true);
@@ -2334,7 +2330,7 @@ class DashboardMail extends MX_Controller {
                 $mpdf->WriteHTML($stylesheet2, 1);
                 $mpdf->WriteHTML($html,2);
                 $mpdf->Output($pdfFilePath,'F');
-                //ob_end_flush();
+                ob_end_flush();
             } catch (\Mpdf\MpdfException $e) {
                 echo $e->getMessage();
             }
@@ -2638,26 +2634,26 @@ class DashboardMail extends MX_Controller {
             
             $this->load->model('order/document');
             $borrowerDocumentCount = $this->document->countBorrowerDocument($data['orderDetails']['id']);
-            $document_name = "borrower_buyer_".$borrowerDocumentCount."_".$order[0]['file_id'].".pdf";
+            $document_name = "borrower_buyer_".date('YmdHis')."_".$order[0]['file_id'].".pdf";
             if (!is_dir('uploads/borrower')) {
                 mkdir('./uploads/borrower', 0777, TRUE);
             }
             $pdfFilePath = './uploads/borrower/'.$document_name;
 
             try {
-                //ob_clean(); 
+                ob_clean(); 
                 $mpdf = new \Mpdf\Mpdf();
                 ini_set("pcre.backtrack_limit", "5000000");
                 $html = $this->load->view('order/borrower_buyer_pdf', $pdfData, true);
                 $stylesheet = file_get_contents('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200&display=swap');
                 $mpdf->WriteHTML($stylesheet, 1);
-                //$stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
-                //$mpdf->WriteHTML($stylesheet1, 1);
+                $stylesheet1 = file_get_contents('assets/frontend/css/buyer-seller-package/bootstrap.min.css');
+                $mpdf->WriteHTML($stylesheet1, 1);
                 $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
                 $mpdf->WriteHTML($stylesheet2, 1);
                 $mpdf->WriteHTML($html,2);
                 $mpdf->Output($pdfFilePath,'F');
-                //ob_end_flush();
+                ob_end_flush();
             } catch (\Mpdf\MpdfException $e) { 
                 echo $e->getMessage();
             }
