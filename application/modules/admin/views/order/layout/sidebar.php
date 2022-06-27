@@ -99,6 +99,11 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
 			<span>Settings</span>
         </a>
         <div class="dropdown-menu" aria-labelledby="li_settings" id="li_settings_list">
+			<?php if($role_id == 1) : ?>
+				<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/roles') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/roles'; ?>">
+        		User Roles
+			</a>
+			<?php endif; ?>
         	<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/credentials-check') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/credentials-check'; ?>">
         		Credentials Check
 			</a>
