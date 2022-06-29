@@ -175,6 +175,7 @@ class Sales extends MX_Controller {
                         'sales_rep_premium' => $_POST['sales_rep_premium'],
                         'is_password_updated' => 1,
                         'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
+						'commission_draw_value' => $this->input->post('commission_draw') ? $this->input->post('commission_draw') : 0,
 						
                     );
 
@@ -187,7 +188,7 @@ class Sales extends MX_Controller {
 							$this->load->model('order/underwriter_user_model');
 							$this->load->model('order/underwriter_user_threshold_model');
 							$call_procedure = FALSE;
-
+							
 							$commission_array = $this->input->post('commission');
 							foreach($commission_array as $product_key=>$product_type_array) {
 								foreach($product_type_array as $underwriter_key=>$product_underwriter) {
@@ -412,6 +413,7 @@ class Sales extends MX_Controller {
                             'sales_rep_premium' => $_POST['sales_rep_premium'],
                             'is_password_updated' => 1,
                             'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
+							'commission_draw_value' => $this->input->post('commission_draw') ? $this->input->post('commission_draw') : 0,
 							
                         );
 						// var_dump($salesRepData);die;
@@ -429,6 +431,9 @@ class Sales extends MX_Controller {
 								//$existing_underwriter;
 	
 								$call_procedure = FALSE;
+								if($sales_rep_info['commission_draw_value'] != $salesRepData['commission_draw_value']) {
+									$call_procedure = TRUE;
+								}
 								
 								$existing_underwriter_array = array();
 								$commission_array = $this->input->post('commission');
