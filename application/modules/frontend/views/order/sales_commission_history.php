@@ -91,6 +91,7 @@
 																	<?php
 																	$details_json = $commissionRecord['commission_data']->commission_details;
 																	$details = array();
+																	$draw_amount = $commission_sub_total= 0;
 																	if(!empty( $details_json) && json_decode( $details_json)) {
 		
 																		$details = json_decode($details_json);
@@ -108,11 +109,17 @@
 																		$detail = json_decode($detail_json);
 																		$prod_type = $detail->prod_type;
 																		$underwriter = $detail->underwriter;
-																		if(isset($details_arr[$prod_type][$underwriter])) {
-																			$details_arr[$prod_type][$underwriter] += $detail->commisison;
+																		if( in_array($prod_type,$prod_array)) {
+																			
+																			if(isset($details_arr[$prod_type][$underwriter])) {
+																				$details_arr[$prod_type][$underwriter] += $detail->commisison;
+																			}
+																			else {
+																				$details_arr[$prod_type][$underwriter] = $detail->commisison;
+																			}
 																		}
-																		else {
-																			$details_arr[$prod_type][$underwriter] = $detail->commisison;
+																		elseif($prod_type == 'draw') {
+																			$draw_amount = $detail->commisison;
 																		}
 																	}
 																	?>
@@ -144,7 +151,9 @@
 																					</tr>
 																					
 																				<?php
-																					if(++$comm_i === $numItems) : ?>
+																					if(++$comm_i === $numItems) : 
+																						$commission_sub_total += $total_commission_val;
+																					?>
 																					<tr class="custom__total">
 																						<th class="text-left">Total Commission</th>
 																						<td class="text-right">$ <?php echo number_format($total_commission_val,2); ?></td>
@@ -166,6 +175,18 @@
 																		endforeach;
 																		?>
 		
+																	</tr>
+																	<tr class="custom__total">
+																		<th class="text-left">Commission SubTotal : ( <?= implode(' + ',array_map("ucwords", PRODUCT_TYPE)); ?> )</th>
+																		<td class="text-right">$ <?php echo number_format($commission_sub_total,2); ?></td>
+																	</tr>
+																	<tr class="custom__total">
+																		<th class="text-left">Draw Amount</th>
+																		<td class="text-right">- $ <?php echo number_format(abs($draw_amount),2); ?></td>
+																	</tr>
+																	<tr class="custom__total">
+																		<th class="text-left">Total Commission</th>
+																		<td class="text-right"> $ <?php echo number_format(($commission_sub_total - abs($draw_amount)),2); ?></td>
 																	</tr>
 																	
 		

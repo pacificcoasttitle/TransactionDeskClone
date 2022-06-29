@@ -348,6 +348,16 @@
 						</div>
 						<div id="commissionInfo" class="collapse" role="tabpanel" aria-labelledby="commissionTab" data-parent="#accordionEx">
 							<div class="card-body">
+								<div class="card">
+									<div class="card-body">
+										<div class="form-group row" >
+											<label for="commission-draw" class="col-sm-4 col-form-label">Draw amount</label>
+											<div class="col-sm-8">
+												<input  step="01" min="0"  type="number" class="form-control" name="commission_draw" id="commission-draw" class="form-control" value="<?php echo set_value('commission_draw',$sales_rep_info['commission_draw_value']);?>" />
+											</div>
+										</div>
+									</div>
+								</div>
 							<?php
 								foreach($product_types as $product_type): 
 								?>
