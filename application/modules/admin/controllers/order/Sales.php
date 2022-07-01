@@ -188,7 +188,7 @@ class Sales extends MX_Controller {
 							$this->load->model('order/underwriter_user_model');
 							$this->load->model('order/underwriter_user_threshold_model');
 							$call_procedure = FALSE;
-							
+
 							$commission_array = $this->input->post('commission');
 							foreach($commission_array as $product_key=>$product_type_array) {
 								foreach($product_type_array as $underwriter_key=>$product_underwriter) {
@@ -242,13 +242,61 @@ class Sales extends MX_Controller {
 									}
 								}
 							}
-								if($call_procedure) {
-									$stored_pocedure = "CALL calculate_commission(?)";
-									$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$insert));
-								}
-						}
 
-						
+							//Escrow commission
+							$escrow_commission_array = $this->input->post('escrow_commission');
+							$escrow_commission_type = $escrow_commission_array['type'];
+							if($escrow_commission_type == 'fix') {
+								$fix_commission = $escrow_commission_array['fix_commission'];
+								if(!empty($fix_commission)) {
+									$underwriter_data =[
+										'user_id'=>$insert,
+										'fix_commission'=>$fix_commission,
+										'is_escrow'=>1
+									];
+
+									$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
+									$call_procedure = TRUE;
+								}
+							}
+							elseif($escrow_commission_type == 'override') {
+								
+								$underwriter_data =[
+									'user_id'=>$insert,
+									'allow_threshold'=>1,
+									'is_escrow'=>1
+								];
+								
+								$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
+								
+								$threshold_commissions = $escrow_commission_array['threshold_commission'];
+								$threshold_amount_min = $escrow_commission_array['threshold_amount_min'];
+								$threshold_amount_max = $escrow_commission_array['threshold_amount_max'];
+
+								foreach($threshold_commissions as $commission_key=>$threshold_commission) {
+									
+
+									if($threshold_commission >= 0 && isset($threshold_amount_min[$commission_key])  && isset($threshold_amount_max[$commission_key])) {
+										
+										$underwriter_threshold_data =[
+											'underwriter_users_id'=>$underwriter_user_id,
+											'threshold_amount_min'=>$threshold_amount_min[$commission_key],
+											'threshold_amount_max'=>$threshold_amount_max[$commission_key],
+											'threshold_commission'=>$threshold_commission,
+										];
+
+										$this->underwriter_user_threshold_model->insert($underwriter_threshold_data);
+										$call_procedure = TRUE;
+									}
+								}
+							}
+
+							//Escrow commission
+							if($call_procedure) {
+								$stored_pocedure = "CALL calculate_commission(?)";
+								$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$insert));
+							}
+						}
 							$flash_data['success'] = 'Sales Rep added successfully.';
 							$this->session->set_flashdata($flash_data);
 							redirect(base_url('order/admin/add-sales-rep'));
@@ -436,10 +484,14 @@ class Sales extends MX_Controller {
 								}
 								
 								$existing_underwriter_array = array();
+								$existing_escrow = array();
 								$commission_array = $this->input->post('commission');
 								foreach($existing_underwriter as $existing_underwriter_obj) {
 									if($existing_underwriter_obj->underwriter_tier_id) {
 										$existing_underwriter_array[$existing_underwriter_obj->underwriter_tier_id] = $existing_underwriter_obj;
+									}
+									elseif($existing_underwriter_obj->is_escrow) {
+										$existing_escrow = $existing_underwriter_obj;
 									}
 								}
 								foreach($commission_array as $product_key=>$product_type_array) {
@@ -533,6 +585,94 @@ class Sales extends MX_Controller {
 										}
 									}
 								}
+
+								//Escrow commission
+								$escrow_commission_array = $this->input->post('escrow_commission');
+								
+								$existing_underwriter_val = null;
+								if(!empty($existing_escrow)) {
+									$existing_underwriter_val = $existing_escrow;
+									$this->underwriter_user_threshold_model->delete_by('underwriter_users_id',$existing_underwriter_val->id);
+								}
+								if($escrow_commission_array['type'] == 'global') {
+									if($existing_underwriter_val) {
+										$this->underwriter_user_model->delete($existing_underwriter_val->id);
+										$call_procedure = TRUE;
+									}
+								}
+								elseif($escrow_commission_array['type'] == 'fix') {
+									$fix_commission = $escrow_commission_array['fix_commission'];
+									if(!empty($fix_commission)) {
+										if($existing_underwriter_val) {
+											$underwriter_user_id = $existing_underwriter_val->id;
+											$underwriter_data =[
+												'fix_commission'=>$fix_commission,
+												'allow_threshold'=>0,
+											];
+											$this->underwriter_user_model->update($underwriter_user_id,$underwriter_data);
+											if($existing_underwriter_val->fix_commission != $fix_commission || $existing_underwriter_val->allow_threshold != 0) {
+												$call_procedure = TRUE;
+											}
+
+										}
+										else {
+
+											$underwriter_data =[
+												'user_id'=>$id,
+												'fix_commission'=>$fix_commission,
+												'is_escrow'=>1
+											];
+
+											$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
+											$call_procedure = TRUE;
+										}
+									}
+								}
+								elseif($escrow_commission_array['type'] == 'override') {
+
+									if($existing_underwriter_val) {
+										$underwriter_user_id = $existing_underwriter_val->id;
+										$underwriter_data =[
+											'fix_commission'=>0,
+											'allow_threshold'=>1,
+										];
+										$this->underwriter_user_model->update($underwriter_user_id,$underwriter_data);
+										
+
+									}
+									else {
+
+										$underwriter_data =[
+											'user_id'=>$id,
+											'allow_threshold'=>1,
+											'is_escrow'=>1
+										];
+										
+										$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
+									}
+									
+									$threshold_commissions = $escrow_commission_array['threshold_commission'];
+									$threshold_amount_min = $escrow_commission_array['threshold_amount_min'];
+									$threshold_amount_max = $escrow_commission_array['threshold_amount_max'];
+
+									foreach($threshold_commissions as $commission_key=>$threshold_commission) {
+										if($threshold_commission >= 0 && isset($threshold_amount_min[$commission_key])  && isset($threshold_amount_max[$commission_key])) {
+											$underwriter_threshold_data =[
+												'underwriter_users_id'=>$underwriter_user_id,
+												'threshold_amount_min'=>$threshold_amount_min[$commission_key],
+												'threshold_amount_max'=>$threshold_amount_max[$commission_key],
+												'threshold_commission'=>$threshold_commission,
+											];
+
+											$this->underwriter_user_threshold_model->insert($underwriter_threshold_data);
+										}
+									}
+
+									$call_procedure = TRUE;
+
+
+								}
+								//Escrow commission
 	
 								if($call_procedure) {
 									$stored_pocedure = "CALL calculate_commission(?)";
@@ -594,9 +734,13 @@ class Sales extends MX_Controller {
 		$data['commission_types'] = $this->commission_types;
 		
 		$data['existing_underwriter'] = array();
+		$data['escrow_commissions'] = array();
 		foreach($existing_underwriter as $existing_underwriter_obj) {
 			if($existing_underwriter_obj->underwriter_tier_id) {
 				$data['existing_underwriter'][$existing_underwriter_obj->underwriter_tier_id] = $existing_underwriter_obj;
+			}
+			elseif($existing_underwriter_obj->is_escrow) {
+				$data['escrow_commissions'] = $existing_underwriter_obj;
 			}
 		}
 		$data['is_super_admin'] =$this->common->if_super_admin();

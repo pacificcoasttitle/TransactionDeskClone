@@ -314,7 +314,7 @@
 								foreach($product_types as $product_type): 
 								?>
 								<div class="card">
-									<div class="card-header" role="tab" id="commissionTab">
+									<div class="card-header" role="tab" >
 										<?php echo ucwords($product_type); ?>
 									</div>
 									<div class="card-body row commission-details">
@@ -426,6 +426,72 @@
 								<?php
 								endforeach;
 								?>
+								<div class="card">
+									<div class="card-header" role="tab" >
+										Escrow
+									</div>
+									<div class="card-body commission-details underwriters-div">
+
+										<div class="form-group row">
+											<label  class="col-sm-4 col-form-label"> Commission Type</label>
+											<div class="col-sm-8">
+												<select name="escrow_commission[type]"  class="selectpicker show_hide_commissiontypes_select"  data-actions-box="true">
+													
+													<?php foreach($commission_types as $commission_type) {?>
+														<option <?php echo set_select('escrow_commission[type]', $commission_type);?>  value="<?php echo $commission_type;?>"><?php echo ucwords($commission_type);?></option>
+													<?php }?>
+												</select>
+											</div>
+										</div>
+										<div class="show_hide_commissiontypes show_hide_commissiontypes-override">
+											<div class='threshold__amounts '>
+												<div class='clone-this-threshold card clone-main-div' >
+													<div class="card-body ">
+													<div class = "form-group row"><div class="col-sm-12"><div class="remove-btn-holder"><button type="button" class="btn btn-danger threshold-remove-btn"><i class="fa fa-times"></i></button></div></div></div>
+														<div class="form-group row ">
+															<label  class="col-sm-4 col-form-label">Commission Range</label>
+															<div class="col-sm-4">
+																<input  step="01" min="0"  type="number" class="form-control" name="escrow_commission[threshold_amount_min][]"  class="form-control" placeholder="Minimum Amount" value="">
+															</div>
+															<div class="col-sm-4">
+																<input  step="01" min="0"  type="number" class="form-control" name="escrow_commission[threshold_amount_max][]"  class="form-control" placeholder="Maximum Amount" value="">
+															</div>
+														</div>
+														<div class="form-group row ">
+															<label  class="col-sm-4 col-form-label">Commission %</label>
+															<div class="col-sm-8">
+																<input  step="0.1" min="0"  type="number" class="form-control" name="escrow_commission[threshold_commission][]"  class="form-control" placeholder="Commision %" value="">
+															</div>
+														</div>
+														
+
+													</div>
+												</div>
+												<div class='clone-to-threshold'>
+												</div>
+
+												<div class="clearfix">
+													<div class="form-group">
+														<button type="button" class="btn btn-success pull-right threshold-add-btn">
+															<i class="fa fa-plus"></i>
+														</button>
+
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="show_hide_commissiontypes show_hide_commissiontypes-fix">
+											<div class="form-group row">
+												<label  class="col-sm-4 col-form-label"> Commission %</label>
+												<div class="col-sm-8">
+													<input  step="0.1" min="0"  type="number" class="form-control" name="escrow_commission[fix_commission]"  class="form-control" placeholder="Threshold commision %" value="<?php echo set_value('escrow_commission[fix_commission]') ?>">
+												</div>
+											</div>
+										</div>
+											
+										
+									</div>
+								</div>
 								
 							</div>
 						</div>
