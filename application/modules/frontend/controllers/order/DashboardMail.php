@@ -2742,7 +2742,7 @@ class DashboardMail extends MX_Controller {
                 "errors" =>  $errors,
                 "success" => $success
             );
-            $this->session->set_userdata($data);exit;
+            $this->session->set_userdata($data);
             redirect(base_url().'borrower-buyer-form/'.$random_number);exit;
         }
         $this->load->view('order/borrower_buyer', $data);
