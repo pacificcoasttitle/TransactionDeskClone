@@ -68,126 +68,172 @@
                                 </h2>
                                 <div id="collapseThirteen" class="accordion-collapse collapse show" aria-labelledby="headingThirteen" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <div class="row mb-3">
-                                            <div class="col-md-12">
-                                                <div class="fieldset">
-													<div class="legend">Enter Buyer #1 Name *</div>
-                                                    <div class="row">
-                                                        <div class="col-md-4">
-                                                            <div class="form-group">
-                                                                <label for="first_name" class="mb-2">First Name</label>
-                                                                <input type="text" style='width: 100%;' class="form-control" id="first_name" name="first_name" value="<?php echo $first_name;?>">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="form-group">
-                                                                <label for="middle_name" class="mb-2">Middle Name</label>
-                                                                <input type="text" style='width: 100%;' class="form-control" id="middle_name" name="middle_name" value="<?php echo $middle_name;?>">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="form-group">
-                                                                <label for="last_name" class="mb-2">Last Name</label>
-                                                                <input type="text" style='width: 100%;' class="form-control" id="last_name" name="last_name" value="<?php echo $last_name;?>">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mt-2">
-                                                            <div class="form-group position-relative">
-                                                                <label for="" class="mb-2">Phone Number</label>
-                                                                <input type="text" style='width: 100%;' class="form-control" id="phone_number" name="phone_number" value="<?php echo $phone_number;?>">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mt-2">
-                                                            <div class="form-group position-relative">
-                                                                <label for="" class="mb-2">Email Address</label>
-                                                                <input type="text" style='width: 100%;' class="form-control" id="email" name="email" value="<?php echo $email;?>">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-												</div>
+                                        <div class="date_escrow_num mt-md-5">
+                                            <span>Escrow No.:</span> 10257432-GLE-MP<br><span>Title No.:</span> 10257432-GLT-
+                                        </div> 
+
+                                        <h4 class="text-center my-4"><strong>PLEASE FILL OUT THIS FORM COMPLETELY AND RETURN TO OUR OFFICE AS SOON AS POSSIBLE <br> AS IT WILL ASSIST US IN THE ADMINISTRATION OF YOUR TRANSACTION.</strong></h4>
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" style='width: 100%;' class="form-control" id="buyer_full_name" name="buyer_full_name" value="<?php echo $buyer_full_name;?>">
+                                            <small class="small_label">Buyer(s):</small>
+                                        </div>
+                                       
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="buyer_home_number" name="buyer_home_number" value="<?php echo $buyer_home_number;?>">
+                                                    <small class="small_label">Home Phone Number:</small>
+                                                </div>
                                             </div>
-											<div class="col-md-12">
-                                                <div class="fieldset">
-                                                    <div class="legend">Enter Buyer #2 Name *</div>
-                                                    <div class="row">
-                                                        <div class="col-md-4">
-                                                            <div class="form-group">
-                                                                <label for="" class="mb-2">First Name</label>
-                                                                <input type="text" style='width: 100%;' class="form-control" id="second_buyer_first_name" name="second_buyer_first_name" value="<?php echo $second_buyer_first_name;?>">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="form-group">
-                                                                <label for="" class="mb-2">Middle Name</label>
-                                                                <input type="text" style='width: 100%;' class="form-control" id="second_buyer_middle_name" name="second_buyer_middle_name" value="<?php echo $second_buyer_middle_name;?>">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="form-group">
-                                                                <label for="" class="mb-2">Last Name</label>
-                                                                <input type="text" style='width: 100%;' class="form-control" id="second_buyer_last_name" name="second_buyer_last_name" value="<?php echo $second_buyer_last_name;?>">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mt-2">
-                                                            <div class="form-group position-relative mb-4">
-                                                                <label for="" class="mb-2">Phone Number</label>
-                                                                <input type="text" style='width: 100%;' class="form-control" id="second_buyer_phone_number" name="second_buyer_phone_number" value="<?php echo $second_buyer_phone_number;?>">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mt-2">
-                                                            <div class="form-group position-relative mb-4">
-                                                                <label for="" class="mb-2">Email Address</label>
-                                                                <input type="email" style='width: 100%;' class="form-control" id="second_buyer_email" name="second_buyer_email" value="<?php echo $second_buyer_email;?>">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-												</div>
+                                            
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="buyer_work_number" name="buyer_work_number" value="<?php echo $buyer_work_number;?>">
+                                                    <small class="small_label">Work Phone Number:</small>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="form-group mb-3">
-                                            <label for="" class="mb-2"><b>Forwarding Address after Closing</b></label>
-                                            <ul class="list-inline">
-                                                <li class="list-inline-item me-md-5">
-                                                    &nbsp;<input type="radio" id="sameAddress" <?php echo ($is_same_property_address_as_forwarding_address == 'same') ? 'checked="checked"' : '';?> value="same" name="is_same_property_address_as_forwarding_address"> 
-                                                    &nbsp;<label for="option11">Same as Property Address</label>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                    &nbsp;<input type="radio" id="otherAddress" <?php echo ($is_same_property_address_as_forwarding_address == 'other') ? 'checked="checked"' : '';?> value="other" name="is_same_property_address_as_forwarding_address"> 
-                                                    &nbsp;<label for="option12">Other Address</label>
-                                                </li>
-                                            </ul>
-                                            <div class="otherAddress <?php echo ($is_same_property_address_as_forwarding_address == 'other') ? '' : 'd-none';?>">
-                                                <div class="form-group position-relative mb-3">
-                                                    <label for="" class="mb-2"><b>Enter Forwarding Address After Closing </b></label>
-                                                    <input type="text" style='width: 100%;' class="form-control" id="forwarding_street_address" name="forwarding_street_address" value="<?php echo $forwarding_street_address;?>">
-                                                    <small class="small_label">Street Address</small>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="buyer_email_address" name="buyer_email_address" value="<?php echo $buyer_email_address;?>">
+                                                    <small class="small_label">E-Mail Address:</small>
                                                 </div>
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" style='width: 100%;' class="form-control" id="forwarding_street_address2" name="forwarding_street_address2" value="<?php echo $forwarding_street_address2;?>">
-                                                    <small  class="small_label">Street Address Line 2</small>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="buyer_fax_number" name="buyer_fax_number" value="<?php echo $buyer_fax_number;?>">
+                                                    <small class="small_label">Fax Number:</small>
                                                 </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="buyer_ssn" name="buyer_ssn" value="<?php echo $buyer_ssn;?>">
+                                                    <small class="small_label">Social Security #:</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="5" style='width: 100%;' class="form-control" style="height:auto;" id="buyer_current_mailing_address" name="buyer_current_mailing_address"><?php echo $buyer_current_mailing_address;?></textarea>
+                                            <small class="small_label">Buyer(s) Current Mailing Address:</small>
+                                        </div>
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="5" style='width: 100%;' class="form-control" style="height:auto;" id="buyer_mailing_address_after_close" name="buyer_mailing_address_after_close" value="<?php echo $buyer_mailing_address_after_close;?>"></textarea>
+                                            <small class="small_label">Buyer(s) Mailing Address After Close Of Escrow:</small>
+                                        </div>
+
+                                        <div class="form-group position-relative mb-3 mt-5">
+                                            <label for="" class="mb-2"><b>New Loan(s) Buyer(s) Are Applying For:</b></label>
+                                            <input type="text" style='width: 100%;' class="form-control" id="lender_name" name="lender_name" value="<?php echo $lender_name;?>">
+                                            <small class="small_label">Name Of Lender:</small>
+                                        </div>
+                                        
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="5" style='width: 100%;' class="form-control" style="height:auto;" id="lender_address" name="lender_address" value="<?php echo $lender_address;?>"></textarea>
+                                            <small class="small_label">Address:</small>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="agent_name" name="agent_name" value="<?php echo $agent_name;?>">
+                                                    <small class="small_label">Agent's Name:</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="agent_phone_number" name="agent_phone_number" value="<?php echo $agent_phone_number;?>">
+                                                    <small class="small_label">Phone Number:</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group position-relative mb-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" style='width: 100%;' class="form-control" id="second_lender_name" name="second_lender_name" value="<?php echo $second_lender_name;?>">
+                                            <small class="small_label">Name Of Seond Lender:</small>
+                                        </div>
+                                        
+                                        
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="5" style='width: 100%;' class="form-control" style="height:auto;" id="seond_lender_address" name="seond_lender_address"><?php echo $seond_lender_address;?></textarea>
+                                            <small class="small_label">Address:</small>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="second_agent_name" name="second_agent_name" value="<?php echo $second_agent_name;?>">
+                                                    <small class="small_label">Second Agent's Name:</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="seond_agent_phone_number" name="seond_agent_phone_number" value="<?php echo $seond_agent_phone_number;?>">
+                                                    <small class="small_label">Phone Number:</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b>New Insurance:</b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="insurance_name" name="insurance_name" value="<?php echo $insurance_name;?>">
+                                                    <small class="small_label">Insurance's Name:</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="insurance_phone_number" name="insurance_phone_number" value="<?php echo $insurance_phone_number;?>">
+                                                    <small class="small_label">Phone Number:</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="insurance_address" name="insurance_address"><?php echo $insurance_address;?></textarea>
+                                            <small class="small_label">Insurance's Address:</small>
+                                        </div>
+                                        
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" style='width: 100%;' class="form-control" id="insurance_company" name="insurance_company" value="<?php echo $insurance_company;?>">
+                                            <small class="small_label">Insurance Company:</small>
+                                        </div>
+
+                                        <p class="mt-5">Please place any additional information that you feel we may require on the reverse side of this form.</p>
                                                 
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group position-relative mb-3">
-                                                            <input type="text" style='width: 100%;' class="form-control" id="forwarding_city" name="forwarding_city" value="<?php echo $forwarding_city;?>">
-                                                            <small  class="small_label">City</small>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group position-relative mb-3">
-                                                            <input type="text" style='width: 100%;' class="form-control" id="forwarding_state" name="forwarding_state" value="<?php echo $forwarding_state;?>">
-                                                            <small  class="small_label">State</small>
-                                                        </div>
-                                                        
-                                                    </div>    
-                                                </div>
-                                                <div class="form-group position-relative mb-3 col-md-6">
-                                                    <input type="text" style='width: 100%;' class="form-control" id="forwarding_zip_code" name="forwarding_zip_code" value="<?php echo $forwarding_zip_code;?>">
-                                                    <small  class="small_label">Zip Code</small>
-                                                </div>
-                                            </div>
+                                        <div class="mb-80 mt-5">
+                                            Dated:    
+                                            <input type="text" class="w30 input_single" id="buyer_date" name="buyer_date" value="<?php echo $buyer_date;?>">
                                         </div>
+                                       
+                                        <input type="text" class="signature" value="" placeholder="signature" id="buyer_signature" name="buyer_signature" value="<?php echo $buyer_signature;?>">  
                                     </div>   
                                 </div>
                             </div>
@@ -612,151 +658,665 @@
                                 </h2>
                                 <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <div class="form-group mb-4">
-                                            <label for="" class="mb-2"><b>How would you like to receive the sale proceeds after closing?</b></label>
-                                            <ul class="list-unstyled">
-                                                <li>
-                                                    &nbsp;<input type="radio" id="wire" value="wire" name="sale_proceeds" <?php echo ($sale_proceeds == 'wire') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
-                                                    <label for="wire">Wire Funds</label>
-                                                </li>
-                                                <li>
-                                                    &nbsp;<input type="radio" id="pickUp" value="pickUp" name="sale_proceeds" <?php echo ($sale_proceeds == 'pickUp') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
-                                                    <label for="pickUp">Pick Up Check</label>
-                                                </li>
-                                                <li>
-                                                    &nbsp;<input type="radio" id="mailCheck" value="mailCheck" name="sale_proceeds" <?php echo ($sale_proceeds == 'mailCheck') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;  
-                                                    <label for="mailCheck">Mail Check</label>
-                                                </li>
-                                            </ul>
-                                            
-                                            <div class="mailAddress <?php echo ($sale_proceeds == 'mailCheck') ? '' : 'd-none';?>">
-                                                <div class="form-group position-relative mb-3">
-                                                    <label for="" class="mb-2"><b>Address Closing Proceeds to be Mailed To
-                                                    </b></label>
-                                                    <input type="text" style='width: 100%;' class="form-control" id="closing_proceeds_street_address" name="closing_proceeds_street_address" value="<?php echo $closing_proceeds_street_address;?>">
-                                                    <small class="small_label">Street Address</small>
-                                                </div>
-                                                
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" style='width: 100%;' class="form-control" id="closing_proceeds_street_address2" name="closing_proceeds_street_address2" value="<?php echo $closing_proceeds_street_address2;?>">
-                                                    <small  class="small_label">Street Address Line 2</small>
-                                                </div>
-                                                
+                                        <h4 class="text-center my-4"><strong>CONFIDENTIAL INFORMATION FOR YOUR PROTECTION</strong></h4>
+
+                                        <div class="mb-20">
+                                            Completion of this statement expedites your application for title insurance, as it assists in establishing identity, eliminating matters affecting persons with similar names and avoiding the use of fraudulent or forged documents.  Complete all blanks (please print) or indicate "none" or "N/A."  If more space is needed for any item(s), use the reverse side of the form.  Each party (and spouse/domestic partner, if applicable) to the transaction should personally sign this form.
+                                        </div>
+                                        <div class="row my-5">
+                                            <div class="col-md-6">
+                                                To: Pacific Coast Title Company <br>
+                                                516 Burchett St., Glendale, CA  91203	
+                                            </div>
+                                            <div class="col-md-6 text-md-end">
+                                                ESCROW NO.:  <b>10257432-GLE-MP</b><br>TITLE NO.: <b> 10257432-GLT-</b>	
+                                            </div> 
+                                        </div>
+                                        <h4 class="text-center"><b>NAME AND PERSONAL INFORMATION</b></h4>
+
+                                        <div class="row mt-5">
+                                            <div class="col-md-9">	
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-lg-3 col-md-6">
                                                         <div class="form-group position-relative mb-3">
-                                                            <input type="text" style='width: 100%;' class="form-control" id="closing_proceeds_city" name="closing_proceeds_city" value="<?php echo $closing_proceeds_city;?>">
-                                                            <small  class="small_label">City</small>
+                                                            <label for="" class="mb-2"><b></b></label>
+                                                            <input type="text" style='width: 100%;' class="form-control" id="first_name" name="first_name" value="<?php echo $first_name;?>">
+                                                            <small class="small_label">First Name</small>
                                                         </div>
                                                         
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-lg-3 col-md-6">
                                                         <div class="form-group position-relative mb-3">
-                                                            <input type="text" style='width: 100%;' class="form-control" id="closing_proceeds_state" name="closing_proceeds_state" value="<?php echo $closing_proceeds_state;?>">
-                                                            <small  class="small_label">State / Province</small>
+                                                            <label for="" class="mb-2"><b></b></label>
+                                                            <input type="text" style='width: 100%;' class="form-control" id="middle_name" name="middle_name" value="<?php echo $middle_name;?>">
+                                                            <small class="small_label">Middle Name</small>
                                                         </div>
                                                         
-                                                    </div>    
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="form-group position-relative mb-3">
+                                                            <label for="" class="mb-2"><b></b></label>
+                                                            <input type="text" style='width: 100%;' class="form-control" id="last_name" name="last_name" value="<?php echo $last_name;?>">
+                                                            <small class="small_label">Last Name</small>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="form-group position-relative mb-3">
+                                                            <label for="" class="mb-2"><b></b></label>
+                                                            <input type="text" style='width: 100%;' class="form-control" id="maiden_name" name="maiden_name" value="<?php echo $maiden_name;?>">
+                                                            <small class="small_label">Maiden Name</small>
+                                                        </div>
+                                                        
+                                                    </div>
                                                 </div>
-                                                <div class="form-group position-relative mb-3 col-md-6">
-                                                    <input type="text" style='width: 100%;' class="form-control" id="closing_proceeds_zipcode" name="closing_proceeds_zipcode" value="<?php echo $closing_proceeds_zipcode;?>">
-                                                    <small  class="small_label">Postal / Zip Code</small>
+                                                <div class="text-center mt-4 f14">(If none, indicate)</div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" style='width: 100%;' class="form-control" id="date_of_birth" name="date_of_birth" value="<?php echo $date_of_birth;?>">
+                                                    <small class="small_label">Date of Birth</small>
                                                 </div>
                                                 
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item <?php echo ($sale_proceeds == 'wire') ? '' : 'd-none';?>" id="wireInstructions">
-                                <h2 class="accordion-header" id="headingFour">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                        WIRE INSTRUCTIONS
-                                    </button>
-                                </h2>
-                                <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <div class="row mb-4">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="" class="mb-2">Name On Account</label>
-                                                    <input type="text" style='width: 100%;' class="form-control" id="name_on_account" name="name_on_account" value="<?php echo $name_on_account;?>">
+                                            <div class="row mt-3">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="home_phone_number" name="home_phone_number" value="<?php echo $home_phone_number;?>">
+                                                        <small class="small_label">Home Phone</small>
+                                                    </div>
+                                                    
                                                 </div>
-                                                
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="" class="mb-2">Bank Name</label>
-                                                    <input type="text" style='width: 100%;' class="form-control" id="bank_name" name="bank_name" value="<?php echo $bank_name;?>">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="business_phone_number" name="business_phone_number" value="<?php echo $business_phone_number;?>">
+                                                        <small class="small_label">Business Phone</small>
+                                                    </div>
+                                                    
                                                 </div>
-                                                
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="" class="mb-2">Bank City</label>
-                                                    <input type="text" style='width: 100%;' class="form-control" id="bank_city" name="bank_city" value="<?php echo $bank_city;?>">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="birthplace" name="birthplace" value="<?php echo $birthplace;?>">
+                                                        <small class="small_label">Birthplace</small>
+                                                    </div>
+                                                    
                                                 </div>
-                                                
                                             </div>
-                                        </div>
-                                        <div class="row mb-4">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="" class="mb-2">Bank State</label>
-                                                    <input type="text" style='width: 100%;' class="form-control" id="bank_state" name="bank_state" value="<?php echo $bank_state;?>">
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="ssn" name="ssn" value="<?php echo $ssn;?>">
+                                                        <small class="small_label">Social Security No.</small>
+                                                    </div>
+                                                    
                                                 </div>
-                                                
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="" class="mb-2">Account Number</label>
-                                                    <input type="text" style='width: 100%;' class="form-control" id="account_number" name="account_number" value="<?php echo $account_number;?>">
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="driver_license_no" name="driver_license_no" value="<?php echo $driver_license_no;?>">
+                                                        <small class="small_label">Driver’s License No.</small>
+                                                    </div>
+                                                    
                                                 </div>
-                                                
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="" class="mb-2">Routing Number</label>
-                                                    <input type="text" style='width: 100%;' class="form-control" id="routing_number" name="routing_number" value="<?php echo $routing_number;?>">
+                                            <div class="row mt-3">
+                                                <div class="col-md-12">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="another_name_that_used" name="another_name_that_used" value="<?php echo $another_name_that_used;?>">
+                                                        <small class="small_label">List any other name you have used or been known by</small>
+                                                    </div>
+                                                    
                                                 </div>
-                                                
                                             </div>
-                                        </div>
-                                        <div class="mailAddress">
-                                            <div class="form-group position-relative mb-3">
-                                                <label for="" class="mb-2"><b>Address Associated with Account Number
-                                                </b></label>
-                                                <input type="text" style='width: 100%;' class="form-control" id="street_address_for_account" name="street_address_for_account" value="<?php echo $street_address_for_account;?>">
-                                                <small class="small_label">Street Address</small>
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="residence_state" name="residence_state" value="<?php echo $residence_state;?>">
+                                                        <small class="small_label">State of residence</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="lived_year" name="lived_year" value="<?php echo $lived_year;?>">
+                                                        <small class="small_label">I have lived continuously in the U.S.A. since</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>                                            
+                                            <div class="mt-5">
+                                                Are you currently married? <input type="checkbox" name="is_married" id="is_married" <?php echo  ($is_married == 'is_married') ? 'checked="checked"' : '';?>> If yes, complete the following information:
+                                            </div>
+
+                                            <div class="form-group position-relative mt-3 mb-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" style='width: 100%;' class="form-control" id="date_and_place_marriage" name="date_and_place_marriage" value="<?php echo $date_and_place_marriage;?>">
+                                                <small class="small_label">Date and place of marriage</small>
                                             </div>
                                             
-                                            <div class="form-group position-relative mb-3">
-                                                <input type="text" style='width: 100%;' class="form-control" id="street_address2_for_account" name="street_address2_for_account" value="<?php echo $street_address2_for_account;?>">
-                                                <small  class="small_label">Street Address Line 2</small>
+
+                                            <div class="row mt-3">
+                                                <div class="col-md-9">	
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-6">
+                                                            <div class="form-group position-relative mb-3">
+                                                                <label for="" class="mb-2"><b>Spouse:</b></label>
+                                                                <input type="text" style='width: 100%;' class="form-control" id="spouse_first_name" name="spouse_first_name" value="<?php echo $spouse_first_name;?>">
+                                                                <small class="small_label">First Name</small>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-6">
+                                                            <div class="form-group position-relative mb-3">
+                                                                <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                                <input type="text" style='width: 100%;' class="form-control" id="spouse_middle_name" name="spouse_middle_name" value="<?php echo $spouse_middle_name;?>">
+                                                                <small class="small_label">Middle Name</small>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-6">
+                                                            <div class="form-group position-relative mb-3">
+                                                                <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                                <input type="text" style='width: 100%;' class="form-control" id="spouse_last_name" name="spouse_last_name" value="<?php echo $spouse_last_name;?>">
+                                                                <small class="small_label">Last Name</small>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-6">
+                                                            <div class="form-group position-relative mb-3">
+                                                                <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                                <input type="text" style='width: 100%;' class="form-control" id="spouse_maiden_name" name="spouse_maiden_name" value="<?php echo $spouse_maiden_name;?>">
+                                                                <small class="small_label">Maiden Name</small>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-center mt-4 f14">(If none, indicate)</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="spouse_date_of_birth" name="spouse_date_of_birth" value="<?php echo $spouse_date_of_birth;?>">
+                                                        <small class="small_label">Date of Birth</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="spouse_home_phone_number" name="spouse_home_phone_number" value="<?php echo $spouse_home_phone_number;?>">
+                                                        <small class="small_label">Home Phone</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="spouse_business_phone_number" name="spouse_business_phone_number" value="<?php echo $spouse_business_phone_number;?>">
+                                                        <small class="small_label">Business Phone</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="spouse_birthplace" name="spouse_birthplace" value="<?php echo $spouse_birthplace;?>">
+                                                        <small class="small_label">Birthplace</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="spouse_ssn" name="spouse_ssn" value="<?php echo $spouse_ssn;?>">
+                                                        <small class="small_label">Social Security No.</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="spouse_driver_license_no" name="spouse_driver_license_no" value="<?php echo $spouse_driver_license_no;?>">
+                                                        <small class="small_label">Driver’s License No.</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-12">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="spouse_another_name_that_used" name="spouse_another_name_that_used" value="<?php echo $spouse_another_name_that_used;?>">
+                                                        <small class="small_label">List any other name you have used or been known by</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="spouse_state_residence" name="spouse_state_residence" value="<?php echo $spouse_state_residence;?>">
+                                                        <small class="small_label">State of residence</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="spouse_lived_year" name="spouse_lived_year" value="<?php echo $spouse_lived_year;?>">
+                                                        <small class="small_label">I have lived continuously in the U.S.A. since</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>                                            
+                                            <div class="mt-5">
+                                                Are you currently a registered domestic partner? <input type="checkbox" name="is_domestic_partner" id="is_domestic_partner" <?php echo  ($is_domestic_partner == 'is_domestic_partner') ? 'checked="checked"' : '';?>> If yes, complete the following information:
+                                            </div>
+
+                                            <div class="row mt-3">
+                                                <div class="col-md-9">	
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-6">
+                                                            <div class="form-group position-relative mb-3">
+                                                                <label for="" class="mb-2"><b>Domestic Partner:</b></label>
+                                                                <input type="text" style='width: 100%;' class="form-control" id="domestic_first_name" name="domestic_first_name" value="<?php echo $domestic_first_name;?>">
+                                                                <small class="small_label">First Name</small>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-6">
+                                                            <div class="form-group position-relative mb-3">
+                                                                <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                                <input type="text" style='width: 100%;' class="form-control" id="domestic_middle_name" name="domestic_middle_name" value="<?php echo $domestic_middle_name;?>">
+                                                                <small class="small_label">Middle Name</small>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-6">
+                                                            <div class="form-group position-relative mb-3">
+                                                                <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                                <input type="text" style='width: 100%;' class="form-control" id="domestic_last_name" name="domestic_last_name" value="<?php echo $domestic_last_name;?>">
+                                                                <small class="small_label">Last Name</small>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-6">
+                                                            <div class="form-group position-relative mb-3">
+                                                                <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                                <input type="text" style='width: 100%;' class="form-control" id="domestic_maiden_name" name="domestic_maiden_name" value="<?php echo $domestic_maiden_name;?>">
+                                                                <small class="small_label">Maiden Name</small>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-center mt-4 f14">(If none, indicate)</div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="domestic_date_of_birth" name="domestic_date_of_birth" value="<?php echo $domestic_date_of_birth;?>">
+                                                        <small class="small_label">Date of Birth</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="domestic_home_phone_number" name="domestic_home_phone_number" value="<?php echo $domestic_home_phone_number;?>">
+                                                        <small class="small_label">Home Phone</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="domestic_business_phone_number" name="domestic_business_phone_number" value="<?php echo $domestic_business_phone_number;?>">
+                                                        <small class="small_label">Business Phone</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="domestic_birthplace" name="domestic_birthplace" value="<?php echo $domestic_birthplace;?>">
+                                                        <small class="small_label">Birthplace</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="domestic_ssn" name="domestic_ssn" value="<?php echo $domestic_ssn;?>">
+                                                        <small class="small_label">Social Security No.</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="domestic_driver_license_no" name="domestic_driver_license_no" value="<?php echo $domestic_driver_license_no;?>">
+                                                        <small class="small_label">Driver’s License No.</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-12">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="domestic_another_name_that_used" name="domestic_another_name_that_used" value="<?php echo $domestic_another_name_that_used;?>">
+                                                        <small class="small_label">List any other name you have used or been known by</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="domestic_state_residence" name="domestic_state_residence" value="<?php echo $domestic_state_residence;?>">
+                                                        <small class="small_label">State of residence</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="domestic_lived_year" name="domestic_lived_year" value="<?php echo $domestic_lived_year;?>">
+                                                        <small class="small_label">I have lived continuously in the U.S.A. since</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>   
+
+                                            <div class="mt-5 mb-2 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                            <h5 class="text-center"><strong>RESIDENCES (LAST 10 YEARS)</strong></h5>
+
+                                            <div class="mt-3 mb-3 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="residence_number_street" name="residence_number_street" value="<?php echo $residence_number_street;?>">
+                                                        <small class="small_label">Number &amp; Street</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="residence_city" name="residence_city" value="<?php echo $residence_city;?>">
+                                                        <small class="small_label">City</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="residence_from_date_to_date" name="residence_from_date_to_date" value="<?php echo $residence_from_date_to_date;?>">
+                                                        <small class="small_label">From (date) to (date)</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="second_residence_number_street" name="second_residence_number_street" value="<?php echo $second_residence_number_street;?>">
+                                                        <small class="small_label">Number &amp; Street</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="second_residence_city" name="second_residence_city" value="<?php echo $second_residence_city;?>">
+                                                        <small class="small_label">City</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="second_residence_from_date_to_date" name="second_residence_from_date_to_date" value="<?php echo $second_residence_from_date_to_date;?>">
+                                                        <small class="small_label">From (date) to (date)</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="text-center mt-4 f14">(If more space is required, use reverse side of form)</div>
+                                            <div class="mt-4 mb-2 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                            <h5 class="text-center"><strong>OCCUPATIONS/BUSINESSES (LAST 10 YEARS)</strong></h5>
+
+                                            <div class="mt-3 mb-3 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="firm_or_business_name" name="firm_or_business_name" value="<?php echo $firm_or_business_name;?>">
+                                                        <small class="small_label">Firm or Business name</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="business_address" name="business_address" value="<?php echo $business_address;?>">
+                                                        <small class="small_label">Address</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="business_from_date_to_date" name="business_from_date_to_date" value="<?php echo $business_from_date_to_date;?>">
+                                                        <small class="small_label">From (date) to (date)</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="second_firm_or_business_name" name="second_firm_or_business_name" value="<?php echo $second_firm_or_business_name;?>">
+                                                        <small class="small_label">Firm or Business name</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="second_business_address" name="second_business_address" value="<?php echo $second_business_address;?>">
+                                                        <small class="small_label">Address</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="second_business_from_date_to_date" name="second_business_from_date_to_date" value="<?php echo $second_business_from_date_to_date;?>">
+                                                        <small class="small_label">From (date) to (date)</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-5 mb-2 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                            <h5 class="text-center"><strong>INFORMATION ABOUT THE PROPERTY</strong></h5>
+
+                                            <div class="mt-3 mb-3 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                            <div class="d-flex">
+                                                <div class="me-3">
+                                                    Buyer intends to reside on the property in this transaction:  
+                                                </div>
+                                                <div class="me-3">
+                                                    <input type="radio" id="yesProperty" value="Yes" name="is_buyer_intends">
+                                                    <label for="yesProperty">Yes</label>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" id="noPorperty" value="No" name="is_buyer_intends">
+                                                    <label for="noPorperty">No</label>
+                                                </div>
                                             </div>
                                             
+
+                                            <div class="mt-5 mb-2 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                            <h5 class="text-center"><strong>Owner to complete the following items</strong></h5>
+
+                                            <div class="mt-3 mb-3 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                            <div class="form-group position-relative mb-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" style='width: 100%;' class="form-control" id="owner_street_address" name="owner_street_address" value="<?php echo $owner_street_address;?>">
+                                                <small class="small_label"> Street Address of Property in this transaction: </small>
+                                            </div>
+
+                                            <div class="mt-4">
+                                                The land is unimproved <input type="text" class="input_single w-small" id="unimproved" name="unimproved" value="<?php echo $unimproved;?>">; or improved with a structure of the following type:  A Single or 1-4 Family <input type="text" class="input_single w-small" id="single_family" name="single_family" value="<?php echo $single_family;?>"> Condo Unit <input type="text" class="input_single w-small" id="condo_unit" name="condo_unit" value="<?php echo $condo_unit;?>"> Other <input type="text" class="input_single w-small" id="other" name="other" value="<?php echo $other;?>"> 	
+                                            </div>
+
+                                            <div class="d-flex mt-3">
+                                                <div class="me-3">
+                                                    Improvements, remodeling or repairs to this property have been made within the past six months: 
+                                                </div>
+                                                <div class="me-3">
+                                                    <input type="radio" name="is_improvement" id="yesImprovements" value="Yes">
+                                                    <label for="yesImprovements">Yes</label>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" name="is_improvement" id="noImprovements" value="No">
+                                                    <label for="noImprovements">No</label>
+                                                </div>
+                                            </div>
+                                            
+
+                                            <div class="d-flex mt-3">
+                                                <div class="me-3">
+                                                    If yes, have all costs for labor and materials arising in connection therewith been paid in full?
+                                                </div>
+                                                <div class="me-3">
+                                                    <input type="radio" name="is_materials" id="yesmaterials" value="Yes">
+                                                    <label for="yesmaterials">Yes</label>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" name="is_materials" id="nomaterials" value="No">
+                                                    <label for="nomaterials">No</label>
+                                                </div>
+                                                
+                                            </div>
+                                            
+
+                                            <div class="mt-3">
+                                                Any current loans on property? <input type="checkbox" name="is_loan" id="is_loan" <?php echo  ($is_loan == 'is_loan') ? 'checked="checked"' : '';?>>; If yes, complete the following:
+                                            </div>
+
+                                            <div class="mt-3 row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="lender" name="lender" value="<?php echo $lender;?>">
+                                                        <small class="small_label">Lender</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="loan_amount" name="loan_amount" value="<?php echo $loan_amount;?>">
+                                                        <small class="small_label">Loan Amount</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="loan_account" name="loan_account" value="<?php echo $loan_account;?>">
+                                                        <small class="small_label">Loan Account #</small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-3 row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="second_lender" name="second_lender" value="<?php echo $second_lender;?>">
+                                                        <small class="small_label">Lender</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="second_loan_amount" name="second_loan_amount" value="<?php echo $second_loan_amount;?>">
+                                                        <small class="small_label">Loan Amount</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group position-relative">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" style='width: 100%;' class="form-control" id="second_loan_account" name="second_loan_account" value="<?php echo $second_loan_account;?>">
+                                                        <small class="small_label">Loan Account #</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-4">The undersigned declare, under penalty of perjury, that the foregoing is true and correct.</div>
+
+                                            <div class="mt-3 row">
+                                                <div class="col-md-6">
+                                                    Executed on <input type="text" class="input_single" id="executed_date" name="executed_date" value="<?php echo $executed_date;?>">, <input type="text" class="input_single w-medium" id="executed_year" name="executed_year" value="<?php echo $executed_year;?>">
+                                                    
+                                                </div>
+                                                <div class="col-md-6">
+                                                    at <input type="text" class="input_single" id="executed_time" name="executed_time" value="<?php echo $executed_time;?>">
+                                                    
+                                                </div>
+                                            </div>
+
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <div class="form-group position-relative mb-3">
-                                                        <input type="text" style='width: 100%;' class="form-control" id="city_for_account" name="city_for_account" value="<?php echo $city_for_account;?>">
-                                                        <small  class="small_label">City</small>
+                                                    <div class="mt-5">
+                                                        Signature :    
+                                                        <input type="text" class="input_single" id="signature" name="signature" value="<?php echo $signature;?>">
                                                     </div>
                                                     
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group position-relative mb-3">
-                                                        <input type="text" style='width: 100%;' class="form-control" id="state_for_account" name="state_for_account" value="<?php echo $state_for_account;?>">
-                                                        <small  class="small_label">State / Province</small>
+                                                <div class="col-md-6 text-md-end">
+                                                    <div class="mt-5">
+                                                        Signature :    
+                                                        <input type="text" class="input_single" id="second_signature" name="second_signature" value="<?php echo $second_signature;?>">
                                                     </div>
                                                     
-                                                </div>    
+                                                </div>
                                             </div>
-                                            <div class="form-group position-relative mb-3 col-md-6">
-                                                <input type="text" style='width: 100%;' class="form-control" id="zipcode_for_account" name="zipcode_for_account" value="<?php echo $zipcode_for_account;?>">
-                                                <small  class="small_label">Postal / Zip Code</small>
-                                            </div>
-                                            
-                                        </div>
+
+                                            <p class="mt-4 text-center">
+                                                (Note:  If applicable, both spouses/domestic partners must sign.)
+                                                <strong class="d-block">THANK YOU</strong>
+                                            </p>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -769,44 +1329,149 @@
                                 </h2>
                                 <div id="collapseEight" class="accordion-collapse collapse show" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <div class="page">
-                                            <div class="row mt-5">
-                                                <div class="col-md-6">
-                                                    <div class="to_address md-mb-0 mb-4">
-                                                        <span>TO:</span>
-                                                        <b>Pacific Coast Title Company
-                                                            Madonna Pallan
-                                                            516 Burchett St.
-                                                            Glendale, CA  91203  </b>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="date_escrow_num md-ms-auto">
-                                                        <span>DATE: </span>February 11, 2022<br>
-                                                        <span>ESCROW NO.: </span>10257432-GLE-MP<br>
-                                                        <span>TITLE NO.: </span>10257432-GLT-<br>
-                                                        <span>PROPERTY ADDRESS: </span> Lots/APN: 210-021-30-00-1 and 210-021-29-00-9, Bakersfield, CA  93301
-                                                    </div>
+                                    <div class="page">
+                                            <div class="d-float">
+                                                <div class="date_escrow_num mt-md-5">
+                                                    <span>Date:</span>February 11, 2022<br><br>
+                                                    <span>ESCROW NO.:</span>10257432-GLE-MP<br>
+                                                    <span>TITLE NO.:</span>10257432-GLT-
                                                 </div>
                                             </div>
-                                            <h2 class="text-center my-4"><strong>PRELIMINARY REPORT APPROVAL</strong></h2>
-                                            <p>
-                                                I have read the Preliminary Report dated <span class="text_red">FEBRUARY 2, 2022</span> covering the property described in your above numbered escrow, and approve the Policy of Title Insurance to be issued to me as required by my instructions to include as encumbrances therein Item Nos. 1, 4-9 of said report, in addition, to those specific items described in my escrow instructions or created by me. Legal description is also hereby approved.
+                                            <p class="mt-3">
+                                                YOU AS ESCROW HOLDER ARE AUTHORIZED TO SHOW VESTING ON THE GRANT DEED TO RECORD AS FOLLOWS:
                                             </p>
-                                            <p>
-                                                [Buyer acknowledges receipt of CC&amp;Rs.]
-                                            </p>
-                                            <p>
-                                                [I hereby acknowledge receipt of copy of said Preliminary Report and the report has satisfied, or by this acknowledgement we waive, the condition as listed under Paragraph 13A of the purchase agreement.]
-                                            </p>
-                                            <div class="mb-80">
-                                                Dated:    
-                                                <input type="text" class="w30 input_single form-control" id="vesting_form_date" name="vesting_form_date" value="<?php echo $vesting_form_date;?>">
-                                                
+                                            
+                                            <div class="form-group position-relative mb-4 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="names" name="names" value="<?php echo $names;?>">
+                                                <small class="small_label">Names:</small>
+                                            </div>
+
+                                            <div class="mb-4">PLEASE MARK APPROPRIATE CHOICE FOR STATUS: check for PICK-UP </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="husbandWife" name="pick_ups[]" value="husbandWife" class="me-2">
+                                                <label for="husbandWife">Husband and Wife</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="wifeHusband" name="pick_ups[]" value="wifeHusband" class="me-2">
+                                                <label for="wifeHusband">Wife and Husband</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="couple" name="pick_ups[]" value="couple" class="me-2">
+                                                <label for="couple">A Married Couple</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="singleMan" name="pick_ups[]" value="singleMan" class="me-2">
+                                                <label for="singleMan">A Single Man (never married)</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="singleWoman" name="pick_ups[]" value="singleWoman" class="me-2">
+                                                <label for="singleWoman">A Single Woman (never married)</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="singlePerson" name="pick_ups[]" value="singlePerson" class="me-2">
+                                                <label for="singlePerson">A Single Person (never married)</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="marriedMan" name="pick_ups[]" value="marriedMan" class="me-2">
+                                                <label for="marriedMan">A Married Man (as his sole and separate property)*</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="marriedWoman" name="pick_ups[]" value="marriedWoman" class="me-2">
+                                                <label for="marriedWoman">A Married Woman (as her sole and separate property)*</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="marriedPerson" name="pick_ups[]" value="marriedPerson" class="me-2">
+                                                <label for="marriedPerson">A Married Person (as his/her sole and separate property)*</label>                                                 
+                                            </div>
+                                            <div class="mb-2">
+                                                <label for="interspousal">* Please indicate name of spouse so interspousal deed may be drawn:</label>  
+                                                <input type="text" class="form-control" id="names_of_spouse" name="names_of_spouse" value="<?php echo $names;?>">                                               
                                             </div>
                                             
-                                            <input type="text" class="signature form-control" value="" id="vesting_form_signature" name="vesting_form_signature" value="<?php echo $vesting_form_signature;?>"> 
-                                                      
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="unmarriedMan" name="pick_ups[]" value="unmarriedMan" class="me-2">
+                                                <label for="unmarriedMan">An Unmarried Man (divorced)</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="unmarriedWoman" name="pick_ups[]" value="unmarriedWoman" class="me-2">
+                                                <label for="unmarriedWoman">An Unmarried Woman (divorced)</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="unmarriedPerson" name="pick_ups[]" value="unmarriedPerson" class="me-2">
+                                                <label for="unmarriedPerson">An Unmarried Person (divorced)</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="widow" name="pick_ups[]" value="widow" class="me-2">
+                                                <label for="widow">A Widow (spouse deceased)</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="widower" name="pick_ups[]" value="widower" class="me-2">
+                                                <label for="widower">A Widower (spouse deceased)</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="domestic" name="pick_ups[]" value="domestic" class="me-2">
+                                                <label for="domestic">Registered Domestic Partners</label>                                                 
+                                            </div>
+                                            <div class="mb-3 mt-3"><b>PLEASE MARK APPROPRIATE CHOICE FOR VESTING:</b></div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="community" name="appropriate_choice[]" value="community" class="me-2">
+                                                <label for="community">Community Property</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="survivorship" name="appropriate_choice[]" value="survivorship" class="me-2">
+                                                <label for="survivorship">Community Property with Right of Survivorship</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="tenants" name="appropriate_choice[]" value="tenants" class="me-2">
+                                                <label for="tenants">Joint Tenants</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="internetAmount" name="appropriate_choice[]" value="internetAmount" class="me-2">
+                                                <label for="internetAmount">Tenants In Common (Please Give Interest Amounts)</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="partnership" name="appropriate_choice[]" value="partnership" class="me-2">
+                                                <label for="partnership">Sole and Separate Property (If Married or Domestic Partnership, an Interspousal Grant Deed, A Quitclaim Deed, Statement Of Information and Appropriate Instructions Will Need To Be Submitted.)</label>                                                 
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="general" name="appropriate_choice[]" value="general" class="me-2">
+                                                <label for="general">Partnership (Limited Or General)</label>     
+                                                <input type="text" class="form-control w-50 ms-3" id="partnership_name" name="partnership_name" value="<?php echo $partnership_name;?>">                                            
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="corporation" name="appropriate_choice[]" value="corporation" class="me-2">
+                                                <label for="corporation">Corporation (California Or Other State)</label>     
+                                                <input type="text" class="form-control w-50 ms-3" id="corporation_name" name="corporation_name" value="<?php echo $corporation_name;?>">                                            
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="trust" name="appropriate_choice[]" value="trust" class="me-2">
+                                                <label for="trust">A Trust (attach copy of Trust Agreement)</label>                                     
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <input type="checkbox" id="other" name="appropriate_choice[]" value="other" class="me-2">
+                                                <label for="other">Other</label>                                     
+                                            </div>
+
+                                            <div class="mt-5 mb-5">
+                                                Escrow Holder advises the parties hereto to seek legal counsel with their attorney and/or accountant as to how they should hold title.
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mt-5">
+                                                        Signature :    
+                                                        <input type="text" class="input_single" id="vesting_form_signature" name="vesting_form_signature" value="<?php echo $vesting_form_signature;?>">
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-6 text-md-end">
+                                                    <div class="mt-5">
+                                                        Date :    
+                                                        <input type="text" class="input_single" id="vesting_form_date" name="vesting_form_date" value="<?php echo $vesting_form_date;?>">
+                                                    </div>
+                                                </div> 
+                                            </div>                                
                                         </div>
                                     </div>
                                 </div>

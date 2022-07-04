@@ -269,14 +269,30 @@ input.signature {
 .w-medium {
     width: 80px !important;
 }
-
-
-
-
-
-
-
+.space-between {
+    justify-content: space-between;
+}
+.w-49{
+    width:49%;
+}
+.f14{
+    font-size: 14px;
+}
 @media(max-width:767px){
+    .title_string{
+        max-width: 100%;
+        overflow: hidden;
+    }
+    .w-49{
+        width: 100%;
+        margin: 0 !important;
+    }
+    .flex-wrap{
+        flex-flow: wrap;
+    }
+    .w30 {
+        width: 70%;
+    }
     .date_group input {
         width: 60px;
         margin-right: 8px;
@@ -351,3 +367,5 @@ input.signature {
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,border-radius .15s ease;
 	letter-spacing: 0.5px;
 }
+
+

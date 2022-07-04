@@ -1,7 +1,6 @@
 $(document).on('change','input[type="radio"]',function(){
     var $this = $(this);
     var selectedvalue = $this.val();
-
     if ($this.attr('id') == 'coSellerYes') {
         $('#co_seller_first_name').prop('required',true);
         $('#co_seller_middle_name').prop('required',true);
@@ -218,7 +217,87 @@ $(document).on('change','input[type="radio"]',function(){
     }else{
         $this.parents('.col-md-4').siblings().find(".spouseName").addClass("d-none")
     }
-})
+});
+
+$(document).ready(function() {
+    $('#is_married').change(function() {
+        if (this.checked) {
+            $('#date_and_place_marriage').prop('required',true);
+            $('#spouse_first_name').prop('required',true);
+            $('#spouse_middle_name').prop('required',true);
+            $('#spouse_last_name').prop('required',true);
+            $('#spouse_maiden_name').prop('required',true);
+            $('#spouse_date_of_birth').prop('required',true); 
+            $('#spouse_home_phone_number').prop('required',true);
+            $('#spouse_business_phone_number').prop('required',true);
+            $('#spouse_birthplace').prop('required',true);
+            $('#spouse_ssn').prop('required',true);
+            $('#spouse_driver_license_no').prop('required',true); 
+            $('#spouse_another_name_that_used').prop('required',true);
+            $('#spouse_state_residence').prop('required',true);
+            $('#spouse_lived_year').prop('required',true);
+        } else {
+            $('#date_and_place_marriage').prop('required',false);
+            $('#spouse_first_name').prop('required',false);
+            $('#spouse_middle_name').prop('required',false);
+            $('#spouse_last_name').prop('required',false);
+            $('#spouse_maiden_name').prop('required',false);
+            $('#spouse_date_of_birth').prop('required',false);
+            $('#spouse_home_phone_number').prop('required',false);
+            $('#spouse_business_phone_number').prop('required',false);
+            $('#spouse_birthplace').prop('required',false);
+            $('#spouse_ssn').prop('required',false);
+            $('#spouse_driver_license_no').prop('required',false);
+            $('#spouse_another_name_that_used').prop('required',false);
+            $('#spouse_state_residence').prop('required',false);
+        }      
+    });
+
+    $('#is_domestic_partner').change(function() {
+        if (this.checked) {
+            $('#domestic_first_name').prop('required',true);
+            $('#domestic_middle_name').prop('required',true);
+            $('#domestic_last_name').prop('required',true);
+            $('#domestic_date_of_birth').prop('required',true);
+            $('#domestic_maiden_name').prop('required',true);
+            $('#domestic_home_phone_number').prop('required',true); 
+            $('#domestic_business_phone_number').prop('required',true);
+            $('#domestic_birthplace').prop('required',true);
+            $('#domestic_ssn').prop('required',true);
+            $('#domestic_driver_license_no').prop('required',true);
+            $('#domestic_another_name_that_used').prop('required',true); 
+            $('#domestic_state_residence').prop('required',true);
+            $('#domestic_lived_year').prop('required',true);
+            $('#spouse_lived_year').prop('required',true);
+        } else {
+            $('#domestic_first_name').prop('required',false);
+            $('#domestic_middle_name').prop('required',false);
+            $('#domestic_last_name').prop('required',false);
+            $('#domestic_date_of_birth').prop('required',false);
+            $('#domestic_maiden_name').prop('required',false);
+            $('#domestic_home_phone_number').prop('required',false);
+            $('#domestic_business_phone_number').prop('required',false);
+            $('#domestic_birthplace').prop('required',false);
+            $('#domestic_ssn').prop('required',false);
+            $('#domestic_driver_license_no').prop('required',false);
+            $('#domestic_another_name_that_used').prop('required',false);
+            $('#domestic_state_residence').prop('required',false);
+            $('#domestic_lived_year').prop('required',false);
+        }      
+    });
+
+    $('#is_loan').change(function() {
+        if (this.checked) {
+            $('#lender').prop('required',true);
+            $('#loan_amount').prop('required',true);
+            $('#loan_account').prop('required',true);
+        } else {
+            $('#lender').prop('required',false);
+            $('#loan_amount').prop('required',false);
+            $('#loan_account').prop('required',false);
+        }      
+    });
+});
 
 $("#borrower_seller_form").validate({
     ignore: false,
