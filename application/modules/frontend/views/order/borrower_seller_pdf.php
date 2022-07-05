@@ -193,7 +193,7 @@
 												<label for="" class="mb-2 col-md-12"><b>Email</b></label>
 												<div class="col-md-6">
 													<div class="form-group position-relative">
-														<input type="email" class="form-control" id="co_seller_email" name="co_seller_email" value="<?php echo $co_seller_email;?>">
+														<input type="email" style='width: 100%;' class="form-control" id="co_seller_email" name="co_seller_email" value="<?php echo $co_seller_email;?>">
 														<small class="small_label"> example@example.com</small>
 													</div>
 												</div>
@@ -433,7 +433,7 @@
 												</li>
 												<li class="list-inline-item">
                                                     &nbsp;<input type="radio" id="noinsurance" value="no" name="is_insurance_policy" <?php echo ($is_insurance_policy == 'no') ? 'checked="checked"' : '';?>>
-													&nbsp;&nbsp;<label for="noinsurance">No</label>
+													&nbsp;&nbsp;<label for="noinsurance">No</label> 
 												</li>
 											</ul>
 											<div class="insurance_policy_file_name d-none mb-4">
@@ -574,19 +574,19 @@
 											<label for="" class="mb-2"><b>Seller Will be Paying and providing invoices for</b></label>
 											<ul class="list-unstyled">
 												<li>
-                                                    &nbsp;<input class="form-check-input" type="checkbox" id="repair" value="repairs" name="repairs" <?php echo (in_array('repairs', $seller_invoices)) ? 'checked="checked"' : '';?>>
+                                                    &nbsp;<input class="form-check-input" type="checkbox" style="font-size: 18pt" id="repair" value="repairs" name="repairs" <?php echo (in_array('repairs', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													&nbsp;&nbsp;<label for="repair">Repairs</label>
 												</li>
 												<li>
-                                                    &nbsp;<input class="form-check-input" type="checkbox" id="warranty" value="warranty" name="warranty" <?php echo (in_array('warranty', $seller_invoices)) ? 'checked="checked"' : '';?>>
+                                                    &nbsp;<input class="form-check-input" type="checkbox" style="font-size: 18pt" id="warranty" value="warranty" name="warranty" <?php echo (in_array('warranty', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													&nbsp;&nbsp;<label for="warranty">Home Warranty</label>
 												</li>
 												<li>
-                                                    &nbsp;<input class="form-check-input" type="checkbox" id="other" value="other" name="other" <?php echo (in_array('other', $seller_invoices)) ? 'checked="checked"' : '';?>>
+                                                    &nbsp;<input class="form-check-input" type="checkbox" style="font-size: 18pt" id="other" value="other" name="other" <?php echo (in_array('other', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													&nbsp;&nbsp;<label for="other">Other</label>
 												</li>
 												<li>
-                                                    &nbsp;<input class="form-check-input" type="checkbox" id="none" value="none" name="none" <?php echo (in_array('none', $seller_invoices)) ? 'checked="checked"' : '';?>>
+                                                    &nbsp;<input class="form-check-input" type="checkbox" style="font-size: 18pt" id="none" value="none" name="none" <?php echo (in_array('none', $seller_invoices)) ? 'checked="checked"' : '';?>>
 													&nbsp;&nbsp;<label for="none">None1</label>
 												</li>
 											</ul>
@@ -668,7 +668,7 @@
 												<div class="col-md-6 mb-4">
 													<div class="form-group">
 														<label for="" class="mb-2"><b>Lender/Mortgage Holder Phone:</b></label>
-														<input type="text" style='width: 100%;' class="form-control" id="mortgage_phone" name="mortgage_phone" value="<?php echo $propmortgage_phoneerty_address;?>">
+														<input type="text" style='width: 100%;' class="form-control" id="mortgage_phone" name="mortgage_phone" value="<?php echo $mortgage_phone;?>">
 													</div>
 												</div>
 												<div class="col-md-6 mb-4">
@@ -900,7 +900,7 @@
 										</div>
 
 										<div class="form-group mb-2">
-                                            &nbsp;<input type="checkbox" id="is_agree_593_c" name="is_agree_593_c" checked="checked">
+                                            &nbsp;<input type="checkbox" style="font-size: 18pt" id="is_agree_593_c" name="is_agree_593_c" checked="checked">
 											&nbsp;&nbsp;<label for="agree">I/We have read and agree to <span>*</span></label>
 										</div>
 										
@@ -1307,7 +1307,7 @@
 										</ul>
 
 										<div class="form-group mb-2">
-                                            &nbsp;<input type="checkbox" id="sign" name="sign" checked="checked">
+                                            &nbsp;<input type="checkbox" style="font-size: 18pt" id="sign" name="sign" checked="checked">
 											&nbsp;&nbsp;<label for="sign">My/Our Signature(s) below <span>*</span></label>
 										</div>
 										
@@ -1366,7 +1366,7 @@
 
 
 										<div class="form-group mb-2 d-flex">
-                                            &nbsp;<input type="checkbox" id="agreementSign" name="agreementSign" class="me-2 mt-1" <?php echo ($agreementSign == 'on') ? 'checked="checked"' : '';?>>
+                                            &nbsp;<input type="checkbox" style="font-size: 18pt" id="agreementSign" name="agreementSign" class="me-2 mt-1"  checked="checked">
 											&nbsp;&nbsp;<label for="agreementSign" class="mb-2">By checking and signing below
 												<span>*</span></label>
 										</div>
@@ -1658,7 +1658,7 @@
 
 
 										<div class="form-group mb-2 d-flex">
-                                            &nbsp;<input type="checkbox" id="readAgree" name="readAgree" class="me-2 mt-1" checked="checked">
+                                            &nbsp;<input type="checkbox" style="font-size: 18pt" id="readAgree" name="readAgree" class="me-2 mt-1" checked="checked">
 											&nbsp;&nbsp;<label for="readAgree" class="mb-2">I/We have read and agree to
 												<span>*</span></label>
 										</div>
