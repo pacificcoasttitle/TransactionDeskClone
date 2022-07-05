@@ -128,13 +128,13 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="5" style='width: 100%;' class="form-control" style="height:auto;" id="buyer_current_mailing_address" name="buyer_current_mailing_address"><?php echo $buyer_current_mailing_address;?></textarea>
+                                            <textarea rows="5" style='height:auto !important;width: 100%;' class="form-control" id="buyer_current_mailing_address" name="buyer_current_mailing_address"><?php echo $buyer_current_mailing_address;?></textarea>
                                             <small class="small_label">Buyer(s) Current Mailing Address:</small>
                                         </div>
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="5" style='width: 100%;' class="form-control" style="height:auto;" id="buyer_mailing_address_after_close" name="buyer_mailing_address_after_close" value="<?php echo $buyer_mailing_address_after_close;?>"></textarea>
+                                            <textarea rows="5" style='height:auto !important;width: 100%;' class="form-control" id="buyer_mailing_address_after_close" name="buyer_mailing_address_after_close"><?php echo $buyer_mailing_address_after_close;?></textarea>
                                             <small class="small_label">Buyer(s) Mailing Address After Close Of Escrow:</small>
                                         </div>
 
@@ -146,7 +146,7 @@
                                         
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="5" style='width: 100%;' class="form-control" style="height:auto;" id="lender_address" name="lender_address" value="<?php echo $lender_address;?>"></textarea>
+                                            <textarea rows="5" class="form-control" style="height:auto !important; width: 100%;" id="lender_address" name="lender_address"><?php echo $lender_address;?></textarea>
                                             <small class="small_label">Address:</small>
                                         </div>
 
@@ -176,7 +176,7 @@
                                         
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="5" style='width: 100%;' class="form-control" style="height:auto;" id="seond_lender_address" name="seond_lender_address"><?php echo $seond_lender_address;?></textarea>
+                                            <textarea rows="5" style='height:auto !important;width: 100%;' class="form-control" id="seond_lender_address" name="seond_lender_address"><?php echo $seond_lender_address;?></textarea>
                                             <small class="small_label">Address:</small>
                                         </div>
 
@@ -216,7 +216,7 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="insurance_address" name="insurance_address"><?php echo $insurance_address;?></textarea>
+                                            <textarea rows="5" class="form-control" style="height:auto !important;width: 100%;" id="insurance_address" name="insurance_address"><?php echo $insurance_address;?></textarea>
                                             <small class="small_label">Insurance's Address:</small>
                                         </div>
                                         
@@ -230,10 +230,10 @@
                                                 
                                         <div class="mb-80 mt-5">
                                             Dated:    
-                                            <input type="text" class="w30 input_single" id="buyer_date" name="buyer_date" value="<?php echo $buyer_date;?>">
+                                            <input type="text" class="form-control" id="buyer_date" name="buyer_date" value="<?php echo $buyer_date;?>">
                                         </div>
                                        
-                                        <input type="text" class="signature" value="" placeholder="signature" id="buyer_signature" name="buyer_signature" value="<?php echo $buyer_signature;?>">  
+                                        <input type="text" class="form-control" value="" placeholder="signature" id="buyer_signature" name="buyer_signature" value="<?php echo $buyer_signature;?>">  
                                     </div>   
                                 </div>
                             </div>
@@ -292,7 +292,7 @@
                                                     <label for="yesresidence">Yes</label>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    &nbsp;<input type="radio" id="noresidence" <?php echo ($is_residence == 'no') ? 'checked="checked"' : '';?> value="no" name="is_residence"> &nbsp;&nbsp;&nbsp;
+                                                    &nbsp;<input type="radio" id="noresidence" <?php echo ($is_residence == 'no') ? 'checked="checked"' : '';?> value="no" name="is_residence">&nbsp;&nbsp;&nbsp;
                                                     <label for="noresidence">No</label>
                                                 </li>
                                             </ul>
@@ -794,7 +794,7 @@
                                                 </div>
                                             </div>                                            
                                             <div class="mt-5">
-                                                Are you currently married? <input type="checkbox" name="is_married" id="is_married" <?php echo  ($is_married == 'is_married') ? 'checked="checked"' : '';?>> If yes, complete the following information:
+                                                Are you currently married? <input type="checkbox" style='font-size: 18pt;' class="" name="is_married" id="is_married" <?php echo  ($is_married == 'on') ? 'checked="checked"' : '';?>> If yes, complete the following information:
                                             </div>
 
                                             <div class="form-group position-relative mt-3 mb-3">
@@ -924,7 +924,7 @@
                                                 </div>
                                             </div>                                            
                                             <div class="mt-5">
-                                                Are you currently a registered domestic partner? <input type="checkbox" name="is_domestic_partner" id="is_domestic_partner" <?php echo  ($is_domestic_partner == 'is_domestic_partner') ? 'checked="checked"' : '';?>> If yes, complete the following information:
+                                                Are you currently a registered domestic partner? <input type="checkbox" style='font-size: 18pt;' name="is_domestic_partner" id="is_domestic_partner" <?php echo  ($is_domestic_partner == 'on') ? 'checked="checked"' : '';?>> If yes, complete the following information:
                                             </div>
 
                                             <div class="row mt-3">
@@ -1170,11 +1170,11 @@
                                                     Buyer intends to reside on the property in this transaction:  
                                                 </div>
                                                 <div class="me-3">
-                                                    <input type="radio" id="yesProperty" value="Yes" name="is_buyer_intends">
+                                                    &nbsp;<input type="radio" id="yesProperty" value="Yes" name="is_buyer_intends" <?php echo ($is_buyer_intends == 'Yes') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                     <label for="yesProperty">Yes</label>
                                                 </div>
                                                 <div>
-                                                    <input type="radio" id="noPorperty" value="No" name="is_buyer_intends">
+                                                    &nbsp;<input type="radio" id="noPorperty" value="No" name="is_buyer_intends" <?php echo ($is_buyer_intends == 'No') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                     <label for="noPorperty">No</label>
                                                 </div>
                                             </div>
@@ -1193,7 +1193,7 @@
                                             </div>
 
                                             <div class="mt-4">
-                                                The land is unimproved <input type="text" class="input_single w-small" id="unimproved" name="unimproved" value="<?php echo $unimproved;?>">; or improved with a structure of the following type:  A Single or 1-4 Family <input type="text" class="input_single w-small" id="single_family" name="single_family" value="<?php echo $single_family;?>"> Condo Unit <input type="text" class="input_single w-small" id="condo_unit" name="condo_unit" value="<?php echo $condo_unit;?>"> Other <input type="text" class="input_single w-small" id="other" name="other" value="<?php echo $other;?>"> 	
+                                                The land is unimproved <input type="text" class="input_single form-control" id="unimproved" name="unimproved" value="<?php echo $unimproved;?>">; or improved with a structure of the following type:  A Single or 1-4 Family <input type="text" class="input_single form-control" id="single_family" name="single_family" value="<?php echo $single_family;?>"> Condo Unit <input type="text" class="input_single form-control" id="condo_unit" name="condo_unit" value="<?php echo $condo_unit;?>"> Other <input type="text" class="input_single form-control" id="other" name="other" value="<?php echo $other;?>"> 	
                                             </div>
 
                                             <div class="d-flex mt-3">
@@ -1201,11 +1201,11 @@
                                                     Improvements, remodeling or repairs to this property have been made within the past six months: 
                                                 </div>
                                                 <div class="me-3">
-                                                    <input type="radio" name="is_improvement" id="yesImprovements" value="Yes">
+                                                    &nbsp;<input type="radio" name="is_improvement" id="yesImprovements" value="Yes" <?php echo ($is_improvement == 'Yes') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                     <label for="yesImprovements">Yes</label>
                                                 </div>
                                                 <div>
-                                                    <input type="radio" name="is_improvement" id="noImprovements" value="No">
+                                                    &nbsp;<input type="radio" name="is_improvement" id="noImprovements" value="No" <?php echo ($is_improvement == 'No') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                     <label for="noImprovements">No</label>
                                                 </div>
                                             </div>
@@ -1216,11 +1216,11 @@
                                                     If yes, have all costs for labor and materials arising in connection therewith been paid in full?
                                                 </div>
                                                 <div class="me-3">
-                                                    <input type="radio" name="is_materials" id="yesmaterials" value="Yes">
+                                                    &nbsp;<input type="radio" name="is_materials" id="yesmaterials" value="Yes" <?php echo ($is_materials == 'Yes') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                     <label for="yesmaterials">Yes</label>
                                                 </div>
                                                 <div>
-                                                    <input type="radio" name="is_materials" id="nomaterials" value="No">
+                                                    &nbsp;<input type="radio" name="is_materials" id="nomaterials" value="No" <?php echo ($is_materials == 'No') ? 'checked="checked"' : '';?>>&nbsp;&nbsp;&nbsp;
                                                     <label for="nomaterials">No</label>
                                                 </div>
                                                 
@@ -1228,7 +1228,7 @@
                                             
 
                                             <div class="mt-3">
-                                                Any current loans on property? <input type="checkbox" name="is_loan" id="is_loan" <?php echo  ($is_loan == 'is_loan') ? 'checked="checked"' : '';?>>; If yes, complete the following:
+                                                Any current loans on property? <input style='font-size: 18pt;' type="checkbox" name="is_loan" id="is_loan" <?php echo  ($is_loan == 'on') ? 'checked="checked"' : '';?>>; If yes, complete the following:
                                             </div>
 
                                             <div class="mt-3 row">
@@ -1286,27 +1286,27 @@
 
                                             <div class="mt-3 row">
                                                 <div class="col-md-6">
-                                                    Executed on <input type="text" class="input_single" id="executed_date" name="executed_date" value="<?php echo $executed_date;?>">, <input type="text" class="input_single w-medium" id="executed_year" name="executed_year" value="<?php echo $executed_year;?>">
+                                                    Executed on <input type="text" class="input_single form-control" id="executed_date" name="executed_date" value="<?php echo $executed_date;?>">, <input type="text" class="input_single form-control" id="executed_year" name="executed_year" value="<?php echo $executed_year;?>">
                                                     
                                                 </div>
                                                 <div class="col-md-6">
-                                                    at <input type="text" class="input_single" id="executed_time" name="executed_time" value="<?php echo $executed_time;?>">
+                                                    at <input type="text" class="input_single form-control" id="executed_time" name="executed_time" value="<?php echo $executed_time;?>">
                                                     
                                                 </div>
                                             </div>
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <div class="mt-5">
+                                                    <div class="mt-5 form-group">
                                                         Signature :    
-                                                        <input type="text" class="input_single" id="signature" name="signature" value="<?php echo $signature;?>">
+                                                        <input type="text" style='width: auto;' class="form-control" id="signature" name="signature" value="<?php echo $signature;?>">
                                                     </div>
                                                     
                                                 </div>
                                                 <div class="col-md-6 text-md-end">
-                                                    <div class="mt-5">
+                                                    <div class="mt-5 form-group">
                                                         Signature :    
-                                                        <input type="text" class="input_single" id="second_signature" name="second_signature" value="<?php echo $second_signature;?>">
+                                                        <input type="text" style='width: auto;' class="form-control" id="second_signature" name="second_signature" value="<?php echo $second_signature;?>">
                                                     </div>
                                                     
                                                 </div>
@@ -1343,113 +1343,113 @@
                                             
                                             <div class="form-group position-relative mb-4 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="names" name="names" value="<?php echo $names;?>">
+                                                <input type="text" style='width: 100%;' class="form-control" id="names" name="names" value="<?php echo $names;?>">
                                                 <small class="small_label">Names:</small>
                                             </div>
 
                                             <div class="mb-4">PLEASE MARK APPROPRIATE CHOICE FOR STATUS: check for PICK-UP </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="husbandWife" name="pick_ups[]" value="husbandWife" class="me-2">
+                                                <input style='font-size: 18pt;' type="checkbox" id="husbandWife" name="pick_ups[]" value="husbandWife" class="me-2" <?php echo (in_array('husbandWife', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="husbandWife">Husband and Wife</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="wifeHusband" name="pick_ups[]" value="wifeHusband" class="me-2">
+                                                <input style='font-size: 18pt;' type="checkbox" id="wifeHusband" name="pick_ups[]" value="wifeHusband" class="me-2" <?php echo (in_array('wifeHusband', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="wifeHusband">Wife and Husband</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="couple" name="pick_ups[]" value="couple" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="couple" name="pick_ups[]" value="couple" class="me-2" <?php echo (in_array('couple', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="couple">A Married Couple</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="singleMan" name="pick_ups[]" value="singleMan" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="singleMan" name="pick_ups[]" value="singleMan" class="me-2" <?php echo (in_array('singleMan', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="singleMan">A Single Man (never married)</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="singleWoman" name="pick_ups[]" value="singleWoman" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="singleWoman" name="pick_ups[]" value="singleWoman" class="me-2" <?php echo (in_array('singleWoman', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="singleWoman">A Single Woman (never married)</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="singlePerson" name="pick_ups[]" value="singlePerson" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="singlePerson" name="pick_ups[]" value="singlePerson" class="me-2" <?php echo (in_array('singlePerson', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="singlePerson">A Single Person (never married)</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="marriedMan" name="pick_ups[]" value="marriedMan" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="marriedMan" name="pick_ups[]" value="marriedMan" class="me-2" <?php echo (in_array('marriedMan', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="marriedMan">A Married Man (as his sole and separate property)*</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="marriedWoman" name="pick_ups[]" value="marriedWoman" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="marriedWoman" name="pick_ups[]" value="marriedWoman" class="me-2" <?php echo (in_array('purchase', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="marriedWoman">A Married Woman (as her sole and separate property)*</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="marriedPerson" name="pick_ups[]" value="marriedPerson" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="marriedPerson" name="pick_ups[]" value="marriedPerson" class="me-2" <?php echo (in_array('marriedPerson', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="marriedPerson">A Married Person (as his/her sole and separate property)*</label>                                                 
                                             </div>
                                             <div class="mb-2">
                                                 <label for="interspousal">* Please indicate name of spouse so interspousal deed may be drawn:</label>  
-                                                <input type="text" class="form-control" id="names_of_spouse" name="names_of_spouse" value="<?php echo $names;?>">                                               
+                                                <input style='width: 100%;' type="text" class="form-control" id="names_of_spouse" name="names_of_spouse" value="<?php echo $names;?>">                                               
                                             </div>
                                             
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="unmarriedMan" name="pick_ups[]" value="unmarriedMan" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="unmarriedMan" name="pick_ups[]" value="unmarriedMan" class="me-2" <?php echo (in_array('unmarriedMan', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="unmarriedMan">An Unmarried Man (divorced)</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="unmarriedWoman" name="pick_ups[]" value="unmarriedWoman" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="unmarriedWoman" name="pick_ups[]" value="unmarriedWoman" class="me-2" <?php echo (in_array('unmarriedWoman', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="unmarriedWoman">An Unmarried Woman (divorced)</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="unmarriedPerson" name="pick_ups[]" value="unmarriedPerson" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="unmarriedPerson" name="pick_ups[]" value="unmarriedPerson" class="me-2" <?php echo (in_array('unmarriedPerson', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="unmarriedPerson">An Unmarried Person (divorced)</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="widow" name="pick_ups[]" value="widow" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="widow" name="pick_ups[]" value="widow" class="me-2" <?php echo (in_array('widow', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="widow">A Widow (spouse deceased)</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="widower" name="pick_ups[]" value="widower" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="widower" name="pick_ups[]" value="widower" class="me-2" <?php echo (in_array('widower', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="widower">A Widower (spouse deceased)</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="domestic" name="pick_ups[]" value="domestic" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="domestic" name="pick_ups[]" value="domestic" class="me-2" <?php echo (in_array('domestic', $pick_ups)) ? 'checked="checked"' : '';?>>
                                                 <label for="domestic">Registered Domestic Partners</label>                                                 
                                             </div>
                                             <div class="mb-3 mt-3"><b>PLEASE MARK APPROPRIATE CHOICE FOR VESTING:</b></div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="community" name="appropriate_choice[]" value="community" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="community" name="appropriate_choice[]" value="community" class="me-2" <?php echo (in_array('community', $appropriate_choice)) ? 'checked="checked"' : '';?>>
                                                 <label for="community">Community Property</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="survivorship" name="appropriate_choice[]" value="survivorship" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="survivorship" name="appropriate_choice[]" value="survivorship" class="me-2" <?php echo (in_array('survivorship', $appropriate_choice)) ? 'checked="checked"' : '';?>>
                                                 <label for="survivorship">Community Property with Right of Survivorship</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="tenants" name="appropriate_choice[]" value="tenants" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="tenants" name="appropriate_choice[]" value="tenants" class="me-2" <?php echo (in_array('tenants', $appropriate_choice)) ? 'checked="checked"' : '';?>>
                                                 <label for="tenants">Joint Tenants</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="internetAmount" name="appropriate_choice[]" value="internetAmount" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="internetAmount" name="appropriate_choice[]" value="internetAmount" class="me-2" <?php echo (in_array('internetAmount', $appropriate_choice)) ? 'checked="checked"' : '';?>>
                                                 <label for="internetAmount">Tenants In Common (Please Give Interest Amounts)</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="partnership" name="appropriate_choice[]" value="partnership" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="partnership" name="appropriate_choice[]" value="partnership" class="me-2" <?php echo (in_array('partnership', $appropriate_choice)) ? 'checked="checked"' : '';?>>
                                                 <label for="partnership">Sole and Separate Property (If Married or Domestic Partnership, an Interspousal Grant Deed, A Quitclaim Deed, Statement Of Information and Appropriate Instructions Will Need To Be Submitted.)</label>                                                 
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="general" name="appropriate_choice[]" value="general" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="general" name="appropriate_choice[]" value="general" class="me-2" <?php echo (in_array('general', $appropriate_choice)) ? 'checked="checked"' : '';?>>
                                                 <label for="general">Partnership (Limited Or General)</label>     
                                                 <input type="text" class="form-control w-50 ms-3" id="partnership_name" name="partnership_name" value="<?php echo $partnership_name;?>">                                            
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="corporation" name="appropriate_choice[]" value="corporation" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="corporation" name="appropriate_choice[]" value="corporation" class="me-2" <?php echo (in_array('corporation', $appropriate_choice)) ? 'checked="checked"' : '';?>>
                                                 <label for="corporation">Corporation (California Or Other State)</label>     
                                                 <input type="text" class="form-control w-50 ms-3" id="corporation_name" name="corporation_name" value="<?php echo $corporation_name;?>">                                            
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="trust" name="appropriate_choice[]" value="trust" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="trust" name="appropriate_choice[]" value="trust" class="me-2" <?php echo (in_array('trust', $appropriate_choice)) ? 'checked="checked"' : '';?>>
                                                 <label for="trust">A Trust (attach copy of Trust Agreement)</label>                                     
                                             </div>
                                             <div class="d-flex align-items-center mb-2">
-                                                <input type="checkbox" id="other" name="appropriate_choice[]" value="other" class="me-2">
+                                                <input type="checkbox" style="font-size: 18pt" id="other" name="appropriate_choice[]" value="other" class="me-2" <?php echo (in_array('other', $appropriate_choice)) ? 'checked="checked"' : '';?>>
                                                 <label for="other">Other</label>                                     
                                             </div>
 
@@ -1461,14 +1461,14 @@
                                                 <div class="col-md-6">
                                                     <div class="mt-5">
                                                         Signature :    
-                                                        <input type="text" class="input_single" id="vesting_form_signature" name="vesting_form_signature" value="<?php echo $vesting_form_signature;?>">
+                                                        <input type="text" class="input_single form-control" id="vesting_form_signature" name="vesting_form_signature" value="<?php echo $vesting_form_signature;?>">
                                                     </div>
                                                     
                                                 </div>
                                                 <div class="col-md-6 text-md-end">
                                                     <div class="mt-5">
                                                         Date :    
-                                                        <input type="text" class="input_single" id="vesting_form_date" name="vesting_form_date" value="<?php echo $vesting_form_date;?>">
+                                                        <input type="text" class="input_single form-control" id="vesting_form_date" name="vesting_form_date" value="<?php echo $vesting_form_date;?>">
                                                     </div>
                                                 </div> 
                                             </div>                                
@@ -1536,8 +1536,10 @@ Los Angeles, CA 90036
                                                 <th></th>
                                             </tr>
                                             <tr>
-                                                <td><input style='margin-top: 5px;' type="radio" name="is_principal_residence" id="checkYes0" value="yes" <?php echo ($is_principal_residence == 'yes') ? 'checked="checked"' : '';?>></td> 
-                                                <td><input style='margin-top: 5px;' type="radio" name="is_principal_residence" id="checkNo0" value="no" <?php echo ($is_principal_residence == 'no') ? 'checked="checked"' : '';?>></td>
+                                                <td>
+                                                    <input type="radio" name="is_principal_residence" id="checkYes0" value="yes" <?php echo ($is_principal_residence == 'yes') ? 'checked="checked"' : '';?>></td> 
+                                                <td>
+                                                    <input type="radio" name="is_principal_residence" id="checkNo0" value="no" <?php echo ($is_principal_residence == 'no') ? 'checked="checked"' : '';?>></td>
                                                 <td>
                                                     This property is intended as my principal residence. If YES, please indicate the date of occupancy or intended occupancy.
                                                     <div class="d-flex date_group">
@@ -1838,25 +1840,25 @@ Los Angeles, CA 90036
                                                     <div class="row">
                                                         <div class="col-lg-2 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="purchase" value="purchase" name="types_of_transfer[]" <?php echo (in_array('purchase', $types_of_transfer)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="purchase" value="purchase" name="types_of_transfer[]" <?php echo (in_array('purchase', $types_of_transfer)) ? 'checked="checked"' : '';?>>
                                                                 <label for="purchase">Purchase</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-2 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="foreclosure" value="foreclosure" name="types_of_transfer[]" <?php echo (in_array('foreclosure', $types_of_transfer)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="foreclosure" value="foreclosure" name="types_of_transfer[]" <?php echo (in_array('foreclosure', $types_of_transfer)) ? 'checked="checked"' : '';?>>
                                                                 <label for="foreclosure">Foreclosure</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-3 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="trade" value="trade_of_exchange" name="types_of_transfer[]" <?php echo (in_array('trade_of_exchange', $types_of_transfer)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="trade" value="trade_of_exchange" name="types_of_transfer[]" <?php echo (in_array('trade_of_exchange', $types_of_transfer)) ? 'checked="checked"' : '';?>>
                                                                 <label for="trade">Trade or exchange </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-5 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="acquisition" value="acquisition" name="types_of_transfer[]" <?php echo (in_array('acquisition', $types_of_transfer)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="acquisition" value="acquisition" name="types_of_transfer[]" <?php echo (in_array('acquisition', $types_of_transfer)) ? 'checked="checked"' : '';?>>
                                                                 <label for="acquisition"> Merger, stock, or partnership acquisition (Form BOE-100-B) </label>
                                                             </div>
                                                         </div>
@@ -1867,7 +1869,7 @@ Los Angeles, CA 90036
                                                             
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="checkbox" id="inheritance" value="inheritance" name="types_of_transfer[]" <?php echo (in_array('inheritance', $types_of_transfer)) ? 'checked="checked"' : '';?>> 
+                                                            <input type="checkbox" style="font-size: 18pt" id="inheritance" value="inheritance" name="types_of_transfer[]" <?php echo (in_array('inheritance', $types_of_transfer)) ? 'checked="checked"' : '';?>> 
                                                             <label for="inheritance">Inheritance. Date of death: 
                                                             <input type="date" class="input_single" id="date_of_death_transfer" name="date_of_death_transfer" value="<?php echo $date_of_death_transfer;?>"></label>
                                                             
@@ -1876,25 +1878,25 @@ Los Angeles, CA 90036
                                                     <div class="row mt-3">
                                                         <div class="col-lg-2 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="leaseback" value="leaseback" name="types_of_transfer[]" <?php echo (in_array('leaseback', $types_of_transfer)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="leaseback" value="leaseback" name="types_of_transfer[]" <?php echo (in_array('leaseback', $types_of_transfer)) ? 'checked="checked"' : '';?>>
                                                                 <label for="leaseback"> Sale/leaseback</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-2 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="lease" value="lease" name="types_of_transfer[]" <?php echo (in_array('lease', $types_of_transfer)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="lease" value="lease" name="types_of_transfer[]" <?php echo (in_array('lease', $types_of_transfer)) ? 'checked="checked"' : '';?>>
                                                                 <label for="lease">Creation of a lease</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-3 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="assignment" value="assignment" name="types_of_transfer[]" <?php echo (in_array('assignment', $types_of_transfer)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="assignment" value="assignment" name="types_of_transfer[]" <?php echo (in_array('assignment', $types_of_transfer)) ? 'checked="checked"' : '';?>>
                                                                 <label for="assignment">Assignment of a lease </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-5 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="termination" value="termination" name="types_of_transfer[]" <?php echo (in_array('termination', $types_of_transfer)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="termination" value="termination" name="types_of_transfer[]" <?php echo (in_array('termination', $types_of_transfer)) ? 'checked="checked"' : '';?>>
                                                                 <label for="termination"> Termination of a lease. Date lease began  
                                                                     <input type="date" class="input_single" id="date_of_lease_began" name="date_of_lease_began" value="<?php echo $date_of_lease_began;?>"></label>
                                                                 
@@ -1970,25 +1972,25 @@ Los Angeles, CA 90036
                                                     <div class="row mt-3">
                                                         <div class="col-lg-3 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="fha" value="fha" name="first_deed_payment_types[]" <?php echo (in_array('fha', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="fha" value="fha" name="first_deed_payment_types[]" <?php echo (in_array('fha', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="discount">FHA (____Discount Points)</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-3 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="cal_vet" value="cal_vet" name="first_deed_payment_types[]" <?php echo (in_array('cal_vet', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="cal_vet" value="cal_vet" name="first_deed_payment_types[]" <?php echo (in_array('cal_vet', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="vet">Cal-Vet </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-3 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="va_point" value="va_point" name="first_deed_payment_types[]" <?php echo (in_array('va_point', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="va_point" value="va_point" name="first_deed_payment_types[]" <?php echo (in_array('va_point', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="va_point">VA (____Discount Points) </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-3 col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="fix_rate" value="fix_rate" name="first_deed_payment_types[]" <?php echo (in_array('fix_rate', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="fix_rate" value="fix_rate" name="first_deed_payment_types[]" <?php echo (in_array('fix_rate', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="fix_rate">Fixed rate </label>
                                                             </div>
                                                         </div>
@@ -1996,19 +1998,19 @@ Los Angeles, CA 90036
                                                     <div class="row mt-3">
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="var_rate" value="var_rate" name="first_deed_payment_types[]" <?php echo (in_array('var_rate', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="var_rate" value="var_rate" name="first_deed_payment_types[]" <?php echo (in_array('var_rate', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="var_rate">Variable rate</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="loan" value="loan" name="first_deed_payment_types[]" <?php echo (in_array('loan', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="loan" value="loan" name="first_deed_payment_types[]" <?php echo (in_array('loan', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="loan">Bank/Savings & Loan/Credit Union </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="loan_carried_by_seller" value="loan_carried_by_seller" name="first_deed_payment_types[]" <?php echo (in_array('loan_carried_by_seller', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="loan_carried_by_seller" value="loan_carried_by_seller" name="first_deed_payment_types[]" <?php echo (in_array('loan_carried_by_seller', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="carried">Loan carried by seller</label>
                                                             </div>
                                                         </div>
@@ -2016,13 +2018,13 @@ Los Angeles, CA 90036
                                                     <div class="row mt-3">
                                                         <div class="col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="balloon_payment" value="balloon_payment" name="first_deed_payment_types[]" <?php echo (in_array('balloon_payment', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="balloon_payment" value="balloon_payment" name="first_deed_payment_types[]" <?php echo (in_array('balloon_payment', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="balloon">Balloon payment $</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="due_date" value="due_date" name="first_deed_payment_types[]" <?php echo (in_array('due_date', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="due_date" value="due_date" name="first_deed_payment_types[]" <?php echo (in_array('due_date', $first_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="due_date">Due date: <input type="date" class="input_single" id="first_deed_due_date" name="first_deed_due_date" value="<?php echo $first_deed_due_date;?>"></label>
                                                             </div>
                                                         </div>
@@ -2041,19 +2043,19 @@ Los Angeles, CA 90036
                                                     <div class="mt-3 row">
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="fixed_rate" value="fixed_rate" name="second_deed_payment_types[]" <?php echo (in_array('fixed_rate', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="fixed_rate" value="fixed_rate" name="second_deed_payment_types[]" <?php echo (in_array('fixed_rate', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="fixed_rate">Fixed rate</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="second_var_rate" value="second_var_rate" name="second_deed_payment_types[]" <?php echo (in_array('second_var_rate', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="second_var_rate" value="second_var_rate" name="second_deed_payment_types[]" <?php echo (in_array('second_var_rate', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="variable_rate">Variable rate</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="second_loan" value="second_loan" name="second_deed_payment_types[]" <?php echo (in_array('second_loan', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="second_loan" value="second_loan" name="second_deed_payment_types[]" <?php echo (in_array('second_loan', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="union">Bank/Savings & Loan/Credit Union </label>
                                                             </div>
                                                         </div>
@@ -2061,19 +2063,19 @@ Los Angeles, CA 90036
                                                     <div class="mt-3 row">
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="second_loan_carried_by_seller" value="second_loan_carried_by_seller" name="second_deed_payment_types[]" <?php echo (in_array('second_loan_carried_by_seller', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="second_loan_carried_by_seller" value="second_loan_carried_by_seller" name="second_deed_payment_types[]" <?php echo (in_array('second_loan_carried_by_seller', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="loan_seller">Loan carried by seller</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="second_ballon_payment" value="second_ballon_payment" name="second_deed_payment_types[]" <?php echo (in_array('second_ballon_payment', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="second_ballon_payment" value="second_ballon_payment" name="second_deed_payment_types[]" <?php echo (in_array('second_ballon_payment', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="ballon_pay">Balloon payment $ <input type="text" id="ballon_payment" name="ballon_payment" class="input_single form-control" value="<?php echo $ballon_payment;?>"></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="second_due_date" value="second_due_date" name="second_deed_payment_types[]" <?php echo (in_array('second_due_date', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="second_due_date" value="second_due_date" name="second_deed_payment_types[]" <?php echo (in_array('second_due_date', $second_deed_payment_types)) ? 'checked="checked"' : '';?>>
                                                                 <label for="date_due">Due date:<input type="date" class="input_single form-control" id="second_deed_due_date" name="second_deed_due_date" value="<?php echo $second_deed_due_date;?>"></label>
                                                             </div>
                                                         </div>
@@ -2103,7 +2105,7 @@ Los Angeles, CA 90036
                                                 <td>
                                                     he property was purchased: 
                                                     <div class="mt-3">
-                                                        <input type="radio" name="property_purchase_via" id="real_estate" value="real_estate" <?php echo ($property_purchase_via == 'yes') ? 'real_estate' : '';?>>&nbsp;&nbsp;&nbsp;
+                                                        &nbsp;<input type="radio" name="property_purchase_via" id="real_estate" value="real_estate" <?php echo ($property_purchase_via == 'yes') ? 'real_estate' : '';?>>&nbsp;&nbsp;&nbsp;
                                                         <label for="broker_name">Through real estate broker.</label> 
                                                         Broker name: <input type="text" class="input_single form-control" id="broker_name" name="broker_name" value="<?php echo $broker_name;?>"> 
                                                         Phone number: <input type="text" class="input_single form-control" id="broker_phone_number" name="broker_phone_number" value="<?php echo $broker_phone_number;?>">
@@ -2151,19 +2153,19 @@ Los Angeles, CA 90036
                                                     <div class="row mt-3">
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="single" name="types_of_property_transferred[]" value="single" <?php echo (in_array('single', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="single" name="types_of_property_transferred[]" value="single" <?php echo (in_array('single', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
                                                                 <label for="single">Single-family residence</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="own" name="types_of_property_transferred[]" value="own" <?php echo (in_array('own', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="own" name="types_of_property_transferred[]" value="own" <?php echo (in_array('own', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
                                                                 <label for="own">Co-op/Own-your-own</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="manufactured" name="types_of_property_transferred[]" value="manufactured" <?php echo (in_array('manufactured', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="manufactured" name="types_of_property_transferred[]" value="manufactured" <?php echo (in_array('manufactured', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
                                                                 <label for="manufactured">Manufactured home</label>
                                                             </div>
                                                         </div>
@@ -2171,20 +2173,20 @@ Los Angeles, CA 90036
                                                     <div class="row mt-3">
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="multiple" name="types_of_property_transferred[]" value="multiple" <?php echo (in_array('multiple', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="multiple" name="types_of_property_transferred[]" value="multiple" <?php echo (in_array('multiple', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
                                                                 <label for="multiple">Multiple-family residence. Number of units: 
                                                                 <input type="text" class="input_single form-control" id="num_of_units" name="num_of_units" value="<?php echo $num_of_units;?>"></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="condo" name="types_of_property_transferred[]" value="condo" <?php echo (in_array('condo', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="condo" name="types_of_property_transferred[]" value="condo" <?php echo (in_array('condo', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
                                                                 <label for="condo">Condominium</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="unimproved" name="types_of_property_transferred[]" value="unimproved" <?php echo (in_array('unimproved', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="unimproved" name="types_of_property_transferred[]" value="unimproved" <?php echo (in_array('unimproved', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
                                                                 <label for="unimproved">Unimproved lot</label>
                                                             </div>
                                                         </div>
@@ -2192,19 +2194,19 @@ Los Angeles, CA 90036
                                                     <div class="row mt-3">
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="timber" name="types_of_property_transferred[]" value="timber" <?php echo (in_array('timber', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="timber" name="types_of_property_transferred[]" value="timber" <?php echo (in_array('timber', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
                                                                 <label for="timber">Other. Description: (i.e., timber, mineral, water rights, etc.)</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="timshare" name="types_of_property_transferred[]" value="timshare" <?php echo (in_array('timshare', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="timshare" name="types_of_property_transferred[]" value="timshare" <?php echo (in_array('timshare', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
                                                                 <label for="timshare">Timeshare </label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="commercial" name="types_of_property_transferred[]" value="commercial" <?php echo (in_array('commercial', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
+                                                                <input type="checkbox" style="font-size: 18pt" class="mt-2 me-2" id="commercial" name="types_of_property_transferred[]" value="commercial" <?php echo (in_array('commercial', $types_of_property_transferred)) ? 'checked="checked"' : '';?>>
                                                                 <label for="commercial">Commercial/Industrial</label>
                                                             </div>
                                                         </div>
@@ -2432,7 +2434,7 @@ Los Angeles, CA 90036
                                 <div id="collapseEleven" class="accordion-collapse collapse show" aria-labelledby="headingEleven" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="form-group d-flex mb-2">
-                                            <input type="checkbox" id="acknowledge" name="acknowledge"  class="me-2 mt-1">
+                                            <input type="checkbox" style="font-size: 18pt" id="acknowledge" name="acknowledge"  class="me-2 mt-1" checked="checked">
                                             <label for="acknowledge" class="mb-2">By clicking the submit button, I agree to terms & conditions.</label>
                                                 
                                         </div>
