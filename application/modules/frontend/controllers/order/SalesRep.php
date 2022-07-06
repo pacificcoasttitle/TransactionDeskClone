@@ -427,7 +427,7 @@ class SalesRep extends MX_Controller
                 } else {
                     $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonth($userId);
                 }
-                $salesHistory[$iM-1]['trending'] = $previousCount['total_count'] > $salesHistory[$iM-1]['total_open_count'] ? '<span style="color: red;font-weight:bold;"><i class="fa fa-arrow-down"></i></span>' : '<span style="color: limegreen;font-weight:bold;"><i class="fa fa-arrow-up"></i></span>';
+                $salesHistory[$iM-1]['trending'] = $previousCount['total_count'] >= $salesHistory[$iM-1]['total_open_count'] ? '<span style="color: red;font-weight:bold;"><i class="fa fa-arrow-down"></i></span>' : '<span style="color: limegreen;font-weight:bold;"><i class="fa fa-arrow-up"></i></span>';
             } else {
                 if ($month == '01') {
                     $previousCount = $this->order->getOpenOrdersCountForLastMonthOfPreviousYear($userId);
@@ -435,7 +435,7 @@ class SalesRep extends MX_Controller
                 } else {
                     $previousCount = $salesHistory[$iM-2]['total_open_count'];
                 }
-                $salesHistory[$iM-1]['trending'] = $previousCount > $salesHistory[$iM-1]['total_open_count'] ? '<span style="color: red;font-weight:bold;"><i class="fa fa-arrow-down"></i></span>' : '<span style="color: limegreen;font-weight:bold;"><i class="fa fa-arrow-up"></i></span>';
+                $salesHistory[$iM-1]['trending'] = $previousCount >= $salesHistory[$iM-1]['total_open_count'] ? '<span style="color: red;font-weight:bold;"><i class="fa fa-arrow-down"></i></span>' : '<span style="color: limegreen;font-weight:bold;"><i class="fa fa-arrow-up"></i></span>';
             }
 
 		}
@@ -581,8 +581,6 @@ class SalesRep extends MX_Controller
                 }
             }
         }
-       // echo "<pre>";
-        //print_r($data['summary_info']);exit;
         $this->template->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
         $this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=05') );
 		$this->template->show("order", "sales_summary", $data);
