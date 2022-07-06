@@ -488,7 +488,7 @@
 																					<div class="form-group row show_hide_threshold">
 																						<label  class="col-sm-4 col-form-label">Commission %</label>
 																						<div class="col-sm-8">
-																							<input  step="0.1" min="0"  type="number" class="form-control" name="commission[<?php echo $product_type;?>][<?php echo $underwriter_type_key;?>][<?php echo $underwriter_tire->id;?>][threshold_commission][]"  class="form-control" placeholder="Threshold commision %" value="<?php echo $threshold_commission;?>">
+																							<input  step="0.1" min="0"  type="number" class="form-control" name="commission[<?php echo $product_type;?>][<?php echo $underwriter_type_key;?>][<?php echo $underwriter_tire->id;?>][threshold_commission][]"  class="form-control" placeholder="Commision %" value="<?php echo $threshold_commission;?>">
 																						</div>
 																					</div>
 																							
@@ -514,7 +514,7 @@
 																		<div class="form-group row">
 																			<label  class="col-sm-4 col-form-label"> Commission %</label>
 																			<div class="col-sm-8">
-																				<input  step="0.1" min="0"  type="number" class="form-control" name="commission[<?php echo $product_type;?>][<?php echo $underwriter_type_key;?>][<?php echo $underwriter_tire->id;?>][fix_commission]"  class="form-control" placeholder="Threshold commision %" value="<?php echo set_value('commission['.$product_type.']['.$underwriter_type_key.']['.$underwriter_tire->id.'][fix_commission]',$fix_commission) ?>">
+																				<input  step="0.1" min="0"  type="number" class="form-control" name="commission[<?php echo $product_type;?>][<?php echo $underwriter_type_key;?>][<?php echo $underwriter_tire->id;?>][fix_commission]"  class="form-control" placeholder="Commision %" value="<?php echo set_value('commission['.$product_type.']['.$underwriter_type_key.']['.$underwriter_tire->id.'][fix_commission]',$fix_commission) ?>">
 																			</div>
 																		</div>
 																	</div>
@@ -633,7 +633,7 @@
 														<div class="form-group row show_hide_threshold">
 															<label  class="col-sm-4 col-form-label">Commission %</label>
 															<div class="col-sm-8">
-																<input  step="0.1" min="0"  type="number" class="form-control" name="escrow_commission[threshold_commission][]"  class="form-control" placeholder="Threshold commision %" value="<?php echo $threshold_commission;?>">
+																<input  step="0.1" min="0"  type="number" class="form-control" name="escrow_commission[threshold_commission][]"  class="form-control" placeholder="Commision %" value="<?php echo $threshold_commission;?>">
 															</div>
 														</div>
 																
@@ -659,7 +659,7 @@
 											<div class="form-group row">
 												<label  class="col-sm-4 col-form-label"> Commission %</label>
 												<div class="col-sm-8">
-													<input  step="0.1" min="0"  type="number" class="form-control" name="escrow_commission[fix_commission]"  class="form-control" placeholder="Threshold commision %" value="<?php echo set_value('commission['.$product_type.']['.$underwriter_type_key.']['.$underwriter_tire->id.'][fix_commission]',$fix_commission) ?>">
+													<input  step="0.1" min="0"  type="number" class="form-control" name="escrow_commission[fix_commission]"  class="form-control" placeholder="Commision %" value="<?php echo set_value('commission['.$product_type.']['.$underwriter_type_key.']['.$underwriter_tire->id.'][fix_commission]',$fix_commission) ?>">
 												</div>
 											</div>
 										</div>
