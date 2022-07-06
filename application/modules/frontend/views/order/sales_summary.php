@@ -63,12 +63,13 @@ td {
 				</div>
 				<div class="col-sm-5 text-right custom__task_button">
 					<div class="typography-section__inner">
-						
-						<select name="sales_user_summary_filter" id="sales_user_summary_filter" class="custom-select custom-select-sm form-control form-control-sm select_user">
-							<?php foreach($salesUsers as $salesUser) { ?>
-								<option <?php echo ($sales_user_id == $salesUser['id']) ? 'selected' : '' ;?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
-							<?php }?>
-						</select>
+						<?php if (!empty($salesUsers)) { ?>
+							<select name="sales_user_summary_filter" id="sales_user_summary_filter" class="custom-select custom-select-sm form-control form-control-sm select_user">
+								<?php foreach($salesUsers as $salesUser) { ?>
+									<option <?php echo ($sales_user_id == $salesUser['id']) ? 'selected' : '' ;?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
+								<?php }?>
+							</select>
+						<?php } ?>
 						<button type="button" class="btn button-color task_show_all"><i class="fa fa-plus"></i></button>
 						<button type="button" class="btn button-color task_hide_all"><i class="fa fa-minus"></i></button>
 					</div>
