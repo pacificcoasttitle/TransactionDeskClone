@@ -53,8 +53,9 @@
 								<table class="table table-type-3 typography-last-elem" id="production_history_tab">
 									<thead>
 										<tr>
-											<th align="center">Month</th>
-											<th>Commission</th>
+											<th >Month</th>
+											<th>Title Commission</th>
+											<th>Escrow Commission</th>
 											<th>File Name</th>
 											<th>Action</th>
 										</tr>
@@ -62,9 +63,48 @@
 									<?php if(!empty($commissionHistory)) {?>
 										<tbody>
 											<?php foreach($commissionHistory as $key=>$commissionRecord) { ?>
+												<?php
+													$details_json = $commissionRecord['commission_data']->commission_details;
+													$details = array();
+													$draw_amount = $commission_sub_total=$escrow_commission = 0;
+													if(!empty( $details_json) && json_decode( $details_json)) {
+
+														$details = json_decode($details_json);
+													}
+													$details_arr = array();
+													$prod_array = PRODUCT_TYPE;
+													$underwriter_array = UNDERWRITERS;
+													foreach($prod_array as $prod) {
+														foreach($underwriter_array as $und_key=>$underwriter) {
+															$details_arr[$prod][$und_key] = 0;
+														}
+													}
+
+													foreach($details as $detail_json) {
+														$detail = json_decode($detail_json);
+														$prod_type = $detail->prod_type;
+														$underwriter = $detail->underwriter;
+														if( in_array($prod_type,$prod_array)) {
+															
+															if(isset($details_arr[$prod_type][$underwriter])) {
+																$details_arr[$prod_type][$underwriter] += $detail->commisison;
+															}
+															else {
+																$details_arr[$prod_type][$underwriter] = $detail->commisison;
+															}
+														}
+														elseif($prod_type == 'draw') {
+															$draw_amount = $detail->commisison;
+														}
+														elseif($prod_type == 'escrow') {
+															$escrow_commission += $detail->commisison;
+														}
+													}
+													?>
 												<tr>
 													<td><?php echo $commissionRecord['month'];?></td>
 													<th>$ <?php echo ($commissionRecord['commission_data']) ? number_format($commissionRecord['commission_data']->commission,2) : '0.00';?> </th>
+													<th>$ <?php echo number_format($escrow_commission,2);?> </th>
 													<td><?php echo ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->pdf_name : '';?></td>
 													<td>
 													<?php
@@ -84,45 +124,11 @@
 													</td>
 												</tr> 
 												<tr  class="custom__task_collapse collapse" id="collapseCard_<?php echo $key; ?>" aria-expanded="false">
-													<td colspan="4">
+													<td colspan="5">
 														<div class="card">
 															<div class="card-body">
 																<table class="table">
-																	<?php
-																	$details_json = $commissionRecord['commission_data']->commission_details;
-																	$details = array();
-																	$draw_amount = $commission_sub_total= 0;
-																	if(!empty( $details_json) && json_decode( $details_json)) {
-		
-																		$details = json_decode($details_json);
-																	}
-																	$details_arr = array();
-																	$prod_array = PRODUCT_TYPE;
-																	$underwriter_array = UNDERWRITERS;
-																	foreach($prod_array as $prod) {
-																		foreach($underwriter_array as $und_key=>$underwriter) {
-																			$details_arr[$prod][$und_key] = 0;
-																		}
-																	}
-		
-																	foreach($details as $detail_json) {
-																		$detail = json_decode($detail_json);
-																		$prod_type = $detail->prod_type;
-																		$underwriter = $detail->underwriter;
-																		if( in_array($prod_type,$prod_array)) {
-																			
-																			if(isset($details_arr[$prod_type][$underwriter])) {
-																				$details_arr[$prod_type][$underwriter] += $detail->commisison;
-																			}
-																			else {
-																				$details_arr[$prod_type][$underwriter] = $detail->commisison;
-																			}
-																		}
-																		elseif($prod_type == 'draw') {
-																			$draw_amount = $detail->commisison;
-																		}
-																	}
-																	?>
+																	
 																	<tr>
 																		<?php
 																		foreach($details_arr as $prod_key=>$details_obj) :
@@ -164,9 +170,6 @@
 																					endforeach;
 																				?>
 																			</table>
-																					
-																				
-																			
 		
 																		</td>
 																			

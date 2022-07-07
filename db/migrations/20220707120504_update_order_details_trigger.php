@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class CreateCalcluateCommissionTriggers extends AbstractMigration
+final class UpdateOrderDetailsTrigger extends AbstractMigration
 {
     /**
      * Change Method.
@@ -64,13 +64,13 @@ final class CreateCalcluateCommissionTriggers extends AbstractMigration
 			SET for_month = MONTH(CURRENT_DATE());
 			SET for_year = YEAR(CURRENT_DATE());
 
-			IF (OLD.premium <> new.premium OR old.sent_to_accounting_date <> new.sent_to_accounting_date OR old.prod_type <> new.prod_type OR old.underwriter <> new.underwriter) AND (MONTH(new.sent_to_accounting_date) =  for_month AND YEAR(new.sent_to_accounting_date) = for_year) THEN
+			IF (OLD.premium <> NEW.premium OR OLD.sent_to_accounting_date <> NEW.sent_to_accounting_date OR OLD.prod_type <> NEW.prod_type OR OLD.underwriter <> NEW.underwriter OR OLD.escrow_amount <> NEW.escrow_amount) AND (MONTH(NEW.sent_to_accounting_date) =  for_month AND YEAR(NEW.sent_to_accounting_date) = for_year) THEN
 			BLOCK1: BEGIN
 				DECLARE get_sales_rep_cur
 					CURSOR FOR 
 						SELECT transaction_details.sales_representative
 						FROM transaction_details
-						WHERE new.transaction_id = transaction_details.id
+						WHERE NEW.transaction_id = transaction_details.id
 						LIMIT 1;
 				DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
@@ -146,8 +146,8 @@ final class CreateCalcluateCommissionTriggers extends AbstractMigration
 				CREATE TRIGGER `transaction_details_after_update` AFTER UPDATE ON `transaction_details` FOR EACH ROW BEGIN
 
 
-				IF OLD.sales_amount <> new.sales_amount OR old.loan_amount <> new.loan_amount OR old.sales_representative <> new.sales_representative  THEN
-					CALL calculate_commission(new.sales_representative);
+				IF OLD.sales_amount <> NEW.sales_amount OR OLD.loan_amount <> NEW.loan_amount OR OLD.sales_representative <> NEW.sales_representative  THEN
+					CALL calculate_commission(NEW.sales_representative);
 				END IF;
 				END";
 		$transaction_details_delete = "DROP TRIGGER IF EXISTS `transaction_details_after_delete`;
@@ -166,6 +166,6 @@ final class CreateCalcluateCommissionTriggers extends AbstractMigration
 		$this->execute($transaction_details_insert);
 		$this->execute($transaction_details_update);
 		$this->execute($transaction_details_delete);
-		
+
     }
 }
