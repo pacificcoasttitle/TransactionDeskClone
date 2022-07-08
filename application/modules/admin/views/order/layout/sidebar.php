@@ -154,6 +154,9 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
 			<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*commission-file*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/commission-files'; ?>">
 				Commission Files
 			</a>
+			<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*commission-config*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/commission-config'; ?>">
+				Escrow Commisison
+			</a>
 		</div>
 	</li>
 	<?php endif; ?>
