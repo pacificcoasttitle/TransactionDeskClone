@@ -667,6 +667,74 @@ class CommissionRange extends MX_Controller {
         
     }
 
+	public function commission_config() 
+	{
+		$this->load->model('order/config_settings_model');
+		$data = array();
+        
+        $data['title'] = 'PCT Order: Commisison config.';
+		
+		$data['config_details'] = $this->config_settings_model->get_many_by('slug','escrow_commission');
+		$data['success_msg'] = $this->session->flashdata('success');
+		$data['error_msg'] = $this->session->flashdata('error');
+
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/config/index', $data);
+        $this->load->view('order/layout/footer', $data);
+
+
+	}
+
+	public function edit_commission_config($id)
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Edit Comission Configuartion';
+		$this->load->model('order/config_settings_model');
+        
+		$record = $this->config_settings_model->get($id);
+        
+        if (!empty($record)) {
+			if ($this->input->post()) {
+            
+            	$this->form_validation->set_rules('title', 'Tier Title', 'trim|required');  
+				$this->form_validation->set_rules('commission', 'Commission %', 'trim|required|numeric');
+			   
+				if ($this->form_validation->run() == true) {
+					
+						$configData = array(
+							'title' =>$this->input->post('title') ,
+							'value' => !empty($this->input->post('commission'))?$this->input->post('commission'):0 ,
+						);
+						
+						$update = $this->config_settings_model->update($id,$configData);
+						
+						if ($update) {
+							//Check data before call function
+							if($record->value != $configData['value'] ) {
+								$this->common->updateCommisssionCalculation();
+							}
+							$flash_data['success'] = 'Commission value successfully.';
+						} else {
+							$flash_data['error'] = 'Commission value not updated.';
+						}
+						
+						$this->session->set_flashdata($flash_data);
+						redirect(base_url('order/admin/commission-config'));
+				}                                       
+			}
+
+        } else {
+            redirect('order/admin/commission-config');
+        }
+		
+		$data['success_msg'] = $this->session->flashdata('success');
+		$data['error_msg'] = $this->session->flashdata('error');
+        $data['record'] = $record;
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/config/edit_config', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
 	
 
 }
