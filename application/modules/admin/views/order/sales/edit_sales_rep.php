@@ -114,6 +114,13 @@
 										<?php } ?>
 									</div>
 								</div>
+
+								<div class="form-group row">
+									<label for="language" class="col-sm-4 col-form-label">Disable</label>
+									<div class="col-sm-1">
+										<input <?php echo $sales_rep_info['status'] == 0 ? "checked" : "";?>  type="checkbox" class="form-control" name="status" id="status" class="form-control">
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

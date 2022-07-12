@@ -64,7 +64,7 @@ class Login extends MX_Controller {
                 }
             } else {
                 $email = $this->input->post('email_address');
-                $user =  $this->home_model->get_user(array('email_address' => $email, 'is_password_updated' => 1));
+                $user =  $this->home_model->get_user(array('email_address' => $email, 'is_password_updated' => 1, 'status' => 1));
                 
                 if (!empty($user)) {
                     if ($user['is_password_required'] == 1 && $is_password_field_show == 0 && $user['is_tmp_password'] == 1) {

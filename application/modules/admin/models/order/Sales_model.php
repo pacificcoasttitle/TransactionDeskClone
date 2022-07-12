@@ -8,7 +8,6 @@ class Sales_model extends CI_Model
 	
     public function get_sales_reps($params)
     {
-        $this->db->where('status', 1);
         $this->db->where('is_sales_rep', 1);
         $this->db->from('customer_basic_details');
 		$total_records =  $this->db->count_all_results();
@@ -18,7 +17,6 @@ class Sales_model extends CI_Model
         
     	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
     		$keyword = $params['searchvalue'];
-            $this->db->where('status', 1);
             $this->db->where('is_sales_rep', 1);
     		if (isset($keyword) && !empty($keyword)) {
 
@@ -32,7 +30,6 @@ class Sales_model extends CI_Model
 
 			$filter_total_records =  $this->db->count_all_results();
 
-            $this->db->where('status', 1);
             $this->db->where('is_sales_rep', 1);
 			if (isset($keyword) && !empty($keyword)) {
 
@@ -52,13 +49,11 @@ class Sales_model extends CI_Model
 			if ($query->num_rows() > 0) {
                 $sales_rep_lists = $query->result_array();
 	        }
-    	} else {   
-            $this->db->where('status', 1); 	
+    	} else {    	
             $this->db->where('is_sales_rep', 1);	
 	    	$this->db->from('customer_basic_details');
 			$filter_total_records =  $this->db->count_all_results();
 
-            $this->db->where('status', 1);
             $this->db->where('is_sales_rep', 1);
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);

@@ -1892,6 +1892,7 @@ class Order
         $this->CI->db->select('*');
         $this->CI->db->from('customer_basic_details');
         $this->CI->db->where('is_sales_rep', 1);
+        $this->CI->db->where('status', 1);
         if (!empty($sales_rep_users)) {
             $this->CI->db->where_in('id', $sales_rep_users);
         }
