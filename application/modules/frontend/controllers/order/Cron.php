@@ -5058,4 +5058,142 @@ class Cron extends MX_Controller {
 
 
 	}
+
+    public function sendThankYouEmailForClosedOrder($fileNumbers)
+    {
+        $month = sprintf('%02d',date('m') - 1);
+        $this->db->select('order_details.file_id, 
+            order_details.file_number, 
+            order_details.id as order_id,
+            order_details.resware_status, 
+            property_details.full_address,
+            customer_basic_details.first_name,
+            customer_basic_details.last_name,
+            customer_basic_details.email_address as sales_email,
+            customer_basic_details.sales_rep_profile_thank_you_img,
+            property_details.escrow_lender_id,
+            escrow_details.email_address, 
+            transaction_details.sales_representative');
+        $this->db->from('order_details');
+        $this->db->where('MONTH(order_details.resware_closed_status_date)', $month);
+        $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+        $this->db->where_in('order_details.file_number', $fileNumbers); 
+        $this->db->where('order_details.is_thank_you_email_sent', 0); 
+        $this->db->where('property_details.escrow_lender_id != ""');
+        $this->db->where('transaction_details.sales_representative != ""');
+        $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
+        $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
+        $this->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
+        $this->db->join('customer_basic_details as escrow_details', 'escrow_details.id = property_details.escrow_lender_id','inner');
+        $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
+        $query = $this->db->get();
+        $result   = $query->result_array();  
+
+        if(!empty($result)) {
+            $checkFlag = 0;
+            $data = array();
+            $i = 0;
+            foreach($result as $res) {
+                if ($checkFlag == 0) {
+                    $sales_rep_user_id = $res['sales_representative'];
+                    $escrow_user_id = $res['escrow_lender_id'];
+                    $escrow_email_address = $res['email_address'];
+                    $checkFlag = 1;
+                }
+                if ($res['sales_representative'] == $sales_rep_user_id && $res['escrow_lender_id'] == $escrow_user_id) {
+                    $data['order_info'][$i]['order_number'] = $res['file_number'];
+                    $data['order_info'][$i]['address'] = $res['full_address'];
+                    $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
+                    $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    if(!empty($data['sales_rep_profile_thank_you_img'])) {
+                        $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH').str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
+                    }
+                    $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
+                    $i++;
+                } else {
+                    $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = env('FROM_EMAIL');
+                    $subject = 'Thank You!';
+                    $to = $escrow_email_address;
+                    $cc = array('ghernandez@pct.com', $data['sales_email']);
+                    $mailParams = array(
+                        'from_mail'=>$from_mail, 
+                        'from_name'=>$from_name, 
+                        'to'=> $to,
+                        'subject'=>$subject,
+                        'message'=>json_encode($data),
+                        'cc' => $data['sales_email']
+                    );
+                    //$to = 'hitesh.p@crestinfosystems.com';
+                    //$cc = array();
+                    $this->load->helper('sendemail');
+                    $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
+                    $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                    $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $res['orderId'], $logid);
+                    $data = array();
+                    $sales_rep_user_id = $res['sales_representative'];
+                    $escrow_user_id = $res['escrow_lender_id'];
+                    $escrow_email_address = $res['email_address'];
+                    $data['order_info'][$i]['order_number'] = $res['file_number'];
+                    $data['order_info'][$i]['address'] = $res['full_address'];
+                    $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
+                    $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    if(!empty($data['sales_rep_profile_thank_you_img'])) {
+                        $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH').str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
+                    }
+                    $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
+                    $i++;
+                }
+                $sales_email = $res['sales_email'];
+                $order_id = $res['order_id'];
+            }
+            if(!empty($data)){
+                $message = $this->load->view('emails/thank_you_escrow.php',$data,TRUE);
+                $from_name = 'Pacific Coast Title Company';
+                $from_mail = env('FROM_EMAIL');
+                $subject = 'Thank You!';
+                $to = $escrow_email_address;  
+
+                $cc = array('ghernandez@pct.com', $sales_email);          
+                $this->load->helper('sendemail');
+                $mailParams = array(
+                    'from_mail'=>$from_mail, 
+                    'from_name'=>$from_name, 
+                    'to'=> $to,
+                    'subject'=>$subject,
+                    'message'=>json_encode($data),
+                    'cc' => $sales_email
+                );
+                //$to = 'hitesh.p@crestinfosystems.com';
+                //$cc = array();   
+  
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $order_id, 0);
+                $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $order_id, $logid);
+            }
+            echo "Mails sent successfully to Escow user ";exit;
+        }
+    }
+
+    public function getFileNumbers() 
+    {
+        $fileNumbers = array();
+        $this->db->select('*');
+        $this->db->from('pct_order_api_logs');  
+        $this->db->where('request_type', 'get_prelim'); 
+        $this->db->order_by('id','DESC');
+		$this->db->limit(200);
+        $query = $this->db->get();
+        $result = $query->result_array();
+        foreach($result as $res) {
+           $data = json_decode($res['response_data'], true);
+           if (isset($data['FileNumber']) && !in_array($data['FileNumber'], $fileNumbers)) {
+                $fileNumbers[] = $data['FileNumber'];
+           }
+        }
+        echo "<pre>";
+        print_r($fileNumbers);
+        echo "All prelim data synced successfully";   
+    }
 }
