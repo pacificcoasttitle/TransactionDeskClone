@@ -451,7 +451,7 @@ class Sales extends MX_Controller {
                             'partner_id' => $_POST['partner_id'],
                             'partner_type_id' =>  $_POST['partner_type_id'],
                             'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
-                            'status' => 1,
+                            'status' => isset($_POST['status']) ? 0 : 1,
                             'is_sales_rep' => 1,
                             'is_sales_rep_manager' => isset($_POST['is_sales_rep_manager']) ? 1 : 0,
                             'sales_rep_profile_img' => $fileuri,
