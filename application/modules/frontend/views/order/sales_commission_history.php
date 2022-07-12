@@ -55,7 +55,7 @@
 										<tr>
 											<th >Month</th>
 											<th>Title Commission</th>
-											<th>Escrow Commission</th>
+											
 											<th>File Name</th>
 											<th>Action</th>
 										</tr>
@@ -74,6 +74,7 @@
 													$details_arr = array();
 													$prod_array = PRODUCT_TYPE;
 													$underwriter_array = UNDERWRITERS;
+													$underwriter_array['escrow'] = 'Escrow';
 													foreach($prod_array as $prod) {
 														foreach($underwriter_array as $und_key=>$underwriter) {
 															$details_arr[$prod][$und_key] = 0;
@@ -96,15 +97,15 @@
 														elseif($prod_type == 'draw') {
 															$draw_amount = $detail->commisison;
 														}
-														elseif($prod_type == 'escrow') {
-															$escrow_commission += $detail->commisison;
-														}
+														// elseif($prod_type == 'escrow') {
+														// 	$escrow_commission += $detail->commisison;
+														// }
 													}
 													?>
 												<tr>
 													<td><?php echo $commissionRecord['month'];?></td>
 													<th>$ <?php echo ($commissionRecord['commission_data']) ? number_format($commissionRecord['commission_data']->commission,2) : '0.00';?> </th>
-													<th>$ <?php echo number_format($escrow_commission,2);?> </th>
+													
 													<td><?php echo ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->pdf_name : '';?></td>
 													<td>
 													<?php
