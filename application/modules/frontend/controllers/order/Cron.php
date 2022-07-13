@@ -3600,6 +3600,8 @@ class Cron extends MX_Controller {
                         $file_number = '';
                         $fileStatus = '';
                         $closedDate = '';
+                        $loan_amount = '';
+                        $sales_amount = '';
 
                         if(in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number",$headerColumns);
@@ -3616,6 +3618,16 @@ class Cron extends MX_Controller {
                             $closedDate = $data[$closedDateKey];
                         }
 
+                        if(in_array('Loan Amount', $headerColumns)) {
+                            $loanAmountKey = array_search("Loan Amount",$headerColumns);
+                            $loan_amount = $data[$loanAmountKey];
+                        }
+
+                        if(in_array('Sales Price', $headerColumns)) {
+                            $salePriceKey = array_search("Sales Price",$headerColumns);
+                            $sales_amount = $data[$salePriceKey];
+                        }
+
                         if($row != 1) {
                             if(1 === preg_match('~[0-9]~', $file_number)){
                                 $completed_date = null;
@@ -3627,6 +3639,8 @@ class Cron extends MX_Controller {
                                     'file_number'=> (int)$file_number,
                                     'resware_status' => strtolower($fileStatus),
                                     'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
+                                    'loan_amount'=> (int)$loan_amount,
+                                    'sales_amount'=> (int)$sales_amount,
                                     'updated_at' => date('Y-m-d H:i:s')
                                 );  
                             } 
