@@ -18,6 +18,8 @@ final class AddThankYouEmailFlag extends AbstractMigration
      */
     public function change(): void
     {
-
+        $table = $this->table('order_details');
+		$table->addColumn('is_thank_you_email_sent', 'boolean', ['default' => 0, 'after' => 'is_underwriter_updated'])
+            ->update();
     }
 }
