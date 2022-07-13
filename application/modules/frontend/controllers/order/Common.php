@@ -2472,6 +2472,7 @@ class Common extends MX_Controller {
 		$this->db->select('sales_representative');
 		$this->db->from($table);   
 		$this->db->join('order_details','order_details.transaction_id = transaction_details.id');   
+		$this->db->join('customer_basic_details','customer_basic_details.id = transaction_details.sales_representative');   
 		$this->db->where('MONTH(sent_to_accounting_date)',$for_month);
 		$this->db->where('YEAR(sent_to_accounting_date)',$for_year);
 		$this->db->group_by('sales_representative');
@@ -2500,6 +2501,7 @@ class Common extends MX_Controller {
 		$this->db->select('sales_representative');
 		$this->db->from($table);   
 		$this->db->join('order_details','order_details.transaction_id = transaction_details.id');   
+		$this->db->join('customer_basic_details','customer_basic_details.id = transaction_details.sales_representative');   
 		$this->db->where('MONTH(sent_to_accounting_date)',$for_month);
 		$this->db->where('YEAR(sent_to_accounting_date)',$for_year);
 		$this->db->group_by('sales_representative');
