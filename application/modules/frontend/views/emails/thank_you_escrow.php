@@ -880,15 +880,17 @@ $previousMonth = Date('F', strtotime($currentMonth . " last month"));
             <th>Order Number</th>
 			<th>Property Addres</th>
 			<th>Status</th>
+            <th>Closed Date</th>
 		</tr>
 	</thead>
                                                                                 <tbody>
                                                                                     <?php if(!empty($order_info)) { 
                                                                                         foreach($order_info as $order) {?>
                                                                                             <tr>
-                                                                                            <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $order['order_number'];?></strong></td>
+                                                                                                <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $order['order_number'];?></strong></td>
                                                                                                 <td style="width: 427px;border-bottom: 1px solid #CCCCCC;text-align: center;"><span style="color:#d35411"><?php echo $order['address'];?></span></td>
                                                                                                 <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $order['resware_status'];?></strong></td>
+                                                                                                <td style="width: 209px;border-bottom: 1px solid #CCCCCC;text-align: center;"><strong><?php echo $order['closed_date'];?></strong></td>
                                                                                             </tr>
                                                                                     <?php }} ?>
                                                                                     
