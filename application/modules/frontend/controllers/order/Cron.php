@@ -3665,6 +3665,12 @@ class Cron extends MX_Controller {
                         }
                     }
                 }
+                
+                $documentName = pathinfo($filePath);
+                $fileName = date('YmdHis')."_".$documentName['basename'];
+                rename(FCPATH."/uploads/order-status/".$documentName['basename'], FCPATH."/uploads/order-status/".$fileName);
+                $this->order->uploadDocumentOnAwsS3($fileName, 'order-status', 1);  
+                echo "All orders status updated successfully"."<br>";
                 if (!empty($closedFileNumbers)) {
                     // $param = $closedFileNumbers;
                     // $command = "php ".FCPATH."index.php frontend/order/cron sendThankYouEmailForClosedOrder $param";
@@ -3674,13 +3680,8 @@ class Cron extends MX_Controller {
                     // else {
                     //     exec($command . " > /dev/null &");  
                     // }
-                    $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
+                    //$this->sendThankYouEmailForClosedOrder($closedFileNumbers);
                 }
-                $documentName = pathinfo($filePath);
-                $fileName = date('YmdHis')."_".$documentName['basename'];
-                rename(FCPATH."/uploads/order-status/".$documentName['basename'], FCPATH."/uploads/order-status/".$fileName);
-                //$this->order->uploadDocumentOnAwsS3($fileName, 'order-status', 1);  
-                echo "All orders status updated successfully"."<br>";;
                 echo date('Y-m-d H:i:s');exit;
             }
         } else {
@@ -5076,7 +5077,7 @@ class Cron extends MX_Controller {
 		}
 	}
 
-    public function sendThankYouEmailForClosedOrder($fileNumbers)
+    public function sendThankYouEmailForClosedOrder($fileNumbers = array('10255554'))
     {
         $this->db->select('order_details.file_number, 
             order_details.resware_status, 
@@ -5127,11 +5128,11 @@ class Cron extends MX_Controller {
                 $to = $res['email_address'];
                 $cc = array('ghernandez@pct.com', 'hitesh.p@crestinfosystems.com');
 
-                if (!empty($data['sales_email'])) {
+                if (!empty($res['sales_email'])) {
                     $cc[] = $res['sales_email'];
                 }
 
-                if (!empty($data['client_email'])) {
+                if (!empty($res['client_email'])) {
                     $cc[] = $res['client_email'];
                 }
 
