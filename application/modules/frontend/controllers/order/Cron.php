@@ -3679,7 +3679,7 @@ class Cron extends MX_Controller {
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
                 rename(FCPATH."/uploads/order-status/".$documentName['basename'], FCPATH."/uploads/order-status/".$fileName);
-                $this->order->uploadDocumentOnAwsS3($fileName, 'order-status', 1);  
+                //$this->order->uploadDocumentOnAwsS3($fileName, 'order-status', 1);  
                 echo "All orders status updated successfully"."<br>";;
                 echo date('Y-m-d H:i:s');exit;
             }
@@ -5125,7 +5125,15 @@ class Cron extends MX_Controller {
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Thank You!';
                 $to = $res['email_address'];
-                $cc = array('ghernandez@pct.com', $data['sales_email'], $data['client_email'], 'hitesh.p@crestinfosystems.com');
+                $cc = array('ghernandez@pct.com', 'hitesh.p@crestinfosystems.com');
+
+                if (!empty($data['sales_email'])) {
+                    $cc[] = $res['sales_email'];
+                }
+
+                if (!empty($data['client_email'])) {
+                    $cc[] = $res['client_email'];
+                }
 
                 if (!empty($res['listing_agent_email'])) {
                     $cc[] = $res['listing_agent_email'];
@@ -5141,7 +5149,7 @@ class Cron extends MX_Controller {
                     'to'=> $to,
                     'subject'=>$subject,
                     'message'=>json_encode($data),
-                    'cc' => $data['sales_email']
+                    'cc' => $cc
                 );
                 //$to = 'hitesh.p@crestinfosystems.com';
                 //$cc = array();
