@@ -5125,7 +5125,7 @@ class Cron extends MX_Controller {
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Thank You!';
                 $to = $res['email_address'];
-                $cc = array('ghernandez@pct.com', $data['sales_email'], $data['client_email']);
+                $cc = array('ghernandez@pct.com', $data['sales_email'], $data['client_email'], 'hitesh.p@crestinfosystems.com');
 
                 if (!empty($res['listing_agent_email'])) {
                     $cc[] = $res['listing_agent_email'];
