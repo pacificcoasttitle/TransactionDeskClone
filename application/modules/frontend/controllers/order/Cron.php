@@ -2412,6 +2412,7 @@ class Cron extends MX_Controller {
             order_details.file_number, 
             order_details.id as order_id,
             order_details.resware_status, 
+            order_details.resware_closed_status_date
             property_details.full_address,
             customer_basic_details.first_name,
             customer_basic_details.last_name,
@@ -5142,8 +5143,8 @@ class Cron extends MX_Controller {
                     'message'=>json_encode($data),
                     'cc' => $data['sales_email']
                 );
-                $to = 'hitesh.p@crestinfosystems.com';
-                $cc = array();
+                //$to = 'hitesh.p@crestinfosystems.com';
+                //$cc = array();
                 $this->load->helper('sendemail');
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
