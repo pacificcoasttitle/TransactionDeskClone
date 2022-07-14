@@ -3663,15 +3663,15 @@ class Cron extends MX_Controller {
                     }
                 }
                 if (!empty($closedFileNumbers)) {
-                    // $param = $closedFileNumbers;
-                    // $command = "php ".FCPATH."index.php frontend/order/cron sendThankYouEmailForClosedOrder $param";
-                    // if (substr(php_uname(), 0, 7) == "Windows"){
-                    //     pclose(popen("start /B ". $command, "r")); 
-                    // }
-                    // else {
-                    //     exec($command . " > /dev/null &");  
-                    // }
-                    $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
+                    $param = $closedFileNumbers;
+                    $command = "php ".FCPATH."index.php frontend/order/cron sendThankYouEmailForClosedOrder $param";
+                    if (substr(php_uname(), 0, 7) == "Windows"){
+                        pclose(popen("start /B ". $command, "r")); 
+                    }
+                    else {
+                        exec($command . " > /dev/null &");  
+                    }
+                    //$this->sendThankYouEmailForClosedOrder($closedFileNumbers);
                 }
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
@@ -5088,7 +5088,7 @@ class Cron extends MX_Controller {
             buyer_agent.email_address as buyer_agent_email');
         $this->db->from('order_details'); 
         $this->db->where_in('order_details.file_number', $fileNumbers); 
-       // $this->db->where('order_details.is_thank_you_email_sent', 0); 
+        $this->db->where('order_details.is_thank_you_email_sent', 0); 
         $this->db->where('order_details.customer_id > 0');
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
@@ -5100,6 +5100,7 @@ class Cron extends MX_Controller {
         $this->db->join('agents as buyer_agent', 'buyer_agent.id = property_details.buyer_agent_id','left');
         $this->db->join('agents as listing_agent', 'listing_agent.id = property_details.listing_agent_id','left');
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
+        $this->db->limit(10);
         $query = $this->db->get();
         $result   = $query->result_array();  
 
@@ -5116,7 +5117,7 @@ class Cron extends MX_Controller {
                     $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH').str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
                 }
     
-                $message = $this->load->view('emails/thank_you_escrow.php', $data, TRUE);
+                $message = $this->load->view('emails/thank_you_closed.php', $data, TRUE);
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Thank You!';
@@ -5145,6 +5146,13 @@ class Cron extends MX_Controller {
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $res['order_id'], $logid);
+                $order_details = [
+                    'is_thank_you_email_sent' => 1
+                ];
+                $condition = [
+                    'id' => $res['order_id']
+                ];
+                $this->db->update('order_details', $order_details, $condition);
             }
             echo "Mails sent successfully to Escow user ";exit;
         }
