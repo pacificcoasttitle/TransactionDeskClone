@@ -2448,6 +2448,7 @@ class Cron extends MX_Controller {
                     $data['order_info'][$i]['order_number'] = $res['file_number'];
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
+                    $data['order_info'][$i]['closed_date'] = date("m/d/Y", strtotime($res['resware_closed_status_date']));
                     $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
                     if(!empty($data['sales_rep_profile_thank_you_img'])) {
                         $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH').str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
@@ -2482,6 +2483,7 @@ class Cron extends MX_Controller {
                     $data['order_info'][$i]['order_number'] = $res['file_number'];
                     $data['order_info'][$i]['address'] = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
+                    $data['order_info'][$i]['closed_date'] = date("m/d/Y", strtotime($res['resware_closed_status_date']));
                     $data['sales_rep_profile_thank_you_img'] = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
                     if(!empty($data['sales_rep_profile_thank_you_img'])) {
                         $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH').str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
