@@ -3666,15 +3666,15 @@ class Cron extends MX_Controller {
                     }
                 }
                 if (!empty($closedFileNumbers)) {
-                    $param = $closedFileNumbers;
-                    $command = "php ".FCPATH."index.php frontend/order/cron sendThankYouEmailForClosedOrder $param";
-                    if (substr(php_uname(), 0, 7) == "Windows"){
-                        pclose(popen("start /B ". $command, "r")); 
-                    }
-                    else {
-                        exec($command . " > /dev/null &");  
-                    }
-                    //$this->sendThankYouEmailForClosedOrder($closedFileNumbers);
+                    // $param = $closedFileNumbers;
+                    // $command = "php ".FCPATH."index.php frontend/order/cron sendThankYouEmailForClosedOrder $param";
+                    // if (substr(php_uname(), 0, 7) == "Windows"){
+                    //     pclose(popen("start /B ". $command, "r")); 
+                    // }
+                    // else {
+                    //     exec($command . " > /dev/null &");  
+                    // }
+                    $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
                 }
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
