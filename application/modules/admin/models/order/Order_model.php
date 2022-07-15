@@ -267,31 +267,29 @@ class Order_model extends CI_Model
         return $query->row_array();
     }
 
-    public function get_order_count()
+    public function get_order_count($filter = null)
     {
-        $this->db->select('COUNT(*) AS total,
-            (
-                CASE
-                  WHEN pct_order_product_types.product_type LIKE "%Loan:%"
-                  THEN "Loan"
-                  WHEN pct_order_product_types.product_type LIKE "%Sale:%" 
-                  THEN "Sale" 
-                END
-            ) AS type')
-        ->from('order_details')
-        ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-        ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1')
-        ->where('is_imported=0')
-        ->group_by('(
-                        CASE
-                          WHEN pct_order_product_types.product_type LIKE "%Loan:%"
-                          THEN "Loan"
-                          WHEN pct_order_product_types.product_type LIKE "%Sale:%" 
-                          THEN "Sale" 
-                        END
-                    )');
+        $query = $this->db->select('order_details.prod_type as type,COUNT(order_details.id) AS total')
+        ->from('order_details');
+        // ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+        // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+        // ->where('is_imported=0');
+		if($filter && is_array($filter)) {
+			$check_date_field = 'order_details.created_at';
+			if(isset($filter['type']) && $filter['type'] == 'closed') {
+				$check_date_field = 'order_details.sent_to_accounting_date';
+			}
+			if(isset($filter['for_month'])) {
+				$query->where('MONTH('.$check_date_field.')', $filter['for_month']); 
+			}
+			if(isset($filter['for_year'])) {
+				$query->where('YEAR('.$check_date_field.')', $filter['for_year']); 
+			}
+		}
+        $query->group_by('order_details.prod_type');
 
         $query = $this->db->get();
+		// echo $this->db->last_query();die;
         $orders_data = array();
         if ($query->num_rows() > 0)  
         {
