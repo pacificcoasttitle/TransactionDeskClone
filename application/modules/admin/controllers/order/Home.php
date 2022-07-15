@@ -36,47 +36,84 @@ class Home extends MX_Controller {
     {
         $data = array();
         // $data['title'] = 'PCT Order: Dashboard';
-        $orderData = $this->order_model->get_order_count();
+		$order_filter = ['for_month'=>date('m'),'for_year'=>date('Y')];
+        $openOrderData = $this->order_model->get_order_count($order_filter);
+		$order_filter['type']='closed';
+        $closedOrderData = $this->order_model->get_order_count($order_filter);
         $titlePointData = $this->order_model->get_title_point_count();
         
-        $loanCount = $salesCount = $totalCount = 0;
-        if(isset($orderData) && !empty($orderData))
+        $openLoanCount = $openSalesCount = 0;
+        $closedLoanCount = $closedSalesCount = 0;
+
+        if(isset($openOrderData) && !empty($openOrderData))
         {
-            foreach ($orderData as $key => $value) 
+            foreach ($openOrderData as $key => $value) 
             {
-                if($value['type'] == 'Loan')
+                if($value['type'] == 'loan')
                 {
-                    $loanCount = $value['total'];
-                    $totalCount += $loanCount;
+                    $openLoanCount = $value['total'];
                 }
-                if($value['type'] == 'Sale')
+                if($value['type'] == 'sale')
                 {
-                    $salesCount = $value['total'];
-                    $totalCount += $salesCount;
+                    $openSalesCount = $value['total'];
                 }
             }
         }
-        $totalFailCount = 0;
 
-        $lvCount = isset($titlePointData['lv_total_records']) && !empty($titlePointData['lv_total_records']) ? $titlePointData['lv_total_records'] : 0;
-        $totalFailCount += $lvCount;
+		if(isset($closedOrderData) && !empty($closedOrderData))
+        {
+            foreach ($closedOrderData as $key => $value) 
+            {
+                if($value['type'] == 'loan')
+                {
+                    $closedLoanCount = $value['total'];
+                }
+                if($value['type'] == 'sale')
+                {
+                    $closedSalesCount = $value['total'];
+                }
+            }
+        }
+        // $totalFailCount = 0;
 
-        $grantDeedCount = isset($titlePointData['grant_deed_total_records']) && !empty($titlePointData['grant_deed_total_records']) ? $titlePointData['grant_deed_total_records'] : 0;    
-        $totalFailCount += $grantDeedCount;
+        // $lvCount = isset($titlePointData['lv_total_records']) && !empty($titlePointData['lv_total_records']) ? $titlePointData['lv_total_records'] : 0;
+        // $totalFailCount += $lvCount;
 
-        $taxCount = isset($titlePointData['tax_total_records']) && !empty($titlePointData['tax_total_records']) ? $titlePointData['tax_total_records'] : 0;
+        // $grantDeedCount = isset($titlePointData['grant_deed_total_records']) && !empty($titlePointData['grant_deed_total_records']) ? $titlePointData['grant_deed_total_records'] : 0;    
+        // $totalFailCount += $grantDeedCount;
 
-        $totalFailCount += $taxCount;
+        // $taxCount = isset($titlePointData['tax_total_records']) && !empty($titlePointData['tax_total_records']) ? $titlePointData['tax_total_records'] : 0;
+
+        // $totalFailCount += $taxCount;
+
+		$this->load->model('order/customer_basic_details_model');
+		$customer_filter = ['is_escrow'=>1,'status'=>1];
+		$escrowUsersCount = $this->customer_basic_details_model->count_by($customer_filter);
+		$customer_filter = ['is_escrow'=>0,'status'=>1];
+		$lenderUsersCount = $this->customer_basic_details_model->count_by($customer_filter);
+		$customer_filter = ['is_sales_rep'=>1];
+		$salesRepUsersCount = $this->customer_basic_details_model->count_by($customer_filter);
+		$customer_filter = [];
+		$expiredPasswords = $this->home_model->get_incorrect_customers($customer_filter);
+		$expiredPasswordCount = $expiredPasswords['recordsTotal'];
+		$failedJsonCount = 0;
         
         $data = array(
             'title' => 'PCT Order: Dashboard',
-            'loanCount' => $loanCount,
-            'salesCount' => $salesCount,
-            'totalCount' => $totalCount,
-            'lvCount' => $lvCount,
-            'grantDeedCount' => $grantDeedCount,
-            'taxCount' => $taxCount,
-            'totalFailCount' => $totalFailCount
+            'openLoanCount' => $openLoanCount,
+            'openSalesCount' => $openSalesCount,
+			'closedLoanCount' => $closedLoanCount,
+            'closedSalesCount' => $closedSalesCount,
+			'escrowUsersCount'=>$escrowUsersCount,
+			'lenderUsersCount'=>$lenderUsersCount,
+			'salesRepUsersCount'=>$salesRepUsersCount,
+			'expiredPasswordCount'=>$expiredPasswordCount,
+			'failedJsonCount'=>$failedJsonCount,
+			
+            // 'lvCount' => $lvCount,
+            // 'grantDeedCount' => $grantDeedCount,
+            // 'taxCount' => $taxCount,
+            // 'totalFailCount' => $totalFailCount
         );
         
         $this->load->view('order/layout/header', $data);
