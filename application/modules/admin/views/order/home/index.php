@@ -176,7 +176,7 @@
 
 				</div>
 
-				<!-- <div class="col-md-6 col-sm-12">
+				<div class="col-md-6 col-sm-12">
 					<div class="card">
 
 						<div class="card-header">
@@ -187,15 +187,15 @@
 							<div class="mr-5"><?php echo $failedJsonCount.' files'; ?></div>
 						</div>
 
-						<a class="card-footer clearfix small z-1" href="<?php echo base_url('order/admin/escrow'); ?>">
-							<span class="float-left">View Details</span>
+						<div class="card-footer clearfix small z-1">
+							<span class="float-left">&nbsp;</span>
 							<span class="float-right">
-								<i class="fas fa-angle-right"></i>
+								<!-- <i class="fas fa-angle-right"></i> -->
 							</span>
-						</a>
+						</div>
 					</div>
 
-				</div> -->
+				</div>
 		</div>
 
     </div>
