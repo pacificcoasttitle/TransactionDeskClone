@@ -516,7 +516,7 @@
 								<td align="center" class="img-responsive">
 									<img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;"
 										width="800"
-										src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/5905c1a3-e215-f67d-5221-acdb2823b17a.jpg"
+										src="<?php echo base_url().'assets/media/order/email/footer.jpg'; ?>"
 										border="0" alt="picture">
 								</td>
 							</tr>
@@ -672,13 +672,13 @@
 																									<a href="#"
 																										style="font-family:Roboto, Arial, Helvetica, sans-serif;font-size:12px;line-height:12px;font-weight:400;font-style:normal;color:rgb(255, 255, 255);text-decoration:none;letter-spacing:0px;display:inline-block;"><img
 																											style="width:16px;border:0px;display:inline-block!important;vertical-align:middle;"
-																											src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/94399c8b-32fc-b705-79e0-5d71a4756553.png"
+																											src="<?php echo base_url().'assets/media/order/email/facebook.png'; ?>"
 																											width="16"
 																											border="0"
 																											alt="icon"><img
 																											data-icon-space=""
 																											style="width:8px;border:0px;display:inline!important;"
-																											src="https://modulescomposer.s3.us-east-2.amazonaws.com/general/gap.gif"
+																											src="<?php echo base_url().'assets/media/order/email/gap.gif'; ?>"
 																											width="8"
 																											border="0"
 																											alt="1st social icon - Space between icon &amp;link"><span>Facebook</span></a>
@@ -703,13 +703,13 @@
 																									<a href="#"
 																										style="font-family:Roboto, Arial, Helvetica, sans-serif;font-size:12px;line-height:12px;font-weight:400;font-style:normal;color:rgb(255, 255, 255);text-decoration:none;letter-spacing:0px;display:inline-block;"><img
 																											style="width:16px;border:0px;display:inline-block!important;vertical-align:middle;"
-																											src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/055ea0d0-4d7f-a93c-fabe-281a7a94df3f.png"
+																											src="<?php echo base_url().'assets/media/order/email/instragram.png'; ?>"
 																											width="16"
 																											border="0"
 																											alt="icon"><img
 																											data-icon-space=""
 																											style="width:8px;border:0px;display:inline!important;"
-																											src="https://modulescomposer.s3.us-east-2.amazonaws.com/general/gap.gif"
+																											src="<?php echo base_url().'assets/media/order/email/gap.gif'; ?>"
 																											width="8"
 																											border="0"
 																											alt="4th social icon - Space between icon &amp;link"><span>Instagram</span></a>
