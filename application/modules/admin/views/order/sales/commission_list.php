@@ -1,9 +1,5 @@
-
-<style type="text/css">
-	th {
-		text-align: center;
-	}
-	.custom__collapse_arrow .div__expand {
+<style>
+.custom__collapse_arrow .div__expand {
     display: none;
 }
 	.custom__collapse_arrow.collapsed .div__expand {
@@ -15,52 +11,29 @@
 .table > tbody > tr.custom__total > th ,.table > tbody > tr.custom__total > td {
 	border-top: 2px solid;
 }
-.custom__task_collapse .card-body {
-    padding-left: 35px;
-    font-size: 16px;
-    background: #f2f2f2;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    padding-top: 30px;
-    /* border: 1px solid #d0c9c9; */
-    /* border-radius: 10px; */
-    padding-right: 30px;
-}
 </style>
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container">
-		<div class="row">
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="typography-section__inner">
-						<h4 class="ui-title-block_light">Below is list of your month order's count for the current year of <b><?php echo date('Y');?></b></h3>
-					</div>
-					<?php if(!empty($salesUsers)) { ?>
-						<div id="sales_user_listing">
-							<label>
-								<select style="width:auto;" name="sales_user_commission_filter" id="sales_user_commission_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
-									<!-- <option value="all"> All Sales Rep Users </option> -->
-									<?php foreach($salesUsers as $salesUser) { ?>
-										<option <?php echo ($sales_user_id == $salesUser['id']) ? 'selected' : '' ;?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
-									<?php }?>
-								</select>
-							</label>
-						</div>
-					<?php } ?>
-					<div class="typography-sectiona">
-						<div class="col-md-12">
-							<div class="table-container">
-								<table class="table table-type-3 typography-last-elem" id="production_history_tab">
-									<thead>
-										<tr>
-											<th >Month</th>
-											<th>Commission</th>
-											
-											<th>File Name</th>
-											<th>Action</th>
-										</tr>
-									</thead>
-									<?php if(!empty($commissionHistory)) {?>
+<div class="container-fluid">
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-table"></i>
+            Sales Rep Commissison
+          
+        </div>
+     
+        <div class="card-body">
+		
+            <div class="table-responsive">
+                <table class="table " id="tbl-sales-rep-commission-listing" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+						<th >Month</th>
+						<th>Commission</th>
+						<th>File Name</th>
+						<th>Action</th>
+                        </tr>
+						
+                    </thead>                
+					<?php if(!empty($commissionHistory)) {?>
 										<tbody>
 											<?php foreach($commissionHistory as $key=>$commissionRecord) { ?>
 												<?php
@@ -102,7 +75,7 @@
 														// }
 													}
 													?>
-												<tr>
+												<tr class="text-center">
 													<td><?php echo $commissionRecord['month'];?></td>
 													<th>$ <?php echo ($commissionRecord['commission_data']) ? number_format($commissionRecord['commission_data']->commission,2) : '0.00';?> </th>
 													
@@ -112,7 +85,7 @@
 													if($commissionRecord['commission_data'] && $commissionRecord['commission_data']->commisssion_pdf) :
 														$documentUrl = env('AWS_PATH')."file_document/".$commissionRecord['commission_data']->commisssion_pdf;
 														?>
-														<a class="btn btn-grad-2a" style="background: #d35411;"  target='_blank' href='<?php echo $documentUrl;?>'>View</a>
+														<a class="btn btn-info"   target='_blank' href='<?php echo $documentUrl;?>'>View</a>
 														<?php
 													else : ?>
 														 &nbsp;
@@ -146,7 +119,7 @@
 																						if($comm_i == 0) : 
 																					?>
 																					<tr>
-																						<th colspan="2"><?php echo ucwords($prod_key); ?></th>
+																						<th colspan="2" class="text-center"><?php echo ucwords($prod_key); ?></th>
 																					</tr>
 																					<?php
 																						endif;
@@ -212,18 +185,8 @@
 											</tr>
 										</tbody>
 									<?php } ?>
-								</table>
-								<div class="typography-sectionab">	
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-	
-
-
-
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

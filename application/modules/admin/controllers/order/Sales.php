@@ -64,6 +64,9 @@ class Sales extends MX_Controller {
                     $editOrderUrl = base_url().'order/admin/edit-sales-rep/'.$value['id'];
                     $action = "<a href='".$editOrderUrl."' class='btn btn-action edit-agent'title ='Edit Sales Rep Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
                     $action .= "<a href='javascript:void(0);' onclick='deleteSalesRep(".$value['id'].")' class='btn btn-action'  title='Delete Sales Rep'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+					if($this->common->if_super_admin()) {
+						$action .= "<a href='".base_url('order/admin/sales-rep-commission/'.$value['id'])."'  class='btn btn-action'  title='View Commissions'><span class='fa fa-dollar' aria-hidden='true'></span></a>";
+					}
                     $nestedData[] = $action;
                 }
                 $data[] = $nestedData;            
