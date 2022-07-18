@@ -1654,4 +1654,31 @@ class Home_model extends CI_Model
             'data' => $customer_lists
         );
     }
+
+	public function get_pending_json_files() {
+		
+		$this->db->select('file_number');
+		$this->db->from('pct_order_prelim_summary');
+		
+		$query = $this->db->get();
+        $result = ($query->num_rows() > 0)?$query->result_array():array();
+		$file_array = array();
+		if(count($result)) {
+			$file_array = array_column($result,'file_number');
+		}
+		
+		$this->db->distinct()->select('count(order_details.file_number) as total_files');
+		$this->db->from('pct_order_api_logs');
+		$this->db->join('order_details','order_details.id = pct_order_api_logs.order_id');
+		$this->db->where_not_in('order_details.file_number',$file_array);
+		$query = $this->db->get();
+		$result = ($query->num_rows() > 0)?$query->result_array():array();
+		if(count($result)) {
+			return $result[0]['total_files'];
+		}
+		else {
+			return 0;
+		}
+
+	}
 }

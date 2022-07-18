@@ -40,7 +40,7 @@ class Home extends MX_Controller {
         $openOrderData = $this->order_model->get_order_count($order_filter);
 		$order_filter['type']='closed';
         $closedOrderData = $this->order_model->get_order_count($order_filter);
-        $titlePointData = $this->order_model->get_title_point_count();
+        // $titlePointData = $this->order_model->get_title_point_count();
         
         $openLoanCount = $openSalesCount = 0;
         $closedLoanCount = $closedSalesCount = 0;
@@ -96,7 +96,7 @@ class Home extends MX_Controller {
 		$customer_filter = [];
 		$expiredPasswords = $this->home_model->get_incorrect_customers($customer_filter);
 		$expiredPasswordCount = $expiredPasswords['recordsTotal'];
-		$failedJsonCount = 0;
+		$failedJsonCount = $this->home_model->get_pending_json_files();
         
         $data = array(
             'title' => 'PCT Order: Dashboard',
