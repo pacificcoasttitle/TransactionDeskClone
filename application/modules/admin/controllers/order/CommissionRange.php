@@ -735,6 +735,42 @@ class CommissionRange extends MX_Controller {
         $this->load->view('order/layout/footer', $data);
     }
 
+	public function sales_rep_commission($sales_rep_id) {
+		
+		$data['salesUsers'] = array();
+		$data['title'] = 'Sales Production History | Pacific Coast Title Company';
+		$commissionHistory = array();
+		$current_year = date('Y');
+		$this->load->model('admin/order/user_monthly_commission_model');
+		for ($iM = 1; $iM <= (int)date('m'); $iM++) {
+			$dateObj   = DateTime::createFromFormat('!m', $iM);
+			$monthName = $dateObj->format('F'); 
+			$commissionHistory[$iM-1]['month'] = $monthName;
+			$get_month_conditon = [
+				'user_id'=>$sales_rep_id,
+				'commission_year'=>$current_year,
+				'commission_month'=>$iM,
+			];
+			$commisson_data = $this->user_monthly_commission_model->get_by($get_month_conditon);
+			if($iM == date('m') && (!($commisson_data) || empty($commisson_data->commission))) {
+				//Call procedure
+				$stored_pocedure = "CALL calculate_commission(?)";
+				$this->user_monthly_commission_model->call_sp($stored_pocedure,array('id'=>$sales_rep_id));
+				$commisson_data = $this->user_monthly_commission_model->get_by($get_month_conditon);
+			}
+			$commissionHistory[$iM-1]['commission_data'] = $commisson_data;
+
+			
+
+		}
+		$data['commissionHistory'] = $commissionHistory;
+		// echo '<pre>';var_dump($data);die;
+
+		$this->load->view('order/layout/header', $data);
+        $this->load->view('order/sales/commission_list', $data);
+        $this->load->view('order/layout/footer', $data);
+	}
+
 	
 
 }
