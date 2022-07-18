@@ -5104,7 +5104,7 @@ class Cron extends MX_Controller {
         $this->db->join('agents as buyer_agent', 'buyer_agent.id = property_details.buyer_agent_id','left');
         $this->db->join('agents as listing_agent', 'listing_agent.id = property_details.listing_agent_id','left');
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
-        //$this->db->limit(10);
+        $this->db->limit(10);
         $query = $this->db->get();
         $result   = $query->result_array();  
 
