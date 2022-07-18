@@ -5104,7 +5104,6 @@ class Cron extends MX_Controller {
         $this->db->join('agents as buyer_agent', 'buyer_agent.id = property_details.buyer_agent_id','left');
         $this->db->join('agents as listing_agent', 'listing_agent.id = property_details.listing_agent_id','left');
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
-        $this->db->limit(10);
         $query = $this->db->get();
         $result   = $query->result_array();  
 
@@ -5152,19 +5151,19 @@ class Cron extends MX_Controller {
                     'message'=>json_encode($data),
                     'cc' => $cc
                 );
-                $to = 'hitesh.p@crestinfosystems.com';
-                $cc = array();
+                //$to = 'hitesh.p@crestinfosystems.com';
+                //$cc = array();
                 $this->load->helper('sendemail');
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $res['order_id'], $logid);
-                // $order_details = [
-                //     'is_thank_you_email_sent' => 1
-                // ];
-                // $condition = [
-                //     'id' => $res['order_id']
-                // ];
-                // $this->db->update('order_details', $order_details, $condition);
+                $order_details = [
+                    'is_thank_you_email_sent' => 1
+                ];
+                $condition = [
+                    'id' => $res['order_id']
+                ];
+                $this->db->update('order_details', $order_details, $condition);
             }
             echo "Mails sent successfully to Escow user ";exit;
         }
