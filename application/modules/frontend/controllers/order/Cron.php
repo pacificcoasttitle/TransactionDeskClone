@@ -3665,22 +3665,23 @@ class Cron extends MX_Controller {
                         }
                     }
                 }
-                if (!empty($closedFileNumbers)) {
-                    $param = $closedFileNumbers;
-                    $command = "php ".FCPATH."index.php frontend/order/cron sendThankYouEmailForClosedOrder $param";
-                    if (substr(php_uname(), 0, 7) == "Windows"){
-                        pclose(popen("start /B ". $command, "r")); 
-                    }
-                    else {
-                        exec($command . " > /dev/null &");  
-                    }
-                    //$this->sendThankYouEmailForClosedOrder($closedFileNumbers);
-                }
+                
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
                 rename(FCPATH."/uploads/order-status/".$documentName['basename'], FCPATH."/uploads/order-status/".$fileName);
                 $this->order->uploadDocumentOnAwsS3($fileName, 'order-status', 1);  
-                echo "All orders status updated successfully"."<br>";;
+                echo "All orders status updated successfully"."<br>";
+                if (!empty($closedFileNumbers)) {
+                    // $param = $closedFileNumbers;
+                    // $command = "php ".FCPATH."index.php frontend/order/cron sendThankYouEmailForClosedOrder $param";
+                    // if (substr(php_uname(), 0, 7) == "Windows"){
+                    //     pclose(popen("start /B ". $command, "r")); 
+                    // }
+                    // else {
+                    //     exec($command . " > /dev/null &");  
+                    // }
+                    $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
+                }
                 echo date('Y-m-d H:i:s');exit;
             }
         } else {
@@ -5103,7 +5104,6 @@ class Cron extends MX_Controller {
         $this->db->join('agents as buyer_agent', 'buyer_agent.id = property_details.buyer_agent_id','left');
         $this->db->join('agents as listing_agent', 'listing_agent.id = property_details.listing_agent_id','left');
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc'); 
-        $this->db->limit(10);
         $query = $this->db->get();
         $result   = $query->result_array();  
 
@@ -5125,7 +5125,15 @@ class Cron extends MX_Controller {
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Thank You!';
                 $to = $res['email_address'];
-                $cc = array('ghernandez@pct.com', $data['sales_email'], $data['client_email'], 'hitesh.p@crestinfosystems.com');
+                $cc = array('ghernandez@pct.com');
+
+                if (!empty($res['sales_email'])) {
+                    $cc[] = $res['sales_email'];
+                }
+
+                if (!empty($res['client_email'])) {
+                    $cc[] = $res['client_email'];
+                }
 
                 if (!empty($res['listing_agent_email'])) {
                     $cc[] = $res['listing_agent_email'];
@@ -5141,7 +5149,7 @@ class Cron extends MX_Controller {
                     'to'=> $to,
                     'subject'=>$subject,
                     'message'=>json_encode($data),
-                    'cc' => $data['sales_email']
+                    'cc' => $cc
                 );
                 //$to = 'hitesh.p@crestinfosystems.com';
                 //$cc = array();
