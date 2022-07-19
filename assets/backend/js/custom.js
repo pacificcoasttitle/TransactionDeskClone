@@ -4647,3 +4647,38 @@ function changePassword(id)
         return false;
     }
 }
+function refreshExipredPasswords() 
+{
+	var ready = confirm("Are you sure want to execute password update script? It will take time to update all passwords.");
+    if (ready) {
+        $.ajax({
+            url: base_url+"admin/order/home/refreshExipredPasswords",
+            success: function(data) {
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#refresh_password_success_msg').html(result.message).show();
+                    
+                    setTimeout(function () {
+                        $('#refresh_password_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#refresh_password_error_msg').html('Something went wrong. Please try it again.').show();
+					
+					setTimeout(function () {
+						$('#refresh_password_error_msg').html('').hide();
+					}, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#refresh_password_error_msg').html('Something went wrong. Please try it again.').show();
+               
+
+                setTimeout(function () {
+                    $('#refresh_password_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}
