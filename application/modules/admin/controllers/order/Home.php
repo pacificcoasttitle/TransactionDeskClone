@@ -3237,4 +3237,17 @@ class Home extends MX_Controller {
         $data = array('status'=>'success', 'msg'=> 'Password required field updated successfully.');
         echo json_encode($data);
     }
+
+	public function refreshExipredPasswords()
+    {
+		$command = "php ".FCPATH."index.php frontend/order/cron passwordUpdateAll";
+		if (substr(php_uname(), 0, 7) == "Windows"){
+			pclose(popen("start /B ". $command, "r")); 
+		}
+		else {
+			exec($command . " > /dev/null &");  
+		}
+		echo  json_encode(array('status'=>'success', 'message'=> 'Script execution is in process.'));
+
+	}
 }

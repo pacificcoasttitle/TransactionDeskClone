@@ -101,7 +101,7 @@
 
 					<div class="row">
 						<div class="col-md-4 col-sm-12">
-							<div class="card">
+							<div class="card border-info">
 
 								<div class="card-body text-info">
 									<div class="mr-5"><?php echo $escrowUsersCount.' Escrows'; ?></div>
@@ -118,7 +118,7 @@
 						</div>
 
 						<div class="col-md-4 col-sm-12">
-							<div class="card">
+							<div class="card border-info">
 
 								<div class="card-body text-info">
 									<div class="mr-5"><?php echo $lenderUsersCount.' Lenders'; ?></div>
@@ -135,7 +135,7 @@
 						</div>
 
 						<div class="col-md-4 col-sm-12">
-							<div class="card">
+							<div class="card border-info">
 
 								<div class="card-body text-info">
 									<div class="mr-5"><?php echo $salesRepUsersCount.' Sales Rep'; ?></div>
@@ -163,7 +163,12 @@
 						</div>
 
 						<div class="card-body text-danger">
-							<div class="mr-5"><?php echo $expiredPasswordCount.' Password expired'; ?></div>
+						<div id="refresh_password_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+            			<div id="refresh_password_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+							<div class="mr-5"><?php echo $expiredPasswordCount.' Password expired'; ?>
+							<button type="button" class="btn btn-danger text-right float-right" onclick="refreshExipredPasswords();"><i class="fas fa-refresh"></i></button>
+							</div>
+							<!-- <div class="text-right pull-right"></div> -->
 						</div>
 
 						<a class="card-footer clearfix small z-1 bg-danger text-white" href="<?php echo base_url('order/admin/incorrect-users'); ?>">
