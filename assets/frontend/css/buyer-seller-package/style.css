@@ -213,7 +213,7 @@ label span{
     border: 0;
     border-bottom: 1px solid #000;
     outline: none;
-    padding: 0;
+    padding: 0 5px;
     font-weight: 600;
 }
 input.signature {
@@ -269,29 +269,77 @@ input.signature {
 .w-medium {
     width: 80px !important;
 }
-.space-between {
-    justify-content: space-between;
+.w-80 {
+    width: 80% !important;
 }
-.w-49{
-    width:49%;
+.flex1 {
+    flex: 1;
 }
-.f14{
-    font-size: 14px;
+.pl-100 {
+    padding-left: 100px;
 }
+.mt-10 {
+    margin-top: 10px;
+}
+.f44 {
+    font-size: 44px;
+    line-height: 50px;
+    font-weight: 700;
+}
+.big_bullet li {
+    list-style-type: square;
+    font-size: 24px;
+}
+.max-w-full{
+    max-width: 100%;
+}
+.bullet-alpha {
+    list-style: upper-alpha;
+}
+.real_estate_title {
+    line-height: 40px;
+}
+.mt-30 {
+    margin-top: 30px;
+}
+.f32 {
+    font-size: 32px;
+    line-height: 40px;
+    font-weight: 700;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @media(max-width:767px){
-    .title_string{
-        max-width: 100%;
-        overflow: hidden;
+    .big_bullet li {
+        font-size: 18px;
     }
-    .w-49{
-        width: 100%;
-        margin: 0 !important;
+    .f44 {
+        font-size: 26px;
+        line-height: 32px;
     }
-    .flex-wrap{
-        flex-flow: wrap;
+    .flex-xs-wrap{
+        flex-wrap: wrap;
     }
-    .w30 {
-        width: 70%;
+    .pl-100 {
+        padding-left: 0;
     }
     .date_group input {
         width: 60px;
@@ -367,5 +415,6 @@ input.signature {
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,border-radius .15s ease;
 	letter-spacing: 0.5px;
 }
-
-
+.w-full{
+    width: 100%;
+}

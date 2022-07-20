@@ -21,6 +21,9 @@
 	.form-control {
         width: 100%;
     }
+    .table>:not(caption)>*>* {
+        padding: 1rem;
+    }
 </style>
 
 <body class="">
@@ -44,9 +47,9 @@
 	<!-- form content -->
 
 	<section class="form_content">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
 					<?php if(!empty($success)) {?>
                         <div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
                             <?php foreach($success as $sucess) {
@@ -61,1777 +64,2226 @@
                                 }?>
                         </div>
                     <?php } ?>
-					<form action="<?php echo base_url().'borrower-seller-form/'.$orderDetails['file_id']; ?>" onsubmit="if (validateForm()) { document.forms['borrower_seller_form'].submit(); }" method="post" name="borrower_seller_form" id="borrower_seller_form">
-						<h2 class="blue_title">Seller Opening Package<br><span
-								style="font-size:16px; padding-top:15px;">Property Address: <?php echo $orderDetails['full_address'];?></span><br><span
-								style="font-size:16px; padding-top:15px;">APN:<?php echo $orderDetails['apn'];?></span></h2>
-						<div class="accordion mt-4" id="accordionExample">
+                    <form action="<?php echo base_url().'borrower-seller-form/'.$orderDetails['file_id']; ?>" onsubmit="if (validateForm()) { document.forms['borrower_seller_form'].submit(); }" method="post" name="borrower_seller_form" id="borrower_seller_form">
+                        <h2 class="blue_title">Seller Opening Package<br><span style="font-size:16px; padding-top:15px;">Property Address: <?php echo $orderDetails['full_address'];?></span><br><span style="font-size:16px; padding-top:15px;">APN:<?php echo $orderDetails['apn'];?></span></h2>
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">(1) Escrow Instructions</button>
+                                </h2>
+								<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
+                                <div id="collapseOne" class="accordion-collapsed collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <table class="table table-type-3 typography-last-elem no-footer spacer-t30">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Document Name</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr role="row" class="odd">
+                                                            <td>1</td>
+                                                            <td><?php echo $escrow_instruction_document;?></td>
+                                                            <td>
+                                                                <div class="custom__task_actions smart-forms" style="display: inline-block;">
+                                                                    <a target="_blank" href="<?php echo env('AWS_PATH').'escrow_instruction_documents/'.$escrow_instruction_document;?>" class="btn button btn-primary">
+                                                                        <span class="text">View</span>
+                                                                    </a>
+                                                                    <div class="clearfix"></div>
+                                                                </div>
+                                                            </td> 
+                                                        </tr>         
+                                                    </tbody>
+                                                </table>	
+                                            </div>
+                                        </div>
+                                    </div>                                       
+                                </div>
+                            </div>
 							<div class="accordion-item">
-								<h2 class="accordion-header" id="headingOne">
-									<button class="accordion-button" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseOne" aria-expanded="true"
-										aria-controls="collapseOne">(1) Seller Information</button>
-								</h2>
-								<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-									data-bs-parent="#accordionExample">
-									<div class="accordion-body">
+                                <h2 class="accordion-header" id="heading2">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">(2) Commission Instructions</button>
+                                </h2>
+                                <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#accordionExample">
+                                    
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingEighteen">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEighteen" aria-expanded="true" aria-controls="collapseEighteen">
+                                      (3) OWNER'S ESCROW INFORMATION SHEET
+                                    </button>
+                                </h2>
+                                <div id="collapseEighteen" class="accordion-collapse collapse" aria-labelledby="headingEighteen" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        <h3 class="text-center mt-md-5 mby-5">
+                                            <b>
+                                                OWNER'S ESCROW INFORMATION SHEET <br>
+                                                BORROWER’S AUTHORIZATION
+                                            </b>
+                                        </h3>
 
-										<div class="form-group sellerName mb-5">
-											<label for="" class="mb-2"><b>Seller's Name exactly as shown on your Drivers
-													license or government issued ID: <span>*</span></b></label>
-											<div class="row">
-												<div class="col-md-4">
-													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="first_name"
-															name="first_name" value="<?php echo $orderDetails['seller_first_name'];?>" required data-error="#first_name-error">
-														<small class="small_label">First Name</small>
-													</div>
-													<label id="first_name-error" class="error text-danger error2" for="first_name"></label>
-												</div>
-												<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
-												<div class="col-md-4">
-													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="middle_name"
-															name="middle_name" value="<?php echo $orderDetails['seller_middle_name'];?>" required data-error="#middle_name-error">
-														<small class="small_label">Middle Name</small>
-													</div>
-													<label id="middle_name-error" class="error text-danger error2" for="middle_name"></label>
-												</div>
-												<div class="col-md-4">
-													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="last_name"
-															name="last_name" value="<?php echo $orderDetails['seller_last_name'];?>" required data-error="#last_name-error">
-														<small class="small_label">Last Name</small>
-													</div>
-													<label id="last_name-error" class="error text-danger error2" for="last_name"></label>
-												</div>
-											</div>
-										</div>
+                                        <div class="notice_box mt-4">
+                                            NOTE:  Please accept this as authorization for Pacific Coast Title Company associates to obtain payoff demand statements on any below-referenced loans on our behalf.
+                                        </div>
 
-										<div class="form-group mb-3">
-											<div class="row">
-												<div class="col-md-4">
-													<div class="form-group position-relative">
-														<label for="" class="mb-2"><b>Seller 1 Preferred Phone Number
-														<span>*</span></b></label>
-														<input type="text" class="form-control" id="phone_number" name="phone_number" required>
-													</div>
-												</div>
-												<div class="col-md-4">
-													<div class="form-group position-relative">
-														<label for="" class="mb-2"><b>Phone number is
-																<span>*</span></b></label>
-														<ul class="list-unstyled">
-															<li>
-																<input type="radio" name="phone_number_type" value="Home" id="Home" required data-error="#phone_number_type-error">
-																<label for="Home">Home Number</label>
-															</li>
-															<li>
-																<input type="radio" name="phone_number_type" value="Cell" id="Cell">
-																<label for="Cell">Cell</label>
-															</li>
-															<li>
-																<input type="radio" name="phone_number_type" value="Business" id="Business">
-																<label for="Business">Business Phone</label>
-															</li>
-														</ul>
-													</div>
-													<label id="phone_number_type-error" class="error text-danger" for="phone_number_type"></label>
-												</div>
-											</div>
-										</div>
+                                        <div class="date_escrow_num max-w-100 text_black mt-4">
+                                            <span><strong>ESCROW NO.:</strong></span>10257432-GLE-MP<br>
+                                            <span><strong>TITLE NO.:</strong></span>10257432-GLT-<br>
+                                        </div>
 
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>Is Seller a citizen or resident of a foreign country? <span>*</span></b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" value="yes" id="foreignYes" name="foreign_resident" required data-error="#foreign_resident-error">
-													<label for="foreignYes">Yes</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" value="no" id="foreignNo" name="foreign_resident">
-													<label for="foreignNo">No</label>
-												</li>
-											</ul>
-											<label id="foreign_resident-error" class="error text-danger" for="foreign_resident"></label>
-										</div>
+                                        <div class="text-center mt-4">
+                                            PLEASE FILL OUT THIS FORM COMPLETELY AND RETURN TO OUR OFFICE AS SOON AS POSSIBLE <br>
+                                            AS IT WILL ASSIST US IN THE ADMINISTRATION OF YOUR TRANSACTION.
+                                        </div>
 
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="seller_name" name="seller_name">
+                                            <small class="small_label">Seller(s):</small>
+                                        </div>
 
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>Is there a Co-Seller for this property?<span>*</span></b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" value="yes" id="coSellerYes" name="co_seller" required data-error="#co_seller-error">
-													<label for="coSellerYes">Yes</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" value="no" id="coSellerNo" name="co_seller">
-													<label for="coSellerNo">No</label>
-												</li>
-											</ul>
-											<label id="co_seller-error" class="error text-danger" for="co_seller"></label>
-										</div>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="home_phone_number" name="home_phone_number">
+                                                <small class="small_label">Home Phone Number:</small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="work_phone_number" name="work_phone_number">
+                                                <small class="small_label">Work Phone Number:</small>
+                                            </div>
+                                        </div>
 
-										<div class="coSellerInfo d-none">
-											<div class="form-group sellerName mb-5">
-												<label for="" class="mb-2"><b>Spouse/Co-Seller's Name exactly as shown
-														on their Driver's License or other government issued ID:
-														<span>*</span></b></label>
-												<div class="row">
-													<div class="col-md-4">
-														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_first_name" name="co_seller_first_name" value="<?php echo $orderDetails['second_seller_first_name'];?>" data-error="#co_seller_first_name-error">
-															<small class="small_label">First Name</small>
-														</div>
-														<label id="co_seller_first_name-error" class="error text-danger error2" for="co_seller_first_name"></label>
-													</div>
-													
-													<div class="col-md-4">
-														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_middle_name" name="co_seller_middle_name" value="<?php echo $orderDetails['second_seller_middle_name'];?>" data-error="#co_seller_middle_name-error">
-															<small class="small_label">Middle Name</small>
-														</div>
-														<label id="co_seller_middle_name-error" class="error text-danger error2" for="co_seller_middle_name"></label>
-													</div>
-													
-													<div class="col-md-4">
-														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="co_seller_last_name" name="co_seller_last_name" value="<?php echo $orderDetails['second_seller_last_name'];?>" data-error="#co_seller_last_name-error">
-															<small class="small_label">Last Name</small>
-														</div>
-														<label id="co_seller_last_name-error" class="error text-danger error2" for="co_seller_last_name"></label>
-													</div>
-													
-												</div>
-											</div>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="fax_number" name="fax_number">
+                                                <small class="small_label">Fax Number:</small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="cell_phone_number" name="cell_phone_number">
+                                                <small class="small_label">Cell Phone Number:</small>
+                                            </div>
+                                        </div>
 
-											<div class="form-group position-relative mb-5 row">
-												<label for="" class="mb-2 col-md-12"><b>Expiration Date of their
-														Driver's License or other government issued ID:
-														<span>*</span></b></label>
-												<div class="col-md-4">
-													<div class="form-group position-relative">
-														<input type="date" class="form-control" id="co_seller_expiration_date" name="co_seller_expiration_date" data-error="#co_seller_expiration_date-error">
-														<small class="small_label">Date</small>
-													</div>
-													<label id="co_seller_expiration_date-error" class="error text-danger error2" for="co_seller_expiration_date"></label>
-												</div>
-											</div>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="email_address" name="email_address">
+                                                <small class="small_label">E-Mail Address:</small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="cell_phone_number_2" name="cell_phone_number_2">
+                                                <small class="small_label">Cell Phone Number:</small>
+                                            </div>
+                                        </div>
 
-											<div class="form-group mb-3 row">
-												<label for="" class="mb-2 col-md-12"><b>Marital Status
-														<span>*</span></b></label>
-												<ul class="list-unstyled">
-													<li>
-														<input type="radio" value="single" id="singlecoSeller" name="co_seller_marital_status" data-error="#co_seller_marital_status-error">
-														<label for="singlecoSeller">Single</label>
-													</li>
-													<li>
-														<input type="radio" value="married" id="marriedcoSeller" name="co_seller_marital_status">
-														<label for="marriedcoSeller">Married</label>
-													</li>
-												</ul>
-												<label id="co_seller_marital_status-error" class="error text-danger" for="co_seller_marital_status"></label>
-											</div>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="ssn" name="ssn">
+                                                <small class="small_label">Social Security #:</small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="ssn_2" name="ssn_2">
+                                                <small class="small_label">Social Security #:</small>
+                                            </div>
+                                        </div>
 
-											<div class="form-group mb-4 row">
-												<label for="" class="mb-2 col-md-12"><b>Seller's Social Security/Tax ID:<span>*</span></b></label>
-												<div class="col-md-4">
-													<input type="text" class="form-control" id="co_seller_ssn" name="co_seller_ssn">
-												</div>
-											</div>
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="property_address" name="property_address"></textarea>
+                                            <small class="small_label">Property Address:</small>
+                                        </div>
 
-											<div class="form-group position-relative mb-5 row">
-												<label for="" class="mb-2 col-md-12"><b>Email</b></label>
-												<div class="col-md-6">
-													<div class="form-group position-relative">
-														<input type="email" class="form-control" id="co_seller_email" name="co_seller_email" data-error="#co_seller_email-error">
-														<small class="small_label"> example@example.com</small>
-													</div>
-													<label id="co_seller_email-error" class="error text-danger error2" for="co_seller_email"></label>
-												</div>
-											</div>
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="seller_current_mailing_address" name="seller_current_mailing_address"></textarea>
+                                            <small class="small_label">Seller(s) Current Mailing Address: </small>
+                                        </div>
 
-											<div class="form-group mb-3">
-												<div class="row">
-													<div class="col-md-4">
-														<div class="form-group position-relative">
-															<label for="" class="mb-2"><b>Preferred Phone Number
-																	<span>*</span></b></label>
-															<input type="text" class="form-control" id="co_seller_phone_number" name="co_seller_phone_number">
-														</div>
-													</div>
-													<div class="col-md-4">
-														<div class="form-group position-relative">
-															<label for="" class="mb-2"><b>Phone number is
-																	<span>*</span></b></label>
-															<ul class="list-unstyled">
-																<li>
-																	<input type="radio" name="co_seller_phone_number_type" value="Home" id="HomecoSeller" data-error="#co_seller_phone_number_type-error">
-																	<label for="HomecoSeller">Home Number</label>
-																</li>
-																<li>
-																	<input type="radio" name="co_seller_phone_number_type" value="Cell" id="CellcoSeller">
-																	<label for="CellcoSeller">Cell</label>
-																</li>
-																<li>
-																	<input type="radio" name="co_seller_phone_number_type" value="Business" id="BusinesscoSeller">
-																	<label for="BusinesscoSeller">Business Phone</label>
-																</li>
-															</ul>
-															<label id="co_seller_phone_number_type-error" class="error text-danger" for="co_seller_phone_number_type"></label>
-														</div>
-													</div>
-												</div>
-											</div>
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow" name="seller_mailing_address_after_close_escrow"></textarea>
+                                            <small class="small_label">Seller(s) Mailing Address after Close of Escrow: </small>
+                                        </div>
 
-											<div class="form-group mb-4">
-												<label for="" class="mb-2"><b>Is Seller a citizen or resident of a
-														foreign country? * <span>*</span></b></label>
-												<ul class="list-inline">
-													<li class="list-inline-item me-md-5">
-														<input type="radio" value="yes" id="coSellerforeignYes" name="co_seller_foreign_resident" data-error="#co_seller_foreign_resident-error">
-														<label for="coSellerforeignYes">Yes</label>
-													</li>
-													<li class="list-inline-item">
-														<input type="radio" value="no" id="coSellerforeignNo" name="co_seller_foreign_resident">
-														<label for="coSellerforeignNo">No</label>
-													</li>
-												</ul>
-												<label id="co_seller_foreign_resident-error" class="error text-danger" for="co_seller_foreign_resident"></label>
-											</div>
-										</div>
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow_2" name="seller_mailing_address_after_close_escrow_2"></textarea>
+                                            <small class="small_label">Seller(s) Mailing Address after Close of Escrow: </small>
+                                        </div>
 
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>I/We will be attending closing
-													<span>*</span></b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" value="yes" id="attendingYes" name="attending" required data-error="#attending-error">
-													<label for="attendingYes">Yes</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" value="no" id="attendingNo" name="attending">
-													<label for="attendingNo">No</label>
-												</li>
-											</ul>
-											<label id="attending-error" class="error text-danger" for="attending"></label>
-										</div>
-									</div>
-								</div>
-							</div>
+                                        <div class="mt-4 mb-2"><b>Existing Loan(s) That Are Currently Recorded Against The Property:</b></div>
+
+                                        <b>
+                                            NOTE:  If you have an FHA Loan that is to be paid off at the close of escrow, the lender requires a 30-day notice of your intention to prepay.  It is the owner’s responsibility to notify the lender.
+                                        </b>
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="first_trust_deed_lender" name="first_trust_deed_lender">
+                                            <small class="small_label">FIRST TRUST DEED LENDER:</small>
+                                        </div>
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="lender_address" name="lender_address"></textarea>
+                                            <small class="small_label">Address:</small>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="loan_number" name="loan_number">
+                                                <small class="small_label">Loan Number:</small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="lender_phone_number" name="lender_phone_number">
+                                                <small class="small_label">Phone Number:</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="unpaid_principal_balance" name="unpaid_principal_balance">
+                                                <small class="small_label">Unpaid Principal Balance $:</small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="next_due" name="next_due">
+                                                <small class="small_label">Next Due:</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mt-4">
+                                            <div class="col-lg-9 col-md-8">
+                                                <div class="mb-3">
+                                                    Type of Loan: <input type="text" class="input_single w-medium" id="type_of_loan" name="type_of_loan"> VA <input type="text" class="input_single w-medium" id="va" name="va">FHA <input type="text" class="input_single w-medium" id="fha" name="fha">Conventional <input type="text" class="input_single w-medium" id="conventional" name="conventional">Equity Line/Line of Credit
+                                                </div>
+                                                <div>
+                                                    TAXES: <input type="text" class="input_single w-medium" id="taxes" name="taxes">Paid <input type="text" class="input_single w-medium" id="paid" name="paid"> Unpaid<input type="text" class="input_single w-medium" id="unpaid" name="unpaid"> Taxes are being paid through my impound account
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-4">
+                                                <div class="d-flex">
+                                                    Impound Acct:
+                                                    <div class="ms-2">
+                                                        <input type="radio" id="impondYes" value="yes" name="is_impound_acc">
+                                                        <label for="impondYes">Yes</label>
+                                                    </div>
+                                                    <div class="ms-2">
+                                                        <input type="radio" id="impondNo" value="no" name="is_impound_acc">
+                                                        <label for="impondNo">No</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr class="mt-4">
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="second_trust_deed_lender" name="second_trust_deed_lender">
+                                            <small class="small_label">SECOND TRUST DEED LENDER: </small>
+                                        </div>
+
+                                        <div class="form-group position-relative mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="second_lender_address" name="second_lender_address"></textarea>
+                                            <small class="small_label">Address:</small>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group position-relative mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="second_loan_number" name="second_loan_number">
+                                                <small class="small_label">Loan Number:</small>
+                                            </div>
+                                            <div class="form-group position-relative mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="second_lender_phone_number" name="second_lender_phone_number">
+                                                <small class="small_label">Phone Number:</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="second_unpaid_principal_balance" name="second_unpaid_principal_balance">
+                                                <small class="small_label">Unpaid Principal Balance $:</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mt-4">
+                                            <div class="col-lg-12">
+                                                <div class="mb-3">
+                                                    Type of Loan: <input type="text" class="input_single w-medium" id="second_type_of_loan" name="second_type_of_loan"> VA <input type="text" class="input_single w-medium" id="second_va" name="second_va">FHA <input type="text" class="input_single w-medium" id="second_fha" name="second_fha">Conventional <input type="text" class="input_single w-medium" id="second_conventional" name="second_conventional">Equity Line/Line of Credit
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="homeowner_association" name="homeowner_association">
+                                            <small class="small_label">Homeowner’s Association: </small>
+                                        </div>
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="management_company" name="management_company">
+                                            <small class="small_label">Management Company: </small>
+                                        </div>
+
+                                        <div class="form-group position-relative mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="management_mailing_address" name="management_mailing_address">
+                                            <small class="small_label">Mailing Address: </small>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="contact_person" name="contact_person">
+                                                <small class="small_label">Contact Person:</small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="management_phone_number" name="management_phone_number">
+                                                <small class="small_label">Phone Number:</small>
+                                            </div>
+                                        </div>
+
+                                        <hr>	
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="second_homeowner_association" name="second_homeowner_association">
+                                            <small class="small_label">Homeowner’s Association: </small>
+                                        </div>
+
+                                        <div class="form-group position-relative mb-3 mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="second_management_company" name="second_management_company">
+                                            <small class="small_label">Management Company: </small>
+                                        </div>
+
+                                        <div class="form-group position-relative mt-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="second_management_mailing_address" name="second_management_mailing_address">
+                                            <small class="small_label">Mailing Address: </small>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="second_contact_person" name="second_contact_person">
+                                                <small class="small_label">Contact Person:</small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="second_management_phone_number" name="second_management_phone_number">
+                                                <small class="small_label">Phone Number:</small>
+                                            </div>
+                                        </div>
+
+                                        <hr>	
+
+                                        <div class="mt-3">
+                                            Water Stock: If so, please attach certificate for transfer
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="water_company_name" name="water_company_name">
+                                                <small class="small_label">Name of Company: </small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="water_contract_name" name="water_contract_name">
+                                                <small class="small_label">Name of Contact: </small>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="water_company_address" name="water_company_address">
+                                                <small class="small_label">Address: </small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="water_company_phone" name="water_company_phone">
+                                                <small class="small_label">Phone: </small>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-4">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="amount_of_assessment" name="amount_of_assessment">
+                                                <small class="small_label">Amount of assessment $ </small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-4">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="water_next_due" name="water_next_due">
+                                                <small class="small_label">Next Due </small>
+                                            </div>
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-4">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="no_of_shares" name="no_of_shares">
+                                                <small class="small_label">No. of Shares </small>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4">
+                                            Please place any additional information that you feel we may require on the reverse side of this form.
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="mt-5">
+                                                    Date :    
+                                                    <input type="text" class="input_single" id="date" name="date">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="mt-5">
+                                                    <input type="text" class="input_single d-block w-full" id="signature" name="signature">
+                                                    Luz Amparo Rockey
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">   (4) Statement of Information</button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                    <h4 class="text-center my-4"><strong>CONFIDENTIAL INFORMATION FOR YOUR PROTECTION</strong></h4>
+
+                                    <div class="mb-20">
+                                        Completion of this statement expedites your application for title insurance, as it assists in establishing identity, eliminating matters affecting persons with similar names and avoiding the use of fraudulent or forged documents.  Complete all blanks (please print) or indicate "none" or "N/A."  If more space is needed for any item(s), use the reverse side of the form.  Each party (and spouse/domestic partner, if applicable) to the transaction should personally sign this form.
+                                    </div>
+                                    <div class="row my-5">
+                                        <div class="col-md-6">
+                                            To: Pacific Coast Title Company <br>
+                                            516 Burchett St., Glendale, CA  91203	
+                                        </div>
+                                        <div class="col-md-6 text-md-end">
+                                            ESCROW NO.:  <b>10257432-GLE-MP</b><br>TITLE NO.: <b> 10257432-GLT-</b>	
+                                        </div> 
+                                    </div>
+                                    <h4 class="text-center"><b>NAME AND PERSONAL INFORMATION</b></h4>
+
+                                    <div class="row mt-5">
+                                        <div class="col-md-9">	
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" class="form-control" id="first_name" name="first_name" required data-error="#first_name-error">
+                                                        <small class="small_label">First Name</small>
+                                                    </div>
+                                                    <label id="first_name-error" class="error text-danger" for="first_name"></label>
+                                                </div>
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" class="form-control" id="middle_name" name="middle_name" required data-error="#middle_name-error">
+                                                        <small class="small_label">Middle Name</small>
+                                                    </div>
+                                                    <label id="middle_name-error" class="error text-danger" for="middle_name"></label>
+                                                </div>
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" class="form-control" id="last_name" name="last_name" required data-error="#last_name-error">
+                                                        <small class="small_label">Last Name</small>
+                                                    </div>
+                                                    <label id="last_name-error" class="error text-danger" for="last_name"></label>
+                                                </div>
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="form-group position-relative mb-3">
+                                                        <label for="" class="mb-2"><b></b></label>
+                                                        <input type="text" class="form-control" id="maiden_name" name="maiden_name" required data-error="#maiden_name-error">
+                                                        <small class="small_label">Maiden Name</small>
+                                                    </div>
+                                                    <label id="maiden_name-error" class="error text-danger" for="maiden_name"></label>
+                                                </div>
+                                            </div>
+                                            <div class="text-center mt-4 f14">(If none, indicate)</div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group position-relative mb-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" required data-error="#date_of_birth-error">
+                                                <small class="small_label">Date of Birth</small>
+                                            </div>
+                                            <label id="date_of_birth-error" class="error text-danger" for="date_of_birth"></label>
+                                        </div>
+                                    </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="home_phone_number" name="home_phone_number" required data-error="#home_phone_number-error">
+                                                    <small class="small_label">Home Phone</small>
+                                                </div>
+                                                <label id="home_phone_number-error" class="error text-danger" for="home_phone_number"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="business_phone_number" name="business_phone_number" required data-error="#business_phone_number-error">
+                                                    <small class="small_label">Business Phone</small>
+                                                </div>
+                                                <label id="business_phone_number-error" class="error text-danger" for="business_phone_number"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="birthplace" name="birthplace" required data-error="#birthplace-error">
+                                                    <small class="small_label">Birthplace</small>
+                                                </div>
+                                                <label id="birthplace-error" class="error text-danger" for="birthplace"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="ssn" name="ssn" required data-error="#ssn-error">
+                                                    <small class="small_label">Social Security No.</small>
+                                                </div>
+                                                <label id="ssn-error" class="error text-danger" for="ssn"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="driver_license_no" name="driver_license_no" required data-error="#driver_license_no-error">
+                                                    <small class="small_label">Driver’s License No.</small>
+                                                </div>
+                                                <label id="driver_license_no-error" class="error text-danger" for="driver_license_no"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-12">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="another_name_that_used" name="another_name_that_used" required data-error="#another_name_that_used-error">
+                                                    <small class="small_label">List any other name you have used or been known by</small>
+                                                </div>
+                                                <label id="another_name_that_used-error" class="error text-danger" for="another_name_that_used"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="residence_state" name="residence_state" required data-error="#residence_state-error">
+                                                    <small class="small_label">State of residence</small>
+                                                </div>
+                                                <label id="residence_state-error" class="error text-danger" for="residence_state"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="lived_year" name="lived_year" required data-error="#lived_year-error">
+                                                    <small class="small_label">I have lived continuously in the U.S.A. since</small>
+                                                </div>
+                                                <label id="lived_year-error" class="error text-danger" for="lived_year"></label>
+                                            </div>
+                                        </div>                                            
+                                        <div class="mt-5">
+                                            Are you currently married? <input type="checkbox" name="is_married" id="is_married"> If yes, complete the following information:
+                                        </div>
+
+                                        <div class="form-group position-relative mt-3 mb-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="date_and_place_marriage" name="date_and_place_marriage" data-error="#date_and_place_marriage-error">
+                                            <small class="small_label">Date and place of marriage</small>
+                                        </div>
+                                        <label id="date_and_place_marriage-error" class="error text-danger d-flex" for="date_and_place_marriage"></label>  
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-9">	
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="form-group position-relative mb-3">
+                                                            <label for="" class="mb-2"><b>Spouse:</b></label>
+                                                            <input type="text" class="form-control" id="spouse_first_name" name="spouse_first_name" data-error="#spouse_first_name-error">
+                                                            <small class="small_label">First Name</small>
+                                                        </div>
+                                                        <label id="spouse_first_name-error" class="error text-danger" for="spouse_first_name"></label>
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="form-group position-relative mb-3">
+                                                            <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                            <input type="text" class="form-control" id="spouse_middle_name" name="spouse_middle_name" data-error="#spouse_middle_name-error">
+                                                            <small class="small_label">Middle Name</small>
+                                                        </div>
+                                                        <label id="spouse_middle_name-error" class="error text-danger" for="spouse_middle_name"></label>
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="form-group position-relative mb-3">
+                                                            <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                            <input type="text" class="form-control" id="spouse_last_name" name="spouse_last_name" data-error="#spouse_last_name-error">
+                                                            <small class="small_label">Last Name</small>
+                                                        </div>
+                                                        <label id="spouse_last_name-error" class="error text-danger" for="spouse_last_name"></label>
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="form-group position-relative mb-3">
+                                                            <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                            <input type="text" class="form-control" id="spouse_maiden_name" name="spouse_maiden_name" data-error="#spouse_maiden_name-error">
+                                                            <small class="small_label">Maiden Name</small>
+                                                        </div>
+                                                        <label id="spouse_maiden_name-error" class="error text-danger" for="spouse_maiden_name"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="text-center mt-4 f14">(If none, indicate)</div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                    <input type="text" class="form-control" id="spouse_date_of_birth" name="spouse_date_of_birth" data-error="#spouse_date_of_birth-error">
+                                                    <small class="small_label">Date of Birth</small>
+                                                </div>
+                                                <label id="spouse_date_of_birth-error" class="error text-danger" for="spouse_date_of_birth"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="spouse_home_phone_number" name="spouse_home_phone_number" data-error="#spouse_home_phone_number-error">
+                                                    <small class="small_label">Home Phone</small>
+                                                </div>
+                                                <label id="spouse_home_phone_number-error" class="error text-danger" for="spouse_home_phone_number"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="spouse_business_phone_number" name="spouse_business_phone_number" data-error="#spouse_business_phone_number-error">
+                                                    <small class="small_label">Business Phone</small>
+                                                </div>
+                                                <label id="spouse_business_phone_number-error" class="error text-danger" for="spouse_business_phone_number"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="spouse_birthplace" name="spouse_birthplace" data-error="#spouse_birthplace-error">
+                                                    <small class="small_label">Birthplace</small>
+                                                </div>
+                                                <label id="spouse_birthplace-error" class="error text-danger" for="spouse_birthplace"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="spouse_ssn" name="spouse_ssn" data-error="#spouse_ssn-error">
+                                                    <small class="small_label">Social Security No.</small>
+                                                </div>
+                                                <label id="spouse_ssn-error" class="error text-danger" for="spouse_ssn"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="spouse_driver_license_no" name="spouse_driver_license_no" data-error="#spouse_driver_license_no-error">
+                                                    <small class="small_label">Driver’s License No.</small>
+                                                </div>
+                                                <label id="spouse_driver_license_no-error" class="error text-danger" for="spouse_driver_license_no"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-12">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="spouse_another_name_that_used" name="spouse_another_name_that_used" data-error="#spouse_another_name_that_used-error">
+                                                    <small class="small_label">List any other name you have used or been known by</small>
+                                                </div>
+                                                <label id="spouse_another_name_that_used-error" class="error text-danger" for="spouse_another_name_that_used"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="spouse_state_residence" name="spouse_state_residence" data-error="#spouse_state_residence-error">
+                                                    <small class="small_label">State of residence</small>
+                                                </div>
+                                                <label id="spouse_state_residence-error" class="error text-danger" for="spouse_state_residence"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="spouse_lived_year" name="spouse_lived_year" data-error="#spouse_lived_year-error">
+                                                    <small class="small_label">I have lived continuously in the U.S.A. since</small>
+                                                </div>
+                                                <label id="spouse_lived_year-error" class="error text-danger" for="spouse_lived_year"></label>
+                                            </div>
+                                        </div>                                            
+                                        <div class="mt-5">
+                                            Are you currently a registered domestic partner? <input type="checkbox" name="is_domestic_partner" id="is_domestic_partner"> If yes, complete the following information:
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-9">	
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="form-group position-relative mb-3">
+                                                            <label for="" class="mb-2"><b>Domestic Partner:</b></label>
+                                                            <input type="text" class="form-control" id="domestic_first_name" name="domestic_first_name" data-error="#domestic_first_name-error">
+                                                            <small class="small_label">First Name</small>
+                                                        </div>
+                                                        <label id="domestic_first_name-error" class="error text-danger" for="domestic_first_name"></label>
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="form-group position-relative mb-3">
+                                                            <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                            <input type="text" class="form-control" id="domestic_middle_name" name="domestic_middle_name" data-error="#domestic_middle_name-error">
+                                                            <small class="small_label">Middle Name</small>
+                                                        </div>
+                                                        <label id="domestic_middle_name-error" class="error text-danger" for="domestic_middle_name"></label>
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="form-group position-relative mb-3">
+                                                            <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                            <input type="text" class="form-control" id="domestic_last_name" name="domestic_last_name" data-error="#domestic_last_name-error">
+                                                            <small class="small_label">Last Name</small>
+                                                        </div>
+                                                        <label id="domestic_last_name-error" class="error text-danger" for="domestic_last_name"></label>
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="form-group position-relative mb-3">
+                                                            <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                            <input type="text" class="form-control" id="domestic_maiden_name" name="domestic_maiden_name" data-error="#domestic_maiden_name-error">
+                                                            <small class="small_label">Maiden Name</small>
+                                                        </div>
+                                                        <label id="domestic_maiden_name-error" class="error text-danger" for="domestic_maiden_name"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="text-center mt-4 f14">(If none, indicate)</div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                    <input type="text" class="form-control" id="domestic_date_of_birth" name="domestic_date_of_birth" data-error="#domestic_date_of_birth-error">
+                                                    <small class="small_label">Date of Birth</small>
+                                                </div>
+                                                <label id="domestic_date_of_birth-error" class="error text-danger" for="domestic_date_of_birth"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="domestic_home_phone_number" name="domestic_home_phone_number" data-error="#domestic_home_phone_number-error">
+                                                    <small class="small_label">Home Phone</small>
+                                                </div>
+                                                <label id="domestic_home_phone_number-error" class="error text-danger" for="domestic_home_phone_number"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="domestic_business_phone_number" name="domestic_business_phone_number" data-error="#domestic_business_phone_number-error">
+                                                    <small class="small_label">Business Phone</small>
+                                                </div>
+                                                <label id="domestic_business_phone_number-error" class="error text-danger" for="domestic_business_phone_number"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="domestic_birthplace" name="domestic_birthplace" data-error="#domestic_birthplace-error">
+                                                    <small class="small_label">Birthplace</small>
+                                                </div>
+                                                <label id="domestic_birthplace-error" class="error text-danger" for="domestic_birthplace"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="domestic_ssn" name="domestic_ssn" data-error="#domestic_ssn-error">
+                                                    <small class="small_label">Social Security No.</small>
+                                                </div>
+                                                <label id="domestic_ssn-error" class="error text-danger" for="domestic_ssn"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="domestic_driver_license_no" name="domestic_driver_license_no" data-error="#domestic_driver_license_no-error">
+                                                    <small class="small_label">Driver’s License No.</small>
+                                                </div>
+                                                <label id="domestic_driver_license_no-error" class="error text-danger" for="domestic_driver_license_no"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-12">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="domestic_another_name_that_used" name="domestic_another_name_that_used" data-error="#domestic_another_name_that_used-error">
+                                                    <small class="small_label">List any other name you have used or been known by</small>
+                                                </div>
+                                                <label id="domestic_another_name_that_used-error" class="error text-danger" for="domestic_another_name_that_used"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="domestic_state_residence" name="domestic_state_residence" data-error="#domestic_state_residence-error">
+                                                    <small class="small_label">State of residence</small>
+                                                </div>
+                                                <label id="domestic_state_residence-error" class="error text-danger" for="domestic_state_residence"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="domestic_lived_year" name="domestic_lived_year" data-error="#domestic_lived_year-error">
+                                                    <small class="small_label">I have lived continuously in the U.S.A. since</small>
+                                                </div>
+                                                <label id="domestic_lived_year-error" class="error text-danger" for="domestic_lived_year"></label>
+                                            </div>
+                                        </div>   
+
+                                        <div class="mt-5 mb-2 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                        <h5 class="text-center"><strong>RESIDENCES (LAST 10 YEARS)</strong></h5>
+
+                                        <div class="mt-3 mb-3 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="residence_number_street" name="residence_number_street" required data-error="#residence_number_street-error">
+                                                    <small class="small_label">Number &amp; Street</small>
+                                                </div>
+                                                <label id="residence_number_street-error" class="error text-danger" for="residence_number_street"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="residence_city" name="residence_city" required data-error="#residence_city-error">
+                                                    <small class="small_label">City</small>
+                                                </div>
+                                                <label id="residence_city-error" class="error text-danger" for="residence_city"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="residence_from_date_to_date" name="residence_from_date_to_date" required data-error="#residence_from_date_to_date-error">
+                                                    <small class="small_label">From (date) to (date)</small>
+                                                </div>
+                                                <label id="residence_from_date_to_date-error" class="error text-danger" for="residence_from_date_to_date"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_residence_number_street" name="second_residence_number_street">
+                                                    <small class="small_label">Number &amp; Street</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_residence_city" name="second_residence_city">
+                                                    <small class="small_label">City</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_residence_from_date_to_date" name="second_residence_from_date_to_date">
+                                                    <small class="small_label">From (date) to (date)</small>
+                                                </div>
+                                                <label id="second_residence_from_date_to_date-error" class="error text-danger error2" for="second_residence_from_date_to_date"></label>
+                                            </div>
+                                        </div>
+                                        <div class="text-center mt-4 f14">(If more space is required, use reverse side of form)</div>
+                                        <div class="mt-4 mb-2 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                        <h5 class="text-center"><strong>OCCUPATIONS/BUSINESSES (LAST 10 YEARS)</strong></h5>
+
+                                        <div class="mt-3 mb-3 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="firm_or_business_name" name="firm_or_business_name" required data-error="#firm_or_business_name-error">
+                                                    <small class="small_label">Firm or Business name</small>
+                                                </div>
+                                                <label id="firm_or_business_name-error" class="error text-danger" for="firm_or_business_name"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="business_address" name="business_address" required data-error="#business_address-error">
+                                                    <small class="small_label">Address</small>
+                                                </div>
+                                                <label id="business_address-error" class="error text-danger" for="business_address"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="business_from_date_to_date" name="business_from_date_to_date" required data-error="#business_from_date_to_date-error">
+                                                    <small class="small_label">From (date) to (date)</small>
+                                                </div>
+                                                <label id="business_from_date_to_date-error" class="error text-danger" for="business_from_date_to_date"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_firm_or_business_name" name="second_firm_or_business_name">
+                                                    <small class="small_label">Firm or Business name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_business_address" name="second_business_address">
+                                                    <small class="small_label">Address</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_business_from_date_to_date" name="second_business_from_date_to_date">
+                                                    <small class="small_label">From (date) to (date)</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-5 mb-2 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                        <h5 class="text-center"><strong>INFORMATION ABOUT THE PROPERTY</strong></h5>
+
+                                        <div class="mt-3 mb-3 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                        <div class="d-flex">
+                                            <div class="me-3">
+                                                Buyer intends to reside on the property in this transaction:  
+                                            </div>
+                                            <div class="me-3">
+                                                <input type="radio" id="yesProperty" value="Yes" name="is_buyer_intends" required data-error="#is_buyer_intends-error">
+                                                <label for="yesProperty">Yes</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="noPorperty" value="No" name="is_buyer_intends">
+                                                <label for="noPorperty">No</label>
+                                            </div>
+                                        </div>
+                                        <label id="is_buyer_intends-error" class="error text-danger d-flex" for="is_buyer_intends"></label>
+
+                                        <div class="mt-5 mb-2 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                        <h5 class="text-center"><strong>Owner to complete the following items</strong></h5>
+
+                                        <div class="mt-3 mb-3 text-center title_string"><b>***********************************************************************************************************************************</b></div>
+
+                                        <div class="form-group position-relative mb-3">
+                                            <label for="" class="mb-2"><b></b></label>
+                                            <input type="text" class="form-control" id="owner_street_address" name="owner_street_address" required data-error="#owner_street_address-error">
+                                            <small class="small_label"> Street Address of Property in this transaction: </small>
+                                        </div>
+                                        <label id="owner_street_address-error" class="error text-danger d-flex" for="owner_street_address"></label>
+
+                                        <div class="mt-4">
+                                            The land is unimproved <input type="text" class="input_single w-small" id="unimproved" name="unimproved">; or improved with a structure of the following type:  A Single or 1-4 Family <input type="text" class="input_single w-small" id="single_family" name="single_family"> Condo Unit <input type="text" class="input_single w-small" id="condo_unit" name="condo_unit"> Other <input type="text" class="input_single w-small" id="other" name="other"> 	
+                                        </div>
+
+                                        <div class="d-flex mt-3">
+                                            <div class="me-3">
+                                                Improvements, remodeling or repairs to this property have been made within the past six months: 
+                                            </div>
+                                            <div class="me-3">
+                                                <input type="radio" name="is_improvement" id="yesImprovements" value="Yes" required data-error="#is_improvement-error">
+                                                <label for="yesImprovements">Yes</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" name="is_improvement" id="noImprovements" value="No">
+                                                <label for="noImprovements">No</label>
+                                            </div>
+                                        </div>
+                                        <label id="is_improvement-error" class="error text-danger d-flex" for="is_improvement"></label>
+
+                                        <div class="d-flex mt-3">
+                                            <div class="me-3">
+                                                If yes, have all costs for labor and materials arising in connection therewith been paid in full?
+                                            </div>
+                                            <div class="me-3">
+                                                <input type="radio" name="is_materials" id="yesmaterials" value="Yes" required data-error="#is_materials-error">
+                                                <label for="yesmaterials">Yes</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" name="is_materials" id="nomaterials" value="No">
+                                                <label for="nomaterials">No</label>
+                                            </div>
+                                            
+                                        </div>
+                                        <label id="is_materials-error" class="error text-danger d-flex" for="is_materials"></label>
+
+                                        <div class="mt-3">
+                                            Any current loans on property? <input type="checkbox" name="is_loan" id="is_loan">; If yes, complete the following:
+                                        </div>
+
+                                        <div class="mt-3 row">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="lender" name="lender" data-error="#lender-error">
+                                                    <small class="small_label">Lender</small>
+                                                </div>
+                                                <label id="lender-error" class="error text-danger" for="lender"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="loan_amount" name="loan_amount" data-error="#loan_amount-error">
+                                                    <small class="small_label">Loan Amount</small>
+                                                </div>
+                                                <label id="loan_amount-error" class="error text-danger" for="loan_amount"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="loan_account" name="loan_account" data-error="#loan_account-error">
+                                                    <small class="small_label">Loan Account #</small>
+                                                </div>
+                                                <label id="loan_account-error" class="error text-danger" for="loan_account"></label>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-3 row">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_lender" name="second_lender">
+                                                    <small class="small_label">Lender</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_loan_amount" name="second_loan_amount">
+                                                    <small class="small_label">Loan Amount</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_loan_account" name="second_loan_account">
+                                                    <small class="small_label">Loan Account #</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4">The undersigned declare, under penalty of perjury, that the foregoing is true and correct.</div>
+
+                                        <div class="mt-3 row">
+                                            <div class="col-md-6">
+                                                Executed on <input type="text" class="input_single" id="executed_date" name="executed_date" required data-error="#executed_date-error">, <input type="text" class="input_single w-medium" id="executed_year" name="executed_year">
+                                                <label id="executed_date-error" class="error text-danger d-flex" for="executed_date"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                at <input type="text" class="input_single" id="executed_time" name="executed_time" required data-error="#executed_time-error">
+                                                <label id="executed_time-error" class="error text-danger d-flex" for="executed_time"></label>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mt-5">
+                                                    Signature :    
+                                                    <input type="text" class="input_single" id="signature" name="signature" required data-error="#signature-error">
+                                                </div>
+                                                <label id="signature-error" class="error text-danger" for="signature"></label>
+                                            </div>
+                                            <div class="col-md-6 text-md-end">
+                                                <div class="mt-5">
+                                                    Signature :    
+                                                    <input type="text" class="input_single" id="second_signature" name="second_signature" required data-error="#second_signature-error">
+                                                </div>
+                                                <label id="second_signature-error" class="error text-danger" for="second_signature"></label>
+                                            </div>
+                                        </div>
+
+                                        <p class="mt-4 text-center">
+                                            (Note:  If applicable, both spouses/domestic partners must sign.)
+                                            <strong class="d-block">THANK YOU</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
 							<div class="accordion-item">
-								<h2 class="accordion-header" id="headingTwo">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseTwo" aria-expanded="false"
-										aria-controls="collapseTwo">(2) Property Address</button>
-								</h2>
-								<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-									data-bs-parent="#accordionExample">
-									<div class="accordion-body">
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>Property Address being sold: </b></label>
-											<input type="text" class="form-control" name="property_address" id="property_address" value="<?php echo $orderDetails['full_address'];?>" required>
-										</div>
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>Is the above address the correct address of
-													the property being sold? <span>*</span></b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesCorrectPropertyAddress" value="yes" name="is_correct_property_address" required data-error="#is_correct_property_address-error">
-													<label for="yesCorrect">Yes</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" id="noCorrectPropertyAddress" value="no" name="is_correct_property_address">
-													<label for="noCorrect">No</label>
-												</li>
-											</ul>
-											<label id="is_correct_property_address-error" class="error text-danger" for="is_correct_property_address"></label>
-											<div class="otherPropertyAddress d-none">
-												<div class="form-group position-relative mb-3">
-													<label for="" class="mb-2"><b>Enter the property address being sold
-															<span>*</span> </b></label>
-													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="property_street_address" name="property_street_address" data-error="#property_street_address-error">
-														<small class="small_label">Street Address</small>
-													</div>
-													<label id="property_street_address-error" class="error text-danger error2" for="property_street_address"></label>
-												</div>
-												<div class="row">
-													<div class="col-md-6">
-														<div class="form-group position-relative mb-3">
-															<input type="text" class="form-control" id="property_city" name="property_city" data-error="#property_city-error">
-															<small class="small_label">City</small>
-														</div>
-														<label id="property_city-error" class="error text-danger error2" for="property_city"></label>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group position-relative mb-3">
-															<select class="form-control" id="property_state" name="property_state" data-error="#property_state-error">
-																<option value="CA" selected>CA</option>
-															</select>
-															<small class="small_label">State</small>
-														</div>
-														<label id="property_state-error" class="error text-danger error2" for="property_state"></label>
-													</div>
-												</div>
-												<div class="form-group position-relative mb-3 col-md-6">
-													<input type="text" class="form-control" id="property_zip_code" name="property_zip_code" data-error="#property_zip_code-error">
-													<small class="small_label">Zip Code</small>
-												</div>
-												<label id="property_zip_code-error" class="error text-danger error2" for="property_zip_code"></label>
-											</div>
-										</div>
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>Is the Property Address above your current
-													address? <span>*</span></b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesCorrectPropertyAddressAsCurrentAddress" value="yes" name="is_property_address_as_current_address" required data-error="#is_property_address_as_current_address-error">
-													<label for="yesCurrent">Yes</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" id="noCorrectPropertyAddressAsCurrentAddress" value="no" name="is_property_address_as_current_address">
-													<label for="noCurrent">No</label>
-												</li>
-											</ul>
-											<label id="is_property_address_as_current_address-error" class="error text-danger" for="is_property_address_as_current_address"></label>
-											<div class="otherCurrentAddress d-none">
-												<div class="form-group position-relative mb-3">
-													<label for="" class="mb-2"><b>Current Address
-															<span>*</span> </b></label>
-													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="current_street_address" name="current_street_address" data-error="#current_street_address-error">
-														<small class="small_label">Street Address</small>
-													</div>
-													<label id="current_street_address-error" class="error text-danger error2" for="current_street_address"></label>
-												</div>
-												<div class="row">
-													<div class="col-md-6">
-														<div class="form-group position-relative mb-3">
-															<input type="text" class="form-control" id="current_city" name="current_city" data-error="#current_city-error">
-															<small class="small_label">City</small>
-														</div>
-														<label id="current_city-error" class="error text-danger error2" for="current_city"></label>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group position-relative mb-3">
-															<select class="form-control" id="current_state" name="current_state" data-error="#current_state-error">
-																<option value="CA" selected>CA</option>
-															</select>
-															<small class="small_label">State</small>
-														</div>
-														<label id="current_state-error" class="error text-danger error2" for="current_state"></label>
-													</div>
-												</div>
-												<div class="form-group position-relative mb-3 col-md-6">
-													<input type="text" class="form-control" id="current_zip_code" name="current_zip_code" data-error="#current_zip_code-error">
-													<small class="small_label">Zip Code</small>
-												</div>
-												<label id="current_zip_code-error" class="error text-danger error2" for="current_zip_code"></label>											
-											</div>
-										</div>
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>Is your Forwarding Address different from your
-													Current Address? <span>*</span></b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesForwarding" value="yes" name="is_forwarding_address_different_from_current_address" required data-error="#is_forwarding_address_different_from_current_address-error">
-													<label for="yesForwarding">Yes</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" id="noForwarding" value="no" name="is_forwarding_address_different_from_current_address">
-													<label for="noForwarding">No</label>
-												</li>
-											</ul>
-											<label id="is_forwarding_address_different_from_current_address-error" class="error text-danger" for="is_forwarding_address_different_from_current_address"></label>
-											<div class="otherForwardAddress d-none">
-												<div class="form-group position-relative mb-3">
-													<label for="" class="mb-2"><b>Forwarding Address<span>*</span> </b></label>
-													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="forwarding_street_address" name="forwarding_street_address" data-error="#forwarding_street_address-error">
-														<small class="small_label">Street Address</small>
-													</div>
-													<label id="forwarding_street_address-error" class="error text-danger error2" for="forwarding_street_address"></label>
-												</div>
-												<div class="row">
-													<div class="col-md-6">
-														<div class="form-group position-relative mb-3">
-															<input type="text" class="form-control" id="forwarding_city" name="forwarding_city" data-error="#forwarding_city-error">
-															<small class="small_label">City</small>
-														</div>
-														<label id="forwarding_city-error" class="error text-danger error2" for="forwarding_city"></label>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group position-relative mb-3">
-															<select class="form-control" id="forwarding_state" name="forwarding_state" data-error="#forwarding_state-error">
-																<option value="CA" selected>CA</option>
-															</select>
-															<small class="small_label">State</small>
-														</div>
-														<label id="forwarding_state-error" class="error text-danger error2" for="forwarding_state"></label>
-													</div>
-												</div>
-												<div class="form-group position-relative mb-3 col-md-6">
-													<input type="text" class="form-control" id="forwarding_zip_code" name="forwarding_zip_code" data-error="#forwarding_zip_code-error">
-													<small class="small_label">Zip Code</small>
-												</div>
-												<label id="forwarding_zip_code-error" class="error text-danger error2" for="forwarding_zip_code"></label>	
-											</div>
-										</div>
+                                <h2 class="accordion-header" id="headingTwenty">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwenty" aria-expanded="true" aria-controls="collapseTwenty">
+                                       (5) 593-C Form
+                                    </button>
+                                </h2>
+                                <div id="collapseTwenty" class="accordion-collapse collapse" aria-labelledby="headingTwenty" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="row text-center mb-4">
+                                            <div class="col-md-3">
+                                                TAXABLE YEAR
+                                                <hr class="hr1 mt-0 mb-0">
+                                                <h4 class="mt-0 mb-0 real_estate_title"><b><?php echo date('Y')?></b></h4>
+                                                <hr class="hr1 mt-0 mb-0">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h4 class="mt-30"><strong>Real Estate Withholding Statement</strong></h4>
+                                            </div>
+                                            <div class="col-md-3">
+                                                CALIFORNIA FORM
+                                                <hr class="hr1 mt-0 mb-0">
+                                                <h4 class="mt-0 mb-0 real_estate_title"><b>593</b></h4>
+                                                <hr class="hr1 mt-0 mb-0">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-4">
+                                            <div class="col-md-3">
+                                                <div>
+                                                    <label for="amended">AMENDED: </label>
+                                                    <input type="checkbox" id="is_amended" name="is_amended" value="yes">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9 text-end">
+                                                <div>
+                                                    <label for="amended">Escrow or Exchange No.  </label>
+                                                    <input type="innput" class="input_single" readonly value="10257432-GLE-MP">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <strong>Part I  Remitter Information</strong> &nbsp;
+                                            <input type="checkbox" id="remitter1" name="remitter_info[]" value="REEP"> &nbsp;
+                                            <label for="remitter1">REEP</label> &nbsp;
+                                            <input type="checkbox" id="remitter2" name="remitter_info[]" value="qualified_intermediary"> &nbsp;
+                                            <label for="remitter2">Qualified Intermediary</label> &nbsp;
+                                            <input type="checkbox" id="remitter3" name="remitter_info[]" value="transferee"> &nbsp;
+                                            <label for="remitter3">Buyer/Transferee</label> &nbsp;
+                                            <input type="checkbox" id="remitter4" name="remitter_info[]" value="other"> &nbsp;
+                                            <label for="remitter4">Other</label> &nbsp;
+                                            <input type="text" class="input_single" id="other_remitter_info" name="other_remitter_info"> &nbsp;
+                                        </div>
+                                        <hr class="hr1 mb-4">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" value="Pacific Coast Title Company" id="business_name" name="business_name">
+                                                    <small class="small_label">Business name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="checkbox" id="fein" name="business_num[]" value="fein"> &nbsp;
+                                                <label for="fein">FEIN</label> &nbsp;
+                                                <input type="checkbox" id="corpNo" name="business_num[]" value="corpNo"> &nbsp;
+                                                <label for="corpNo">CA Corp no.</label> &nbsp;
+                                                <input type="checkbox" id="sosNo" name="business_num[]" value="sosNo"> &nbsp;
+                                                <label for="sosNo">CA SOS file no.</label> &nbsp;<br>
+                                                <strong>95-2569776</strong>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="remitter_first_name" name="remitter_first_name">
+                                                    <small class="small_label">First name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="remitter_initial_name" name="remitter_initial_name">
+                                                    <small class="small_label">Initial</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="remitter_last_name" name="remitter_last_name">
+                                                    <small class="small_label">last name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="remitter_ssn_or_itin" name="remitter_ssn_or_itin">
+                                                    <small class="small_label">SSN or ITIN</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" value="516 Burchett St." id="remitter_address" name="remitter_address">
+                                                    <small class="small_label">Address (apt./ste., room, PO box, or PMB no.) </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" value="Glendale" id="remitter_city" name="remitter_city">
+                                                    <small class="small_label">City (If you have a foreign address, see instructions.)</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" value="CA" id="remitter_state" name="remitter_state">
+                                                    <small class="small_label">State</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" value="91203" id="remitter_zip_code" name="remitter_zip_code"> 
+                                                    <small class="small_label">ZIP code</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" value="(818) 662-6700" id="remitter_telephone_num" name="remitter_telephone_num">
+                                                    <small class="small_label">Telephone number</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <strong>Part II   Seller/Transferor Information If a grantor or nongrantor trust, check the box that applies.</strong> &nbsp;
+                                            <input type="checkbox" id="granter" name="trust_types[]" value="granter"> &nbsp;
+                                            <label for="granter">Grantor</label> &nbsp;
+                                            <input type="checkbox" id="nongranter" name="trust_types[]" value="nongranter"> &nbsp;
+                                            <label for="nongranter">Nongrantor Trust</label>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_first_name" name="transferor_first_name">
+                                                    <small class="small_label">First name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_initial_name" name="transferor_initial_name">
+                                                    <small class="small_label">Initial</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_last_name" name="transferor_last_name">
+                                                    <small class="small_label">last name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_ssn_or_itin" name="transferor_ssn_or_itin">
+                                                    <small class="small_label">SSN or ITIN</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_spouse_first_name" name="transferor_spouse_first_name">
+                                                    <small class="small_label">Spouse's/RDP's first name (if jointly owned)</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_spouse_middle_name" name="transferor_spouse_middle_name">
+                                                    <small class="small_label">Initial</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_spouse_last_name" name="transferor_spouse_last_name">
+                                                    <small class="small_label">last name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_spouse_ssn_or_itin" name="transferor_spouse_ssn_or_itin">
+                                                    <small class="small_label">Spouse's/RDP's SSN or ITIN (if jointly owned) </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 align-items-center">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative">
+                                                    <input type="text" class="form-control" id="nongrantor_trust_name" name="nongrantor_trust_name">
+                                                    <small class="small_label">Business/Nongrantor Trust name (if applicable)</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="checkbox" id="fein1" name="transferor_business_num[]" value="fein"> &nbsp;
+                                                <label for="fein1">FEIN</label> &nbsp;
+                                                <input type="checkbox" id="corpNo1" name="transferor_business_num[]" value="corpNo"> &nbsp;
+                                                <label for="corpNo1">CA Corp no.</label> &nbsp;
+                                                <input type="checkbox" id="sosNo1" name="transferor_business_num[]" value="sosNo"> &nbsp;
+                                                <label for="sosNo1">CA SOS file no.</label>
+                                            </div>
+                                        </div> 
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_address" name="transferor_address">
+                                                    <small class="small_label">Address (apt./ste., room, PO box, or PMB no.) </small>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_city" name="transferor_city">
+                                                    <small class="small_label">City (If you have a foreign address, see instructions.)</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_state" name="transferor_state">
+                                                    <small class="small_label">State </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_zip_code" name="transferor_zip_code">
+                                                    <small class="small_label">ZIP code</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferor_telephone_number" name="transferor_telephone_number">
+                                                    <small class="small_label">Telephone number</small>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="row mb-3">
+                                            <div class="col-md-8">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" id="transferor_property_address" name="transferor_property_address" class="form-control" value="Lots/APN: 210-021-30-00-1 and 210-021-29-00-9, Bakersfield, CA  93301 / APN: 210-021-29-00, 210-021-30-00 / Kern County">
+                                                    <small class="small_label">Property address (provide street address, parcel number, and county) </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="ownership_percentage" name="ownership_percentage">
+                                                    <small class="small_label">Ownership percentage (%)</small>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="mb-4">
+                                            <strong>Part III Certifications which fully exempt the sale from withholding</strong> (See instructions) <br>
+                                            <small><strong>Determine whether you qualify for a full withholding exemption. Check all boxes that apply to the property being sold or transferred.
+                                            </strong></small>
+                                        </div>
+                                        <ol>
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkOne" class="mt-1 me-2" value="certification_1" name="certifications[]">
+                                                    <label for="checkOne">The property qualifies as the seller's (or decedent's, if sold by the decedent's estate or trust) principal residence under Internal Revenue Code (IRC) Section 121.</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkTwo" class="mt-1 me-2" value="certification_2" name="certifications[]">
+                                                    <label for="checkTwo">The seller (or decedent, if sold by the decedent's estate or trust) last used the property as the seller's (decedent's) principal residence under IRC 121 without regard to the two-year time period.</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkThree" class="mt-1 me-2" value="certification_3" name="certifications[]">
+                                                    <label for="checkThree">The seller has a loss or zero gain for California income tax purposes on this sale. Complete Part VI, Computation on Side</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkFour" class="mt-1 me-2" value="certification_4" name="certifications[]">
+                                                    <label for="checkFour">The property is compulsorily or involuntarily converted, and the seller intends to acquire property that will qualify for nonrecognition of gain under IRC Section 1033.</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkFive" class="mt-1 me-2" value="certification_5" name="certifications[]">
+                                                    <label for="checkFive">The transfer qualifies for nonrecognition treatment under IRC Section 351 (property transferred to a corporationcontrolled by the transferor) or IRC Section 721 (property contributed to a partnership in exchange for a partnership interest).</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkSix" class="mt-1 me-2" value="certification_6" name="certifications[]">
+                                                    <label for="checkSix">The seller is a corporation (or a limited liability company (LLC) classified as a corporation for federal and California income tax purposes) that is either qualified through the California Secretary of State or has a permanent place of business in California.</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkSeven" class="mt-1 me-2" value="certification_7" name="certifications[]">
+                                                    <label for="checkSeven">The seller is a California partnership or qualified to do business in California (or an LLC that is classified as a partnership for federal and California income tax purposes that is not a single member LLC that is disregarded for federal and California income tax purposes).</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkEight" class="mt-1 me-2" value="certification_8" name="certifications[]">
+                                                    <label for="checkEight">The seller is a tax-exempt entity under California or federal law.</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkNine" class="mt-1 me-2" value="certification_9" name="certifications[]">
+                                                    <label for="checkNine">The seller is an insurance company, individual retirement account, qualified pension/profit sharing plan, or charitable remainder trust. </label>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                        <p>
+                                            If you checked one or more boxes in line 1 through line 9, withholding is not required. Do not complete Part IV. Go to Side 3, complete the perjury statement and sign. Provide Sides 1-3 to the remitter before the close of escrow or exchange transaction to submit to the Franchise Tax Board.
+                                        </p>
+                                        <div class="mb-4">
+                                            <strong>Part IV Certifications that may partially or fully exempt the sale from withholding or if no exemptions apply
+                                            </strong> (See instructions) <br>
+                                            <small>Determine whether you qualify for a full, partial, or no withholding exemption. Check all boxes that apply to the property being sold or transferred.</small>
+                                        </div>
+                                        <ol start="10">
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkTen" class="mt-1 me-2" value="certification_10" name="certifications[]">
+                                                    <label for="checkTen">The transfer qualifies as either a simultaneous or deferred like-kind exchange under IRC Section 1031. See instructions for Form 593, Part IV.</label>
+                                                </div>
+                                            </li>                                            
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkEleven" class="mt-1 me-2" value="certification_11" name="certifications[]">
+                                                    <label for="checkEleven">The transfer of this property is an installment sale where the buyer must withhold on the principal portion of each installment payment. Copy of the promissory note is attached at the close of escrow. Complete Part V, Buyer/Transferee Information on Side 2. Withholding may be required.</label>
+                                                </div>
+                                            </li>                                            
+                                            <li>
+                                                <div class="d-flex align-items-start">
+                                                    <input type="checkbox" id="checkTwelve" class="mt-1 me-2" value="certification_12" name="certifications[]">
+                                                    <label for="checkTwelve">No exemptions apply. Check this box if the exemptions in Part III or Part IV, line 10 and 11, do not apply. Remitter must complete Part VII, Escrow or Exchange Information, on Side 3 for amounts to withhold. Withholding is required.</label>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                        <div class="row mb-3">
+                                            <div class="col-md-8">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" value="Pacific Coast Title Company" id="remitter_name" name="remitter_name">
+                                                    <small class="small_label">Remitter name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" value="95-2569776" id="remitter_ssn_fein" name="remitter_ssn_fein">
+                                                    <small class="small_label">SSN, ITIN, FEIN, CA corp no., or CA SOS file no.</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <strong>Part V   Buyer/Transferee Information</strong><br>
+                                            <small><strong>Complete this part if you checked box 11 in Part IV for an installment agreement.
+                                            </strong></small>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_first_name" name="transferee_first_name">
+                                                    <small class="small_label">First name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_initial_name" name="transferee_initial_name">
+                                                    <small class="small_label">Initial</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_last_name" name="transferee_last_name">
+                                                    <small class="small_label">last name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_ssn_or_itin" name="transferee_ssn_or_itin">
+                                                    <small class="small_label">SSN or ITIN</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_spouse_first_name" name="transferee_spouse_first_name">
+                                                    <small class="small_label">Spouse's/RDP's first name (if jointly owned)</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_spouse_initial_name" name="transferee_spouse_initial_name">
+                                                    <small class="small_label">Initial</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_spouse_last_name" name="transferee_spouse_last_name">
+                                                    <small class="small_label">last name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_spouse_ssn_or_itin" name="transferee_spouse_ssn_or_itin">
+                                                    <small class="small_label">Spouse's/RDP's SSN or ITIN</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 align-items-center">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative">
+                                                    <input type="text" class="form-control" id="transferee_nongrantor_trust_name" name="transferee_nongrantor_trust_name">
+                                                    <small class="small_label">Business/Nongrantor Trust name (if applicable)</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="checkbox" id="fein2" name="transferee_business_num[]" value="fein"> &nbsp;
+                                                <label for="fein2">FEIN</label> &nbsp;
+                                                <input type="checkbox" id="corpNo2" name="transferee_business_num[]" value="corpNo2"> &nbsp;
+                                                <label for="corpNo2">CA Corp no.</label> &nbsp;
+                                                <input type="checkbox" id="sosNo2" name="transferee_business_num[]" value="sosNo2"> &nbsp;
+                                                <label for="sosNo2">CA SOS file no.</label>
+                                            </div>
+                                        </div> 
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_address" name="transferee_address">
+                                                    <small class="small_label">Address (apt./ste., room, PO box, or PMB no.) </small>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_city" name="transferee_city">
+                                                    <small class="small_label">City (If you have a foreign address, see instructions.)</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_state" name="transferee_state">
+                                                    <small class="small_label">State </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_zip_code" name="transferee_zip_code">
+                                                    <small class="small_label">ZIP code</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="transferee_telephone_number" name="transferee_telephone_number">
+                                                    <small class="small_label">Telephone number</small>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="principal_amount_of_promissory_note" name="principal_amount_of_promissory_note">
+                                                    <small class="small_label">Principal Amount of Promissory Note</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="installment_amount" name="installment_amount">
+                                                    <small class="small_label">Installment Amount</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="principal_interrest_rate" name="principal_interrest_rate">
+                                                    <small class="small_label">PInterest Rate (%)</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" id="repayment_period" name="repayment_period">
+                                                    <small class="small_label">Repayment Period (Number of months)</small>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="mb-4">
+                                            <strong>Buyer's/Transferee's Acknowledgment to Withhold</strong><br>
+                                            <small><strong>Read the "Buyer/Transferee" Information below.</strong></small>
+                                        </div>
+                                        <div class="notice_box mb-3">
+                                            I acknowledge that I am required to withhold on the principal portion of each installment payment to the seller/transferor for the above shown California real property either at the rate of 3 1/3% (.0333) of the sales price or the Alternative Withholding Calculation, as specified by the seller/transferor on Form 593, Real Estate Withholding Statement, of the principal portion of each installment payment. I will complete Form 593 for the principal portion of each installment payment and send one copy of each to the Franchise Tax Board (FTB) along with Form 593-V, Payment Voucher for Real Estate Withholding, the withholding payment, and give one copy of Form 593 to the seller/transferor. I will send each withholding payment to the FTB by the 20th day of the month following the month of the installment payment. If the terms of the installment sale, promissory note, or payment schedule change, I will promptly inform the FTB. I understand that the FTB may review relevant escrow documents to ensure withholding compliance. I also understand that I am subject to withholding penalties if I do not withhold on the principal portion of each installment payment and do not send the withholding along with Form 593 to the FTB by the due date, or if I do not send one copy of Form 593 to the seller/transferor by the due date. Go to Side 3, complete the perjury statement and sign.
+                                        </div>
+                                        <div class="mb-4">
+                                            <strong>Part VI Computation</strong><br>
+                                            <small><strong>Complete this part if you checked and certified box 3 in Part III, or to calculate an alternative withholding calculation amount.</strong></small>
+                                        </div>
 
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>This property was our<span>*</span></b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" id="primary" value="primary" name="residence" required data-error="#residence-error">
-													<label for="primary">Primary Residence</label>
-												</li>
-												<li class="list-inline-item me-md-5">
-													<input type="radio" id="secondary" value="secondary" name="residence">
-													<label for="secondary">Second Home</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" id="investment" value="investment" name="residence">
-													<label for="investment">Investment Property</label>
-												</li>
-											</ul>
-											<label id="residence-error" class="error text-danger" for="residence"></label>
-										</div>
+                                        <ol start="13">
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    <b>Selling price</b>&nbsp;<input type="text" class="input_single flex1" id="selling_price" name="selling_price">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Selling expenses&nbsp;<input type="text" class="input_single flex1" id="selling_expenses" name="selling_expenses">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                   <span><b>Amount realized.</b> Subtract line 14 from line</span>&nbsp;<input type="text" class="input_single flex1" id="amount_realized" name="amount_realized">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Enter the price you paid to purchase the property (see instructions, How to Figure Your Basis.)&nbsp;<input type="text" class="input_single flex1" id="paid_price_to_purchase" name="paid_price_to_purchase">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Seller/Transferor-paid points&nbsp;<input type="text" class="input_single flex1" id="seller_paid_months" name="seller_paid_months">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Depreciation&nbsp;<input type="text" class="input_single flex1" id="seller_depreciation" name="seller_depreciation">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Other decreases to basis&nbsp;<input type="text" class="input_single flex1" id="other_decreases" name="other_decreases">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Total decreases to basis. Add line 17 through line&nbsp;<input type="text" class="input_single flex1" id="total_decrease_line_17" name="total_decrease_line_17">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Subtract line 20 from line&nbsp;<input type="text" class="input_single flex1" id="subtract_line_20" name="subtract_line_20">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Cost of additions and improvements&nbsp;<input type="text" class="input_single flex1" id="cost_of_addition" name="cost_of_addition">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Other increases to basis&nbsp;<input type="text" class="input_single flex1" id="other_increase_to_basis" name="other_increase_to_basis">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Total increases to basis. Add line 22 and line&nbsp;<input type="text" class="input_single flex1" id="total_decrease_line_22" name="total_decrease_line_22">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Adjusted basis. Add line 21 and line&nbsp;<input type="text" class="input_single flex1" id="adjusted_basis_line_21" name="adjusted_basis_line_21">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Enter any suspended passive activity losses from this property&nbsp;<input type="text" class="input_single flex1" id="suspended_passive_lossed" name="suspended_passive_lossed">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    Add line 25 and line&nbsp;<input type="text" class="input_single flex1" id="add_line_25" name="add_line_25">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2 align-items-end">
+                                                    <span><b>Estimated gain or loss on sale.</b> Subtract line 27 from line 15 and enter the amount here
+                                                        If you have a loss or zero gain, skip lines 29 and 30. Certify on Side 3. Withholding is not required.
+                                                        If you have a gain, go to line 29 to calculate your withholding</span>&nbsp;<input type="text" class="input_single flex1" id="estimated_gain_or_loss" name="estimated_gain_or_loss">
+                                                </div>
+                                            </li>
+                                        </ol>
+                                        <div class="row mb-3">
+                                            <div class="col-md-8">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" value="Pacific Coast Title Company" id="remitter_name_2" name="remitter_name_2">
+                                                    <small class="small_label">Remitter name</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control" value="95-2569776" id="remitter_ssn_itin_fein_2" name="remitter_ssn_itin_fein_2">
+                                                    <small class="small_label">SSN, ITIN, FEIN, CA corp no., or CA SOS file no.</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ol start="29">
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2 align-items-end">
+                                                    <span>
+                                                    <div><b>Alternative withholding calculation amount.</b> Check the applicable box for the filing type.</div>
+                                                    <input type="checkbox" class="me-2" id="cal1" name="calculation_amount[]" value="individual_12.3">
+                                                    <label for="cal1">Individual 12.3%</label>&nbsp;
+                                                    <input type="checkbox" class="me-2" id="cal2" name="calculation_amount[]" value="corporation_8.84">
+                                                    <label for="cal2">Corporation 8.84%</label>&nbsp;
+                                                    <input type="checkbox" class="me-2" id="cal3" name="calculation_amount[]" value="financial_corporation_10.84">
+                                                    <label for="cal3">Bank and Financial Corporation 10.84%</label>&nbsp;
+                                                    <input type="checkbox" class="me-2" id="cal4" name="calculation_amount[]" value="trust_12.3">
+                                                    <label for="cal4">Trust 12.3%</label>&nbsp;
+                                                    <input type="checkbox" class="me-2" id="cal5" name="calculation_amount[]" value="non_california_12.3">
+                                                    <label for="cal5">Non-California Partnership 12.3%</label>&nbsp;
+                                                    <input type="checkbox" class="me-2" id="cal6" name="calculation_amount[]" value="s_corporation_13.8">
+                                                    <label for="cal6">S Corporation 13.8%</label>&nbsp;
+                                                    <input type="checkbox" class="me-2" id="cal7" name="calculation_amount[]" value="financial_s_corporation_15.8">
+                                                    <label for="cal7">Financial S Corporation 15.8%</label>
+                                                    Multiply the amount on line 28 by the tax rate for the filing type selected above and enter the amount here. This is the alternative withholding calculation amount. If you elect the alternative withholding calculation amount, then check the
+                                                    appropriate box on line 36, Boxes B-H, and enter the amount on line 37</span>&nbsp;<input type="text" class="input_single flex1" id="calculation_amount_value" name="calculation_amount_value">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2 align-items-end">
+                                                    <span>
+                                                        <b>Sales price withholding amount.</b> Multiply the selling price on line 13 by 3 1/3% (.0333).
+                                                        This is the <b>sales price withholding amount,</b> If you select the sales price withholding amount, check box A on
+                                                        line 36 below and enter the amount on line 37
+                                                    </span>&nbsp;<input type="text" class="input_single flex1" id="sales_price_withholding_amount" name="sales_price_withholding_amount">
+                                                </div>
+                                            </li>
+                                        </ol>
+                                        <div class="mb-4"><strong>Part VII Escrow or Exchange Information</strong></div>
+                                        <ol start="31">
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    <span>Escrow or Exchange Number</span>&nbsp;<input type="text" class="input_single flex1" value="10257432-GLE-MP" id="escrow_exchange_number" name="escrow_exchange_number">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    <span>Date of Transfer, Exchange Completion, Failed Exchange, or Installment Payment...........(mm/dd/yyyy)</span>&nbsp;<input type="text" class="input_single flex1" id="date_of_transfer" name="date_of_transfer">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    <span>Sales Price, Failed Exchange, or Boot Amount $ <input type="text" class="input_single w-small" id="boot_amount" name="boot_amount"> x Ownership Percentage  <input type="text" class="input_single w-small" id="exchange_ownership_percentage_from" name="exchange_ownership_percentage_from"> , <input type="text" class="input_single w-small" id="exchange_ownership_percentage_to" name="exchange_ownership_percentage_to">%</span>&nbsp;<input type="text" class="input_single flex1" id="exchange_ownership_amount" name="exchange_ownership_amount">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    <span>Amount that should have been withheld</span>&nbsp;<input type="text" class="input_single flex1" id="amount_withheld_from" name="amount_withheld_from">,<input type="text" class="input_single flex1" id="amount_withheld_to" name="amount_withheld_to">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    <span>
+                                                        <div class="mb-2">Type of Transaction (Check One Only): </div>
+                                                        <label>
+                                                            <b>A</b> <input type="radio" class="square_radio mb-2" name="transaction" value="conventional_sale" id="transaction1">
+                                                            <label for="transaction1">Conventional Sale/Transfer</label>&nbsp;
+                                                            <b>C</b> <input type="radio" class="square_radio" name="transaction" value="boot"  id="transaction2">
+                                                            <label for="transaction2">Boot</label>&nbsp;
+                                                            <b>E</b> <input type="radio" class="square_radio" name="transaction" value="cash_poor"  id="transaction3">
+                                                            <label for="transaction3">Cash Poor</label><br>
+                                                            <b>B</b> <input type="radio" class="square_radio" name="transaction" value="installment_sale_payment"  id="installment_sale_payment">
+                                                            <label for="transaction4">Installment Sale Payment</label>&nbsp;
+                                                            <b>D</b> <input type="radio" class="square_radio" name="transaction" value="failed_exchange"  id="failed_exchange">
+                                                            <label for="transaction5">Failed Exchange</label>&nbsp;
+                                                        </label>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex-flex-xs-wrap mb-2">
+                                                    <span>
+                                                        <div>
+                                                            Withholding Calculation (Check One Only):
+                                                        </div>
+                                                        <label>
+                                                            <b>Sales Price Method</b><br>
+                                                            <b>A</b> <input type="radio" class="square_radio" name="with_holding" id="sales_price_boot">
+                                                            <label for="Withholding1">3 1/3% (.0333) x Sales Price, Boot, or Installment Sale Payment</label><br>
+                                                            <b>Alternative Withholding Calculation Election</b><br>
+                                                            <b>B</b> <input type="radio" class="square_radio" name="with_holding" id="individual_12.3">
+                                                            <label for="Withholding2">Individual 12.3% x Gain on Sale</label>&nbsp;
+                                                            <b>F</b> <input type="radio" class="square_radio" name="with_holding" id="s_corporation_13.8">
+                                                            <label for="Withholding3">S Corporation 13.8% x Gain on Sale</label><br>
+                                                            <b>C</b> <input type="radio" class="square_radio" name="with_holding" id="non_california_12.3">
+                                                            <label for="Withholding4">Non-California Partnership 12.3% x Gain on Sale </label>&nbsp;
+                                                            <b>G</b> <input type="radio" class="square_radio" name="with_holding" id="financial_s_corporation_15.8">
+                                                            <label for="transaction5">Financial S Corporation 15.8% x Gain on Sale</label><br>
+                                                            <b>D</b> <input type="radio" class="square_radio" name="with_holding" id="corporation_8.84">
+                                                            <label for="Withholding6">Corporation 8.84% x Gain on Sale</label>&nbsp;
+                                                            <b>H</b> <input type="radio" class="square_radio" name="with_holding" id="trust_12.3">
+                                                            <label for="Withholding7">Trust 12.3% x Gain on Sale</label><br>
+                                                            <b>E</b> <input type="radio" class="square_radio" name="with_holding" id="bank_and_financial_10.84">
+                                                            <label for="Withholding8">Bank and Financial Corp. 10.84% x Gain on Sale</label>
+                                                        </label>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap mb-2">
+                                                    <span>Amount Withheld from this Seller/Transferor</span>&nbsp;<input type="text" class="input_single flex1" id="amount_withheld" name="amount_withheld">
+                                                </div>
+                                            </li>
+                                        </ol>
+                                        <div class="notice_box mb-3">
+                                            <strong>Title and escrow persons, and exchange accommodators are not authorized to provide legal or accounting advice for purposes of determining withholding amounts. Transferors are strongly encouraged to consult with a competent tax professional for this purpose.</strong>
+                                        </div>
+                                        <div class="mb-3">
+                                            Our privacy notice can be found in annual tax booklets or online. Go to <strong><a target="_blank" href="https://www.ftb.ca.gov/your-rights/privacy/index.html?WT.mc_id=akvPrivacy">ftb.ca.gov/privacy</a></strong> to learn about our privacy policy statement, or go to <strong><a href="https://www.ftb.ca.gov/forms/">ftb.ca.gov/forms</a></strong> and search for <strong>1131</strong> to locate FTB 1131 EN-SP, Franchise Tax Board Privacy Notice on Collection. To request this notice by mail, call 800.338.0505 and enter form code <strong>948</strong> when instructed.
+                                        </div>
+                                        <div class="mb-3">
+                                            <b>Perjury Statement</b><br>
+                                            Under penalties of perjury, I hereby certify that the information provided above is, to the best of my knowledge, true and correct. I further certify that:<br>
+                                            <div class="my-2">
+                                                Check the applicable box(s):
+                                            </div>
+                                            <div class="d-flex align-items-start mb-2">
+                                                <input type="checkbox" class="mt-1 me-2" id="sale1" name="perjury[]" value="sale1">
+                                                <label for="sale1">The sale is fully exempt from withholding as indicated by a check mark(s) in Part III.</label>
+                                            </div>
+                                            <div class="d-flex align-items-start mb-2">
+                                                <input type="checkbox" class="mt-1 me-2" id="sale2" name="perjury[]" value="sale2">
+                                                <label for="sale2">The sale is fully or partially exempt from withholding as indicated by a check mark(s) in Part IV, box 10 or 11.</label>
+                                            </div>
+                                            <div class="d-flex align-items-start mb-2">
+                                                <input type="checkbox" class="mt-1 me-2" id="sale3" name="perjury[]" value="sale3">
+                                                <label for="sale3">The seller has elected the Alternative Withholding Calculation as indicated by a check mark in Part VII, line 36 (B-H).</label>
+                                            </div>
+                                            <div class="d-flex align-items-start mb-2">
+                                                <input type="checkbox" checked class="mt-1 me-2" id="sale4" name="perjury[]" value="sale4">
+                                                <label for="sale4">The buyer/transferee understands and accepts the withholding requirements as stated on the Buyer's/Transferee's Acknowledgment to Withhold
+                                                    in Part V. The buyer/transferee should only check this box when involved in an installment sale.</label>
+                                            </div>
+                                            <div class="d-flex align-items-start mb-2">
+                                                <input type="checkbox" class="mt-1 me-2" id="sale5" name="perjury[]" value="sale5">
+                                                <label for="sale5">The Remitter (Qualified Intermediary) acknowledges this is a cash poor transaction as indicated by a check mark in Part VII, line 35, box E</label>
+                                            </div>
+                                        </div>
+                                        <hr class="hr1">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="f32 mb-2">
+                                                    <b>Sign Here</b>
+                                                </div>
+                                                <small>
+                                                    It is unlawful to forge
+                                                    a spouse's/RDP's
+                                                    signature.
+                                                </small>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row mb-3 mt-md-0 mt-4">
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="input_single w-full mb-2" id="seller_transferor_signature" name="seller_transferor_signature">
+                                                        Seller's/Transferor's signature 
+                                                    </div>
+                                                    <div class="col-md-4 mt-md-0 mt-2">
+                                                        <input type="text" class="input_single w-full mb-2" id="seller_transferor_date" name="seller_transferor_date">
+                                                        Date
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="input_single w-full mb-2" id="seller_transferor_spouse_signature" name="seller_transferor_spouse_signature">
+                                                        Seller's/Transferor's spouse's/RDP's signature 
+                                                    </div>
+                                                    <div class="col-md-4 mt-md-0 mt-2">
+                                                        <input type="text" class="input_single w-full mb-2" id="seller_transferor_spouse_date" name="seller_transferor_spouse_date">
+                                                        Date
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="input_single w-full mb-2" id="buyer_transferor_signature" name="buyer_transferor_signature">
+                                                        Buyer's/Transferee's signature 
+                                                    </div>
+                                                    <div class="col-md-4 mt-md-0 mt-2">
+                                                        <input type="text" class="input_single w-full mb-2" id="buyer_transferor_date" name="buyer_transferor_signature">
+                                                        Date
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="input_single w-full mb-2" id="buyer_transferor_spouse_signature" name="buyer_transferor_spouse_signature">
+                                                        Buyer's/Transferee's spouse's/RDP's signature
+                                                    </div>
+                                                    <div class="col-md-4 mt-md-0 mt-2">
+                                                        <input type="text" class="input_single w-full mb-2" id="buyer_transferor_spouse_date" name="buyer_transferor_spouse_date">
+                                                        Date
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <b>
+                                                            Remitter's name and Title/Escrow business name<br>
+                                                            Pacific Coast Title Company
+                                                        </b>
+                                                    </div>
+                                                    <div class="col-md-4 mt-md-0 mt-2">
+                                                        <b>
+                                                            Telephone Number<br>
+                                                            714-516-6700
+                                                        </b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>Do you have your title insurance policy from
-													when you purchased the house? (It will save some time in doing your
-													title search because we will tack to your current
-													policy.)</b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesinsurance" value="yes" name="is_insurance_policy" required data-error="#is_insurance_policy-error">
-													<label for="yesinsurance">Yes</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" id="noinsurance" value="no" name="is_insurance_policy">
-													<label for="noinsurance">No</label>
-												</li>
-											</ul>
-											<label id="is_insurance_policy-error" class="error text-danger" for="is_insurance_policy"></label>
-											<div class="insurance_policy_file_name d-none mb-4">
-												<input type="file" name="insurance_policy_file_name" class="d-none" id="insurance_policy_file_name" data-error="#insurance_policy_file_name-error">
-												<label for="insurance_policy_file_name">
-													<b>Please upload your prior title insurance policy</b>
-													<span>Browse Files</span>
-												</label>
-											</div>
-											<label id="insurance_policy_file_name-error" class="error text-danger" for="insurance_policy_file_name"></label>
-										</div>
-									</div>
-								</div>
-							</div>
 							<div class="accordion-item">
-								<h2 class="accordion-header" id="headingThree">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseThree" aria-expanded="false"
-										aria-controls="collapseThree">(3) Statement of Information</button>
-								</h2>
-								<div id="collapseThree" class="accordion-collapse collapse"
-									aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-									<div class="accordion-body">
+                                <h2 class="accordion-header" id="headingFourteen">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourteen" aria-expanded="true" aria-controls="collapseFourteen">
+                                       (6) 1099-S
+                                    </button>
+                                </h2>
+                                <div id="collapseFourteen" class="accordion-collapse collapse" aria-labelledby="headingFourteen" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">                                        
+                                        <h5 class="text-center mt-md-5">
+                                            <strong>Proceeds from Real Estate Transactions as required by the Internal Revenue Service</strong>
+                                        </h5>
 
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>Are you being represented by a Real Estate
-													Agent? <span>*</span></b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesRealEstate" value="yes" name="is_real_estate" required data-error="#is_real_estate-error">
-													<label for="yesRealEstate">Yes</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" id="noRealEstate" value="no" name="is_real_estate">
-													<label for="noRealEstate">No</label>
-												</li>
-											</ul>
-											<label id="is_real_estate-error" class="error text-danger" for="is_real_estate"></label>
-										</div>
+                                        <div class="text-center">
+                                            <em>You are required by law to provide Pacific Coast Title Company with your correct taxpayer identification number. If you do not provide your correct taxpayer identification number, you may be subject to civil or criminal penalties imposed by law.</em>
+                                        </div>
+                                
+                                        <div class="row mt-5">
+                                            <div class="col-md-6">
+                                                Branch Address:<br>
+                                                Pacific Coast Title Company<br>
+                                                516 Burchett St.<br>
+                                                Glendale, CA  91203<br><br><br>
 
-										<div class="RealEstateInfo d-none">
-											<h3 class="text-center"><b>Real Estate Agent Information:</b></h3>
-											<hr>
-											<div class="form-group sellerName mb-5">
-												<label for="" class="mb-2"><b>Seller Agent's Name
-														<span>*</span></b></label>
-												<div class="row">
-													<div class="col-md-4">
-														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_first_name" name="agent_first_name" data-error="#agent_first_name-error">
-															<small class="small_label">First Name</small>
-														</div>
-														<label id="agent_first_name-error" class="error text-danger error2" for="agent_first_name"></label>
-													</div>
-													<div class="col-md-4">
-														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_middle_name" name="agent_middle_name" data-error="#agent_middle_name-error">
-															<small class="small_label">Middle Name</small>
-														</div>
-														<label id="agent_middle_name-error" class="error text-danger error2" for="agent_middle_name"></label>
-													</div>
-													<div class="col-md-4">
-														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_last_name" name="agent_last_name" data-error="#agent_last_name-error">
-															<small class="small_label">Last Name</small>
-														</div>
-														<label id="agent_last_name-error" class="error text-danger error2" for="agent_last_name"></label>
-													</div>
-												</div>
-											</div>
-
-											<div class="form-group row mb-4">
-												<label for="" class="mb-2 col-12"><b>Agent's Company:<span>*</span></b></label>
-												<div class="col-md-8">
-													<input type="text" class="form-control" id="agent_company" name="agent_company" data-error="#agent_company-error">
-												</div>
-												<label id="agent_company-error" class="error text-danger" for="agent_company"></label>
-											</div>
-
-											<div class="otherAddress mb-5">
-												<div class="form-group position-relative mb-3">
-													<label for="" class="mb-2"><b>Agent's Company Address </b></label>
-													<div class="form-group position-relative">
-														<input type="text" class="form-control" id="agent_company_address" name="agent_company_address" data-error="#agent_company_address-error">
-														<small class="small_label">Street Address</small>
-													</div>
-													<label id="agent_company_address-error" class="error text-danger error2" for="agent_company_address"></label>
-												</div>
-								
-												<div class="row mb-3">
-													<div class="col-md-6">
-														<div class="form-group position-relative">
-															<input type="text" class="form-control" id="agent_company_city" name="agent_company_city" data-error="#agent_company_city-error">
-															<small class="small_label">City</small>
-														</div>
-														<label id="agent_company_city-error" class="error text-danger error2" for="agent_company_city"></label>
-													</div>
-													
-													<div class="col-md-6">
-														<div class="form-group position-relative">
-															<select name="state" class="form-control" id="agent_company_state" name="agent_company_state" data-error="#agent_company_state-error">
-																<option value="CA" selected>CA</option>
-															</select>
-															<small class="small_label">State</small>
-														</div>
-														<label id="agent_company_state-error" class="error text-danger error2" for="agent_company_state"></label>
-													</div>
-												</div>
-												<div class="form-group position-relative col-md-6">
-													<input type="text" class="form-control" id="agent_company_zip_code" name="agent_company_zip_code" data-error="#agent_company_zip_code-error">
-													<small class="small_label">Zip Code</small>
-												</div>
-												<label id="agent_company_zip_code-error" class="error text-danger error2" for="agent_company_zip_code"></label>
-											</div>
-
-											<div class="row">
-												<div class="col-md-6 mb-3">
-													<div class="form-group">
-														<label for=""><b>Amount/Percent of Commission:</b></label>
-														<input type="text" class="form-control" id="amount_percent_commission" name="amount_percent_commission" data-error="#amount_percent_commission-error">
-													</div>
-													<label id="amount_percent_commission-error" class="error text-danger" for="amount_percent_commission"></label>
-												</div>
-												<div class="col-md-6 mb-3">
-													<div class="form-group">
-														<label for=""><b>Amount of Any Deductions from Commission:
-															</b></label>
-														<input type="text" class="form-control" id="amount_deduction" name="amount_deduction" data-error="#amount_deduction-error">
-													</div>
-													<label id="amount_deduction-error" class="error text-danger" for="amount_deduction"></label>
-												</div>
-												<div class="col-md-6 mb-3">
-													<div class="form-group position-relative">
-														<label for=""><b>Agent Phone</b></label>
-														<input type="text" class="form-control"  id="agent_phone" name="agent_phone" data-error="#agent_phone-error">
-														<small class="small_label">Cell Phone or Email is required</small>
-													</div>
-													<label id="agent_phone-error" class="error text-danger error2" for="agent_phone"></label>
-												</div>
-											</div>
-
-											<div class="form-group position-relative row mb-3">
-												<label for="" class="mb-2 col-12"><b>Email<span></span></b></label>
-												<div class="form-group position-relative col-md-8">
-													<input type="text" class="form-control" id="agent_email" name="agent_email" data-error="#agent_email-error">
-													<small class="small_label">Cell Phone or Email is required</small>
-												</div>
-												<label id="agent_email-error" class="error text-danger error2" for="agent_email"></label>
-											</div>
-										</div>
+                                                
+                                                Escrow No.:  10257432-GLE-MP	
+                                            </div>
+                                            <div class="col-md-6">
+                                                This is important tax information and is being furnished to the Internal Revenue Service, as required by section 1521 of the Tax Reform Act of 1986.  If you are required to file a return, a negligence penalty or other sanction will be imposed if this income is taxable and the IRS determines that it has not been reported.<br><br>
+                                                Date of closing: <input type="text" class="w-half input_single" id="date_of_closing" name="date_of_closing">
+                                            </div> 
+                                        </div>
 
 
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>Seller Will be Paying and providing invoices for</b></label>
-											<ul class="list-unstyled">
-												<li>
-													<input type="checkbox" id="repair" value="repairs" name="seller_invoices[]" required data-error="#seller_invoices-error">
-													<label for="repair">Repairs</label>
-												</li>
-												<li>
-													<input type="checkbox" id="warranty" value="warranty" name="seller_invoices[]">
-													<label for="warranty">Home Warranty</label>
-												</li>
-												<li>
-													<input type="checkbox" id="other" value="other" name="seller_invoices[]">
-													<label for="other">Other</label>
-												</li>
-												<li>
-													<input type="checkbox" id="none" value="none" name="seller_invoices[]">
-													<label for="none"> None</label>
-												</li>
-											</ul>
-											<label id="seller_invoices-error" class="error text-danger" for="seller_invoices"></label>
-											<div class="seller_invoices_files d-none mb-4">
-												<input type="file" name="seller_invoices_files" class="d-none" id="seller_invoices_files">
-												<label for="seller_invoices_files">
-													<b>Upload Invoice(s) if available</b>
-													<span>Browse Files</span>
-												</label>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
+                                        <hr>
+                                
+                                        <h5 class="mt-0"><b>PROPERTY ADDRESS OR LEGAL DESCRIPTION</b></h5>
+                                
+                                        <div>
+                                            Lots/APN: 210-021-30-00-1 and 210-021-29-00-9, Bakersfield, CA  93301<br>
+                                            Assessors Parcel Number (APN) - 210-021-29-00, 210-021-30-00
+                                        </div>
+                                        <hr>
+                                
+                                        <div>
+                                            <b>PROCEEDS FOR THIS SALE WENT TO:  </b> (MULTIPLE SELLERS - Use one form for each seller.  Treat husband and wife as one seller (filing joint tax returns) unless requested otherwise, then separate forms must be used.)
+                                        </div>
+                                
+                                        <div class="row mt-5">
+                                            <div class="col-md-7">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="sellers_name" name="sellers_name">
+                                                    <small class="small_label">Sellers Name (First, MI, Last or Entity Name)</small>
+                                                </div>
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="personal_representative" name="personal_representative">
+                                                    <small class="small_label">Spouse or Personal Representative</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="federal_tax" name="federal_tax">
+                                                    <small class="small_label">Federal Tax ID# for this seller</small>
+                                                </div>
+                                                (List only the Tax ID# for the seller listed on Line 1, spouse Tax ID# not required.  Executor/Trustee should not list their name as the seller unless they are going to report the proceeds on their personal income tax return.)
+                                            </div> 
+                                        </div>
+                                
+                                        <hr>
+                                
+                                        <div>
+                                            <b>TOTAL CONSIDERATION</b>
+                                        </div>
+                                
+                                        
+                                        <div class="row mt-5">
+                                            <div class="col-md-6">
+                                                <div>$ <input type="text" class="input_single" id="total_consideration" name="total_consideration"> Total Consideration</div>
+                                                <div><input type="text " class="input_single" id="percentage_of_ownership" name="percentage_of_ownership">% Percentage of ownership for this seller</div>
+                                                <div>$ <input type="text" class="input_single" id="gross_allocated" name="gross_allocated"> GROSS Allocated Proceeds</div>
+                                                <div><small> (Total consideration multiplied by percentage of ownership)</small></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div>
+                                                    <input type="checkbox" name="is_exchange" id="is_exchange" value="yes"> <label for="exchange">Exchange (If checked)</label>
+                                                    <div class="mt-5">$ <input type="text" class="input_single" id="tax_credit" name="tax_credit"> Tax Credit to Seller (Real property tax credits to seller contained in the 400 series of the HUD-1 or comparable closing statement form.)</div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                
+                                        <hr>
+                                
+                                        <div>
+                                            <b>MAILING ADDRESS AFTER CLOSE:</b>
+                                        </div>
+                                
+                                
+                                        <div class="row mt-5">
+                                            <div class="col-md-6">
+                                                <input type="text" class="w-full input_single" id="mailing_address_1099_s_1" name="mailing_address_1099_s_1">
+                                                <input type="text" class="w-full mt-4 input_single" id="mailing_address_1099_s_2" name="mailing_address_1099_s_2">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="d-flex">
+                                                    <input type="checkbox" name="is_outside" id="is_outside" value="yes" class="me-3"> <label for="outside"><small>Check here if the address is outside of the U.S.A.</small></label>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <input type="checkbox" name="is_regulations" id="is_regulations"  value="yes" class="me-3"> <label for="regulations"><small>Check here if you are a foreign person per IRS regulations (nonresident alien, foreign partnership, foreign estate, or foreign trust.) Do not sign below.</small></label>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                
+                                        <hr>
+                                
+                                        <div>
+                                            Under penalty of perjury, I certify that I am a U.S. person or U.S. resident alien and the number shown on this statement is my correct taxpayer identification number.
+                                        </div>
+                                
+                                        <div class="row mt-5">
+                                            <div class="col-md-6">
+                                            <div>
+                                                <input type="text" class="w-full input_single" id="tranferor_signature" name="tranferor_signature">
+                                                Transferor’s Signature
+                                            </div>
+                                            <div>
+                                                <input type="text" class="w-full mt-3 input_single" id="spouse_signature" name="spouse_signature">
+                                                Spouse
+                                            </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div>
+                                                    <input type="text" class="w-full input_single" id="tranferor_date" name="tranferor_date">
+                                                    Date
+                                                </div>
+                                                <div>
+                                                    <input type="text" class="w-full mt-3 input_single" id="spouse_date" name="spouse_date">
+                                                    Date
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </div>    
+                                </div>
+                            </div>
+
 							<div class="accordion-item">
-								<h2 class="accordion-header" id="headingFour">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseFour" aria-expanded="false"
-										aria-controls="collapseFour">
-										(4) 593-C
-									</button>
-								</h2>
-								<div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
-									data-bs-parent="#accordionExample">
-									<div class="accordion-body">
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b> Is there a mortgage on the property?</b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesmortgage" value="yes" name="is_mortgage" required data-error="#is_mortgage-error">
-													<label for="yesmortgage">Yes</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" id="nomortgage" value="no" name="is_mortgage">
-													<label for="nomortgage">No</label>
-												</li>
-											</ul>
-											<label id="is_mortgage-error" class="error text-danger" for="is_mortgage"></label>
-										</div>
+                                <h2 class="accordion-header" id="heading22">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse22" aria-expanded="true" aria-controls="collapse22">
+                                       (7) FIRPTA AFFIDAVIT
+                                    </button>
+                                </h2>
+                                <div id="collapse22" class="accordion-collapse collapse" aria-labelledby="heading22" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        <div class="mt-md-5">
+                                            <b>DATE:</b> February 11, 2022<br>
+                                            <b>ESCROW NO.:</b> 10257432-GLE-MP
+                                        </div>
+                                        <h3 class="text-center my-4"><strong>Certification of Non-Foreign Status</strong></h3>
+                                        
+                                        <div class="mb-3">
+                                            Section 1445 of the Internal Revenue Code requires a transferee (buyer) of a U.S. Real Property interest to withhold fifteen percent (15%) tax of the gross sales price if the transferor (seller) is a foreign person or entity unless the transferee receives a certification of non-foreign status from the transferor (seller). The certification must be signed under penalties of perjury stating the transferor is not a foreign person/entity and containing the transferor’s name, address, and U.S. Taxpayers Identification Number.
+                                        </div>
+                                        <div class="mb-3">
+                                            Sellers who provide such a certification are except from withholding and the estimated tax cannot be collected from them unless the buyer or their agent have knowledge the certification is false.
+                                        </div>
+                                        <div class="mb-3">
+                                            Certification of Non-Foreign Status by Individual (a separate statement must be completed by each individual seller)
+                                        </div>
+                                        <div class="mb-2">
+                                            I, the undersigned Seller(s), hereby certify the following:
+                                        </div>
 
-										<div class="d-none" id="mortgage">
-											<div class="form-group mb-4">
-												<label for="" class="mb-2"><b>Is this mortgage/loan a Line of Credit?</b></label>
-												<ul class="list-inline">
-													<li class="list-inline-item me-md-5">
-														<input type="radio" id="yesCreditCard" value="yes" name="is_mortgage_credit" data-error="#is_mortgage_credit-error">
-														<label for="yesCreditCard">Yes</label>
-													</li>
-													<li class="list-inline-item">
-														<input type="radio" id="noCreditCard" value="no" name="is_mortgage_credit">
-														<label for="noCreditCard">No</label>
-													</li>
-												</ul>
-												<label id="is_mortgage_credit-error" class="error text-danger" for="CreditCard"></label>
-												<div class="form-group CreditCardLock d-none mb-4">
-													<label for="" class="mb-2"><b>Do you want to close and lock this Line of Credit?</b></label>
-													<ul class="list-inline">
-														<li class="list-inline-item me-md-5">
-															<input type="radio" id="yesCreditCardLock" value="yes" name="is_creditcard_lock" data-error="#is_creditcard_lock-error">
-															<label for="yesCreditCardLock">Yes</label>
-														</li>
-														<li class="list-inline-item">
-															<input type="radio" id="noCreditCardLock" value="no" name="is_creditcard_lock">
-															<label for="noCreditCardLock">No</label>
-														</li>
-													</ul>
-													<label id="is_creditcard_lock-error" class="error text-danger" for="is_creditcard_lock"></label>
-												</div>
-											</div>
-											<div class="form-group mb-4">
-												<label for="" class="mb-2"><b>Lender/Mortgage Holder:</b></label>
-												<input type="text" class="form-control" id="mortgage_holder" name="mortgage_holder" data-error="#mortgage_holder-error">
-												<label id="mortgage_holder-error" class="error text-danger" for="mortgage_holder"></label>
-											</div>
-											
-											<div class="row">
-												<div class="col-md-6 mb-4">
-													<div class="form-group">
-														<label for="" class="mb-2"><b>Original Loan Amount:</b></label>
-														<input type="text" class="form-control" id="loan_amount" name="loan_amount" data-error="#loan_amount-error">
-													</div>
-													<label id="loan_amount-error" class="error text-danger" for="loan_amount"></label>
-												</div>
-												<div class="col-md-6 mb-4">
-													<div class="form-group">
-														<label for="" class="mb-2"><b>Lender/Mortgage Holder Phone:</b></label>
-														<input type="text" class="form-control" id="mortgage_phone" name="mortgage_phone" data-error="#mortgage_phone-error">
-													</div>
-													<label id="mortgage_phone-error" class="error text-danger" for="mortgage_phone"></label>
-												</div>
-												<div class="col-md-6 mb-4">
-													<div class="form-group">
-														<label for="" class="mb-2"><b>Loan Number:</b></label>
-														<input type="text" class="form-control" id="loan_number" name="loan_number" data-error="#loan_number-error">
-													</div>
-													<label id="loan_number-error" class="error text-danger" for="loan_number"></label>
-												</div>
-												<div class="col-md-6 mb-4">
-													<div class="form-group">
-														<label for="" class="mb-2"><b>Approximate Loan
-																Balance:</b></label>
-														<input type="text" class="form-control" id="loan_balance" name="loan_balance" data-error="#loan_balance-error">
-													</div>
-													<label id="loan_balance-error" class="error text-danger" for="loan_balance"></label>
-												</div>
-											</div>
-											<div class="form-group mb-4">
-												<label for="" class="mb-2"><b>Account Holder's Name:</b></label>
-												<input type="text" class="form-control" id="account_holder_name" name="account_holder_name" data-error="#account_holder_name-error">
-												<label id="account_holder_name-error" class="error text-danger" for="account_holder_name"></label>
-											</div>
-									        
-											<div class="form-group mb-3">
-												<label for="" class="mb-2"><b>Is there a 2nd mortgage on the
-														property?</b></label>
-												<ul class="list-inline">
-													<li class="list-inline-item me-md-5">
-														<input type="radio" id="yesmortgage2" value="yes" name="is_second_mortgage" data-error="#is_second_mortgage-error">
-														<label for="yesmortgage2">Yes</label>
-													</li>
-													<li class="list-inline-item">
-														<input type="radio" id="nomortgage2" value="no" name="is_second_mortgage">
-														<label for="nomortgage2">No</label>
-													</li>
-												</ul>
-												<label id="is_second_mortgage-error" class="error text-danger" for="is_second_mortgage"></label>
-												<div class="secondMortgage d-none">
-													<div class="form-group mb-4">
-														<label for="" class="mb-2"><b>Is the 2nd mortgage a Line of
-																Credit?</b></label>
-														<ul class="list-inline">
-															<li class="list-inline-item me-md-5">
-																<input type="radio" id="yesCreditCard2" value="yes" name="is_second_mortgage_credit" data-error="#is_second_mortgage_credit-error">
-																<label for="yesCreditCard2">Yes</label>
-															</li>
-															<li class="list-inline-item">
-																<input type="radio" id="noCreditCard2" value="no" name="is_second_mortgage_credit">
-																<label for="noCreditCard2">No</label>
-															</li>
-														</ul>
-														<label id="is_second_mortgage_credit-error" class="error text-danger" for="is_second_mortgage_credit"></label>
-														<div class="form-group CreditCardLock d-none mb-4">
-															<label for="" class="mb-2"><b>Do you want to close and lock this Line of Credit?</b></label>
-															<ul class="list-inline">
-																<li class="list-inline-item me-md-5">
-																	<input type="radio" id="yesCreditCardLock2" value="yes" name="is_second_creditcard_lock" data-error="#is_second_creditcard_lock-error">
-																	<label for="yesCreditCardLock2">Yes</label>
-																</li>
-																<li class="list-inline-item">
-																	<input type="radio" id="noCreditCardLock2" value="no" name="is_second_creditcard_lock">
-																	<label for="noCreditCardLock2">No</label>
-																</li>
-															</ul>
-															<label id="is_second_creditcard_lock-error" class="error text-danger" for="is_second_creditcard_lock"></label>
-														</div>
-													</div>
-													<div class="form-group mb-4">
-														<label for="" class="mb-2"><b>2nd Lender/Mortgage Holder:</b></label>
-														<input type="text" class="form-control" id="second_mortgage_holder" name="second_mortgage_holder" data-error="#second_mortgage_holder-error">
-														<label id="second_mortgage_holder-error" class="error text-danger" for="second_mortgage_holder"></label>
-													</div>
-													<div class="row">
-														<div class="col-md-6 mb-4">
-															<div class="form-group">
-																<label for="" class="mb-2"><b>2nd Original Loan Amount:</b></label>
-																<input type="text" class="form-control" id="second_loan_amount" name="second_loan_amount" data-error="#second_loan_amount-error">
-															</div>
-															<label id="second_loan_amount-error" class="error text-danger" for="second_loan_amount"></label>
-														</div>
-														<div class="col-md-6 mb-4">
-															<div class="form-group">
-																<label for="" class="mb-2"><b>2nd Lender/Mortgage Holder Phone:</b></label>
-																<input type="text" class="form-control" id="second_mortgage_phone" name="second_mortgage_phone" data-error="#second_mortgage_phone-error">
-															</div>
-															<label id="second_mortgage_phone-error" class="error text-danger" for="second_mortgage_phone"></label>
-														</div>
-														<div class="col-md-6 mb-4">
-															<div class="form-group">
-																<label for="" class="mb-2"><b>2nd Loan Number:</b></label>
-																<input type="text" class="form-control" id="second_loan_number" name="second_loan_number" data-error="#second_loan_number-error">
-															</div>
-															<label id="second_loan_number-error" class="error text-danger" for="second_loan_number"></label>
-														</div>
-														<div class="col-md-6 mb-4">
-															<div class="form-group">
-																<label for="" class="mb-2"><b> 2nd Approximate Loan
-																		Balance:</b></label>
-																<input type="text" class="form-control" id="second_loan_balance" name="second_loan_balance" data-error="#second_loan_balance-error">
-															</div>
-															<label id="second_loan_balance-error" class="error text-danger" for="second_loan_balance"></label>
-														</div>
-													</div>
-													<div class="form-group mb-4">
-														<label for="" class="mb-2"><b>2nd Account Holder's Name:</b></label>
-														<input type="text" class="form-control" id="second_account_holder_name" name="second_account_holder_name" data-error="#second_account_holder_name-error">
-														<label id="second_account_holder_name-error" class="error text-danger" for="second_account_holder_name"></label>
-													</div>
-												</div>
-											</div>
+                                        <ol>
+                                            <li>
+                                                I am not a non-resident alien for the purposes of U.S. Income Taxation;
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap my-2">
+                                                    My U.S. taxpayer identifying no. (Social Security No.) is: <input type="text" class="input_single flex1" id="taxpayer_identifying_num" name="taxpayer_identifying_num">;
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="d-flex flex-xs-wrap">
+                                                    My home address is:<input type="text" class="input_single flex1 mb-2" id="home_address" name="home_address">
+                                                </div>
+                                                <input type="text" class="input_single w-full" id="home_address_2" name="home_address_2">
+                                            </li>
+                                        </ol>
+                                        
+                                        <div class="mb-3">
+                                            I understand this certification may be disclosed to the Internal Revenue Service by the transferee and any false statement I have made herein could be punished by fine, imprisonment, or both.
+                                        </div>
 
-											<h3 class="text-center mb-4"><b>AUTHORIZATION FOR THE RELEASE OF
-													INFORMATION</b></h3>
+                                        <div class="mb-3">
+                                            Under penalty of perjury I declare I have completed this certification and to the best of my knowledge and belief it is true, correct and complete.
+                                        </div>
 
-											TO WHOM IT MAY CONCERN:<br><br>
+                                        <div class="mb-3">
+                                            IN WITNESS WHEREOF, the undersigned have executed this document on the date(s) set forth below.
+                                        </div>
 
-											I (WE), The undersigned parties hereby release, authorize and direct TITLE
-											COMPANY NAME to release all necessary loan information and data to my real
-											estate broker, and other third party contractors including but not limited
-											to lien holders, and title insurance companies. <br><br>
+                                        <div class="mt-5">
+                                            Date :    
+                                            <input type="text" class="input_single" id="firpta_date" name="firpta_date">
+                                        </div>
+                                        <div class="mt-5 row">
+                                            <div class="col-md-4">
+                                                <input type="text" class="input_single d-block w-full" id="firpta_signature" name="firpta_signature">
+                                                Luz Amparo Rockey
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-											I (WE), the undersigned parties hereby release, authorize and direct your
-											respective companies to release all necessary loan information and data
-											to:<br><br>
-
-											TITLE COMPANY NAME, and lenders. Phone: &nbsp; (111) 111-1111 &nbsp;
-											&nbsp;&nbsp;&nbsp; Fax: &nbsp; (111) 222-2222<br><br>
-
-											For the purpose of obtaining payoffs of my loans below, for a Short Sale
-											payoff of the same which may require such disclosures, and for Closing
-											Instruction Compliance.<br><br>
-
-											For your convenience, I (WE) have attached the following
-											information:<br><br>
-
-											<div class="mb-3"><b>FIRST LOAN / PRIMARY LOAN / MORTGAGE</b></div>
-											<div class="row mb-3">
-												<div class="col-md-6">
-													<table class="table_fee_table">
-														<tr>
-															<td>Loan Number</td>
-															<th></th>
-														</tr>
-														<tr>
-															<td>Loan Amount</td>
-															<th>$</th>
-														</tr>
-														<tr>
-															<td>Lender's Name</td>
-															<th>CASH</th>
-														</tr>
-														<tr>
-															<td>Lender's Phone </td>
-															<th></th>
-														</tr>
-													</table>
-												</div>
-												<div class="col-md-6">
-													<table class="table_fee_table">
-														<tr>
-															<td>Account Balance</td>
-															<th>$</th>
-														</tr>
-														<tr>
-															<td>Account Holder's Name:</td>
-															<th></th>
-														</tr>
-														<tr>
-															<td>&nbsp;</td>
-															<th>&nbsp;</th>
-														</tr>
-														<tr>
-															<td>Phone Number: </td>
-															<th></th>
-														</tr>
-													</table>
-												</div>
-											</div>
-											<div class="mb-3"><b>SECOND LOAN / EQUITY LINE OF CREDIT</b></div>
-											<div class="row mb-3">
-												<div class="col-md-6">
-													<table class="table_fee_table">
-														<tr>
-															<td>Loan Number</td>
-															<th></th>
-														</tr>
-														<tr>
-															<td>Loan Amount</td>
-															<th>$</th>
-														</tr>
-														<tr>
-															<td>Lender's Name</td>
-															<th></th>
-														</tr>
-														<tr>
-															<td>Lender's Phone </td>
-															<th></th>
-														</tr>
-													</table>
-												</div>
-												<div class="col-md-6">
-													<table class="table_fee_table">
-														<tr>
-															<td>Account Balance</td>
-															<th>$</th>
-														</tr>
-														<tr>
-															<td>Account Holder's Name:</td>
-															<th></th>
-														</tr>
-														<tr>
-															<td>&nbsp;</td>
-															<th>&nbsp;</th>
-														</tr>
-														<tr>
-															<td>Phone Number: </td>
-															<th></th>
-														</tr>
-													</table>
-												</div>
-											</div>
-
-											<div class="mb-5">
-												I(We), authorize the release of the information and for the bank to
-												close and freeze any equity line described above.
-											</div>
-
-										</div>
-
-										<div class="form-group mb-2">
-											<input type="checkbox" id="is_agree_593_c" name="is_agree_593_c" required data-error="#is_agree_593_c-error">
-											<label for="agree">I/We have read and agree to <span>*</span></label>
-										</div>
-										<label id="is_agree_593_c-error" class="error text-danger" for="is_agree_593_c"></label>
-										<div class="border p-3">
-											the above payoff authorization as indicated by signing below.
-										</div>
-									</div>
-								</div>
-							</div>
 							<div class="accordion-item">
-								<h2 class="accordion-header" id="headingFive">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseFive" aria-expanded="false"
-										aria-controls="collapseFive">
-										(5) 1099-S
-									</button>
-								</h2>
-								<div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
-									data-bs-parent="#accordionExample">
-									<div class="accordion-body">
+                                <h2 class="accordion-header" id="headingEleven">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+                                        (8) NHD Receipt
+                                    </button>
+                                </h2>
+                                <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="form-group d-flex mb-2">
+                                            <input type="checkbox" id="acknowledge" class="me-2 mt-1">
+                                            <label for="acknowledge" class="mb-2">By clicking the submit button, I agree to terms & conditions.</label>
+                                        </div>
+                                        <div class="border text-danger p-3">
+                                            IMPORTANT NOTICE: Cyber criminals are preying on those involved in real estate transactions. They will hack email accounts, spoof email addresses, and send emails with fake wiring or fake funds delivery instructions. These emails are convincing and sophisticated. Always independently confirm wiring and funding instructions in person or by telephone to our published office phone number of record. Never wire money without double-checking, in person or by telephone that the wiring instructions are correct. BE SKEPTICAL AND VIGILANT. 
+                                        </div>
+                                        <hr>
+                                        
+                                        <div class="form-group mb-4">
+                                            <label for="" class="mb-2"><b>Signature</b></label>
+                                            <textarea name="" id="" class="form-control h-auto" rows="5"></textarea>
+                                            <a href="javascript:;" class="text-body text-end"> Clear</a>
+                                        </div>
 
-										<ul class="list-unstyled">
-											<li>
-												<div class="form-group mb-3">
-													<label class="mb-2"><b>(1) I owned and used the residence as my
-															principal residence for periods aggregating 2 years or more
-															during the 5-year period ending on the date of the sale or
-															exchange of the residence.</b></label>
-													<ul class="list-inline">
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="exchangeeResidenceTrue" name="is_exchange_residence" value="true" required data-error="#is_exchange_residence-error">
-															<label for="exchangeeResidenceTrue">True</label>
-														</li>
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="exchangeeResidenceFalse" value="false" name="is_exchange_residence">
-															<label for="exchangeeResidenceFalse">False</label>
-														</li>
-													</ul>
-													<label id="is_exchange_residence-error" class="error text-danger" for="is_exchange_residence"></label>
-												</div>
-											</li>
-											<li>
-												<div class="form-group mb-3">
-													<label class="mb-2"><b>(2) I have not sold or exchanged another
-															principle residence during the 2-year period ending on the
-															date of the sale or exchange of the residence.</b></label>
-													<ul class="list-inline">
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="NotexchangeeResidenceTrue" name="is_not_exchange_residence" value="true" required data-error="#is_not_exchange_residence-error">
-															<label for="NotexchangeeResidenceTrue">True</label>
-														</li>
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="NotexchangeeResidenceFalse" name="is_not_exchange_residence" value="false">
-															<label for="NotexchangeeResidenceFalse">False</label>
-														</li>
-													</ul>
-													<label id="is_not_exchange_residence-error" class="error text-danger" for="is_not_exchange_residence"></label>
-												</div>
-											</li>
-											<li>
-												<div class="form-group mb-3">
-													<label class="mb-2"><b>(3) I (or my spouse or former or former
-															spouse, if I was married at any time during the period
-															beginning after May 6, 1997, and ending today) have not used
-															any portion of the residence for business or rental purposes
-															after May 6, 1997..</b></label>
-													<ul class="list-inline">
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="formerSpouseTrue" name="is_former_spouse" value="true" required data-error="#is_former_spouse-error">
-															<label for="formerSpouseTrue">True</label>
-														</li>
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="formerSpouseFalse" name="is_former_spouse" value="false">
-															<label for="formerSpouseFalse">False</label>
-														</li>
-													</ul>
-													<label id="is_former_spouse-error" class="error text-danger" for="is_former_spouse"></label>
-												</div>
-											</li>
-											<li>
-												<div class="form-group mb-3">
-													<label class="mb-2">
-														<b>(4) At least one of the following three statements
-															applies:<br><br>
-															The sale or exchange is of the entire residence for $250,000
-															or less.<br><br>
+                                        <div class="row mt-5">
+                                            <div class="col-md-4">
+                                                <div class="form-group mb-3">
+                                                    <label for="" class="mb-2"><b>TenantID</b></label>
+                                                    <input type="text" class="form-control" id="tenant_id" name="tenant_id">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group mb-3">
+                                                    <label for="" class="mb-2"><b>DocType</b></label>
+                                                    <input type="text" class="form-control" id="doc_type" name="doc_type">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-															OR<br><br>
-
-															I am married, the sale or exchange is of the entire
-															residence for $500,000 or less, and the gain on the sale or
-															exchange of the entire residence is $250,000 or
-															less.<br><br>
-
-															OR<br><br>
-
-															I am married, the sale or exchange is of the entire
-															residence for $500,000 or less, and (a) I intend to file a
-															joint return for the year of the sale or exchange, (b) my
-															spouse also used the residence as his or her principal
-															residence for periods aggregating 2 years or more during the
-															5 year period ending on the date of the sale or exchange of
-															the residence, and (c) my spouse also has not sold or
-															exchanged another principal residence during the 2-year
-															period ending on the date of the sale or exchange of the
-															principal residence.<br><br></b>
-													</label>
-													<ul class="list-inline">
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="marriedTrue" name="is_married" value="true" required data-error="#is_married-error">
-															<label for="marriedTrue">True</label>
-														</li>
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="marriedFalse" name="is_married" value="false">
-															<label for="marriedFalse">False</label>
-														</li>
-													</ul>
-													<label id="is_married-error" class="error text-danger" for="is_married"></label>
-												</div>
-											</li>
-											<li>
-												<div class="form-group mb-3">
-													<label class="mb-2"><b>(5) During the 5-year period ending on the
-															date of the sale or exchange of the residence, I did not
-															acquire the residence in an exchange to which section 1031
-															of the Internal Revenue Code applied.</b></label>
-													<ul class="list-inline">
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="periodTrue" name="is_period" value="true" required data-error="#is_period-error">
-															<label for="periodTrue">True</label>
-														</li>
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="periodFalse" name="is_period" value="false">
-															<label for="periodFalse">False</label>
-														</li>
-													</ul>
-													<label id="is_period-error" class="error text-danger" for="is_period"></label>
-												</div>
-											</li>
-											<li>
-												<div class="form-group mb-3">
-													<label class="mb-2"><b>(6) If my basis in the residence is
-															determined by reference to the basis in the hands of a
-															person who acquired the residence in an exchange to which
-															section 1031 of the Internal Revenue Code applied, the
-															exchange to which section 1031 applied occurred more than 5
-															years prior to the date I sold or exchanged the
-															residence.</b></label>
-													<ul class="list-inline">
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="RevenueTrue" name="is_revenue"  value="true" required data-error="#is_revenue-error">
-															<label for="RevenueTrue">True</label>
-														</li>
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="RevenueFalse" name="is_revenue" value="false">
-															<label for="RevenueFalse">False</label>
-														</li>
-														<li class="list-inline item me-md-5">
-															<input type="radio" id="RevenueNA" name="is_revenue" value="n/a">
-															<label for="RevenueNA">N/A</label>
-														</li>
-													</ul>
-													<label id="is_revenue-error" class="error text-danger" for="is_revenue"></label>
-												</div>
-											</li>
-										</ul>
-
-
-
-									</div>
-								</div>
-							</div>
 							<div class="accordion-item">
-								<h2 class="accordion-header" id="headingSix">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-										(6) FIRPTA Affidavit
-									</button>
-								</h2>
-								<div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix"
-									data-bs-parent="#accordionExample">
-									<div class="accordion-body">
-
-										<h3 class="mb-4 text-ecnter"><b>SELLERS' CLOSING AGREEMENT AND DISCLOSURES</b>
-										</h3>
-
-										<p>
-											<b>FEES AND COSTS</b> - Our standard closing fee has been disclosed to you.
-											All fees paid to our firm will be designated on the Closing Disclosure or
-											HUD, if applicable. If we are required to perform additional services beyond
-											those described herein, we will charge extra for them. Please note this may
-											cause a delay if we are not made aware of the change until the last minute,
-											due to the disclosure tolerances. Without limiting the definition of
-											“additional services”, examples would be preparation of a subordination
-											agreement or release deed, powers of attorney or any other documents.
-											Certain charges on the Closing Disclosure, Settlement Statement, including
-											but not limited to overnight/courier and recording fees, may not reflect the
-											actual costs paid by the settlement agent to a vendor. The additional amount
-											is to cover our administrative aspects of handling the particular item or
-											service. I/We hereby consent to and accept the above-referenced up-charges.
-										</p>
-
-										<p class="mb-0">
-											<b>TERMS OF REPRESENTATION -</b>
-										</p>
-										<p>
-											Unless explicitly stated in writing, we do NOT represent you, the Seller, in
-											this transaction. We advise you to seek legal assistance. No member of our
-											firm can give you legal advice other than to obtain independent counsel of
-											your choice.
-										</p>
-										<p>
-											As an accommodation to you, we are permitted by law to prepare the documents
-											that you will need to sign at closing, such as the Seller’s Uniform Closing
-											Disclosure, Settlement Statement, Deed and Lien Waiver. The drafting of
-											these documents does not create an attorney–client relationship. We will
-											prepare the documents consistent with the specifications of the purchase
-											agreement. If the purchase agreement does not indicate specifications, we
-											will prepare the documents to advance the interests of the Buyer.
-										</p>
-										<p>
-											IF THE SELLER IS MARRIED, HIS /HER SPOUSE MUST ATTEND OR ARRANGE TO SIGN THE
-											DEED AND LIEN WAIVER (THIS INCLUDES SEPARATION). TITLE COMPANY WILL NOT
-											PERMIT A DEED AND LIEN WAIVER TO BE EXECUTED BY POWER OF ATTORNEY, EXCEPT IN
-											EXTENUATING CIRCUMSTANCES.
-										</p>
-
-										<div class="text-primary text-center mb-3"><b> ********** Standard Closing Costs
-												************</b></div>
-
-										<div class="mb-3">
-											<table class="table_fee_table mx-auto">
-												<tr>
-													<td>Seller Document Preparation</td>
-													<th>$300</th>
-												</tr>
-												<tr>
-													<td>Satisfaction Tracking</td>
-													<th>$45</th>
-												</tr>
-												<tr>
-													<td>1031 Exchange</td>
-													<th>$200</th>
-												</tr>
-												<tr>
-													<td>Wire Fee</td>
-													<th>$25 per wire</th>
-												</tr>
-												<tr>
-													<td>UPS</td>
-													<th>$25 per package </th>
-												</tr>
-											</table>
-										</div>
-										<div class="text-center mb-3"><b>****Additional document(s) are on a
-												case-by-case basis </b> </div>
-										<p>
-											You also have the choice of retaining your own attorney at your expense
-											beyond the normal Closing Fee to draft your documents. In that event, please
-											have the attorney send all necessary documents (at minimum, a deed and lien
-											waiver) to our office at least 3 business days prior to closing for our
-											review and possible changes.
-										</p>
-										<p>
-											If you are using a 1031 Exchange, there will be an additional $200 fee for
-											work related to the exchange. Call us as soon as possible if there is a 1031
-											exchange.
-										</p>
-
-										<div class="form-group mb-3">
-											<label for="" class="mb-2"><b>Select One: <span>*</span></b></label>
-											<ul class="list-unstyled">
-												<li>
-													<input type="radio" id="attorney" value="no" name="is_attorney" required data-error="#is_attorney-error">
-													<label for="attorney">I would like THIS ATTORNEY to prepare a deed
-														and lien waiver for me pursuant to the understanding
-														above.</label>
-												</li>
-												<li>
-													<input type="radio" id="otherAttorney" value="yes" name="is_attorney">
-													<label for="otherAttorney">The following attorney will draft my deed
-														and lien waiver and secure cancellation of all deeds of trust
-														and other exceptions to title.</label>
-												</li>
-											</ul>
-											<label id="is_attorney-error" class="error text-danger" for="is_attorney"></label>
-										</div>
-
-
-										<div class="attorneyInfo d-none">
-											<div class="row">
-												<div class="col-md-6 mb-4">
-													<div class="form-group">
-														<label for="" class="mb-2"><b>Firm Name:</b></label>
-														<input type="text" class="form-control" id="firm_name" name="firm_name" data-error="#firm_name-error">
-													</div>
-													<label id="firm_name-error" class="error text-danger" for="firm_name"></label>
-												</div>
-												<div class="col-md-6 mb-4">
-													<div class="form-group">
-														<label for="" class="mb-2"><b>Phone Number:</b></label>
-														<input type="text" class="form-control" id="firm_phone_number" name="firm_phone_number" data-error="#firm_phone_number-error">
-													</div>
-													<label id="firm_phone_number-error" class="error text-danger" for="firm_phone_number"></label>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-md-4 mb-4">
-													<div class="form-group">
-														<label for="" class="mb-2"><b>Attorney Name:</b></label>
-														<input type="text" class="form-control" id="attorney_name" name="attorney_name" data-error="#attorney_name-error">
-													</div>
-													<label id="attorney_name-error" class="error text-danger" for="attorney_name"></label>
-												</div>
-												<div class="col-md-4 mb-4">
-													<div class="form-group">
-														<label for="" class="mb-2"><b>Attorney Phone No.:</b></label>
-														<input type="text" class="form-control" id="attorney_phone_number" name="attorney_phone_number" data-error="#attorney_phone_number-error">
-													</div>
-													<label id="attorney_phone_number-error" class="error text-danger" for="attorney_phone_number"></label>
-												</div>
-												<div class="col-md-4 mb-4">
-													<div class="form-group position-relative">
-														<label for="" class="mb-2"><b>Attorney Email:</b></label>
-														<input type="text" class="form-control" id="attorney_email" name="attorney_email" data-error="#attorney_email-error">
-														<small class="small_label">example@example.com</small>
-													</div>
-													<label id="attorney_email-error" class="error text-danger error2" for="attorney_email"></label>
-												</div>
-											</div>
-										</div>
-
-
-										<p>
-											<b>WHAT SERVICES DO WE PERFORM-</b> We conduct the title examination of the
-											property for the Buyer, we ensure that the deed of conveyance and the loan
-											documents have been properly executed, that the closing funds are properly
-											received and disbursed pursuant to the Settlement Statement to be prepared
-											by us and reviewed by you at closing, and that the Buyers deed and deed of
-											trust (mortgage) are duly recorded and that the owners’ and lender’s
-											policies of title insurance are issued and delivered. If we are drafting the
-											deed and lien waiver for the Seller we will furnish payoffs of the
-											outstanding liens, along with cancellation of lien requests to the proper
-											creditors; however, in the event the creditor does not comply with our
-											cancellation request we will not pursue the creditor without being further
-											retained by the buyer or seller.
-										</p>
-										<p>
-											<b>CANCELLATION OF DEEDS OF TRUST-</b> Paragraph 8(e) of the OUR STATE Offer
-											to Purchase and Contract, has places a legal duty on the Seller to ensure
-											that all prior deeds of trust are canceled of record. The OUR STATE State
-											Bar does not place the duty of cancellation on the Closing Attorney because
-											the banks are required to cancel a Deed of Trust which is paid in full
-											within 60 days of receiving payment in full. We will engage a third-party
-											lien release company to guarantee your compliance with this duty at an
-											additional fee collected on the settlement statement to the firm or our
-											third party vendor. Please note, it is still your responsibility to release
-											all liens and judgments from the public record. OUR LAW FIRM WILL NOT TAKE
-											ANY ACTION BEYOND SENDING AN INITIAL LETTER OF REQUEST. A THIRD-PARTY VENDOR
-											WILL CANCEL YOUR LIENS AT YOUR EXPENSE (APPROXIMATELY $35.00-$55.00 PER
-											RELEASE).
-										</p>
-										<p>
-											<b>FUNDS TO CLOSE-</b> Incoming Closing Funds- Any and all funds to close
-											must be in the form of a wire from your bank. Please be sure to include your
-											TITLE COMPANY File Number or Name, the property address as a reference. Our
-											trust account is set up to not accept ACH, Book Transfers or any other form
-											money transfer. <b> PLEASE NOTE TITLE COMPANY NAME WILL NOT ALTER ITS WIRING
-												INSTRUCTIONS. IF YOU RECEIVE A MESSAGE FROM US THAT SAYS WE HAVE CHANGED
-												OUR WIRING INSTRUCTIONS DO NOT SEND A WIRE AND CALL US IMMEDIATELY!</b>
-										</p>
-										<p>
-											<b>OUTGOING PROCEEDS OR REFUNDS-</b> Should you elect to receive money from
-											TITLE COMPANY NAME, via wire transfer we will require you to sign our wiring
-											agreement (which is part of the closing package) and to provide us your
-											wiring instructions. <b>If you must change your wiring instructions, we will
-												require you to present us with new wiring instructions in person;
-												otherwise we will deliver the funds via UPS, other expedited courier, or
-												USPS.</b> If you elect to receive money from TITLE COMPANY NAME via
-											check, you must cash or deposit the check within 90 days of the check date
-											or the check becomes VOID. TITLE COMPANY NAME will make every effort to
-											contact you, confirm that you have received the check and if needed, stop
-											payment, recut and mail a replacement check to you. A reasonable dormancy
-											fee shall be charged against any remaining funds in the client trust account
-											which are unclaimed after the 90 days. Said fee shall not exceed $200.00 per
-											year. The charge shall be based on time and effort spent making reasonable
-											efforts to contact you and return the funds. Any de minimis amount of funds
-											of $10.00 or less that remain in our trust account for a period of 6 months
-											or longer will not be refunded to you, but will be applied to the dormancy
-											fee charge and made payable to TITLE COMPANY NAME. <b>We appreciate your
-												extra effort to quickly cash or deposit checks made payable to you,
-												regardless of the amount. </b>
-										</p>
-
-										<p class="mb-0"><b class="text-underline">VERY IMPORTANT NOTICE!</b></p>
-
-										<p><b>Proceeds will NOT be disbursed at the table. OUR STATE State Law mandates
-												we must have the following to disburse funds:</b></p>
-
-										<ul>
-											<li>Good funds from the buyer and lender</li>
-											<li>Funding authorization from the buyer’s lender</li>
-											<li>Original signed documents in TITLE COMPANY Property office(s)</li>
-											<li>Documents properly recorded within the Register of Deeds</li>
-										</ul>
-
-										<div class="form-group mb-2">
-											<input type="checkbox" id="sign" name="sign" required data-error="#sign-error">
-											<label for="sign">My/Our Signature(s) below <span>*</span></label>
-										</div>
-										<label id="sign-error" class="error text-danger error2" for="sign"></label>
-										<div class="border p-3">
-											CERTIFIES OUR RECEIPT, ACKNOWLEDGMENT, AND CONSENT TO THE TERMS OF OUR
-											REPRESENTATION BY TITLE COMPANY NAME
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="accordion-item d-none" id="association">
-								<h2 class="accordion-header" id="headingSeven">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseSeven" aria-expanded="false"
-										aria-controls="collapseSeven">
-										Association Information
-									</button>
-								</h2>
-								<div id="collapseSeven" class="accordion-collapse collapse"
-									aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
-									<div class="accordion-body">
-										<div class="row">z
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Condominium / Homeowners Association
-														1</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Property Management Company</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Property Management Number</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Condominium / Homeowners Association
-														2</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Property Management Company</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group mb-4">
-													<label for="" class="mb-2">Property Management Number</label>
-													<input type="text" class="form-control">
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="accordion-item">
-								<h2 class="accordion-header" id="headingEight">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseEight" aria-expanded="false"
-										aria-controls="collapseEight">
-										(7) NHD Receipt
-									</button>
-								</h2>
-								<div id="collapseEight" class="accordion-collapse collapse"
-									aria-labelledby="headingEight" data-bs-parent="#accordionExample">
-									<div class="accordion-body">
-										Name(s): <br><br>
-
-										Date: 04-14-2022<br><br>
-
-										Property Address: 202 Nice New St, City, ST 11111<br><br>
-
-										<p>
-											I/We the undersigned seller in the transaction contemplated hereunder
-											acknowledge that from time to time, it is necessary to share information
-											concerning this transaction with other parties to this transaction. I
-											acknowledge that some of the information to be shared, may be protected as
-											Non-Public Personal Information as defined by federal law.<br><br>
-
-											I authorize TITLE COMPANY NAME., as the settlement agent to provide to the
-											following parties with a copy of the Closing Disclosure, Loan Estimate,
-											Title Insurance Policy and any Settlement Statement which is prepared and/or
-											executed during the course of this transaction:<br><br>
-
-											Buyer, their real estate agent and lender, the Seller and their real estate
-											agent, asset management companies, the title insurance company/underwriter
-											who is insuring this transaction, the service providers retained by the
-											Borrower and/ or Seller to provide settlement services necessary to complete
-											this transaction including but not limited to surveyors, pest inspectors,
-											property inspectors, insurance agents, Seller’s counsel/settlement agent in
-											this; or a related transaction.<br><br>
-
-											I further authorize TITLE COMPANY to allow its third-party auditors and my
-											title insurance company to review my file for accuracy and
-											security/compliance purposes during the annual security audit of the law
-											firm. TITLE COMPANY., will employ all necessary safeguards during such an
-											audit to ensure the integrity and security of sensitive attorney client, and
-											client financial information pursuant to federal law and OUR STATE State Bar
-											Rules of Professional Conduct.
-										</p>
-
-
-										<div class="form-group mb-2 d-flex">
-											<input type="checkbox" id="agreementSign" name="agreementSign" class="me-2 mt-1" required data-error="#agreementSign-error">
-											<label for="agreementSign" class="mb-2">By checking and signing below
-												<span>*</span></label>
-										</div>
-										<label id="agreementSign-error" class="error text-danger error2" for="agreementSign"></label>
-
-										<div class="border p-3">
-											we agree that a copy of this authorization may be accepted as an original.
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="accordion-item">
-								<h2 class="accordion-header" id="headingNine">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseNine" aria-expanded="false"
-										aria-controls="collapseNine">
-										(8) HOA ??
-									</button>
-								</h2>
-								<div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine"
-									data-bs-parent="#accordionExample">
-									<div class="accordion-body">
-
-										<div class="form-group mb-4">
-											<label for="" class="mb-2"><b>Does your property have an HOA?
-													<span>*</span></b></label>
-											<ul class="list-inline">
-												<li class="list-inline-item me-md-5">
-													<input type="radio" id="yesHOA" value="yes" name="is_property_hoa" required data-error="#is_property_hoa-error">
-													<label for="yesHOA">Yes</label>
-												</li>
-												<li class="list-inline-item">
-													<input type="radio" id="noHOA" value="no" name="is_property_hoa">
-													<label for="noHOA">No</label>
-												</li>
-											</ul>
-											<label id="is_property_hoa-error" class="error text-danger error2" for="is_property_hoa"></label>
-										</div>
-
-										<div class="homeOwner d-none">
-											<h3 class="mb-4 text-center"><b>Homeowners Association Management
-													Information:</b></h3>
-
-											<div class="row">
-												<div class="col-md-6 mb-3">
-													<div class="form-group">
-														<label for="" class="mb-2">Name of Management Company:</label>
-														<input type="text" class="form-control" id="hoa_management_company_name" name="hoa_management_company_name" data-error="#hoa_management_company_name-error">
-													</div>
-													<label id="hoa_management_company_name-error" class="error text-danger" for="hoa_management_company_name"></label>
-												</div>
-												<div class="col-md-6 mb-3">
-													<div class="form-group">
-														<label for="" class="mb-2">Contact Person:</label>
-														<input type="text" class="form-control" id="hoa_contact_person" name="hoa_contact_person" data-error="#hoa_contact_person-error">
-													</div>
-													<label id="hoa_management_company_name-error" class="error text-danger" for="hoa_management_company_name"></label>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-md-6 mb-3">
-													<div class="form-group position-relative">
-														<label for="" class="mb-2">Email:</label>
-														<input type="text" class="form-control" id="hoa_email" name="hoa_email" data-error="#hoa_email-error">
-														<small class="small_label">example@example.com</small>
-													</div>
-													<label id="hoa_email-error" class="error text-danger error2" for="hoa_email"></label>
-												</div>
-												<div class="col-md-6 mb-3">
-													<div class="form-group">
-														<label for="" class="mb-2">Phone:</label>
-														<input type="text" class="form-control" id="hoa_phone" name="hoa_phone" data-error="#hoa_phone-error">
-													</div>
-													<label id="hoa_phone-error" class="error text-danger" for="hoa_phone"></label>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-md-6 mb-3">
-													<div class="form-group">
-														<label for="" class="mb-2">HOA Dues:</label>
-														<input type="text" class="form-control" id="hoa_dues" name="hoa_dues" data-error="#hoa_dues-error">
-													</div>
-													<label id="hoa_dues-error" class="error text-danger" for="hoa_dues"></label>
-												</div>
-												<div class="col-md-6 mb-3">
-													<div class="form-group">
-														<label for="" class="mb-2">Dues Per</label>
-														<ul class="list-unstyled">
-															<li>
-																<input type="radio" id="month" name="hoa_dues_per" value="month" data-error="#hoa_dues_per-error">
-																<label for="month">Month</label>
-															</li>
-															<li>
-																<input type="radio" id="Quarter" value="quarter" name="hoa_dues_per">
-																<label for="Quarter">Quarter</label>
-															</li>
-															<li>
-																<input type="radio" id="Semi-Annually" value="semi-annually" name="hoa_dues_per">
-																<label for="Semi-Annually">Semi-Annually</label>
-															</li>
-															<li>
-																<input type="radio" id="Annually" value="annually" name="hoa_dues_per">
-																<label for="Annually">Annually</label>
-															</li>
-														</ul>
-														<label id="hoa_dues_per-error" class="error text-danger" for="hoa_dues_per"></label>
-													</div>
-												</div>
-											</div>
-											<div class="form-group mb-3">
-												<label for="" class="mb-2">Notes:</label>
-												<input type="text" class="form-control" id="hoa_notes" name="hoa_notes" data-error="#hoa_notes-error">
-												<label id="hoa_notes-error" class="error text-danger" for="hoa_notes"></label>
-											</div>
-											
-
-											<div class="form-group mb-4">
-												<label for="" class="mb-2"><b>Does the property have a 2nd Home Owner's
-														Association? <span>*</span></b></label>
-												<ul class="list-inline">
-													<li class="list-inline-item me-md-5">
-														<input type="radio" id="yesHOA2" value="yes" name="is_property_second_hoa" data-error="#is_property_second_hoa-error">
-														<label for="yesHOA2">Yes</label>
-													</li>
-													<li class="list-inline-item">
-														<input type="radio" id="noHOA2" value="no" name="is_property_second_hoa">
-														<label for="noHOA2">No</label>
-													</li>
-												</ul>
-												<label id="is_property_second_hoa-error" class="error text-danger" for="is_property_second_hoa"></label>
-											</div>
-
-											<div class="homeOwner2 d-none">
-												<h3 class="mb-4 text-center"><b>2nd Homeowners Association Management Information:</b></h3>
-												<div class="row">
-													<div class="col-md-6 mb-3">
-														<div class="form-group">
-															<label for="" class="mb-2">Name of 2nd Management Company:</label>
-															<input type="text" class="form-control" id="second_hoa_management_company_name" name="second_hoa_management_company_name" data-error="#second_hoa_management_company_name-error">
-														</div>
-														<label id="second_hoa_management_company_name-error" class="error text-danger" for="second_hoa_management_company_name"></label>
-													</div>
-													<div class="col-md-6 mb-3">
-														<div class="form-group">
-															<label for="" class="mb-2">Contact Person:</label>
-															<input type="text" class="form-control" id="second_hoa_contact_person" name="second_hoa_contact_person" data-error="#second_hoa_contact_person-error">
-														</div>
-														<label id="second_hoa_contact_person-error" class="error text-danger" for="second_hoa_contact_person"></label>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-md-6 mb-3">
-														<div class="form-group position-relative">
-															<label for="" class="mb-2">Email:</label>
-															<input type="text" class="form-control" id="second_hoa_email" name="second_hoa_email" data-error="#second_hoa_email-error">
-															<small class="small_label">example@example.com</small>
-														</div>
-														<label id="second_hoa_email-error" class="error text-danger error2" for="second_hoa_email"></label>
-													</div>
-													<div class="col-md-6 mb-3">
-														<div class="form-group">
-															<label for="" class="mb-2">Phone:</label>
-															<input type="text" class="form-control" id="second_hoa_phone" name="second_hoa_phone" data-error="#second_hoa_phone-error">
-														</div>
-														<label id="second_hoa_phone-error" class="error text-danger" for="second_hoa_phone"></label>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-md-6 mb-3">
-														<div class="form-group">
-															<label for="" class="mb-2">2nd HOA Dues:</label>
-															<input type="text" class="form-control" id="second_hoa_dues" name="second_hoa_dues" data-error="#second_hoa_dues-error">
-														</div>
-														<label id="second_hoa_dues-error" class="error text-danger" for="second_hoa_dues"></label>
-													</div>
-													<div class="col-md-6 mb-3">
-														<div class="form-group">
-															<label for="" class="mb-2">Dues Per</label>
-															<ul class="list-unstyled">
-																<li>
-																	<input type="radio" id="month" name="second_hoa_dues_per" value="month" data-error="#second_hoa_dues_per-error">
-																	<label for="month">Month</label>
-																</li>
-																<li>
-																	<input type="radio" id="Quarter" name="second_hoa_dues_per" value="quarter">
-																	<label for="Quarter">Quarter</label>
-																</li>
-																<li>
-																	<input type="radio" id="Semi-Annually" name="second_hoa_dues_per" value="semi-annually">
-																	<label for="Semi-Annually">Semi-Annually</label>
-																</li>
-																<li>
-																	<input type="radio" id="Annually" name="second_hoa_dues_per" value="annually">
-																	<label for="Annually">Annually</label>
-																</li>
-															</ul>
-															<label id="second_hoa_dues_per-error" class="error text-danger" for="second_hoa_dues_per"></label>
-														</div>
-													</div>
-												</div>
-												<div class="form-group mb-3">
-													<label for="" class="mb-2">2nd Notes:</label>
-													<input type="text" class="form-control" id="second_hoa_notes" name="second_hoa_notes" data-error="#second_hoa_notes-error">
-													<label id="second_hoa_notes-error" class="error text-danger" for="second_hoa_notes"></label>
-												</div>
-												
-											</div>
-
-										</div>
-
-										<div class="border p-3">
-											* OUR STATE LAW PROHIBITS THE DISBURSEMENT OF CLOSING FUNDS PRIOR TO THE
-											RECORDING OF THE DEED AND BUYER’S DEED OF TRUST. TITLE COMPANY NAME MAKES
-											EVERY EFFORT TO EXPEDITE CLOSING AND RECORDING. PARTIES WILL BE NOTIFIED
-											WHEN CLOSING DISBURSEMENTS ARE AVAILABLE. PARTIES WHO REQUEST FUNDS TO BE
-											WIRED WILL INCUR A $25.00 WIRE FEE, WHICH IS DEDUCTED FROM WIRED FUNDS, AND
-											MUST PROVIDE TITLE COMPANY NAME A VOIDED CHECK BEARING THE NAMES OF ALL
-											PARTIES ENTITLED TO THE FUNDS, THE ACCOUNT NUMBER, AND BANK ROUTING NUMBER.
-										</div>
-
-
-									</div>
-								</div>
-							</div>
-							<div class="accordion-item">
-								<h2 class="accordion-header" id="headingTen">
-									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-										data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
-										(9) Seller Closing Day??
-									</button>
-								</h2>
-								<div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen"
-									data-bs-parent="#accordionExample">
-									<div class="accordion-body">
-										<p class="mb-4">Please have the following information and tangible items ready
-											for the day of closing.</p>
-
-										<ul>
-											<li>
-												<b>Non-Expired Photo Identification</b>
-												<ul>
-													<li>
-														Please make sure you have a valid form of photo identification
-														whether it is a driver’s license, passport or government issued
-														identification. If any form of Identification that you choose is
-														expired, you will not be able to sign your closing documents and
-														it will result in a delay in closing. Additionally, we can not
-														accept temporary drivers licenses.
-													</li>
-												</ul>
-											</li>
-											<li>
-												<b>
-													Wiring Instructions
-												</b>
-												<ul>
-													<li>
-														Please bring your wiring instructions (i.e. void check) or
-														mailing address (cannot be a P.O. Box) for proceeds to closing.
-													</li>
-												</ul>
-											</li>
-											<li>
-												<b>
-													Spousal Attendance
-												</b>
-												<ul>
-													<li>
-														Spouse must attend closing, whether they are listed on the deed
-														or not.
-													</li>
-												</ul>
-											</li>
-											<li>
-												<b>
-													Proceeds
-												</b>
-												<ul>
-													<li>
-														Proceeds will <b>NOT</b> be disbursed at the table.
-													</li>
-												</ul>
-											</li>
-										</ul>
-
-										<img src="<?php echo base_url();?>assets/frontend/images/buyer-seller-package/sold.jpg"
-											class="img-fluid d-block mx-auto my-5" alt="">
-
-
-
-										<div class="form-group mb-2 d-flex">
-											<input type="checkbox" id="readAgree" name="readAgree" class="me-2 mt-1" required data-error="#readAgree-error">
-											<label for="readAgree" class="mb-2">I/We have read and agree to
-												<span>*</span></label>
-										</div>
-										<label id="readAgree-error" class="error text-danger error2" for="readAgree"></label>
-										<div class="border p-3">
-											the above requirements for Closing Day.
-										</div>
-
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<p class="my-4">
+                                <h2 class="accordion-header" id="heading23">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+                                       (9) Wire Instructions
+                                    </button>
+                                </h2>
+                                <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="page">
+                                            <h2 class="text-center my-4"><strong>WIRING INFORMATION</strong></h2>
+                                            
+                                            <div class="date_escrow_num">
+                                                <span>ESCROW NO.:</span>10257432-GLE-MP<br>
+                                                <span>TITLE NO.:</span>10257432-GLT-<br><br>
+                                                <span>TO:</span>
+                                                <b>
+                                                    Pacific Coast Title Company<br>
+                                                    516 Burchett St.<br>
+                                                    Glendale, CA  91203	
+                                                </b><br><br>
+                                                <span>BANK:</span>
+                                                <b class="text_black">
+                                                    Nano Banc, 7700 Irvine Center Drive, Suite 700, Irvine, CA  92618
+                                                </b><br><br>
+                                                <span>ROUTING NO:</span>
+                                                <b class="text_black">
+                                                    122245251
+                                                </b><br><br>
+                                                <span>ACCOUNT NO:</span>
+                                                <b class="text_black">
+                                                    Credit to <b class="text_red">Pacific Coast Title Company</b> in trust for <b class="text_red">MORDECHAI CITRONENBAUM</b><br> account number 6100100846
+                                                </b><br><br>
+                                               <b class="text_black"> PLEASE REFER TO OUR ESCROW NO. <b class="text_red">10257432-GLE-MP</b> </b>
+                                            </div>
+                                            <h5 class="text-underline text-center my-5 f600">
+                                                WIRED FUNDS are preferred, as the funds are immediately posted and available.
+                                            </h5>
+                                            <p>
+                                                ANY CASHIER CHECKS should be made payable to <span class="text_red">Pacific Coast Title Company</span>, reference the escrow number noted above. Funds received by Cashier’s Checks require overnight clearing prior to any close of escrow.
+                                            </p>
+                                            <p>
+                                                Personal checks require bank clearance and your proof from your bank of your paid check.
+                                            </p>
+                                    
+                                            <p>
+                                                Delays in closing are likely if these guidelines are not followed. <span class="text_red">Pacific Coast Title Company</span> does not accept any responsibility for these delays to your closing.
+                                            </p>
+                                    
+                                            <p>
+                                                Please Note:  Our office does not accept ACH transfers. These instructions are for the purpose of sending wire transfers only.
+                                            </p>
+                                            
+                                            <div class="notice_box">
+                                                <p class="mt-0 text-center f600">
+                                                    NOTE THE FOLLOWING IS <span class="text-underline">NOT ACCEPTABLE</span> AND CAN <i class="f600">SIGNIFICANTLY DELAY YOUR CLOSING:</i>
+                                                </p>
+                                                <p>
+                                                    OFFICIAL CHECKS &amp; CERTIFIED CHECKS - are not a Cashier’s Check and are subject to a waiting period of 3-7 days and verification of cleared funds.
+                                                </p>
+                                                <p>
+                                                    ON-LINE TRANSFERS OR ACH CREDITS- these can be recalled by the sender and therefore are not acceptable as they do not meet existing government guidelines of “Good Funds”. Your bank may offer this option at a lower cost, DO NOT ACCEPT! 
+                                                </p>
+                                                <p class="mb-0">
+                                                    DIRECT DEPOSIT- This could cause a significant delay in your closing.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+							</div> 
+                        </div>
+                        <p class="my-4">
 							Signing below indicates that the information included here is correct and complete to the
 							best of my knowledge and ackowledges and accepts the information included in this document
 						</p>
@@ -1840,12 +2292,11 @@
 							Company.
 						</h4>
 						<div class="text-center"><button type="submit" class="btn btn-primary">Submit</button></div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</section>
-
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 	<script src="<?php echo base_url();?>assets/frontend/js/order/jquery.min.js"></script>
     <script src="<?php echo base_url();?>assets/frontend/js/jquery.validate.min.js"></script>
 	<script src="<?php echo base_url();?>assets/frontend/js/order/bootstrap.bundle.min.js"></script>

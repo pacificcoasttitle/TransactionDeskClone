@@ -1595,79 +1595,73 @@
 								<h2 class="accordion-header" id="headingTen">
 									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
 										data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
-										(9) Seller Closing Day??
+										(9) Wire Instructions
 									</button>
 								</h2>
-								<div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen"
-									data-bs-parent="#accordionExample">
-									<div class="accordion-body">
-										<p class="mb-4">Please have the following information and tangible items ready
-											for the day of closing.</p>
-
-										<ul>
-											<li>
-												<b>Non-Expired Photo Identification</b>
-												<ul>
-													<li>
-														Please make sure you have a valid form of photo identification
-														whether it is a driver’s license, passport or government issued
-														identification. If any form of Identification that you choose is
-														expired, you will not be able to sign your closing documents and
-														it will result in a delay in closing. Additionally, we can not
-														accept temporary drivers licenses.
-													</li>
-												</ul>
-											</li>
-											<li>
-												<b>
-													Wiring Instructions
-												</b>
-												<ul>
-													<li>
-														Please bring your wiring instructions (i.e. void check) or
-														mailing address (cannot be a P.O. Box) for proceeds to closing.
-													</li>
-												</ul>
-											</li>
-											<li>
-												<b>
-													Spousal Attendance
-												</b>
-												<ul>
-													<li>
-														Spouse must attend closing, whether they are listed on the deed
-														or not.
-													</li>
-												</ul>
-											</li>
-											<li>
-												<b>
-													Proceeds
-												</b>
-												<ul>
-													<li>
-														Proceeds will <b>NOT</b> be disbursed at the table.
-													</li>
-												</ul>
-											</li>
-										</ul>
-
-										<img src="<?php echo base_url();?>assets/frontend/images/buyer-seller-package/sold.jpg"
-											class="img-fluid d-block mx-auto my-5" alt="">
-
-
-
-										<div class="form-group mb-2 d-flex">
-                                            &nbsp;<input type="checkbox" style="font-size: 18pt" id="readAgree" name="readAgree" class="me-2 mt-1" checked="checked">
-											&nbsp;&nbsp;<label for="readAgree" class="mb-2">I/We have read and agree to
-												<span>*</span></label>
-										</div>
-										<div class="border p-3">
-											the above requirements for Closing Day.
-										</div>
-
-									</div>
-								</div>
+								<div id="collapseTen" class="accordion-collapse collapse show" aria-labelledby="headingTen" data-bs-parent="#accordionExample" style="">
+                                    <div class="accordion-body">
+                                        <div class="page">
+                                            <h2 class="text-center my-4"><strong>WIRING INFORMATION</strong></h2>
+                                            
+                                            <div class="date_escrow_num">
+                                                <span>ESCROW NO.:</span>10257432-GLE-MP<br>
+                                                <span>TITLE NO.:</span>10257432-GLT-<br><br>
+                                                <span>TO:</span>
+                                                <b>
+                                                    Pacific Coast Title Company<br>
+                                                    516 Burchett St.<br>
+                                                    Glendale, CA  91203	
+                                                </b><br><br>
+                                                <span>BANK:</span>
+                                                <b class="text_black">
+                                                    Nano Banc, 7700 Irvine Center Drive, Suite 700, Irvine, CA  92618
+                                                </b><br><br>
+                                                <span>ROUTING NO:</span>
+                                                <b class="text_black">
+                                                    122245251
+                                                </b><br><br>
+                                                <span>ACCOUNT NO:</span>
+                                                <b class="text_black">
+                                                    Credit to <b class="text_red">Pacific Coast Title Company</b> in trust for <b class="text_red">MORDECHAI CITRONENBAUM</b><br> account number 6100100846
+                                                </b><br><br>
+                                               <b class="text_black"> PLEASE REFER TO OUR ESCROW NO. <b class="text_red">10257432-GLE-MP</b> </b>
+                                            </div>
+                                            <h5 class="text-underline text-center my-5 f600">
+                                                WIRED FUNDS are preferred, as the funds are immediately posted and available.
+                                            </h5>
+                                            <p>
+                                                ANY CASHIER CHECKS should be made payable to <span class="text_red">Pacific Coast Title Company</span>, reference the escrow number noted above. Funds received by Cashier’s Checks require overnight clearing prior to any close of escrow.
+                                            </p>
+                                            <p>
+                                                Personal checks require bank clearance and your proof from your bank of your paid check.
+                                            </p>
+                                    
+                                            <p>
+                                                Delays in closing are likely if these guidelines are not followed. <span class="text_red">Pacific Coast Title Company</span> does not accept any responsibility for these delays to your closing.
+                                            </p>
+                                    
+                                            <p>
+                                                Please Note:  Our office does not accept ACH transfers. These instructions are for the purpose of sending wire transfers only.
+                                            </p>
+                                            
+                                            <div class="notice_box">
+                                                <p class="mt-0 text-center f600">
+                                                    NOTE THE FOLLOWING IS <span class="text-underline">NOT ACCEPTABLE</span> AND CAN <i class="f600">SIGNIFICANTLY DELAY YOUR CLOSING:</i>
+                                                </p>
+                                                <p>
+                                                    OFFICIAL CHECKS &amp; CERTIFIED CHECKS - are not a Cashier’s Check and are subject to a waiting period of 3-7 days and verification of cleared funds.
+                                                </p>
+                                                <p>
+                                                    ON-LINE TRANSFERS OR ACH CREDITS- these can be recalled by the sender and therefore are not acceptable as they do not meet existing government guidelines of “Good Funds”. Your bank may offer this option at a lower cost, DO NOT ACCEPT! 
+                                                </p>
+                                                <p class="mb-0">
+                                                    DIRECT DEPOSIT- This could cause a significant delay in your closing.
+                                                </p>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+                                </div>
 							</div>
 						</div>
 
