@@ -168,7 +168,6 @@
 							<div class="mr-5"><?php echo $expiredPasswordCount.' Password expired'; ?>
 							<button type="button" class="btn btn-danger text-right float-right" onclick="refreshExipredPasswords();"><i class="fas fa-refresh"></i></button>
 							</div>
-							<!-- <div class="text-right pull-right"></div> -->
 						</div>
 
 						<a class="card-footer clearfix small z-1 bg-danger text-white" href="<?php echo base_url('order/admin/incorrect-users'); ?>">
