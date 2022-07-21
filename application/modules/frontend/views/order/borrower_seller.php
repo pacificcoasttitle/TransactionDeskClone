@@ -500,12 +500,12 @@
                                             <div class="col-md-8">
                                                 <div class="mt-5">
                                                     Date :    
-                                                    <input type="text" class="input_single" id="date" name="date" required="required">
+                                                    <input type="text" class="input_single" id="date" name="date">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="mt-5">
-                                                    <input type="text" class="input_single d-block w-full" id="escrow_signature" name="escrow_signature" required="required">
+                                                    <input type="text" class="input_single d-block w-full" id="escrow_signature" name="escrow_signature">
                                                     Luz Amparo Rockey
                                                 </div>
                                             </div>
