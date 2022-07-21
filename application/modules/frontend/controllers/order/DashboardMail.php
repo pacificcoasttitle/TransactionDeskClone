@@ -2185,8 +2185,7 @@ class DashboardMail extends MX_Controller {
             $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
             $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
             $resDocuments = json_decode($resultDocuments, true);
-            //echo "<pre>";
-            //print_r($resDocuments);exit;
+            
             if (!empty($resDocuments['Documents'])) {
                 foreach ($resDocuments['Documents'] as $document) {
                     if ($document['DocumentType']['DocumentTypeID'] == 1015) {
