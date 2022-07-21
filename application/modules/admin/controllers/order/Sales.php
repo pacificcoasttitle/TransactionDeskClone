@@ -179,6 +179,7 @@ class Sales extends MX_Controller {
                         'is_password_updated' => 1,
                         'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
 						'commission_draw_value' => $this->input->post('commission_draw') ? $this->input->post('commission_draw') : 0,
+						'first_in_threshold' => $this->input->post('commission_first_threshold') ? $this->input->post('commission_first_threshold') : 0,
 						
                     );
 
@@ -190,7 +191,6 @@ class Sales extends MX_Controller {
 						if($this->common->if_super_admin()) {
 							$this->load->model('order/underwriter_user_model');
 							$this->load->model('order/underwriter_user_threshold_model');
-							$call_procedure = FALSE;
 
 							$commission_array = $this->input->post('commission');
 							foreach($commission_array as $product_key=>$product_type_array) {
@@ -208,7 +208,6 @@ class Sales extends MX_Controller {
 												];
 		
 												$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
-												$call_procedure = TRUE;
 											}
 										}
 										elseif($product_underwriter_tier['type'] == 'override') {
@@ -238,7 +237,6 @@ class Sales extends MX_Controller {
 													];
 		
 													$this->underwriter_user_threshold_model->insert($underwriter_threshold_data);
-													$call_procedure = TRUE;
 												}
 											}
 										}
@@ -259,7 +257,6 @@ class Sales extends MX_Controller {
 									];
 
 									$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
-									$call_procedure = TRUE;
 								}
 							}
 							elseif($escrow_commission_type == 'override') {
@@ -289,16 +286,25 @@ class Sales extends MX_Controller {
 										];
 
 										$this->underwriter_user_threshold_model->insert($underwriter_threshold_data);
-										$call_procedure = TRUE;
 									}
 								}
 							}
 
 							//Escrow commission
-							if($call_procedure) {
-								$stored_pocedure = "CALL calculate_commission(?)";
-								$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$insert));
+
+							//Sales rep Override commission
+							if($this->input->post('commission_sales_rep_override_id') > 0 && $this->input->post('commission_sales_rep_override_val') > 0 ) {
+								$this->load->model('order/sales_rep_commission_override_model');
+								$commission_override = [
+									'user_id'=>$insert,
+									'override_user_id'=>$this->input->post('commission_sales_rep_override_id'),
+									'commission'=>$this->input->post('commission_sales_rep_override_val')
+								];
+
+								$this->sales_rep_commission_override_model->insert($commission_override);
 							}
+							//Sales rep Override commission
+
 						}
 							$flash_data['success'] = 'Sales Rep added successfully.';
 							$this->session->set_flashdata($flash_data);
@@ -364,7 +370,9 @@ class Sales extends MX_Controller {
             $sales_rep_info = $this->sales_model->getSalesRep($con);
 
 			$this->load->model('order/underwriter_user_model');
+			$this->load->model('order/sales_rep_commission_override_model');
 			$existing_underwriter = $this->underwriter_user_model->with('underwriter_user_threshold_obj')->get_many_by('user_id',$id);
+			$existing_commission_override = $this->sales_rep_commission_override_model->get_by('user_id',$id);
 
             if (isset($_POST) && !empty($_POST)) {
 
@@ -465,6 +473,7 @@ class Sales extends MX_Controller {
                             'is_password_updated' => 1,
                             'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
 							'commission_draw_value' => $this->input->post('commission_draw') ? $this->input->post('commission_draw') : 0,
+							'first_in_threshold' => $this->input->post('commission_first_threshold') ? $this->input->post('commission_first_threshold') : 0,
 							
                         );
 						// var_dump($salesRepData);die;
@@ -481,10 +490,7 @@ class Sales extends MX_Controller {
 	
 								//$existing_underwriter;
 	
-								$call_procedure = FALSE;
-								if($sales_rep_info['commission_draw_value'] != $salesRepData['commission_draw_value']) {
-									$call_procedure = TRUE;
-								}
+								
 								
 								$existing_underwriter_array = array();
 								$existing_escrow = array();
@@ -508,7 +514,7 @@ class Sales extends MX_Controller {
 											if($product_underwriter_tier['type'] == 'global') {
 												if($existing_underwriter_val) {
 													$this->underwriter_user_model->delete($existing_underwriter_val->id);
-													$call_procedure = TRUE;
+													
 												}
 											}
 											elseif($product_underwriter_tier['type'] == 'fix') {
@@ -522,9 +528,7 @@ class Sales extends MX_Controller {
 															'allow_threshold'=>0,
 														];
 														$this->underwriter_user_model->update($underwriter_user_id,$underwriter_data);
-														if($existing_underwriter_val->fix_commission != $fix_commission || $existing_underwriter_val->allow_threshold != 0) {
-															$call_procedure = TRUE;
-														}
+														
 	
 													}
 													else {
@@ -536,7 +540,7 @@ class Sales extends MX_Controller {
 														];
 			
 														$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
-														$call_procedure = TRUE;
+														
 													}
 												}
 											}
@@ -581,7 +585,7 @@ class Sales extends MX_Controller {
 													}
 												}
 	
-												$call_procedure = TRUE;
+	
 	
 	
 											}
@@ -600,7 +604,6 @@ class Sales extends MX_Controller {
 								if($escrow_commission_array['type'] == 'global') {
 									if($existing_underwriter_val) {
 										$this->underwriter_user_model->delete($existing_underwriter_val->id);
-										$call_procedure = TRUE;
 									}
 								}
 								elseif($escrow_commission_array['type'] == 'fix') {
@@ -613,9 +616,7 @@ class Sales extends MX_Controller {
 												'allow_threshold'=>0,
 											];
 											$this->underwriter_user_model->update($underwriter_user_id,$underwriter_data);
-											if($existing_underwriter_val->fix_commission != $fix_commission || $existing_underwriter_val->allow_threshold != 0) {
-												$call_procedure = TRUE;
-											}
+											
 
 										}
 										else {
@@ -627,7 +628,6 @@ class Sales extends MX_Controller {
 											];
 
 											$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
-											$call_procedure = TRUE;
 										}
 									}
 								}
@@ -671,16 +671,54 @@ class Sales extends MX_Controller {
 										}
 									}
 
-									$call_procedure = TRUE;
-
 
 								}
 								//Escrow commission
+								//Sales rep Override commission
+								if($this->input->post('commission_sales_rep_override_id') > 0 && $this->input->post('commission_sales_rep_override_val') > 0 ) {
+									if($existing_commission_override && count($existing_commission_override)) {
+										//Update
+										$commission_override = [
+											'override_user_id'=>$this->input->post('commission_sales_rep_override_id'),
+											'commission'=>$this->input->post('commission_sales_rep_override_val')
+										];
+										$this->sales_rep_commission_override_model->update($existing_commission_override->id,$commission_override);
+										$stored_pocedure = "CALL calculate_commission(?)";
+										$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$existing_commission_override->override_user_id));
+										if($existing_commission_override->override_user_id != $this->input->post('commission_sales_rep_override_id')) {
+											$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$this->input->post('commission_sales_rep_override_id')));
+										}
+
+									}
+									else {
+
+										$commission_override = [
+											'user_id'=>$id,
+											'override_user_id'=>$this->input->post('commission_sales_rep_override_id'),
+											'commission'=>$this->input->post('commission_sales_rep_override_val')
+										];
 	
-								if($call_procedure) {
-									$stored_pocedure = "CALL calculate_commission(?)";
-									$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$id));
+										$this->sales_rep_commission_override_model->insert($commission_override);
+										$stored_pocedure = "CALL calculate_commission(?)";
+										$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$this->input->post('commission_sales_rep_override_id')));
+										
+									}
+									
 								}
+								elseif($existing_commission_override && count($existing_commission_override)) {
+									$this->sales_rep_commission_override_model->delete($existing_commission_override->id);
+									$stored_pocedure = "CALL calculate_commission(?)";
+									$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$existing_commission_override->override_user_id));
+								}
+								//Sales rep Override commission
+
+
+								
+	
+								
+								$stored_pocedure = "CALL calculate_commission(?)";
+								$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$id));
+								
 								
 							}
 
@@ -747,6 +785,13 @@ class Sales extends MX_Controller {
 			}
 		}
 		$data['is_super_admin'] =$this->common->if_super_admin();
+		$data['commission_sales_rep_override_id']="";
+		$data['commission_sales_rep_override_val']=0;
+
+		if($existing_commission_override && count($existing_commission_override)) {
+			$data['commission_sales_rep_override_id']=$existing_commission_override->override_user_id;
+			$data['commission_sales_rep_override_val']=$existing_commission_override->commission;
+		}
 
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/sales/edit_sales_rep', $data);
