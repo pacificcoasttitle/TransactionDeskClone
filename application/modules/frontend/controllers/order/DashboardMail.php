@@ -2164,6 +2164,7 @@ class DashboardMail extends MX_Controller {
             $orderDetails['second_seller_last_name'] = '' ;
         }
         $data['orderDetails'] = $orderDetails;
+        
 
         $errors = array();
         $data['errors'] = array();
@@ -2180,11 +2181,12 @@ class DashboardMail extends MX_Controller {
         if (empty($order[0]['escrow_instruction_document'])) {
             $user_data['admin_api'] = 1; 
             $endPoint = 'files/'. $order[0]['file_id'] .'/documents';
-            $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+            $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
             $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
-            $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $orderDetails['order_id'], $logid);
+            $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
             $resDocuments = json_decode($resultDocuments, true);
-        
+            //echo "<pre>";
+            //print_r($resDocuments);exit;
             if (!empty($resDocuments['Documents'])) {
                 foreach ($resDocuments['Documents'] as $document) {
                     if ($document['DocumentType']['DocumentTypeID'] == 1015) {
@@ -2195,9 +2197,9 @@ class DashboardMail extends MX_Controller {
                         }
                         
                         $endPoint = 'documents/'.$document['DocumentID'].'?format=json';
-                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
                         $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
-                        $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $orderDetails['order_id'], $logid);
+                        $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order[0]['id'], $logid);
                         $resDocument = json_decode($resultDocument, true);
 
                         if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
@@ -2225,19 +2227,19 @@ class DashboardMail extends MX_Controller {
             $sellerOwnerEscrowInfoData = array(
                 'order_id' => $this->input->post('order_id'),
                 'seller_name' => $this->input->post('seller_name') ? $this->input->post('seller_name') : null,
-                'home_phone_number' => $this->input->post('home_phone_number') ? $this->input->post('home_phone_number') : null,
+                'escrow_home_phone_number' => $this->input->post('escrow_home_phone_number') ? $this->input->post('escrow_home_phone_number') : null,
                 'work_phone_number' => $this->input->post('work_phone_number') ? $this->input->post('work_phone_number') : null,
                 'fax_number' => $this->input->post('fax_number') ? $this->input->post('fax_number') : null,
                 'cell_phone_number' => $this->input->post('cell_phone_number') ? $this->input->post('cell_phone_number') : null,
                 'email_address' => $this->input->post('email_address') ? $this->input->post('email_address') : null,
                 'cell_phone_number_2' => $this->input->post('cell_phone_number_2') ? $this->input->post('cell_phone_number_2') : null,
-                'ssn' => $this->input->post('ssn') ? $this->input->post('ssn') : null,
+                'escrow_ssn' => $this->input->post('escrow_ssn') ? $this->input->post('escrow_ssn') : null,
                 'ssn_2' => $this->input->post('ssn_2') ? $this->input->post('ssn_2') : null,
                 'property_address' => $this->input->post('property_address') ? $this->input->post('property_address') : null,
                 'seller_current_mailing_address' => $this->input->post('seller_current_mailing_address') ? $this->input->post('seller_current_mailing_address') : null,
                 'seller_mailing_address_after_close_escrow' => $this->input->post('seller_mailing_address_after_close_escrow') ? $this->input->post('seller_mailing_address_after_close_escrow') : null,
                 'seller_mailing_address_after_close_escrow_2' => $this->input->post('seller_mailing_address_after_close_escrow_2') ? $this->input->post('seller_mailing_address_after_close_escrow_2') : null,
-                'first_trust_deed_lender' => $this->input->post('first_trust_deed_lender') ? implode(',', $this->input->post('first_trust_deed_lender')) : null,
+                'first_trust_deed_lender' => $this->input->post('first_trust_deed_lender') ? $this->input->post('first_trust_deed_lender') : null,
                 'lender_address' => $this->input->post('lender_address') ? $this->input->post('lender_address') : null,
                 'loan_number' => $this->input->post('loan_number') ? $this->input->post('loan_number') : null,
                 'lender_phone_number' => $this->input->post('lender_phone_number') ? $this->input->post('lender_phone_number') : null,
@@ -2251,7 +2253,7 @@ class DashboardMail extends MX_Controller {
                 'paid' => $this->input->post('paid') ? $this->input->post('paid') : null,
                 'unpaid' => $this->input->post('unpaid') ? $this->input->post('unpaid') : null,
                 'is_impound_acc' => $this->input->post('is_impound_acc') ? $this->input->post('is_impound_acc') : null,
-                'second_trust_deed_lender' => $this->input->post('second_trust_deed_lender') ? implode(',', $this->input->post('second_trust_deed_lender')) : null,
+                'second_trust_deed_lender' => $this->input->post('second_trust_deed_lender') ? $this->input->post('second_trust_deed_lender') : null,
                 'second_lender_address' => $this->input->post('second_lender_address') ? $this->input->post('second_lender_address') : null,
                 'second_loan_number' => $this->input->post('second_loan_number') ? $this->input->post('second_loan_number') : null,
                 'second_lender_phone_number' => $this->input->post('second_lender_phone_number') ? $this->input->post('second_lender_phone_number') : null,
@@ -2278,9 +2280,9 @@ class DashboardMail extends MX_Controller {
                 'water_next_due' => $this->input->post('water_next_due') ? $this->input->post('water_next_due') : null,
                 'no_of_shares' => $this->input->post('no_of_shares') ? $this->input->post('no_of_shares') : null,
                 'date' => $this->input->post('date') ? $this->input->post('date') : null,
-                'signature' => $this->input->post('signature') ? $this->input->post('signature') : null,
+                'escrow_signature' => $this->input->post('escrow_signature') ? $this->input->post('escrow_signature') : null,
             );
-            $this->home_model->insert($sellerOwnerEscrowInfoData, 'pct_order_borrower_owner_escrow_info');
+            $this->home_model->insert($sellerOwnerEscrowInfoData, 'pct_order_borrower_seller_owner_escrow_info');
 
             $sellerStatementInfoData = array(
                 'order_id' => $this->input->post('order_id'),
@@ -2361,13 +2363,12 @@ class DashboardMail extends MX_Controller {
             );
             $this->home_model->insert($sellerStatementInfoData, 'pct_order_borrower_seller_statement_of_info'); 
 
-        
-            $seller593CData = array(
+            $seller593CPart1Data = array(
                 'order_id' => $this->input->post('order_id'),
                 'is_amended' => $this->input->post('is_amended') ? $this->input->post('is_amended') : null,
-                'remitter_info' => $this->input->post('remitter_info') ? $this->input->post('remitter_info') : null,
+                'remitter_info' => $this->input->post('remitter_info') ? implode(',', $this->input->post('remitter_info')) : null,
                 'business_name' => $this->input->post('business_name') ? $this->input->post('business_name') : null,
-                'business_num' => $this->input->post('business_num') ? $this->input->post('business_num') : null,
+                'business_num' => $this->input->post('business_num') ? implode(',', $this->input->post('business_num')) : null,
                 'remitter_first_name' => $this->input->post('remitter_first_name') ? $this->input->post('remitter_first_name') : null,
                 'remitter_initial_name' => $this->input->post('remitter_initial_name') ? $this->input->post('remitter_initial_name') : null,
                 'remitter_last_name' => $this->input->post('remitter_last_name') ? $this->input->post('remitter_last_name') : null,
@@ -2377,7 +2378,7 @@ class DashboardMail extends MX_Controller {
                 'remitter_state' => $this->input->post('remitter_state') ? $this->input->post('remitter_state') : null,
                 'remitter_zip_code' => $this->input->post('remitter_zip_code') ? $this->input->post('remitter_zip_code') : null,
                 'remitter_telephone_num' => $this->input->post('remitter_telephone_num') ? $this->input->post('remitter_telephone_num') : null,
-                'trust_types' => $this->input->post('trust_types') ? $this->input->post('trust_types') : null,
+                'trust_types' => $this->input->post('trust_types') ? implode(',', $this->input->post('trust_types')) : null,
                 'transferor_first_name' => $this->input->post('transferor_first_name') ? $this->input->post('transferor_first_name') : null,
                 'transferor_initial_name' => $this->input->post('transferor_initial_name') ? $this->input->post('transferor_initial_name') : null,
                 'transferor_last_name' => $this->input->post('transferor_last_name') ? $this->input->post('transferor_last_name') : null,
@@ -2387,7 +2388,7 @@ class DashboardMail extends MX_Controller {
                 'transferor_spouse_last_name' => $this->input->post('transferor_spouse_last_name') ? $this->input->post('transferor_spouse_last_name') : null,
                 'transferor_spouse_ssn_or_itin' => $this->input->post('transferor_spouse_ssn_or_itin') ? $this->input->post('transferor_spouse_ssn_or_itin') : null,
                 'nongrantor_trust_name' => $this->input->post('nongrantor_trust_name') ? $this->input->post('nongrantor_trust_name') : null,
-                'transferor_business_num' => $this->input->post('transferor_business_num') ? $this->input->post('transferor_business_num') : null,
+                'transferor_business_num' => $this->input->post('transferor_business_num') ? implode(',', $this->input->post('transferor_business_num')) : null,
                 'transferor_address' => $this->input->post('transferor_address') ? $this->input->post('transferor_address') : null,
                 'transferor_city' => $this->input->post('transferor_city') ? $this->input->post('transferor_city') : null,
                 'transferor_state' => $this->input->post('transferor_state') ? $this->input->post('transferor_state') : null,
@@ -2395,7 +2396,7 @@ class DashboardMail extends MX_Controller {
                 'transferor_telephone_number' => $this->input->post('transferor_telephone_number') ? $this->input->post('transferor_telephone_number') : null,
                 'transferor_property_address' => $this->input->post('transferor_property_address') ? $this->input->post('transferor_property_address') : null,
                 'ownership_percentage' => $this->input->post('ownership_percentage') ? $this->input->post('ownership_percentage') : null,
-                'certifications' => $this->input->post('certifications') ? $this->input->post('certifications') : null,
+                'certifications' => $this->input->post('certifications') ? implode(',', $this->input->post('certifications')) : null,
                 'remitter_name' => $this->input->post('remitter_name') ? $this->input->post('remitter_name') : null,
                 'remitter_ssn_fein' => $this->input->post('remitter_ssn_fein') ? $this->input->post('remitter_ssn_fein') : null,
                 'transferee_first_name' => $this->input->post('transferee_first_name') ? $this->input->post('transferee_first_name') : null,
@@ -2404,12 +2405,14 @@ class DashboardMail extends MX_Controller {
                 'transferee_ssn_or_itin' => $this->input->post('transferee_ssn_or_itin') ? $this->input->post('transferee_ssn_or_itin') : null,
                 'transferee_spouse_first_name' => $this->input->post('transferee_spouse_first_name') ? $this->input->post('transferee_spouse_first_name') : null,
                 'transferee_spouse_initial_name' => $this->input->post('transferee_spouse_initial_name') ? $this->input->post('transferee_spouse_initial_name') : null,
-                'transferee_spouse_last_name' => $this->input->post('transferee_spouse_last_name') ? $this->input->post('transferee_spouse_last_name') : null,
+                'transferee_spouse_last_name' => $this->input->post('transferee_spouse_last_name') ? $this->input->post('transferee_spouse_last_name') : null
+            );
+            $this->home_model->insert($seller593CPart1Data, 'pct_order_borrower_seller_593_c_form_part_1');
+
+            $seller593CPart2Data = array(
                 'transferee_spouse_ssn_or_itin' => $this->input->post('transferee_spouse_ssn_or_itin') ? $this->input->post('transferee_spouse_ssn_or_itin') : null,
-                'residence_city' => $this->input->post('residence_city') ? $this->input->post('residence_city') : null,
-                'residence_from_date_to_date' => $this->input->post('residence_from_date_to_date') ? $this->input->post('residence_from_date_to_date') : null,
                 'transferee_nongrantor_trust_name' => $this->input->post('transferee_nongrantor_trust_name') ? $this->input->post('transferee_nongrantor_trust_name') : null,
-                'transferee_business_num' => $this->input->post('transferee_business_num') ? $this->input->post('transferee_business_num') : null,
+                'transferee_business_num' => $this->input->post('transferee_business_num') ? implode(',' , $this->input->post('transferee_business_num')) : null,
                 'transferee_address' => $this->input->post('transferee_address') ? $this->input->post('transferee_address') : null,
                 'transferee_city' => $this->input->post('transferee_city') ? $this->input->post('transferee_city') : null,
                 'transferee_state' => $this->input->post('transferee_state') ? $this->input->post('transferee_state') : null,
@@ -2437,7 +2440,7 @@ class DashboardMail extends MX_Controller {
                 'estimated_gain_or_loss' => $this->input->post('estimated_gain_or_loss') ? $this->input->post('estimated_gain_or_loss') : null,
                 'remitter_name_2' => $this->input->post('remitter_name_2') ? $this->input->post('remitter_name_2') : null,
                 'remitter_ssn_itin_fein_2' => $this->input->post('remitter_ssn_itin_fein_2') ? $this->input->post('remitter_ssn_itin_fein_2') : null,
-                'calculation_amount' => $this->input->post('calculation_amount') ? $this->input->post('calculation_amount') : null,
+                'calculation_amount' => $this->input->post('calculation_amount') ? implode(',', $this->input->post('calculation_amount')) : null,
                 'calculation_amount_value' => $this->input->post('calculation_amount_value') ? $this->input->post('calculation_amount_value') : null,
                 'sales_price_withholding_amount' => $this->input->post('sales_price_withholding_amount') ? $this->input->post('sales_price_withholding_amount') : null,
                 'escrow_exchange_number' => $this->input->post('escrow_exchange_number') ? $this->input->post('escrow_exchange_number') : null,
@@ -2450,7 +2453,7 @@ class DashboardMail extends MX_Controller {
                 'transaction' => $this->input->post('transaction') ? $this->input->post('transaction') : null,
                 'with_holding' => $this->input->post('with_holding') ? $this->input->post('with_holding') : null,
                 'amount_withheld' => $this->input->post('amount_withheld') ? $this->input->post('amount_withheld') : null,
-                'perjury' => $this->input->post('perjury') ? $this->input->post('perjury') : null,
+                'perjury' => $this->input->post('perjury') ? implode(',', $this->input->post('perjury')) : null,
                 'seller_transferor_signature' => $this->input->post('seller_transferor_signature') ? $this->input->post('seller_transferor_signature') : null,
                 'seller_transferor_date' => $this->input->post('seller_transferor_date') ? $this->input->post('seller_transferor_date') : null,
                 'seller_transferor_spouse_signature' => $this->input->post('seller_transferor_spouse_signature') ? $this->input->post('seller_transferor_spouse_signature') : null,
@@ -2460,7 +2463,7 @@ class DashboardMail extends MX_Controller {
                 'buyer_transferor_spouse_signature' => $this->input->post('buyer_transferor_spouse_signature') ? $this->input->post('buyer_transferor_date') : null,
                 'buyer_transferor_spouse_date' => $this->input->post('buyer_transferor_spouse_date') ? $this->input->post('buyer_transferor_spouse_date') : null,
             );
-            $this->home_model->insert($seller593CData, 'pct_order_borrower_buyer_593_c_form');
+            $this->home_model->insert($seller593CPart2Data, 'pct_order_borrower_seller_593_c_form_part_2');
 
             $sellerOtherInfoData = array(
                 'order_id' => $this->input->post('order_id'),
@@ -2488,13 +2491,21 @@ class DashboardMail extends MX_Controller {
                 'tenant_id' => $this->input->post('tenant_id') ? $this->input->post('tenant_id') : null,
                 'doc_type' => $this->input->post('doc_type') ? $this->input->post('doc_type') : null,
             );
-            $this->home_model->insert($sellerOtherInfoData, 'pct_order_borrower_selller_mortgage_info');    
+            $this->home_model->insert($sellerOtherInfoData, 'pct_order_borrower_seller_other_info');    
   
-            $pdfData = array_merge($sellerEscrowInstructionData, $sellerCommissionInstructionData, $sellerOwnerEscrowInfoData, $sellerStatementInfoData, $seller593CData, $sellerOtherInfoData);
+            $pdfData = array_merge($sellerEscrowInstructionData, $sellerCommissionInstructionData, $sellerOwnerEscrowInfoData, $sellerStatementInfoData, $seller593CPart1Data, $seller593CPart2Data, $sellerOtherInfoData);
             $pdfData['seller_invoices'] = $this->input->post('seller_invoices');
             $pdfData['full_address'] = $data['orderDetails']['full_address'];
             $pdfData['apn'] = $data['orderDetails']['apn'];
-
+            $pdfData['remitter_info'] = $this->input->post('remitter_info') ? $this->input->post('remitter_info') : array();
+            $pdfData['business_num'] = $this->input->post('business_num') ? $this->input->post('business_num') : array();
+            $pdfData['trust_types'] = $this->input->post('trust_types') ? $this->input->post('trust_types') : array();
+            $pdfData['transferor_business_num'] = $this->input->post('transferor_business_num') ? $this->input->post('transferor_business_num') : array();
+            $pdfData['certifications'] = $this->input->post('certifications') ? $this->input->post('certifications') : array();
+            $pdfData['transferee_business_num'] = $this->input->post('transferee_business_num') ? $this->input->post('transferee_business_num') : array();
+            $pdfData['calculation_amount'] = $this->input->post('calculation_amount') ? $this->input->post('calculation_amount') : array();
+            $pdfData['perjury'] = $this->input->post('perjury') ? $this->input->post('perjury') : array();
+           
             $this->load->model('order/document');
             $document_name = "borrower_seller_".date('YmdHis')."_".$order[0]['file_id'].".pdf";
             if (!is_dir('uploads/borrower')) {

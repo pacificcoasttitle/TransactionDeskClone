@@ -24,6 +24,14 @@
     .table>:not(caption)>*>* {
         padding: 1rem;
     }
+    .error {
+        position: absolute !important;
+        top: 65px;
+    }
+    #property_address-error, #seller_current_mailing_address-error, #seller_mailing_address_after_close_escrow-error, #seller_mailing_address_after_close_escrow_2-error, #lender_address-error, #second_lender_address-error {
+        position: absolute !important;
+        top: 79px;
+    }
 </style>
 
 <body class="">
@@ -85,18 +93,26 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr role="row" class="odd">
-                                                            <td>1</td>
-                                                            <td><?php echo $escrow_instruction_document;?></td>
-                                                            <td>
-                                                                <div class="custom__task_actions smart-forms" style="display: inline-block;">
-                                                                    <a target="_blank" href="<?php echo env('AWS_PATH').'escrow_instruction_documents/'.$escrow_instruction_document;?>" class="btn button btn-primary">
-                                                                        <span class="text">View</span>
-                                                                    </a>
-                                                                    <div class="clearfix"></div>
-                                                                </div>
-                                                            </td> 
-                                                        </tr>         
+                                                        <?php if (!empty($escrow_instruction_document)) { ?>
+                                                            <tr role="row" class="odd">
+                                                                <td>1</td>
+                                                                <td><?php echo $escrow_instruction_document;?></td>
+                                                                <td>
+                                                                    <div class="custom__task_actions smart-forms" style="display: inline-block;">
+                                                                        <a target="_blank" href="<?php echo env('AWS_PATH').'escrow_instruction_documents/'.$escrow_instruction_document;?>" class="btn button btn-primary">
+                                                                            <span class="text">View</span>
+                                                                        </a>
+                                                                        <div class="clearfix"></div>
+                                                                    </div>
+                                                                </td> 
+                                                            </tr>   
+                                                        <?php } else { ?>
+
+                                                            <tr align="center">
+                                                                <td colspan="3">No Document found.</td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                              
                                                     </tbody>
                                                 </table>	
                                             </div>
@@ -143,19 +159,19 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="seller_name" name="seller_name">
+                                            <input type="text" class="form-control" id="seller_name" name="seller_name" required="required">
                                             <small class="small_label">Seller(s):</small>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="home_phone_number" name="home_phone_number">
+                                                <input type="text" class="form-control" id="escrow_home_phone_number" name="escrow_home_phone_number" required="required">
                                                 <small class="small_label">Home Phone Number:</small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="work_phone_number" name="work_phone_number">
+                                                <input type="text" class="form-control" id="work_phone_number" name="work_phone_number" required="required">
                                                 <small class="small_label">Work Phone Number:</small>
                                             </div>
                                         </div>
@@ -163,12 +179,12 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="fax_number" name="fax_number">
+                                                <input type="text" class="form-control" id="fax_number" name="fax_number" required="required">
                                                 <small class="small_label">Fax Number:</small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="cell_phone_number" name="cell_phone_number">
+                                                <input type="text" class="form-control" id="cell_phone_number" name="cell_phone_number" required="required">
                                                 <small class="small_label">Cell Phone Number:</small>
                                             </div>
                                         </div>
@@ -176,12 +192,12 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="email_address" name="email_address">
+                                                <input type="text" class="form-control" id="email_address" name="email_address" required="required">
                                                 <small class="small_label">E-Mail Address:</small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="cell_phone_number_2" name="cell_phone_number_2">
+                                                <input type="text" class="form-control" id="cell_phone_number_2" name="cell_phone_number_2" required="required">
                                                 <small class="small_label">Cell Phone Number:</small>
                                             </div>
                                         </div>
@@ -189,38 +205,46 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="ssn" name="ssn">
+                                                <input type="text" class="form-control" id="escrow_ssn" name="escrow_ssn" required="required">
                                                 <small class="small_label">Social Security #:</small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="ssn_2" name="ssn_2">
+                                                <input type="text" class="form-control" id="ssn_2" name="ssn_2" required="required">
                                                 <small class="small_label">Social Security #:</small>
                                             </div>
                                         </div>
 
-                                        <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="property_address" name="property_address"></textarea>
-                                            <small class="small_label">Property Address:</small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="property_address" name="property_address" required="required"></textarea>
+                                                <small class="small_label">Property Address:</small>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="seller_current_mailing_address" name="seller_current_mailing_address"></textarea>
-                                            <small class="small_label">Seller(s) Current Mailing Address: </small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_current_mailing_address" name="seller_current_mailing_address" required="required"></textarea>
+                                                <small class="small_label">Seller(s) Current Mailing Address: </small>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow" name="seller_mailing_address_after_close_escrow"></textarea>
-                                            <small class="small_label">Seller(s) Mailing Address after Close of Escrow: </small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow" name="seller_mailing_address_after_close_escrow" required="required"></textarea>
+                                                <small class="small_label">Seller(s) Mailing Address after Close of Escrow: </small>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow_2" name="seller_mailing_address_after_close_escrow_2"></textarea>
-                                            <small class="small_label">Seller(s) Mailing Address after Close of Escrow: </small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow_2" name="seller_mailing_address_after_close_escrow_2" required="required"></textarea>
+                                                <small class="small_label">Seller(s) Mailing Address after Close of Escrow: </small>
+                                            </div>
                                         </div>
 
                                         <div class="mt-4 mb-2"><b>Existing Loan(s) That Are Currently Recorded Against The Property:</b></div>
@@ -231,25 +255,27 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="first_trust_deed_lender" name="first_trust_deed_lender">
+                                            <input type="text" class="form-control" id="first_trust_deed_lender" name="first_trust_deed_lender" required="required">
                                             <small class="small_label">FIRST TRUST DEED LENDER:</small>
                                         </div>
 
-                                        <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="lender_address" name="lender_address"></textarea>
-                                            <small class="small_label">Address:</small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="lender_address" name="lender_address" required="required"></textarea>
+                                                <small class="small_label">Address:</small>
+                                            </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="loan_number" name="loan_number">
+                                                <input type="text" class="form-control" id="loan_number" name="loan_number" required="required">
                                                 <small class="small_label">Loan Number:</small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="lender_phone_number" name="lender_phone_number">
+                                                <input type="text" class="form-control" id="lender_phone_number" name="lender_phone_number" required="required">
                                                 <small class="small_label">Phone Number:</small>
                                             </div>
                                         </div>
@@ -257,35 +283,37 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="unpaid_principal_balance" name="unpaid_principal_balance">
+                                                <input type="text" class="form-control" id="unpaid_principal_balance" name="unpaid_principal_balance" required="required">
                                                 <small class="small_label">Unpaid Principal Balance $:</small>
                                             </div>
-                                            <div class="form-group position-relative mb-3 mt-3col-md-6">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="next_due" name="next_due">
+                                                <input type="text" class="form-control" id="next_due" name="next_due" required="required">
                                                 <small class="small_label">Next Due:</small>
                                             </div>
                                         </div>
                                         
-                                        <div class="row mt-4">
-                                            <div class="col-lg-9 col-md-8">
-                                                <div class="mb-3">
-                                                    Type of Loan: <input type="text" class="input_single w-medium" id="type_of_loan" name="type_of_loan"> VA <input type="text" class="input_single w-medium" id="va" name="va">FHA <input type="text" class="input_single w-medium" id="fha" name="fha">Conventional <input type="text" class="input_single w-medium" id="conventional" name="conventional">Equity Line/Line of Credit
-                                                </div>
-                                                <div>
-                                                    TAXES: <input type="text" class="input_single w-medium" id="taxes" name="taxes">Paid <input type="text" class="input_single w-medium" id="paid" name="paid"> Unpaid<input type="text" class="input_single w-medium" id="unpaid" name="unpaid"> Taxes are being paid through my impound account
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-4">
-                                                <div class="d-flex">
-                                                    Impound Acct:
-                                                    <div class="ms-2">
-                                                        <input type="radio" id="impondYes" value="yes" name="is_impound_acc">
-                                                        <label for="impondYes">Yes</label>
+                                        <div class="row">
+                                            <div class="row mt-4">
+                                                <div class="col-lg-9 col-md-8">
+                                                    <div class="mb-3">
+                                                        Type of Loan: <input type="text" class="input_single w-medium" id="type_of_loan" name="type_of_loan"> VA <input type="text" class="input_single w-medium" id="va" name="va">FHA <input type="text" class="input_single w-medium" id="fha" name="fha">Conventional <input type="text" class="input_single w-medium" id="conventional" name="conventional">Equity Line/Line of Credit
                                                     </div>
-                                                    <div class="ms-2">
-                                                        <input type="radio" id="impondNo" value="no" name="is_impound_acc">
-                                                        <label for="impondNo">No</label>
+                                                    <div>
+                                                        TAXES: <input type="text" class="input_single w-medium" id="taxes" name="taxes">Paid <input type="text" class="input_single w-medium" id="paid" name="paid"> Unpaid<input type="text" class="input_single w-medium" id="unpaid" name="unpaid"> Taxes are being paid through my impound account
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4">
+                                                    <div class="d-flex">
+                                                        Impound Acct:
+                                                        <div class="ms-2">
+                                                            <input type="radio" id="impondYes" value="yes" name="is_impound_acc">
+                                                            <label for="impondYes">Yes</label>
+                                                        </div>
+                                                        <div class="ms-2">
+                                                            <input type="radio" id="impondNo" value="no" name="is_impound_acc">
+                                                            <label for="impondNo">No</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -293,27 +321,31 @@
 
                                         <hr class="mt-4">
 
-                                        <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="second_trust_deed_lender" name="second_trust_deed_lender">
-                                            <small class="small_label">SECOND TRUST DEED LENDER: </small>
-                                        </div>
-
-                                        <div class="form-group position-relative mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="second_lender_address" name="second_lender_address"></textarea>
-                                            <small class="small_label">Address:</small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="second_trust_deed_lender" name="second_trust_deed_lender" required="required">
+                                                <small class="small_label">SECOND TRUST DEED LENDER: </small>
+                                            </div>
                                         </div>
 
                                         <div class="row">
-                                            <div class="form-group position-relative mt-3 col-md-6">
+                                            <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_loan_number" name="second_loan_number">
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="second_lender_address" name="second_lender_address" required="required"></textarea>
+                                                <small class="small_label">Address:</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="second_loan_number" name="second_loan_number" required="required">
                                                 <small class="small_label">Loan Number:</small>
                                             </div>
-                                            <div class="form-group position-relative mt-3 col-md-6">
+                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_lender_phone_number" name="second_lender_phone_number">
+                                                <input type="text" class="form-control" id="second_lender_phone_number" name="second_lender_phone_number" required="required">
                                                 <small class="small_label">Phone Number:</small>
                                             </div>
                                         </div>
@@ -321,7 +353,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_unpaid_principal_balance" name="second_unpaid_principal_balance">
+                                                <input type="text" class="form-control" id="second_unpaid_principal_balance" name="second_unpaid_principal_balance" required="required">
                                                 <small class="small_label">Unpaid Principal Balance $:</small>
                                             </div>
                                         </div>
@@ -334,66 +366,78 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="homeowner_association" name="homeowner_association">
-                                            <small class="small_label">Homeowner’s Association: </small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="homeowner_association" name="homeowner_association" required="required">
+                                                <small class="small_label">Homeowner’s Association: </small>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="management_company" name="management_company">
-                                            <small class="small_label">Management Company: </small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="management_company" name="management_company" required="required">
+                                                <small class="small_label">Management Company: </small>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group position-relative mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="management_mailing_address" name="management_mailing_address">
-                                            <small class="small_label">Mailing Address: </small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-"><b></b></label>
+                                                <input type="text" class="form-control" id="management_mailing_address" name="management_mailing_address" required="required">
+                                                <small class="small_label">Mailing Address: </small>
+                                            </div>
                                         </div>
                                         
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="contact_person" name="contact_person">
+                                                <input type="text" class="form-control" id="contact_person" name="contact_person" required="required">
                                                 <small class="small_label">Contact Person:</small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="management_phone_number" name="management_phone_number">
+                                                <input type="text" class="form-control" id="management_phone_number" name="management_phone_number" required="required">
                                                 <small class="small_label">Phone Number:</small>
                                             </div>
                                         </div>
 
                                         <hr>	
 
-                                        <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="second_homeowner_association" name="second_homeowner_association">
-                                            <small class="small_label">Homeowner’s Association: </small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="second_homeowner_association" name="second_homeowner_association" required="required">
+                                                <small class="small_label">Homeowner’s Association: </small>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="second_management_company" name="second_management_company">
-                                            <small class="small_label">Management Company: </small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="second_management_company" name="second_management_company" required="required">
+                                                <small class="small_label">Management Company: </small>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group position-relative mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="second_management_mailing_address" name="second_management_mailing_address">
-                                            <small class="small_label">Mailing Address: </small>
+                                        <div class="row">
+                                            <div class="form-group position-relative mb-3 mt-3">
+                                                <label for="" class="mb-2"><b></b></label>
+                                                <input type="text" class="form-control" id="second_management_mailing_address" name="second_management_mailing_address" required="required">
+                                                <small class="small_label">Mailing Address: </small>
+                                            </div>
                                         </div>
                                         
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_contact_person" name="second_contact_person">
+                                                <input type="text" class="form-control" id="second_contact_person" name="second_contact_person" required="required">
                                                 <small class="small_label">Contact Person:</small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_management_phone_number" name="second_management_phone_number">
+                                                <input type="text" class="form-control" id="second_management_phone_number" name="second_management_phone_number" required="required">
                                                 <small class="small_label">Phone Number:</small>
                                             </div>
                                         </div>
@@ -407,12 +451,12 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="water_company_name" name="water_company_name">
+                                                <input type="text" class="form-control" id="water_company_name" name="water_company_name" required="required">
                                                 <small class="small_label">Name of Company: </small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="water_contract_name" name="water_contract_name">
+                                                <input type="text" class="form-control" id="water_contract_name" name="water_contract_name" required="required">
                                                 <small class="small_label">Name of Contact: </small>
                                             </div>
                                         </div>
@@ -420,12 +464,12 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="water_company_address" name="water_company_address">
+                                                <input type="text" class="form-control" id="water_company_address" name="water_company_address" required="required">
                                                 <small class="small_label">Address: </small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="water_company_phone" name="water_company_phone">
+                                                <input type="text" class="form-control" id="water_company_phone" name="water_company_phone" required="required">
                                                 <small class="small_label">Phone: </small>
                                             </div>
                                         </div>
@@ -433,17 +477,17 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-4">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="amount_of_assessment" name="amount_of_assessment">
+                                                <input type="text" class="form-control" id="amount_of_assessment" name="amount_of_assessment" required="required">
                                                 <small class="small_label">Amount of assessment $ </small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-4">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="water_next_due" name="water_next_due">
+                                                <input type="text" class="form-control" id="water_next_due" name="water_next_due" required="required">
                                                 <small class="small_label">Next Due </small>
                                             </div>
                                             <div class="form-group position-relative mb-3 mt-3 col-md-4">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="no_of_shares" name="no_of_shares">
+                                                <input type="text" class="form-control" id="no_of_shares" name="no_of_shares" required="required">
                                                 <small class="small_label">No. of Shares </small>
                                             </div>
                                         </div>
@@ -456,12 +500,12 @@
                                             <div class="col-md-8">
                                                 <div class="mt-5">
                                                     Date :    
-                                                    <input type="text" class="input_single" id="date" name="date">
+                                                    <input type="text" class="input_single" id="date" name="date" required="required">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="mt-5">
-                                                    <input type="text" class="input_single d-block w-full" id="signature" name="signature">
+                                                    <input type="text" class="input_single d-block w-full" id="escrow_signature" name="escrow_signature" required="required">
                                                     Luz Amparo Rockey
                                                 </div>
                                             </div>
@@ -1820,22 +1864,22 @@
                                                         </div>
                                                         <label>
                                                             <b>Sales Price Method</b><br>
-                                                            <b>A</b> <input type="radio" class="square_radio" name="with_holding" id="sales_price_boot">
+                                                            <b>A</b> <input type="radio" class="square_radio" name="with_holding" id="sales_price_boot" value="sales_price_boot">
                                                             <label for="Withholding1">3 1/3% (.0333) x Sales Price, Boot, or Installment Sale Payment</label><br>
                                                             <b>Alternative Withholding Calculation Election</b><br>
-                                                            <b>B</b> <input type="radio" class="square_radio" name="with_holding" id="individual_12.3">
+                                                            <b>B</b> <input type="radio" class="square_radio" name="with_holding" id="individual_12.3" value="individual_12.3">
                                                             <label for="Withholding2">Individual 12.3% x Gain on Sale</label>&nbsp;
-                                                            <b>F</b> <input type="radio" class="square_radio" name="with_holding" id="s_corporation_13.8">
+                                                            <b>F</b> <input type="radio" class="square_radio" name="with_holding" id="s_corporation_13.8" value="s_corporation_13.8">
                                                             <label for="Withholding3">S Corporation 13.8% x Gain on Sale</label><br>
-                                                            <b>C</b> <input type="radio" class="square_radio" name="with_holding" id="non_california_12.3">
+                                                            <b>C</b> <input type="radio" class="square_radio" name="with_holding" id="non_california_12.3" value="non_california_12.3">
                                                             <label for="Withholding4">Non-California Partnership 12.3% x Gain on Sale </label>&nbsp;
-                                                            <b>G</b> <input type="radio" class="square_radio" name="with_holding" id="financial_s_corporation_15.8">
+                                                            <b>G</b> <input type="radio" class="square_radio" name="with_holding" id="financial_s_corporation_15.8" value="financial_s_corporation_15.8">
                                                             <label for="transaction5">Financial S Corporation 15.8% x Gain on Sale</label><br>
-                                                            <b>D</b> <input type="radio" class="square_radio" name="with_holding" id="corporation_8.84">
+                                                            <b>D</b> <input type="radio" class="square_radio" name="with_holding" id="corporation_8.84" value="corporation_8.84">
                                                             <label for="Withholding6">Corporation 8.84% x Gain on Sale</label>&nbsp;
-                                                            <b>H</b> <input type="radio" class="square_radio" name="with_holding" id="trust_12.3">
+                                                            <b>H</b> <input type="radio" class="square_radio" name="with_holding" id="trust_12.3" value="trust_12.3">
                                                             <label for="Withholding7">Trust 12.3% x Gain on Sale</label><br>
-                                                            <b>E</b> <input type="radio" class="square_radio" name="with_holding" id="bank_and_financial_10.84">
+                                                            <b>E</b> <input type="radio" class="square_radio" name="with_holding" id="bank_and_financial_10.84" value="bank_and_financial_10.84">
                                                             <label for="Withholding8">Bank and Financial Corp. 10.84% x Gain on Sale</label>
                                                         </label>
                                                     </span>
