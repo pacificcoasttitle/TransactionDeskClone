@@ -165,7 +165,7 @@
 						<div class="card-body text-danger">
 						<div id="refresh_password_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             			<div id="refresh_password_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
-							<div class="mr-5"><?php echo $expiredPasswordCount.' Password expired'; ?>
+							<div class="mr-5"><?php echo $expiredPasswordCount.' Passwords expired'; ?>
 							<button type="button" class="btn btn-danger text-right float-right" onclick="refreshExipredPasswords();"><i class="fas fa-refresh"></i></button>
 							</div>
 						</div>
