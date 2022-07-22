@@ -24,14 +24,7 @@
     .table>:not(caption)>*>* {
         padding: 1rem;
     }
-    .error {
-        position: absolute !important;
-        top: 65px;
-    }
-    #property_address-error, #seller_current_mailing_address-error, #seller_mailing_address_after_close_escrow-error, #seller_mailing_address_after_close_escrow_2-error, #lender_address-error, #second_lender_address-error {
-        position: absolute !important;
-        top: 79px;
-    }
+    
 </style>
 
 <body class="">
@@ -125,7 +118,43 @@
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">(2) Commission Instructions</button>
                                 </h2>
                                 <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#accordionExample">
-                                    
+                                    <div class="accordion-body">
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <table class="table table-type-3 typography-last-elem no-footer spacer-t30">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Document Name</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php if (!empty($commission_instruction_document)) { ?>
+                                                            <tr role="row" class="odd">
+                                                                <td>1</td>
+                                                                <td><?php echo $commission_instruction_document;?></td>
+                                                                <td>
+                                                                    <div class="custom__task_actions smart-forms" style="display: inline-block;">
+                                                                        <a target="_blank" href="<?php echo env('AWS_PATH').'commission_instruction_document/'.$commission_instruction_document;?>" class="btn button btn-primary">
+                                                                            <span class="text">View</span>
+                                                                        </a>
+                                                                        <div class="clearfix"></div>
+                                                                    </div>
+                                                                </td> 
+                                                            </tr>   
+                                                        <?php } else { ?>
+
+                                                            <tr align="center">
+                                                                <td colspan="3">No Document found.</td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                            
+                                                    </tbody>
+                                                </table>	
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="accordion-item">
@@ -159,92 +188,131 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="seller_name" name="seller_name" required="required">
+                                            <input type="text" class="form-control" id="seller_name" name="seller_name" required="required" data-error="#seller_name-error">
                                             <small class="small_label">Seller(s):</small>
                                         </div>
+                                        <label id="seller_name-error" class="error text-danger" for="seller_name"></label>
 
                                         <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="escrow_home_phone_number" name="escrow_home_phone_number" required="required">
-                                                <small class="small_label">Home Phone Number:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="escrow_home_phone_number" name="escrow_home_phone_number" required="required" data-error="#escrow_home_phone_number-error">
+                                                    <small class="small_label">Home Phone Number:</small>
+                                                </div>
+                                                <label id="escrow_home_phone_number-error" class="error text-danger" for="escrow_home_phone_number"></label>
                                             </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="work_phone_number" name="work_phone_number" required="required">
-                                                <small class="small_label">Work Phone Number:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="work_phone_number" name="work_phone_number" required="required" data-error="#work_phone_number-error">
+                                                    <small class="small_label">Work Phone Number:</small>
+                                                </div>
+                                                <label id="work_phone_number-error" class="error text-danger" for="work_phone_number"></label>
                                             </div>
                                         </div>
 
                                         <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="fax_number" name="fax_number" required="required">
-                                                <small class="small_label">Fax Number:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="fax_number" name="fax_number" required="required" data-error="#fax_number-error">
+                                                    <small class="small_label">Fax Number:</small>
+                                                    
+                                                </div>
+                                                <label id="fax_number-error" class="error text-danger" for="fax_number"></label>
                                             </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="cell_phone_number" name="cell_phone_number" required="required">
-                                                <small class="small_label">Cell Phone Number:</small>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="email_address" name="email_address" required="required">
-                                                <small class="small_label">E-Mail Address:</small>
-                                            </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="cell_phone_number_2" name="cell_phone_number_2" required="required">
-                                                <small class="small_label">Cell Phone Number:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="cell_phone_number" name="cell_phone_number" required="required" data-error="#cell_phone_number-error">
+                                                    <small class="small_label">Cell Phone Number:</small>
+                                                    
+                                                </div>
+                                                <label id="cell_phone_number-error" class="error text-danger" for="cell_phone_number"></label>
                                             </div>
                                         </div>
 
                                         <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="escrow_ssn" name="escrow_ssn" required="required">
-                                                <small class="small_label">Social Security #:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="email_address" name="email_address" required="required" data-error="#email_address-error">
+                                                    <small class="small_label">E-Mail Address:</small>
+                                                    
+                                                </div>
+                                                <label id="email_address-error" class="error text-danger" for="email_address"></label>
                                             </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="ssn_2" name="ssn_2" required="required">
-                                                <small class="small_label">Social Security #:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="cell_phone_number_2" name="cell_phone_number_2" required="required" data-error="#cell_phone_number_2-error">
+                                                    <small class="small_label">Cell Phone Number:</small>
+                                                    
+                                                </div>
+                                                <label id="cell_phone_number_2-error" class="error text-danger" for="cell_phone_number_2"></label>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="escrow_ssn" name="escrow_ssn" required="required" data-error="#escrow_ssn-error">
+                                                    <small class="small_label">Social Security #:</small>
+                                                   
+                                                </div>
+                                                <label id="escrow_ssn-error" class="error text-danger" for="escrow_ssn"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="ssn_2" name="ssn_2" required="required" data-error="#ssn_2-error">
+                                                    <small class="small_label">Social Security #:</small>
+                                                    
+                                                </div>
+                                                <label id="ssn_2-error" class="error text-danger" for="ssn_2"></label>
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="property_address" name="property_address" required="required"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="property_address" name="property_address" required="required" data-error="#property_address-error"></textarea>
                                                 <small class="small_label">Property Address:</small>
+                                                
                                             </div>
+                                            <label id="property_address-error" class="error text-danger" for="property_address"></label>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_current_mailing_address" name="seller_current_mailing_address" required="required"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_current_mailing_address" name="seller_current_mailing_address" required="required" data-error="#seller_current_mailing_address-error"></textarea>
                                                 <small class="small_label">Seller(s) Current Mailing Address: </small>
+                                                
                                             </div>
+                                            <label id="seller_current_mailing_address-error" class="error text-danger" for="seller_current_mailing_address"></label>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow" name="seller_mailing_address_after_close_escrow" required="required"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow" name="seller_mailing_address_after_close_escrow" required="required" data-error="#seller_mailing_address_after_close_escrow-error"></textarea>
                                                 <small class="small_label">Seller(s) Mailing Address after Close of Escrow: </small>
+                                                
                                             </div>
+                                            <label id="seller_mailing_address_after_close_escrow-error" class="error text-danger" for="seller_mailing_address_after_close_escrow"></label>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow_2" name="seller_mailing_address_after_close_escrow_2" required="required"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow_2" name="seller_mailing_address_after_close_escrow_2" required="required" data-error="#seller_mailing_address_after_close_escrow_2-error"></textarea>
                                                 <small class="small_label">Seller(s) Mailing Address after Close of Escrow: </small>
+                                                
                                             </div>
+                                            <label id="seller_mailing_address_after_close_escrow_2-error" class="error text-danger" for="seller_mailing_address_after_close_escrow_2"></label>
                                         </div>
 
                                         <div class="mt-4 mb-2"><b>Existing Loan(s) That Are Currently Recorded Against The Property:</b></div>
@@ -255,41 +323,57 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="first_trust_deed_lender" name="first_trust_deed_lender" required="required">
+                                            <input type="text" class="form-control" id="first_trust_deed_lender" name="first_trust_deed_lender" required="required" data-error="#first_trust_deed_lender-error">
                                             <small class="small_label">FIRST TRUST DEED LENDER:</small>
                                         </div>
+                                        <label id="first_trust_deed_lender-error" class="error text-danger" for="first_trust_deed_lender"></label>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="lender_address" name="lender_address" required="required"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="lender_address" name="lender_address" required="required" data-error="#lender_address-error"></textarea>
                                                 <small class="small_label">Address:</small>
+                                                
+                                            </div>
+                                        </div>
+                                        <label id="lender_address-error" class="error text-danger" for="lender_address"></label>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="loan_number" name="loan_number" required="required" data-error="#loan_number-error">
+                                                    <small class="small_label">Loan Number:</small>
+                                                    
+                                                </div>
+                                                <label id="loan_number-error" class="error text-danger" for="loan_number"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="lender_phone_number" name="lender_phone_number" required="required" data-error="#lender_phone_number-error">
+                                                    <small class="small_label">Phone Number:</small>
+                                                </div>
+                                                <label id="lender_phone_number-error" class="error text-danger" for="lender_phone_number"></label>
                                             </div>
                                         </div>
 
                                         <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="loan_number" name="loan_number" required="required">
-                                                <small class="small_label">Loan Number:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="unpaid_principal_balance" name="unpaid_principal_balance" required="required" data-error="#unpaid_principal_balance-error">
+                                                    <small class="small_label">Unpaid Principal Balance $:</small>
+                                                </div>
+                                                <label id="unpaid_principal_balance-error" class="error text-danger" for="unpaid_principal_balance"></label>
                                             </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="lender_phone_number" name="lender_phone_number" required="required">
-                                                <small class="small_label">Phone Number:</small>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="unpaid_principal_balance" name="unpaid_principal_balance" required="required">
-                                                <small class="small_label">Unpaid Principal Balance $:</small>
-                                            </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="next_due" name="next_due" required="required">
-                                                <small class="small_label">Next Due:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="next_due" name="next_due" required="required" data-error="#next_due-error">
+                                                    <small class="small_label">Next Due:</small>
+                                                </div>
+                                                <label id="next_due-error" class="error text-danger" for="next_due"></label>
                                             </div>
                                         </div>
                                         
@@ -324,38 +408,50 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_trust_deed_lender" name="second_trust_deed_lender" required="required">
+                                                <input type="text" class="form-control" id="second_trust_deed_lender" name="second_trust_deed_lender" required="required" data-error="#second_trust_deed_lender-error">
                                                 <small class="small_label">SECOND TRUST DEED LENDER: </small>
                                             </div>
+                                            <label id="second_trust_deed_lender-error" class="error text-danger" for="second_trust_deed_lender"></label>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="second_lender_address" name="second_lender_address" required="required"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="second_lender_address" name="second_lender_address" required="required" data-error="#second_lender_address-error"></textarea>
                                                 <small class="small_label">Address:</small>
+                                                
+                                            </div>
+                                            <label id="second_lender_address-error" class="error text-danger" for="second_lender_address"></label>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_loan_number" name="second_loan_number" required="required" data-error="#second_loan_number-error">
+                                                    <small class="small_label">Loan Number:</small>
+                                                    
+                                                </div>
+                                                <label id="second_loan_number-error" class="error text-danger" for="second_loan_number"></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_lender_phone_number" name="second_lender_phone_number" required="required" data-error="#second_lender_phone_number-error">
+                                                    <small class="small_label">Phone Number:</small>
+                                                    
+                                                </div>
+                                                <label id="second_lender_phone_number-error" class="error text-danger" for="second_lender_phone_number"></label>
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_loan_number" name="second_loan_number" required="required">
-                                                <small class="small_label">Loan Number:</small>
-                                            </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_lender_phone_number" name="second_lender_phone_number" required="required">
-                                                <small class="small_label">Phone Number:</small>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_unpaid_principal_balance" name="second_unpaid_principal_balance" required="required">
+                                                <input type="text" class="form-control" id="second_unpaid_principal_balance" name="second_unpaid_principal_balance" required="required" data-error="#second_unpaid_principal_balance-error">
                                                 <small class="small_label">Unpaid Principal Balance $:</small>
                                             </div>
+                                            <label id="second_unpaid_principal_balance-error" class="error text-danger" for="second_unpaid_principal_balance"></label>
                                         </div>
                                         
                                         <div class="row mt-4">
@@ -369,37 +465,51 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="homeowner_association" name="homeowner_association" required="required">
+                                                <input type="text" class="form-control" id="homeowner_association" name="homeowner_association" required="required" data-error="#homeowner_association-error">
                                                 <small class="small_label">Homeowner’s Association: </small>
+                                                
                                             </div>
+                                            <label id="homeowner_association-error" class="error text-danger" for="homeowner_association"></label>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="management_company" name="management_company" required="required">
+                                                <input type="text" class="form-control" id="management_company" name="management_company" required="required" data-error="#management_company-error">
                                                 <small class="small_label">Management Company: </small>
+                                                
                                             </div>
+                                            <label id="management_company-error" class="error text-danger" for="management_company"></label>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-"><b></b></label>
-                                                <input type="text" class="form-control" id="management_mailing_address" name="management_mailing_address" required="required">
+                                                <input type="text" class="form-control" id="management_mailing_address" name="management_mailing_address" required="required" data-error="#management_mailing_address-error">
                                                 <small class="small_label">Mailing Address: </small>
+                                                
                                             </div>
+                                            <label id="management_mailing_address-error" class="error text-danger" for="management_mailing_address"></label>
                                         </div>
                                         
                                         <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="contact_person" name="contact_person" required="required">
-                                                <small class="small_label">Contact Person:</small>
-                                            </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="management_phone_number" name="management_phone_number" required="required">
-                                                <small class="small_label">Phone Number:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="contact_person" name="contact_person" required="required" data-error="#contact_person-error">
+                                                    <small class="small_label">Contact Person:</small>
+                                                    
+                                                </div>
+                                                <label id="contact_person-error" class="error text-danger" for="contact_person"></label>
+                                            </div> 
+                                            <div class="col-md-6">         
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="management_phone_number" name="management_phone_number" required="required" data-error="#management_phone_number-error">
+                                                    <small class="small_label">Phone Number:</small>
+                                                    
+                                                </div>
+                                                <label id="management_phone_number-error" class="error text-danger" for="management_phone_number"></label>
                                             </div>
                                         </div>
 
@@ -408,37 +518,51 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_homeowner_association" name="second_homeowner_association" required="required">
+                                                <input type="text" class="form-control" id="second_homeowner_association" name="second_homeowner_association" required="required" data-error="#second_homeowner_association-error">
                                                 <small class="small_label">Homeowner’s Association: </small>
+                                                
                                             </div>
+                                            <label id="second_homeowner_association-error" class="error text-danger" for="second_homeowner_association"></label>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_management_company" name="second_management_company" required="required">
+                                                <input type="text" class="form-control" id="second_management_company" name="second_management_company" required="required" data-error="#second_management_company-error">
                                                 <small class="small_label">Management Company: </small>
+                                                
                                             </div>
+                                            <label id="second_management_company-error" class="error text-danger" for="second_management_company"></label>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_management_mailing_address" name="second_management_mailing_address" required="required">
+                                                <input type="text" class="form-control" id="second_management_mailing_address" name="second_management_mailing_address" required="required" data-error="#second_management_mailing_address-error">
                                                 <small class="small_label">Mailing Address: </small>
+                                                
                                             </div>
+                                            <label id="second_management_mailing_address-error" class="error text-danger" for="second_management_mailing_address"></label>
                                         </div>
                                         
                                         <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_contact_person" name="second_contact_person" required="required">
-                                                <small class="small_label">Contact Person:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_contact_person" name="second_contact_person" required="required" data-error="#second_contact_person-error">
+                                                    <small class="small_label">Contact Person:</small>
+                                                    
+                                                </div>
+                                                <label id="second_contact_person-error" class="error text-danger" for="second_contact_person"></label>
                                             </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_management_phone_number" name="second_management_phone_number" required="required">
-                                                <small class="small_label">Phone Number:</small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="second_management_phone_number" name="second_management_phone_number" required="required" data-error="#second_management_phone_number-error">
+                                                    <small class="small_label">Phone Number:</small>
+                                                    
+                                                </div>
+                                                <label id="second_management_phone_number-error" class="error text-danger" for="second_management_phone_number"></label>
                                             </div>
                                         </div>
 
@@ -449,46 +573,74 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="water_company_name" name="water_company_name" required="required">
-                                                <small class="small_label">Name of Company: </small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="water_company_name" name="water_company_name" required="required" data-error="#water_company_name-error">
+                                                    <small class="small_label">Name of Company: </small>
+                                                    
+                                                </div>
+                                                <label id="water_company_name-error" class="error text-danger" for="water_company_name"></label>
                                             </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="water_contract_name" name="water_contract_name" required="required">
-                                                <small class="small_label">Name of Contact: </small>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="water_company_address" name="water_company_address" required="required">
-                                                <small class="small_label">Address: </small>
-                                            </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-6">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="water_company_phone" name="water_company_phone" required="required">
-                                                <small class="small_label">Phone: </small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="water_contract_name" name="water_contract_name" required="required" data-error="#water_contract_name-error">
+                                                    <small class="small_label">Name of Contact: </small>
+                                                    
+                                                </div>
+                                                <label id="water_contract_name-error" class="error text-danger" for="water_contract_name"></label>
                                             </div>
                                         </div>
 
                                         <div class="row">
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-4">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="amount_of_assessment" name="amount_of_assessment" required="required">
-                                                <small class="small_label">Amount of assessment $ </small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="water_company_address" name="water_company_address" required="required" data-error="#water_company_address-error">
+                                                    <small class="small_label">Address: </small>
+                                                    
+                                                </div>
+                                                <label id="water_company_address-error" class="error text-danger" for="water_company_address"></label>
                                             </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-4">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="water_next_due" name="water_next_due" required="required">
-                                                <small class="small_label">Next Due </small>
+                                            <div class="col-md-6">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="water_company_phone" name="water_company_phone" required="required" data-error="#water_company_phone-error">
+                                                    <small class="small_label">Phone: </small>
+                                                    
+                                                </div>
+                                                <label id="water_company_phone-error" class="error text-danger" for="water_company_phone"></label>
                                             </div>
-                                            <div class="form-group position-relative mb-3 mt-3 col-md-4">
-                                                <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="no_of_shares" name="no_of_shares" required="required">
-                                                <small class="small_label">No. of Shares </small>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="amount_of_assessment" name="amount_of_assessment" required="required" data-error="#amount_of_assessment-error">
+                                                    <small class="small_label">Amount of assessment $ </small>
+                                                    
+                                                </div>
+                                                <label id="amount_of_assessment-error" class="error text-danger" for="amount_of_assessment"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="water_next_due" name="water_next_due" required="required" data-error="#water_next_due-error">
+                                                    <small class="small_label">Next Due </small>
+                                                    
+                                                </div>
+                                                <label id="water_next_due-error" class="error text-danger" for="water_next_due"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group position-relative mb-3 mt-3">
+                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <input type="text" class="form-control" id="no_of_shares" name="no_of_shares" required="required" data-error="#no_of_shares-error">
+                                                    <small class="small_label">No. of Shares </small>
+                                                    
+                                                </div>
+                                                <label id="no_of_shares-error" class="error text-danger" for="no_of_shares"></label>
                                             </div>
                                         </div>
 
@@ -500,15 +652,19 @@
                                             <div class="col-md-8">
                                                 <div class="mt-5">
                                                     Date :    
-                                                    <input type="text" class="input_single" id="date" name="date">
+                                                    <input type="text" class="input_single" id="date" name="date" required="required" data-error="#date-error">
                                                 </div>
+                                                <label id="date-error" class="error text-danger" for="date"></label>
                                             </div>
+                                            
                                             <div class="col-md-4">
                                                 <div class="mt-5">
-                                                    <input type="text" class="input_single d-block w-full" id="escrow_signature" name="escrow_signature">
+                                                    <input type="text" class="input_single d-block w-full" id="escrow_signature" name="escrow_signature" required="required" data-error="#escrow_signature-error">
                                                     Luz Amparo Rockey
                                                 </div>
+                                                <label id="escrow_signature-error" class="error text-danger" for="escrow_signature"></label>
                                             </div>
+                                            
                                         </div>
 
                                     </div>
@@ -543,7 +699,7 @@
                                                 <div class="col-lg-3 col-md-6">
                                                     <div class="form-group position-relative mb-3">
                                                         <label for="" class="mb-2"><b></b></label>
-                                                        <input type="text" class="form-control" id="first_name" name="first_name" required data-error="#first_name-error">
+                                                        <input type="text" class="form-control" id="first_name" name="first_name" required="required" data-error="#first_name-error">
                                                         <small class="small_label">First Name</small>
                                                     </div>
                                                     <label id="first_name-error" class="error text-danger" for="first_name"></label>
@@ -551,7 +707,7 @@
                                                 <div class="col-lg-3 col-md-6">
                                                     <div class="form-group position-relative mb-3">
                                                         <label for="" class="mb-2"><b></b></label>
-                                                        <input type="text" class="form-control" id="middle_name" name="middle_name" required data-error="#middle_name-error">
+                                                        <input type="text" class="form-control" id="middle_name" name="middle_name" required="required" data-error="#middle_name-error">
                                                         <small class="small_label">Middle Name</small>
                                                     </div>
                                                     <label id="middle_name-error" class="error text-danger" for="middle_name"></label>
