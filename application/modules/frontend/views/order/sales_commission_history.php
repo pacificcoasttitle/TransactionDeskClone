@@ -64,9 +64,10 @@
 										<tbody>
 											<?php foreach($commissionHistory as $key=>$commissionRecord) { ?>
 												<?php
+													$total_commission = ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->commission : 0;
 													$details_json = $commissionRecord['commission_data']->commission_details;
 													$details = array();
-													$draw_amount = $commission_sub_total=$escrow_commission = 0;
+													$draw_amount = $commission_sub_total=$escrow_commission=$first_in_threshold=$override_sub = $override_add = 0;
 													if(!empty( $details_json) && json_decode( $details_json)) {
 
 														$details = json_decode($details_json);
@@ -97,14 +98,22 @@
 														elseif($prod_type == 'draw') {
 															$draw_amount = $detail->commisison;
 														}
-														// elseif($prod_type == 'escrow') {
-														// 	$escrow_commission += $detail->commisison;
-														// }
+														elseif($prod_type == 'first_threshold') {
+															$first_in_threshold = $detail->commisison;
+														}
+														elseif($prod_type == 'override_sub') {
+															$override_sub = abs($detail->commisison);
+															$total_commission = $total_commission - $override_sub;
+														}
+														elseif($prod_type == 'override_add') {
+															$override_add = abs($detail->commisison);
+															$total_commission = $total_commission + $override_add;
+														}
 													}
 													?>
 												<tr>
 													<td><?php echo $commissionRecord['month'];?></td>
-													<th>$ <?php echo ($commissionRecord['commission_data']) ? number_format($commissionRecord['commission_data']->commission,2) : '0.00';?> </th>
+													<th>$ <?php echo number_format($total_commission,2);?> </th>
 													
 													<td><?php echo ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->pdf_name : '';?></td>
 													<td>
@@ -184,13 +193,34 @@
 																		<th class="text-left">Commission SubTotal : ( <?= implode(' + ',array_map("ucwords", PRODUCT_TYPE)); ?> )</th>
 																		<td class="text-right">$ <?php echo number_format($commission_sub_total,2); ?></td>
 																	</tr>
+																	<?php if ($draw_amount) : ?>
 																	<tr class="custom__total">
 																		<th class="text-left">Draw Amount</th>
 																		<td class="text-right">- $ <?php echo number_format(abs($draw_amount),2); ?></td>
 																	</tr>
+																	<?php endif; ?>
+																	<?php if ($first_in_threshold) : ?>
+																	<tr class="custom__total">
+																		<th class="text-left">First In Threshold Amount</th>
+																		<td class="text-right">- $ <?php echo number_format(abs($first_in_threshold),2); ?></td>
+																	</tr>
+																	<?php endif; ?>
+																	<?php if ($override_sub) : ?>
+																	<tr class="custom__total">
+																		<th class="text-left">Override</th>
+																		<td class="text-right">- $ <?php echo number_format($override_sub,2); ?></td>
+																	</tr>
+																	<?php endif; ?>
+																	<?php if ($override_add) : ?>
+																	<tr class="custom__total">
+																		<th class="text-left">Extra Commission</th>
+																		<td class="text-right">$ <?php echo number_format($override_add,2); ?></td>
+																	</tr>
+																	<?php endif; ?>
+																	
 																	<tr class="custom__total">
 																		<th class="text-left">Total Commission</th>
-																		<td class="text-right"> $ <?php echo number_format(($commission_sub_total - abs($draw_amount)),2); ?></td>
+																		<td class="text-right"> $ <?php echo number_format(($commission_sub_total - abs($draw_amount) - $override_sub + $override_add),2); ?></td>
 																	</tr>
 																	
 		
