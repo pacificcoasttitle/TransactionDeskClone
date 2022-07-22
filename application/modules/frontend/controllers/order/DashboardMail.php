@@ -2178,38 +2178,59 @@ class DashboardMail extends MX_Controller {
             $this->session->unset_userdata('success');
         }
         
-        if (empty($order[0]['escrow_instruction_document'])) {
+
+        if (empty($order[0]['escrow_instruction_document']) || empty($order[0]['commission_instruction_document'])) {
             $user_data['admin_api'] = 1; 
             $endPoint = 'files/'. $order[0]['file_id'] .'/documents';
             $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
             $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
             $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
             $resDocuments = json_decode($resultDocuments, true);
+            $escrow_instruction_flag = 0;
+            $commission_instruction_flag = 0;
             
             if (!empty($resDocuments['Documents'])) {
                 foreach ($resDocuments['Documents'] as $document) {
-                    if ($document['DocumentType']['DocumentTypeID'] == 1015) {
-                        $document_name = date('YmdHis')."_".$document['DocumentName'];
-                        $ext = end(explode('.', $document['DocumentName']));
-                        if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
-                            $document_name = str_replace($ext, 'pdf', $document_name);
-                        }
-                        
-                        $endPoint = 'documents/'.$document['DocumentID'].'?format=json';
-                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
-                        $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
-                        $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order[0]['id'], $logid);
-                        $resDocument = json_decode($resultDocument, true);
-
-                        if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
-                            $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
-                            if (!is_dir('uploads/escrow_instruction_documents')) {
-                                mkdir(FCPATH.'/uploads/escrow_instruction_documents', 0777, TRUE);
+                    if ($document['DocumentType']['DocumentTypeID'] == 1015 || $document['DocumentType']['DocumentTypeID'] == 1020) {
+                        if (str_contains(strtolower($document['DocumentName']), 'commission') || str_contains(strtolower($document['DocumentName']), 'car 21')) {
+                            $document_name = date('YmdHis')."_".$document['DocumentName'];
+                            $ext = end(explode('.', $document['DocumentName']));
+                            if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
+                                $document_name = str_replace($ext, 'pdf', $document_name);
                             }
-                            file_put_contents(FCPATH.'/uploads/escrow_instruction_documents/'.$document_name, $documentContent);
-                            $this->order->uploadDocumentOnAwsS3($document_name, 'escrow_instruction_documents');
-                            $this->home_model->update(array('escrow_instruction_document' => $document_name), array('file_id' => $order[0]['file_id']), 'order_details');
-                            $data['escrow_instruction_document'] = $document_name;
+                            
+                            $endPoint = 'documents/'.$document['DocumentID'].'?format=json';
+                            $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+                            $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
+                            $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order[0]['id'], $logid);
+                            $resDocument = json_decode($resultDocument, true);
+
+                            if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+                                
+                                if (str_contains(strtolower($document['DocumentName']), 'car 21') && $escrow_instruction_flag == 0) {
+                                    $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+                                    if (!is_dir('uploads/escrow_instruction_documents')) {
+                                        mkdir(FCPATH.'/uploads/escrow_instruction_documents', 0777, TRUE);
+                                    }
+                                    file_put_contents(FCPATH.'/uploads/escrow_instruction_documents/'.$document_name, $documentContent);
+                                    $this->order->uploadDocumentOnAwsS3($document_name, 'escrow_instruction_documents');
+                                    //$this->home_model->update(array('escrow_instruction_document' => $document_name), array('file_id' => $order[0]['file_id']), 'order_details');
+                                    $data['escrow_instruction_document'] = $document_name;
+                                    $escrow_instruction_flag = 1;
+                                }
+
+                                if (str_contains(strtolower($document['DocumentName']), 'commission') && $commission_instruction_flag == 0) {
+                                    $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+                                    if (!is_dir('uploads/commission_instruction_document')) {
+                                        mkdir(FCPATH.'/uploads/commission_instruction_document', 0777, TRUE);
+                                    }
+                                    file_put_contents(FCPATH.'/uploads/commission_instruction_document/'.$document_name, $documentContent);
+                                    $this->order->uploadDocumentOnAwsS3($document_name, 'commission_instruction_document');
+                                    //$this->home_model->update(array('commission_instruction_document' => $document_name), array('file_id' => $order[0]['file_id']), 'order_details');
+                                    $data['commission_instruction_document'] = $document_name;
+                                    $commission_instruction_flag = 1;
+                                }
+                            }
                         }
                     }
                 }
@@ -2217,7 +2238,7 @@ class DashboardMail extends MX_Controller {
         } else {
             $data['escrow_instruction_document'] = $order[0]['escrow_instruction_document']; 
         }
-        
+       
         if ($this->input->post()) {
             
             $sellerEscrowInstructionData = array();
