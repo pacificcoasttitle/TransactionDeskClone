@@ -83,158 +83,7 @@ class SalesRep extends MX_Controller
         $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $userId);
 		
 		//Commission Logic
-		// $all_order_data = $this->order->getOrdersForUser($userId);
-		// // echo '<pre>';var_dump($all_order_data);die;
-		// $sales_commission = 0;
-		// $this->load->model('admin/order/underwriter_tier_model');
-		// $underwriter_tiers = $this->underwriter_tier_model->with('commision_range_obj')->get_all();
-		// $underwriter_tier_data = array();
-		// foreach($underwriter_tiers as $underwriter_tier_obj) {
-		// 	$underwriter_tier_data[$underwriter_tier_obj->product_type][$underwriter_tier_obj->underwriter][$underwriter_tier_obj->id] = $underwriter_tier_obj;
-		// }
-		// // echo '<pre>';var_dump($underwriter_tier_data);die;
-		// $this->load->model('admin/order/underwriter_user_model');
-		// $existing_comission_data = $this->underwriter_user_model->with('underwriter_tier_obj')->with('underwriter_user_threshold_obj')->get_many_by('user_id',$userId);
-		// $user_specific_commission = array();
-		// foreach ($existing_comission_data as $existing_comission_record) {
-		// 	if($existing_comission_record->underwriter_tier_obj) {
-		// 		$pord_type = $existing_comission_record->underwriter_tier_obj->product_type;
-		// 		$underwriter_type = $existing_comission_record->underwriter_tier_obj->underwriter;
-		// 		$user_specific_commission[$existing_comission_record->underwriter_tier_id] = $existing_comission_record;
-		// 	}
-		// }
-
-		// $order_tier_group = array();
 		
-		// $underwriters = UNDERWRITERS;
-		// foreach ($all_order_data as $all_order_record) {
-		// 	$product_type = $all_order_record['prod_type'];
-		// 	$underwriter = $all_order_record['underwriter'];
-
-		// 	$underwriter_type = $underwriter;
-		// 	$check_key = array_search($underwriter,$underwriters);
-		// 	if($check_key !== false) {
-		// 		$underwriter_type =$check_key;
-		// 	}
-		// 	$premium =  $all_order_record['premium'];
-		// 	$check_amount = 0;
-		// 	if($product_type == 'loan') {
-		// 		$check_amount = $all_order_record['loan_amount'];
-		// 	}
-		// 	else {
-		// 		$check_amount = $all_order_record['sale_amount'];
-		// 	}
-
-		// 	//Find Tier
-		// 	if(isset($underwriter_tier_data[$product_type][$underwriter_type])) {
-		// 		// echo "in";die;
-		// 		$default_tier_value = null;
-		// 		//Check if Underwriter has single tier
-		// 		if(count($underwriter_tier_data[$product_type][$underwriter_type]) <= 1) {
-		// 			$default_tier_value = reset($underwriter_tier_data[$product_type][$underwriter_type]);
-		// 		} else {
-		// 			//Find Tier
-		// 			$tires = $underwriter_tier_data[$product_type][$underwriter_type];
-		// 			$found_tier = false;
-		// 			foreach($tires as $tire){
-		// 				$commission_range_data = $tire->commision_range_obj;
-		// 				foreach($commission_range_data as $commission_range_obj ) {
-		// 					$check_premium = $commission_range_obj->premium;
-		// 					$check_min = $commission_range_obj->min_revenue;
-		// 					$check_max = $commission_range_obj->max_revenue;
-		// 					if($check_premium == $premium && $check_amount >= $check_min && $check_amount <=  $check_max) {
-		// 						$default_tier_value = $tire;
-		// 						$found_tier = true;
-		// 						break;
-		// 					}
-		// 				}
-		// 				if($found_tier) {
-		// 					break;
-		// 				}
-		// 			}
-		// 		}
-
-		// 		//Check if we found tier
-		// 		if($default_tier_value) {
-		// 			// $commission_val = $default_tier_value['commission'];
-		// 			$tier_id = $default_tier_value->id;
-		// 			if(!is_array($order_tier_group[$tier_id][$premium])) {
-		// 				$order_tier_group[$tier_id][$premium]['default'] = $default_tier_value;
-		// 				$order_tier_group[$tier_id][$premium]['data'] = array();
-		// 			}
-		// 			$order_tier_group[$tier_id][$premium]['data'][]=$all_order_record;
-					
-
-		// 		}
-
-
-		// 	}
-		// }
-
-		
-		// $sales_commission = 0;
-		// foreach ($order_tier_group as $tier_id=>$order_tier_record) {
-		// 	foreach ($order_tier_record as $premium_amount=>$order_record) {
-		// 		$commission_val = $order_record['default']->commission;
-		// 		$total_premium = $premium_amount*count($order_record['data']);
-		// 		//Check if its override
-		// 		if(isset($user_specific_commission[$tier_id]) && !empty($user_specific_commission[$tier_id])) {
-		// 			$user_specific_commission_obj = $user_specific_commission[$tier_id];
-		// 			if($user_specific_commission_obj->allow_threshold == 0 && $user_specific_commission_obj->fix_commission) {
-		// 				$commission_val = $user_specific_commission_obj->fix_commission;
-		// 				$sales_commission += ((float)$commission_val * (float)$total_premium) / 100;
-		// 			}
-		// 			elseif($user_specific_commission_obj->allow_threshold == 1 && $user_specific_commission_obj->underwriter_user_threshold_obj) {
-		// 				$threshold_data = $user_specific_commission_obj->underwriter_user_threshold_obj;
-		// 				usort($threshold_data, function($a, $b) {
-		// 					return $a->threshold_amount_min <=> $b->threshold_amount_min;
-		// 				});
-		// 				$remaining_amount = $total_premium;
-		// 				$threshold_i = 0;
-		// 				$threshold_cnt = count($threshold_data);
-		// 				$commission_calculated = false;
-		// 				if(isset($threshold_data[0]) && !empty($threshold_data[0])) {
-		// 					$check_min = $threshold_data[0]->threshold_amount_min;
-		// 					if($check_min > 1 && $remaining_amount >= $check_min) {
-		// 						$remaining_amount -= $check_min;
-		// 						$sales_commission += ((float)$commission_val * (float)$check_min) / 100;
-		// 						$commission_calculated = true;
-
-		// 					}
-		// 				}
-		// 				foreach($threshold_data as $threshold_obj) {
-		// 					// if($threshold_obj->threshold_amount_min < 1)
-		// 					if($remaining_amount >= $threshold_obj->threshold_amount_min) {
-		// 						$calculate_value = $threshold_obj->threshold_amount_max;
-		// 						$commission_val = $threshold_obj->threshold_commission;
-		// 						$commission_calculated = true;
-		// 						if($remaining_amount <= $threshold_obj->threshold_amount_max || $threshold_i == ($threshold_cnt -1)) {
-		// 							$calculate_value = $remaining_amount;
-		// 							$sales_commission += ((float)$commission_val * (float)$calculate_value) / 100;
-		// 							break;
-		// 						} else {
-		// 							$sales_commission += ((float)$commission_val * (float)$calculate_value) / 100;
-		// 						}
-		// 						$remaining_amount -= $calculate_value;
-		// 						$threshold_i++;
-		// 					}
-		// 				}
-
-		// 				if(!$commission_calculated) {
-		// 					$sales_commission += ((float)$commission_val * (float)$total_premium) / 100;
-		// 				}
-		// 			}
-		// 			else {
-		// 				$sales_commission += ((float)$commission_val * (float)$total_premium) / 100;
-		// 			}
-		// 		}
-		// 		else {
-		// 			$sales_commission += ((float)$commission_val * (float)$total_premium) / 100;
-		// 		}
-				
-				
-		// 	}	
-		// }
 		// get commission value from monthly commission
 		$sales_commission = 0;
 		$this->load->model('admin/order/user_monthly_commission_model');
@@ -246,6 +95,27 @@ class SalesRep extends MX_Controller
 		$commission_obj = $this->user_monthly_commission_model->get_by($monthly_commission_arr);
 		if($commission_obj) {
 			$sales_commission = $commission_obj->commission;
+			$details_json = $commission_obj->commission_details;
+			
+			if(!empty( $details_json) && json_decode( $details_json)) {
+
+				$details = json_decode($details_json);
+				foreach($details as $detail) {
+					if(!empty( $detail) && json_decode( $detail)) {
+						$check_obj = json_decode( $detail);
+						$prod_type = $check_obj->prod_type;
+						if($prod_type == 'override_sub') {
+							$override_sub = abs($check_obj->commisison);
+							$sales_commission = $sales_commission - $override_sub;
+						}
+						elseif($prod_type == 'override_add') {
+							$override_add = abs($check_obj->commisison);
+							$sales_commission = $sales_commission + $override_add;
+						}
+
+					}
+				}
+			}
 		}
         $data['sales_commission'] = $sales_commission;
 		//Commission Logic Ends
