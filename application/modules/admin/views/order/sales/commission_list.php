@@ -41,6 +41,7 @@
 													$details_json = $commissionRecord['commission_data']->commission_details;
 													$details = array();
 													$draw_amount = $commission_sub_total=$escrow_commission=$first_in_threshold=$override_sub = $override_add = 0;
+													$override_add_user = $override_sub_user = 0;
 													if(!empty( $details_json) && json_decode( $details_json)) {
 
 														$details = json_decode($details_json);
@@ -77,10 +78,12 @@
 														elseif($prod_type == 'override_sub') {
 															$override_sub = abs($detail->commisison);
 															$total_commission = $total_commission - $override_sub;
+															$override_sub_user = $detail->override_id;
 														}
 														elseif($prod_type == 'override_add') {
 															$override_add = abs($detail->commisison);
 															$total_commission = $total_commission + $override_add;
+															$override_add_user = $detail->override_id;
 														}
 													}
 													?>
@@ -180,13 +183,13 @@
 																	<?php endif; ?>
 																	<?php if ($override_sub) : ?>
 																	<tr class="custom__total">
-																		<th class="text-left">Override</th>
+																		<th class="text-left">Override : <?php echo getUserName($override_sub_user); ?></th>
 																		<td class="text-right">- $ <?php echo number_format($override_sub,2); ?></td>
 																	</tr>
 																	<?php endif; ?>
 																	<?php if ($override_add) : ?>
 																	<tr class="custom__total">
-																		<th class="text-left">Extra Commission</th>
+																		<th class="text-left">Extra Commission : <?php echo getUserName($override_add_user); ?></th>
 																		<td class="text-right">$ <?php echo number_format($override_add,2); ?></td>
 																	</tr>
 																	<?php endif; ?>

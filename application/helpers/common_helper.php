@@ -56,3 +56,18 @@ if(!function_exists('convertTimezone')) {
 		return $date->format($format);
 	}
 }
+if(!function_exists('getUserName')) {
+	function getUserName($id)
+	{
+		
+		$CI = get_instance();
+		$CI->load->model('admin/order/customer_basic_details_model');
+		$user = $CI->customer_basic_details_model->get($id);
+		if($user) {
+			return $user->first_name.' '.$user->last_name;
+		}
+		else {
+			return '';
+		}
+	}
+}
