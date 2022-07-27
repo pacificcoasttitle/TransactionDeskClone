@@ -316,21 +316,7 @@
 											</div>
 										</div>
 
-										<div class="form-group row" >
-											<label class="col-sm-4 col-form-label">Sales Rep Override</label>
-											<div class="col-sm-4">
-											<select name="commission_sales_rep_override_id"  class="selectpicker"  data-actions-box="true">
-												<option value="">Select Sales Rep</option>
-												<?php foreach($salesUsers as $salesUser) :?>
-													<option value="<?=$salesUser['id']?>"><?=$salesUser['first_name'].' '.$salesUser['last_name']?></option>
-												<?php endforeach; ?>
-											</select>
-
-											</div>
-											<div class="col-sm-4">
-												<input  step="0.1" min="0"  type="number" class="form-control" name="commission_sales_rep_override_val"  class="form-control" value="0.00" />
-											</div>
-										</div>
+										
 
 									</div>
 								</div>
@@ -513,6 +499,37 @@
 											</div>
 										</div>
 											
+										
+									</div>
+								</div>
+								<div class="card">
+									<div class="card-header" role="tab" >
+										Sales Rep Override
+									</div>
+									<div class="card-body commission-details underwriters-div">
+										<div class="form-group row" >
+											<label class="col-sm-4 col-form-label">Sales Rep</label>
+											<div class="col-sm-8">
+												<select name="commission_sales_rep_override_id"  class="selectpicker"  data-actions-box="true">
+													<option value="">Select Sales Rep</option>
+													<?php foreach($salesUsers as $salesUser) :?>
+														<option value="<?=$salesUser['id']?>"><?=$salesUser['first_name'].' '.$salesUser['last_name']?></option>
+													<?php endforeach; ?>
+												</select>
+
+											</div>
+										</div>
+
+										<?php 
+										$product_types[] = 'escrow';
+										foreach($product_types as $product_type): ?>
+											<div class="form-group row" >
+												<label class="col-sm-4 col-form-label"><?=ucfirst($product_type);?></label>
+												<div class="col-sm-8">
+													<input  step="0.1" min="0"  type="number" class="form-control" name="commission_sales_rep_override_val[<?=$product_type?>]"  class="form-control" value="0.00" />
+												</div>
+											</div>
+										<?php endforeach; ?>
 										
 									</div>
 								</div>

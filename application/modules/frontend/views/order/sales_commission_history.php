@@ -55,7 +55,6 @@
 										<tr>
 											<th >Month</th>
 											<th>Commission</th>
-											
 											<th>File Name</th>
 											<th>Action</th>
 										</tr>
@@ -67,8 +66,11 @@
 													$total_commission = ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->commission : 0;
 													$details_json = $commissionRecord['commission_data']->commission_details;
 													$details = array();
-													$draw_amount = $commission_sub_total=$escrow_commission=$first_in_threshold=$override_sub = $override_add = 0;
-													$override_add_user = $override_sub_user = 0;
+													$draw_amount = $commission_sub_total=$escrow_commission=$first_in_threshold=$override_commission_total= 0;
+													$override_add_user = "";
+													$override_add_per=$override_add_val = array();
+													$month_num = $commissionRecord['month_num'];
+
 													if(!empty( $details_json) && json_decode( $details_json)) {
 
 														$details = json_decode($details_json);
@@ -102,14 +104,38 @@
 														elseif($prod_type == 'first_threshold') {
 															$first_in_threshold = $detail->commisison;
 														}
-														elseif($prod_type == 'override_sub') {
-															$override_sub = abs($detail->commisison);
-															$total_commission = $total_commission - $override_sub;
-														}
 														elseif($prod_type == 'override_add') {
-															$override_add = abs($detail->commisison);
-															$total_commission = $total_commission + $override_add;
-															$override_add_user = $detail->override_id;
+															$override_add_user = getUserName($detail->user_id);
+															if($detail->loan > 0) {
+																$override_add_per['loan'] = $detail->loan;
+															}
+															if($detail->sale > 0) {
+																$override_add_per['sale'] = $detail->sale;
+															}
+															if($detail->escrow > 0) {
+																$override_add_per['escrow'] = $detail->escrow;
+															}
+															if(count($override_add_per)) {
+																$condition = [
+																	'user_id' => $detail->user_id,
+																	'commission_month' => $month_num,
+																	'commission_year' => date('Y'),
+																];
+																$override_add_val= getExtraCommission($override_add_per,$condition);
+															}
+															if ($override_add_user) :
+															 	foreach($override_add_val as $override_add_key=>$override_add_comm) :
+																	if($override_add_key == 'escrow' && is_array($override_add_comm)):
+																		$override_commission_val = array_sum($override_add_comm);
+																	else:
+																		$override_commission_val = $override_add_comm;
+																	endif;
+
+																	$total_commission += $override_commission_val;
+																	
+																	endforeach;
+															endif;
+
 														}
 													}
 													?>
@@ -167,7 +193,6 @@
 																						<td class="text-right">$ <?php echo number_format($commission_val,2) ; ?></td>
 				
 																					</tr>
-																					
 																				<?php
 																					if(++$comm_i === $numItems) : 
 																						$commission_sub_total += $total_commission_val;
@@ -207,22 +232,29 @@
 																		<td class="text-right">- $ <?php echo number_format(abs($first_in_threshold),2); ?></td>
 																	</tr>
 																	<?php endif; ?>
-																	<?php /* if ($override_sub) : ?>
-																	<tr class="custom__total">
-																		<th class="text-left">Override</th>
-																		<td class="text-right">- $ <?php echo number_format($override_sub,2); ?></td>
-																	</tr>
-																	<?php endif; */ ?>
-																	<?php if ($override_add) : ?>
-																	<tr class="custom__total">
-																		<th class="text-left">Extra Commission : <?php echo getUserName($override_add_user); ?></th>
-																		<td class="text-right">$ <?php echo number_format($override_add,2); ?></td>
-																	</tr>
+																	<?php if ($override_add_user) : 
+																		$override_i = 0;
+																		?>
+																		<?php foreach($override_add_val as $override_add_key=>$override_add_comm) :
+																				if($override_add_key == 'escrow' && is_array($override_add_comm)):
+																					$override_commission_val = array_sum($override_add_comm);
+																				else:
+																					$override_commission_val = $override_add_comm;
+																				endif;
+
+																				$override_commission_total += $override_commission_val;
+																			?>
+																			
+																			<tr class="<?=($override_i++ == 0) ? 'custom__total' : '';?>">
+																				<th class="text-left">Extra Commission <?php echo ucwords($override_add_key) ?> : <?php echo $override_add_user; ?></th>
+																				<td class="text-right">$ <?php echo number_format($override_commission_val,2); ?></td>
+																			</tr>
+																		<?php endforeach; ?>
 																	<?php endif; ?>
 																	
 																	<tr class="custom__total">
 																		<th class="text-left">Total Commission</th>
-																		<td class="text-right"> $ <?php echo number_format(($commission_sub_total - abs($draw_amount) - $override_sub + $override_add),2); ?></td>
+																		<td class="text-right"> $ <?php echo number_format(($commission_sub_total - abs($draw_amount) - abs($first_in_threshold) + $override_commission_total),2); ?></td>
 																	</tr>
 																	
 		
