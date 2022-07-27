@@ -114,7 +114,7 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="buyer_full_name" name="buyer_full_name" required data-error="#buyer_full_name-error">
+                                            <input type="text" class="form-control" id="buyer_full_name" name="buyer_full_name" value="<?php echo $buyer_full_name;?>" required data-error="#buyer_full_name-error">
                                             <small class="small_label">Buyer(s):</small>
                                         </div>
                                         <label id="buyer_full_name-error" class="error text-danger" for="buyer_full_name"></label>
@@ -123,7 +123,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="buyer_home_number" name="buyer_home_number" required data-error="#buyer_home_number-error">
+                                                    <input type="text" class="form-control" id="buyer_home_number" name="buyer_home_number" value="<?php echo $buyer_home_number;?>" required data-error="#buyer_home_number-error">
                                                     <small class="small_label">Home Phone Number:</small>
                                                 </div>
                                                 <label id="buyer_home_number-error" class="error text-danger" for="buyer_home_number"></label>
@@ -132,7 +132,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="buyer_work_number" name="buyer_work_number" required data-error="#buyer_work_number-error">
+                                                    <input type="text" class="form-control" id="buyer_work_number" name="buyer_work_number" value="<?php echo $buyer_work_number;?>" required data-error="#buyer_work_number-error">
                                                     <small class="small_label">Work Phone Number:</small>
                                                 </div>
                                                 <label id="buyer_work_number-error" class="error text-danger" for="buyer_work_number"></label>
@@ -143,7 +143,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="buyer_email_address" name="buyer_email_address" required data-error="#buyer_email_address-error">
+                                                    <input type="text" class="form-control" id="buyer_email_address" name="buyer_email_address" value="<?php echo $buyer_email_address;?>" required data-error="#buyer_email_address-error">
                                                     <small class="small_label">E-Mail Address:</small>
                                                 </div>
                                                 <label id="buyer_email_address-error" class="error text-danger" for="buyer_email_address"></label>
@@ -152,7 +152,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="buyer_fax_number" name="buyer_fax_number" required data-error="#buyer_fax_number-error">
+                                                    <input type="text" class="form-control" id="buyer_fax_number" name="buyer_fax_number" value="<?php echo $buyer_fax_number;?>" required data-error="#buyer_fax_number-error">
                                                     <small class="small_label">Fax Number:</small>
                                                 </div>
                                                 <label id="buyer_fax_number-error" class="error text-danger" for="buyer_fax_number"></label>
@@ -163,7 +163,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="buyer_ssn" name="buyer_ssn" required data-error="#buyer_ssn-error">
+                                                    <input type="text" class="form-control" id="buyer_ssn" name="buyer_ssn" value="<?php echo $buyer_ssn;?>" required data-error="#buyer_ssn-error">
                                                     <small class="small_label">Social Security #:</small>
                                                 </div>
                                                 <label id="buyer_ssn-error" class="error text-danger" for="buyer_ssn"></label>
@@ -172,28 +172,28 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="buyer_current_mailing_address" name="buyer_current_mailing_address" required data-error="#buyer_current_mailing_address-error"></textarea>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="buyer_current_mailing_address" name="buyer_current_mailing_address" required data-error="#buyer_current_mailing_address-error"><?php echo $buyer_current_mailing_address;?></textarea>
                                             <small class="small_label">Buyer(s) Current Mailing Address:</small>
                                         </div>
                                         <label id="buyer_current_mailing_address-error" class="error text-danger" for="buyer_current_mailing_address"></label>
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="buyer_mailing_address_after_close" name="buyer_mailing_address_after_close" required data-error="#buyer_mailing_address_after_close-error"></textarea>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="buyer_mailing_address_after_close" name="buyer_mailing_address_after_close" required data-error="#buyer_mailing_address_after_close-error"><?php echo $buyer_mailing_address_after_close;?></textarea>
                                             <small class="small_label">Buyer(s) Mailing Address After Close Of Escrow:</small>
                                         </div>
                                         <label id="buyer_mailing_address_after_close-error" class="error text-danger" for="buyer_mailing_address_after_close"></label>
 
                                         <div class="form-group position-relative mb-3 mt-5">
                                             <label for="" class="mb-2"><b>New Loan(s) Buyer(s) Are Applying For:</b></label>
-                                            <input type="text" class="form-control" id="lender_name" name="lender_name" required data-error="#lender_name-error">
+                                            <input type="text" class="form-control" id="lender_name" name="lender_name" value="<?php echo $lender_name;?>" required data-error="#lender_name-error">
                                             <small class="small_label">Name Of Lender:</small>
                                         </div>
                                         <label id="lender_name-error" class="error text-danger" for="lender_name"></label>
                                         
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="lender_address" name="lender_address" required data-error="#property_address-error"></textarea>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="lender_address" name="lender_address" required data-error="#property_address-error"><?php echo $lender_address;?></textarea>
                                             <small class="small_label">Address:</small>
                                         </div>
                                         <label id="lender_address-error" class="error text-danger" for="lender_address"></label>
@@ -202,7 +202,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="agent_name" name="agent_name" required data-error="#agent_name-error">
+                                                    <input type="text" class="form-control" id="agent_name" name="agent_name" value="<?php echo $agent_name;?>" required data-error="#agent_name-error">
                                                     <small class="small_label">Agent's Name:</small>
                                                 </div>
                                                 <label id="agent_name-error" class="error text-danger error2" for="agent_name"></label>
@@ -210,7 +210,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="agent_phone_number" name="agent_phone_number" required data-error="#agent_phone_number-error">
+                                                    <input type="text" class="form-control" id="agent_phone_number" name="agent_phone_number" value="<?php echo $agent_phone_number;?>" required data-error="#agent_phone_number-error">
                                                     <small class="small_label">Phone Number:</small>
                                                 </div>
                                                 <label id="agent_phone_number-error" class="error text-danger error2" for="agent_phone_number"></label>
@@ -219,14 +219,14 @@
 
                                         <div class="form-group position-relative mb-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="second_lender_name" name="second_lender_name">
+                                            <input type="text" class="form-control" id="second_lender_name" name="second_lender_name" value="<?php echo $second_lender_name;?>">
                                             <small class="small_label">Name Of Seond Lender:</small>
                                         </div>
                                         
                                         
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="seond_lender_address" name="seond_lender_address"></textarea>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="seond_lender_address" name="seond_lender_address" ><?php echo $seond_lender_address;?></textarea>
                                             <small class="small_label">Address:</small>
                                         </div>
 
@@ -234,14 +234,14 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="second_agent_name" name="second_agent_name">
+                                                    <input type="text" class="form-control" id="second_agent_name" name="second_agent_name" value="<?php echo $second_agent_name;?>">
                                                     <small class="small_label">Second Agent's Name:</small>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="seond_agent_phone_number" name="seond_agent_phone_number">
+                                                    <input type="text" class="form-control" id="seond_agent_phone_number" name="seond_agent_phone_number" value="<?php echo $seond_agent_phone_number;?>">
                                                     <small class="small_label">Phone Number:</small>
                                                 </div>
                                             </div>
@@ -251,7 +251,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b>New Insurance:</b></label>
-                                                    <input type="text" class="form-control" id="insurance_name" name="insurance_name" required data-error="#insurance_name-error">
+                                                    <input type="text" class="form-control" id="insurance_name" name="insurance_name" value="<?php echo $insurance_name;?>" required data-error="#insurance_name-error">
                                                     <small class="small_label">Insurance's Name:</small>
                                                 </div>
                                                 <label id="insurance_name-error" class="error text-danger error2" for="insurance_name"></label>
@@ -259,7 +259,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b>&nbsp;</b></label>
-                                                    <input type="text" class="form-control" id="insurance_phone_number" name="insurance_phone_number" required data-error="#insurance_phone_number-error">
+                                                    <input type="text" class="form-control" id="insurance_phone_number" name="insurance_phone_number" value="<?php echo $insurance_phone_number;?>" required data-error="#insurance_phone_number-error">
                                                     <small class="small_label">Phone Number:</small>
                                                 </div>
                                                 <label id="insurance_phone_number-error" class="error text-danger error2" for="insurance_phone_number"></label>
@@ -268,14 +268,14 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <textarea rows="2" class="form-control" style="height:auto;" id="insurance_address" name="insurance_address" required data-error="#insurance_address-error"></textarea>
+                                            <textarea rows="2" class="form-control" style="height:auto;" id="insurance_address" name="insurance_address" required data-error="#insurance_address-error"><?php echo $insurance_address;?></textarea>
                                             <small class="small_label">Insurance's Address:</small>
                                         </div>
                                         <label id="insurance_address-error" class="error text-danger" for="insurance_address"></label>
                                         
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="insurance_company" name="insurance_company" required data-error="#insurance_company-error">
+                                            <input type="text" class="form-control" id="insurance_company" name="insurance_company" value="<?php echo $insurance_company;?>" required data-error="#insurance_company-error">
                                             <small class="small_label">Insurance Company:</small>
                                         </div>
                                         <label id="insurance_company-error" class="error text-danger" for="insurance_company"></label>
@@ -284,12 +284,12 @@
                                                 
                                         <div class="mb-80 mt-5">
                                             Dated:    
-                                            <input type="text" class="w30 input_single" id="buyer_date" name="buyer_date" required data-error="#buyer_date-error">
+                                            <input type="text" class="w30 input_single" id="buyer_date" name="buyer_date" value="<?php echo $buyer_date;?>" required data-error="#buyer_date-error">
                                             <label id="buyer_date-error" class="error text-danger d-flex" for="buyer_date"></label>
                                         </div>
                                        
 
-                                        <input type="text" class="signature" value="" placeholder="signature" id="buyer_signature" name="buyer_signature" required data-error="#buyer_signature-error">  
+                                        <input type="text" class="signature" value="" placeholder="signature" id="buyer_signature" name="buyer_signature" value="<?php echo $signature;?>" required data-error="#buyer_signature-error">  
                                         <label id="buyer_signature-error" class="error text-danger d-flex" for="buyer_signature"></label>
                                     </div>   
                                 </div>

@@ -592,4 +592,112 @@ class Escrow extends MX_Controller
         $response = array('status' => 'success');
         echo json_encode($response);	
 	}
+
+    public function addBuyerOnOrder()
+    {
+        $userdata = $this->session->userdata('user');
+        $file_id = $this->input->post('file_id');
+		$order_id = $this->input->post('order_id');
+		$buyer_email = $this->input->post('buyer_email');
+        $orderDetails = $this->order->get_order_details($file_id);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $errors = array();
+        $success = array();
+     
+        $form_url = base_url().'buyer-info/'.$orderDetails['random_number'];
+        
+        $email_data = array(
+            'file_number'=> $orderDetails['file_number'],
+            'property_address'=> $orderDetails['full_address'],
+            'random_number'=>  $orderDetails['random_number'],
+            'borrrower'=> $orderDetails['primary_owner'],
+            'form_url' => $form_url,
+            'escrow_officer' => $userdata['name']
+        );
+        
+        $borrower_message_body = $this->load->view('emails/borrower_buyer_seller.php', $email_data, TRUE);
+        $message_body = $borrower_message_body; 
+        $subject = $orderDetails['file_number']. ' - Welcome Buyer';
+        
+        $mailParams = array(
+            'from_mail' => $from_mail, 
+            'from_name' => $from_name, 
+            'subject' => $subject,
+            'message'=>json_encode($email_data)
+        );
+        
+        if (!empty($buyer_email)) {
+            $to = $buyer_email;
+            $mailParams['to'] = $to;
+            $this->load->helper('sendemail');
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_buyer', '', $mailParams, array(), $order_id, 0);
+            $buyer_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+            $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_buyer', '', $mailParams, array('status'=>$buyer_mail_result), $order_id, $logid);
+        }
+
+        $success[] = "Mail sent succesfully to buyer."; 
+        $data['errors'] = $errors;
+		$data['success'] = $success;
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'order/escrow/order-tasks/'.$orderDetails['order_id']);
+    }
+
+    public function addSellerOnOrder()
+    {
+        $userdata = $this->session->userdata('user');
+        $file_id = $this->input->post('file_id');
+		$order_id = $this->input->post('order_id');
+		$seller_email = $this->input->post('seller_email');
+        $orderDetails = $this->order->get_order_details($file_id);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $errors = array();
+        $success = array();
+
+        $form_url = base_url().'seller-info/'.$orderDetails['random_number'];
+        
+        $email_data = array(
+            'file_number'=> $orderDetails['file_number'],
+            'property_address'=> $orderDetails['full_address'],
+            'random_number'=>  $orderDetails['random_number'],
+            'borrrower'=> $orderDetails['primary_owner'],
+            'form_url' => $form_url,
+            'escrow_officer' => $userdata['name']
+        );
+        
+        $borrower_message_body = $this->load->view('emails/borrower_buyer_seller.php', $email_data, TRUE);
+        $message_body = $borrower_message_body; 
+        $subject = $orderDetails['file_number']. ' - Welcome Sender';
+        
+        $mailParams = array(
+            'from_mail' => $from_mail, 
+            'from_name' => $from_name, 
+            'subject' => $subject,
+            'message'=>json_encode($email_data)
+        );
+        
+        if (!empty($seller_email)) {
+            $to = $seller_email;
+            $mailParams['to'] = $to;
+            $this->load->helper('sendemail');
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_seller', '', $mailParams, array(), $order_id, 0);
+            $borrower_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+            $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_seller', '', $mailParams, array('status'=>$borrower_mail_result), $order_id, $logid);
+        }
+
+        $success[] = "Mail sent succesfully to seller.";
+        $data['errors'] = $errors;
+		$data['success'] = $success;
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'order/escrow/order-tasks/'.$orderDetails['order_id']);
+    }
 }

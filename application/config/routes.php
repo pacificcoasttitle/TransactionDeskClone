@@ -234,6 +234,10 @@ $route['borrower-seller-form/(:any)'] = 'frontend/order/dashboardMail/borrowerSe
 $route['borrower-buyer-form/(:any)'] = 'frontend/order/dashboardMail/borrowerBuyerForm/$1';
 $route['sales-commission/(:num)'] = 'frontend/order/salesRep/commission/$1';
 $route['task-documents'] = 'frontend/order/escrow/taskDocuments';
+$route['add-buyer-on-order'] = 'frontend/order/escrow/addBuyerOnOrder';
+$route['add-seller-on-order'] = 'frontend/order/escrow/addSellerOnOrder';
+$route['buyer-info/(:any)'] = 'frontend/order/dashboardMail/buyerInfo/$1';
+$route['seller-info/(:any)'] = 'frontend/order/dashboardMail/sellerInfo/$1';
 
 
 /* Route for PCT-Order backend*/
