@@ -138,7 +138,7 @@ if(!function_exists('getExtraCommission')) {
 			$commission = ($sale_total * $per_array['sale'] ) /100;
 			$commission_array['sale'] = $commission;
 		}
-
+		
 		return $commission_array;
 		
 	}
