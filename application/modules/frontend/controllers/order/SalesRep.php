@@ -100,17 +100,42 @@ class SalesRep extends MX_Controller
 			if(!empty( $details_json) && json_decode( $details_json)) {
 
 				$details = json_decode($details_json);
-				foreach($details as $detail) {
-					if(!empty( $detail) && json_decode( $detail)) {
-						$check_obj = json_decode( $detail);
-						$prod_type = $check_obj->prod_type;
-						if($prod_type == 'override_sub') {
-							$override_sub = abs($check_obj->commisison);
-							$sales_commission = $sales_commission - $override_sub;
-						}
-						elseif($prod_type == 'override_add') {
-							$override_add = abs($check_obj->commisison);
-							$sales_commission = $sales_commission + $override_add;
+				foreach($details as $detail_json) {
+					if(!empty( $detail_json) && json_decode( $detail_json)) {
+						$detail = json_decode( $detail_json);
+						$prod_type = $detail->prod_type;
+						if($prod_type == 'override_add') {
+							$override_add_user = getUserName($detail->user_id);
+							if($detail->loan > 0) {
+								$override_add_per['loan'] = $detail->loan;
+							}
+							if($detail->sale > 0) {
+								$override_add_per['sale'] = $detail->sale;
+							}
+							if($detail->escrow > 0) {
+								$override_add_per['escrow'] = $detail->escrow;
+							}
+							if(count($override_add_per)) {
+								$condition = [
+									'user_id' => $detail->user_id,
+									'commission_month' => date('m'),
+									'commission_year' => date('Y'),
+								];
+								$override_add_val= getExtraCommission($override_add_per,$condition);
+							}
+							if ($override_add_user) :
+								 foreach($override_add_val as $override_add_key=>$override_add_comm) :
+									if($override_add_key == 'escrow' && is_array($override_add_comm)):
+										$override_commission_val = array_sum($override_add_comm);
+									else:
+										$override_commission_val = $override_add_comm;
+									endif;
+
+									$sales_commission += $override_commission_val;
+									
+									endforeach;
+							endif;
+
 						}
 
 					}
@@ -491,6 +516,7 @@ class SalesRep extends MX_Controller
 			$dateObj   = DateTime::createFromFormat('!m', $iM);
 			$monthName = $dateObj->format('F'); 
 			$commissionHistory[$iM-1]['month'] = $monthName;
+			$commissionHistory[$iM-1]['month_num'] = $iM;
 			$get_month_conditon = [
 				'user_id'=>$userId,
 				'commission_year'=>$current_year,

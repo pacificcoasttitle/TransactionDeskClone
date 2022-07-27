@@ -746,6 +746,7 @@ class CommissionRange extends MX_Controller {
 			$dateObj   = DateTime::createFromFormat('!m', $iM);
 			$monthName = $dateObj->format('F'); 
 			$commissionHistory[$iM-1]['month'] = $monthName;
+			$commissionHistory[$iM-1]['month_num'] = $iM;
 			$get_month_conditon = [
 				'user_id'=>$sales_rep_id,
 				'commission_year'=>$current_year,
