@@ -517,6 +517,8 @@ $route['hr/admin/create-note'] = 'admin/hr/orders/create_note';
 $route['hr/admin/add-borrower-on-order'] = 'admin/hr/orders/addBorrowerOnOrder';
 $route['hr/admin/add-borrower-on-order-for-payoff'] = 'admin/hr/orders/addBorrowerOnOrderForPayoff';
 $route['hr/admin/add-lender-on-order'] = 'admin/hr/orders/addLenderOnOrder';
+$route['hr/admin/add-buyer-on-order'] = 'admin/hr/orders/addBuyerOnOrder';
+$route['hr/admin/add-seller-on-order'] = 'admin/hr/orders/addSellerOnOrder';
 $route['hr/admin/task-documents'] = 'admin/hr/orders/taskDocuments';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
