@@ -222,8 +222,9 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 														<?php if (!empty($keys)) { ?>
 															<div class="" id="sub_task_<?php echo $task['id']; ?>">
 																<div class="smart-forms spacer-b30 spacer-t30">
-																	<div class="tagline" style="<?php echo ($task['id'] == 4 || $task['id'] == 6 || $task['id'] == 7) ? 'width:80%;' : '';?>"><span>Sub Task </span></div>
+																	
 																	<?php if ($task['id'] == 4) { ?>
+																		<div class="tagline" style="<?php echo ($task['id'] == 4) ? 'width:40%;' : '';?>"><span>Sub Task </span></div>
 																		<a data-target="#borrower_information" data-toggle="modal"
 																			role="button"  href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
 																			<span class="text">Send Package</span>
@@ -239,11 +240,13 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 																		</a>
 																		
 																	<?php } else if ($task['id'] == 6) { ?>
+																		<div class="tagline" style="<?php echo ($task['id'] == 6) ? 'width:80%;' : '';?>"><span>Sub Task </span></div>
 																		<a data-target="#borrower_information_payoff" data-toggle="modal"
 																			role="button"  href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
 																			<span class="text">Send Package</span>
 																		</a>
 																	<?php } else if ($task['id'] == 7) { ?>
+																		<div class="tagline" style="<?php echo ($task['id'] == 7) ? 'width:80%;' : '';?>"><span>Sub Task </span></div>
 																		<a data-target="#lender_information" data-toggle="modal"
 																			role="button"  href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
 																			<span class="text">Send Package</span>

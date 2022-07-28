@@ -72,11 +72,12 @@
 							
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingEighteen">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEighteen" aria-expanded="true" aria-controls="collapseEighteen">
-                                      (3) OWNER'S ESCROW INFORMATION SHEET
+                                    <button style="border-bottom: 1px solid rgba(0,0,0,.125)" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEighteen" aria-expanded="true" aria-controls="collapseEighteen">
+                                      OWNER'S ESCROW INFORMATION SHEET
                                     </button>
                                 </h2>
-                                <div id="collapseEighteen" class="accordion-collapse collapse" aria-labelledby="headingEighteen" data-bs-parent="#accordionExample" style="">
+                                <input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
+                                <div id="collapseEighteen" class="accordion-collapse collapse show" aria-labelledby="headingEighteen" data-bs-parent="#accordionExample" style="">
                                     <div class="accordion-body">
                                         <h3 class="text-center mt-md-5 mby-5">
                                             <b>
