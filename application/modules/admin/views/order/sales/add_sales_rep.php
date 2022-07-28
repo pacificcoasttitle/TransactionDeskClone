@@ -315,6 +315,17 @@
 												<input  step="01" min="0"  type="number" class="form-control" name="commission_first_threshold" id="commission-first-threshold" class="form-control" value="0.00" />
 											</div>
 										</div>
+										<div class="form-group row" >
+											<label for="commission-bonus" class="col-sm-4 col-form-label">Apply Bonus?</label>
+											<div class="col-sm-8">
+											<select name="apply_bonus"  id="commission-bonus" class="selectpicker" >
+												
+												<option  value="0">No</option>
+												<option value="1">Yes</option>
+												
+											</select>
+											</div>
+										</div>
 
 										
 

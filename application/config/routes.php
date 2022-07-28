@@ -340,6 +340,12 @@ $route['order/admin/delete-commission-range/(:num)'] = 'admin/order/commissionRa
 $route['order/admin/commission-files(/:num)?(/:num)?(/:num)?'] = 'admin/order/commissionRange/commission_files$1$2$3';
 $route['order/admin/delete-commission-file/(:num)'] = 'admin/order/commissionRange/delete_commission_file/$1';
 
+$route['order/admin/commission-bonus'] = 'admin/order/commissionRange/index_bonus';
+$route['order/admin/add-commission-bonus'] = 'admin/order/commissionRange/add_bonus';
+$route['order/admin/edit-commission-bonus/(:num)'] = 'admin/order/commissionRange/edit_bonus/$1';
+$route['order/admin/delete-commission-bonus/(:num)'] = 'admin/order/commissionRange/delete_bonus/$1';
+
+
 $route['order/admin/underwriter-tier'] = 'admin/order/commissionRange/index_underwriter_tier';
 $route['order/admin/add-underwriter-tier'] = 'admin/order/commissionRange/add_underwriter_tier';
 $route['order/admin/edit-underwriter-tier/(:num)'] = 'admin/order/commissionRange/edit_underwriter_tier/$1';
