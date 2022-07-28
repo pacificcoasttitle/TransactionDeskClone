@@ -2110,6 +2110,30 @@ class DashboardMail extends MX_Controller {
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
 
+        $this->db->select('*')
+            ->from('pct_order_borrower_seller_owner_escrow_info');
+        $this->db->where('order_id', $order[0]['id']);
+        $this->db->order_by('id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            $data['sellerInfo'] = $query->row_array();
+        } else {
+            $data['sellerInfo'] = array();
+        }
+
+        $this->db->select('*')
+            ->from('pct_order_documents');
+        $this->db->where('order_id', $order[0]['id']);
+        $this->db->where('(is_commission_doc = 1 or is_escrow_instruction_doc = 1)');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            $data['docsInfo'] = $query->result_array();
+        } else {
+            $data['docsInfo'] = array();
+        }
+        
+
         if (!empty($orderDetails['borrower'])) {
             $orderDetails['primary_owner_name'] = $orderDetails['borrower'];
         } else {
@@ -2164,8 +2188,6 @@ class DashboardMail extends MX_Controller {
             $orderDetails['second_seller_last_name'] = '' ;
         }
         $data['orderDetails'] = $orderDetails;
-        
-
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();
@@ -2178,72 +2200,69 @@ class DashboardMail extends MX_Controller {
             $this->session->unset_userdata('success');
         }
         
+        $user_data['admin_api'] = 1; 
+        $endPoint = 'files/'. $order[0]['file_id'] .'/documents';
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+        $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
+        $resDocuments = json_decode($resultDocuments, true);
+        $documentIds = array(1015, 1534, 1040, 1405, 1039, 1038, 1020);
 
-        if (empty($order[0]['escrow_instruction_document']) || empty($order[0]['commission_instruction_document'])) {
-            $user_data['admin_api'] = 1; 
-            $endPoint = 'files/'. $order[0]['file_id'] .'/documents';
-            $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
-            $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
-            $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
-            $resDocuments = json_decode($resultDocuments, true);
-            $escrow_instruction_flag = 0;
-            $commission_instruction_flag = 0;
-            
-            if (!empty($resDocuments['Documents'])) {
-                foreach ($resDocuments['Documents'] as $document) {
-                    if ($document['DocumentType']['DocumentTypeID'] == 1015 || $document['DocumentType']['DocumentTypeID'] == 1020) {
-                        if (str_contains(strtolower($document['DocumentName']), 'commission') || str_contains(strtolower($document['DocumentName']), 'car 21')) {
-                            $document_name = date('YmdHis')."_".$document['DocumentName'];
-                            $ext = end(explode('.', $document['DocumentName']));
-                            if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
-                                $document_name = str_replace($ext, 'pdf', $document_name);
+        if(!empty($resDocuments['Documents'])) {
+            foreach ($resDocuments['Documents'] as $document) {
+                if (in_array($document['DocumentType']['DocumentTypeID'], $documentIds)) {
+                    $key = array_search($document['DocumentID'], array_column($data['docsInfo'], 'api_document_id'));
+                    // echo $document['DocumentID']."---";
+                    // print_r($data['docsInfo']);
+                    // print_r(array_column($data['docsInfo'], 'api_document_id'));exit;
+                    $this->load->model('order/document');
+                    if(strlen($key) == 0 && strpos(strtolower($document['DocumentName']), 'snapshot') === false) {
+                        $document_name = date('YmdHis')."_".$document['DocumentName'];
+                        $ext = end(explode('.', $document['DocumentName']));
+
+                        if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
+                            $document_name = str_replace($ext, 'pdf', $document_name);
+                        }
+
+                        $endPoint = 'documents/'.$document['DocumentID'].'?format=json';
+                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+                        $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
+                        $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order[0]['id'], $logid);
+                        $resDocument = json_decode($resultDocument, true);
+
+                        if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+                            $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+                            if (!is_dir('uploads/instruction_documents')) {
+                                mkdir(FCPATH.'/uploads/instruction_documents', 0777, TRUE);
                             }
-                            
-                            $endPoint = 'documents/'.$document['DocumentID'].'?format=json';
-                            $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
-                            $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
-                            $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order[0]['id'], $logid);
-                            $resDocument = json_decode($resultDocument, true);
-
-                            if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
-                                
-                                if (str_contains(strtolower($document['DocumentName']), 'car 21') && $escrow_instruction_flag == 0) {
-                                    $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
-                                    if (!is_dir('uploads/escrow_instruction_documents')) {
-                                        mkdir(FCPATH.'/uploads/escrow_instruction_documents', 0777, TRUE);
-                                    }
-                                    file_put_contents(FCPATH.'/uploads/escrow_instruction_documents/'.$document_name, $documentContent);
-                                    $this->order->uploadDocumentOnAwsS3($document_name, 'escrow_instruction_documents');
-                                    //$this->home_model->update(array('escrow_instruction_document' => $document_name), array('file_id' => $order[0]['file_id']), 'order_details');
-                                    $data['escrow_instruction_document'] = $document_name;
-                                    $escrow_instruction_flag = 1;
-                                }
-
-                                if (str_contains(strtolower($document['DocumentName']), 'commission') && $commission_instruction_flag == 0) {
-                                    $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
-                                    if (!is_dir('uploads/commission_instruction_document')) {
-                                        mkdir(FCPATH.'/uploads/commission_instruction_document', 0777, TRUE);
-                                    }
-                                    file_put_contents(FCPATH.'/uploads/commission_instruction_document/'.$document_name, $documentContent);
-                                    $this->order->uploadDocumentOnAwsS3($document_name, 'commission_instruction_document');
-                                    //$this->home_model->update(array('commission_instruction_document' => $document_name), array('file_id' => $order[0]['file_id']), 'order_details');
-                                    $data['commission_instruction_document'] = $document_name;
-                                    $commission_instruction_flag = 1;
-                                }
-                            }
+                            file_put_contents(FCPATH.'/uploads/instruction_documents/'.$document_name, $documentContent);
+                            $this->order->uploadDocumentOnAwsS3($document_name, 'instruction_documents');
+                            $documentData = array(
+                                'document_name' => $document_name,
+                                'original_document_name' => $document['DocumentName'],
+                                'document_type_id' => $document['DocumentType']['DocumentTypeID'],
+                                'api_document_id' => $document['DocumentID'],
+                                'document_size' => $document['Size'],
+                                'user_id' => 0,
+                                'order_id' => $orderDetails['order_id'],
+                                'description' => $document['DocumentName'],
+                                'created' => date('Y-m-d H:i:s'),
+                                'is_sync' => 0,
+                                'is_commission_doc' => ($document['DocumentType']['DocumentTypeID'] == 1039 || $document['DocumentType']['DocumentTypeID'] == 1038  ||$document['DocumentType']['DocumentTypeID'] == 1020) ? 1 : 0,
+                                'is_escrow_instruction_doc' => ($document['DocumentType']['DocumentTypeID'] == 1015 || $document['DocumentType']['DocumentTypeID'] == 1534  ||$document['DocumentType']['DocumentTypeID'] == 1040) ? 1 : 0,
+                            );  
+                            $data['docsInfo'][] = $documentData;
+                            $this->document->insert($documentData);
                         }
                     }
                 }
             }
-        } else {
-            $data['escrow_instruction_document'] = $order[0]['escrow_instruction_document']; 
         }
-       
+        
         if ($this->input->post()) {
             
             $sellerEscrowInstructionData = array();
             $sellerCommissionInstructionData = array();
-
             $sellerOwnerEscrowInfoData = array(
                 'order_id' => $this->input->post('order_id'),
                 'seller_name' => $this->input->post('seller_name') ? $this->input->post('seller_name') : null,
@@ -2585,6 +2604,18 @@ class DashboardMail extends MX_Controller {
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
 
+        $this->db->select('*')
+            ->from('pct_order_borrower_buyer_info');
+        $this->db->where('order_id', $order[0]['id']);
+        $this->db->order_by('id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            $data['buyerInfo'] = $query->row_array();
+        } else {
+            $data['buyerInfo'] = array();
+        }
+        
         if (!empty($orderDetails['primary_owner'])) {
             $buyer_owner_names = explode(' ', $orderDetails['primary_owner']);
             if(count($buyer_owner_names) == 3) {
@@ -2969,5 +3000,167 @@ class DashboardMail extends MX_Controller {
             redirect(base_url().'borrower-buyer-form/'.$random_number);exit;
         }
         $this->load->view('order/borrower_buyer', $data);
+    }
+
+    public function buyerInfo($random_number)
+    {
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $order = $this->getOrderInfo($random_number);
+        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+        $data['orderDetails'] = $orderDetails;
+        $errors = array();
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+
+        if ($this->input->post()) {
+            $borrowerBuyerInfoData = array(
+                'order_id' => $this->input->post('order_id'),
+                'property_address' => $orderDetails['address'],
+                'property_address2' => ' ',
+                'property_city' => $orderDetails['property_city'],
+                'property_state' => 'CA',
+                'property_zip_code' => $orderDetails['property_zip'],
+                'buyer_full_name' => $this->input->post('buyer_full_name'),
+                'buyer_home_number' => $this->input->post('buyer_home_number'),
+                'buyer_work_number' => $this->input->post('buyer_work_number'),
+                'buyer_email_address' => $this->input->post('buyer_email_address'),
+                'buyer_fax_number' => $this->input->post('buyer_fax_number'),
+                'buyer_ssn' => $this->input->post('buyer_ssn'),
+                'lender_name' => $this->input->post('lender_name'),
+                'lender_address' => $this->input->post('lender_address'),
+                'buyer_current_mailing_address' => $this->input->post('buyer_current_mailing_address'),
+                'buyer_mailing_address_after_close' => $this->input->post('buyer_mailing_address_after_close'),
+                'agent_name' => $this->input->post('agent_name'),
+                'agent_phone_number' => $this->input->post('agent_phone_number'),
+                'second_lender_name' => $this->input->post('second_lender_name') ? $this->input->post('second_lender_name') : null,
+                'seond_lender_address' => $this->input->post('seond_lender_address') ? $this->input->post('seond_lender_address') : null,
+                'second_agent_name' => $this->input->post('second_agent_name') ? $this->input->post('second_agent_name') : null,
+                'seond_agent_phone_number' => $this->input->post('seond_agent_phone_number') ? $this->input->post('seond_agent_phone_number') : null,
+                'insurance_name' => $this->input->post('insurance_name'),
+                'insurance_phone_number' => $this->input->post('insurance_phone_number'),
+                'insurance_address' => $this->input->post('insurance_address'),
+                'insurance_company' => $this->input->post('insurance_company'),
+                'buyer_date' => $this->input->post('buyer_date'),
+                'buyer_signature' => $this->input->post('buyer_signature'),
+                'names' => ' ',
+                'pick_ups' => ' ',
+                'names_of_spouse' => ' ',
+                'appropriate_choice' => ' ',
+                'partnership_name' => ' ',
+                'corporation_name' => ' ',
+                'vesting_form_date' => ' ',
+                'vesting_form_signature' => ' ',
+                'tenant_id' => ' ',
+                'doc_type' => ' ',
+            );
+            $this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info');         
+            $success[] = "Borrower buyer info saved successfully.";
+            $data = array(
+                "errors" =>  $errors,
+                "success" => $success
+            );
+            $this->session->set_userdata($data);
+            redirect(base_url().'buyer-info/'.$random_number);exit;
+        }
+        $this->load->view('order/borrower_buyer_info', $data);
+    }
+
+    public function sellerInfo($random_number)
+    {
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $order = $this->getOrderInfo($random_number);
+        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+        $data['orderDetails'] = $orderDetails;
+        $errors = array();
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        
+        if ($this->input->post()) {
+            $sellerOwnerEscrowInfoData = array(
+                'order_id' => $this->input->post('order_id'),
+                'seller_name' => $this->input->post('seller_name') ? $this->input->post('seller_name') : null,
+                'escrow_home_phone_number' => $this->input->post('escrow_home_phone_number') ? $this->input->post('escrow_home_phone_number') : null,
+                'work_phone_number' => $this->input->post('work_phone_number') ? $this->input->post('work_phone_number') : null,
+                'fax_number' => $this->input->post('fax_number') ? $this->input->post('fax_number') : null,
+                'cell_phone_number' => $this->input->post('cell_phone_number') ? $this->input->post('cell_phone_number') : null,
+                'email_address' => $this->input->post('email_address') ? $this->input->post('email_address') : null,
+                'cell_phone_number_2' => $this->input->post('cell_phone_number_2') ? $this->input->post('cell_phone_number_2') : null,
+                'escrow_ssn' => $this->input->post('escrow_ssn') ? $this->input->post('escrow_ssn') : null,
+                'ssn_2' => $this->input->post('ssn_2') ? $this->input->post('ssn_2') : null,
+                'property_address' => $this->input->post('property_address') ? $this->input->post('property_address') : null,
+                'seller_current_mailing_address' => $this->input->post('seller_current_mailing_address') ? $this->input->post('seller_current_mailing_address') : null,
+                'seller_mailing_address_after_close_escrow' => $this->input->post('seller_mailing_address_after_close_escrow') ? $this->input->post('seller_mailing_address_after_close_escrow') : null,
+                'seller_mailing_address_after_close_escrow_2' => $this->input->post('seller_mailing_address_after_close_escrow_2') ? $this->input->post('seller_mailing_address_after_close_escrow_2') : null,
+                'first_trust_deed_lender' => $this->input->post('first_trust_deed_lender') ? $this->input->post('first_trust_deed_lender') : null,
+                'lender_address' => $this->input->post('lender_address') ? $this->input->post('lender_address') : null,
+                'loan_number' => $this->input->post('loan_number') ? $this->input->post('loan_number') : null,
+                'lender_phone_number' => $this->input->post('lender_phone_number') ? $this->input->post('lender_phone_number') : null,
+                'unpaid_principal_balance' => $this->input->post('unpaid_principal_balance') ? $this->input->post('unpaid_principal_balance') : null,
+                'next_due' => $this->input->post('next_due') ? $this->input->post('next_due') : null,
+                'type_of_loan' => $this->input->post('type_of_loan') ? $this->input->post('type_of_loan') : null,
+                'va' => $this->input->post('va') ? $this->input->post('va') : null,
+                'fha' => $this->input->post('fha') ? $this->input->post('fha') : null,
+                'conventional' => $this->input->post('conventional') ? $this->input->post('conventional') : null,
+                'taxes' => $this->input->post('taxes') ? $this->input->post('taxes') : null,
+                'paid' => $this->input->post('paid') ? $this->input->post('paid') : null,
+                'unpaid' => $this->input->post('unpaid') ? $this->input->post('unpaid') : null,
+                'is_impound_acc' => $this->input->post('is_impound_acc') ? $this->input->post('is_impound_acc') : null,
+                'second_trust_deed_lender' => $this->input->post('second_trust_deed_lender') ? $this->input->post('second_trust_deed_lender') : null,
+                'second_lender_address' => $this->input->post('second_lender_address') ? $this->input->post('second_lender_address') : null,
+                'second_loan_number' => $this->input->post('second_loan_number') ? $this->input->post('second_loan_number') : null,
+                'second_lender_phone_number' => $this->input->post('second_lender_phone_number') ? $this->input->post('second_lender_phone_number') : null,
+                'second_unpaid_principal_balance' => $this->input->post('second_unpaid_principal_balance') ? $this->input->post('second_unpaid_principal_balance') : null,
+                'second_type_of_loan' => $this->input->post('second_type_of_loan') ? $this->input->post('second_type_of_loan') : null,
+                'second_va' => $this->input->post('second_va') ? $this->input->post('second_va') : null,
+                'second_fha' => $this->input->post('second_fha') ? $this->input->post('second_fha') : null,
+                'second_conventional' => $this->input->post('second_conventional') ? $this->input->post('second_conventional') : null,
+                'homeowner_association' => $this->input->post('homeowner_association') ? $this->input->post('homeowner_association') : null,
+                'management_company' => $this->input->post('management_company') ? $this->input->post('management_company') : null,
+                'management_mailing_address' => $this->input->post('management_mailing_address') ? $this->input->post('management_mailing_address') : null,
+                'contact_person' => $this->input->post('contact_person') ? $this->input->post('contact_person') : null,
+                'management_phone_number' => $this->input->post('management_phone_number') ? $this->input->post('management_phone_number') : null,
+                'second_homeowner_association' => $this->input->post('second_homeowner_association') ? $this->input->post('second_homeowner_association') : null,
+                'second_management_company' => $this->input->post('second_management_company') ? $this->input->post('second_management_company') : null,
+                'second_management_mailing_address' => $this->input->post('second_management_mailing_address') ? $this->input->post('second_management_mailing_address') : null,
+                'second_contact_person' => $this->input->post('second_contact_person') ? $this->input->post('second_contact_person') : null,
+                'second_management_phone_number' => $this->input->post('second_management_phone_number') ? $this->input->post('second_management_phone_number') : null,
+                'water_company_name' => $this->input->post('water_company_name') ? $this->input->post('water_company_name') : null,
+                'water_contract_name' => $this->input->post('water_contract_name') ? $this->input->post('water_contract_name') : null,
+                'water_company_address' => $this->input->post('water_company_address') ? $this->input->post('water_company_address') : null,
+                'water_company_phone' => $this->input->post('water_company_phone') ? $this->input->post('water_company_phone') : null,
+                'amount_of_assessment' => $this->input->post('amount_of_assessment') ? $this->input->post('amount_of_assessment') : null,
+                'water_next_due' => $this->input->post('water_next_due') ? $this->input->post('water_next_due') : null,
+                'no_of_shares' => $this->input->post('no_of_shares') ? $this->input->post('no_of_shares') : null,
+                'date' => $this->input->post('date') ? $this->input->post('date') : null,
+                'escrow_signature' => $this->input->post('escrow_signature') ? $this->input->post('escrow_signature') : null,
+            );
+            $this->home_model->insert($sellerOwnerEscrowInfoData, 'pct_order_borrower_seller_owner_escrow_info');
+            $success[] = "Borrower seller info saved successfully.";
+            $data = array(
+                "errors" =>  $errors,
+                "success" => $success
+            );
+            $this->session->set_userdata($data);
+            redirect(base_url().'seller-info/'.$random_number);exit;
+        }
+        $this->load->view('order/borrower_seller_info', $data);
     }
 }

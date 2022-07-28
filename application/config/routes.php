@@ -234,6 +234,10 @@ $route['borrower-seller-form/(:any)'] = 'frontend/order/dashboardMail/borrowerSe
 $route['borrower-buyer-form/(:any)'] = 'frontend/order/dashboardMail/borrowerBuyerForm/$1';
 $route['sales-commission/(:num)'] = 'frontend/order/salesRep/commission/$1';
 $route['task-documents'] = 'frontend/order/escrow/taskDocuments';
+$route['add-buyer-on-order'] = 'frontend/order/escrow/addBuyerOnOrder';
+$route['add-seller-on-order'] = 'frontend/order/escrow/addSellerOnOrder';
+$route['buyer-info/(:any)'] = 'frontend/order/dashboardMail/buyerInfo/$1';
+$route['seller-info/(:any)'] = 'frontend/order/dashboardMail/sellerInfo/$1';
 
 
 /* Route for PCT-Order backend*/
@@ -521,6 +525,8 @@ $route['hr/admin/create-note'] = 'admin/hr/orders/create_note';
 $route['hr/admin/add-borrower-on-order'] = 'admin/hr/orders/addBorrowerOnOrder';
 $route['hr/admin/add-borrower-on-order-for-payoff'] = 'admin/hr/orders/addBorrowerOnOrderForPayoff';
 $route['hr/admin/add-lender-on-order'] = 'admin/hr/orders/addLenderOnOrder';
+$route['hr/admin/add-buyer-on-order'] = 'admin/hr/orders/addBuyerOnOrder';
+$route['hr/admin/add-seller-on-order'] = 'admin/hr/orders/addSellerOnOrder';
 $route['hr/admin/task-documents'] = 'admin/hr/orders/taskDocuments';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */

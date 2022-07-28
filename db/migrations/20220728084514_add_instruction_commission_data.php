@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class AddCommissionDocumentColumn extends AbstractMigration
+final class AddInstructionCommissionData extends AbstractMigration
 {
     /**
      * Change Method.
@@ -18,8 +18,9 @@ final class AddCommissionDocumentColumn extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('order_details');
-		$table->addColumn('commission_instruction_document', 'string', ['null' => true, 'after' => 'is_underwriter_updated'])
+        $table = $this->table('pct_order_documents');
+		$table->addColumn('is_commission_doc', 'boolean', ['null' => true, 'after'=>'is_uploaded_by_borrower'])
+            ->addColumn('is_escrow_instruction_doc', 'boolean', ['null' => true, 'after'=>'is_commission_doc'])
             ->update();
     }
 }

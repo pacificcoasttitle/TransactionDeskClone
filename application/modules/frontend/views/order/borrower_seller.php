@@ -86,24 +86,28 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php if (!empty($escrow_instruction_document)) { ?>
-                                                            <tr role="row" class="odd">
-                                                                <td>1</td>
-                                                                <td><?php echo $escrow_instruction_document;?></td>
-                                                                <td>
-                                                                    <div class="custom__task_actions smart-forms" style="display: inline-block;">
-                                                                        <a target="_blank" href="<?php echo env('AWS_PATH').'escrow_instruction_documents/'.$escrow_instruction_document;?>" class="btn button btn-primary">
-                                                                            <span class="text">View</span>
-                                                                        </a>
-                                                                        <div class="clearfix"></div>
-                                                                    </div>
-                                                                </td> 
-                                                            </tr>   
-                                                        <?php } else { ?>
+                                                        <?php if (!empty($docsInfo)) { 
+                                                            $i = 1;
+                                                            foreach($docsInfo as $docs) {
+                                                                if($docs['is_escrow_instruction_doc'] == 1) {?>
+                                                                    <tr role="row" class="odd">
+                                                                        <td><?php echo $i;?></td>
+                                                                        <td><?php echo $docs['original_document_name'];?></td>
+                                                                        <td>
+                                                                            <div class="custom__task_actions smart-forms" style="display: inline-block;">
+                                                                                <a target="_blank" href="<?php echo env('AWS_PATH').'instruction_documents/'.$docs['document_name'];?>" class="btn button btn-primary">
+                                                                                    <span class="text">View</span>
+                                                                                </a>
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </td> 
+                                                                    </tr>   
+                                                        <?php $i++; } }
+                                                            } else { ?>
 
-                                                            <tr align="center">
-                                                                <td colspan="3">No Document found.</td>
-                                                            </tr>
+                                                                <tr align="center">
+                                                                    <td colspan="3">No Document found.</td>
+                                                                </tr>
                                                         <?php } ?>
                                                               
                                                     </tbody>
@@ -130,20 +134,24 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php if (!empty($commission_instruction_document)) { ?>
-                                                            <tr role="row" class="odd">
-                                                                <td>1</td>
-                                                                <td><?php echo $commission_instruction_document;?></td>
-                                                                <td>
-                                                                    <div class="custom__task_actions smart-forms" style="display: inline-block;">
-                                                                        <a target="_blank" href="<?php echo env('AWS_PATH').'commission_instruction_document/'.$commission_instruction_document;?>" class="btn button btn-primary">
-                                                                            <span class="text">View</span>
-                                                                        </a>
-                                                                        <div class="clearfix"></div>
-                                                                    </div>
-                                                                </td> 
+                                                    <?php if (!empty($docsInfo)) { 
+                                                            $i = 1;
+                                                            foreach($docsInfo as $docs) {
+                                                                if($docs['is_commission_doc'] == 1) {?>
+                                                                    <tr role="row" class="odd">
+                                                                        <td><?php echo $i;?></td>
+                                                                        <td><?php echo $docs['original_document_name'];?></td>
+                                                                        <td>
+                                                                            <div class="custom__task_actions smart-forms" style="display: inline-block;">
+                                                                                <a target="_blank" href="<?php echo env('AWS_PATH').'instruction_documents/'.$docs['document_name'];?>" class="btn button btn-primary">
+                                                                                    <span class="text">View</span>
+                                                                                </a>
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </td> 
                                                             </tr>   
-                                                        <?php } else { ?>
+                                                            <?php $i++; } }
+                                                            } else { ?>
 
                                                             <tr align="center">
                                                                 <td colspan="3">No Document found.</td>
@@ -188,7 +196,7 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="seller_name" name="seller_name" required="required" data-error="#seller_name-error">
+                                            <input type="text" class="form-control" id="seller_name" name="seller_name" value="<?php echo $sellerInfo['seller_name'] ? $sellerInfo['seller_name'] : '';?>" required="required" data-error="#seller_name-error">
                                             <small class="small_label">Seller(s):</small>
                                         </div>
                                         <label id="seller_name-error" class="error text-danger" for="seller_name"></label>
@@ -197,7 +205,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="escrow_home_phone_number" name="escrow_home_phone_number" required="required" data-error="#escrow_home_phone_number-error">
+                                                    <input type="text" class="form-control" id="escrow_home_phone_number" name="escrow_home_phone_number" value="<?php echo $sellerInfo['escrow_home_phone_number'] ? $sellerInfo['escrow_home_phone_number'] : '';?>" required="required" data-error="#escrow_home_phone_number-error">
                                                     <small class="small_label">Home Phone Number:</small>
                                                 </div>
                                                 <label id="escrow_home_phone_number-error" class="error text-danger" for="escrow_home_phone_number"></label>
@@ -205,7 +213,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="work_phone_number" name="work_phone_number" required="required" data-error="#work_phone_number-error">
+                                                    <input type="text" class="form-control" id="work_phone_number" name="work_phone_number" value="<?php echo $sellerInfo['work_phone_number'] ? $sellerInfo['work_phone_number'] : '';;?>" required="required" data-error="#work_phone_number-error">
                                                     <small class="small_label">Work Phone Number:</small>
                                                 </div>
                                                 <label id="work_phone_number-error" class="error text-danger" for="work_phone_number"></label>
@@ -216,7 +224,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="fax_number" name="fax_number" required="required" data-error="#fax_number-error">
+                                                    <input type="text" class="form-control" id="fax_number" name="fax_number" value="<?php echo $sellerInfo['fax_number'] ? $sellerInfo['fax_number'] : '';;?>" required="required" data-error="#fax_number-error">
                                                     <small class="small_label">Fax Number:</small>
                                                     
                                                 </div>
@@ -225,7 +233,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="cell_phone_number" name="cell_phone_number" required="required" data-error="#cell_phone_number-error">
+                                                    <input type="text" class="form-control" id="cell_phone_number" name="cell_phone_number" value="<?php echo $sellerInfo['cell_phone_number'] ? $sellerInfo['cell_phone_number'] : '';?>" required="required" data-error="#cell_phone_number-error">
                                                     <small class="small_label">Cell Phone Number:</small>
                                                     
                                                 </div>
@@ -237,7 +245,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="email_address" name="email_address" required="required" data-error="#email_address-error">
+                                                    <input type="text" class="form-control" id="email_address" name="email_address" value="<?php echo $sellerInfo['email_address'] ? $sellerInfo['email_address'] : '';?>" required="required" data-error="#email_address-error">
                                                     <small class="small_label">E-Mail Address:</small>
                                                     
                                                 </div>
@@ -246,7 +254,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="cell_phone_number_2" name="cell_phone_number_2" required="required" data-error="#cell_phone_number_2-error">
+                                                    <input type="text" class="form-control" id="cell_phone_number_2" name="cell_phone_number_2" value="<?php echo $sellerInfo['cell_phone_number_2'] ? $sellerInfo['cell_phone_number_2'] : '';?>" required="required" data-error="#cell_phone_number_2-error">
                                                     <small class="small_label">Cell Phone Number:</small>
                                                     
                                                 </div>
@@ -258,7 +266,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="escrow_ssn" name="escrow_ssn" required="required" data-error="#escrow_ssn-error">
+                                                    <input type="text" class="form-control" id="escrow_ssn" name="escrow_ssn" value="<?php echo $sellerInfo['escrow_ssn'] ? $sellerInfo['escrow_ssn'] : '';?>" required="required" data-error="#escrow_ssn-error">
                                                     <small class="small_label">Social Security #:</small>
                                                    
                                                 </div>
@@ -267,7 +275,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="ssn_2" name="ssn_2" required="required" data-error="#ssn_2-error">
+                                                    <input type="text" class="form-control" id="ssn_2" name="ssn_2" value="<?php echo $sellerInfo['ssn_2'] ? $sellerInfo['ssn_2'] : '';?>" required="required" data-error="#ssn_2-error">
                                                     <small class="small_label">Social Security #:</small>
                                                     
                                                 </div>
@@ -278,7 +286,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="property_address" name="property_address" required="required" data-error="#property_address-error"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="property_address" name="property_address" required="required" data-error="#property_address-error"><?php echo $sellerInfo['property_address'] ? $sellerInfo['property_address'] : '';?></textarea>
                                                 <small class="small_label">Property Address:</small>
                                                 
                                             </div>
@@ -288,7 +296,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_current_mailing_address" name="seller_current_mailing_address" required="required" data-error="#seller_current_mailing_address-error"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_current_mailing_address" name="seller_current_mailing_address"  required="required" data-error="#seller_current_mailing_address-error"><?php echo $sellerInfo['seller_current_mailing_address'] ? $sellerInfo['seller_current_mailing_address'] : '';?></textarea>
                                                 <small class="small_label">Seller(s) Current Mailing Address: </small>
                                                 
                                             </div>
@@ -298,7 +306,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow" name="seller_mailing_address_after_close_escrow" required="required" data-error="#seller_mailing_address_after_close_escrow-error"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow" name="seller_mailing_address_after_close_escrow"  required="required" data-error="#seller_mailing_address_after_close_escrow-error"><?php echo $sellerInfo['seller_mailing_address_after_close_escrow'] ? $sellerInfo['seller_mailing_address_after_close_escrow'] : '';?></textarea>
                                                 <small class="small_label">Seller(s) Mailing Address after Close of Escrow: </small>
                                                 
                                             </div>
@@ -308,7 +316,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow_2" name="seller_mailing_address_after_close_escrow_2" required="required" data-error="#seller_mailing_address_after_close_escrow_2-error"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="seller_mailing_address_after_close_escrow_2" name="seller_mailing_address_after_close_escrow_2"  required="required" data-error="#seller_mailing_address_after_close_escrow_2-error"><?php echo $sellerInfo['seller_mailing_address_after_close_escrow_2'] ? $sellerInfo['seller_mailing_address_after_close_escrow_2'] : '';?></textarea>
                                                 <small class="small_label">Seller(s) Mailing Address after Close of Escrow: </small>
                                                 
                                             </div>
@@ -323,7 +331,7 @@
 
                                         <div class="form-group position-relative mb-3 mt-3">
                                             <label for="" class="mb-2"><b></b></label>
-                                            <input type="text" class="form-control" id="first_trust_deed_lender" name="first_trust_deed_lender" required="required" data-error="#first_trust_deed_lender-error">
+                                            <input type="text" class="form-control" id="first_trust_deed_lender" name="first_trust_deed_lender" value="<?php echo $sellerInfo['first_trust_deed_lender'] ? $sellerInfo['first_trust_deed_lender'] : '';?>" required="required" data-error="#first_trust_deed_lender-error">
                                             <small class="small_label">FIRST TRUST DEED LENDER:</small>
                                         </div>
                                         <label id="first_trust_deed_lender-error" class="error text-danger" for="first_trust_deed_lender"></label>
@@ -331,7 +339,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="lender_address" name="lender_address" required="required" data-error="#lender_address-error"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="lender_address" name="lender_address" required="required" data-error="#lender_address-error"><?php echo $sellerInfo['lender_address'] ? $sellerInfo['lender_address'] : '';?>"</textarea>
                                                 <small class="small_label">Address:</small>
                                                 
                                             </div>
@@ -342,7 +350,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="loan_number" name="loan_number" required="required" data-error="#loan_number-error">
+                                                    <input type="text" class="form-control" id="loan_number" name="loan_number" value="<?php echo $sellerInfo['loan_number'] ? $sellerInfo['loan_number'] : '';?>" required="required" data-error="#loan_number-error">
                                                     <small class="small_label">Loan Number:</small>
                                                     
                                                 </div>
@@ -351,7 +359,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="lender_phone_number" name="lender_phone_number" required="required" data-error="#lender_phone_number-error">
+                                                    <input type="text" class="form-control" id="lender_phone_number" name="lender_phone_number" value="<?php echo $sellerInfo['lender_phone_number'] ? $sellerInfo['lender_phone_number'] : '';?>" required="required" data-error="#lender_phone_number-error">
                                                     <small class="small_label">Phone Number:</small>
                                                 </div>
                                                 <label id="lender_phone_number-error" class="error text-danger" for="lender_phone_number"></label>
@@ -362,7 +370,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="unpaid_principal_balance" name="unpaid_principal_balance" required="required" data-error="#unpaid_principal_balance-error">
+                                                    <input type="text" class="form-control" id="unpaid_principal_balance" name="unpaid_principal_balance" value="<?php echo $sellerInfo['unpaid_principal_balance'] ? $sellerInfo['unpaid_principal_balance'] : '';?>" required="required" data-error="#unpaid_principal_balance-error">
                                                     <small class="small_label">Unpaid Principal Balance $:</small>
                                                 </div>
                                                 <label id="unpaid_principal_balance-error" class="error text-danger" for="unpaid_principal_balance"></label>
@@ -370,7 +378,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="next_due" name="next_due" required="required" data-error="#next_due-error">
+                                                    <input type="text" class="form-control" id="next_due" name="next_due" value="<?php echo $sellerInfo['next_due'] ? $sellerInfo['next_due'] : '';?>" required="required" data-error="#next_due-error">
                                                     <small class="small_label">Next Due:</small>
                                                 </div>
                                                 <label id="next_due-error" class="error text-danger" for="next_due"></label>
@@ -381,21 +389,21 @@
                                             <div class="row mt-4">
                                                 <div class="col-lg-9 col-md-8">
                                                     <div class="mb-3">
-                                                        Type of Loan: <input type="text" class="input_single w-medium" id="type_of_loan" name="type_of_loan"> VA <input type="text" class="input_single w-medium" id="va" name="va">FHA <input type="text" class="input_single w-medium" id="fha" name="fha">Conventional <input type="text" class="input_single w-medium" id="conventional" name="conventional">Equity Line/Line of Credit
+                                                        Type of Loan: <input type="text" class="input_single w-medium" id="type_of_loan" name="type_of_loan" value="<?php echo $sellerInfo['type_of_loan'] ? $sellerInfo['type_of_loan'] : '';?>"> VA <input type="text" class="input_single w-medium" id="va" name="va" value="<?php echo $sellerInfo['va'] ? $sellerInfo['va'] : '';?>">FHA <input type="text" class="input_single w-medium" id="fha" name="fha" value="<?php echo $sellerInfo['fha'] ? $sellerInfo['fha'] : '';?>">Conventional <input type="text" class="input_single w-medium" id="conventional" name="conventional" value="<?php echo $sellerInfo['conventional'] ? $sellerInfo['conventional'] : '';?>">Equity Line/Line of Credit
                                                     </div>
                                                     <div>
-                                                        TAXES: <input type="text" class="input_single w-medium" id="taxes" name="taxes">Paid <input type="text" class="input_single w-medium" id="paid" name="paid"> Unpaid<input type="text" class="input_single w-medium" id="unpaid" name="unpaid"> Taxes are being paid through my impound account
+                                                        TAXES: <input type="text" class="input_single w-medium" id="taxes" name="taxes" value="<?php echo $sellerInfo['taxes'] ? $sellerInfo['taxes'] : '';?>">Paid <input type="text" class="input_single w-medium" id="paid" name="paid" value="<?php echo $sellerInfo['paid'] ? $sellerInfo['paid'] : '';?>"> Unpaid<input type="text" class="input_single w-medium" id="unpaid" name="unpaid" value="<?php echo $sellerInfo['unpaid'] ? $sellerInfo['unpaid'] : '';?>"> Taxes are being paid through my impound account
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4">
                                                     <div class="d-flex">
                                                         Impound Acct:
                                                         <div class="ms-2">
-                                                            <input type="radio" id="impondYes" value="yes" name="is_impound_acc">
+                                                            <input type="radio" id="impondYes" value="yes" name="is_impound_acc" value="<?php echo $sellerInfo['is_impound_acc'] ? $sellerInfo['is_impound_acc'] : '';?>">
                                                             <label for="impondYes">Yes</label>
                                                         </div>
                                                         <div class="ms-2">
-                                                            <input type="radio" id="impondNo" value="no" name="is_impound_acc">
+                                                            <input type="radio" id="impondNo" value="no" name="is_impound_acc" value="<?php echo $sellerInfo['is_impound_acc'] ? $sellerInfo['is_impound_acc'] : '';?>">
                                                             <label for="impondNo">No</label>
                                                         </div>
                                                     </div>
@@ -408,7 +416,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_trust_deed_lender" name="second_trust_deed_lender" required="required" data-error="#second_trust_deed_lender-error">
+                                                <input type="text" class="form-control" id="second_trust_deed_lender" name="second_trust_deed_lender" value="<?php echo $sellerInfo['second_trust_deed_lender'] ? $sellerInfo['second_trust_deed_lender'] : '';?>" required="required" data-error="#second_trust_deed_lender-error">
                                                 <small class="small_label">SECOND TRUST DEED LENDER: </small>
                                             </div>
                                             <label id="second_trust_deed_lender-error" class="error text-danger" for="second_trust_deed_lender"></label>
@@ -417,7 +425,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <textarea rows="2" class="form-control" style="height:auto;" id="second_lender_address" name="second_lender_address" required="required" data-error="#second_lender_address-error"></textarea>
+                                                <textarea rows="2" class="form-control" style="height:auto;" id="second_lender_address" name="second_lender_address"  required="required" data-error="#second_lender_address-error"><?php echo $sellerInfo['second_lender_address'] ? $sellerInfo['second_lender_address'] : '';?></textarea>
                                                 <small class="small_label">Address:</small>
                                                 
                                             </div>
@@ -428,7 +436,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="second_loan_number" name="second_loan_number" required="required" data-error="#second_loan_number-error">
+                                                    <input type="text" class="form-control" id="second_loan_number" name="second_loan_number" value="<?php echo $sellerInfo['second_loan_number'] ? $sellerInfo['second_loan_number'] : '';?>" required="required" data-error="#second_loan_number-error">
                                                     <small class="small_label">Loan Number:</small>
                                                     
                                                 </div>
@@ -437,7 +445,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="second_lender_phone_number" name="second_lender_phone_number" required="required" data-error="#second_lender_phone_number-error">
+                                                    <input type="text" class="form-control" id="second_lender_phone_number" name="second_lender_phone_number" value="<?php echo $sellerInfo['second_lender_phone_number'] ? $sellerInfo['second_lender_phone_number'] : '';?>" required="required" data-error="#second_lender_phone_number-error">
                                                     <small class="small_label">Phone Number:</small>
                                                     
                                                 </div>
@@ -448,7 +456,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3 col-md-6">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_unpaid_principal_balance" name="second_unpaid_principal_balance" required="required" data-error="#second_unpaid_principal_balance-error">
+                                                <input type="text" class="form-control" id="second_unpaid_principal_balance" name="second_unpaid_principal_balance" value="<?php echo $sellerInfo['second_unpaid_principal_balance'] ? $sellerInfo['second_unpaid_principal_balance'] : '';?>" required="required" data-error="#second_unpaid_principal_balance-error">
                                                 <small class="small_label">Unpaid Principal Balance $:</small>
                                             </div>
                                             <label id="second_unpaid_principal_balance-error" class="error text-danger" for="second_unpaid_principal_balance"></label>
@@ -457,7 +465,7 @@
                                         <div class="row mt-4">
                                             <div class="col-lg-12">
                                                 <div class="mb-3">
-                                                    Type of Loan: <input type="text" class="input_single w-medium" id="second_type_of_loan" name="second_type_of_loan"> VA <input type="text" class="input_single w-medium" id="second_va" name="second_va">FHA <input type="text" class="input_single w-medium" id="second_fha" name="second_fha">Conventional <input type="text" class="input_single w-medium" id="second_conventional" name="second_conventional">Equity Line/Line of Credit
+                                                    Type of Loan: <input type="text" class="input_single w-medium" id="second_type_of_loan" name="second_type_of_loan" value="<?php echo $sellerInfo['second_type_of_loan'] ? $sellerInfo['second_type_of_loan'] : '';?>"> VA <input type="text" class="input_single w-medium" id="second_va" name="second_va" value="<?php echo $sellerInfo['second_va'] ? $sellerInfo['second_va'] : '';?>">FHA <input type="text" class="input_single w-medium" id="second_fha" name="second_fha" value="<?php echo $sellerInfo['second_fha'] ? $sellerInfo['second_fha'] : '';?>">Conventional <input type="text" class="input_single w-medium" id="second_conventional" name="second_conventional" value="<?php echo $sellerInfo['second_conventional'] ? $sellerInfo['second_conventional'] : '';?>">Equity Line/Line of Credit
                                                 </div>
                                             </div>
                                         </div>
@@ -465,7 +473,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="homeowner_association" name="homeowner_association" required="required" data-error="#homeowner_association-error">
+                                                <input type="text" class="form-control" id="homeowner_association" name="homeowner_association" value="<?php echo $sellerInfo['homeowner_association'] ? $sellerInfo['homeowner_association'] : '';?>" required="required" data-error="#homeowner_association-error">
                                                 <small class="small_label">Homeowner’s Association: </small>
                                                 
                                             </div>
@@ -475,7 +483,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="management_company" name="management_company" required="required" data-error="#management_company-error">
+                                                <input type="text" class="form-control" id="management_company" name="management_company" value="<?php echo $sellerInfo['management_company'] ? $sellerInfo['management_company'] : '';?>" required="required" data-error="#management_company-error">
                                                 <small class="small_label">Management Company: </small>
                                                 
                                             </div>
@@ -485,7 +493,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-"><b></b></label>
-                                                <input type="text" class="form-control" id="management_mailing_address" name="management_mailing_address" required="required" data-error="#management_mailing_address-error">
+                                                <input type="text" class="form-control" id="management_mailing_address" name="management_mailing_address" value="<?php echo $sellerInfo['management_mailing_address'] ? $sellerInfo['management_mailing_address'] : '';?>" required="required" data-error="#management_mailing_address-error">
                                                 <small class="small_label">Mailing Address: </small>
                                                 
                                             </div>
@@ -496,7 +504,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="contact_person" name="contact_person" required="required" data-error="#contact_person-error">
+                                                    <input type="text" class="form-control" id="contact_person" name="contact_person" required="required" value="<?php echo $sellerInfo['contact_person'] ? $sellerInfo['contact_person'] : '';?>" data-error="#contact_person-error">
                                                     <small class="small_label">Contact Person:</small>
                                                     
                                                 </div>
@@ -505,7 +513,7 @@
                                             <div class="col-md-6">         
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="management_phone_number" name="management_phone_number" required="required" data-error="#management_phone_number-error">
+                                                    <input type="text" class="form-control" id="management_phone_number" name="management_phone_number" value="<?php echo $sellerInfo['management_phone_number'] ? $sellerInfo['management_phone_number'] : '';?>" required="required" data-error="#management_phone_number-error">
                                                     <small class="small_label">Phone Number:</small>
                                                     
                                                 </div>
@@ -518,7 +526,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_homeowner_association" name="second_homeowner_association" required="required" data-error="#second_homeowner_association-error">
+                                                <input type="text" class="form-control" id="second_homeowner_association" name="second_homeowner_association" value="<?php echo $sellerInfo['second_homeowner_association'] ? $sellerInfo['second_homeowner_association'] : '';?>" required="required" data-error="#second_homeowner_association-error">
                                                 <small class="small_label">Homeowner’s Association: </small>
                                                 
                                             </div>
@@ -528,7 +536,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_management_company" name="second_management_company" required="required" data-error="#second_management_company-error">
+                                                <input type="text" class="form-control" id="second_management_company" name="second_management_company" value="<?php echo $sellerInfo['second_management_company'] ? $sellerInfo['second_management_company'] : '';?>" required="required" data-error="#second_management_company-error">
                                                 <small class="small_label">Management Company: </small>
                                                 
                                             </div>
@@ -538,7 +546,7 @@
                                         <div class="row">
                                             <div class="form-group position-relative mb-3 mt-3">
                                                 <label for="" class="mb-2"><b></b></label>
-                                                <input type="text" class="form-control" id="second_management_mailing_address" name="second_management_mailing_address" required="required" data-error="#second_management_mailing_address-error">
+                                                <input type="text" class="form-control" id="second_management_mailing_address" name="second_management_mailing_address" value="<?php echo $sellerInfo['second_management_mailing_address'] ? $sellerInfo['second_management_mailing_address'] : '';?>" required="required" data-error="#second_management_mailing_address-error">
                                                 <small class="small_label">Mailing Address: </small>
                                                 
                                             </div>
@@ -549,7 +557,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="second_contact_person" name="second_contact_person" required="required" data-error="#second_contact_person-error">
+                                                    <input type="text" class="form-control" id="second_contact_person" name="second_contact_person" value="<?php echo $sellerInfo['second_contact_person'] ? $sellerInfo['second_contact_person'] : '';?>" required="required" data-error="#second_contact_person-error">
                                                     <small class="small_label">Contact Person:</small>
                                                     
                                                 </div>
@@ -558,7 +566,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="second_management_phone_number" name="second_management_phone_number" required="required" data-error="#second_management_phone_number-error">
+                                                    <input type="text" class="form-control" id="second_management_phone_number" name="second_management_phone_number" value="<?php echo $sellerInfo['second_management_phone_number'] ? $sellerInfo['second_management_phone_number'] : '';?>" required="required" data-error="#second_management_phone_number-error">
                                                     <small class="small_label">Phone Number:</small>
                                                     
                                                 </div>
@@ -576,7 +584,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="water_company_name" name="water_company_name" required="required" data-error="#water_company_name-error">
+                                                    <input type="text" class="form-control" id="water_company_name" name="water_company_name" value="<?php echo $sellerInfo['water_company_name'] ? $sellerInfo['water_company_name'] : '';?>" required="required" data-error="#water_company_name-error">
                                                     <small class="small_label">Name of Company: </small>
                                                     
                                                 </div>
@@ -585,7 +593,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="water_contract_name" name="water_contract_name" required="required" data-error="#water_contract_name-error">
+                                                    <input type="text" class="form-control" id="water_contract_name" name="water_contract_name" value="<?php echo $sellerInfo['water_contract_name'] ? $sellerInfo['water_contract_name'] : '';?>" required="required" data-error="#water_contract_name-error">
                                                     <small class="small_label">Name of Contact: </small>
                                                     
                                                 </div>
@@ -597,7 +605,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="water_company_address" name="water_company_address" required="required" data-error="#water_company_address-error">
+                                                    <input type="text" class="form-control" id="water_company_address" name="water_company_address" value="<?php echo $sellerInfo['water_company_address'] ? $sellerInfo['water_company_address'] : '';?>" required="required" data-error="#water_company_address-error">
                                                     <small class="small_label">Address: </small>
                                                     
                                                 </div>
@@ -606,7 +614,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="water_company_phone" name="water_company_phone" required="required" data-error="#water_company_phone-error">
+                                                    <input type="text" class="form-control" id="water_company_phone" name="water_company_phone" value="<?php echo $sellerInfo['water_company_phone'] ? $sellerInfo['water_company_phone'] : '';?>" required="required" data-error="#water_company_phone-error">
                                                     <small class="small_label">Phone: </small>
                                                     
                                                 </div>
@@ -618,7 +626,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="amount_of_assessment" name="amount_of_assessment" required="required" data-error="#amount_of_assessment-error">
+                                                    <input type="text" class="form-control" id="amount_of_assessment" name="amount_of_assessment" value="<?php echo $sellerInfo['amount_of_assessment'] ? $sellerInfo['amount_of_assessment'] : '';?>" required="required" data-error="#amount_of_assessment-error">
                                                     <small class="small_label">Amount of assessment $ </small>
                                                     
                                                 </div>
@@ -627,7 +635,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="water_next_due" name="water_next_due" required="required" data-error="#water_next_due-error">
+                                                    <input type="text" class="form-control" id="water_next_due" name="water_next_due" value="<?php echo $sellerInfo['water_next_due'] ? $sellerInfo['water_next_due'] : '';?>" required="required" data-error="#water_next_due-error">
                                                     <small class="small_label">Next Due </small>
                                                     
                                                 </div>
@@ -636,7 +644,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group position-relative mb-3 mt-3">
                                                     <label for="" class="mb-2"><b></b></label>
-                                                    <input type="text" class="form-control" id="no_of_shares" name="no_of_shares" required="required" data-error="#no_of_shares-error">
+                                                    <input type="text" class="form-control" id="no_of_shares" name="no_of_shares" value="<?php echo $sellerInfo['no_of_shares'] ? $sellerInfo['no_of_shares'] : '';?>" required="required" data-error="#no_of_shares-error">
                                                     <small class="small_label">No. of Shares </small>
                                                     
                                                 </div>
@@ -652,14 +660,14 @@
                                             <div class="col-md-8">
                                                 <div class="mt-5">
                                                     Date :    
-                                                    <input type="text" class="input_single" id="date" name="date" required="required" data-error="#date-error">
+                                                    <input type="text" class="input_single" id="date" name="date" value="<?php echo $sellerInfo['date'] ? $sellerInfo['date'] : '';?>" required="required" data-error="#date-error">
                                                 </div>
                                                 <label id="date-error" class="error text-danger" for="date"></label>
                                             </div>
                                             
                                             <div class="col-md-4">
                                                 <div class="mt-5">
-                                                    <input type="text" class="input_single d-block w-full" id="escrow_signature" name="escrow_signature" required="required" data-error="#escrow_signature-error">
+                                                    <input type="text" class="input_single d-block w-full" id="escrow_signature" name="escrow_signature" value="<?php echo $sellerInfo['escrow_signature'] ? $sellerInfo['escrow_signature'] : '';?>" required="required" data-error="#escrow_signature-error">
                                                     Luz Amparo Rockey
                                                 </div>
                                                 <label id="escrow_signature-error" class="error text-danger" for="escrow_signature"></label>

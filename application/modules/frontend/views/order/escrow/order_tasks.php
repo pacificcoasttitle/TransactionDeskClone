@@ -222,18 +222,31 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 														<?php if (!empty($keys)) { ?>
 															<div class="" id="sub_task_<?php echo $task['id']; ?>">
 																<div class="smart-forms spacer-b30 spacer-t30">
-																	<div class="tagline" style="<?php echo ($task['id'] == 4 || $task['id'] == 6 || $task['id'] == 7) ? 'width:80%;' : '';?>"><span>Sub Task </span></div>
+																	
 																	<?php if ($task['id'] == 4) { ?>
+																		<div class="tagline" style="<?php echo ($task['id'] == 4) ? 'width:40%;' : '';?>"><span>Sub Task </span></div>
 																		<a data-target="#borrower_information" data-toggle="modal"
 																			role="button"  href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
 																			<span class="text">Send Package</span>
 																		</a>
+																		
+																		<a data-target="#seller_welcome" data-toggle="modal"
+																			role="button"  href="#" class="btn button btn-primary" style="width:auto;height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
+																			<span class="text">Send Seller welcome</span>
+																		</a>
+																		<a data-target="#buyer_welcome" data-toggle="modal"
+																			role="button"  href="#" class="btn button btn-primary" style="width:auto;height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
+																			<span class="text">Send Buyer Welcome</span>
+																		</a>
+																		
 																	<?php } else if ($task['id'] == 6) { ?>
+																		<div class="tagline" style="<?php echo ($task['id'] == 6) ? 'width:80%;' : '';?>"><span>Sub Task </span></div>
 																		<a data-target="#borrower_information_payoff" data-toggle="modal"
 																			role="button"  href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
 																			<span class="text">Send Package</span>
 																		</a>
 																	<?php } else if ($task['id'] == 7) { ?>
+																		<div class="tagline" style="<?php echo ($task['id'] == 7) ? 'width:80%;' : '';?>"><span>Sub Task </span></div>
 																		<a data-target="#lender_information" data-toggle="modal"
 																			role="button"  href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;">
 																			<span class="text">Send Package</span>
@@ -349,7 +362,7 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 																						<td><?php echo $j;?></td>
 																						<td><?php echo $document['original_document_name'];?></td>
 																						<td>
-																							<div class="custom__task_actions smart-forms" style="display: inline-block;">
+																							<div class="custom__task_actions smart-forms" style="display: flex;">
 																								<a target="_blank" href="<?php echo env('AWS_PATH').'borrower/'.$document['document_name'];?>" class="btn button btn-primary">
 																									<span class="text">View</span>
 																								</a>
@@ -518,6 +531,84 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 											placeholder="Enter Lender Email Address" required="required">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
 										<input type="hidden" name="partner_id" id="partner_id" value="">
+									</label>
+								</div>
+							</div>							
+						</div>
+					</div>
+
+					<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
+					<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id'];?>">
+
+					<div class="form-footer" style="padding-top:0px;">
+						<button type="submit" data-btntext-sending="Sending..."
+							class="button btn-primary">Submit</button>
+						<button type="button" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" width="500px" id="buyer_welcome" tabindex="-1" role="dialog"
+	aria-labelledby="Buyer Infromation" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
+		<div class="modal-content">
+			<form method="POST" action="<?php echo base_url();?>add-buyer-on-order" enctype="multipart/form-data">
+				<div class="smart-forms smart-container wrap-2" style="margin:30px">
+					<div class="modal-body search-result">
+						<div id="lender-details-fields" >
+							
+							<div class="spacer-b25">
+								<div class="tagline"><span>Buyer Email Address</span></div>
+							</div>
+
+							<div class="frm-row">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
+										<input type="text" name="buyer_email" id="buyer_email" class="gui-input ui-autocomplete-input"
+											placeholder="Enter Buyer Email Address" required="required">
+										<span class="field-icon"><i class="fa fa-user"></i></span>
+									</label>
+								</div>
+							</div>							
+						</div>
+					</div>
+
+					<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
+					<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id'];?>">
+
+					<div class="form-footer" style="padding-top:0px;">
+						<button type="submit" data-btntext-sending="Sending..."
+							class="button btn-primary">Submit</button>
+						<button type="button" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" width="500px" id="seller_welcome" tabindex="-1" role="dialog"
+	aria-labelledby="Seller Infromation" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
+		<div class="modal-content">
+			<form method="POST" action="<?php echo base_url();?>add-seller-on-order" enctype="multipart/form-data">
+				<div class="smart-forms smart-container wrap-2" style="margin:30px">
+					<div class="modal-body search-result">
+						<div id="lender-details-fields" >
+							
+							<div class="spacer-b25">
+								<div class="tagline"><span>Seller Email Address</span></div>
+							</div>
+
+							<div class="frm-row">
+								<div class="section colm colm12">
+									<label class="field prepend-icon">
+										<input type="text" name="seller_email" id="seller_email" class="gui-input ui-autocomplete-input"
+											placeholder="Enter Seller Email Address" required="required">
+										<span class="field-icon"><i class="fa fa-user"></i></span>
 									</label>
 								</div>
 							</div>							

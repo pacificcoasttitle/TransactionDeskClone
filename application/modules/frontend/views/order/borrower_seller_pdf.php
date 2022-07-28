@@ -66,7 +66,43 @@
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">(2) Commission Instructions</button>
                                 </h2>
                                 <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#accordionExample">
-                                    
+                                    <div class="accordion-body">
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <table class="table table-type-3 typography-last-elem no-footer spacer-t30">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Document Name</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php if (!empty($commission_instruction_document)) { ?>
+                                                            <tr role="row" class="odd">
+                                                                <td>1</td>
+                                                                <td><?php echo $commission_instruction_document;?></td>
+                                                                <td>
+                                                                    <div class="custom__task_actions smart-forms" style="display: inline-block;">
+                                                                        <a target="_blank" href="<?php echo env('AWS_PATH').'commission_instruction_document/'.$commission_instruction_document;?>" class="btn button btn-primary">
+                                                                            <span class="text">View</span>
+                                                                        </a>
+                                                                        <div class="clearfix"></div>
+                                                                    </div>
+                                                                </td> 
+                                                            </tr>   
+                                                        <?php } else { ?>
+
+                                                            <tr align="center">
+                                                                <td colspan="3">No Document found.</td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                            
+                                                    </tbody>
+                                                </table>	
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="accordion-item">
