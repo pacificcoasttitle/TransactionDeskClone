@@ -2110,6 +2110,30 @@ class DashboardMail extends MX_Controller {
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
 
+        $this->db->select('*')
+            ->from('pct_order_borrower_seller_owner_escrow_info');
+        $this->db->where('order_id', $order[0]['id']);
+        $this->db->order_by('id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            $data['sellerInfo'] = $query->row_array();
+        } else {
+            $data['sellerInfo'] = array();
+        }
+
+        $this->db->select('*')
+            ->from('pct_order_documents');
+        $this->db->where('order_id', $order[0]['id']);
+        $this->db->where('(is_commission_doc = 1 or is_escrow_instruction_doc = 1)');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            $data['docsInfo'] = $query->result_array();
+        } else {
+            $data['docsInfo'] = array();
+        }
+        
+
         if (!empty($orderDetails['borrower'])) {
             $orderDetails['primary_owner_name'] = $orderDetails['borrower'];
         } else {
@@ -2164,8 +2188,6 @@ class DashboardMail extends MX_Controller {
             $orderDetails['second_seller_last_name'] = '' ;
         }
         $data['orderDetails'] = $orderDetails;
-        
-
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();
@@ -2178,72 +2200,69 @@ class DashboardMail extends MX_Controller {
             $this->session->unset_userdata('success');
         }
         
+        $user_data['admin_api'] = 1; 
+        $endPoint = 'files/'. $order[0]['file_id'] .'/documents';
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+        $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
+        $resDocuments = json_decode($resultDocuments, true);
+        $documentIds = array(1015, 1534, 1040, 1405, 1039, 1038, 1020);
 
-        if (empty($order[0]['escrow_instruction_document']) || empty($order[0]['commission_instruction_document'])) {
-            $user_data['admin_api'] = 1; 
-            $endPoint = 'files/'. $order[0]['file_id'] .'/documents';
-            $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
-            $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
-            $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
-            $resDocuments = json_decode($resultDocuments, true);
-            $escrow_instruction_flag = 0;
-            $commission_instruction_flag = 0;
-            
-            if (!empty($resDocuments['Documents'])) {
-                foreach ($resDocuments['Documents'] as $document) {
-                    if ($document['DocumentType']['DocumentTypeID'] == 1015 || $document['DocumentType']['DocumentTypeID'] == 1020) {
-                        if (str_contains(strtolower($document['DocumentName']), 'commission') || str_contains(strtolower($document['DocumentName']), 'car 21')) {
-                            $document_name = date('YmdHis')."_".$document['DocumentName'];
-                            $ext = end(explode('.', $document['DocumentName']));
-                            if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
-                                $document_name = str_replace($ext, 'pdf', $document_name);
+        if(!empty($resDocuments['Documents'])) {
+            foreach ($resDocuments['Documents'] as $document) {
+                if (in_array($document['DocumentType']['DocumentTypeID'], $documentIds)) {
+                    $key = array_search($document['DocumentID'], array_column($data['docsInfo'], 'api_document_id'));
+                    // echo $document['DocumentID']."---";
+                    // print_r($data['docsInfo']);
+                    // print_r(array_column($data['docsInfo'], 'api_document_id'));exit;
+                    $this->load->model('order/document');
+                    if(strlen($key) == 0 && strpos(strtolower($document['DocumentName']), 'snapshot') === false) {
+                        $document_name = date('YmdHis')."_".$document['DocumentName'];
+                        $ext = end(explode('.', $document['DocumentName']));
+
+                        if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
+                            $document_name = str_replace($ext, 'pdf', $document_name);
+                        }
+
+                        $endPoint = 'documents/'.$document['DocumentID'].'?format=json';
+                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+                        $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
+                        $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order[0]['id'], $logid);
+                        $resDocument = json_decode($resultDocument, true);
+
+                        if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+                            $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+                            if (!is_dir('uploads/instruction_documents')) {
+                                mkdir(FCPATH.'/uploads/instruction_documents', 0777, TRUE);
                             }
-                            
-                            $endPoint = 'documents/'.$document['DocumentID'].'?format=json';
-                            $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
-                            $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
-                            $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order[0]['id'], $logid);
-                            $resDocument = json_decode($resultDocument, true);
-
-                            if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
-                                
-                                if (str_contains(strtolower($document['DocumentName']), 'car 21') && $escrow_instruction_flag == 0) {
-                                    $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
-                                    if (!is_dir('uploads/escrow_instruction_documents')) {
-                                        mkdir(FCPATH.'/uploads/escrow_instruction_documents', 0777, TRUE);
-                                    }
-                                    file_put_contents(FCPATH.'/uploads/escrow_instruction_documents/'.$document_name, $documentContent);
-                                    $this->order->uploadDocumentOnAwsS3($document_name, 'escrow_instruction_documents');
-                                    //$this->home_model->update(array('escrow_instruction_document' => $document_name), array('file_id' => $order[0]['file_id']), 'order_details');
-                                    $data['escrow_instruction_document'] = $document_name;
-                                    $escrow_instruction_flag = 1;
-                                }
-
-                                if (str_contains(strtolower($document['DocumentName']), 'commission') && $commission_instruction_flag == 0) {
-                                    $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
-                                    if (!is_dir('uploads/commission_instruction_document')) {
-                                        mkdir(FCPATH.'/uploads/commission_instruction_document', 0777, TRUE);
-                                    }
-                                    file_put_contents(FCPATH.'/uploads/commission_instruction_document/'.$document_name, $documentContent);
-                                    $this->order->uploadDocumentOnAwsS3($document_name, 'commission_instruction_document');
-                                    //$this->home_model->update(array('commission_instruction_document' => $document_name), array('file_id' => $order[0]['file_id']), 'order_details');
-                                    $data['commission_instruction_document'] = $document_name;
-                                    $commission_instruction_flag = 1;
-                                }
-                            }
+                            file_put_contents(FCPATH.'/uploads/instruction_documents/'.$document_name, $documentContent);
+                            $this->order->uploadDocumentOnAwsS3($document_name, 'instruction_documents');
+                            $documentData = array(
+                                'document_name' => $document_name,
+                                'original_document_name' => $document['DocumentName'],
+                                'document_type_id' => $document['DocumentType']['DocumentTypeID'],
+                                'api_document_id' => $document['DocumentID'],
+                                'document_size' => $document['Size'],
+                                'user_id' => 0,
+                                'order_id' => $orderDetails['order_id'],
+                                'description' => $document['DocumentName'],
+                                'created' => date('Y-m-d H:i:s'),
+                                'is_sync' => 0,
+                                'is_commission_doc' => ($document['DocumentType']['DocumentTypeID'] == 1039 || $document['DocumentType']['DocumentTypeID'] == 1038  ||$document['DocumentType']['DocumentTypeID'] == 1020) ? 1 : 0,
+                                'is_escrow_instruction_doc' => ($document['DocumentType']['DocumentTypeID'] == 1015 || $document['DocumentType']['DocumentTypeID'] == 1534  ||$document['DocumentType']['DocumentTypeID'] == 1040) ? 1 : 0,
+                            );  
+                            $data['docsInfo'][] = $documentData;
+                            $this->document->insert($documentData);
                         }
                     }
                 }
             }
-        } else {
-            $data['escrow_instruction_document'] = $order[0]['escrow_instruction_document']; 
         }
-       
+        
         if ($this->input->post()) {
             
             $sellerEscrowInstructionData = array();
             $sellerCommissionInstructionData = array();
-
             $sellerOwnerEscrowInfoData = array(
                 'order_id' => $this->input->post('order_id'),
                 'seller_name' => $this->input->post('seller_name') ? $this->input->post('seller_name') : null,
@@ -2585,6 +2604,18 @@ class DashboardMail extends MX_Controller {
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
 
+        $this->db->select('*')
+            ->from('pct_order_borrower_buyer_info');
+        $this->db->where('order_id', $order[0]['id']);
+        $this->db->order_by('id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            $data['buyerInfo'] = $query->row_array();
+        } else {
+            $data['buyerInfo'] = array();
+        }
+        
         if (!empty($orderDetails['primary_owner'])) {
             $buyer_owner_names = explode(' ', $orderDetails['primary_owner']);
             if(count($buyer_owner_names) == 3) {
@@ -2977,8 +3008,6 @@ class DashboardMail extends MX_Controller {
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
-
-        
         $data['orderDetails'] = $orderDetails;
         $errors = array();
         $data['errors'] = array();
@@ -2995,11 +3024,11 @@ class DashboardMail extends MX_Controller {
         if ($this->input->post()) {
             $borrowerBuyerInfoData = array(
                 'order_id' => $this->input->post('order_id'),
-                'property_address' => $this->input->post('property_address'),
-                'property_address2' => $this->input->post('property_address2'),
-                'property_city' => $this->input->post('property_city'),
+                'property_address' => $orderDetails['address'],
+                'property_address2' => ' ',
+                'property_city' => $orderDetails['property_city'],
                 'property_state' => 'CA',
-                'property_zip_code' => $this->input->post('property_zipcode'),
+                'property_zip_code' => $orderDetails['property_zip'],
                 'buyer_full_name' => $this->input->post('buyer_full_name'),
                 'buyer_home_number' => $this->input->post('buyer_home_number'),
                 'buyer_work_number' => $this->input->post('buyer_work_number'),
@@ -3022,16 +3051,16 @@ class DashboardMail extends MX_Controller {
                 'insurance_company' => $this->input->post('insurance_company'),
                 'buyer_date' => $this->input->post('buyer_date'),
                 'buyer_signature' => $this->input->post('buyer_signature'),
-                'names' => $this->input->post('names'),
-                'pick_ups' => $this->input->post('pick_ups') ? implode(',', $this->input->post('pick_ups')) : null,
-                'names_of_spouse' => $this->input->post('names_of_spouse'),
-                'appropriate_choice' => $this->input->post('appropriate_choice') ? implode(',', $this->input->post('appropriate_choice')) : null,
-                'partnership_name' => $this->input->post('partnership_name') ? $this->input->post('partnership_name') : null,
-                'corporation_name' => $this->input->post('corporation_name') ? $this->input->post('corporation_name') : null,
-                'vesting_form_date' => $this->input->post('vesting_form_date'),
-                'vesting_form_signature' => $this->input->post('vesting_form_signature'),
-                'tenant_id' => $this->input->post('tenant_id'),
-                'doc_type' => $this->input->post('doc_type')
+                'names' => ' ',
+                'pick_ups' => ' ',
+                'names_of_spouse' => ' ',
+                'appropriate_choice' => ' ',
+                'partnership_name' => ' ',
+                'corporation_name' => ' ',
+                'vesting_form_date' => ' ',
+                'vesting_form_signature' => ' ',
+                'tenant_id' => ' ',
+                'doc_type' => ' ',
             );
             $this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info');         
             $success[] = "Borrower buyer info saved successfully.";
@@ -3052,8 +3081,6 @@ class DashboardMail extends MX_Controller {
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
         $data['orderDetails'] = $orderDetails;
-        
-
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();
@@ -3126,16 +3153,13 @@ class DashboardMail extends MX_Controller {
                 'escrow_signature' => $this->input->post('escrow_signature') ? $this->input->post('escrow_signature') : null,
             );
             $this->home_model->insert($sellerOwnerEscrowInfoData, 'pct_order_borrower_seller_owner_escrow_info');
-
-            
-
-            $success[] = "Borrower seller info saved successfully and sent to Escrow officer/assistant users to verify data.";
+            $success[] = "Borrower seller info saved successfully.";
             $data = array(
                 "errors" =>  $errors,
                 "success" => $success
             );
             $this->session->set_userdata($data);
-            redirect(base_url().'borrower-seller-form/'.$random_number);exit;
+            redirect(base_url().'seller-info/'.$random_number);exit;
         }
         $this->load->view('order/borrower_seller_info', $data);
     }

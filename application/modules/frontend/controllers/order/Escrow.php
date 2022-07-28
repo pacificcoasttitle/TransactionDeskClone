@@ -616,7 +616,7 @@ class Escrow extends MX_Controller
             'escrow_officer' => $userdata['name']
         );
         
-        $borrower_message_body = $this->load->view('emails/borrower_buyer_seller.php', $email_data, TRUE);
+        $borrower_message_body = $this->load->view('emails/welcome_buyer.php', $email_data, TRUE);
         $message_body = $borrower_message_body; 
         $subject = $orderDetails['file_number']. ' - Welcome Buyer';
         

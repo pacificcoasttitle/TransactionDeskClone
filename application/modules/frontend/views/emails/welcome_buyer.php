@@ -431,7 +431,7 @@
 								<td align="center" class="img-responsive container-padding">
 									<img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;"
 										width="800"
-										src="<?php echo base_url().'assets/media/order/email/header.jpg'; ?>"
+										src="<?php echo base_url().'assets/media/order/email/buyer_packet.jpg'; ?>"
 										border="0" alt="picture">
 								</td>
 							</tr>
@@ -486,7 +486,7 @@
 
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;"><br></p>
-														<p style="margin: 0px; padding: 0px;">Dear <?php echo $borrrower; ?>
+														<p style="margin: 0px; padding: 0px;">Hello
 														</p>
 														<p style="margin: 0px; padding: 0px;">
 														</p>
@@ -529,10 +529,10 @@
 																</u></strong></p>
 														<p style="margin: 0px; padding: 0px;"><?php echo $borrrower; ?>
 														</p>
-														<p style="margin: 0px; padding: 0px;">348 Hauser Blvd. #1-110
+														<!-- <p style="margin: 0px; padding: 0px;">348 Hauser Blvd. #1-110
 														</p>
 														<p style="margin: 0px; padding: 0px;">Los Angeles, CA 90036
-														</p>
+														</p> -->
 														<p style="margin: 0px; padding: 0px;"><strong><u>
 																	<font color="#d35411"><br></font>
 																</u></strong></p>
@@ -542,14 +542,9 @@
 																</strong></u></p>
 														<p style="margin: 0px; padding: 0px;"><u></u></p>
 														<p style="margin: 0px; padding: 0px;"><strong>1.</strong>
-															Statement of information (used to eliminate matters
-															affecting persons with similar names)
+															Buyer Information
 														</p>
-														<p style="margin: 0px; padding: 0px;"><strong>2.</strong>
-															Buyer’s Escrow Information Sheet
-														</p>
-														<p style="margin: 0px; padding: 0px;"><strong>3.</strong>
-															Vesting Form</p><br>
+														
 
 
 														<!-- Align -->
@@ -584,12 +579,12 @@
 														</p>
 														<p style="margin: 0px; padding: 0px;"><?php echo $escrow_officer; ?>
 														</p>
-														<p style="margin: 0px; padding: 0px;">Escrow Officer
+														<!-- <p style="margin: 0px; padding: 0px;">Escrow Officer
 														</p>
 														<p style="margin: 0px; padding: 0px;">(818) 662-6700
 														</p>
 														<p style="margin: 0px; padding: 0px;">TS
-														</p>
+														</p> -->
 														<p style="margin: 0px; padding: 0px;"><br></p>
 														<p style="margin: 0px; padding: 0px;">
 														</p>
