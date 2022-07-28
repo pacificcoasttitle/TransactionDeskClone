@@ -328,13 +328,13 @@
 											<tr>
 												<td height="10" style="font-size:60px;line-height:10px;">&nbsp;</td>
 											</tr>
-											<tr style="">
+											<!-- <tr style="">
 												<td align="center" class="center-text">
 													<img style="width:250px;border:0px;display:inline!important;"
 														src="<?php echo base_url().'assets/media/order/email/logo.png'; ?>"
 														width="250" border="0" alt="logo">
 												</td>
-											</tr>
+											</tr> -->
 											<tr>
 												<td height="5" style="font-size:30px;line-height:5px;">&nbsp;</td>
 											</tr>
