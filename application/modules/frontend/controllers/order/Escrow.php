@@ -672,7 +672,7 @@ class Escrow extends MX_Controller
         
         $borrower_message_body = $this->load->view('emails/welcome_seller.php', $email_data, TRUE);
         $message_body = $borrower_message_body; 
-        $subject = $orderDetails['file_number']. ' - Welcome Sender';
+        $subject = $orderDetails['file_number']. ' - Welcome Seller';
         
         $mailParams = array(
             'from_mail' => $from_mail, 
