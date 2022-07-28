@@ -180,6 +180,7 @@ class Sales extends MX_Controller {
                         'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
 						'commission_draw_value' => $this->input->post('commission_draw') ? $this->input->post('commission_draw') : 0,
 						'first_in_threshold' => $this->input->post('commission_first_threshold') ? $this->input->post('commission_first_threshold') : 0,
+						'apply_bonus' => $this->input->post('apply_bonus') == "1" ? 1 : 0,
 						
                     );
 
@@ -489,6 +490,7 @@ class Sales extends MX_Controller {
                             'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
 							'commission_draw_value' => $this->input->post('commission_draw') ? $this->input->post('commission_draw') : 0,
 							'first_in_threshold' => $this->input->post('commission_first_threshold') ? $this->input->post('commission_first_threshold') : 0,
+							'apply_bonus' => $this->input->post('apply_bonus') == "1" ? 1 : 0,
 							
                         );
 						// var_dump($salesRepData);die;

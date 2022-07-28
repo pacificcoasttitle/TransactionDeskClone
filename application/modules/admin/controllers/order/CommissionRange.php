@@ -771,6 +771,153 @@ class CommissionRange extends MX_Controller {
         $this->load->view('order/sales/commission_list', $data);
         $this->load->view('order/layout/footer', $data);
 	}
+	public function index_bonus()
+    {
+        $data = array();
+        
+        $data['title'] = 'PCT Order: Bonus Range.';
+		
+		$data['success_msg'] = $this->session->flashdata('success');
+		$data['error_msg'] = $this->session->flashdata('error');
+
+		$this->load->model('admin/order/commission_bonus_model');
+		
+		$data['bonus_details'] = $this->commission_bonus_model->order_by('min_range','ASC')->get_all();
+		
+
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/sales/commission_bonus', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+	public function add_bonus()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Add Bonus';
+
+        if ($this->input->post()) {
+            
+            
+			$this->form_validation->set_rules('revenue_range_min', 'From Revenue Range', 'trim|required|numeric');
+            $this->form_validation->set_rules('bonus_amount', 'Bous Amount', 'trim|required|numeric');
+
+			if(!empty($this->input->post('product_type'))) {
+				$this->form_validation->set_rules('underwriter_tier['.$this->input->post('product_type').']', 'Underwriter Tier', 'trim|required');
+			}
+              
+           
+            if ($this->form_validation->run() == true) {
+                
+                    $commissionData = array(
+						'min_range' => !empty($this->input->post('revenue_range_min')) ? $this->input->post('revenue_range_min') : 0,
+						'bonus_amount' => !empty($this->input->post('bonus_amount')) ? $this->input->post('bonus_amount') : 0,
+						
+                    );
+					$this->load->model('admin/order/commission_bonus_model');
+					
+                    $insert = $this->commission_bonus_model->insert($commissionData);
+                    
+                    if ($insert) {
+                        $flash_data['success'] = 'Bonus added successfully.';
+						$this->common->updateCommisssionCalculation();
+                    } else {
+                        $flash_data['error'] = 'Bonus not added.';
+                    }
+					
+					$this->session->set_flashdata($flash_data);
+					redirect(base_url('order/admin/commission-bonus'));
+                
+                
+            }                                       
+        }
+		
+		
+		$data['success_msg'] = $this->session->flashdata('success');
+		$data['error_msg'] = $this->session->flashdata('error');
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/sales/add_commission_bonus', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+
+    public function edit_bonus($id)
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Edit Bonus';
+
+		$this->load->model('admin/order/commission_bonus_model');
+        
+		$record = $this->commission_bonus_model->get($id);
+        
+        if (!empty($record)) {
+			if ($this->input->post()) {
+            
+            
+				$this->form_validation->set_rules('revenue_range_min', 'From Revenue Range', 'trim|required|numeric');
+				$this->form_validation->set_rules('bonus_amount', 'Bous Amount', 'trim|required|numeric');
+
+			   
+				if ($this->form_validation->run() == true) {
+					
+					$commissionData = array(
+						'min_range' => !empty($this->input->post('revenue_range_min')) ? $this->input->post('revenue_range_min') : 0,
+						'bonus_amount' => !empty($this->input->post('bonus_amount')) ? $this->input->post('bonus_amount') : 0,
+						
+                    );
+						
+						$update = $this->commission_bonus_model->update($id,$commissionData);
+						
+						if ($update) {
+							//Check data before call function
+							
+							$this->common->updateCommisssionCalculation();
+							
+							$flash_data['success'] = 'Bonus updated successfully.';
+						} else {
+							$flash_data['error'] = 'Bonus not updated.';
+						}
+						
+						$this->session->set_flashdata($flash_data);
+						redirect(base_url('order/admin/edit-commission-bonus/'.$id));
+					
+					
+				}                                       
+			}
+
+        } else {
+            redirect('order/admin/commission-bonus');
+        }
+		
+		$data['success_msg'] = $this->session->flashdata('success');
+		$data['error_msg'] = $this->session->flashdata('error');
+		
+        $data['record'] = $record;
+		
+		
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/sales/edit_commission_bonus', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function delete_bonus($id)
+    {
+		$status = false;
+		if($this->input->post('action') == 'delete') {
+			$this->load->model('admin/order/commission_bonus_model');
+			$delete_status = $this->commission_bonus_model->delete($id);
+			if ($delete_status) {
+				$flash_data['success'] = 'Bonus deleted successfully.';
+				$this->common->updateCommisssionCalculation();
+				$status = true;
+			} else {
+				$flash_data['error'] = 'Bonus not deleted.';
+			}
+			
+			$this->session->set_flashdata($flash_data);
+
+		}
+		echo json_encode(['status'=>$status]);
+    }
 
 	
 

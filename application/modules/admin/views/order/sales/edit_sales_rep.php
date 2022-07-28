@@ -370,6 +370,18 @@
 											</div>
 										</div>
 
+										<div class="form-group row" >
+											<label for="commission-bonus" class="col-sm-4 col-form-label">Apply Bonus?</label>
+											<div class="col-sm-8">
+											<select name="apply_bonus"  id="commission-bonus" class="selectpicker" >
+												
+												<option  value="0">No</option>
+												<option <?=($sales_rep_info['apply_bonus'] == "1") ? 'selected' : '';?> value="1">Yes</option>
+												
+											</select>
+											</div>
+										</div>
+
 									</div>
 								</div>
 							<?php
