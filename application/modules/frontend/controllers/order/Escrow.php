@@ -365,10 +365,10 @@ class Escrow extends MX_Controller
 
         if ($package_type == 'seller') {
             $form_url = base_url().'borrower-seller-form/'.$orderDetails['random_number'];
-            $subject = $orderDetails['file_number']. ' - Seller Packet';
+            $subject = $orderDetails['file_number']. ' - Seller: Required Info Needed';
         } else {
             $form_url = base_url().'borrower-buyer-form/'.$orderDetails['random_number'];
-            $subject = $orderDetails['file_number']. ' - Buyer Packet';
+            $subject = $orderDetails['file_number']. ' - Buyer: Required Info Needed';
         }
 
         $email_data = array(
@@ -622,7 +622,7 @@ class Escrow extends MX_Controller
         
         $borrower_message_body = $this->load->view('emails/welcome_buyer.php', $email_data, TRUE);
         $message_body = $borrower_message_body; 
-        $subject = $orderDetails['file_number']. ' - Welcome Buyer';
+        $subject = $orderDetails['file_number']. ' - Welcome to Esrow';
         
         $mailParams = array(
             'from_mail' => $from_mail, 
@@ -676,7 +676,7 @@ class Escrow extends MX_Controller
         
         $borrower_message_body = $this->load->view('emails/welcome_seller.php', $email_data, TRUE);
         $message_body = $borrower_message_body; 
-        $subject = $orderDetails['file_number']. ' - Welcome Seller';
+        $subject = $orderDetails['file_number']. ' - Escrow Is Open';
         
         $mailParams = array(
             'from_mail' => $from_mail, 
