@@ -548,15 +548,15 @@
                                                             Commission Instructions
 														</p>
 														<p style="margin: 0px; padding: 0px;"><strong>3.</strong>
-                                                            Statement of information(used to eliminate matters affecting persons with similar names)</p><br>
+                                                            Statement of information(used to eliminate matters affecting persons with similar names)</p>
                                                         <p style="margin: 0px; padding: 0px;"><strong>4.</strong>
-                                                            Owner’s Escrow Information Sheet</p><br>
+                                                            Owner’s Escrow Information Sheet</p>
                                                         <p style="margin: 0px; padding: 0px;"><strong>5.</strong>
-                                                            593C (if you cannot check any item in Part II 1-8, please contact your escrow officer immediately)</p><br>
+                                                            593C (if you cannot check any item in Part II 1-8, please contact your escrow officer immediately)</p>
                                                         <p style="margin: 0px; padding: 0px;"><strong>6.</strong>
-															1099-S</p><br>
+															1099-S</p>
                                                         <p style="margin: 0px; padding: 0px;"><strong>7.</strong>
-                                                            FIRPTA Affidavit</p><br>
+                                                            FIRPTA Affidavit</p>
                                                         <p style="margin: 0px; padding: 0px;"><strong>8.</strong>
                                                             NHD Receipt </p><br>
 
