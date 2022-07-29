@@ -100,7 +100,7 @@
                                     </div>    
                                 </div>
                             </div>
-                            <div class="accordion-item">
+                            <div class="accordion-item d-none">
                                 <h2 class="accordion-header" id="headingThirteen">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThirteen" aria-expanded="false" aria-controls="collapseThirteen">(2) Buyer Information</button>
                                 </h2>
@@ -297,7 +297,7 @@
                         
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingTwo">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">(3) Escrow Instructions</button>
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">(2) Escrow Instructions</button>
                                 </h2>
                                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
@@ -714,7 +714,7 @@
 
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingThree">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">   (4) Statement of Information</button>
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">   (3) Statement of Information</button>
                                 </h2>
                                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
@@ -1383,7 +1383,7 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingEight">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-                                       (5) Vesting Form
+                                       (4) Vesting Form
                                     </button>
                                 </h2>
                                 <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
@@ -1540,7 +1540,7 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingNine">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
-                                       (6) Preliminary Change of Ownership
+                                       (5) Preliminary Change of Ownership
                                     </button>
                                 </h2>
                                 <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionExample">
@@ -2422,7 +2422,7 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingTen">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
-                                       (7) Preliminary Report Approval
+                                       (6) Preliminary Report Approval
                                     </button>
                                 </h2>
                                 <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#accordionExample">
@@ -2493,7 +2493,7 @@
 							<div class="accordion-item">
                                 <h2 class="accordion-header" id="headingEleven">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
-                                        (8) NHD Receipt
+                                        (7) NHD Receipt
                                     </button>
                                 </h2>
                                 <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#accordionExample">
