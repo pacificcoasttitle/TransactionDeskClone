@@ -429,10 +429,17 @@
 						<tbody>
 							<tr>
 								<td align="center" class="img-responsive container-padding">
-									<img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;"
+									<?php if ($is_seller_flag == 1)  { ?>
+										<img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;"
 										width="800"
-										src="<?php echo base_url().'assets/media/order/email/seller_escrow_welcome.jpg'; ?>"
+										src="<?php echo base_url().'assets/media/order/email/seller_packet.jpg'; ?>"
 										border="0" alt="picture">
+									<?php } else { ?>
+										<img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;"
+										width="800"
+										src="<?php echo base_url().'assets/media/order/email/buyer_packet.jpg'; ?>"
+										border="0" alt="picture">
+									<?php } ?>
 								</td>
 							</tr>
 							<!-- furnistore-header -->
@@ -461,7 +468,7 @@
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;"><span
 																style="color:rgb(211, 84, 0);">
-																CONGRATULATIONS</span></p>
+																WE NEED YOUR HELP</span></p>
 													</div>
 
 												</td>
@@ -472,7 +479,7 @@
 
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;">
-															ESCROW IS OPEN!</p>
+														PLEASE PROVIDE MORE INFO</p>
 													</div>
 
 												</td>
@@ -486,16 +493,15 @@
 
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;"><br></p>
-														<p style="margin: 0px; padding: 0px;">Hello
+														<p style="margin: 0px; padding: 0px;">Dear <?php echo $borrrower; ?>
 														</p>
 														<p style="margin: 0px; padding: 0px;">
 														</p>
 														<p style="margin: 0px; padding: 0px;">
 														</p>
 														<p style="margin: 0px; padding: 0px;"><br></p>
-														<p style="margin: 0px; padding: 0px;">Thank you for selecting Pacific Coast Title Company as your closing agent. We look forward to providing you with quality title and escrow services in connection with the above-referenced property. 
-														</p>
-														<p style="margin: 0px; padding: 0px;">In order to efficiently process your transaction, we ask that you provide us with a little more information so we can get our forms prefilled out for you.
+														
+														<p style="margin: 0px; padding: 0px;">In order to efficiently process your transaction, we ask that you attend to the following matters and forward requested documents to the attention of the undersigned at your earliest convenience: 
 														</p>
 														<p style="margin: 0px; padding: 0px;"><strong><u>
 																	<font color="#d35411"><br></font>
@@ -536,9 +542,14 @@
 																</strong></u></p>
 														<p style="margin: 0px; padding: 0px;"><u></u></p>
 														<p style="margin: 0px; padding: 0px;"><strong>1.</strong>
-															Seller Information
+															Statement of information (used to eliminate matters
+															affecting persons with similar names)
 														</p>
-														
+														<p style="margin: 0px; padding: 0px;"><strong>2.</strong>
+															Buyer’s Escrow Information Sheet
+														</p>
+														<p style="margin: 0px; padding: 0px;"><strong>3.</strong>
+															Vesting Form</p><br>
 
 
 														<!-- Align -->
