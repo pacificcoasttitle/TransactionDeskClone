@@ -468,7 +468,7 @@
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;"><span
 																style="color:rgb(211, 84, 0);">
-																&nbsp;</span></p>
+																Dear</span></p>
 													</div>
 
 												</td>
