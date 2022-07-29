@@ -454,14 +454,14 @@
 												<td class="m-height15" height="40"
 													style="font-size:40px;line-height:40px;">&nbsp;</td>
 											</tr>
-											<!-- <tr>
+											<tr>
 												<td class="center-text" align="left"
 													style="font-family:Poppins, Arial, Helvetica, sans-serif;font-size:21px;line-height:28px;font-weight:300;font-style:normal;color:rgb(211, 84, 17);text-decoration:none;letter-spacing:0px;">
 
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;"><span
 																style="color:rgb(211, 84, 0);">
-																CONGRATULATIONS</span></p>
+																&nbsp;</span></p>
 													</div>
 
 												</td>
@@ -472,11 +472,11 @@
 
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;">
-															Welcome Seller</p>
+														&nbsp;</p>
 													</div>
 
 												</td>
-											</tr> -->
+											</tr>
 											<tr>
 												<td height="2" style="font-size:10px;line-height:2px;">&nbsp;</td>
 											</tr>
