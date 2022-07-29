@@ -663,7 +663,7 @@ class Orders extends MX_Controller {
         
         $borrower_message_body = $this->load->view('frontend/emails/welcome_buyer.php', $email_data, TRUE);
         $message_body = $borrower_message_body; 
-        $subject = $orderDetails['file_number']. ' - Welcome to Esrow';
+        $subject = $orderDetails['file_number']. ' - Welcome to Escrow';
         
         $mailParams = array(
             'from_mail' => $from_mail, 
