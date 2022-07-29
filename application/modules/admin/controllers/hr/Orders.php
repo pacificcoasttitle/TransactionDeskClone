@@ -365,8 +365,10 @@ class Orders extends MX_Controller {
 
         if ($package_type == 'seller') {
             $form_url = base_url().'borrower-seller-form/'.$orderDetails['random_number'];
+            $subject = $orderDetails['file_number']. ' - Seller Packet';
         } else {
             $form_url = base_url().'borrower-buyer-form/'.$orderDetails['random_number'];
+            $subject = $orderDetails['file_number']. ' - Buyer Packet';
         }
 
         $email_data = array(
@@ -381,7 +383,6 @@ class Orders extends MX_Controller {
         
         $borrower_message_body = $this->load->view('frontend/emails/borrower_buyer_seller.php', $email_data, TRUE);
         $message_body = $borrower_message_body; 
-        $subject = $orderDetails['file_number']. ' - Borrower';
         
         $mailParams = array(
             'from_mail' => $from_mail, 
