@@ -66,7 +66,7 @@
 													$total_commission = ($commissionRecord['commission_data']) ? $commissionRecord['commission_data']->commission : 0;
 													$details_json = $commissionRecord['commission_data']->commission_details;
 													$details = array();
-													$draw_amount = $commission_sub_total=$escrow_commission=$first_in_threshold=$override_commission_total= 0;
+													$draw_amount = $commission_sub_total=$escrow_commission=$first_in_threshold=$override_commission_total = $bonus= 0;
 													$override_add_user = "";
 													$override_add_per=$override_add_val = array();
 													$month_num = $commissionRecord['month_num'];
@@ -137,7 +137,13 @@
 															endif;
 
 														}
+														elseif($prod_type == 'bonus') {
+															$bonus = $detail->commisison;
+														}
 													}
+													if($total_commission < 0 &&  abs($draw_amount) == 0 && abs($first_in_threshold) > 0 ):
+														$total_commission = 0;
+													endif;
 													?>
 												<tr>
 													<td><?php echo $commissionRecord['month'];?></td>
@@ -220,6 +226,12 @@
 																		<th class="text-left">Commission SubTotal : ( <?= implode(' + ',array_map("ucwords", PRODUCT_TYPE)); ?> )</th>
 																		<td class="text-right">$ <?php echo number_format($commission_sub_total,2); ?></td>
 																	</tr>
+																	<?php if ($bonus) : ?>
+																	<tr class="custom__total">
+																		<th class="text-left">Bonus</th>
+																		<td class="text-right">$ <?php echo number_format($bonus,2); ?></td>
+																	</tr>
+																	<?php endif; ?>
 																	<?php if ($draw_amount) : ?>
 																	<tr class="custom__total">
 																		<th class="text-left">Draw Amount</th>
@@ -254,7 +266,7 @@
 																	
 																	<tr class="custom__total">
 																		<th class="text-left">Total Commission</th>
-																		<td class="text-right"> $ <?php echo number_format(($commission_sub_total - abs($draw_amount) - abs($first_in_threshold) + $override_commission_total),2); ?></td>
+																		<td class="text-right"> $ <?php echo number_format(($commission_sub_total - abs($draw_amount) - abs($first_in_threshold) + $override_commission_total + $bonus),2); ?></td>
 																	</tr>
 																	
 		
