@@ -96,6 +96,7 @@ class SalesRep extends MX_Controller
 		if($commission_obj) {
 			$sales_commission = $commission_obj->commission;
 			$details_json = $commission_obj->commission_details;
+			$first_in_threshold =$draw_amount= 0;
 			
 			if(!empty( $details_json) && json_decode( $details_json)) {
 
@@ -137,8 +138,17 @@ class SalesRep extends MX_Controller
 							endif;
 
 						}
+						elseif($prod_type == 'draw') {
+							$draw_amount = $detail->commisison;
+						}
+						elseif($prod_type == 'first_threshold') {
+							$first_in_threshold = $detail->commisison;
+						}
 
 					}
+				}
+				if($sales_commission < 0 &&  abs($draw_amount) == 0 && abs($first_in_threshold) > 0 ){
+					$sales_commission = 0;
 				}
 			}
 		}
