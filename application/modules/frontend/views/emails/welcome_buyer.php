@@ -450,13 +450,42 @@
 										class="row container-padding" width="87.5%"
 										style="width:87.5%;max-width:87.5%;">
 										<tbody>
-											
+											<tr>
+												<td class="m-height15" height="40"
+													style="font-size:40px;line-height:40px;">&nbsp;</td>
+											</tr>
+											<tr>
+												<td class="center-text" align="left"
+													style="font-family:Poppins, Arial, Helvetica, sans-serif;font-size:21px;line-height:28px;font-weight:300;font-style:normal;color:rgb(211, 84, 17);text-decoration:none;letter-spacing:0px;">
+
+													<div style="margin: 0px; padding: 0px;">
+														<p style="margin: 0px; padding: 0px;"><span
+																style="color:rgb(211, 84, 0);">
+																CONGRATULATIONS</span></p>
+													</div>
+
+												</td>
+											</tr>
+											<tr>
+												<td class="center-text" align="left"
+													style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:34px;line-height:44px;font-weight:900;font-style:normal;color:#000000;text-decoration:none;letter-spacing:0px;">
+
+													<div style="margin: 0px; padding: 0px;">
+														<p style="margin: 0px; padding: 0px;">
+                                                            YOU ARE IN ESCROW!</p>
+													</div>
+
+												</td> 
+											</tr>
+											<tr>
+												<td height="2" style="font-size:10px;line-height:2px;">&nbsp;</td>
+											</tr>
 											<tr>
 												<td class="center-text" align="left"
 													style="font-family:Roboto, Arial, Helvetica, sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:normal;color:rgb(0, 0, 0);text-decoration:none;letter-spacing:0px;">
 
 													<div style="margin: 0px; padding: 0px;">
-                                                        <p style="margin: 0px; padding: 0px;"><br></p>
+														<p style="margin: 0px; padding: 0px;"><br></p>
 														<p style="margin: 0px; padding: 0px;">Hello
 														</p>
 														<p style="margin: 0px; padding: 0px;">
@@ -464,15 +493,9 @@
 														<p style="margin: 0px; padding: 0px;">
 														</p>
 														<p style="margin: 0px; padding: 0px;"><br></p>
-														<p style="margin: 0px; padding: 0px;">Thank you for selecting
-															Pacific Coast Title Company as your closing agent. We look
-															forward to providing you with quality title and escrow
-															services in connection with the above-referenced property.
+														<p style="margin: 0px; padding: 0px;">Thank you for selecting Pacific Coast Title Company as your closing agent. We look forward to providing you with quality title and escrow services in connection with the above-referenced property. 
 														</p>
-														<p style="margin: 0px; padding: 0px;">In order to efficiently
-															process your transaction, we ask that you attend to the
-															following matters and forward requested documents to the
-															attention of the undersigned at your earliest convenience:
+														<p style="margin: 0px; padding: 0px;">In order to efficiently process your transaction, we ask that you provide us with a little more information so we can get our forms prefilled out for you.
 														</p>
 														<p style="margin: 0px; padding: 0px;"><strong><u>
 																	<font color="#d35411"><br></font>

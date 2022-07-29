@@ -165,7 +165,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="accordion-item">
+                            <div class="accordion-item d-none">
                                 <h2 class="accordion-header" id="headingEighteen">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEighteen" aria-expanded="true" aria-controls="collapseEighteen">
                                       (3) OWNER'S ESCROW INFORMATION SHEET
@@ -681,7 +681,7 @@
 
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingThree">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">   (4) Statement of Information</button>
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">   (3) Statement of Information</button>
                                 </h2>
                                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
@@ -1351,7 +1351,7 @@
 							<div class="accordion-item">
                                 <h2 class="accordion-header" id="headingTwenty">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwenty" aria-expanded="true" aria-controls="collapseTwenty">
-                                       (5) 593-C Form
+                                       (4) 593-C Form
                                     </button>
                                 </h2>
                                 <div id="collapseTwenty" class="accordion-collapse collapse" aria-labelledby="headingTwenty" data-bs-parent="#accordionExample">
@@ -2165,7 +2165,7 @@
 							<div class="accordion-item">
                                 <h2 class="accordion-header" id="headingFourteen">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourteen" aria-expanded="true" aria-controls="collapseFourteen">
-                                       (6) 1099-S
+                                       (5) 1099-S
                                     </button>
                                 </h2>
                                 <div id="collapseFourteen" class="accordion-collapse collapse" aria-labelledby="headingFourteen" data-bs-parent="#accordionExample" style="">
@@ -2312,7 +2312,7 @@
 							<div class="accordion-item">
                                 <h2 class="accordion-header" id="heading22">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse22" aria-expanded="true" aria-controls="collapse22">
-                                       (7) FIRPTA AFFIDAVIT
+                                       (6) FIRPTA AFFIDAVIT
                                     </button>
                                 </h2>
                                 <div id="collapse22" class="accordion-collapse collapse" aria-labelledby="heading22" data-bs-parent="#accordionExample" style="">
@@ -2382,7 +2382,7 @@
 							<div class="accordion-item">
                                 <h2 class="accordion-header" id="headingEleven">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
-                                        (8) NHD Receipt
+                                        (7) NHD Receipt
                                     </button>
                                 </h2>
                                 <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#accordionExample">

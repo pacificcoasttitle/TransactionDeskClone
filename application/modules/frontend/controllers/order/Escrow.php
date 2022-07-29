@@ -381,7 +381,11 @@ class Escrow extends MX_Controller
             'is_seller_flag' => $package_type == 'seller' ? 1 : 0
         );
         
-        $borrower_message_body = $this->load->view('emails/borrower_buyer_seller.php', $email_data, TRUE);
+        if ($package_type == 'seller') {
+            $borrower_message_body = $this->load->view('emails/borrower_seller.php', $email_data, TRUE);
+        } else {
+            $borrower_message_body = $this->load->view('emails/borrower_buyer.php', $email_data, TRUE);
+        }
         $message_body = $borrower_message_body; 
 
         
