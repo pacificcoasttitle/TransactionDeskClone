@@ -375,7 +375,8 @@ class Orders extends MX_Controller {
             'random_number'=>  $orderDetails['random_number'],
             'borrrower'=> $orderDetails['primary_owner'],
             'form_url' => $form_url,
-            'escrow_officer' => ''
+            'escrow_officer' => '',
+            'is_seller_flag' => $package_type == 'seller' ? 1 : 0
         );
         
         $borrower_message_body = $this->load->view('frontend/emails/borrower_buyer_seller.php', $email_data, TRUE);

@@ -429,10 +429,17 @@
 						<tbody>
 							<tr>
 								<td align="center" class="img-responsive container-padding">
-									<img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;"
+									<?php if ($is_seller_flag == 1)  { ?>
+										<img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;"
 										width="800"
-										src="<?php echo base_url().'assets/media/order/email/borrower_escrow.jpg'; ?>"
+										src="<?php echo base_url().'assets/media/order/email/seller_packet.jpg'; ?>"
 										border="0" alt="picture">
+									<?php } else { ?>
+										<img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;"
+										width="800"
+										src="<?php echo base_url().'assets/media/order/email/buyer_packet.jpg'; ?>"
+										border="0" alt="picture">
+									<?php } ?>
 								</td>
 							</tr>
 							<!-- furnistore-header -->
@@ -461,7 +468,7 @@
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;"><span
 																style="color:rgb(211, 84, 0);">
-																CONGRATULATIONS</span></p>
+																&nbsp;</span></p>
 													</div>
 
 												</td>
@@ -472,11 +479,11 @@
 
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;">
-															YOU ARE IN ESCROW!</p>
+														&nbsp;</p>
 													</div>
 
 												</td>
-											</tr>
+											</tr> 
 											<tr>
 												<td height="2" style="font-size:10px;line-height:2px;">&nbsp;</td>
 											</tr>
