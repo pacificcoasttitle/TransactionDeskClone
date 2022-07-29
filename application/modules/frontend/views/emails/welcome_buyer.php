@@ -450,20 +450,13 @@
 										class="row container-padding" width="87.5%"
 										style="width:87.5%;max-width:87.5%;">
 										<tbody>
-											<tr>
-												<td class="m-height15" height="40"
-													style="font-size:40px;line-height:40px;">&nbsp;</td>
-											</tr>
 											
-											<tr>
-												<td height="2" style="font-size:10px;line-height:2px;">&nbsp;</td>
-											</tr>
 											<tr>
 												<td class="center-text" align="left"
 													style="font-family:Roboto, Arial, Helvetica, sans-serif;font-size:14px;line-height:26px;font-weight:400;font-style:normal;color:rgb(0, 0, 0);text-decoration:none;letter-spacing:0px;">
 
 													<div style="margin: 0px; padding: 0px;">
-														<p style="margin: 0px; padding: 0px;"><br></p>
+														
 														<p style="margin: 0px; padding: 0px;">Hello
 														</p>
 														<p style="margin: 0px; padding: 0px;">
