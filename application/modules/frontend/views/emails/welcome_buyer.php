@@ -431,7 +431,7 @@
 								<td align="center" class="img-responsive container-padding">
 									<img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;"
 										width="800"
-										src="<?php echo base_url().'assets/media/order/email/buyer_packet.jpg'; ?>"
+										src="<?php echo base_url().'assets/media/order/email/buyer_escrow_welcome.jpg'; ?>"
 										border="0" alt="picture">
 								</td>
 							</tr>
