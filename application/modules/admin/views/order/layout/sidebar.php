@@ -2,12 +2,16 @@
 $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->userdata('admin')['role_id'] : 0;
 ?>
 <ul class="sidebar navbar-nav">
+	<?php
+		if($role_id != 3):
+	?>
 	<li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/dashboard' || $this->uri->segment(3) == 'order-details') { echo 'active'; } ?>">
 		<a class="nav-link" href="<?php echo base_url().'order/admin/dashboard'; ?>">
 			<i class="fas fa fa-dashboard"></i>
 			<span>Dashboard</span>
 		</a>
 	</li>
+	<?php endif; ?>
 	<li class="nav-item dropdown">
 		<a class="nav-link dropdown-toggle" href="#" id="ordersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-list"></i>
@@ -25,7 +29,9 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
 		</a>
         </div>
 	</li>
-
+	<?php
+		if($role_id != 3):
+	?>
 	<li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="usersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-users"></i>
@@ -163,5 +169,5 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
 		</div>
 	</li>
 	<?php endif; ?>
-
+<?php endif; ?>
 </ul>

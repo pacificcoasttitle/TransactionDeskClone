@@ -18,7 +18,13 @@ class Login extends MX_Controller {
         $data = array();
         $userdata = $this->session->userdata('admin');
         if (!empty($userdata['id']) && $userdata['is_admin'] == 1) {
-            redirect(base_url().'order/admin/dashboard');
+			if(!empty($userdata['role_id']) && $userdata['role_id'] == 3) {
+
+				redirect(base_url().'order/admin/orders');
+			}
+			else {
+				redirect(base_url().'order/admin/dashboard');
+			}
         } else {
             $data['msg'] = $this->session->userdata('msg');
             $this->session->unset_userdata('msg');
@@ -48,7 +54,13 @@ class Login extends MX_Controller {
                     echo json_encode($result); exit;
                 } else {
                     // redirect('home/dashboard');
-                    redirect(base_url().'order/admin/dashboard');
+					if($session_data['role_id'] == 3) {
+						redirect(base_url().'order/admin/orders');
+					}
+					else {
+
+						redirect(base_url().'order/admin/dashboard');
+					}
                 }
         	} else  {
                 if ($this->input->is_ajax_request())  {
