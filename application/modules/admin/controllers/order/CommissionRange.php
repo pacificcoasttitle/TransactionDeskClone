@@ -826,8 +826,6 @@ class CommissionRange extends MX_Controller {
 					
 					$this->session->set_flashdata($flash_data);
 					redirect(base_url('order/admin/commission-bonus'));
-                
-                
             }                                       
         }
 		
