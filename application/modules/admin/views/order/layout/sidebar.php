@@ -21,12 +21,16 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
         	<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/orders' || $this->uri->segment(3) == 'order-details' || $this->uri->segment(4) == 'loan' || $this->uri->segment(4) == 'sale') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/orders'; ?>">
 				Orders
 			</a>
+			<?php
+				if($role_id != 3):
+			?>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/safewire-orders') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/safewire-orders'; ?>">
 				Safewire Orders
 			</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/import-orders') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/import-orders'; ?>">
 			Import Orders
-		</a>
+			</a>
+			<?php endif; ?>
         </div>
 	</li>
 	<?php
