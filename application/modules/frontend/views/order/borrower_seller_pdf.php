@@ -42,18 +42,29 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr role="row" class="odd">
-                                                            <td>1</td>
-                                                            <td><?php echo $escrow_instruction_document;?></td>
-                                                            <td>
-                                                                <div class="custom__task_actions smart-forms" style="display: inline-block;">
-                                                                    <a target="_blank" href="<?php echo env('AWS_PATH').'escrow_instruction_documents/'.$escrow_instruction_document;?>" class="btn button btn-primary">
-                                                                        <span class="text">View</span>
-                                                                    </a>
-                                                                    <div class="clearfix"></div>
-                                                                </div>
-                                                            </td> 
-                                                        </tr>         
+                                                        <?php if (!empty($docsInfo)) { 
+                                                            $i = 1;
+                                                            foreach($docsInfo as $docs) {
+                                                                if($docs['is_escrow_instruction_doc'] == 1) {?>
+                                                                    <tr role="row" class="odd">
+                                                                        <td><?php echo $i;?></td>
+                                                                        <td><?php echo $docs['original_document_name'];?></td>
+                                                                        <td>
+                                                                            <div class="custom__task_actions smart-forms" style="display: inline-block;">
+                                                                                <a target="_blank" href="<?php echo env('AWS_PATH').'instruction_documents/'.$docs['document_name'];?>" class="btn button btn-primary">
+                                                                                    <span class="text">View</span>
+                                                                                </a>
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </td> 
+                                                                    </tr>   
+                                                        <?php $i++; } }
+                                                            } else { ?>
+
+                                                                <tr align="center">
+                                                                    <td colspan="3">No Document found.</td>
+                                                                </tr>
+                                                        <?php } ?>    
                                                     </tbody>
                                                 </table>	
                                             </div>
@@ -78,20 +89,24 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php if (!empty($commission_instruction_document)) { ?>
-                                                            <tr role="row" class="odd">
-                                                                <td>1</td>
-                                                                <td><?php echo $commission_instruction_document;?></td>
-                                                                <td>
-                                                                    <div class="custom__task_actions smart-forms" style="display: inline-block;">
-                                                                        <a target="_blank" href="<?php echo env('AWS_PATH').'commission_instruction_document/'.$commission_instruction_document;?>" class="btn button btn-primary">
-                                                                            <span class="text">View</span>
-                                                                        </a>
-                                                                        <div class="clearfix"></div>
-                                                                    </div>
-                                                                </td> 
+                                                        <?php if (!empty($docsInfo)) { 
+                                                            $i = 1;
+                                                            foreach($docsInfo as $docs) {
+                                                                if($docs['is_commission_doc'] == 1) {?>
+                                                                    <tr role="row" class="odd">
+                                                                        <td><?php echo $i;?></td>
+                                                                        <td><?php echo $docs['original_document_name'];?></td>
+                                                                        <td>
+                                                                            <div class="custom__task_actions smart-forms" style="display: inline-block;">
+                                                                                <a target="_blank" href="<?php echo env('AWS_PATH').'instruction_documents/'.$docs['document_name'];?>" class="btn button btn-primary">
+                                                                                    <span class="text">View</span>
+                                                                                </a>
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </td> 
                                                             </tr>   
-                                                        <?php } else { ?>
+                                                            <?php $i++; } }
+                                                            } else { ?>
 
                                                             <tr align="center">
                                                                 <td colspan="3">No Document found.</td>
