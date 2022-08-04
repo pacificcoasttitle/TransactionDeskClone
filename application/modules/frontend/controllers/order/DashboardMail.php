@@ -2545,6 +2545,7 @@ class DashboardMail extends MX_Controller {
             $pdfData['transferee_business_num'] = $this->input->post('transferee_business_num') ? $this->input->post('transferee_business_num') : array();
             $pdfData['calculation_amount'] = $this->input->post('calculation_amount') ? $this->input->post('calculation_amount') : array();
             $pdfData['perjury'] = $this->input->post('perjury') ? $this->input->post('perjury') : array();
+            $pdfData['docsInfo'] = $data['docsInfo'];
            
             $this->load->model('order/document');
             $document_name = "borrower_seller_".date('YmdHis')."_".$order[0]['file_id'].".pdf";
