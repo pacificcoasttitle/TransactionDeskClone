@@ -510,6 +510,7 @@ class Order
             transaction_details.borrower, 
             transaction_details.secondary_borrower,
             transaction_details.vesting,
+            transaction_details.escrow_number,
             customer_basic_details.id as lender_id,
             customer_basic_details.partner_id as lender_partner_id,
             customer_basic_details.street_address as lender_address,

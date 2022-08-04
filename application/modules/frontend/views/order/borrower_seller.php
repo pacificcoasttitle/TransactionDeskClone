@@ -185,7 +185,7 @@
                                         </div>
 
                                         <div class="date_escrow_num max-w-100 text_black mt-4">
-                                            <span><strong>ESCROW NO.:</strong></span>10257432-GLE-MP<br>
+                                            <span><strong>ESCROW NO.:</strong></span><?php echo $orderDetails['escrow_number'];?><br>
                                             <span><strong>TITLE NO.:</strong></span>10257432-GLT-<br>
                                         </div>
 
