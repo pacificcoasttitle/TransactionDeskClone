@@ -2187,6 +2187,7 @@ class DashboardMail extends MX_Controller {
             $orderDetails['second_seller_middle_name'] = '' ;
             $orderDetails['second_seller_last_name'] = '' ;
         }
+        
         $data['orderDetails'] = $orderDetails;
         $errors = array();
         $data['errors'] = array();
