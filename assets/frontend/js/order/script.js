@@ -297,6 +297,7 @@ $(document).ready(function() {
             $('#loan_account').prop('required',false);
         }      
     });
+	
 });
 
 $("#borrower_seller_form").validate({
@@ -316,7 +317,7 @@ $("#borrower_seller_form").validate({
         document.forms["borrower_seller_form"].submit();
     },
     invalidHandler: function(e,validator) {
-        for (var i=0;i<validator.errorList.length;i++){   
+		for (var i=0;i<validator.errorList.length;i++){   
             $(validator.errorList[i].element).closest('.accordion-collapse').addClass('show');
             return false;
         }
@@ -326,7 +327,7 @@ $("#borrower_seller_form").validate({
         if (placement) {
           $(placement).append(error)
         } else {
-          error.insertAfter(element);
+          error.insertAfter(element.parent());
         }
     }
 });
@@ -625,9 +626,45 @@ $(function () {
 var clear1 = function () {
     window.signaturePad1.clear()
 }  
-
-
-
+function condtionalRequired(checkbox_element,elements_paernt) {
+	if($(checkbox_element).is(":checked")) {
+		$(elements_paernt+" input[type=text]").each(function(){
+			if(!($(this).hasClass('optional-input'))) {
+				$(this).prop('required',true);
+			}
+		});
+	}
+	else {
+		$(elements_paernt+" input[type=text]").each(function(){
+			$(this).prop('required',false);
+		});
+	}
+}
+$('#checkEleven').change(function(){
+	condtionalRequired('#checkEleven','#borrower_seller_form #collapseTwenty .part_5_parent');
+});
+$('#checkThree').change(function(){
+	condtionalRequired('#checkThree','#borrower_seller_form #collapseTwenty .part_6_parent');
+});
+$(document).ready(function(){
+	$("#borrower_seller_form #collapseTwenty input[type=text]").each(function(){
+		if(!($(this).hasClass('optional-input'))) {
+			$(this).prop('required',true);
+		}
+	});
+	$("#borrower_seller_form #collapseFourteen input[type=text]").each(function(){
+		if(!($(this).hasClass('optional-input'))) {
+			$(this).prop('required',true);
+		}
+	});
+	$("#borrower_seller_form #collapse22 input[type=text]").each(function(){
+		if(!($(this).hasClass('optional-input'))) {
+			$(this).prop('required',true);
+		}
+	});
+	condtionalRequired('#checkEleven','#borrower_seller_form #collapseTwenty .part_5_parent');
+	condtionalRequired('#checkThree','#borrower_seller_form #collapseTwenty .part_6_parent');
+});
 
 
 

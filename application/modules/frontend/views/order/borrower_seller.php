@@ -65,7 +65,7 @@
                                 }?>
                         </div>
                     <?php } ?>
-                    <form action="<?php echo base_url().'borrower-seller-form/'.$orderDetails['file_id']; ?>" onsubmit="if (validateForm()) { document.forms['borrower_seller_form'].submit(); }" method="post" name="borrower_seller_form" id="borrower_seller_form">
+                    <form action="<?php echo base_url().'borrower-seller-form/'.$orderDetails['file_id']; ?>" method="post" name="borrower_seller_form" id="borrower_seller_form">
                         <h2 class="blue_title">Seller Opening Package<br><span style="font-size:16px; padding-top:15px;">Property Address: <?php echo $orderDetails['full_address'];?></span><br><span style="font-size:16px; padding-top:15px;">APN:<?php echo $orderDetails['apn'];?></span></h2>
                         <div class="accordion" id="accordionExample">
                             <div class="accordion-item">
@@ -1397,7 +1397,7 @@
                                             <label for="remitter3">Buyer/Transferee</label> &nbsp;
                                             <input type="checkbox" id="remitter4" name="remitter_info[]" value="other"> &nbsp;
                                             <label for="remitter4">Other</label> &nbsp;
-                                            <input type="text" class="input_single" id="other_remitter_info" name="other_remitter_info"> &nbsp;
+                                            <input type="text" class="input_single optional-input" id="other_remitter_info" name="other_remitter_info"> &nbsp;
                                         </div>
                                         <hr class="hr1 mb-4">
                                         <div class="row mb-3">
@@ -1513,33 +1513,33 @@
                                         <div class="row mb-3">
                                             <div class="col-md-4">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferor_spouse_first_name" name="transferor_spouse_first_name">
+                                                    <input type="text" class="form-control optional-input" id="transferor_spouse_first_name" name="transferor_spouse_first_name">
                                                     <small class="small_label">Spouse's/RDP's first name (if jointly owned)</small>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferor_spouse_middle_name" name="transferor_spouse_middle_name">
+                                                    <input type="text" class="form-control optional-input" id="transferor_spouse_middle_name" name="transferor_spouse_middle_name">
                                                     <small class="small_label">Initial</small>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferor_spouse_last_name" name="transferor_spouse_last_name">
+                                                    <input type="text" class="form-control optional-input" id="transferor_spouse_last_name" name="transferor_spouse_last_name">
                                                     <small class="small_label">last name</small>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferor_spouse_ssn_or_itin" name="transferor_spouse_ssn_or_itin">
+                                                    <input type="text" class="form-control optional-input" id="transferor_spouse_ssn_or_itin" name="transferor_spouse_ssn_or_itin">
                                                     <small class="small_label">Spouse's/RDP's SSN or ITIN (if jointly owned) </small>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row mb-3 align-items-center">
                                             <div class="col-md-6">
-                                                <div class="form-group position-relative">
-                                                    <input type="text" class="form-control" id="nongrantor_trust_name" name="nongrantor_trust_name">
+                                                <div class="form-group position-relative mb-3">
+                                                    <input type="text" class="form-control optional-input" id="nongrantor_trust_name" name="nongrantor_trust_name">
                                                     <small class="small_label">Business/Nongrantor Trust name (if applicable)</small>
                                                 </div>
                                             </div>
@@ -1703,139 +1703,143 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="mb-4">
-                                            <strong>Part V   Buyer/Transferee Information</strong><br>
-                                            <small><strong>Complete this part if you checked box 11 in Part IV for an installment agreement.
-                                            </strong></small>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-4">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_first_name" name="transferee_first_name">
-                                                    <small class="small_label">First name</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_initial_name" name="transferee_initial_name">
-                                                    <small class="small_label">Initial</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_last_name" name="transferee_last_name">
-                                                    <small class="small_label">last name</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_ssn_or_itin" name="transferee_ssn_or_itin">
-                                                    <small class="small_label">SSN or ITIN</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-4">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_spouse_first_name" name="transferee_spouse_first_name">
-                                                    <small class="small_label">Spouse's/RDP's first name (if jointly owned)</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_spouse_initial_name" name="transferee_spouse_initial_name">
-                                                    <small class="small_label">Initial</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_spouse_last_name" name="transferee_spouse_last_name">
-                                                    <small class="small_label">last name</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_spouse_ssn_or_itin" name="transferee_spouse_ssn_or_itin">
-                                                    <small class="small_label">Spouse's/RDP's SSN or ITIN</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3 align-items-center">
-                                            <div class="col-md-6">
-                                                <div class="form-group position-relative">
-                                                    <input type="text" class="form-control" id="transferee_nongrantor_trust_name" name="transferee_nongrantor_trust_name">
-                                                    <small class="small_label">Business/Nongrantor Trust name (if applicable)</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input type="checkbox" id="fein2" name="transferee_business_num[]" value="fein"> &nbsp;
-                                                <label for="fein2">FEIN</label> &nbsp;
-                                                <input type="checkbox" id="corpNo2" name="transferee_business_num[]" value="corpNo2"> &nbsp;
-                                                <label for="corpNo2">CA Corp no.</label> &nbsp;
-                                                <input type="checkbox" id="sosNo2" name="transferee_business_num[]" value="sosNo2"> &nbsp;
-                                                <label for="sosNo2">CA SOS file no.</label>
-                                            </div>
-                                        </div> 
-                                        <div class="row mb-3">
-                                            <div class="col-md-12">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_address" name="transferee_address">
-                                                    <small class="small_label">Address (apt./ste., room, PO box, or PMB no.) </small>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <div class="row mb-3">
-                                            <div class="col-md-4">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_city" name="transferee_city">
-                                                    <small class="small_label">City (If you have a foreign address, see instructions.)</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_state" name="transferee_state">
-                                                    <small class="small_label">State </small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_zip_code" name="transferee_zip_code">
-                                                    <small class="small_label">ZIP code</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="transferee_telephone_number" name="transferee_telephone_number">
-                                                    <small class="small_label">Telephone number</small>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <div class="row mb-3">
-                                            <div class="col-md-3">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="principal_amount_of_promissory_note" name="principal_amount_of_promissory_note">
-                                                    <small class="small_label">Principal Amount of Promissory Note</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="installment_amount" name="installment_amount">
-                                                    <small class="small_label">Installment Amount</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="principal_interrest_rate" name="principal_interrest_rate">
-                                                    <small class="small_label">PInterest Rate (%)</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" id="repayment_period" name="repayment_period">
-                                                    <small class="small_label">Repayment Period (Number of months)</small>
-                                                </div>
-                                            </div>
-                                        </div> 
+										<div class="part_5_parent">
+											<div class="mb-4">
+												<strong>Part V   Buyer/Transferee Information</strong><br>
+												<small><strong>Complete this part if you checked box 11 in Part IV for an installment agreement.
+												</strong></small>
+											</div>
+
+											
+											<div class="row mb-3">
+												<div class="col-md-4">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="transferee_first_name" name="transferee_first_name">
+														<small class="small_label">First name</small>
+													</div>
+												</div>
+												<div class="col-md-2">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="transferee_initial_name" name="transferee_initial_name">
+														<small class="small_label">Initial</small>
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="transferee_last_name" name="transferee_last_name">
+														<small class="small_label">last name</small>
+													</div>
+												</div>
+												<div class="col-md-2">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="transferee_ssn_or_itin" name="transferee_ssn_or_itin">
+														<small class="small_label">SSN or ITIN</small>
+													</div>
+												</div>
+											</div>
+											<div class="row mb-3">
+												<div class="col-md-4">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control optional-input" id="transferee_spouse_first_name" name="transferee_spouse_first_name">
+														<small class="small_label">Spouse's/RDP's first name (if jointly owned)</small>
+													</div>
+												</div>
+												<div class="col-md-2">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control optional-input" id="transferee_spouse_initial_name" name="transferee_spouse_initial_name">
+														<small class="small_label">Initial</small>
+													</div>
+												</div>
+												<div class="col-md-2">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control optional-input" id="transferee_spouse_last_name" name="transferee_spouse_last_name">
+														<small class="small_label">last name</small>
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control optional-input" id="transferee_spouse_ssn_or_itin" name="transferee_spouse_ssn_or_itin">
+														<small class="small_label">Spouse's/RDP's SSN or ITIN</small>
+													</div>
+												</div>
+											</div>
+											<div class="row mb-3 align-items-center">
+												<div class="col-md-6">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control optional-input" id="transferee_nongrantor_trust_name" name="transferee_nongrantor_trust_name">
+														<small class="small_label">Business/Nongrantor Trust name (if applicable)</small>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<input type="checkbox" id="fein2" name="transferee_business_num[]" value="fein"> &nbsp;
+													<label for="fein2">FEIN</label> &nbsp;
+													<input type="checkbox" id="corpNo2" name="transferee_business_num[]" value="corpNo2"> &nbsp;
+													<label for="corpNo2">CA Corp no.</label> &nbsp;
+													<input type="checkbox" id="sosNo2" name="transferee_business_num[]" value="sosNo2"> &nbsp;
+													<label for="sosNo2">CA SOS file no.</label>
+												</div>
+											</div> 
+											<div class="row mb-3">
+												<div class="col-md-12">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="transferee_address" name="transferee_address">
+														<small class="small_label">Address (apt./ste., room, PO box, or PMB no.) </small>
+													</div>
+												</div>
+											</div> 
+											<div class="row mb-3">
+												<div class="col-md-4">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="transferee_city" name="transferee_city">
+														<small class="small_label">City (If you have a foreign address, see instructions.)</small>
+													</div>
+												</div>
+												<div class="col-md-2">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="transferee_state" name="transferee_state">
+														<small class="small_label">State </small>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="transferee_zip_code" name="transferee_zip_code">
+														<small class="small_label">ZIP code</small>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="transferee_telephone_number" name="transferee_telephone_number">
+														<small class="small_label">Telephone number</small>
+													</div>
+												</div>
+											</div> 
+											<div class="row mb-3">
+												<div class="col-md-3">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="principal_amount_of_promissory_note" name="principal_amount_of_promissory_note">
+														<small class="small_label">Principal Amount of Promissory Note</small>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="installment_amount" name="installment_amount">
+														<small class="small_label">Installment Amount</small>
+													</div>
+												</div>
+												<div class="col-md-2">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="principal_interrest_rate" name="principal_interrest_rate">
+														<small class="small_label">PInterest Rate (%)</small>
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" id="repayment_period" name="repayment_period">
+														<small class="small_label">Repayment Period (Number of months)</small>
+													</div>
+												</div>
+											</div> 
+										</div>
                                         <div class="mb-4">
                                             <strong>Buyer's/Transferee's Acknowledgment to Withhold</strong><br>
                                             <small><strong>Read the "Buyer/Transferee" Information below.</strong></small>
@@ -1843,142 +1847,144 @@
                                         <div class="notice_box mb-3">
                                             I acknowledge that I am required to withhold on the principal portion of each installment payment to the seller/transferor for the above shown California real property either at the rate of 3 1/3% (.0333) of the sales price or the Alternative Withholding Calculation, as specified by the seller/transferor on Form 593, Real Estate Withholding Statement, of the principal portion of each installment payment. I will complete Form 593 for the principal portion of each installment payment and send one copy of each to the Franchise Tax Board (FTB) along with Form 593-V, Payment Voucher for Real Estate Withholding, the withholding payment, and give one copy of Form 593 to the seller/transferor. I will send each withholding payment to the FTB by the 20th day of the month following the month of the installment payment. If the terms of the installment sale, promissory note, or payment schedule change, I will promptly inform the FTB. I understand that the FTB may review relevant escrow documents to ensure withholding compliance. I also understand that I am subject to withholding penalties if I do not withhold on the principal portion of each installment payment and do not send the withholding along with Form 593 to the FTB by the due date, or if I do not send one copy of Form 593 to the seller/transferor by the due date. Go to Side 3, complete the perjury statement and sign.
                                         </div>
-                                        <div class="mb-4">
-                                            <strong>Part VI Computation</strong><br>
-                                            <small><strong>Complete this part if you checked and certified box 3 in Part III, or to calculate an alternative withholding calculation amount.</strong></small>
-                                        </div>
+										<div class="part_6_parent">
+											<div class="mb-4">
+												<strong>Part VI Computation</strong><br>
+												<small><strong>Complete this part if you checked and certified box 3 in Part III, or to calculate an alternative withholding calculation amount.</strong></small>
+											</div>
 
-                                        <ol start="13">
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    <b>Selling price</b>&nbsp;<input type="text" class="input_single flex1" id="selling_price" name="selling_price">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Selling expenses&nbsp;<input type="text" class="input_single flex1" id="selling_expenses" name="selling_expenses">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                   <span><b>Amount realized.</b> Subtract line 14 from line</span>&nbsp;<input type="text" class="input_single flex1" id="amount_realized" name="amount_realized">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Enter the price you paid to purchase the property (see instructions, How to Figure Your Basis.)&nbsp;<input type="text" class="input_single flex1" id="paid_price_to_purchase" name="paid_price_to_purchase">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Seller/Transferor-paid points&nbsp;<input type="text" class="input_single flex1" id="seller_paid_months" name="seller_paid_months">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Depreciation&nbsp;<input type="text" class="input_single flex1" id="seller_depreciation" name="seller_depreciation">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Other decreases to basis&nbsp;<input type="text" class="input_single flex1" id="other_decreases" name="other_decreases">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Total decreases to basis. Add line 17 through line&nbsp;<input type="text" class="input_single flex1" id="total_decrease_line_17" name="total_decrease_line_17">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Subtract line 20 from line&nbsp;<input type="text" class="input_single flex1" id="subtract_line_20" name="subtract_line_20">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Cost of additions and improvements&nbsp;<input type="text" class="input_single flex1" id="cost_of_addition" name="cost_of_addition">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Other increases to basis&nbsp;<input type="text" class="input_single flex1" id="other_increase_to_basis" name="other_increase_to_basis">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Total increases to basis. Add line 22 and line&nbsp;<input type="text" class="input_single flex1" id="total_decrease_line_22" name="total_decrease_line_22">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Adjusted basis. Add line 21 and line&nbsp;<input type="text" class="input_single flex1" id="adjusted_basis_line_21" name="adjusted_basis_line_21">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Enter any suspended passive activity losses from this property&nbsp;<input type="text" class="input_single flex1" id="suspended_passive_lossed" name="suspended_passive_lossed">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2">
-                                                    Add line 25 and line&nbsp;<input type="text" class="input_single flex1" id="add_line_25" name="add_line_25">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2 align-items-end">
-                                                    <span><b>Estimated gain or loss on sale.</b> Subtract line 27 from line 15 and enter the amount here
-                                                        If you have a loss or zero gain, skip lines 29 and 30. Certify on Side 3. Withholding is not required.
-                                                        If you have a gain, go to line 29 to calculate your withholding</span>&nbsp;<input type="text" class="input_single flex1" id="estimated_gain_or_loss" name="estimated_gain_or_loss">
-                                                </div>
-                                            </li>
-                                        </ol>
-                                        <div class="row mb-3">
-                                            <div class="col-md-8">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" value="Pacific Coast Title Company" id="remitter_name_2" name="remitter_name_2">
-                                                    <small class="small_label">Remitter name</small>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group position-relative mb-3">
-                                                    <input type="text" class="form-control" value="95-2569776" id="remitter_ssn_itin_fein_2" name="remitter_ssn_itin_fein_2">
-                                                    <small class="small_label">SSN, ITIN, FEIN, CA corp no., or CA SOS file no.</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <ol start="29">
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2 align-items-end">
-                                                    <span>
-                                                    <div><b>Alternative withholding calculation amount.</b> Check the applicable box for the filing type.</div>
-                                                    <input type="checkbox" class="me-2" id="cal1" name="calculation_amount[]" value="individual_12.3">
-                                                    <label for="cal1">Individual 12.3%</label>&nbsp;
-                                                    <input type="checkbox" class="me-2" id="cal2" name="calculation_amount[]" value="corporation_8.84">
-                                                    <label for="cal2">Corporation 8.84%</label>&nbsp;
-                                                    <input type="checkbox" class="me-2" id="cal3" name="calculation_amount[]" value="financial_corporation_10.84">
-                                                    <label for="cal3">Bank and Financial Corporation 10.84%</label>&nbsp;
-                                                    <input type="checkbox" class="me-2" id="cal4" name="calculation_amount[]" value="trust_12.3">
-                                                    <label for="cal4">Trust 12.3%</label>&nbsp;
-                                                    <input type="checkbox" class="me-2" id="cal5" name="calculation_amount[]" value="non_california_12.3">
-                                                    <label for="cal5">Non-California Partnership 12.3%</label>&nbsp;
-                                                    <input type="checkbox" class="me-2" id="cal6" name="calculation_amount[]" value="s_corporation_13.8">
-                                                    <label for="cal6">S Corporation 13.8%</label>&nbsp;
-                                                    <input type="checkbox" class="me-2" id="cal7" name="calculation_amount[]" value="financial_s_corporation_15.8">
-                                                    <label for="cal7">Financial S Corporation 15.8%</label>
-                                                    Multiply the amount on line 28 by the tax rate for the filing type selected above and enter the amount here. This is the alternative withholding calculation amount. If you elect the alternative withholding calculation amount, then check the
-                                                    appropriate box on line 36, Boxes B-H, and enter the amount on line 37</span>&nbsp;<input type="text" class="input_single flex1" id="calculation_amount_value" name="calculation_amount_value">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex flex-xs-wrap mb-2 align-items-end">
-                                                    <span>
-                                                        <b>Sales price withholding amount.</b> Multiply the selling price on line 13 by 3 1/3% (.0333).
-                                                        This is the <b>sales price withholding amount,</b> If you select the sales price withholding amount, check box A on
-                                                        line 36 below and enter the amount on line 37
-                                                    </span>&nbsp;<input type="text" class="input_single flex1" id="sales_price_withholding_amount" name="sales_price_withholding_amount">
-                                                </div>
-                                            </li>
-                                        </ol>
+											<ol start="13">
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														<b>Selling price</b>&nbsp;<input type="text" class="input_single flex1" id="selling_price" name="selling_price">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Selling expenses&nbsp;<input type="text" class="input_single flex1" id="selling_expenses" name="selling_expenses">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+													<span><b>Amount realized.</b> Subtract line 14 from line</span>&nbsp;<input type="text" class="input_single flex1" id="amount_realized" name="amount_realized">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Enter the price you paid to purchase the property (see instructions, How to Figure Your Basis.)&nbsp;<input type="text" class="input_single flex1" id="paid_price_to_purchase" name="paid_price_to_purchase">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Seller/Transferor-paid points&nbsp;<input type="text" class="input_single flex1" id="seller_paid_months" name="seller_paid_months">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Depreciation&nbsp;<input type="text" class="input_single flex1" id="seller_depreciation" name="seller_depreciation">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Other decreases to basis&nbsp;<input type="text" class="input_single flex1" id="other_decreases" name="other_decreases">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Total decreases to basis. Add line 17 through line&nbsp;<input type="text" class="input_single flex1" id="total_decrease_line_17" name="total_decrease_line_17">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Subtract line 20 from line&nbsp;<input type="text" class="input_single flex1" id="subtract_line_20" name="subtract_line_20">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Cost of additions and improvements&nbsp;<input type="text" class="input_single flex1" id="cost_of_addition" name="cost_of_addition">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Other increases to basis&nbsp;<input type="text" class="input_single flex1" id="other_increase_to_basis" name="other_increase_to_basis">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Total increases to basis. Add line 22 and line&nbsp;<input type="text" class="input_single flex1" id="total_decrease_line_22" name="total_decrease_line_22">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Adjusted basis. Add line 21 and line&nbsp;<input type="text" class="input_single flex1" id="adjusted_basis_line_21" name="adjusted_basis_line_21">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Enter any suspended passive activity losses from this property&nbsp;<input type="text" class="input_single flex1" id="suspended_passive_lossed" name="suspended_passive_lossed">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2">
+														Add line 25 and line&nbsp;<input type="text" class="input_single flex1" id="add_line_25" name="add_line_25">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2 align-items-end">
+														<span><b>Estimated gain or loss on sale.</b> Subtract line 27 from line 15 and enter the amount here
+															If you have a loss or zero gain, skip lines 29 and 30. Certify on Side 3. Withholding is not required.
+															If you have a gain, go to line 29 to calculate your withholding</span>&nbsp;<input type="text" class="input_single flex1" id="estimated_gain_or_loss" name="estimated_gain_or_loss">
+													</div>
+												</li>
+											</ol>
+											<div class="row mb-3">
+												<div class="col-md-8">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" value="Pacific Coast Title Company" id="remitter_name_2" name="remitter_name_2">
+														<small class="small_label">Remitter name</small>
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group position-relative mb-3">
+														<input type="text" class="form-control" value="95-2569776" id="remitter_ssn_itin_fein_2" name="remitter_ssn_itin_fein_2">
+														<small class="small_label">SSN, ITIN, FEIN, CA corp no., or CA SOS file no.</small>
+													</div>
+												</div>
+											</div>
+											<ol start="29">
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2 align-items-end">
+														<span>
+														<div><b>Alternative withholding calculation amount.</b> Check the applicable box for the filing type.</div>
+														<input type="checkbox" class="me-2" id="cal1" name="calculation_amount[]" value="individual_12.3">
+														<label for="cal1">Individual 12.3%</label>&nbsp;
+														<input type="checkbox" class="me-2" id="cal2" name="calculation_amount[]" value="corporation_8.84">
+														<label for="cal2">Corporation 8.84%</label>&nbsp;
+														<input type="checkbox" class="me-2" id="cal3" name="calculation_amount[]" value="financial_corporation_10.84">
+														<label for="cal3">Bank and Financial Corporation 10.84%</label>&nbsp;
+														<input type="checkbox" class="me-2" id="cal4" name="calculation_amount[]" value="trust_12.3">
+														<label for="cal4">Trust 12.3%</label>&nbsp;
+														<input type="checkbox" class="me-2" id="cal5" name="calculation_amount[]" value="non_california_12.3">
+														<label for="cal5">Non-California Partnership 12.3%</label>&nbsp;
+														<input type="checkbox" class="me-2" id="cal6" name="calculation_amount[]" value="s_corporation_13.8">
+														<label for="cal6">S Corporation 13.8%</label>&nbsp;
+														<input type="checkbox" class="me-2" id="cal7" name="calculation_amount[]" value="financial_s_corporation_15.8">
+														<label for="cal7">Financial S Corporation 15.8%</label>
+														Multiply the amount on line 28 by the tax rate for the filing type selected above and enter the amount here. This is the alternative withholding calculation amount. If you elect the alternative withholding calculation amount, then check the
+														appropriate box on line 36, Boxes B-H, and enter the amount on line 37</span>&nbsp;<input type="text" class="input_single flex1 optional-input" id="calculation_amount_value" name="calculation_amount_value">
+													</div>
+												</li>
+												<li>
+													<div class="d-flex flex-xs-wrap mb-2 align-items-end">
+														<span>
+															<b>Sales price withholding amount.</b> Multiply the selling price on line 13 by 3 1/3% (.0333).
+															This is the <b>sales price withholding amount,</b> If you select the sales price withholding amount, check box A on
+															line 36 below and enter the amount on line 37
+														</span>&nbsp;<input type="text" class="input_single flex1 optional-input" id="sales_price_withholding_amount" name="sales_price_withholding_amount">
+													</div>
+												</li>
+											</ol>
+										</div>
                                         <div class="mb-4"><strong>Part VII Escrow or Exchange Information</strong></div>
                                         <ol start="31">
                                             <li>
@@ -1993,7 +1999,7 @@
                                             </li>
                                             <li>
                                                 <div class="d-flex flex-xs-wrap mb-2">
-                                                    <span>Sales Price, Failed Exchange, or Boot Amount $ <input type="text" class="input_single w-small" id="boot_amount" name="boot_amount"> x Ownership Percentage  <input type="text" class="input_single w-small" id="exchange_ownership_percentage_from" name="exchange_ownership_percentage_from"> , <input type="text" class="input_single w-small" id="exchange_ownership_percentage_to" name="exchange_ownership_percentage_to">%</span>&nbsp;<input type="text" class="input_single flex1" id="exchange_ownership_amount" name="exchange_ownership_amount">
+                                                    <span>Sales Price, Failed Exchange, or Boot Amount $ <input type="text" class="input_single w-small optional-input" id="boot_amount" name="boot_amount"> x Ownership Percentage  <input type="text" class="input_single w-small optional-input" id="exchange_ownership_percentage_from" name="exchange_ownership_percentage_from"> , <input type="text" class="input_single w-small optional-input" id="exchange_ownership_percentage_to" name="exchange_ownership_percentage_to">%</span>&nbsp;<input type="text" class="input_single flex1 optional-input" id="exchange_ownership_amount" name="exchange_ownership_amount">
                                                 </div>
                                             </li>
                                             <li>
@@ -2243,7 +2249,7 @@
                                         <div class="row mt-5">
                                             <div class="col-md-6">
                                                 <div>$ <input type="text" class="input_single" id="total_consideration" name="total_consideration"> Total Consideration</div>
-                                                <div><input type="text " class="input_single" id="percentage_of_ownership" name="percentage_of_ownership">% Percentage of ownership for this seller</div>
+                                                <div><input type="text" class="input_single" id="percentage_of_ownership" name="percentage_of_ownership">% Percentage of ownership for this seller</div>
                                                 <div>$ <input type="text" class="input_single" id="gross_allocated" name="gross_allocated"> GROSS Allocated Proceeds</div>
                                                 <div><small> (Total consideration multiplied by percentage of ownership)</small></div>
                                             </div>
@@ -2264,8 +2270,12 @@
                                 
                                         <div class="row mt-5">
                                             <div class="col-md-6">
-                                                <input type="text" class="w-full input_single" id="mailing_address_1099_s_1" name="mailing_address_1099_s_1">
-                                                <input type="text" class="w-full mt-4 input_single" id="mailing_address_1099_s_2" name="mailing_address_1099_s_2">
+												<div>
+													<input type="text" class="w-full input_single" id="mailing_address_1099_s_1" name="mailing_address_1099_s_1">
+												</div>
+												<div>
+													<input type="text" class="w-full mt-4 input_single" id="mailing_address_1099_s_2" name="mailing_address_1099_s_2">
+												</div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="d-flex">
@@ -2347,9 +2357,10 @@
                                             </li>
                                             <li>
                                                 <div class="d-flex flex-xs-wrap">
-                                                    My home address is:<input type="text" class="input_single flex1 mb-2" id="home_address" name="home_address">
+                                                    My home address is:<input type="text" class="input_single flex1 mb-2" id="home_address" name="home_address" data-error="home_address-error">
                                                 </div>
-                                                <input type="text" class="input_single w-full" id="home_address_2" name="home_address_2">
+                                                <input type="text optional-input" class="input_single w-full" id="home_address_2" name="home_address_2">
+												<label id="home_address-error" class="error text-danger" for="work_phone_number"></label>
                                             </li>
                                         </ol>
                                         
@@ -2508,7 +2519,7 @@
 	<script src="<?php echo base_url();?>assets/frontend/js/order/jquery.min.js"></script>
     <script src="<?php echo base_url();?>assets/frontend/js/jquery.validate.min.js"></script>
 	<script src="<?php echo base_url();?>assets/frontend/js/order/bootstrap.bundle.min.js"></script>
-	<script src="<?php echo base_url();?>assets/frontend/js/order/script.js?v=01"></script>
+	<script src="<?php echo base_url();?>assets/frontend/js/order/script.js?v=02"></script>
 </body>
 
 </html>
