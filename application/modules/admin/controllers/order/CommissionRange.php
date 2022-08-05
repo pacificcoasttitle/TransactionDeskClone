@@ -829,7 +829,6 @@ class CommissionRange extends MX_Controller {
             }                                       
         }
 		
-		
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
         $this->load->view('order/layout/header', $data);
