@@ -1,7 +1,7 @@
 <?php
 
 (defined('BASEPATH')) OR exit('No direct script access allowed');
-
+use mikehaertl\pdftk\Pdf;
 class DashboardMail extends MX_Controller {
 
     function __construct() {
@@ -3165,4 +3165,295 @@ class DashboardMail extends MX_Controller {
         }
         $this->load->view('order/borrower_seller_info', $data);
     }
+
+	function generatPdfTest($random_number,$type = 'seller') {
+
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $order = $this->getOrderInfo($random_number);
+        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+
+        $this->db->select('*')
+            ->from('pct_order_borrower_seller_owner_escrow_info');
+        $this->db->where('order_id', $order[0]['id']);
+        $this->db->order_by('id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            $data['sellerInfo'] = $query->row_array();
+        } else {
+            $data['sellerInfo'] = array();
+        }
+
+        $this->db->select('*')
+            ->from('pct_order_documents');
+        $this->db->where('order_id', $order[0]['id']);
+        $this->db->where('(is_commission_doc = 1 or is_escrow_instruction_doc = 1)');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            $data['docsInfo'] = $query->result_array();
+        } else {
+            $data['docsInfo'] = array();
+        }
+        
+
+        if (!empty($orderDetails['borrower'])) {
+            $orderDetails['primary_owner_name'] = $orderDetails['borrower'];
+        } else {
+            $orderDetails['primary_owner_name'] = '';
+        }
+
+        if (!empty($orderDetails['secondary_borrower'])) {
+            $orderDetails['secondary_owner_name'] = $orderDetails['secondary_borrower'];
+        } else {
+            $orderDetails['secondary_owner_name'] = '';
+        }
+
+        if (!empty($orderDetails['borrower'])) {
+            $seller_owner_names = explode(' ', $orderDetails['borrower']);
+            if(count($seller_owner_names) == 3) {
+                $orderDetails['seller_first_name'] = $seller_owner_names[0];
+                $orderDetails['seller_middle_name'] = $seller_owner_names[1];
+                $orderDetails['seller_last_name'] = $seller_owner_names[2];
+            } else if(count($seller_owner_names) == 2) {
+                $orderDetails['seller_first_name'] = $seller_owner_names[0];
+                $orderDetails['seller_middle_name'] = '' ;
+                $orderDetails['seller_last_name'] = $seller_owner_names[1];
+            } else {
+                $orderDetails['seller_first_name'] = $seller_owner_names[0];
+                $orderDetails['seller_middle_name'] = '' ;
+                $orderDetails['seller_last_name'] = '' ;
+            }
+        } else {
+            $orderDetails['seller_first_name'] = '' ;
+            $orderDetails['seller_middle_name'] = '' ;
+            $orderDetails['seller_last_name'] = '' ;
+        }
+
+        if (!empty($orderDetails['secondary_borrower'])) {
+            $second_seller_owner_names =  explode(' ', $orderDetails['secondary_borrower']);
+            if(count($second_seller_owner_names) == 3) {
+                $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
+                $orderDetails['second_seller_middle_name'] = $second_seller_owner_names[1];
+                $orderDetails['second_seller_last_name'] = $second_seller_owner_names[2];
+            } else if(count($second_seller_owner_names) == 2) {
+                $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
+                $orderDetails['second_seller_middle_name'] = '' ;
+                $orderDetails['second_seller_last_name'] = $second_seller_owner_names[1];
+            } else {
+                $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
+                $orderDetails['second_seller_middle_name'] = '' ;
+                $orderDetails['second_seller_last_name'] = '' ;
+            }
+        } else {
+            $orderDetails['second_seller_first_name'] = '' ;
+            $orderDetails['second_seller_middle_name'] = '' ;
+            $orderDetails['second_seller_last_name'] = '' ;
+        }
+        
+        $data['orderDetails'] = $orderDetails;
+        $errors = array();
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        
+        $user_data['admin_api'] = 1; 
+        $endPoint = 'files/'. $order[0]['file_id'] .'/documents';
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+        $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
+        $resDocuments = json_decode($resultDocuments, true);
+        $documentIds = array(1015, 1534, 1040, 1405, 1039, 1038, 1020);
+
+        if(!empty($resDocuments['Documents'])) {
+            foreach ($resDocuments['Documents'] as $document) {
+                if (in_array($document['DocumentType']['DocumentTypeID'], $documentIds)) {
+                    $key = array_search($document['DocumentID'], array_column($data['docsInfo'], 'api_document_id'));
+                    // echo $document['DocumentID']."---";
+                    // print_r($data['docsInfo']);
+                    // print_r(array_column($data['docsInfo'], 'api_document_id'));exit;
+                    $this->load->model('order/document');
+                    if(strlen($key) == 0 && strpos(strtolower($document['DocumentName']), 'snapshot') === false) {
+                        $document_name = date('YmdHis')."_".$document['DocumentName'];
+                        $ext = end(explode('.', $document['DocumentName']));
+
+                        if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
+                            $document_name = str_replace($ext, 'pdf', $document_name);
+                        }
+
+                        $endPoint = 'documents/'.$document['DocumentID'].'?format=json';
+                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+                        $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
+                        $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order[0]['id'], $logid);
+                        $resDocument = json_decode($resultDocument, true);
+
+                        if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+                            $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+                            if (!is_dir('uploads/instruction_documents')) {
+                                mkdir(FCPATH.'/uploads/instruction_documents', 0777, TRUE);
+                            }
+                            file_put_contents(FCPATH.'/uploads/instruction_documents/'.$document_name, $documentContent);
+                            $this->order->uploadDocumentOnAwsS3($document_name, 'instruction_documents');
+                            $documentData = array(
+                                'document_name' => $document_name,
+                                'original_document_name' => $document['DocumentName'],
+                                'document_type_id' => $document['DocumentType']['DocumentTypeID'],
+                                'api_document_id' => $document['DocumentID'],
+                                'document_size' => $document['Size'],
+                                'user_id' => 0,
+                                'order_id' => $orderDetails['order_id'],
+                                'description' => $document['DocumentName'],
+                                'created' => date('Y-m-d H:i:s'),
+                                'is_sync' => 0,
+                                'is_commission_doc' => ($document['DocumentType']['DocumentTypeID'] == 1039 || $document['DocumentType']['DocumentTypeID'] == 1038  ||$document['DocumentType']['DocumentTypeID'] == 1020) ? 1 : 0,
+                                'is_escrow_instruction_doc' => ($document['DocumentType']['DocumentTypeID'] == 1015 || $document['DocumentType']['DocumentTypeID'] == 1534  ||$document['DocumentType']['DocumentTypeID'] == 1040) ? 1 : 0,
+                            );  
+                            $data['docsInfo'][] = $documentData;
+                            $this->document->insert($documentData);
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+		$this->load->library('snappy_pdf');
+                
+        // header('Content-Type: application/pdf');
+        $document_name = $type.'_'.time().'_'.$this->user['id'].'.pdf';
+        $dir_to_upload = 'uploads/escrow/'.$type;
+        if (!is_dir(FCPATH.$dir_to_upload)) {
+            mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
+        }
+        chmod(FCPATH.$dir_to_upload, 0777);
+        $dir_name = FCPATH.$dir_to_upload.'/';
+        $dir_name = str_replace('\\', '/', $dir_name);
+        // echo $dir_name.$document_name;die;
+		$report_data = $data;
+		if($type == 'seller') {
+
+			$html = $this->load->view('order/borrower_seller',$report_data,true);
+		}
+		else {
+			$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $order = $this->getOrderInfo($random_number);
+        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+
+        $this->db->select('*')
+            ->from('pct_order_borrower_buyer_info');
+        $this->db->where('order_id', $order[0]['id']);
+        $this->db->order_by('id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            $data['buyerInfo'] = $query->row_array();
+        } else {
+            $data['buyerInfo'] = array();
+        }
+        
+        if (!empty($orderDetails['primary_owner'])) {
+            $buyer_owner_names = explode(' ', $orderDetails['primary_owner']);
+            if(count($buyer_owner_names) == 3) {
+                $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
+                $orderDetails['buyer_middle_name'] = $buyer_owner_names[1];
+                $orderDetails['buyer_last_name'] = $buyer_owner_names[2];
+            } else if(count($buyer_owner_names) == 2) {
+                $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
+                $orderDetails['buyer_middle_name'] = '' ;
+                $orderDetails['buyer_last_name'] = $buyer_owner_names[1];
+            } else {
+                $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
+                $orderDetails['buyer_middle_name'] = '' ;
+                $orderDetails['buyer_last_name'] = '' ;
+            }
+        } else {
+            $orderDetails['buyer_first_name'] = '' ;
+            $orderDetails['buyer_middle_name'] = '' ;
+            $orderDetails['buyer_last_name'] = '' ;
+        }
+
+        if (!empty($orderDetails['secondary_owner'])) {
+            $second_buyer_owner_names =  explode(' ', $orderDetails['secondary_owner']);
+            if(count($second_buyer_owner_names) == 3) {
+                $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
+                $orderDetails['second_buyer_middle_name'] = $second_buyer_owner_names[1];
+                $orderDetails['second_buyer_last_name'] = $second_buyer_owner_names[2];
+            } else if(count($buyer_owner_names) == 2) {
+                $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
+                $orderDetails['second_buyer_middle_name'] = '' ;
+                $orderDetails['second_buyer_last_name'] = $second_buyer_owner_names[1];
+            } else {
+                $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
+                $orderDetails['second_buyer_middle_name'] = '' ;
+                $orderDetails['second_buyer_last_name'] = '' ;
+            }
+        } else {
+            $orderDetails['second_buyer_first_name'] = '' ;
+            $orderDetails['second_buyer_middle_name'] = '' ;
+            $orderDetails['second_buyer_last_name'] = '' ;
+        }
+		
+        $data['orderDetails'] = $orderDetails;
+        $errors = array();
+        $data['errors'] = array();
+        $data['success'] = array();
+		$report_data = $data;
+			$html = $this->load->view('order/borrower_buyer',$report_data,true);
+		}
+        $this->snappy_pdf->pdf->generateFromHtml($html,$dir_name.$document_name);
+
+		echo $dir_name.$document_name;
+
+        // $returnData = array();
+        // $returnData['pdfLink'] = $dir_to_upload.'/'.$document_name;
+        // $response = $this->order->uploadDocumentOnAwsS3($document_name, 'sales-rep/pma');
+        // if($response) {
+        //     //report_url
+        //     $returnData['pdfLink'] = 'sales-rep/pma/'.$document_name;
+        //     if(is_file($dir_name.$document_name)) {
+        //         unlink($dir_name.$document_name);
+        //     }
+        // }
+        // echo json_encode($returnData);exit;
+	}
+
+	public function testPdfkt() {
+		
+		$pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_check.pdf';
+		$pdf = new Pdf($pdf_templates_file);
+		$type = 'buyer';
+		$document_name = $type.'_'.time().'_'.$this->user['id'].'.pdf';
+        $dir_to_upload = 'uploads/escrow/'.$type;
+        if (!is_dir(FCPATH.$dir_to_upload)) {
+            mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
+        }
+        chmod(FCPATH.$dir_to_upload, 0777);
+        $dir_name = FCPATH.$dir_to_upload.'/';
+        $dir_name = str_replace('\\', '/', $dir_name);
+		$file_full_path = $dir_name.$document_name;
+
+		$pdf->fillForm([
+			'Date'    => '10/08/2022',
+			'Escrow#' => '123',
+			'The Undersigned hereby authorizes and directs Pacific Coast Title Company to disburse proceeds as follows' => 1,
+			'All' => 'No',
+			'Or' => 'Yes',
+			'All Net Proceeds or'=>'123.34',
+			'To'=>'Test to',
+			'Attn' => 'TestAtn',
+			'Escrow No'=>'es1'
+			])
+			->needAppearances()
+			->saveAs($file_full_path);
+			echo $file_full_path;
+	}
 }
