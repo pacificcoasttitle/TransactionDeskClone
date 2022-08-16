@@ -417,8 +417,8 @@ label.error {
     font-size: 13px;
     color: #f63726; }
 
-input.error {
-  border: 1px solid #f63726; }
+input.error, select.error {
+  border: 1px solid #f63726 !important; }
 
 #find_bank {
   padding: 0 55px;
@@ -650,6 +650,29 @@ input.error {
     -ms-justify-content: center;
     text-decoration: none;
 	}
+
+.alert-success {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+}
+
+.alert-dismissible {
+    padding-right: 3rem;
+}
+.alert {
+    position: relative;
+    padding: 1rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+}
+
+.alert-danger {
+  color: #842029;
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+}
+
 		
 		
 
