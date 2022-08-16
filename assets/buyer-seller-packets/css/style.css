@@ -621,8 +621,8 @@ input.error {
     width: 90px;
     height: 61px; } }
 	
-	select#loan {
-		    width: 100%;
+	.form-row select {
+		width: 100%;
     display: block;
     border: 1px solid #ebebeb;
     height: 50px;
