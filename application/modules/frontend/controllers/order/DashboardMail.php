@@ -3166,7 +3166,8 @@ class DashboardMail extends MX_Controller {
         $this->load->view('order/borrower_seller_info', $data);
     }
 
-	function generatPdfTest($random_number,$type = 'seller') {
+	function generatPdfTest($random_number,$type = 'seller') 
+    {
 
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
@@ -3426,7 +3427,9 @@ class DashboardMail extends MX_Controller {
         // echo json_encode($returnData);exit;
 	}
 
-	public function testPdfkt() {
+	public function testPdfkt() 
+    {
+
 		
 		$pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_check.pdf';
 		$pdf = new Pdf($pdf_templates_file);
@@ -3456,4 +3459,209 @@ class DashboardMail extends MX_Controller {
 			->saveAs($file_full_path);
 			echo $file_full_path;
 	}
+
+    public function fillPDFSample()
+    {
+        include(APPPATH.'libraries/SetaPDF/Autoload.php');// library for filling in PDF text fields
+        $reader = new SetaPDF_Core_Reader_File('./uploads/borrower/borrower_seller.pdf');
+        $writer = new SetaPDF_Core_Writer_File('new'.time().'.pdf');
+        // $document = SetaPDF_Core_Document::loadByFilename('test.pdf');
+        $document = SetaPDF_Core_Document::load($reader, $writer);
+
+        $formFiller = new SetaPDF_FormFiller($document);
+        $fields = $formFiller->getFields();
+
+
+        $allFields = $fields->getAll();
+        
+        $keyReplaceInfo = array(
+            'order_id' => '1 Sellers',
+            'escrow_home_phone_number' => 'undefined#2',
+            'work_phone_number' => 'undefined_2#2',
+            'fax_number' => 'undefined_3',
+            'cell_phone_number' => 'undefined_4',
+            'email_address' => 'EMail Address',
+            'cell_phone_number_2' => 'undefined_5',
+            'escrow_ssn' => '2 Social Security',
+            'ssn_2' => 'Social Security',
+            'property_address' => '3 Property Address',
+            'seller_current_mailing_address' => '4 Sellers Current Mailing Address',
+            'seller_mailing_address_after_close_escrow' => '5 Sellers Mailing Address after Close of Escrow 1',
+            'seller_mailing_address_after_close_escrow_2' => '5 Sellers Mailing Address after Close of Escrow 2',
+            'first_trust_deed_lender' => 'FIRST TRUST DEED LENDER',
+            'lender_address' => 'Address#1',
+            'loan_number' => 'Loan Number',
+            'lender_phone_number' => 'undefined_6',
+            'unpaid_principal_balance' => 'Unpaid Principal Balance',
+            'next_due' => 'Next Due#1',
+            'type_of_loan' => 'type of Loan',
+            'va' => 'VA',
+            'fha' => 'FHA',
+            'conventional' => 'Conventional',
+            'taxes' => 'TAXES',
+            'paid' => 'Paid',
+            'unpaid' => 'Unpaid',
+            'is_impound_acc' => '',
+            'second_trust_deed_lender' => 'SECOND TRUST DEED LENDER',
+            'second_lender_address' => 'Address_2',
+            'second_loan_number' => 'Loan Number_2',
+            'second_lender_phone_number' => 'undefined_7',
+            'second_unpaid_principal_balance' => 'Unpaid Principal Balance_2',
+            'second_type_of_loan' => 'type of Loan_2',
+            'second_va' => 'VA_2',
+            'second_fha' => 'FHA_2',
+            'second_conventional' => 'Conventional_2',
+            'homeowner_association' => '7 Homeowners Association',
+            'management_company' => 'Management Company#1',
+            'management_mailing_address' => 'Mailing Address#1',
+            'contact_person' => 'Contact Person#1',
+            'management_phone_number' => 'undefined#2',
+            'second_homeowner_association' => '8 Homeowners Association',
+            'second_management_company' => 'Management Company#1',
+            'second_management_mailing_address' => 'Mailing Address#1',
+            'second_contact_person' => 'Contact Person#1',
+            'second_management_phone_number' => 'undefined#2',
+            'water_company_name' => 'Name of Company',
+            'water_contract_name' => 'Name of Contact',
+            'water_company_address' => 'Address#1',
+            'water_company_phone' => 'undefined_2#2',
+            'amount_of_assessment' => 'Amount of assessment',
+            'water_next_due' => 'Next Due#1',
+            'no_of_shares' => 'No of Shares',
+            'date' => 'Date#2',
+            'escrow_signature' => 'Client Name',
+            'first_name' => 'First Name',
+            'middle_name' => 'Middle Name',
+            'last_name' => 'Last Name',
+            'maiden_name' => 'Maiden Name',
+            'date_of_birth' => 'Date of Birth',
+            'home_phone_number' => 'Home Phone',
+            'business_phone_number' => 'Business Phone',
+            'birthplace' => 'Birthplace',
+            'ssn' => 'Social Security No',
+            'driver_license_no' => 'Drivers License No',
+            'another_name_that_used' => 'List any other name you have used or been known by',
+            'residence_state' => 'State of residence',
+            'lived_year' => 'I have lived continuously in the USA since',
+            'is_married' => '',
+            'date_and_place_marriage' => 'Date and place of marriage',
+            'spouse_first_name' => '',
+            'spouse_middle_name' => '',
+            'spouse_last_name' => '',
+            'spouse_maiden_name' => '',
+            'spouse_date_of_birth' => 'Date of Birth_2',
+            'spouse_home_phone_number' => 'Home Phone_2',
+            'spouse_business_phone_number' => 'Business Phone_2',
+            'spouse_birthplace' => 'Birthplace_2',
+            'spouse_ssn' => 'Social Security No_2',
+            'spouse_driver_license_no' => 'Drivers License No_2',
+            'spouse_another_name_that_used' => 'List any other names you have used or been known by',
+            'spouse_state_residence' => 'State of residence_2',
+            'spouse_lived_year' => 'I have lived continuously in the USA since_2',
+            'is_domestic_partner' => '',
+            'domestic_first_name' => 'Domestic Partner',
+            'domestic_middle_name' => '',
+            'domestic_last_name' => '',
+            'domestic_maiden_name' => '',
+            'domestic_date_of_birth' => 'Date of Birth_3',
+            'domestic_home_phone_number' => 'Home Phone_3',
+            'domestic_business_phone_number' => 'Business Phone_3',
+            'domestic_birthplace' => 'Birthplace_3',
+            'domestic_ssn' => 'Social Security No_3',
+            'domestic_driver_license_no' => 'Drivers License No_3',
+            'domestic_another_name_that_used' => 'List any other names you have used or been known by_2',
+            'domestic_state_residence' => 'State of residence_3',
+            'domestic_lived_year' => 'I have lived continuously in the USA since_3',
+            'residence_number_street' => 'Number  Street',
+            'residence_city' => 'City',
+            'residence_from_date_to_date' => 'From date to date',
+            'second_residence_number_street' => 'Number  Street_2',
+            'second_residence_city' => 'City_2',
+            'second_residence_from_date_to_date' => 'From date to date_2',
+            'business_address' => 'Address_3#1',
+            'firm_or_business_name' => 'Firm or Business name',
+            'business_from_date_to_date' => 'From date to date_3',
+            'second_firm_or_business_name' => 'Firm or Business name_2',
+            'second_business_address' => 'Address_4',
+            'second_business_from_date_to_date' => 'From date to date_4',
+            'is_buyer_intends' => '',
+            'owner_street_address' => 'APN, City, Zip',
+            'unimproved' => 'The land is unimproved',
+            'single_family' => 'or improved with a structure of the following type  A Single or 14 Family',
+            'condo_unit' => 'Condo Unit',
+            'other' => 'Other_3',
+            'is_improvement' => '',
+            'is_materials' => '',
+            'is_loan' => '',
+            'lender' => 'Lender',
+            'loan_amount' => 'Loan Amount',
+            'loan_account' => 'Loan Account',
+            'second_lender' => 'Lender_2',
+            'second_loan_amount' => 'Loan Amount_2',
+            'second_loan_account' => 'Loan Account_2',
+            'executed_date' => 'Executed on',
+            'executed_year' => 'undefined_22',
+            'executed_time' => 'at',
+            'signature' => '',
+            'second_signature' => '',
+            'is_amended' => '',
+            'remitter_info' => '',
+            'business_name' => 'Business name Pacific Coast Title Company',
+            'business_num' => '',
+            'remitter_first_name' => 'First name',
+            'remitter_initial_name' => '',
+            'remitter_last_name' => '',
+            'remitter_ssn_or_itin' => '',
+            'remitter_address' => '',
+            'remitter_city' => '',
+            'remitter_state' => '',
+            'remitter_zip_code' => '',
+            'remitter_telephone_num' => '',
+            'trust_types' => '',
+            'transferor_first_name' => '',
+            'transferor_initial_name' => '',
+            'transferor_last_name' => '',
+            'transferor_ssn_or_itin' => '',
+            'transferor_spouse_first_name' => '',
+            'transferor_spouse_middle_name' => '',
+            'transferor_spouse_last_name' => '',
+            'transferor_spouse_ssn_or_itin' => '',
+            'nongrantor_trust_name' => '',
+            'transferor_business_num' => '',
+            'transferor_address' => '',
+            'transferor_city' => '',
+            'transferor_state' => '',
+            'transferor_zip_code' => '',
+            'transferor_telephone_number' => '',
+            'transferor_property_address' => '',
+            'ownership_percentage' => '',
+            'certifications' => '',
+            'remitter_name' => '',
+            'remitter_ssn_fein' => '',
+            'transferee_first_name' => '',
+            'transferee_initial_name' => '',
+            'transferee_last_name' => '',
+            'transferee_ssn_or_itin' => '',
+            'transferee_spouse_first_name' => '',
+            'transferee_spouse_initial_name' => '',
+            'transferee_spouse_last_name' => '',
+        );
+
+        $fields = $formFiller->getFields();
+        $fieldNames = $fields->getNames();
+       
+        $i =0;
+
+        $keyReplaceInfo = array('seller_name' => '1 Sellers', 'escrow_home_phone_number' => 'undefined#2', 'work_phone_number' => 'undefined_2#2', 'd' => 'newD');
+
+        foreach ($fieldNames AS $key=>$fieldName) {
+            echo $fieldName . "<br>";
+            $fields[$fieldName]->setValue($fieldName);
+            $i++;
+        }
+        
+        // $fields->flatten();
+
+        $document->save()->finish();
+    }
 }
