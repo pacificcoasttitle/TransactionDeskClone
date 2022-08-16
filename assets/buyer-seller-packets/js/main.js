@@ -116,4 +116,27 @@
             }
         });
     }
+
+    $('#is_another_seller').change(function(){
+        $('.colors').hide();
+        $('#' + $(this).val()).show();
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if(selectedvalue == 'Yes'){
+            $("#second_seller").removeClass("d-none");
+            $('#first_mortgage_company').prop('required',true);
+            $('#first_mortgage_loan_number').prop('required',true);
+            $('#first_mortgage_area_code').prop('required',true);
+            $('#first_mortgage_phone_number').prop('required',true);
+        } else {
+            $("#second_seller").addClass("d-none");
+            $('#first_mortgage_company').prop('required',false);
+            $('#first_mortgage_loan_number').prop('required',false);
+            $('#first_mortgage_area_code').prop('required',false);
+            $('#first_mortgage_phone_number').prop('required',false);
+        }
+        
+    });
+   
 })(jQuery);
+

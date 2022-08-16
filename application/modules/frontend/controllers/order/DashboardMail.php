@@ -3163,7 +3163,7 @@ class DashboardMail extends MX_Controller {
             $this->session->set_userdata($data);
             redirect(base_url().'seller-info/'.$random_number);exit;
         }
-        $this->load->view('order/borrower_seller_info', $data);
+        $this->load->view('order/borrower_seller_info_1', $data);
     }
 
 	function generatPdfTest($random_number,$type = 'seller') 
