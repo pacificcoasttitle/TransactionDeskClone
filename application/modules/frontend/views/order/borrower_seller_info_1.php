@@ -302,7 +302,7 @@
 
 							<div class="form-row">
 								<div class="form-group">
-									<label class="form-label">Is the property you are selling: </label>
+									<label class="form-label">Is the property you are selling: <?php echo $orderDetails['full_address'];?></label>
 									<select id="is_property_sell" name="is_property_sell" required="required">
 										<option value="">Select</option>
 										<option value="Yes">Yes</option>
