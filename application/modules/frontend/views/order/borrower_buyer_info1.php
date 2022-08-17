@@ -13,7 +13,7 @@
     <!-- <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/vendor/nouislider/nouislider.min.css');?>"> -->
 
     <!-- Main css -->
-    <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css');?>">
+    <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css?v=0.1');?>">
 </head>
 
 <body>
@@ -430,7 +430,7 @@
     <script src="<?=base_url('assets/buyer-seller-packets/vendor/nouislider/nouislider.min.js');?>"></script>
     <script src="<?=base_url('assets/buyer-seller-packets/vendor/wnumb/wNumb.js');?>"></script>
 	<script src="<?=base_url('assets/buyer-seller-packets/vendor/input-mask/jquery.mask.min.js');?>"></script>
-    <script src="<?=base_url('assets/buyer-seller-packets/js/buyer-main.js');?>"></script>
+    <script src="<?=base_url('assets/buyer-seller-packets/js/buyer-main.js?v=0.1');?>"></script>
 
 	<script>
 		$(document).ready(function(){
