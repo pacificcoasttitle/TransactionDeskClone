@@ -13,7 +13,7 @@
     <!-- <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/vendor/nouislider/nouislider.min.css');?>"> -->
 
     <!-- Main css -->
-    <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css');?>">
+    <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css?v=0.1');?>">
 </head>
 
 <body>
