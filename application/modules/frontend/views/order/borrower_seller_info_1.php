@@ -16,13 +16,15 @@
 
 	<!-- Main css -->
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/buyer-seller-packets/css/style.css">
+	<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/css/jquery-ui.css">
 
 </head>
 
 <style>
-.d-none {
-    display: none;
-}
+	.d-none {
+		display: none;
+	}
+
 </style>
 
 <body>
@@ -39,23 +41,24 @@
 
 		<div class="container">
 			<?php if(!empty($success)) {?>
-				<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-					<?php foreach($success as $sucess) {
+			<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
+				<?php foreach($success as $sucess) {
 							echo $sucess."<br \>";	
 						}?>
-						
-				</div>
+
+			</div>
 			<?php  } 
 			if(!empty($errors)) {?>
-				<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-					<?php foreach($errors as $error) {
+			<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
+				<?php foreach($errors as $error) {
 						echo $error."<br \>";	
-					}?>	
-				</div>
+					}?>
+			</div>
 			<?php } ?>
-			<form method="POST" id="signup-form" class="signup-form" action="<?php echo base_url().'seller-info/'.$orderDetails['file_id']; ?>">
+			<form method="POST" id="signup-form" class="signup-form"
+				action="<?php echo base_url().'seller-info/'.$orderDetails['file_id']; ?>">
 				<div>
-					
+
 					<h3>About You</h3>
 					<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
 					<fieldset>
@@ -86,7 +89,8 @@
 									</div>
 									<div class="form-group">
 										<label for="phone" class="form-label">Phone</label>
-										<input type="text" name="phone" id="phone" required="required">
+										<input type="text" class="phone_mask" name="phone" id="phone"
+											required="required">
 										<span class="text-input">example: (000) 000-0000 </span>
 									</div>
 								</div>
@@ -97,13 +101,15 @@
 									<div class="form-date" style="margin-left: 10px;">
 										<label for="birth_date" class="form-label">Birth Date</label>
 										<div class="form-date-group">
-											<div class="form-date-item">
-												<select id="birth_month" name="birth_month" required="required"></select>
-												<span class="text-input">MM</span>
-											</div>
+
 											<div class="form-date-item">
 												<select id="birth_date" name="birth_date" required="required"></select>
 												<span class="text-input">DD</span>
+											</div>
+											<div class="form-date-item">
+												<select id="birth_month" name="birth_month"
+													required="required"></select>
+												<span class="text-input">MM</span>
 											</div>
 											<div class="form-date-item">
 												<select id="birth_year" name="birth_year" required="required"></select>
@@ -111,34 +117,24 @@
 											</div>
 										</div>
 									</div>
-									<div class="form-date" style="margin-left: 10px;">
-										<label for="birth_date" class="form-label">Social Security No.</label>
-										<div class="form-date-group">
-											<div class="form-date-item">
-												<input type="text" id="ssn1" name="ssn1" required="required"></input>
-												<span class="text-input">XXX</span>
-											</div>
-											<div class="form-date-item">
-												<input type="text" id="ssn2" name="ssn2" required="required"></input>
-												<span class="text-input">XX</span>
-											</div>
-											<div class="form-date-item">
-												<input type="text" id="ssn3" name="ssn3" required="required"></input>
-												<span class="text-input">XXXX</span>
-											</div>
-										</div>
+									<div class="form-group">
+										<label class="form-label">Social Security No.</label>
+										<input class="ssn" type="text" name="ssn" required />
+										<span class="text-input">example: XXX-XX-XXXX </span>
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="ssn" class="form-label">Current Mailing Address</label>
-								<input type="text" name="current_mailing_address" id="current_mailing_address" required="required"/>
+								<input type="text" name="current_mailing_address" id="current_mailing_address"
+									required="required" />
 								<span class="text-input">456 Main St. Los Angeles, CA </span>
 
 							</div>
 							<div class="form-group">
 								<label for="ssn" class="form-label">Mailing Address Post Closing</label>
-								<input type="text" name="mailing_address_port_closing" id="mailing_address_port_closing" required="required">
+								<input type="text" name="mailing_address_port_closing" id="mailing_address_port_closing"
+									required="required">
 								<span class="text-input">456 Main St. Los Angeles, CA </span>
 							</div>
 
@@ -154,7 +150,7 @@
 								</div>
 							</div>
 
-                            <div class="d-none" id="second_seller">
+							<div class="d-none" id="second_seller">
 								<div class="form-row">
 									<div class="form-flex">
 										<div class="form-group">
@@ -178,7 +174,7 @@
 										</div>
 										<div class="form-group">
 											<label for="phone" class="form-label">Phone</label>
-											<input type="text" name="second_phone" id="second_phone">
+											<input type="text" class="phone_mask" name="second_phone" id="second_phone">
 											<span class="text-input">example: (000) 000-0000 </span>
 										</div>
 									</div>
@@ -189,13 +185,14 @@
 										<div class="form-date" style="margin-left: 10px;">
 											<label for="birth_date" class="form-label">Birth Date</label>
 											<div class="form-date-group">
-												<div class="form-date-item">
-													<select id="second_birth_month" name="second_birth_month"></select>
-													<span class="text-input">MM</span>
-												</div>
+
 												<div class="form-date-item">
 													<select id="second_birth_date" name="second_birth_date"></select>
 													<span class="text-input">DD</span>
+												</div>
+												<div class="form-date-item">
+													<select id="second_birth_month" name="second_birth_month"></select>
+													<span class="text-input">MM</span>
 												</div>
 												<div class="form-date-item">
 													<select id="second_birth_year" name="second_birth_year"></select>
@@ -203,37 +200,27 @@
 												</div>
 											</div>
 										</div>
-										<div class="form-date" style="margin-left: 10px;">
-											<label for="birth_date" class="form-label">Social Security No.</label>
-											<div class="form-date-group">
-												<div class="form-date-item">
-													<input type="text" id="second_ssn1" name="second_ssn1"></input>
-													<span class="text-input">XXX</span>
-												</div>
-												<div class="form-date-item">
-													<input type="text" id="second_ssn2" name="second_ssn2"></input>
-													<span class="text-input">XX</span>
-												</div>
-												<div class="form-date-item">
-													<input type="text" id="second_ssn3" name="second_ssn3"></input>
-													<span class="text-input">XXXX</span>
-												</div>
-											</div>
+										<div class="form-group">
+											<label class="form-label">Social Security No.</label>
+											<input class="ssn" type="text" name="second_ssn" id="second_ssn" />
+											<span class="text-input">example: XXX-XX-XXXX </span>
 										</div>
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="ssn" class="form-label">Current Mailing Address</label>
-									<input type="text" name="second_current_mailing_address" id="second_current_mailing_address"/>
+									<input type="text" name="second_current_mailing_address"
+										id="second_current_mailing_address" />
 									<span class="text-input">456 Main St. Los Angeles, CA </span>
 
 								</div>
 								<div class="form-group">
 									<label for="ssn" class="form-label">Mailing Address Post Closing</label>
-									<input type="text" name="second_mailing_address_port_closing" id="second_mailing_address_port_closing">
+									<input type="text" name="second_mailing_address_port_closing"
+										id="second_mailing_address_port_closing">
 									<span class="text-input">456 Main St. Los Angeles, CA </span>
 								</div>
-                            </div>
+							</div>
 							<div class="form-row">
 								<div class="form-group">
 									<label class="form-label">Is the Seller a Trustee or Trust?</label>
@@ -247,14 +234,17 @@
 
 								<div class="d-none" id="trustee_container">
 									<div class="form-group">
-										<label for="ssn" class="form-label">Who is/are the Current Acting Trustee(s)?</label>
-										<input type="text" name="current_trustees" id="current_trustees"/>
+										<label for="ssn" class="form-label">Who is/are the Current Acting
+											Trustee(s)?</label>
+										<input type="text" name="current_trustees" id="current_trustees" />
 										<span class="text-input">example: John,Jane </span>
 									</div>
 
 									<div class="form-group">
-										<label class="form-label">Are they the Original Trustees Or Successor Trustee(s)?</label>
-										<select id="is_original_trustees" name="is_original_trustees" required="required">
+										<label class="form-label">Are they the Original Trustees Or Successor
+											Trustee(s)?</label>
+										<select id="is_original_trustees" name="is_original_trustees"
+											required="required">
 											<option value="">Select</option>
 											<option value="Yes">Yes</option>
 											<option value="No">No</option>
@@ -302,7 +292,8 @@
 
 							<div class="form-row">
 								<div class="form-group">
-									<label class="form-label">Is the property you are selling: <?php echo $orderDetails['full_address'];?></label>
+									<label class="form-label">Is the property you are selling:
+										<?php echo $orderDetails['full_address'];?></label>
 									<select id="is_property_sell" name="is_property_sell" required="required">
 										<option value="">Select</option>
 										<option value="Yes">Yes</option>
@@ -315,7 +306,8 @@
 							<div class="form-row">
 								<div class="form-group">
 									<label class="form-label">Is the property owned Free and Clear?</label>
-									<select id="is_property_owned_free_clear" name="is_property_owned_free_clear" required="required">
+									<select id="is_property_owned_free_clear" name="is_property_owned_free_clear"
+										required="required">
 										<option value="">Select</option>
 										<option value="Yes">Yes</option>
 										<option value="No">No</option>
@@ -345,7 +337,8 @@
 										</div>
 										<div class="form-group">
 											<label class="form-label">Phone Number</label>
-											<input type="text" name="lender_phone_number" id="lender_phone_number" />
+											<input type="text" class="phone_mask" name="lender_phone_number"
+												id="lender_phone_number" />
 											<span class="text-input">example: (800) 000-0000 </span>
 										</div>
 									</div>
@@ -355,12 +348,13 @@
 									<div class="form-flex">
 										<div class="form-group">
 											<label class="form-label">Unpaid Balance</label>
-											<input type="text" name="unpaid_balance" id="unpaid_balance" />
+											<input type="text" class="amount_mask" name="unpaid_balance"
+												id="unpaid_balance" />
 											<span class="text-input">example: $585,452.00 </span>
 										</div>
 										<div class="form-group">
 											<label class="form-label">Payment Due Date</label>
-											<input type="text" name="payment_due_date" id="payment_due_date" />
+											<input type="text" class="datepicker" name="payment_due_date" id="payment_due_date" />
 											<span class="text-input">example: 10/15/2022 </span>
 										</div>
 									</div>
@@ -447,7 +441,8 @@
 										</div>
 										<div class="form-group">
 											<label class="form-label">Phone Number</label>
-											<input type="text" name="second_lender_phone_number" id="second_lender_phone_number" />
+											<input type="text" class="phone_mask" name="second_lender_phone_number"
+												id="second_lender_phone_number" />
 											<span class="text-input">example: (800) 000-0000 </span>
 										</div>
 									</div>
@@ -457,12 +452,14 @@
 									<div class="form-flex">
 										<div class="form-group">
 											<label class="form-label">Unpaid Balance</label>
-											<input type="text" name="second_unpaid_balance" id="second_unpaid_balance" />
+											<input type="text" class="amount_mask" name="second_unpaid_balance"
+												id="second_unpaid_balance" />
 											<span class="text-input">example: $585,452.00 </span>
 										</div>
 										<div class="form-group">
 											<label class="form-label">Payment Due Date</label>
-											<input type="text" name="second_payment_due_date" id="second_payment_due_date" />
+											<input type="text" name="second_payment_due_date"
+												id="second_payment_due_date" />
 											<span class="text-input">example: 10/15/2022 </span>
 										</div>
 									</div>
@@ -524,8 +521,10 @@
 						<div class="fieldset-content">
 							<div class="form-row">
 								<div class="form-group">
-									<label class="form-label">Is there a Private Water Company with Water Stock Affecting the Property?</label>
-									<select id="is_private_water_company" name="is_private_water_company" required="required">
+									<label class="form-label">Is there a Private Water Company with Water Stock
+										Affecting the Property?</label>
+									<select id="is_private_water_company" name="is_private_water_company"
+										required="required">
 										<option value="">Select</option>
 										<option value="Yes">Yes</option>
 										<option value="No">No</option>
@@ -550,12 +549,14 @@
 									<div class="form-flex">
 										<div class="form-group">
 											<label class="form-label">Account Number</label>
-											<input type="text" name="water_account_number" id="water_account_number" />
+											<input type="number" name="water_account_number"
+												id="water_account_number" />
 											<span class="text-input">example: 8582985455 </span>
 										</div>
 										<div class="form-group">
 											<label class="form-label">Phone Number</label>
-											<input type="text" name="water_phone_number" id="water_phone_number" />
+											<input type="text" class="phone_mask" name="water_phone_number"
+												id="water_phone_number" />
 											<span class="text-input">example: (000) 000-0000 </span>
 										</div>
 									</div>
@@ -565,7 +566,8 @@
 						<div class="fieldset-content">
 							<div class="form-row">
 								<div class="form-group">
-									<label class="form-label">Are there any Homeowners Associations affecting the Property?</label>
+									<label class="form-label">Are there any Homeowners Associations affecting the
+										Property?</label>
 									<select id="is_hoa" name="is_hoa" required="required">
 										<option value="">Select</option>
 										<option value="Yes">Yes</option>
@@ -598,13 +600,26 @@
 										</div>
 										<div class="form-group">
 											<label class="form-label">HOA Contact Phone</label>
-											<input type="text" name="hoa_contact_number" id="hoa_contact_number" />
-											<span class="text-input">example: 000-000-0000</span>
+											<input type="text" class="phone_mask" name="hoa_contact_number"
+												id="hoa_contact_number" />
+											<span class="text-input">example: (000) 000-0000</span>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+					</fieldset>
+					<h3>Confirmation</h3>
+					<fieldset>
+						<h2>Confirmation</h2>
+						<p>&nbsp;</p>
+						<p class="desc">Signing below indicates that the information included here is correct and
+							complete to the best of my knowledge and ackowledges and accepts the information included in
+							this document.</p>
+						<p class="desc">You must click below Finish button to securely send your completed forms to
+							Pacific Coast Title Company.</p>
+
+
 					</fieldset>
 
 
@@ -781,17 +796,21 @@
 
 	<!-- JS -->
 	<script src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/jquery/jquery.min.js"></script>
+	<script src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/jquery/jquery-ui.min.js"></script>
 	<script
 		src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/jquery-validation/dist/jquery.validate.min.js">
 	</script>
+	
 	<script
 		src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/jquery-validation/dist/additional-methods.min.js">
 	</script>
 	<script src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/jquery-steps/jquery.steps.min.js"></script>
 	<script src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/minimalist-picker/dobpicker.js"></script>
 	<script src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/nouislider/nouislider.min.js"></script>
+	<script src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/input-mask/jquery.mask.min.js"></script>
 	<script src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/wnumb/wNumb.js"></script>
 	<script src="<?php echo base_url();?>assets/buyer-seller-packets/js/main.js"></script>
+
 </body>
 
 </html>
