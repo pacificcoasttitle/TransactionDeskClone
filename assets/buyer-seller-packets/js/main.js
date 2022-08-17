@@ -270,6 +270,11 @@
             $('#hoa_contact_number').prop('required',false);
         }
     });
+
+    $(".phone_mask").mask('(000) 000-0000');
+    $(".ssn").mask('000-00-0000');
+    $(".amount_mask").mask("#,##0", {reverse: true});
+    $( ".datepicker" ).datepicker();
    
 })(jQuery);
 

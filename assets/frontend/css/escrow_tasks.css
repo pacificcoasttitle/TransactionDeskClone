@@ -19,14 +19,14 @@
 	border-top: 1px solid rgba(0, 0, 0, 0.2);
 }
 .custom__task_collapse .card-body {
-	padding-left: 35px;
-	font-size: 16px;
-	/* background: #f2f2f2; */
-	margin-bottom: 25px;
+    padding-left: 75px;
+    font-size: 16px;
+    
+    margin-bottom: 25px;
     padding-bottom: 15px;
-	padding-top: 15px;
-	border: 1px solid #d0c9c9;
-	border-radius: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+    
 }
 .custom__collapse_arrow {
 	padding: 15px;

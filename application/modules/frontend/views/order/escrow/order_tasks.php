@@ -10,6 +10,7 @@ td {
 }
 .card.custom__task_card {
 	background: #ffffff;
+	border-top: 1px solid #f0f0f0;
 }
 .custom__task_collapse {
 	background: #fff;
@@ -122,6 +123,11 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 	border-radius: 25px;
 	color: #555;
 }
+.check_box_text {
+	font-weight: bold;
+    color: black;
+}
+
 </style>
 <section class="section-type-4a section-defaulta b-contact b-contact_mod-a" style="padding-bottom:0px;">
 	<div class="content">
@@ -186,7 +192,9 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 			<form method="post" >
 				<div class="row">
 					<div class="col-md-12">
-						<div class="b-task-list__item task__info">
+						<div class="b-task-list__item task__info"  style="
+    background: #f0f0f0;
+    padding: 21px;">
 						<?php if (!empty($tasks)) {
 									foreach($tasks as $task) { 
 										if ($task['parent_task_id'] == 0) {
