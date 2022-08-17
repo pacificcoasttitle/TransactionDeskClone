@@ -3024,48 +3024,112 @@ class DashboardMail extends MX_Controller {
         }
 
         if ($this->input->post()) {
+			echo '<pre>';
+			var_dump($this->input->post());
             $borrowerBuyerInfoData = array(
-                'order_id' => $this->input->post('order_id'),
-                'property_address' => $orderDetails['address'],
-                'property_address2' => ' ',
-                'property_city' => $orderDetails['property_city'],
-                'property_state' => 'CA',
-                'property_zip_code' => $orderDetails['property_zip'],
-                'buyer_full_name' => $this->input->post('buyer_full_name'),
-                'buyer_home_number' => $this->input->post('buyer_home_number'),
-                'buyer_work_number' => $this->input->post('buyer_work_number'),
-                'buyer_email_address' => $this->input->post('buyer_email_address'),
-                'buyer_fax_number' => $this->input->post('buyer_fax_number'),
-                'buyer_ssn' => $this->input->post('buyer_ssn'),
-                'lender_name' => $this->input->post('lender_name'),
-                'lender_address' => $this->input->post('lender_address'),
-                'buyer_current_mailing_address' => $this->input->post('buyer_current_mailing_address'),
-                'buyer_mailing_address_after_close' => $this->input->post('buyer_mailing_address_after_close'),
-                'agent_name' => $this->input->post('agent_name'),
-                'agent_phone_number' => $this->input->post('agent_phone_number'),
-                'second_lender_name' => $this->input->post('second_lender_name') ? $this->input->post('second_lender_name') : null,
-                'seond_lender_address' => $this->input->post('seond_lender_address') ? $this->input->post('seond_lender_address') : null,
-                'second_agent_name' => $this->input->post('second_agent_name') ? $this->input->post('second_agent_name') : null,
-                'seond_agent_phone_number' => $this->input->post('seond_agent_phone_number') ? $this->input->post('seond_agent_phone_number') : null,
-                'insurance_name' => $this->input->post('insurance_name'),
-                'insurance_phone_number' => $this->input->post('insurance_phone_number'),
-                'insurance_address' => $this->input->post('insurance_address'),
-                'insurance_company' => $this->input->post('insurance_company'),
-                'buyer_date' => $this->input->post('buyer_date'),
-                'buyer_signature' => $this->input->post('buyer_signature'),
-                'names' => ' ',
-                'pick_ups' => ' ',
-                'names_of_spouse' => ' ',
-                'appropriate_choice' => ' ',
-                'partnership_name' => ' ',
-                'corporation_name' => ' ',
-                'vesting_form_date' => ' ',
-                'vesting_form_signature' => ' ',
-                'tenant_id' => ' ',
-                'doc_type' => ' ',
+				'order_id'=>$this->input->post('order_id'),
+				'first_name'=>$this->input->post('first_name'),
+				'last_name'=>$this->input->post('last_name'),
+				'email'=>$this->input->post('email'),
+				'phone'=>$this->input->post('phone'),
+				'birth_month'=>$this->input->post('birth_month'),
+				'birth_date'=>$this->input->post('birth_date'),
+				'birth_year'=>$this->input->post('birth_year'),
+				'ssn'=>$this->input->post('ssn'),
+				'current_mailing_address'=>$this->input->post('current_mailing_address'),
+				'mailing_address_port_closing'=>$this->input->post('mailing_address_port_closing'),
+				'is_another_buyer'=>$this->input->post('is_another_buyer'),
+				'second_first_name'=>$this->input->post('second_first_name'),
+				'second_last_name'=>$this->input->post('second_last_name'),
+				'second_email'=>$this->input->post('second_email'),
+				'second_phone'=>$this->input->post('second_phone'),
+				'second_birth_month'=>$this->input->post('second_birth_month'),
+				'second_birth_date'=>$this->input->post('second_birth_date'),
+				'second_birth_year'=>$this->input->post('second_birth_year'),
+				'second_ssn'=>$this->input->post('second_ssn'),
+				'second_current_mailing_address'=>$this->input->post('second_current_mailing_address'),
+				'second_mailing_address_port_closing'=>$this->input->post('second_mailing_address_port_closing'),
+				'is_same_property'=>$this->input->post('is_same_property'),
+				'loan_amount'=>$this->input->post('loan_amount'),
+				'lender_name'=>$this->input->post('lender_name'),
+				'loan_officer_name'=>$this->input->post('loan_officer_name'),
+				'loan_officer_email'=>$this->input->post('loan_officer_email'),
+				'loan_officer_phone'=>$this->input->post('loan_officer_phone'),
+				'is_loan_processor'=>$this->input->post('is_loan_processor'),
+				'loan_processor_name'=>$this->input->post('loan_processor_name'),
+				'loan_processor_email'=>$this->input->post('loan_processor_email'),
+				'loan_processor_phone'=>$this->input->post('loan_processor_phone'),
+				'is_home_ins'=>$this->input->post('is_home_ins'),
+				'ins_agency_name'=>$this->input->post('ins_agency_name'),
+				'ins_agent_name'=>$this->input->post('ins_agent_name'),
+				'ins_agent_email'=>$this->input->post('ins_agent_email'),
+				'ins_agent_phone'=>$this->input->post('ins_agent_phone'),
+				'annual_premium'=>$this->input->post('annual_premium'),
             );
-            $this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info');         
-            $success[] = "Borrower buyer info saved successfully.";
+            $this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info_wizard');
+			//Generate PDF
+			$pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_check.pdf';
+			$pdf = new Pdf($pdf_templates_file);
+			$type = 'buyer';
+			$document_name = $type.'_'.time().'_'.$this->user['id'].'.pdf';
+			$dir_to_upload = 'uploads/escrow/'.$type;
+			if (!is_dir(FCPATH.$dir_to_upload)) {
+				mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
+			}
+			chmod(FCPATH.$dir_to_upload, 0777);
+			$dir_name = FCPATH.$dir_to_upload.'/';
+			$dir_name = str_replace('\\', '/', $dir_name);
+			$file_full_path = $dir_name.$document_name;
+
+			$pdf->fillForm([
+				'1 Buyers'=>$this->input->post('first_name').' '.$this->input->post('last_name'),
+				'EMail Address'=>$this->input->post('email'),
+				'Social Security 1'=>$this->input->post('ssn'),
+				'Social Security'=>$this->input->post('second_ssn'),
+				'Buyers Current Mailing Address'=>$this->input->post('current_mailing_address'),
+				'1_3'=>$this->input->post('mailing_address_port_closing'),
+				'Name Of Lender'=>$this->input->post('lender_name'),
+				'Insurance Company'=>$this->input->post('ins_agency_name'),
+				'Agents Name_3'=>$this->input->post('ins_agent_name'),
+
+
+				// 'phone'=>$this->input->post('phone'),
+				// 'birth_month'=>$this->input->post('birth_month'),
+				// 'birth_date'=>$this->input->post('birth_date'),
+				// 'birth_year'=>$this->input->post('birth_year'),
+				// 'is_another_buyer'=>$this->input->post('is_another_buyer'),
+				// 'second_first_name'=>$this->input->post('second_first_name'),
+				// 'second_last_name'=>$this->input->post('second_last_name'),
+				// 'second_email'=>$this->input->post('second_email'),
+				// 'second_phone'=>$this->input->post('second_phone'),
+				// 'second_birth_month'=>$this->input->post('second_birth_month'),
+				// 'second_birth_date'=>$this->input->post('second_birth_date'),
+				// 'second_birth_year'=>$this->input->post('second_birth_year'),
+				// 'second_ssn'=>$this->input->post('second_ssn'),
+				// 'second_current_mailing_address'=>$this->input->post('second_current_mailing_address'),
+				// 'second_mailing_address_port_closing'=>$this->input->post('second_mailing_address_port_closing'),
+				// 'is_same_property'=>$this->input->post('is_same_property'),
+				// 'loan_amount'=>$this->input->post('loan_amount'),
+				// 'loan_officer_name'=>$this->input->post('loan_officer_name'),
+				// 'loan_officer_email'=>$this->input->post('loan_officer_email'),
+				// 'loan_officer_phone'=>$this->input->post('loan_officer_phone'),
+				// 'is_loan_processor'=>$this->input->post('is_loan_processor'),
+				// 'loan_processor_name'=>$this->input->post('loan_processor_name'),
+				// 'loan_processor_email'=>$this->input->post('loan_processor_email'),
+				// 'loan_processor_phone'=>$this->input->post('loan_processor_phone'),
+				// 'is_home_ins'=>$this->input->post('is_home_ins'),
+				// 'ins_agency_name'=>$this->input->post('ins_agency_name'),
+				// 'ins_agent_name'=>$this->input->post('ins_agent_name'),
+				// 'ins_agent_email'=>$this->input->post('ins_agent_email'),
+				// 'ins_agent_phone'=>$this->input->post('ins_agent_phone'),
+				// 'annual_premium'=>$this->input->post('annual_premium'),
+				])
+				->needAppearances()
+				->saveAs($file_full_path);
+				// echo $file_full_path;   
+				$pdf_url = base_url($dir_to_upload.'/'.$document_name);      
+			// die;
+            $success[] = "Borrower buyer info saved successfully.View PDF from <a href='$pdf_url' target='_blank' >here</a>";
             $data = array(
                 "errors" =>  $errors,
                 "success" => $success
