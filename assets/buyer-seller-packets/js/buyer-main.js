@@ -52,7 +52,8 @@
             return form.valid();
         },
         onFinished: function(event, currentIndex) {
-            alert('Submited');
+            // alert('Submited');
+			form.submit();
         },
         onStepChanged: function(event, currentIndex, priorIndex) {
 
