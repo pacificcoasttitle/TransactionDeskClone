@@ -247,7 +247,7 @@ input {
     width: 1090px; }
 
 .content {
-  height: auto; }
+  height: auto !important; }
 
 .steps ul {
   flex-direction: column;
