@@ -18,8 +18,8 @@ final class NewBorrowerBuyerInfo extends AbstractMigration
      */
     public function change(): void
     {
-        //$table = $this->table('pct_order_borrower_buyer_info');
-        //$table->rename('pct_order_borrower_buyer_packet_info')->update();
+        $table = $this->table('pct_order_borrower_buyer_info');
+        $table->rename('pct_order_borrower_buyer_packet_info')->update();
 
         $table = $this->table('pct_order_borrower_buyer_info');
         $table->addColumn('order_id', 'integer')
