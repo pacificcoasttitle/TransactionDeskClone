@@ -609,7 +609,7 @@ class Escrow extends MX_Controller
 		$order_id = $this->input->post('order_id');
 		$buyer_emails = $this->input->post('buyer_emails');
         $buyer_first_names = $this->input->post('buyer_first_names');
-        $buyer_last_names = $this->input->post('buyer_first_names');
+        $buyer_last_names = $this->input->post('buyer_last_names');
         $is_main_buyer = $this->input->post('is_main_buyer');
         $orderDetails = $this->order->get_order_details($file_id);
         $from_name = 'Pacific Coast Title Company';

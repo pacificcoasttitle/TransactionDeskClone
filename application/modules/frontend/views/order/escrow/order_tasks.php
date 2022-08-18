@@ -586,14 +586,14 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 
 											<div class="section colm colm6">
 												<label class="field prepend-icon">
-													<input type="text" name="buyer_first_names[]" id="buyer_email" class="gui-input ui-autocomplete-input"
+													<input type="text" name="buyer_first_names[]" id="buyer_first_name" class="gui-input ui-autocomplete-input"
 														placeholder="First Name" required="required">
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 												</label>
 											</div>
 											<div class="section colm colm6">
 												<label class="field prepend-icon">
-													<input type="text" name="buyer_last_names[]" id="buyer_email" class="gui-input ui-autocomplete-input"
+													<input type="text" name="buyer_last_names[]" id="buyer_last_name" class="gui-input ui-autocomplete-input"
 														placeholder="Last Name" required="required">
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 												</label>
