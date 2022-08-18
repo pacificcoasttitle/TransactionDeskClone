@@ -3,13 +3,13 @@ $(document).ready(function () {
     $('#buyer-info-clone-group-fields').cloneya({
         maximum: 5
     }).on('after_append.cloneya', function (event, toclone, newclone) {
-        
+        var id = $(newclone).find("input[name='is_main_buyer']").attr('id');
+        $('#'+id).val(id);
     }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
         $(clone).slideToggle('slow', function () {
             $(clone).remove();
         })
     });
-
 
 	if ($('.custom__task_button').length > 0){
 		change_progress();
