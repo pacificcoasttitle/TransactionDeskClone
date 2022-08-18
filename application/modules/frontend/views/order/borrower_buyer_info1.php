@@ -18,6 +18,29 @@
 
 <body>
 
+<style>
+	span.desc_title {
+    font-size: 18px;
+    padding: 5px 10px;
+    position: relative;
+    z-index: 6;
+    background: #f8f8f8;
+}
+
+p.buyer_desc {
+    text-align: center;
+}
+
+span.desc_border {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #ababab;
+    position: absolute;
+    top: 15px;
+    z-index: 5;
+}
+</style>
+
     <div class="main">
 	
 		<div >
@@ -55,7 +78,90 @@
                     <fieldset>
                         <h2>Personal information</h2>
                         <p class="desc">Please enter your infomation and proceed to next step so we can build your account</p>
-                        <div class="fieldset-content">
+						<div class="fieldset-content">
+						<?php if(count($buyers)) :?>
+						<?php foreach($buyers as $key_buyer=>$buyer) :?>
+								<div class="form-group">
+									<p class="buyer_desc">
+										<span class="desc_title">Buyer <?=($key_buyer+1)?></span>
+										<span class="desc_border"></span>
+									</p>
+								</div>
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group">
+										<label class="form-label">First Name</label>
+										<input type="text" name="first_name[<?=$buyer['id']?>]" required value="<?=$buyer['first_name']?>" />
+										<span class="text-input">example: John </span>
+										</div>
+										<div class="form-group">
+										<label class="form-label">Last Name</label>
+										<input type="text" name="last_name[<?=$buyer['id']?>]" required value="<?=$buyer['last_name']?>"/>
+										<span class="text-input">example: Smith </span>
+										</div>
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group">
+											<label for="email" class="form-label">Email</label>
+											<input type="email" name="email[<?=$buyer['id']?>]" required value="<?=$buyer['email']?>"/>
+											<span class="text-input">example: johnsmith@gmail.com </span>
+										</div>
+										<div class="form-group">
+											<label for="phone" class="form-label">Mobile Phone #</label>
+											<input class="phone_mask" type="text" name="phone[<?=$buyer['id']?>]" required value="<?=$buyer['phone']?>"/>
+											<span class="text-input">example: (000) 000-0000 </span>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group form-date dob_date_picker_div">
+											<label for="birth_date" class="form-label">Birth Date</label>
+											<div class="form-date-group">
+												<div class="form-date-item">
+													<select class="dob_birth_date" id="birth_date[<?=$buyer['id']?>]" name="birth_date[<?=$buyer['id']?>]" required></select>
+													<span class="text-input">DD</span>
+												</div>
+												<div class="form-date-item">
+													<select class="dob_birth_month"  id="birth_month[<?=$buyer['id']?>]" name="birth_month[<?=$buyer['id']?>]" required></select>
+													<span class="text-input">MM</span>
+												</div>
+												<div class="form-date-item">
+													<select class="dob_birth_year"  id="birth_year[<?=$buyer['id']?>]" name="birth_year[<?=$buyer['id']?>]" required></select>
+													<span class="text-input">YYYY</span>
+												</div>
+											</div>
+										</div>
+									
+										<div class="form-group">
+											<label  class="form-label">Social Security No.</label>
+											<input class="ssn" type="text" name="ssn[<?=$buyer['id']?>]" required />
+											<span class="text-input">example: XXX-XX-XXXX </span>
+										</div>
+								
+									</div>
+								</div>
+								<div class="form-group">
+									<label  class="form-label">Current Mailing Address</label>
+									<input type="text" name="current_mailing_address[<?=$buyer['id']?>]" required />
+									<span class="text-input">456 Main St. Los Angeles, CA </span>
+							
+								</div>
+								<div class="form-group">
+										<label  class="form-label">Mailing Address Post Closing</label>
+										<input type="text" name="mailing_address_port_closing[<?=$buyer['id']?>]" required />
+										<span class="text-input">456 Main St. Los Angeles, CA </span>
+								
+								</div>
+							
+							
+							
+						<?php  endforeach; ?>
+						<?php else : ?>
+						
 							<div class="form-row">
                                 <div class="form-flex">
                                     <div class="form-group">
@@ -110,23 +216,7 @@
 								<input class="ssn" type="text" name="ssn" required />
 								<span class="text-input">example: XXX-XX-XXXX </span>
 							</div>
-							<!-- <div class="form-date">
-                                <label  class="form-label">Social Security No.</label>
-                                <div class="form-date-group">
-                                    <div class="form-date-item">
-                                        <input class="ssn1"  name="ssn1" required></input>
-                                        <span class="text-input">XXX</span>
-                                    </div>
-                                    <div class="form-date-item">
-                                        <input class="ssn2" name="ssn2" required></input>
-                                        <span class="text-input">XX</span>
-                                    </div>
-                                    <div class="form-date-item">
-                                         <input class="ssn3" name="ssn3" required></input>
-                                        <span class="text-input">XXXX</span>
-                                    </div>
-								</div>
-                            </div> -->
+							
 							    </div>
                             </div>
 							<div class="form-group">
@@ -142,19 +232,22 @@
                            
 						   </div>
 						   
-						   <div class="form-row">
-							 <div class="form-group">
-									 <label class="form-label">Would You like to add another buyer?</label>
-                                      <select name="is_another_buyer" class="buyer__show_hide_action" data-action="another_buyer">
-									  <option value="">Select</option>
-									  <option value="1">Yes</option>
-									  <option value="0">No</option>
-									 </select>
-									  <span class="text-input">example: yes or no. </span>
+						<?php endif; ?>
+
+						<div class="form-row">
+								<div class="form-group">
+										<label class="form-label">Would You like to add another buyer?</label>
+										<select name="is_another_buyer" class="buyer__show_hide_action" data-action="another_buyer">
+										<option value="">Select</option>
+										<option value="1">Yes</option>
+										<option value="0">No</option>
+										</select>
+										<span class="text-input">example: yes or no. </span>
+								</div>
 							</div>
-                            </div>
-						   
-                        </div>
+							
+						</div>
+                       
 
 						<div class="another_buyer buyer__show_hide_div" style="display: none;">
 							<div class="fieldset-content">
@@ -324,7 +417,7 @@
 										<div class="form-flex">
 											<div class="form-group">
 											<label class="form-label">Enter Loan Processor Email </label>
-											<input type="email"" name="loan_processor_email" id="lpemail" required/>
+											<input type="email" name="loan_processor_email" id="lpemail" required/>
 											<span class="text-input">example: Johnsmith@abcloancompany.com  </span>
 											</div>
 											<div class="form-group">
@@ -405,7 +498,127 @@
 
                         </div>
                     </fieldset>
-					
+
+					<h3>Vesting & Ownership</h3>
+					<fieldset>
+						<h2>Vesting & Ownership</h2>
+						<p class="desc">Please review the relationship and martial status of each of the buyers </p>
+						<div class="form-row">
+							<div class="form-flex">
+								<div class="form-group">
+									<label for="email" class="form-label">Buyer 1</label>
+									<input type="email" name="email" id="email" />
+								</div>
+								<div class="form-group">
+									<label for="email" class="form-label">Marital Status</label>
+									<select id="loan" name="loantype">
+									<option value="Select">Select</option>
+									<option value="">Husband and Wife </option>
+										<option value=""> Wife and Husband </option>
+										<option value=""> A Married Couple </option>
+										<option value=""> A Single Man (never married) </option>
+										<option value=""> A Single Woman (never married) </option>
+										<option value=""> A Single Person (never married) </option>
+										<option value=""> A Married Man (as his sole and separate property)* </option>
+										<option value=""> A Married Woman (as her sole and separate property)*  A Married Person (as his/her sole and separate property)* </option>
+										<option value="">An Unmarried Man (divorced)  An Unmarried Woman (divorced)  An Unmarried Person (divorced)  A Widow (spouse deceased) </option>
+										<option value="">A Widower (spouse deceased)  Registered Domestic Partners</option>
+
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="email" class="form-label">Married To:</label>
+									<select id="loan" name="loantype">
+									<option value="Select">Select</option>
+									<option value="">Buyer 2</option>
+									<option value="">Buyer 3</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-flex">
+								<div class="form-group">
+									<label for="email" class="form-label">Buyer 2</label>
+									<input type="email" name="email" id="email" />
+								</div>
+								<div class="form-group">
+									<label for="email" class="form-label">Marital Status</label>
+									<select id="loan" name="loantype">
+									<option value="Select">Select</option>
+									<option value="">Husband and Wife </option>
+										<option value=""> Wife and Husband </option>
+										<option value=""> A Married Couple </option>
+										<option value=""> A Single Man (never married) </option>
+										<option value=""> A Single Woman (never married) </option>
+										<option value=""> A Single Person (never married) </option>
+										<option value=""> A Married Man (as his sole and separate property)* </option>
+										<option value=""> A Married Woman (as her sole and separate property)*  A Married Person (as his/her sole and separate property)* </option>
+										<option value="">An Unmarried Man (divorced)  An Unmarried Woman (divorced)  An Unmarried Person (divorced)  A Widow (spouse deceased) </option>
+										<option value="">A Widower (spouse deceased)  Registered Domestic Partners</option>
+
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="email" class="form-label">Married To:</label>
+									<select id="loan" name="loantype">
+									<option value="Select">Select</option>
+									<option value="">Buyer 2</option>
+									<option value="">Buyer 3</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-flex">
+								<div class="form-group">
+									<label for="email" class="form-label">Buyer 3</label>
+									<input type="email" name="email" id="email" />
+								</div>
+								
+								<div class="form-group">
+									<label for="email" class="form-label">Marital Status:</label>
+									<select id="loan" name="loantype">
+									<option value="Select">Select</option>
+										<option value="">Husband and Wife </option>
+										<option value=""> Wife and Husband </option>
+										<option value=""> A Married Couple </option>
+										<option value=""> A Single Man (never married) </option>
+										<option value=""> A Single Woman (never married) </option>
+										<option value=""> A Single Person (never married) </option>
+										<option value=""> A Married Man (as his sole and separate property)* </option>
+										<option value=""> A Married Woman (as her sole and separate property)*  A Married Person (as his/her sole and separate property)* </option>
+										<option value="">An Unmarried Man (divorced)  An Unmarried Woman (divorced)  An Unmarried Person (divorced)  A Widow (spouse deceased) </option>
+										<option value="">A Widower (spouse deceased)  Registered Domestic Partners</option>
+
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="email" class="form-label">Married To:</label>
+									<select id="loan" name="loantype">
+									<option value="Select">Select</option>
+									<option value="">Buyer 2</option>
+									<option value="">Buyer 3</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group">
+									<label class="form-label">Please tell us how the property will be vested:</label>
+									<select id="loan" name="loantype">
+									<option value="Select">Select</option>
+									<option value=""> Community Property</option>
+									<option value=""> Community Property with Right of Survivorship</option>
+									<option value=""> Joint Tenants </option>
+									<option value=""> Tenants In Common (Please Give Interest Amounts) </option>
+									<option value=""> Sole and Separate Property (If Married or Domestic Partnership, an Interspousal Grant Deed, A  Quitclaim Deed, Statement Of Information and Appropriate Instructions Will Need To Be Submitted.) </option>
+									<option value=""> Partnership (Limited Or General) </option>
+									<option value=""> Corporation (California Or Other State) </option>
+									<option value=""> A Trust (attach copy of Trust Agreement) </option>
+									<option value=""> Other</option>  
+									</select>
+									<span class="text-input">example: yes or no. </span>
+							</div>
+						</div>
+					</fieldset>
+
 					<h3>Confirmation</h3>
 					<fieldset>
 						<h2>Confirmation</h2>

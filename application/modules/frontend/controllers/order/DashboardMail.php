@@ -3011,6 +3011,10 @@ class DashboardMail extends MX_Controller {
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
         $data['orderDetails'] = $orderDetails;
+		$buyer_where['order_id']=$orderDetails['order_id'];
+		$buyer_order['is_main_buyer']='desc';
+		$data['buyers'] = $this->home_model->get_records('pct_order_borrower_buyer_info',$buyer_where,$buyer_order);
+		// var_dump($data['buyers']);die;
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();

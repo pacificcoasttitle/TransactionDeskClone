@@ -1681,4 +1681,23 @@ class Home_model extends CI_Model
 		}
 
 	}
+
+	public function get_records($table,$condition = null,$order = null) {
+		$this->db->from($table);
+		if($condition) {
+			$this->db->where($condition);
+		}
+		if($order) {
+			foreach($order as $order_key=>$order_val) {
+				$this->db->order_by($order_key, $order_val);
+			}
+		}
+		$query = $this->db->get();
+		if ($query->num_rows() > 0)  {
+			return $query->result_array();
+		} else {
+			return array();
+		}
+	}
+
 }
