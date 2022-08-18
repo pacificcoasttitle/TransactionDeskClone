@@ -2714,7 +2714,7 @@ class DashboardMail extends MX_Controller {
                 'tenant_id' => $this->input->post('tenant_id'),
                 'doc_type' => $this->input->post('doc_type')
             );
-            $this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info');
+            $this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_packet_info');
 
             $borrowerBuyerEscrowInsData = array(
                 'order_id' => $this->input->post('order_id'),
