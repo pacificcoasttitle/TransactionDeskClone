@@ -591,13 +591,17 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 												</label>
 											</div>
-
 											<div class="section colm colm6">
 												<label class="field prepend-icon">
 													<input type="text" name="buyer_last_names[]" id="buyer_email" class="gui-input ui-autocomplete-input"
 														placeholder="Last Name" required="required">
 													<span class="field-icon"><i class="fa fa-user"></i></span>
 												</label>
+											</div>
+											<div class="section colm colm12">	
+												<label class="field prepend-icon">	
+													<input class="radio" type="radio" name="is_main_buyer" id="is_main_buyer" value="is_main_buyer0" required="required">Primary Buyer		
+												</label>	
 											</div>
 										</div>
 										<a href="#" class="mr-5 clone button btn-primary"><i class="fa fa-plus"></i></a>

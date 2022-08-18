@@ -607,15 +607,36 @@ class Escrow extends MX_Controller
         $userdata = $this->session->userdata('user');
         $file_id = $this->input->post('file_id');
 		$order_id = $this->input->post('order_id');
-		$buyer_email = $this->input->post('buyer_email');
+		$buyer_emails = $this->input->post('buyer_emails');
+        $buyer_first_names = $this->input->post('buyer_first_names');
+        $buyer_last_names = $this->input->post('buyer_first_names');
+        $is_main_buyer = $this->input->post('is_main_buyer');
         $orderDetails = $this->order->get_order_details($file_id);
         $from_name = 'Pacific Coast Title Company';
         $from_mail = env('FROM_EMAIL');
         $errors = array();
         $success = array();
-     
+        $i = 0;
+
+        $this->db->delete('pct_order_borrower_buyer_info', array('order_id' => $order_id));
+
+        foreach($buyer_emails as $buyerEmail) {
+            $is_main_buyer_flag = ((str_replace("is_main_buyer", "", $is_main_buyer)) == $i) ? 1 : 0;
+            if ($is_main_buyer_flag == 1) {
+                $buyer_email = $buyerEmail;
+            }
+            $buyerInfo = array(
+                'order_id' => $order_id,
+                'first_name' => $buyer_first_names[$i],
+                'last_name' => $buyer_last_names[$i],
+                'email' => $buyerEmail,
+                'is_main_buyer' => $is_main_buyer_flag
+            );
+            print_r($buyerInfo);
+            $this->home_model->insert($buyerInfo, 'pct_order_borrower_buyer_info');
+            $i++;
+        }
         $form_url = base_url().'buyer-info/'.$orderDetails['random_number'];
-        
         $email_data = array(
             'file_number'=> $orderDetails['file_number'],
             'property_address'=> $orderDetails['full_address'],
