@@ -68,12 +68,12 @@
 									<div class="form-flex">
 										<div class="form-group">
 										<label class="form-label">First Name</label>
-										<input type="text" name="first_name[<?=$buyer['id']?>]" required value="<?=$buyer['first_name']?>" />
+										<input type="text" name="buyer[<?=$buyer['id']?>][first_name]" required value="<?=$buyer['first_name']?>" />
 										<span class="text-input">example: John </span>
 										</div>
 										<div class="form-group">
 										<label class="form-label">Last Name</label>
-										<input type="text" name="last_name[<?=$buyer['id']?>]" required value="<?=$buyer['last_name']?>"/>
+										<input type="text" name="buyer[<?=$buyer['id']?>][last_name]" required value="<?=$buyer['last_name']?>"/>
 										<span class="text-input">example: Smith </span>
 										</div>
 									</div>
@@ -82,12 +82,12 @@
 									<div class="form-flex">
 										<div class="form-group">
 											<label for="email" class="form-label">Email</label>
-											<input type="email" name="email[<?=$buyer['id']?>]" required value="<?=$buyer['email']?>"/>
+											<input type="email" name="buyer[<?=$buyer['id']?>][email]" required value="<?=$buyer['email']?>"/>
 											<span class="text-input">example: johnsmith@gmail.com </span>
 										</div>
 										<div class="form-group">
 											<label for="phone" class="form-label">Mobile Phone #</label>
-											<input class="phone_mask" type="text" name="phone[<?=$buyer['id']?>]" required value="<?=$buyer['phone']?>"/>
+											<input class="phone_mask" type="text" name="buyer[<?=$buyer['id']?>][phone]" required value="<?=$buyer['phone']?>"/>
 											<span class="text-input">example: (000) 000-0000 </span>
 										</div>
 									</div>
@@ -99,15 +99,15 @@
 											<label class="form-label">Birth Date</label>
 											<div class="form-date-group">
 												<div class="form-date-item">
-													<select class="dob_birth_date" id="birth_date<?=$buyer['id']?>" name="birth_date[<?=$buyer['id']?>]" required></select>
+													<select class="dob_birth_date" id="birth_date<?=$buyer['id']?>" name="buyer[<?=$buyer['id']?>][birth_date]" required></select>
 													<span class="text-input">DD</span>
 												</div>
 												<div class="form-date-item">
-													<select class="dob_birth_month"  id="birth_month<?=$buyer['id']?>" name="birth_month[<?=$buyer['id']?>]" required></select>
+													<select class="dob_birth_month"  id="birth_month<?=$buyer['id']?>" name="buyer[<?=$buyer['id']?>][birth_month]" required></select>
 													<span class="text-input">MM</span>
 												</div>
 												<div class="form-date-item">
-													<select class="dob_birth_year"  id="birth_year<?=$buyer['id']?>" name="birth_year[<?=$buyer['id']?>]" required></select>
+													<select class="dob_birth_year"  id="birth_year<?=$buyer['id']?>" name="buyer[<?=$buyer['id']?>][birth_year]" required></select>
 													<span class="text-input">YYYY</span>
 												</div>
 											</div>
@@ -115,7 +115,7 @@
 									
 										<div class="form-group">
 											<label  class="form-label">Social Security No.</label>
-											<input class="ssn" type="text" name="ssn[<?=$buyer['id']?>]" required />
+											<input class="ssn" type="text" name="buyer[<?=$buyer['id']?>][ssn]" required />
 											<span class="text-input">example: XXX-XX-XXXX </span>
 										</div>
 								
@@ -123,13 +123,13 @@
 								</div>
 								<div class="form-group">
 									<label  class="form-label">Current Mailing Address</label>
-									<input type="text" name="current_mailing_address[<?=$buyer['id']?>]" required />
+									<input type="text" name="buyer[<?=$buyer['id']?>][current_mailing_address]" required />
 									<span class="text-input">456 Main St. Los Angeles, CA </span>
 							
 								</div>
 								<div class="form-group">
 										<label  class="form-label">Mailing Address Post Closing</label>
-										<input type="text" name="mailing_address_port_closing[<?=$buyer['id']?>]" required value="<?php echo $orderDetails['full_address'];?>" />
+										<input type="text" name="buyer[<?=$buyer['id']?>][mailing_address_port_closing]" required value="<?php echo $orderDetails['full_address'];?>" />
 										<span class="text-input">456 Main St. Los Angeles, CA </span>
 								
 								</div>
@@ -143,12 +143,12 @@
                                 <div class="form-flex">
                                     <div class="form-group">
 									 <label class="form-label">First Name</label>
-                                     <input type="text" name="first_name[0]" required  />
+                                     <input type="text" name="buyer[0][first_name]" required  />
 									  <span class="text-input">example: John </span>
                                     </div>
                                     <div class="form-group">
 									 <label class="form-label">Last Name</label>
-                                     <input type="text" name="last_name[0]" required/>
+                                     <input type="text" name="buyer[0][last_name]" required/>
 									  <span class="text-input">example: Smith </span>
                                     </div>
                                 </div>
@@ -157,12 +157,12 @@
 								<div class="form-flex">
 								<div class="form-group">
 									<label for="email" class="form-label">Email</label>
-									<input type="email" name="email[0]" required />
+									<input type="email" name="buyer[0][email]" required />
 									 <span class="text-input">example: johnsmith@gmail.com </span>
 								</div>
 								<div class="form-group">
 									<label for="phone" class="form-label">Mobile Phone #</label>
-									<input class="phone_mask" type="text" name="phone[0]" required />
+									<input class="phone_mask" type="text" name="buyer[0][phone]" required />
 									<span class="text-input">example: (000) 000-0000 </span>
                             </div>
 								</div>
@@ -174,15 +174,15 @@
                                 <label class="form-label">Birth Date</label>
                                 <div class="form-date-group">
 									<div class="form-date-item">
-										<select class="dob_birth_date" id="birth_date0" name="birth_date[0]" required></select>
+										<select class="dob_birth_date" id="birth_date0" name="buyer[0][birth_date]" required></select>
 										<span class="text-input">DD</span>
 									</div>
                                     <div class="form-date-item">
-                                        <select class="dob_birth_month" id="birth_month0" name="birth_month[0]" required></select>
+                                        <select class="dob_birth_month" id="birth_month0" name="buyer[0][birth_month]" required></select>
                                         <span class="text-input">MM</span>
                                     </div>
                                     <div class="form-date-item">
-                                        <select class="dob_birth_year" id="birth_year0" name="birth_year[0]" required></select>
+                                        <select class="dob_birth_year" id="birth_year0" name="buyer[0][birth_year]" required></select>
                                         <span class="text-input">YYYY</span>
                                     </div>
 								</div>
@@ -190,7 +190,7 @@
 								
 							<div class="form-group">
 								<label  class="form-label">Social Security No.</label>
-								<input class="ssn" type="text" name="ssn[0]" required />
+								<input class="ssn" type="text" name="buyer[0][ssn]" required />
 								<span class="text-input">example: XXX-XX-XXXX </span>
 							</div>
 							
@@ -198,13 +198,13 @@
                             </div>
 							<div class="form-group">
                                 <label  class="form-label">Current Mailing Address</label>
-                                <input type="text" name="current_mailing_address[0]" required />
+                                <input type="text" name="buyer[0][current_mailing_address]" required />
 								 <span class="text-input">456 Main St. Los Angeles, CA </span>
                            
 						   </div>
 						   <div class="form-group">
                                 <label  class="form-label">Mailing Address Post Closing</label>
-                                <input type="text" name="mailing_address_port_closing[0]" required value="<?php echo $orderDetails['full_address'];?>"/>
+                                <input type="text" name="buyer[0][mailing_address_port_closing]" required value="<?php echo $orderDetails['full_address'];?>"/>
 								 <span class="text-input">456 Main St. Los Angeles, CA </span>
                            
 						   </div>
@@ -232,12 +232,12 @@
 									<div class="form-flex">
 										<div class="form-group">
 										<label class="form-label">First Name</label>
-										<input type="text" name="first_name[new]" required/>
+										<input type="text" name="buyer[new][first_name]" required/>
 										<span class="text-input">example: John </span>
 										</div>
 										<div class="form-group">
 										<label class="form-label">Last Name</label>
-										<input type="text" name="last_name[new]" required />
+										<input type="text" name="buyer[new][last_name]" required />
 										<span class="text-input">example: Smith </span>
 										</div>
 									</div>
@@ -246,12 +246,12 @@
 									<div class="form-flex">
 									<div class="form-group">
 										<label for="email" class="form-label">Email</label>
-										<input type="email" name="email[new]" required/>
+										<input type="email" name="buyer[new][email]" required/>
 										<span class="text-input">example: johnsmith@gmail.com </span>
 									</div>
 									<div class="form-group">
 										<label for="phone" class="form-label">Mobile Phone #</label>
-										<input class="phone_mask" type="text" name="phone[new]" required />
+										<input class="phone_mask" type="text" name="buyer[new][phone]" required />
 										<span class="text-input">example: (000) 000-0000 </span>
 								</div>
 									</div>
@@ -263,22 +263,22 @@
 									<label  class="form-label">Birth Date</label>
 									<div class="form-date-group">
 										<div class="form-date-item">
-											<select class="dob_birth_date" id="birth_datenew" name="birth_date[new]" required></select>
+											<select class="dob_birth_date" id="birth_datenew" name="buyer[new][birth_date]" required></select>
 											<span class="text-input">DD</span>
 										</div>
 										<div class="form-date-item">
-											<select class="dob_birth_month" id="birth_monthnew" name="birth_month[new]" required></select>
+											<select class="dob_birth_month" id="birth_monthnew" name="buyer[new][birth_month]" required></select>
 											<span class="text-input">MM</span>
 										</div>
 										<div class="form-date-item">
-											<select class="dob_birth_year" id="birth_yearnew" name="birth_year[new]" required></select>
+											<select class="dob_birth_year" id="birth_yearnew" name="buyer[new][birth_year]" required></select>
 											<span class="text-input">YYYY</span>
 										</div>
 									</div>
 								</div>
 								<div class="form-group">
 									<label  class="form-label">Social Security No.</label>
-									<input class="ssn" type="text" name="ssn[new]" required />
+									<input class="ssn" type="text" name="buyer[new][ssn]" required />
 									<span class="text-input">example: XXX-XX-XXXX </span>
 								</div>
 								
@@ -286,13 +286,13 @@
 								</div>
 								<div class="form-group">
 									<label  class="form-label">Current Mailing Address</label>
-									<input type="text" name="current_mailing_address[new]"  required/>
+									<input type="text" name="buyer[new][current_mailing_address]"  required/>
 									<span class="text-input">456 Main St. Los Angeles, CA </span>
 							
 							</div>
 							<div class="form-group">
 									<label  class="form-label">Mailing Address Post Closing</label>
-									<input type="text" name="mailing_address_port_closing[new]" required value="<?php echo $orderDetails['full_address'];?>" />
+									<input type="text" name="buyer[new][mailing_address_port_closing]" required value="<?php echo $orderDetails['full_address'];?>" />
 									<span class="text-input">456 Main St. Los Angeles, CA </span>
 							
 							</div>
