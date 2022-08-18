@@ -13,33 +13,10 @@
     <!-- <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/vendor/nouislider/nouislider.min.css');?>"> -->
 
     <!-- Main css -->
-    <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css?v=0.1');?>">
+    <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css?buyer_v=0.2');?>">
 </head>
 
 <body>
-
-<style>
-	span.desc_title {
-    font-size: 18px;
-    padding: 5px 10px;
-    position: relative;
-    z-index: 6;
-    background: #f8f8f8;
-}
-
-p.buyer_desc {
-    text-align: center;
-}
-
-span.desc_border {
-    display: block;
-    width: 100%;
-    border-bottom: 1px solid #ababab;
-    position: absolute;
-    top: 15px;
-    z-index: 5;
-}
-</style>
 
     <div class="main">
 	
@@ -119,18 +96,18 @@ span.desc_border {
 								<div class="form-row">
 									<div class="form-flex">
 										<div class="form-group form-date dob_date_picker_div">
-											<label for="birth_date" class="form-label">Birth Date</label>
+											<label class="form-label">Birth Date</label>
 											<div class="form-date-group">
 												<div class="form-date-item">
-													<select class="dob_birth_date" id="birth_date[<?=$buyer['id']?>]" name="birth_date[<?=$buyer['id']?>]" required></select>
+													<select class="dob_birth_date" id="birth_date<?=$buyer['id']?>" name="birth_date[<?=$buyer['id']?>]" required></select>
 													<span class="text-input">DD</span>
 												</div>
 												<div class="form-date-item">
-													<select class="dob_birth_month"  id="birth_month[<?=$buyer['id']?>]" name="birth_month[<?=$buyer['id']?>]" required></select>
+													<select class="dob_birth_month"  id="birth_month<?=$buyer['id']?>" name="birth_month[<?=$buyer['id']?>]" required></select>
 													<span class="text-input">MM</span>
 												</div>
 												<div class="form-date-item">
-													<select class="dob_birth_year"  id="birth_year[<?=$buyer['id']?>]" name="birth_year[<?=$buyer['id']?>]" required></select>
+													<select class="dob_birth_year"  id="birth_year<?=$buyer['id']?>" name="birth_year[<?=$buyer['id']?>]" required></select>
 													<span class="text-input">YYYY</span>
 												</div>
 											</div>
@@ -152,7 +129,7 @@ span.desc_border {
 								</div>
 								<div class="form-group">
 										<label  class="form-label">Mailing Address Post Closing</label>
-										<input type="text" name="mailing_address_port_closing[<?=$buyer['id']?>]" required />
+										<input type="text" name="mailing_address_port_closing[<?=$buyer['id']?>]" required value="<?php echo $orderDetails['full_address'];?>" />
 										<span class="text-input">456 Main St. Los Angeles, CA </span>
 								
 								</div>
@@ -166,12 +143,12 @@ span.desc_border {
                                 <div class="form-flex">
                                     <div class="form-group">
 									 <label class="form-label">First Name</label>
-                                     <input type="text" name="first_name" required  />
+                                     <input type="text" name="first_name[0]" required  />
 									  <span class="text-input">example: John </span>
                                     </div>
                                     <div class="form-group">
 									 <label class="form-label">Last Name</label>
-                                     <input type="text" name="last_name" required/>
+                                     <input type="text" name="last_name[0]" required/>
 									  <span class="text-input">example: Smith </span>
                                     </div>
                                 </div>
@@ -180,12 +157,12 @@ span.desc_border {
 								<div class="form-flex">
 								<div class="form-group">
 									<label for="email" class="form-label">Email</label>
-									<input type="email" name="email" required />
+									<input type="email" name="email[0]" required />
 									 <span class="text-input">example: johnsmith@gmail.com </span>
 								</div>
 								<div class="form-group">
 									<label for="phone" class="form-label">Mobile Phone #</label>
-									<input class="phone_mask" type="text" name="phone" required />
+									<input class="phone_mask" type="text" name="phone[0]" required />
 									<span class="text-input">example: (000) 000-0000 </span>
                             </div>
 								</div>
@@ -193,19 +170,19 @@ span.desc_border {
 
 							<div class="form-row">
                                 <div class="form-flex">
-							<div class="form-group form-date">
-                                <label for="birth_date" class="form-label">Birth Date</label>
+							<div class="form-group form-date dob_date_picker_div">
+                                <label class="form-label">Birth Date</label>
                                 <div class="form-date-group">
 									<div class="form-date-item">
-										<select id="birth_date" name="birth_date" required></select>
+										<select class="dob_birth_date" id="birth_date0" name="birth_date[0]" required></select>
 										<span class="text-input">DD</span>
 									</div>
                                     <div class="form-date-item">
-                                        <select id="birth_month" name="birth_month" required></select>
+                                        <select class="dob_birth_month" id="birth_month0" name="birth_month[0]" required></select>
                                         <span class="text-input">MM</span>
                                     </div>
                                     <div class="form-date-item">
-                                        <select id="birth_year" name="birth_year" required></select>
+                                        <select class="dob_birth_year" id="birth_year0" name="birth_year[0]" required></select>
                                         <span class="text-input">YYYY</span>
                                     </div>
 								</div>
@@ -213,7 +190,7 @@ span.desc_border {
 								
 							<div class="form-group">
 								<label  class="form-label">Social Security No.</label>
-								<input class="ssn" type="text" name="ssn" required />
+								<input class="ssn" type="text" name="ssn[0]" required />
 								<span class="text-input">example: XXX-XX-XXXX </span>
 							</div>
 							
@@ -221,13 +198,13 @@ span.desc_border {
                             </div>
 							<div class="form-group">
                                 <label  class="form-label">Current Mailing Address</label>
-                                <input type="text" name="current_mailing_address" required />
+                                <input type="text" name="current_mailing_address[0]" required />
 								 <span class="text-input">456 Main St. Los Angeles, CA </span>
                            
 						   </div>
 						   <div class="form-group">
                                 <label  class="form-label">Mailing Address Post Closing</label>
-                                <input type="text" name="mailing_address_port_closing" required />
+                                <input type="text" name="mailing_address_port_closing[0]" required value="<?php echo $orderDetails['full_address'];?>"/>
 								 <span class="text-input">456 Main St. Los Angeles, CA </span>
                            
 						   </div>
@@ -255,12 +232,12 @@ span.desc_border {
 									<div class="form-flex">
 										<div class="form-group">
 										<label class="form-label">First Name</label>
-										<input type="text" name="second_first_name" required/>
+										<input type="text" name="first_name[new]" required/>
 										<span class="text-input">example: John </span>
 										</div>
 										<div class="form-group">
 										<label class="form-label">Last Name</label>
-										<input type="text" name="second_last_name" required />
+										<input type="text" name="last_name[new]" required />
 										<span class="text-input">example: Smith </span>
 										</div>
 									</div>
@@ -269,12 +246,12 @@ span.desc_border {
 									<div class="form-flex">
 									<div class="form-group">
 										<label for="email" class="form-label">Email</label>
-										<input type="email" name="second_email" required/>
+										<input type="email" name="email[new]" required/>
 										<span class="text-input">example: johnsmith@gmail.com </span>
 									</div>
 									<div class="form-group">
 										<label for="phone" class="form-label">Mobile Phone #</label>
-										<input class="phone_mask" type="text" name="second_phone" required />
+										<input class="phone_mask" type="text" name="phone[new]" required />
 										<span class="text-input">example: (000) 000-0000 </span>
 								</div>
 									</div>
@@ -282,56 +259,40 @@ span.desc_border {
 
 								<div class="form-row">
 									<div class="form-flex">
-								<div class="form-group form-date">
+								<div class="form-group form-date dob_date_picker_div">
 									<label  class="form-label">Birth Date</label>
 									<div class="form-date-group">
 										<div class="form-date-item">
-											<select id="birth_date1" name="second_birth_date" required></select>
+											<select class="dob_birth_date" id="birth_datenew" name="birth_date[new]" required></select>
 											<span class="text-input">DD</span>
 										</div>
 										<div class="form-date-item">
-											<select id="birth_month1" name="second_birth_month" required></select>
+											<select class="dob_birth_month" id="birth_monthnew" name="birth_month[new]" required></select>
 											<span class="text-input">MM</span>
 										</div>
 										<div class="form-date-item">
-											<select id="birth_year1" name="second_birth_year" required></select>
+											<select class="dob_birth_year" id="birth_yearnew" name="birth_year[new]" required></select>
 											<span class="text-input">YYYY</span>
 										</div>
 									</div>
 								</div>
 								<div class="form-group">
 									<label  class="form-label">Social Security No.</label>
-									<input class="ssn" type="text" name="second_ssn" required />
+									<input class="ssn" type="text" name="ssn[new]" required />
 									<span class="text-input">example: XXX-XX-XXXX </span>
 								</div>
-								<!-- <div class="form-date">
-									<label  class="form-label">Social Security No.</label>
-									<div class="form-date-group">
-										<div class="form-date-item">
-											<input  class="ssn1"  name="ssn11" required></input>
-											<span class="text-input">XXX</span>
-										</div>
-										<div class="form-date-item">
-											<input  class="ssn2" name="ssn21" required></input>
-											<span class="text-input">XX</span>
-										</div>
-										<div class="form-date-item">
-											<input  class="ssn3" name="ssn31" required></input>
-											<span class="text-input">XXXX</span>
-										</div>
-									</div>
-								</div> -->
+								
 									</div>
 								</div>
 								<div class="form-group">
 									<label  class="form-label">Current Mailing Address</label>
-									<input type="text" name="second_current_mailing_address"  required/>
+									<input type="text" name="current_mailing_address[new]"  required/>
 									<span class="text-input">456 Main St. Los Angeles, CA </span>
 							
 							</div>
 							<div class="form-group">
 									<label  class="form-label">Mailing Address Post Closing</label>
-									<input type="text" name="second_mailing_address_port_closing" required />
+									<input type="text" name="mailing_address_port_closing[new]" required value="<?php echo $orderDetails['full_address'];?>" />
 									<span class="text-input">456 Main St. Los Angeles, CA </span>
 							
 							</div>
@@ -643,30 +604,7 @@ span.desc_border {
     <script src="<?=base_url('assets/buyer-seller-packets/vendor/nouislider/nouislider.min.js');?>"></script>
     <script src="<?=base_url('assets/buyer-seller-packets/vendor/wnumb/wNumb.js');?>"></script>
 	<script src="<?=base_url('assets/buyer-seller-packets/vendor/input-mask/jquery.mask.min.js');?>"></script>
-    <script src="<?=base_url('assets/buyer-seller-packets/js/buyer-main.js?v=0.1');?>"></script>
-
-	<script>
-		$(document).ready(function(){
-			$('.buyer__show_hide_action').change(function(){
-				var show_hide_div = $(this).data('action');
-				if(show_hide_div) {
-					if($(this).val()=='1') {
-						$('.'+show_hide_div).show();
-					}
-					else {
-						$('.'+show_hide_div).hide();
-					}
-				}
-				
-			});
-
-			$(".phone_mask").mask('(000) 000-0000');
-			$(".amount_mask").mask("#,##0", {reverse: true});
-			$(".ssn").mask('000-00-0000');
-
-
-		});
-	</script>
+    <script src="<?=base_url('assets/buyer-seller-packets/js/buyer-main.js?buyer_v=0.2');?>"></script>
 </body>
 
 </html>

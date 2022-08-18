@@ -673,7 +673,26 @@ input.error, select.error {
   border-color: #f5c2c7;
 }
 
-		
-		
+
+span.desc_title {
+	font-size: 18px;
+	padding: 5px 10px;
+	position: relative;
+	z-index: 6;
+	background: #f8f8f8;
+}
+
+p.buyer_desc {
+	text-align: center;
+}
+
+span.desc_border {
+	display: block;
+	width: 100%;
+	border-bottom: 1px solid #ababab;
+	position: absolute;
+	top: 15px;
+	z-index: 5;
+}
 
 /*# sourceMappingURL=style.css.map */
