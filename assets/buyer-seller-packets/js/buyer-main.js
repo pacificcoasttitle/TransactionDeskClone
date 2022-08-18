@@ -74,26 +74,32 @@
         equalTo: ""
     });
 
-    $.dobPicker({
-        daySelector: '#birth_date',
-        monthSelector: '#birth_month',
-        yearSelector: '#birth_year',
-        dayDefault: '',
-        monthDefault: '',
-        yearDefault: '',
-        minimumAge: 0,
-        maximumAge: 120
-    });
-	$.dobPicker({
-        daySelector: '#birth_date1',
-        monthSelector: '#birth_month1',
-        yearSelector: '#birth_year1',
-        dayDefault: '',
-        monthDefault: '',
-        yearDefault: '',
-        minimumAge: 0,
-        maximumAge: 120
-    });
+	$('.dob_date_picker_div').each(function(){
+		var date_id = $(this).find('.dob_birth_date').attr('id');
+		var month_id = $(this).find('.dob_birth_month').attr('id');
+		var year_id = $(this).find('.dob_birth_year').attr('id');
+		$.dobPicker({
+			daySelector: '#'+date_id,
+			monthSelector: '#'+month_id,
+			yearSelector: '#'+year_id,
+			dayDefault: '',
+			monthDefault: '',
+			yearDefault: '',
+			minimumAge: 0,
+			maximumAge: 120
+		});
+	});
+
+	// $.dobPicker({
+    //     daySelector: '#birth_date1',
+    //     monthSelector: '#birth_month1',
+    //     yearSelector: '#birth_year1',
+    //     dayDefault: '',
+    //     monthDefault: '',
+    //     yearDefault: '',
+    //     minimumAge: 0,
+    //     maximumAge: 120
+    // });
     var marginSlider = document.getElementById('slider-margin');
     if (marginSlider != undefined) {
         noUiSlider.create(marginSlider, {
@@ -127,4 +133,21 @@
             }
         });
     }
+
+	$('.buyer__show_hide_action').change(function(){
+		var show_hide_div = $(this).data('action');
+		if(show_hide_div) {
+			if($(this).val()=='1') {
+				$('.'+show_hide_div).show();
+			}
+			else {
+				$('.'+show_hide_div).hide();
+			}
+		}
+		
+	});
+
+	$(".phone_mask").mask('(000) 000-0000');
+	$(".amount_mask").mask("#,##0", {reverse: true});
+	$(".ssn").mask('000-00-0000');
 })(jQuery);
