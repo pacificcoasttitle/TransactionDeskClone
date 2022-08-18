@@ -566,26 +566,50 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 			<form method="POST" action="<?php echo base_url();?>add-buyer-on-order" enctype="multipart/form-data">
 				<div class="smart-forms smart-container wrap-2" style="margin:30px">
 					<div class="modal-body search-result">
-						<div id="lender-details-fields" >
-							
-							<div class="spacer-b25">
-								<div class="tagline"><span>Buyer Email Address</span></div>
-							</div>
-
-							<div class="frm-row">
-								<div class="section colm colm12">
-									<label class="field prepend-icon">
-										<input type="text" name="buyer_email" id="buyer_email" class="gui-input ui-autocomplete-input"
-											placeholder="Enter Buyer Email Address" required="required">
-										<span class="field-icon"><i class="fa fa-user"></i></span>
-									</label>
+						
+							<div id="lender-details-fields" >
+								
+								<div class="spacer-b25">
+									<div class="tagline"><span>Buyer Info</span></div>
 								</div>
-							</div>							
-						</div>
-					</div>
 
-					<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
-					<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id'];?>">
+								<div id="buyer-info-clone-group-fields">
+									<div class="toclone clone-widget">
+										<div class="frm-row">
+											<div class="section colm colm12">
+												<label class="field prepend-icon">
+													<input type="text" name="buyer_emails[]" id="buyer_email" class="gui-input ui-autocomplete-input"
+														placeholder="Email Address" required="required">
+													<span class="field-icon"><i class="fa fa-user"></i></span>
+												</label>
+											</div>
+
+											<div class="section colm colm6">
+												<label class="field prepend-icon">
+													<input type="text" name="buyer_first_names[]" id="buyer_email" class="gui-input ui-autocomplete-input"
+														placeholder="First Name" required="required">
+													<span class="field-icon"><i class="fa fa-user"></i></span>
+												</label>
+											</div>
+
+											<div class="section colm colm6">
+												<label class="field prepend-icon">
+													<input type="text" name="buyer_last_names[]" id="buyer_email" class="gui-input ui-autocomplete-input"
+														placeholder="Last Name" required="required">
+													<span class="field-icon"><i class="fa fa-user"></i></span>
+												</label>
+											</div>
+										</div>
+										<a href="#" class="mr-5 clone button btn-primary"><i class="fa fa-plus"></i></a>
+										<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
+									</div>
+								</div>							
+							</div>
+						
+
+						<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
+						<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id'];?>">
+					</div>
 
 					<div class="form-footer" style="padding-top:0px;">
 						<button type="submit" data-btntext-sending="Sending..."

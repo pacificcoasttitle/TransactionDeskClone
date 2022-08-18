@@ -1,5 +1,16 @@
 
 $(document).ready(function () {
+    $('#buyer-info-clone-group-fields').cloneya({
+        maximum: 5
+    }).on('after_append.cloneya', function (event, toclone, newclone) {
+        
+    }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
+        $(clone).slideToggle('slow', function () {
+            $(clone).remove();
+        })
+    });
+
+
 	if ($('.custom__task_button').length > 0){
 		change_progress();
 		$('.task_check_all').click(function(){
