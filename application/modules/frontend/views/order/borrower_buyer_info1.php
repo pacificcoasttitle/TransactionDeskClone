@@ -464,135 +464,80 @@
 					<fieldset>
 						<h2>Vesting & Ownership</h2>
 						<p class="desc">Please review the relationship and martial status of each of the buyers </p>
-						<div class="form-row">
-							<div class="form-flex">
-								<div class="form-group">
-									<label for="email" class="form-label">Buyer 1</label>
-									<input type="email" name="email" id="email" />
-								</div>
-								<div class="form-group">
-									<label for="email" class="form-label">Marital Status</label>
-									<select id="loan" name="loantype">
-									<option value="Select">Select</option>
-									<option value="">Husband and Wife </option>
-										<option value=""> Wife and Husband </option>
-										<option value=""> A Married Couple </option>
-										<option value=""> A Single Man (never married) </option>
-										<option value=""> A Single Woman (never married) </option>
-										<option value=""> A Single Person (never married) </option>
-										<option value=""> A Married Man (as his sole and separate property)* </option>
-										<option value=""> A Married Woman (as her sole and separate property)*  A Married Person (as his/her sole and separate property)* </option>
-										<option value="">An Unmarried Man (divorced)  An Unmarried Woman (divorced)  An Unmarried Person (divorced)  A Widow (spouse deceased) </option>
-										<option value="">A Widower (spouse deceased)  Registered Domestic Partners</option>
 
-									</select>
+						<?php if(count($buyers)) :?>
+							<?php foreach($buyers as $key_buyer=>$buyer) :?>
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group">
+											<label for="email" class="form-label">Buyer <?=($key_buyer+1)?></label>
+											<input type="text" name="" id="" value="<?=$buyer['first_name']." ".$buyer['last_name']?>"/>
+										</div>
+										<div class="form-group">
+											<label for="email" class="form-label">Marital Status</label>
+											<select id="marital_status_<?=$buyer['id']?>" name="marital_status_<?=$buyer['id']?>">
+												<option value="Select">Select</option>
+												<option value="husband_and_wife">Husband and Wife</option>
+												<option value="wife_and_husband">Wife and Husband</option>
+												<option value="a_married_couple">A Married Couple</option>
+												<option value="a_single_man">A Single Man (never married)</option>
+												<option value="a_single_woman">A Single Woman (never married)</option>
+												<option value="a_single_person">A Single Person (never married)</option>
+												<option value="a_married_man">A Married Man (as his sole and separate property)*</option>
+												<option value="a_married_woman">A Married Woman (as her sole and separate property)*</option>
+												<option value="a_married_person">A Married Person (as his/her sole and separate property)*</option>
+												<option value="an_unmarried_man">An Unmarried Man (divorced)</option>  
+												<option value="an_unmarried_woman">An Unmarried Woman (divorced)</option>  
+												<option value="an_unmarried_person">An Unmarried Person (divorced)</option>  
+												<option value="a_widow">A Widow (spouse deceased)</option>
+												<option value="a_widower">A Widower (spouse deceased)</option> 
+												<option value="registered_domestic_partners">Registered Domestic Partners</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<label for="email" class="form-label">Married To:</label>
+											<select id="married_to_<?=$buyer['id']?>" name="married_to_<?=$buyer['id']?>">
+												<?php foreach($buyers as $key_buyer_married_to=>$buyer_married_to) :?>
+													<option value="Select">Select</option>
+													<?php if($buyer_married_to['id'] != $buyer['id']) :?>
+														<option value="<?=$buyer_married_to['id']?>"><?=$buyer_married_to['first_name']." ".$buyer_married_to['last_name']?></option>
+													<?php endif; ?>	
+												<?php endforeach; ?>
+											</select>
+										</div>
+									</div>
 								</div>
-								<div class="form-group">
-									<label for="email" class="form-label">Married To:</label>
-									<select id="loan" name="loantype">
-									<option value="Select">Select</option>
-									<option value="">Buyer 2</option>
-									<option value="">Buyer 3</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-flex">
-								<div class="form-group">
-									<label for="email" class="form-label">Buyer 2</label>
-									<input type="email" name="email" id="email" />
-								</div>
-								<div class="form-group">
-									<label for="email" class="form-label">Marital Status</label>
-									<select id="loan" name="loantype">
-									<option value="Select">Select</option>
-									<option value="">Husband and Wife </option>
-										<option value=""> Wife and Husband </option>
-										<option value=""> A Married Couple </option>
-										<option value=""> A Single Man (never married) </option>
-										<option value=""> A Single Woman (never married) </option>
-										<option value=""> A Single Person (never married) </option>
-										<option value=""> A Married Man (as his sole and separate property)* </option>
-										<option value=""> A Married Woman (as her sole and separate property)*  A Married Person (as his/her sole and separate property)* </option>
-										<option value="">An Unmarried Man (divorced)  An Unmarried Woman (divorced)  An Unmarried Person (divorced)  A Widow (spouse deceased) </option>
-										<option value="">A Widower (spouse deceased)  Registered Domestic Partners</option>
-
-									</select>
-								</div>
-								<div class="form-group">
-									<label for="email" class="form-label">Married To:</label>
-									<select id="loan" name="loantype">
-									<option value="Select">Select</option>
-									<option value="">Buyer 2</option>
-									<option value="">Buyer 3</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-flex">
-								<div class="form-group">
-									<label for="email" class="form-label">Buyer 3</label>
-									<input type="email" name="email" id="email" />
-								</div>
-								
-								<div class="form-group">
-									<label for="email" class="form-label">Marital Status:</label>
-									<select id="loan" name="loantype">
-									<option value="Select">Select</option>
-										<option value="">Husband and Wife </option>
-										<option value=""> Wife and Husband </option>
-										<option value=""> A Married Couple </option>
-										<option value=""> A Single Man (never married) </option>
-										<option value=""> A Single Woman (never married) </option>
-										<option value=""> A Single Person (never married) </option>
-										<option value=""> A Married Man (as his sole and separate property)* </option>
-										<option value=""> A Married Woman (as her sole and separate property)*  A Married Person (as his/her sole and separate property)* </option>
-										<option value="">An Unmarried Man (divorced)  An Unmarried Woman (divorced)  An Unmarried Person (divorced)  A Widow (spouse deceased) </option>
-										<option value="">A Widower (spouse deceased)  Registered Domestic Partners</option>
-
-									</select>
-								</div>
-								<div class="form-group">
-									<label for="email" class="form-label">Married To:</label>
-									<select id="loan" name="loantype">
-									<option value="Select">Select</option>
-									<option value="">Buyer 2</option>
-									<option value="">Buyer 3</option>
-									</select>
-								</div>
-							</div>
-						</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
 						<div class="form-row">
 							<div class="form-group">
-									<label class="form-label">Please tell us how the property will be vested:</label>
-									<select id="loan" name="loantype">
+								<label class="form-label">Please tell us how the property will be vested:</label>
+								<select id="property_vested" name="property_vested">
 									<option value="Select">Select</option>
-									<option value=""> Community Property</option>
-									<option value=""> Community Property with Right of Survivorship</option>
-									<option value=""> Joint Tenants </option>
-									<option value=""> Tenants In Common (Please Give Interest Amounts) </option>
-									<option value=""> Sole and Separate Property (If Married or Domestic Partnership, an Interspousal Grant Deed, A  Quitclaim Deed, Statement Of Information and Appropriate Instructions Will Need To Be Submitted.) </option>
-									<option value=""> Partnership (Limited Or General) </option>
-									<option value=""> Corporation (California Or Other State) </option>
-									<option value=""> A Trust (attach copy of Trust Agreement) </option>
-									<option value=""> Other</option>  
-									</select>
-									<span class="text-input">example: yes or no. </span>
+									<option value="community_property">Community Property</option>
+									<option value="community_property_with_right">Community Property with Right of Survivorship</option>
+									<option value="joint_tenants">Joint Tenants</option>
+									<option value="tenants_in_common">Tenants In Common (Please Give Interest Amounts)</option>
+									<option value="sole_and_separate_property">Sole and Separate Property (If Married or Domestic Partnership, an Interspousal Grant Deed, A  Quitclaim Deed, Statement Of Information and Appropriate Instructions Will Need To Be Submitted.) </option>
+									<option value="partnership">Partnership (Limited Or General) </option>
+									<option value="corporation">Corporation (California Or Other State) </option>
+									<option value="a_trust">A Trust (attach copy of Trust Agreement) </option>
+									<option value="other">Other</option>  
+								</select>
+								<span class="text-input">example: yes or no. </span>
 							</div>
 						</div>
 					</fieldset>
-
 					<h3>Confirmation</h3>
 					<fieldset>
 						<h2>Confirmation</h2>
 						<p>&nbsp;</p>
 						<p class="desc">Signing below indicates that the information included here is correct and complete to the best of my knowledge and ackowledges and accepts the information included in this document.</p>
 						<p class="desc">You must click below Finish button to securely send your completed forms to Pacific Coast Title Company.</p>
-						
-						
 					</fieldset>
                 </div>
             </form>
         </div>
-
     </div>
 
     <!-- JS -->
