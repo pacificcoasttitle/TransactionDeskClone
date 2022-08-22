@@ -78,6 +78,7 @@
 		var date_id = $(this).find('.dob_birth_date').attr('id');
 		var month_id = $(this).find('.dob_birth_month').attr('id');
 		var year_id = $(this).find('.dob_birth_year').attr('id');
+		
 		$.dobPicker({
 			daySelector: '#'+date_id,
 			monthSelector: '#'+month_id,
@@ -88,6 +89,18 @@
 			minimumAge: 0,
 			maximumAge: 120
 		});
+
+		if($('#'+date_id).data('val')) {
+			$('#'+date_id).val($('#'+date_id).data('val'));
+			$('#'+date_id).change();
+		}
+		if($('#'+month_id).data('val')) {
+			$('#'+month_id).val($('#'+month_id).data('val'));
+			$('#'+month_id).change();
+		}
+		if($('#'+year_id).data('val')) {
+			$('#'+year_id).val($('#'+year_id).data('val'));
+		}
 	});
 
 	// $.dobPicker({

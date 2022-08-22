@@ -13,7 +13,7 @@
     <!-- <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/vendor/nouislider/nouislider.min.css');?>"> -->
 
     <!-- Main css -->
-    <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css?buyer_v=0.2');?>">
+    <link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css?buyer_v='.time());?>">
 </head>
 
 <body>
@@ -87,7 +87,7 @@
 										</div>
 										<div class="form-group">
 											<label for="phone" class="form-label">Mobile Phone #</label>
-											<input class="phone_mask" type="text" name="buyer[<?=$buyer['id']?>][phone]" required value="<?=$buyer['phone']?>"/>
+											<input class="phone_mask" type="text" name="buyer[<?=$buyer['id']?>][phone]" required value="<?=$buyer['phone']?>" pattern="\(\d{3}\)[ ]?\d{3}[-]?\d{4}" />
 											<span class="text-input">example: (000) 000-0000 </span>
 										</div>
 									</div>
@@ -99,15 +99,15 @@
 											<label class="form-label">Birth Date</label>
 											<div class="form-date-group">
 												<div class="form-date-item">
-													<select class="dob_birth_date" id="birth_date<?=$buyer['id']?>" name="buyer[<?=$buyer['id']?>][birth_date]" required></select>
+													<select class="dob_birth_date" id="birth_date<?=$buyer['id']?>" name="buyer[<?=$buyer['id']?>][birth_date]" required data-val="<?=$buyer['birth_date']?>"></select>
 													<span class="text-input">DD</span>
 												</div>
 												<div class="form-date-item">
-													<select class="dob_birth_month"  id="birth_month<?=$buyer['id']?>" name="buyer[<?=$buyer['id']?>][birth_month]" required></select>
+													<select class="dob_birth_month"  id="birth_month<?=$buyer['id']?>" name="buyer[<?=$buyer['id']?>][birth_month]" required data-val="<?=$buyer['birth_month']?>"></select>
 													<span class="text-input">MM</span>
 												</div>
 												<div class="form-date-item">
-													<select class="dob_birth_year"  id="birth_year<?=$buyer['id']?>" name="buyer[<?=$buyer['id']?>][birth_year]" required></select>
+													<select class="dob_birth_year"  id="birth_year<?=$buyer['id']?>" name="buyer[<?=$buyer['id']?>][birth_year]" required data-val="<?=$buyer['birth_year']?>"></select>
 													<span class="text-input">YYYY</span>
 												</div>
 											</div>
@@ -115,7 +115,7 @@
 									
 										<div class="form-group">
 											<label  class="form-label">Social Security No.</label>
-											<input class="ssn" type="text" name="buyer[<?=$buyer['id']?>][ssn]" required />
+											<input class="ssn" type="text" name="buyer[<?=$buyer['id']?>][ssn]" required pattern="\d{3}-?\d{2}-?\d{4}" value="<?=$buyer['ssn']?>"/>
 											<span class="text-input">example: XXX-XX-XXXX </span>
 										</div>
 								
@@ -123,13 +123,13 @@
 								</div>
 								<div class="form-group">
 									<label  class="form-label">Current Mailing Address</label>
-									<input type="text" name="buyer[<?=$buyer['id']?>][current_mailing_address]" required />
+									<input type="text" name="buyer[<?=$buyer['id']?>][current_mailing_address]" required value="<?=$buyer['current_mailing_address']?>"/>
 									<span class="text-input">456 Main St. Los Angeles, CA </span>
 							
 								</div>
 								<div class="form-group">
 										<label  class="form-label">Mailing Address Post Closing</label>
-										<input type="text" name="buyer[<?=$buyer['id']?>][mailing_address_port_closing]" required value="<?php echo $orderDetails['full_address'];?>" />
+										<input type="text" name="buyer[<?=$buyer['id']?>][mailing_address_port_closing]" required value="<?php echo ($buyer['mailing_address_port_closing'])?$buyer['mailing_address_port_closing']:$orderDetails['full_address'];?>" />
 										<span class="text-input">456 Main St. Los Angeles, CA </span>
 								
 								</div>
@@ -162,7 +162,7 @@
 								</div>
 								<div class="form-group">
 									<label for="phone" class="form-label">Mobile Phone #</label>
-									<input class="phone_mask" type="text" name="buyer[0][phone]" required />
+									<input class="phone_mask" type="text" name="buyer[0][phone]" required pattern="\(\d{3}\)[ ]?\d{3}[-]?\d{4}"/>
 									<span class="text-input">example: (000) 000-0000 </span>
                             </div>
 								</div>
@@ -190,7 +190,7 @@
 								
 							<div class="form-group">
 								<label  class="form-label">Social Security No.</label>
-								<input class="ssn" type="text" name="buyer[0][ssn]" required />
+								<input class="ssn" type="text" name="buyer[0][ssn]" required pattern="\d{3}-?\d{2}-?\d{4}" />
 								<span class="text-input">example: XXX-XX-XXXX </span>
 							</div>
 							
@@ -251,7 +251,7 @@
 									</div>
 									<div class="form-group">
 										<label for="phone" class="form-label">Mobile Phone #</label>
-										<input class="phone_mask" type="text" name="buyer[new][phone]" required />
+										<input class="phone_mask" type="text" name="buyer[new][phone]" required pattern="\(\d{3}\)[ ]?\d{3}[-]?\d{4}"/>
 										<span class="text-input">example: (000) 000-0000 </span>
 								</div>
 									</div>
@@ -278,7 +278,7 @@
 								</div>
 								<div class="form-group">
 									<label  class="form-label">Social Security No.</label>
-									<input class="ssn" type="text" name="buyer[new][ssn]" required />
+									<input class="ssn" type="text" name="buyer[new][ssn]" required pattern="\d{3}-?\d{2}-?\d{4}"/>
 									<span class="text-input">example: XXX-XX-XXXX </span>
 								</div>
 								
@@ -347,7 +347,7 @@
                                     </div>
                                     <div class="form-group">
 									 <label class="form-label">Enter Loan Officer Phone Number ( if applicable )</label>
-                                     <input class="phone_mask" type="text" name="loan_officer_phone" id="lophone" />
+                                     <input class="phone_mask" type="text" name="loan_officer_phone" id="lophone" pattern="\(\d{3}\)[ ]?\d{3}[-]?\d{4}"/>
 									  <span class="text-input">example: (800) 000-0000  </span>
                                     </div>
                                 </div>
@@ -383,7 +383,7 @@
 											</div>
 											<div class="form-group">
 											<label class="form-label">Enter Loan Processor Phone Number</label>
-											<input class="phone_mask" type="text" name="loan_processor_phone" id="lpphone" required/>
+											<input class="phone_mask" type="text" name="loan_processor_phone" id="lpphone" required pattern="\(\d{3}\)[ ]?\d{3}[-]?\d{4}"/>
 											<span class="text-input">example: (800) 000-0000  </span>
 											</div>
 										</div>
@@ -417,7 +417,7 @@
 								<div class="form-row">
 										<div class="form-group">
 										 <label class="form-label">Insuance Agency Name</label>
-										 <input type="text" name="ins_agency_name"  />
+										 <input type="text" name="ins_agency_name"  required/>
 										 <span class="text-input">example: Statefarm, Allstate,  etc. </span>
 										</div>
 								</div>
@@ -425,7 +425,7 @@
 								<div class="form-row">
 										<div class="form-group">
 										 <label class="form-label">Insurance Agent Name</label>
-										 <input type="text" name="ins_agent_name"  />
+										 <input type="text" name="ins_agent_name" required />
 										 <span class="text-input">example: Statefarm, Allstate,  etc. </span>
 										</div>
 								</div>
@@ -435,12 +435,12 @@
 									<div class="form-flex">
 										<div class="form-group">
 										 <label class="form-label">Insurance Agent's Email</label>
-										 <input type="email" name="ins_agent_email"  />
+										 <input type="email" name="ins_agent_email" required  />
 										  <span class="text-input">example: johnsmith@abcinsurance.com </span>
 										</div>
 										<div class="form-group">
 										 <label class="form-label">Insurance Agent's Phone Number</label>
-										 <input class="phone_mask" type="text" name="ins_agent_phone"  />
+										 <input class="phone_mask" type="text" name="ins_agent_phone" required  pattern="\(\d{3}\)[ ]?\d{3}[-]?\d{4}"/>
 										  <span class="text-input">example: (800) 000-0000 </span>
 										</div>
 									</div>
@@ -449,7 +449,7 @@
 								<div class="form-row">
 										<div class="form-group">
 										 <label class="form-label">What Annual Premium were you quoted?</label>
-										 <input class="amount_mask" type="text" name="annual_premium"  />
+										 <input class="amount_mask" type="text" name="annual_premium" required />
 										  <span class="text-input">example:$3600 annual premium </span>
 										</div>
 								</div>
@@ -604,7 +604,7 @@
     <script src="<?=base_url('assets/buyer-seller-packets/vendor/nouislider/nouislider.min.js');?>"></script>
     <script src="<?=base_url('assets/buyer-seller-packets/vendor/wnumb/wNumb.js');?>"></script>
 	<script src="<?=base_url('assets/buyer-seller-packets/vendor/input-mask/jquery.mask.min.js');?>"></script>
-    <script src="<?=base_url('assets/buyer-seller-packets/js/buyer-main.js?buyer_v=0.2');?>"></script>
+    <script src="<?=base_url('assets/buyer-seller-packets/js/buyer-main.js?buyer_v='.time());?>"></script>
 </body>
 
 </html>

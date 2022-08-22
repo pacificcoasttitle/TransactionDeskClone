@@ -269,7 +269,7 @@ input {
     position: absolute;
     content: '';
     width: 2px;
-    height: 259px;
+    height: 360px;
     background: #ebebeb;
     left: 64px;
     top: 50%;
@@ -407,7 +407,9 @@ label.error {
   display: block;
   position: absolute;
   top: 0px;
-  right: 0; }
+  right: 0; 
+	color: #f63726;
+}
   label.error:after {
     font-family: 'Material-Design-Iconic-Font';
     position: absolute;
