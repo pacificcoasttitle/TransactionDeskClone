@@ -3046,23 +3046,22 @@ class DashboardMail extends MX_Controller {
 					'ssn'=>$buyer_value['ssn']?$buyer_value['ssn']:null,
 					'current_mailing_address'=>$buyer_value['current_mailing_address']?$buyer_value['current_mailing_address']:null,
 					'mailing_address_port_closing'=>$buyer_value['mailing_address_port_closing']?$buyer_value['mailing_address_port_closing']:null,
+                    'marital_status' => $buyer_value['marital_status']?$buyer_value['marital_status']:null,
+                    'married_to' => $buyer_value['married_to']?$buyer_value['married_to']:null
 				];
 				if($buyer_info['first_name'] && $buyer_info['last_name']) {
-					if($buyer_key == "0" || $buyer_key == 'new') {
-						//Insert Value
-						$buyer_info['is_main_buyer'] =0;
-						if($buyer_key == "0") {
-							$buyer_info['is_main_buyer'] =1;
-						}
-						$this->home_model->insert($buyer_info,'pct_order_borrower_buyer_info');
-					}
-					else{
+					if ($buyer_key == 'new') {
+						$buyer_info['is_main_buyer'] = 0;
+						$new_buyer_id = $this->home_model->insert($buyer_info,'pct_order_borrower_buyer_info');
+					} else {
 						//Update Value
 						$buyer_update['id'] = $buyer_key;
 						$this->home_model->update($buyer_info,$buyer_update,'pct_order_borrower_buyer_info');
 					}
 				}
 			}
+        
+            $this->home_model->update(array('married_to' => $new_buyer_id), array('married_to' => 'new_buyer', 'order_id' => $this->input->post('order_id')),'pct_order_borrower_buyer_info');
             $borrowerBuyerInfoData = array(
 				'order_id'=>$this->input->post('order_id'),
 				'is_same_property'=>$this->input->post('is_same_property'),
@@ -3081,6 +3080,7 @@ class DashboardMail extends MX_Controller {
 				'ins_agent_email'=>$this->input->post('ins_agent_email'),
 				'ins_agent_phone'=>$this->input->post('ins_agent_phone'),
 				'annual_premium'=>$this->input->post('annual_premium'),
+                'property_vested'=>$this->input->post('property_vested')
             );
             $this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info_wizard');
 			//Generate PDF
