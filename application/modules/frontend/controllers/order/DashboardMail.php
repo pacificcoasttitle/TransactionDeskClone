@@ -3030,8 +3030,11 @@ class DashboardMail extends MX_Controller {
         if ($this->input->post()) {
 			// echo '<pre>';
 			// var_dump($this->input->post());
+			$buyers_names = $buyer_pdf = array();
 			//Add all Buyer info relational table
 			$buyer_infos = $this->input->post('buyer');
+			$vesting_info = $skip_vesting = array();
+			$is_first = 1;
 			foreach ($buyer_infos as $buyer_key => $buyer_value) {
 				// Check Keys
 				$buyer_info = [
@@ -3058,8 +3061,38 @@ class DashboardMail extends MX_Controller {
 						$buyer_update['id'] = $buyer_key;
 						$this->home_model->update($buyer_info,$buyer_update,'pct_order_borrower_buyer_info');
 					}
+
+					$buyers_names[] = $buyer_info['first_name'].' '.$buyer_info['last_name'];
+					if($is_first) {
+						$buyer_pdf['current_address'] = $buyer_info['current_mailing_address'];
+						$buyer_pdf['closing_address'] = $buyer_info['mailing_address_port_closing'];
+						$buyer_pdf['ssn'] = $buyer_info['ssn'];
+						$buyer_pdf['email'] = $buyer_info['email'];
+						$is_first = 0;
+					}
+					if(!(in_array($buyer_key,$skip_vesting))) {
+
+						$vesting_name = $buyer_info['first_name'].' '.$buyer_info['last_name'];
+						
+						if($buyer_info['married_to'] && $buyer_infos[$buyer_info['married_to']]) {
+							// echo "in";die;
+
+							$vesting_name .= ' And '.$buyer_infos[$buyer_info['married_to']]['first_name'].' '.$buyer_infos[$buyer_info['married_to']]['last_name'];
+							$vesting_name .= ' '.ucwords(str_replace("_", " ", $buyer_info['marital_status']));
+
+							$skip_vesting[] = $buyer_info['married_to'];
+						}
+						else {
+							$vesting_name .= ' '.ucwords(str_replace("_", " ", $buyer_info['marital_status']));
+						}
+
+						$vesting_info['names'][] = $vesting_name;
+					}
 				}
 			}
+			// echo '<pre>';var_dump($vesting_info);
+			// die;
+			$buyer_pdf['buyers_name'] = $buyers_names;
         
             $this->home_model->update(array('married_to' => $new_buyer_id), array('married_to' => 'new_buyer', 'order_id' => $this->input->post('order_id')),'pct_order_borrower_buyer_info');
             $borrowerBuyerInfoData = array(
@@ -3083,70 +3116,82 @@ class DashboardMail extends MX_Controller {
                 'property_vested'=>$this->input->post('property_vested')
             );
             $this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info_wizard');
+			$buyer_pdf['lender_name'] = $borrowerBuyerInfoData['lender_name'];
+			$buyer_pdf['ins_agency_name'] = $borrowerBuyerInfoData['ins_agency_name'];
+			$buyer_pdf['ins_agent_name'] = $borrowerBuyerInfoData['ins_agent_name'];
 			//Generate PDF
-			// $pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_check.pdf';
-			// $pdf = new Pdf($pdf_templates_file);
-			// $type = 'buyer';
-			// $document_name = $type.'_'.time().'_'.$this->user['id'].'.pdf';
-			// $dir_to_upload = 'uploads/escrow/'.$type;
-			// if (!is_dir(FCPATH.$dir_to_upload)) {
-			// 	mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
-			// }
-			// chmod(FCPATH.$dir_to_upload, 0777);
-			// $dir_name = FCPATH.$dir_to_upload.'/';
-			// $dir_name = str_replace('\\', '/', $dir_name);
-			// $file_full_path = $dir_name.$document_name;
+			$pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_check.pdf';
+			$pdf = new Pdf($pdf_templates_file);
+			$type = 'buyer';
+			$document_name = $type.'_'.time().'_'.$this->user['id'].'.pdf';
+			$dir_to_upload = 'uploads/escrow/'.$type;
+			if (!is_dir(FCPATH.$dir_to_upload)) {
+				mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
+			}
+			chmod(FCPATH.$dir_to_upload, 0777);
+			$dir_name = FCPATH.$dir_to_upload.'/';
+			$dir_name = str_replace('\\', '/', $dir_name);
+			$file_full_path = $dir_name.$document_name;
+			$vesting_buyer_name = $vesting_buyer_name1 = implode(', ',$vesting_info['names']);
+			$vesting_buyer_name2 = '';
+			if(strlen($vesting_buyer_name) > 100 && count($vesting_info['names']) > 2){
+				$vesting_buyer_name1 = $vesting_info['names'][0].', '.$vesting_info['names'][1];
+				unset($vesting_info['names'][0]);
+				unset($vesting_info['names'][1]);
+				$vesting_buyer_name2 =  implode(', ',$vesting_info['names']);
+			}
+			$pdf->fillForm([
+				'1 Buyers'=> implode(',',$buyer_pdf['buyers_name']) ,
+				'EMail Address'=>$buyer_pdf['buyers_name'],
+				'Social Security 1'=>$buyer_pdf['ssn'],
+				// 'Social Security'=>$this->input->post('second_ssn'),
+				'Buyers Current Mailing Address'=>$buyer_pdf['current_address'],
+				'1_3'=>$buyer_pdf['closing_address'],
+				'Name Of Lender'=>$buyer_pdf['lender_name'],
+				'Insurance Company'=>$buyer_pdf['ins_agency_name'],
+				'Agents Name_3'=>$buyer_pdf['ins_agent_name'],
+				'Names 1' => $vesting_buyer_name1,
+				'Names 2' => $vesting_buyer_name2,
 
-			// $pdf->fillForm([
-			// 	'1 Buyers'=>$this->input->post('first_name').' '.$this->input->post('last_name'),
-			// 	'EMail Address'=>$this->input->post('email'),
-			// 	'Social Security 1'=>$this->input->post('ssn'),
-			// 	'Social Security'=>$this->input->post('second_ssn'),
-			// 	'Buyers Current Mailing Address'=>$this->input->post('current_mailing_address'),
-			// 	'1_3'=>$this->input->post('mailing_address_port_closing'),
-			// 	'Name Of Lender'=>$this->input->post('lender_name'),
-			// 	'Insurance Company'=>$this->input->post('ins_agency_name'),
-			// 	'Agents Name_3'=>$this->input->post('ins_agent_name'),
 
-
-			// 	// 'phone'=>$this->input->post('phone'),
-			// 	// 'birth_month'=>$this->input->post('birth_month'),
-			// 	// 'birth_date'=>$this->input->post('birth_date'),
-			// 	// 'birth_year'=>$this->input->post('birth_year'),
-			// 	// 'is_another_buyer'=>$this->input->post('is_another_buyer'),
-			// 	// 'second_first_name'=>$this->input->post('second_first_name'),
-			// 	// 'second_last_name'=>$this->input->post('second_last_name'),
-			// 	// 'second_email'=>$this->input->post('second_email'),
-			// 	// 'second_phone'=>$this->input->post('second_phone'),
-			// 	// 'second_birth_month'=>$this->input->post('second_birth_month'),
-			// 	// 'second_birth_date'=>$this->input->post('second_birth_date'),
-			// 	// 'second_birth_year'=>$this->input->post('second_birth_year'),
-			// 	// 'second_ssn'=>$this->input->post('second_ssn'),
-			// 	// 'second_current_mailing_address'=>$this->input->post('second_current_mailing_address'),
-			// 	// 'second_mailing_address_port_closing'=>$this->input->post('second_mailing_address_port_closing'),
-			// 	// 'is_same_property'=>$this->input->post('is_same_property'),
-			// 	// 'loan_amount'=>$this->input->post('loan_amount'),
-			// 	// 'loan_officer_name'=>$this->input->post('loan_officer_name'),
-			// 	// 'loan_officer_email'=>$this->input->post('loan_officer_email'),
-			// 	// 'loan_officer_phone'=>$this->input->post('loan_officer_phone'),
-			// 	// 'is_loan_processor'=>$this->input->post('is_loan_processor'),
-			// 	// 'loan_processor_name'=>$this->input->post('loan_processor_name'),
-			// 	// 'loan_processor_email'=>$this->input->post('loan_processor_email'),
-			// 	// 'loan_processor_phone'=>$this->input->post('loan_processor_phone'),
-			// 	// 'is_home_ins'=>$this->input->post('is_home_ins'),
-			// 	// 'ins_agency_name'=>$this->input->post('ins_agency_name'),
-			// 	// 'ins_agent_name'=>$this->input->post('ins_agent_name'),
-			// 	// 'ins_agent_email'=>$this->input->post('ins_agent_email'),
-			// 	// 'ins_agent_phone'=>$this->input->post('ins_agent_phone'),
-			// 	// 'annual_premium'=>$this->input->post('annual_premium'),
-			// 	])
-			// 	->needAppearances()
-			// 	->saveAs($file_full_path);
-			// 	// echo $file_full_path;   
-			// 	$pdf_url = base_url($dir_to_upload.'/'.$document_name);      
+				// 'phone'=>$this->input->post('phone'),
+				// 'birth_month'=>$this->input->post('birth_month'),
+				// 'birth_date'=>$this->input->post('birth_date'),
+				// 'birth_year'=>$this->input->post('birth_year'),
+				// 'is_another_buyer'=>$this->input->post('is_another_buyer'),
+				// 'second_first_name'=>$this->input->post('second_first_name'),
+				// 'second_last_name'=>$this->input->post('second_last_name'),
+				// 'second_email'=>$this->input->post('second_email'),
+				// 'second_phone'=>$this->input->post('second_phone'),
+				// 'second_birth_month'=>$this->input->post('second_birth_month'),
+				// 'second_birth_date'=>$this->input->post('second_birth_date'),
+				// 'second_birth_year'=>$this->input->post('second_birth_year'),
+				// 'second_ssn'=>$this->input->post('second_ssn'),
+				// 'second_current_mailing_address'=>$this->input->post('second_current_mailing_address'),
+				// 'second_mailing_address_port_closing'=>$this->input->post('second_mailing_address_port_closing'),
+				// 'is_same_property'=>$this->input->post('is_same_property'),
+				// 'loan_amount'=>$this->input->post('loan_amount'),
+				// 'loan_officer_name'=>$this->input->post('loan_officer_name'),
+				// 'loan_officer_email'=>$this->input->post('loan_officer_email'),
+				// 'loan_officer_phone'=>$this->input->post('loan_officer_phone'),
+				// 'is_loan_processor'=>$this->input->post('is_loan_processor'),
+				// 'loan_processor_name'=>$this->input->post('loan_processor_name'),
+				// 'loan_processor_email'=>$this->input->post('loan_processor_email'),
+				// 'loan_processor_phone'=>$this->input->post('loan_processor_phone'),
+				// 'is_home_ins'=>$this->input->post('is_home_ins'),
+				// 'ins_agency_name'=>$this->input->post('ins_agency_name'),
+				// 'ins_agent_name'=>$this->input->post('ins_agent_name'),
+				// 'ins_agent_email'=>$this->input->post('ins_agent_email'),
+				// 'ins_agent_phone'=>$this->input->post('ins_agent_phone'),
+				// 'annual_premium'=>$this->input->post('annual_premium'),
+				])
+				->needAppearances()
+				->saveAs($file_full_path);
+				// echo $file_full_path;   
+				$pdf_url = base_url($dir_to_upload.'/'.$document_name);      
 			// die;
-            // $success[] = "Borrower buyer info saved successfully.View PDF from <a href='$pdf_url' target='_blank' >here</a>";
-            $success[] = "Borrower buyer info saved successfully.";
+            $success[] = "Borrower buyer info saved successfully.View PDF from <a href='$pdf_url' target='_blank' >here</a>";
+            // $success[] = "Borrower buyer info saved successfully.";
             $data = array(
                 "errors" =>  $errors,
                 "success" => $success

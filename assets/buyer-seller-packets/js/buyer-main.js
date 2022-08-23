@@ -163,11 +163,22 @@
 	$('.buyer__show_hide_action').change(function(){
 		var show_hide_div = $(this).data('action');
 		if(show_hide_div) {
-			if($(this).val()=='1') {
-				$('.'+show_hide_div).show();
+			if($(this).hasClass('has__data_val')) {
+				if($(this).find(':selected').data('val') == '1') {
+					$('.'+show_hide_div).show();
+				}
+				else {
+					$('.'+show_hide_div).hide();
+				}
 			}
-			else {
-				$('.'+show_hide_div).hide();
+			else{
+
+				if($(this).val()=='1') {
+					$('.'+show_hide_div).show();
+				}
+				else {
+					$('.'+show_hide_div).hide();
+				}
 			}
 		}
 		
