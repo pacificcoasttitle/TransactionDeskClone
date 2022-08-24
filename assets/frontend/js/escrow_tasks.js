@@ -122,21 +122,22 @@ function create_note(task_id)
             $('#note_desc_'+task_id).val('');
             $("#note_"+task_id).collapse('hide');
             if (result.status == 'success') {
-                if (result.num_of_notes > 0) {
-                    $("#notes_"+task_id).append('<li><b>'+subject+'</b>: '+note+'</li>');
-                } else {
-                    $("#notes_"+task_id).empty(); 
-                    $("#notes_"+task_id).append('<li><b>'+subject+'</b>: '+note+'</li>'); 
-                }
-                $('#num_of_notes_'+task_id).val(result.num_of_notes+1);
-                $('#order_tasks_success_msg').html(result.message).show();
-                $([document.documentElement, document.body]).animate({
-                    scrollTop: $("#order_tasks_success_msg").offset().top
-                }, 1000);
+                window.location.reload();
+                // if (result.num_of_notes > 0) {
+                //     $("#notes_"+task_id).append('<li><b>'+subject+'</b>: '+note+'</li>');
+                // } else {
+                //     $("#notes_"+task_id).empty(); 
+                //     $("#notes_"+task_id).append('<li><b>'+subject+'</b>: '+note+'</li>'); 
+                // }
+                // $('#num_of_notes_'+task_id).val(result.num_of_notes+1);
+                // $('#order_tasks_success_msg').html(result.message).show();
+                // $([document.documentElement, document.body]).animate({
+                //     scrollTop: $("#order_tasks_success_msg").offset().top
+                // }, 1000);
                 
-                setTimeout(function () {
-                    $('#order_tasks_success_msg').html('').hide();
-                }, 4000);
+                // setTimeout(function () {
+                //     $('#order_tasks_success_msg').html('').hide();
+                // }, 4000);
             } else {
                 $('#order_tasks_error_msg').html(result.message).show();
                 $([document.documentElement, document.body]).animate({

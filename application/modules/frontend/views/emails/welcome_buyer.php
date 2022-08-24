@@ -486,7 +486,7 @@
 
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;"><br></p>
-														<p style="margin: 0px; padding: 0px;">Hello
+														<p style="margin: 0px; padding: 0px;">Hello <?php echo $name; ?>
 														</p>
 														<p style="margin: 0px; padding: 0px;">
 														</p>
