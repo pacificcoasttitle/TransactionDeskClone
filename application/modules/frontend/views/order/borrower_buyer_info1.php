@@ -441,7 +441,7 @@
 
 						<?php if(count($buyers)) :?>
 						<?php foreach($buyers as $key_buyer=>$buyer) :?>
-						<div class="form-row">
+						<div class="form-row vesting-buyer-div" data-id="<?=$buyer['id']?>">
 							<div class="form-flex">
 								<div class="form-group">
 									<label for="email" class="form-label">Buyer <?=($key_buyer+1)?></label>
@@ -450,34 +450,18 @@
 								</div>
 								<div class="form-group">
 									<label for="email" class="form-label">Marital Status</label>
-									<select id="buyer[<?=$buyer['id']?>][marital_status]"
-										name="buyer[<?=$buyer['id']?>][marital_status]" required="required" class="buyer__show_hide_action has__data_val" data-action="married-to-option<?=$buyer['id']?>">
+									<select id="buyer_<?=$buyer['id']?>_marital_status"
+										name="buyer[<?=$buyer['id']?>][marital_status]" required="required" class="buyer__show_hide_action has__data_val marital_status_select" data-action="married-to-option<?=$buyer['id']?>">
 										<option value="" data-val="0">Select</option>
-										<option value="husband_and_wife" data-val="1">Husband and Wife</option>
-										<option value="wife_and_husband" data-val="1">Wife and Husband</option>
-										<option value="a_married_couple" data-val="1">A Married Couple</option>
-										<option value="a_single_man" data-val="0">A Single Man (never married)</option>
-										<option value="a_single_woman" data-val="0">A Single Woman (never married)</option>
-										<option value="a_single_person" data-val="0">A Single Person (never married)</option>
-										<option value="a_married_man" data-val="0">A Married Man (as his sole and separate property)*
-										</option>
-										<option value="a_married_woman" data-val="0">A Married Woman (as her sole and separate
-											property)*</option>
-										<option value="a_married_person" data-val="0">A Married Person (as his/her sole and separate
-											property)*</option>
-										<option value="an_unmarried_man" data-val="0">An Unmarried Man (divorced)</option>
-										<option value="an_unmarried_woman" data-val="0">An Unmarried Woman (divorced)</option>
-										<option value="an_unmarried_person" data-val="0">An Unmarried Person (divorced)</option>
-										<option value="a_widow" data-val="0">A Widow (spouse deceased)</option>
-										<option value="a_widower" data-val="0">A Widower (spouse deceased)</option>
-										<option value="registered_domestic_partners" data-val="1">Registered Domestic Partners
-										</option>
+										<?php foreach($marital_status as $marital_status_key=>$marital_status_val) : ?>
+											<option value="<?=$marital_status_key?>" data-val="<?=$marital_status_val['show_married_option'];?>"><?=$marital_status_val['text'];?></option>
+										<?php endforeach; ?>
 									</select>
 								</div>
 								<div class="form-group married-to-option<?=$buyer['id']?>" style="display: none;" >
 									<label for="email" class="form-label">Married To:</label>
-									<select class="married" id="buyer[<?=$buyer['id']?>][married_to]"
-										name="buyer[<?=$buyer['id']?>][married_to]">
+									<select class="married married_option_change" id="buyer_<?=$buyer['id']?>_married_to"
+										name="buyer[<?=$buyer['id']?>][married_to]" data-related="">
 										<option value="">Select</option>
 										<?php foreach($buyers as $key_buyer_married_to=>$buyer_married_to) :?>
 										<?php if($buyer_married_to['id'] != $buyer['id']) :?>
@@ -494,7 +478,7 @@
 						<?php endforeach; ?>
 						<?php endif; ?>
 
-						<div class="form-row d-none" id="new_buyer_vesting_container">
+						<div class="form-row d-none" id="new_buyer_vesting_container" class="vesting-buyer-div" data-id="new">
 							<div class="form-flex">
 								<div class="form-group">
 									<label for="email" class="form-label">Buyer <?=($new_buyer_index+1)?></label>
@@ -502,33 +486,17 @@
 								</div>
 								<div class="form-group">
 									<label for="email" class="form-label">Marital Status</label>
-									<select id="buyer[new][marital_status]" name="buyer[new][marital_status]"
-										required="required">
+									<select id="buyer_new_marital_status" name="buyer_new_marital_status"
+										required="required" class="buyer__show_hide_action has__data_val" data-action="married-to-optionnew">
 										<option value="">Select</option>
-										<option value="husband_and_wife">Husband and Wife</option>
-										<option value="wife_and_husband">Wife and Husband</option>
-										<option value="a_married_couple">A Married Couple</option>
-										<option value="a_single_man">A Single Man (never married)</option>
-										<option value="a_single_woman">A Single Woman (never married)</option>
-										<option value="a_single_person">A Single Person (never married)</option>
-										<option value="a_married_man">A Married Man (as his sole and separate property)*
-										</option>
-										<option value="a_married_woman">A Married Woman (as her sole and separate
-											property)*</option>
-										<option value="a_married_person">A Married Person (as his/her sole and separate
-											property)*</option>
-										<option value="an_unmarried_man">An Unmarried Man (divorced)</option>
-										<option value="an_unmarried_woman">An Unmarried Woman (divorced)</option>
-										<option value="an_unmarried_person">An Unmarried Person (divorced)</option>
-										<option value="a_widow">A Widow (spouse deceased)</option>
-										<option value="a_widower">A Widower (spouse deceased)</option>
-										<option value="registered_domestic_partners">Registered Domestic Partners
-										</option>
+										<?php foreach($marital_status as $marital_status_key=>$marital_status_val) : ?>
+											<option value="<?=$marital_status_key?>" data-val="<?=$marital_status_val['show_married_option'];?>"><?=$marital_status_val['text'];?></option>
+										<?php endforeach; ?>
 									</select>
 								</div>
-								<div class="form-group">
+								<div class="form-group married-to-optionnew" style="display: none;" >
 									<label for="email" class="form-label">Married To:</label>
-									<select id="buyer[new][married_to]" name="buyer[new][married_to]">
+									<select class="married married_option_change"  id="buyer_new_married_to" name="buyer[new][married_to]" data-related="">
 										<option value="">Select</option>
 										<?php foreach($buyers as $key_buyer_married_to=>$buyer_married_to) :?>
 
@@ -546,21 +514,11 @@
 								<label class="form-label">Please tell us how the property will be vested:</label>
 								<select id="property_vested" name="property_vested" required="required">
 									<option value="">Select</option>
-									<option value="community_property">Community Property</option>
-									<option value="community_property_with_right">Community Property with Right of
-										Survivorship</option>
-									<option value="joint_tenants">Joint Tenants</option>
-									<option value="tenants_in_common">Tenants In Common (Please Give Interest Amounts)
-									</option>
-									<option value="sole_and_separate_property">Sole and Separate Property (If Married or
-										Domestic Partnership, an Interspousal Grant Deed, A Quitclaim Deed, Statement Of
-										Information and Appropriate Instructions Will Need To Be Submitted.) </option>
-									<option value="partnership">Partnership (Limited Or General) </option>
-									<option value="corporation">Corporation (California Or Other State) </option>
-									<option value="a_trust">A Trust (attach copy of Trust Agreement) </option>
-									<option value="other">Other</option>
+									<?php foreach($vesting_choice as $vesting_choice_key=>$vesting_choice_val) : ?>
+											<option value="<?=$vesting_choice_key?>" ><?=$vesting_choice_val['text'];?></option>
+										<?php endforeach; ?>
 								</select>
-								<span class="text-input">example: yes or no. </span>
+								<!-- <span class="text-input">example: yes or no. </span> -->
 							</div>
 						</div>
 					</fieldset>

@@ -4,6 +4,9 @@
 use mikehaertl\pdftk\Pdf;
 class DashboardMail extends MX_Controller {
 
+	private $marital_status = array();
+	private $vesting_choice = array();
+
     function __construct() {
         parent::__construct();
         $this->load->helper(
@@ -21,6 +24,35 @@ class DashboardMail extends MX_Controller {
         $this->load->model('order/twilioMessage');
         $this->load->model('order/titlePointData');
         $this->load->library('order/titlepoint');
+		$this->marital_status = array(
+			"husband_and_wife"=>['show_married_option'=>"1","text"=>"Husband and Wife"],
+			"wife_and_husband"=>['show_married_option'=>"1","text"=>"Wife and Husband"],
+			"a_married_couple"=>['show_married_option'=>"1","text"=>"A Married Couple"],
+			"a_single_man"=>['show_married_option'=>"0","text"=>"A Single Man (never married)"],
+			"a_single_woman"=>['show_married_option'=>"0","text"=>"A Single Woman (never married)"],
+			"a_single_person"=>['show_married_option'=>"0","text"=>"A Single Person (never married)"],
+			"a_married_man"=>['show_married_option'=>"0","text"=>"A Married Man (as his sole and separate property)*"],
+			"a_married_woman"=>['show_married_option'=>"0","text"=>"A Married Woman (as her sole and separate property)*"],
+			"a_married_person"=>['show_married_option'=>"0","text"=>"A Married Person (as his/her sole and separate property)*"],
+			"an_unmarried_man"=>['show_married_option'=>"0","text"=>"An Unmarried Man (divorced)"],
+			"an_unmarried_woman"=>['show_married_option'=>"0","text"=>"An Unmarried Woman (divorced)"],
+			"an_unmarried_person"=>['show_married_option'=>"0","text"=>"An Unmarried Person (divorced)"],
+			"a_widow"=>['show_married_option'=>"0","text"=>"A Widow (spouse deceased)"],
+			"a_widower"=>['show_married_option'=>"0","text"=>"A Widower (spouse deceased)"],
+			"registered_domestic_partners"=>['show_married_option'=>"1","text"=>"Registered Domestic Partners"],
+		);
+
+		$this->vesting_choice = array(
+			"community_property"=>["text"=>"Community Property","pdf_val"=>"Community Property"],
+			"community_property_with_right"=>["text"=>"Community Property with Right of Survivorship","pdf_val"=>"Community Property with Right of Survivorship"],
+			"joint_tenants"=>["text"=>"Joint Tenants","pdf_val"=>"Joint Tenants"],
+			"tenants_in_common"=>["text"=>"Tenants In Common (Please Give Interest Amounts)"],
+			"sole_and_separate_property"=>["text"=>"Sole and Separate Property (If Married or Domestic Partnership, an Interspousal Grant Deed, A Quitclaim Deed, Statement Of Information and Appropriate Instructions Will Need To Be Submitted.)","pdf_val"=>"Sole and Separ"],
+			"partnership"=>["text"=>"Partnership (Limited Or General) ","pdf_val"=>"Partnership"],
+			"corporation"=>["text"=>"Corporation (California Or Other State) ","pdf_val"=>"Corporation"],
+			"a_trust"=>["text"=>"A Trust (attach copy of Trust Agreement) ","pdf_val"=>"A Trust"],
+			"other"=>["text"=>"Other","pdf_val"=>"Other"],
+		);
     }
 
     public function generateCplFromMail()
@@ -3015,6 +3047,9 @@ class DashboardMail extends MX_Controller {
 		$buyer_order['is_main_buyer']='desc';
 		$data['buyers'] = $this->home_model->get_records('pct_order_borrower_buyer_info',$buyer_where,$buyer_order);
 		// var_dump($data['buyers']);die;
+		$data['marital_status'] = $this->marital_status;
+		$data['vesting_choice'] = $this->vesting_choice;
+		//vesting_choice
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();
@@ -3033,7 +3068,7 @@ class DashboardMail extends MX_Controller {
 			$buyers_names = $buyer_pdf = array();
 			//Add all Buyer info relational table
 			$buyer_infos = $this->input->post('buyer');
-			$vesting_info = $skip_vesting = array();
+			$vesting_info = $skip_vesting= $main_buyer = array();
 			$is_first = 1;
 			foreach ($buyer_infos as $buyer_key => $buyer_value) {
 				// Check Keys
@@ -3063,11 +3098,13 @@ class DashboardMail extends MX_Controller {
 					}
 
 					$buyers_names[] = $buyer_info['first_name'].' '.$buyer_info['last_name'];
+					$buyer_pdf['phones'][] = $buyer_info['phone'];
+					$buyer_pdf['emails'][] = $buyer_info['email'];
+					$buyer_pdf['ssns'][] = $buyer_info['ssn'];
 					if($is_first) {
 						$buyer_pdf['current_address'] = $buyer_info['current_mailing_address'];
 						$buyer_pdf['closing_address'] = $buyer_info['mailing_address_port_closing'];
-						$buyer_pdf['ssn'] = $buyer_info['ssn'];
-						$buyer_pdf['email'] = $buyer_info['email'];
+						$main_buyer = $buyer_info;
 						$is_first = 0;
 					}
 					if(!(in_array($buyer_key,$skip_vesting))) {
@@ -3087,6 +3124,7 @@ class DashboardMail extends MX_Controller {
 						}
 
 						$vesting_info['names'][] = $vesting_name;
+						$vesting_info['marital_status'][] = $buyer_info['marital_status'];
 					}
 				}
 			}
@@ -3119,8 +3157,10 @@ class DashboardMail extends MX_Controller {
 			$buyer_pdf['lender_name'] = $borrowerBuyerInfoData['lender_name'];
 			$buyer_pdf['ins_agency_name'] = $borrowerBuyerInfoData['ins_agency_name'];
 			$buyer_pdf['ins_agent_name'] = $borrowerBuyerInfoData['ins_agent_name'];
+			$buyer_pdf['property_vested'] = $borrowerBuyerInfoData['property_vested'];
+			
 			//Generate PDF
-			$pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_check.pdf';
+			$pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_update.pdf';
 			$pdf = new Pdf($pdf_templates_file);
 			$type = 'buyer';
 			$document_name = $type.'_'.time().'_'.$this->user['id'].'.pdf';
@@ -3140,51 +3180,68 @@ class DashboardMail extends MX_Controller {
 				unset($vesting_info['names'][1]);
 				$vesting_buyer_name2 =  implode(', ',$vesting_info['names']);
 			}
-			$pdf->fillForm([
-				'1 Buyers'=> implode(',',$buyer_pdf['buyers_name']) ,
-				'EMail Address'=>$buyer_pdf['buyers_name'],
+			$pdf_fields_val = [
+				'1 Buyers'=> implode(',',$buyer_pdf['buyers_name']),
 				'Social Security 1'=>$buyer_pdf['ssn'],
 				// 'Social Security'=>$this->input->post('second_ssn'),
 				'Buyers Current Mailing Address'=>$buyer_pdf['current_address'],
 				'1_3'=>$buyer_pdf['closing_address'],
 				'Name Of Lender'=>$buyer_pdf['lender_name'],
-				'Insurance Company'=>$buyer_pdf['ins_agency_name'],
-				'Agents Name_3'=>$buyer_pdf['ins_agent_name'],
+				'Agents Name'=>$borrowerBuyerInfoData['loan_officer_name'],
+				'Name Of Lender_2'=>$borrowerBuyerInfoData['loan_officer_email'],
+				'Loan_Processor_Name'=>$borrowerBuyerInfoData['loan_processor_name'],
+				'LoanProcessor_Phone_Email'=>$borrowerBuyerInfoData['loan_processor_phone'].'/'.$borrowerBuyerInfoData['loan_processor_email'],
+				'Agents Name_3'=>$borrowerBuyerInfoData['ins_agent_name'],
+				'Insurance_Agent_Phone'=>$borrowerBuyerInfoData['ins_agent_phone'],
+				'Insurance Company'=>$borrowerBuyerInfoData['ins_agency_name'],
+				'Insurance_Email'=>$borrowerBuyerInfoData['ins_agent_email'],
 				'Names 1' => $vesting_buyer_name1,
 				'Names 2' => $vesting_buyer_name2,
+				'First Name'=>$main_buyer['first_name'],
+				'Last Name'=>$main_buyer['last_name'],
+				'Date of Birth'=>$main_buyer['birth_date'].'/'.$main_buyer['birth_month'].'/'.$main_buyer['birth_year'],
+				'Home Phone'=>$main_buyer['phone'],
+				'Social Security No'=>$main_buyer['ssn'],
+			];
+			if($main_buyer['married_to'] && $buyer_infos[$main_buyer['married_to']]) {
+				$married_to_buyer = $buyer_infos[$main_buyer['married_to']];
+				$pdf_fields_val['Are you currently married'] = 'Yes';
+				$pdf_fields_val['Spouse'] = $married_to_buyer['first_name'].' '.$married_to_buyer['last_name'];
+				$pdf_fields_val['Date of Birth_2'] = $married_to_buyer['birth_date'].' / '.$married_to_buyer['birth_month'].'/'.$married_to_buyer['birth_year'];
+				$pdf_fields_val['Home Phone_2'] = $married_to_buyer['phone'];
+				$pdf_fields_val['Social Security No_2'] = $married_to_buyer['ssn'];
 
-
-				// 'phone'=>$this->input->post('phone'),
-				// 'birth_month'=>$this->input->post('birth_month'),
-				// 'birth_date'=>$this->input->post('birth_date'),
-				// 'birth_year'=>$this->input->post('birth_year'),
-				// 'is_another_buyer'=>$this->input->post('is_another_buyer'),
-				// 'second_first_name'=>$this->input->post('second_first_name'),
-				// 'second_last_name'=>$this->input->post('second_last_name'),
-				// 'second_email'=>$this->input->post('second_email'),
-				// 'second_phone'=>$this->input->post('second_phone'),
-				// 'second_birth_month'=>$this->input->post('second_birth_month'),
-				// 'second_birth_date'=>$this->input->post('second_birth_date'),
-				// 'second_birth_year'=>$this->input->post('second_birth_year'),
-				// 'second_ssn'=>$this->input->post('second_ssn'),
-				// 'second_current_mailing_address'=>$this->input->post('second_current_mailing_address'),
-				// 'second_mailing_address_port_closing'=>$this->input->post('second_mailing_address_port_closing'),
-				// 'is_same_property'=>$this->input->post('is_same_property'),
-				// 'loan_amount'=>$this->input->post('loan_amount'),
-				// 'loan_officer_name'=>$this->input->post('loan_officer_name'),
-				// 'loan_officer_email'=>$this->input->post('loan_officer_email'),
-				// 'loan_officer_phone'=>$this->input->post('loan_officer_phone'),
-				// 'is_loan_processor'=>$this->input->post('is_loan_processor'),
-				// 'loan_processor_name'=>$this->input->post('loan_processor_name'),
-				// 'loan_processor_email'=>$this->input->post('loan_processor_email'),
-				// 'loan_processor_phone'=>$this->input->post('loan_processor_phone'),
-				// 'is_home_ins'=>$this->input->post('is_home_ins'),
-				// 'ins_agency_name'=>$this->input->post('ins_agency_name'),
-				// 'ins_agent_name'=>$this->input->post('ins_agent_name'),
-				// 'ins_agent_email'=>$this->input->post('ins_agent_email'),
-				// 'ins_agent_phone'=>$this->input->post('ins_agent_phone'),
-				// 'annual_premium'=>$this->input->post('annual_premium'),
-				])
+			}
+			if(isset($buyer_pdf['phones'][0])) {
+				$pdf_fields_val['Buyer_1 Phone'] = $buyer_pdf['phones'][0];
+			}
+			if(isset($buyer_pdf['phones'][1])) {
+				$pdf_fields_val['Buyer_2_Phone'] = $buyer_pdf['phones'][1];
+			}
+			if(isset($buyer_pdf['emails'][0])) {
+				$pdf_fields_val['EMail Address'] = $buyer_pdf['emails'][0];
+			}
+			if(isset($buyer_pdf['emails'][1])) {
+				$pdf_fields_val['Buyer_2 Email'] = $buyer_pdf['emails'][1];
+			}
+			if(isset($buyer_pdf['ssns'][0])) {
+				$pdf_fields_val['Social Security 1'] = $buyer_pdf['ssns'][0];
+			}
+			if(isset($buyer_pdf['ssns'][1])) {
+				$pdf_fields_val['Social Security'] = $buyer_pdf['ssns'][1];
+			}
+			if($vesting_info['marital_status'] && is_array($vesting_info['marital_status'])) {
+				foreach($vesting_info['marital_status'] as $vesting_info) {
+					$key_to_check = $this->marital_status[$vesting_info]['text'];
+					$pdf_fields_val[$key_to_check] = 'Yes';
+				}
+			}
+			if($buyer_pdf['property_vested']) {
+				$key_to_check = $this->vesting_choice[$buyer_pdf['property_vested']]['pdf_val'];
+				$pdf_fields_val[$key_to_check] = 'Yes';
+				
+			}
+			$pdf->fillForm($pdf_fields_val)
 				->needAppearances()
 				->saveAs($file_full_path);
 				// echo $file_full_path;   
