@@ -281,7 +281,7 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 																									<span class="text">Add Note</span>
 																								</a>
 															</div>
-															<ul id="notes_<?php echo $task['id']; ?>">
+															<!-- <ul id="notes_<?php echo $task['id']; ?>">
 																<?php $i = 0;
 																foreach($order_task_notes as $order_task_note) { 
 																	if ($order_task_note['task_id'] == $task['id']) { 
@@ -292,7 +292,41 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 																<?php if ($i == 0)  { ?>
 																	<li>No notes found for this task.</li>
 																<?php } ?>
-															</ul>
+															</ul> -->
+
+															<table class="table table-type-3 typography-last-elem no-footer spacer-t30">
+																<thead>
+																	<tr>
+																		<th>#</th>
+																		<th>Subject</th>
+																		<th>Note</th>
+																		<th>Created</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<?php $j = 1;
+																		if(!empty($order_task_notes)) {
+																			foreach ($order_task_notes as $order_task_note) {
+																				if ($order_task_note['task_id'] == $task['id']) { ?>
+																					<tr role="row" class="odd">
+																						<td><?php echo $j;?></td>
+																						<td><?php echo $order_task_note['subject'];?></td>
+																						<td>
+																							<?php echo $order_task_note['note'];?>
+																						</td> 
+																						<td>
+																							<?php echo date("m/d/Y",strtotime($order_task_note['created_at']));?>
+																						</td>
+																					</tr>
+																				<?php $j++;
+																				} 
+																			}
+																		}
+																		if ($j == 1)  { ?>
+																			<tr role="row" class="odd"><td colspan="4" class="text-center">No documents found</td></tr>
+																	<?php } ?>
+																</tbody>
+															</table>
 
 															<div class="form-reply ui-form-1 collapse" id="note_<?php echo $task['id']; ?>">
 																<div class="smart-forms spacer-b30 spacer-t30">
