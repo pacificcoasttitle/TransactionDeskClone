@@ -166,6 +166,7 @@
 			if($(this).hasClass('has__data_val')) {
 				if($(this).find(':selected').data('val') == '1') {
 					$('.'+show_hide_div).show();
+					$('.'+show_hide_div).find('select').val('').trigger('change');
 				}
 				else {
 					$('.'+show_hide_div).hide();
@@ -182,6 +183,37 @@
 			}
 		}
 		
+	});
+	$(".married_option_change").change(function(){
+		
+		var marital_status = $(this).parents('.vesting-buyer-div').find('.marital_status_select').val();
+		var select_new = '';
+		if(marital_status == 'husband_and_wife') {
+			select_new = 'wife_and_husband';
+		}
+		else if(marital_status == 'wife_and_husband') {
+			select_new = 'husband_and_wife';
+		}
+		else if(marital_status == 'a_married_couple' || marital_status == 'registered_domestic_partners') {
+			select_new = marital_status;
+		}
+		var related_id = $(this).data('related');
+		if(related_id) {
+			var select_id = "#buyer_"+related_id+"_marital_status";
+			$(select_id).val("").trigger('change');
+			select_id = "#buyer_"+related_id+"_married_to";
+			$(select_id).val("");
+		}
+		var married_to = $(this).val();
+		if(select_new && married_to) {
+			var current_buyer = $(this).parents('.vesting-buyer-div').data('id');
+			var select_id = "#buyer_"+married_to+"_marital_status";
+			$(select_id).val(select_new).trigger('change');
+			select_id = "#buyer_"+married_to+"_married_to";
+			$(select_id).val(current_buyer);
+			$(this).data('related',married_to);
+		}
+
 	});
 
 	$(".phone_mask").mask('(000) 000-0000');
