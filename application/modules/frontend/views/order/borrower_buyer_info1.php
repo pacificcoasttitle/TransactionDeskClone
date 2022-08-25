@@ -486,7 +486,7 @@
 								</div>
 								<div class="form-group">
 									<label for="email" class="form-label">Marital Status</label>
-									<select id="buyer_new_marital_status" name="buyer_new_marital_status"
+									<select id="buyer_new_marital_status" name="buyer[new][marital_status]"
 										required="required" class="buyer__show_hide_action has__data_val" data-action="married-to-optionnew">
 										<option value="">Select</option>
 										<?php foreach($marital_status as $marital_status_key=>$marital_status_val) : ?>

@@ -33,13 +33,13 @@
                 form.parent().parent().parent().append('<div class="footer footer-' + currentIndex + '"></div>');
                 if ($('#is_another_buyer').val() == '1') {
                     $('#new_buyer_vesting_container').removeClass('d-none');
-                    $(".married option[value='new_buyer']").each(function() {
+                    $(".married option[value='new']").each(function() {
                         $(this).remove();
                     });
                     var new_buyer = $('#buyer_new_first_name').val()+" "+$('#buyer_new_last_name').val();
                     $('#new_buyer_name').val(new_buyer);
                     $('.married').append($("<option></option>")
-                    .attr("value", "new_buyer")
+                    .attr("value", "new")
                     .text(new_buyer)); 
                 } else {
                     $('#new_buyer_vesting_container').addClass('d-none');
