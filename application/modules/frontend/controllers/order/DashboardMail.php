@@ -46,7 +46,7 @@ class DashboardMail extends MX_Controller {
 			"community_property"=>["text"=>"Community Property","pdf_val"=>"Community Property"],
 			"community_property_with_right"=>["text"=>"Community Property with Right of Survivorship","pdf_val"=>"Community Property with Right of Survivorship"],
 			"joint_tenants"=>["text"=>"Joint Tenants","pdf_val"=>"Joint Tenants"],
-			"tenants_in_common"=>["text"=>"Tenants In Common (Please Give Interest Amounts)"],
+			"tenants_in_common"=>["text"=>"Tenants In Common (Please Give Interest Amounts)","pdf_val"=>"Tenants In Common (Please Give Interest Amounts)"],
 			"sole_and_separate_property"=>["text"=>"Sole and Separate Property (If Married or Domestic Partnership, an Interspousal Grant Deed, A Quitclaim Deed, Statement Of Information and Appropriate Instructions Will Need To Be Submitted.)","pdf_val"=>"Sole and Separ"],
 			"partnership"=>["text"=>"Partnership (Limited Or General) ","pdf_val"=>"Partnership"],
 			"corporation"=>["text"=>"Corporation (California Or Other State) ","pdf_val"=>"Corporation"],
@@ -3202,6 +3202,10 @@ class DashboardMail extends MX_Controller {
 				'Date of Birth'=>$main_buyer['birth_date'].'/'.$main_buyer['birth_month'].'/'.$main_buyer['birth_year'],
 				'Home Phone'=>$main_buyer['phone'],
 				'Social Security No'=>$main_buyer['ssn'],
+				'Escrow#'=>$orderDetails['escrow_number'],
+				'Title#'=>$orderDetails['file_number'],
+				'Date'=>date('d/m/Y'),
+				'Dated_2'=>date('d/m/Y'),
 			];
 			if($main_buyer['married_to'] && $buyer_infos[$main_buyer['married_to']]) {
 				$married_to_buyer = $buyer_infos[$main_buyer['married_to']];
@@ -3244,8 +3248,8 @@ class DashboardMail extends MX_Controller {
 			$pdf->fillForm($pdf_fields_val)
 				->needAppearances()
 				->saveAs($file_full_path);
-				// echo $file_full_path;   
 				$pdf_url = base_url($dir_to_upload.'/'.$document_name);      
+			// echo $pdf_url;   
 			// die;
             $success[] = "Borrower buyer info saved successfully.View PDF from <a href='$pdf_url' target='_blank' >here</a>";
             // $success[] = "Borrower buyer info saved successfully.";
