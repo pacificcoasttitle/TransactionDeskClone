@@ -290,7 +290,7 @@
 												</h6>
 											</div>
 
-											<ul id="notes_<?php echo $task['id']; ?>">
+											<!-- <ul id="notes_<?php echo $task['id']; ?>">
 												<?php $i = 0;
 															foreach($order_task_notes as $order_task_note) { 
 																if ($order_task_note['task_id'] == $task['id']) { 
@@ -302,7 +302,44 @@
 												<?php if ($i == 0)  { ?>
 												<li>No notes found for this task.</li>
 												<?php } ?>
-											</ul>
+											</ul> -->
+											<table class="table table-type-3 typography-last-elem no-footer"
+												style="margin: 10px 15px;">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Subject</th>
+														<th>Note</th>
+														<th>Created</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php $j = 1;
+																	if(!empty($order_task_notes)) {
+																		foreach ($order_task_notes as $order_task_note) {
+																			if ($order_task_note['task_id'] == $task['id']) { ?>
+													<tr role="row" class="odd">
+														<td><?php echo $j;?></td>
+														<td><?php echo $order_task_note['subject']?></td>
+														<td>
+														<?php echo $order_task_note['note']?>
+														</td>
+														<td>
+														<?php echo date("m/d/Y",strtotime($order_task_note['created_at']));?>
+														</td>
+													</tr>
+													<?php $j++;
+																			} 
+																		}
+																	}
+																	if ($j == 1)  { ?>
+													<tr role="row" class="odd">
+														<td colspan="4" class="text-center">No notes found</td>
+													</tr>
+													<?php } ?>
+												</tbody>
+											</table>
+
 											<div class="collapse" id="note_<?php echo $task['id']; ?>"
 												style="margin: 10px 25px;">
 												<h5 class="m-0 font-weight-bold text-primary mt-3">Create a Note</h5>
@@ -658,13 +695,35 @@
 							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id;?>">
 							
 							<div class="card-body">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label>Buyer Email<span class="required"> *</span></label>
-											<input type="text" class="form-control" placeholder="Buyer Email"
-												name="buyer_email" id="buyer_email" value="" required="required">
+								<div id="buyer-info-clone-group-fields">
+									<div class="toclone clone-widget">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="form-group">
+													<label>Buyer Email<span class="required"> *</span></label>
+													<input type="text" class="form-control" placeholder="Buyer Email"
+														name="buyer_emails[]" id="buyer_email" value="" required="required">
+												</div>
+											</div>
+											
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>First Name<span class="required"> *</span></label>
+													<input type="text" class="form-control" name="buyer_first_names[]" id="buyer_first_name" placeholder="First Name" required="required">
+												</div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Last Name<span class="required"> *</span></label>
+													<input type="text" class="form-control" name="buyer_last_names[]" id="buyer_last_names" placeholder="Last Name" required="required">
+												</div>
+											</div>
+
 										</div>
+										<a href="#" style="height:fit-content;" class="mb-3 clone btn btn-success"><i class="fa fa-plus"></i></a>
+											<a href="#" style="height:fit-content;" class="mb-3 delete btn btn-danger"><i class="fa fa-minus"></i></a>
+
 									</div>
 								</div>
 								<button type="submit" data-btntext-sending="Sending..."
