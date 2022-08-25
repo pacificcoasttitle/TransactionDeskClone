@@ -521,7 +521,7 @@
 																	style="">
 																	<font color="#000000;">Borrower Details</font>
 																</u></strong></p>
-														<p style="margin: 0px; padding: 0px;"><?php echo $borrrower; ?>
+														<p style="margin: 0px; padding: 0px;"><?php echo $name; ?>
 														</p>
 														<!-- <p style="margin: 0px; padding: 0px;">348 Hauser Blvd. #1-110
 														</p>
