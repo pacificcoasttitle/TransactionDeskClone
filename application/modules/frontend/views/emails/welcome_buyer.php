@@ -521,8 +521,10 @@
 																	style="">
 																	<font color="#000000;">Borrower Details</font>
 																</u></strong></p>
-														<p style="margin: 0px; padding: 0px;"><?php echo $name; ?>
+														<?php $i =0 ; foreach ($buyer_first_names as $buyer_first_name) { ?>
+														<p style="margin: 0px; padding: 0px;"><?php echo $buyer_first_name." ".$buyer_last_names[$i]; ?>
 														</p>
+														<?php $i++;} ?>
 														<!-- <p style="margin: 0px; padding: 0px;">348 Hauser Blvd. #1-110
 														</p>
 														<p style="margin: 0px; padding: 0px;">Los Angeles, CA 90036

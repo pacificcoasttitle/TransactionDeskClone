@@ -642,6 +642,8 @@ class Escrow extends MX_Controller
             $form_url = base_url().'buyer-info/'.$orderDetails['random_number'];
             $email_data = array(
                 'name' => $buyer_first_names[$i]." ".$buyer_last_names[$i],
+                'buyer_first_names' => $buyer_first_names,
+                'buyer_last_names' => $buyer_last_names,
                 'file_number'=> $orderDetails['file_number'],
                 'property_address'=> $orderDetails['full_address'],
                 'random_number'=>  $orderDetails['random_number'],
