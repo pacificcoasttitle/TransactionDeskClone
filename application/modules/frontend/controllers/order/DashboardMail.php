@@ -3153,7 +3153,7 @@ class DashboardMail extends MX_Controller {
 				'annual_premium'=>$this->input->post('annual_premium'),
                 'property_vested'=>$this->input->post('property_vested')
             );
-            $this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info_wizard');
+            $inserted_wizard_id=$this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info_wizard');
 			$buyer_pdf['lender_name'] = $borrowerBuyerInfoData['lender_name'];
 			$buyer_pdf['ins_agency_name'] = $borrowerBuyerInfoData['ins_agency_name'];
 			$buyer_pdf['ins_agent_name'] = $borrowerBuyerInfoData['ins_agent_name'];
@@ -3248,7 +3248,10 @@ class DashboardMail extends MX_Controller {
 			$pdf->fillForm($pdf_fields_val)
 				->needAppearances()
 				->saveAs($file_full_path);
-				$pdf_url = base_url($dir_to_upload.'/'.$document_name);      
+			$pdf_url = base_url($dir_to_upload.'/'.$document_name);      
+
+			//Update table with pdf file name
+			$this->home_model->update(["pdf_file"=>$document_name],["id"=>$inserted_wizard_id],'pct_order_borrower_buyer_info_wizard');
 			// echo $pdf_url;   
 			// die;
             $success[] = "Borrower buyer info saved successfully.View PDF from <a href='$pdf_url' target='_blank' >here</a>";
