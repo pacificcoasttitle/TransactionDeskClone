@@ -720,6 +720,12 @@
 												</div>
 											</div>
 
+											<div class="col-md-6">	
+												<div class="form-group">
+													<input class="" type="radio" name="is_main_buyer" id="is_main_buyer" value="is_main_buyer0" required="required">&nbsp;&nbsp;Primary Buyer		
+												</div>
+											</div>
+
 										</div>
 										<a href="#" style="height:fit-content;" class="mb-3 clone btn btn-success"><i class="fa fa-plus"></i></a>
 											<a href="#" style="height:fit-content;" class="mb-3 delete btn btn-danger"><i class="fa fa-minus"></i></a>
@@ -788,6 +794,13 @@
 													<input type="text" class="form-control" name="seller_last_names[]" id="seller_last_names" placeholder="Last Name" required="required">
 												</div>
 											</div>
+
+											<div class="col-md-6">	
+												<div class="form-group">
+													<input class="" type="radio" name="is_main_seller" id="is_main_seller" value="is_main_seller0" required="required">&nbsp;&nbsp;&Primary Seller		
+												</div>
+											</div>
+
 
 										</div>
 										<a href="#" style="height:fit-content;" class="mb-3 clone btn btn-success"><i class="fa fa-plus"></i></a>
