@@ -486,7 +486,7 @@
 
 													<div style="margin: 0px; padding: 0px;">
 														<p style="margin: 0px; padding: 0px;"><br></p>
-														<p style="margin: 0px; padding: 0px;">Hello
+														<p style="margin: 0px; padding: 0px;">Hello <?php echo $name; ?>
 														</p>
 														<p style="margin: 0px; padding: 0px;">
 														</p>
@@ -521,8 +521,10 @@
 																	style="">
 																	<font color="#000000;">Borrower Details</font>
 																</u></strong></p>
-														<p style="margin: 0px; padding: 0px;"><?php echo $borrrower; ?>
+														<?php $i =0 ; foreach ($seller_first_names as $seller_first_name) { ?>
+															<p style="margin: 0px; padding: 0px;"><?php echo $seller_first_name." ".$seller_last_names[$i]; ?>
 														</p>
+														<?php $i++;} ?>
 														<!-- <p style="margin: 0px; padding: 0px;">348 Hauser Blvd. #1-110
 														</p>
 														<p style="margin: 0px; padding: 0px;">Los Angeles, CA 90036

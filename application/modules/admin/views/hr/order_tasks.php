@@ -764,13 +764,35 @@
 							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id;?>">
 							
 							<div class="card-body">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label>Seller Email<span class="required"> *</span></label>
-											<input type="text" class="form-control" placeholder="Seller Email"
-												name="seller_email" id="seller_email" value="" required="required">
+								<div id="seller-info-clone-group-fields">
+									<div class="toclone clone-widget">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="form-group">
+													<label>Seller Email<span class="required"> *</span></label>
+													<input type="text" class="form-control" placeholder="Buyer Email"
+														name="seller_emails[]" id="seller_email" value="" required="required">
+												</div>
+											</div>
+											
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>First Name<span class="required"> *</span></label>
+													<input type="text" class="form-control" name="seller_first_names[]" id="seller_first_name" placeholder="First Name" required="required">
+												</div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Last Name<span class="required"> *</span></label>
+													<input type="text" class="form-control" name="seller_last_names[]" id="seller_last_names" placeholder="Last Name" required="required">
+												</div>
+											</div>
+
 										</div>
+										<a href="#" style="height:fit-content;" class="mb-3 clone btn btn-success"><i class="fa fa-plus"></i></a>
+											<a href="#" style="height:fit-content;" class="mb-3 delete btn btn-danger"><i class="fa fa-minus"></i></a>
+
 									</div>
 								</div>
 								<button type="submit" data-btntext-sending="Sending..."
