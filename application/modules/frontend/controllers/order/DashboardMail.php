@@ -3346,7 +3346,7 @@ class DashboardMail extends MX_Controller {
                 'hoa_contact_person' => $this->input->post('hoa_contact_person') ? $this->input->post('hoa_contact_person') : null,
                 'hoa_contact_number' => $this->input->post('hoa_contact_number') ? $this->input->post('hoa_contact_number') : null,
             );
-            $this->home_model->insert($sellerInfoData, 'pct_order_borrower_seller_info');
+            $this->home_model->insert($sellerInfoData, 'pct_order_borrower_seller_packet_info');
 
 
             // $sellerOwnerEscrowInfoData = array(
