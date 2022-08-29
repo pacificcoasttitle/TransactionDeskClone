@@ -48,7 +48,7 @@
             return form.valid();
         },
         onFinishing: function(event, currentIndex) {
-            form.validate().settings.ignore = ":disabled";
+            form.validate().settings.ignore = ":disabled,:hidden";
             return form.valid();
         },
         onFinished: function(event, currentIndex) {
@@ -73,26 +73,34 @@
         equalTo: ""
     });
 
-    $.dobPicker({
-        daySelector: '#birth_date',
-        monthSelector: '#birth_month',
-        yearSelector: '#birth_year',
-        dayDefault: '',
-        monthDefault: '',
-        yearDefault: '',
-        minimumAge: 0,
-        maximumAge: 120
-    });
-    $.dobPicker({
-        daySelector: '#second_birth_date',
-        monthSelector: '#second_birth_month',
-        yearSelector: '#second_birth_year',
-        dayDefault: '',
-        monthDefault: '',
-        yearDefault: '',
-        minimumAge: 0,
-        maximumAge: 120
-    });
+    $('.dob_date_picker_div').each(function(){
+		var date_id = $(this).find('.dob_birth_date').attr('id');
+		var month_id = $(this).find('.dob_birth_month').attr('id');
+		var year_id = $(this).find('.dob_birth_year').attr('id');
+		
+		$.dobPicker({
+			daySelector: '#'+date_id,
+			monthSelector: '#'+month_id,
+			yearSelector: '#'+year_id,
+			dayDefault: '',
+			monthDefault: '',
+			yearDefault: '',
+			minimumAge: 0,
+			maximumAge: 120
+		});
+
+		if($('#'+date_id).data('val')) {
+			$('#'+date_id).val($('#'+date_id).data('val'));
+			$('#'+date_id).change();
+		}
+		if($('#'+month_id).data('val')) {
+			$('#'+month_id).val($('#'+month_id).data('val'));
+			$('#'+month_id).change();
+		}
+		if($('#'+year_id).data('val')) {
+			$('#'+year_id).val($('#'+year_id).data('val'));
+		}
+	});
     var marginSlider = document.getElementById('slider-margin');
     if (marginSlider != undefined) {
         noUiSlider.create(marginSlider, {
