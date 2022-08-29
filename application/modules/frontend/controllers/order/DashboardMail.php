@@ -3273,6 +3273,9 @@ class DashboardMail extends MX_Controller {
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
         $data['orderDetails'] = $orderDetails;
+		$seller_where['order_id']=$orderDetails['order_id'];
+		$seller_order['is_main_seller']='desc';
+		$data['sellers'] = $this->home_model->get_records('pct_order_borrower_seller_info',$seller_where,$seller_order);
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();
@@ -3286,29 +3289,62 @@ class DashboardMail extends MX_Controller {
         }
         
         if ($this->input->post()) {
+			$seller_infos = $this->input->post('seller');
+			$vesting_info = $skip_vesting= $main_buyer = array();
+			$is_first = 1;
+			foreach ($seller_infos as $seller_key => $seller_value) {
+				// Check Keys
+				$seller_info = [
+					'order_id'=>$this->input->post('order_id'),
+					'first_name'=>$seller_value['first_name']?$seller_value['first_name']:null,
+					'last_name'=>$seller_value['last_name']?$seller_value['last_name']:null,
+					'email'=>$seller_value['email']?$seller_value['email']:null,
+					'phone'=>$seller_value['phone']?$seller_value['phone']:null,
+					'birth_month'=>$seller_value['birth_month']?$seller_value['birth_month']:null,
+					'birth_date'=>$seller_value['birth_date']?$seller_value['birth_date']:null,
+					'birth_year'=>$seller_value['birth_year']?$seller_value['birth_year']:null,
+					'ssn'=>$seller_value['ssn']?$seller_value['ssn']:null,
+					'current_mailing_address'=>$seller_value['current_mailing_address']?$seller_value['current_mailing_address']:null,
+					'mailing_address_port_closing'=>$seller_value['mailing_address_port_closing']?$seller_value['mailing_address_port_closing']:null,
+                    'marital_status' => $seller_value['marital_status']?$seller_value['marital_status']:null,
+                    'married_to' => $seller_value['married_to']?$seller_value['married_to']:null
+				];
+				if($seller_info['first_name'] && $seller_info['last_name']) {
+					if ($seller_key == 'new') {
+						$seller_info['is_main_buyer'] = 0;
+						$new_seller_id = $this->home_model->insert($seller_info,'pct_order_borrower_seller_info');
+					} else {
+						//Update Value
+						$seller_update['id'] = $seller_key;
+						$this->home_model->update($seller_info,$seller_update,'pct_order_borrower_seller_info');
+					}
+					
+					}
+				
+			}
             $sellerInfoData = array(
                 'order_id' => $this->input->post('order_id'),
-                'first_name' => $this->input->post('first_name') ? $this->input->post('first_name') : null,
-                'last_name' => $this->input->post('last_name') ? $this->input->post('last_name') : null,
-                'email' => $this->input->post('email') ? $this->input->post('email') : null,
-                'phone' => $this->input->post('phone') ? $this->input->post('phone') : null,
-                'birth_month' => $this->input->post('birth_month') ? $this->input->post('birth_month') : null,
-                'birth_date' => $this->input->post('birth_date') ? $this->input->post('birth_date') : null,
-                'birth_year' => $this->input->post('birth_year') ? $this->input->post('birth_year') : null,
-                'ssn' => $this->input->post('ssn') ? $this->input->post('ssn') : null,
-                'current_mailing_address' => $this->input->post('current_mailing_address') ? $this->input->post('current_mailing_address') : null,
-                'mailing_address_port_closing' => $this->input->post('mailing_address_port_closing') ? $this->input->post('mailing_address_port_closing') : null,
-                'is_another_seller' => $this->input->post('is_another_seller') ? $this->input->post('is_another_seller') : null,
-                'second_first_name' => $this->input->post('second_first_name') ? $this->input->post('second_first_name') : null,
-                'second_last_name' => $this->input->post('second_last_name') ? $this->input->post('second_last_name') : null,
-                'second_email' => $this->input->post('second_email') ? $this->input->post('second_email') : null,
-                'second_phone' => $this->input->post('second_phone') ? $this->input->post('second_phone') : null,
-                'second_birth_month' => $this->input->post('second_birth_month') ? $this->input->post('second_birth_month') : null,
-                'second_birth_date' => $this->input->post('second_birth_date') ? $this->input->post('second_birth_date') : null,
-                'second_birth_year' => $this->input->post('second_birth_year') ? $this->input->post('second_birth_year') : null,
-                'second_ssn' => $this->input->post('second_ssn') ? $this->input->post('second_ssn') : null,
-                'second_current_mailing_address' => $this->input->post('second_current_mailing_address') ? $this->input->post('second_current_mailing_address') : null,
-                'second_mailing_address_port_closing' => $this->input->post('second_mailing_address_port_closing') ? $this->input->post('second_mailing_address_port_closing') : null,
+                // 'first_name' => $this->input->post('first_name') ? $this->input->post('first_name') : null,
+                // 'last_name' => $this->input->post('last_name') ? $this->input->post('last_name') : null,
+                // 'email' => $this->input->post('email') ? $this->input->post('email') : null,
+                // 'phone' => $this->input->post('phone') ? $this->input->post('phone') : null,
+                // 'birth_month' => $this->input->post('birth_month') ? $this->input->post('birth_month') : null,
+                // 'birth_date' => $this->input->post('birth_date') ? $this->input->post('birth_date') : null,
+                // 'birth_year' => $this->input->post('birth_year') ? $this->input->post('birth_year') : null,
+                // 'ssn' => $this->input->post('ssn') ? $this->input->post('ssn') : null,
+                // 'current_mailing_address' => $this->input->post('current_mailing_address') ? $this->input->post('current_mailing_address') : null,
+                // 'mailing_address_port_closing' => $this->input->post('mailing_address_port_closing') ? $this->input->post('mailing_address_port_closing') : null,
+                // 'is_another_seller' => $this->input->post('is_another_seller') ? $this->input->post('is_another_seller') : null,
+                // 'second_first_name' => $this->input->post('second_first_name') ? $this->input->post('second_first_name') : null,
+                // 'second_last_name' => $this->input->post('second_last_name') ? $this->input->post('second_last_name') : null,
+                // 'second_email' => $this->input->post('second_email') ? $this->input->post('second_email') : null,
+                // 'second_phone' => $this->input->post('second_phone') ? $this->input->post('second_phone') : null,
+                // 'second_birth_month' => $this->input->post('second_birth_month') ? $this->input->post('second_birth_month') : null,
+                // 'second_birth_date' => $this->input->post('second_birth_date') ? $this->input->post('second_birth_date') : null,
+                // 'second_birth_year' => $this->input->post('second_birth_year') ? $this->input->post('second_birth_year') : null,
+                // 'second_ssn' => $this->input->post('second_ssn') ? $this->input->post('second_ssn') : null,
+                // 'second_current_mailing_address' => $this->input->post('second_current_mailing_address') ? $this->input->post('second_current_mailing_address') : null,
+                // 'second_mailing_address_port_closing' => $this->input->post('second_mailing_address_port_closing') ? $this->input->post('second_mailing_address_port_closing') : null,
                 'is_trustee' => $this->input->post('is_trustee') ? $this->input->post('is_trustee') : null,
                 'current_trustees' => $this->input->post('current_trustees') ? $this->input->post('current_trustees') : null,
                 'is_original_trustees' => $this->input->post('is_original_trustees') ? $this->input->post('is_original_trustees') : null,
