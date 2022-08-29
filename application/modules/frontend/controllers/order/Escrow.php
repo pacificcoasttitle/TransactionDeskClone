@@ -248,7 +248,7 @@ class Escrow extends MX_Controller
         $data['order_task_notes'] = $this->order->get_order_notes($id);
         $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($data['orderDetails']['order_id']);
 		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=05') );
-		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=05') );
+		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=06') );
         $this->template->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
 		$this->template->show("order/escrow", "order_tasks", $data);
 	}
@@ -721,45 +721,99 @@ class Escrow extends MX_Controller
         $userdata = $this->session->userdata('user');
         $file_id = $this->input->post('file_id');
 		$order_id = $this->input->post('order_id');
-		$seller_email = $this->input->post('seller_email');
+		$seller_emails = $this->input->post('seller_emails');
+        $seller_first_names = $this->input->post('seller_first_names');
+        $seller_last_names = $this->input->post('seller_last_names');
+        $is_main_seller = $this->input->post('is_main_seller');
         $orderDetails = $this->order->get_order_details($file_id);
         $from_name = 'Pacific Coast Title Company';
         $from_mail = env('FROM_EMAIL');
         $errors = array();
         $success = array();
+        $i = 0;
 
-        $form_url = base_url().'seller-info/'.$orderDetails['random_number'];
+        $this->db->delete('pct_order_borrower_seller_info', array('order_id' => $order_id));
+
+        foreach($seller_emails as $sellerEmail) {
+            $is_main_seller_flag = ((str_replace("is_main_buyer", "", $is_main_seller)) == $i) ? 1 : 0;
+            $seller_email = $sellerEmail;
+            $sellerInfo = array(
+                'order_id' => $order_id,
+                'first_name' => $seller_first_names[$i],
+                'last_name' => $seller_last_names[$i],
+                'email' => $sellerEmail,
+                'is_main_seller' => $is_main_seller_flag
+            );
+            $this->home_model->insert($sellerInfo, 'pct_order_borrower_seller_info');
+           
+
+            $form_url = base_url().'seller-info/'.$orderDetails['random_number'];
+            $email_data = array(
+                'name' => $seller_first_names[$i]." ".$seller_last_names[$i],
+                'seller_first_names' => $seller_first_names,
+                'seller_last_names' => $seller_last_names,
+                'file_number'=> $orderDetails['file_number'],
+                'property_address'=> $orderDetails['full_address'],
+                'random_number'=>  $orderDetails['random_number'],
+                'borrrower'=> $orderDetails['primary_owner'],
+                'form_url' => $form_url,
+                'escrow_officer' => $userdata['name']
+            );
+            
+            $borrower_message_body = $this->load->view('emails/welcome_seller.php', $email_data, TRUE);
+            $message_body = $borrower_message_body; 
+            $subject = $orderDetails['file_number']. ' - Welcome to Escrow';
+            
+            $mailParams = array(
+                'from_mail' => $from_mail, 
+                'from_name' => $from_name, 
+                'subject' => $subject,
+                'message'=>json_encode($email_data)
+            );
+            
+            if (!empty($seller_email)) {
+                $to = $seller_email;
+                $mailParams['to'] = $to;
+                $this->load->helper('sendemail');
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_seller', '', $mailParams, array(), $order_id, 0);
+                $seller_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
+                $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_seller', '', $mailParams, array('status'=>$seller_mail_result), $order_id, $logid);
+            }
+            $i++;
+        }
+       
+        $request = array();
+        $endPoint = 'files/'.$file_id.'/notes';
+        $request['Subject'] = 'Seller Welcome Email';
+        $request['Body'] = 'Sellers welcome email sent to successfully to '.implode(', ', $seller_emails)." users.";
+        $request['FileID'] = $file_id;
+        $notes_data = json_encode($request);
+        $user_data['admin_api'] = 1; 
         
-        $email_data = array(
-            'file_number'=> $orderDetails['file_number'],
-            'property_address'=> $orderDetails['full_address'],
-            'random_number'=>  $orderDetails['random_number'],
-            'borrrower'=> $orderDetails['primary_owner'],
-            'form_url' => $form_url,
-            'escrow_officer' => $userdata['name']
-        );
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $order_id, 0);        
+        $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $order_id, $logid);
         
-        $borrower_message_body = $this->load->view('emails/welcome_seller.php', $email_data, TRUE);
-        $message_body = $borrower_message_body; 
-        $subject = $orderDetails['file_number']. ' - Escrow Is Open';
-        
-        $mailParams = array(
-            'from_mail' => $from_mail, 
-            'from_name' => $from_name, 
-            'subject' => $subject,
-            'message'=>json_encode($email_data)
-        );
-        
-        if (!empty($seller_email)) {
-            $to = $seller_email;
-            $mailParams['to'] = $to;
-            $this->load->helper('sendemail');
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_seller', '', $mailParams, array(), $order_id, 0);
-            $borrower_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
-            $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_seller', '', $mailParams, array('status'=>$borrower_mail_result), $order_id, $logid);
+        if (isset($result) && !empty($result)) {
+            $response = json_decode($result, TRUE);
+            if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+                $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+                
+            } else {
+                $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+                $notesData = array(
+                    'resware_note_id' => $noteId,
+                    'subject' => $request['Subject'],
+                    'note' => $request['Body'],
+                    'user_id' => $userdata['id'],
+                    'order_id' => $order_id,
+                    'task_id' => 4
+                );
+                $this->home_model->insert($notesData, 'pct_order_notes');
+            }
         }
 
-        $success[] = "Mail sent succesfully to seller.";
+        $success[] = "Mail sent succesfully to sellers."; 
         $data['errors'] = $errors;
 		$data['success'] = $success;
 		$data = array(
