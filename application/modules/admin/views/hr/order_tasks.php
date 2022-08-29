@@ -797,7 +797,7 @@
 
 											<div class="col-md-6">	
 												<div class="form-group">
-													<input class="" type="radio" name="is_main_seller" id="is_main_seller" value="is_main_seller0" required="required">&nbsp;&nbsp;&Primary Seller		
+													<input class="" type="radio" name="is_main_seller" id="is_main_seller" value="is_main_seller0" required="required">&nbsp;&nbsp;Primary Seller		
 												</div>
 											</div>
 
